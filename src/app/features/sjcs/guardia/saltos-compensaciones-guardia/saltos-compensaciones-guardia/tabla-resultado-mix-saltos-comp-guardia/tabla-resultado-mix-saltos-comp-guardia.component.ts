@@ -3,7 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { Row, Cell } from './tabla-resultado-mix-saltos-comp.service';
 import { Message } from 'primeng/components/common/api';
-import { DatePipe, Location} from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
@@ -64,9 +64,9 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   isDisabled: boolean = true;
   showVolver = false;
   disableButtons = false;
-
+  rowGroupsActualizar: Row[] = [];
   constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService
-    , private persistenceService : PersistenceService, private location: Location) {
+    , private persistenceService: PersistenceService, private location: Location) {
     /* this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
@@ -103,10 +103,10 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
 
     this.historico = this.persistenceService.getHistorico()
 
-    if(sessionStorage.getItem("fromTurnoOficio") === "true"){
+    if (sessionStorage.getItem("fromTurnoOficio") === "true") {
       this.disableButtons = true;
       this.showVolver = true;
-    }else{
+    } else {
       this.disableButtons = false;
       this.showVolver = false;
     }
@@ -175,10 +175,10 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     let isReturn = true;
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       let value = "";
-      if(row.cells[j].type == 'select'){
-        if (row.cells[j].value.toString() == 'C'){
+      if (row.cells[j].type == 'select') {
+        if (row.cells[j].value.toString() == 'C') {
           value = "Compensación";
-        }else if (row.cells[j].value.toString() == 'S'){
+        } else if (row.cells[j].value.toString() == 'S') {
           value = "Saltos";
         }
         if (
@@ -190,7 +190,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
         } else {
           isReturn = true;
         }
-      }else{
+      } else {
         if (
           this.searchText[j] != " " &&
           this.searchText[j] != undefined &&
@@ -225,42 +225,42 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
 
       for (let i = 0; i < this.cabeceras.length; i++) {
         let nombreCabecera = this.cabeceras[i].id;
-        if (nombreCabecera == sort.active){
+        if (nombreCabecera == sort.active) {
           //console.log("a.cells["+i+"].type:"+a.cells[i].type);
 
-          if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
+          if (a.cells[i].type == 'datePickerFin' && b.cells[i].type == 'datePickerFin') {
             return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
-          }else if (a.cells[i].type=='date' && b.cells[i].type=='date'){
+          } else if (a.cells[i].type == 'date' && b.cells[i].type == 'date') {
             return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
           }
-          else if (a.cells[i].type=='dateTime' && b.cells[i].type=='dateTime'){
+          else if (a.cells[i].type == 'dateTime' && b.cells[i].type == 'dateTime') {
             return compareDateAndTime(a.cells[i].value.label, b.cells[i].value.label, isAsc);
           }
 
           let valorA = a.cells[i].value;
           let valorB = b.cells[i].value;
-          if (valorA!=null && valorB!=null){
-            if(isNaN(valorA)){ //Checked for numeric
-              const dayA = valorA.substr(0, 2) ;
+          if (valorA != null && valorB != null) {
+            if (isNaN(valorA)) { //Checked for numeric
+              const dayA = valorA.substr(0, 2);
               const monthA = valorA.substr(3, 2);
               const yearA = valorA.substr(6, 10);
               //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
-              var dt=new Date(yearA, monthA, dayA);
-              if(!isNaN(dt.getTime())){ //Checked for date
+              var dt = new Date(yearA, monthA, dayA);
+              if (!isNaN(dt.getTime())) { //Checked for date
                 return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
-              }else{
+              } else {
               }
-            } else{
+            } else {
             }
           }
 
           return compare(a.cells[i].value, b.cells[i].value, isAsc);
-          
+
         }
       }
- 
+
     });
-}
+  }
 
 
   showMsg(severity, summary, detail) {
@@ -311,8 +311,8 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     let cell13: Cell = new Cell();
     let cell14: Cell = new Cell();
 
-    if (grupo){
-        
+    if (grupo) {
+
       cell1.type = 'select-grupo';
       cell1.combo = this.comboTurnosGrupo;
       cell1.value = '';
@@ -327,8 +327,8 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       cell3.disabled = true;
       cell3.value = '';
       cell3.header = this.cabeceras[2].id;
-    }else{
-        
+    } else {
+
       cell1.type = 'select';
       cell1.combo = this.comboTurnos;
       cell1.value = '';
@@ -341,7 +341,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
 
       cell3.type = 'multiselect';
       cell3.disabled = true;
-      cell3.value = '';
+      cell3.value = null;
       cell3.header = this.cabeceras[2].id;
     }
 
@@ -377,7 +377,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     cell11.type = 'invisible';
     cell11.value = '';
     cell11.header = 'idPersona';
-    
+
     cell12.type = 'invisible';
     cell12.value = '';
     cell12.header = 'idGuardia';
@@ -407,11 +407,11 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   guardar() {
     let error = false;
 
-    this.rowGroups.forEach(row => {
+    this.rowGroupsActualizar.forEach(row => {
       if (
         row.cells[0].value == null || row.cells[0].value.trim() == '' ||
         row.cells[2].value == null ||
-        row.cells[3].value == null || 
+        row.cells[3].value == null ||
         row.cells[4].value == null || row.cells[4].value.trim() == '' ||
         row.cells[5].value == null || row.cells[5].value.trim() == '' ||
         row.cells[6].value == null || row.cells[6].value.trim() == ''
@@ -421,10 +421,11 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     });
 
     if (error) {
-      this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '' );
+      this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '');
     } else {
-      this.saveEvent.emit(this.rowGroups);
+      this.saveEvent.emit(this.rowGroupsActualizar);
       this.selectedArray = [];
+      this.rowGroupsActualizar = [];
     }
   }
 
@@ -432,6 +433,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.deleteEvent.emit(this.selectedArray);
       this.selectedArray = [];
+      this.rowGroupsActualizar = [];
       //this.showSuccessDelete();
     }
   }
@@ -446,6 +448,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   }
 
   toogleHistorico(valor: boolean) {
+    this.rowGroupsActualizar = [];
     this.historico = valor;
     this.searchHistory.emit(valor);
   }
@@ -457,6 +460,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   restablecer() {
     this.rowGroups = [];
     this.rowGroupsAux = [];
+    this.rowGroupsActualizar = [];
     this.rowGroups = JSON.parse(JSON.stringify(this.rowGroupsInit));
     this.rowGroupsAux = JSON.parse(JSON.stringify(this.rowGroupsInit));
     this.totalRegistros = this.rowGroups.length;
@@ -466,11 +470,13 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.anularEvent.emit(this.selectedArray);
       this.selectedArray = [];
+      this.rowGroupsActualizar = [];
     }
   }
 
-  fillFecha(event, cell) {
+  fillFecha(event, cell, row) {
     cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
+    this.addCellChange(row);
   }
 
   changeMultiSelect(row, cell) {
@@ -490,10 +496,11 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       //Si no, se pone el numColegiado
       row.cells[13].value = row.cells[2].value[0];
     }
+    this.addCellChange(row);
   }
 
-  changeMultiSelectGrupo(row, cell){
-    while(cell.value.length > 1) {
+  changeMultiSelectGrupo(row, cell) {
+    while (cell.value.length > 1) {
       cell.value.shift();
     }
     const header = cell.header;
@@ -502,9 +509,9 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       let values = [];
       row.cells[2].combo.forEach(element => {
         console.log(row.cells[2].value[0]);
-        if(element.label.startsWith("(") && row.cells[2].value[0].startsWith("null")){
+        if (element.label.startsWith("(") && row.cells[2].value[0].startsWith("null")) {
           values.push(element.value);
-        } else if (element.label.startsWith("["+row.cells[2].value[0].split('/')[0]+"]")){
+        } else if (element.label.startsWith("[" + row.cells[2].value[0].split('/')[0] + "]")) {
           values.push(element.value);
         }
       });
@@ -523,31 +530,54 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       //Si no, se pone el numColegiado
       row.cells[13].value = null;
     }
+    this.addCellChange(row);
   }
 
   changeSelect(row, cell) {
     const header = cell.header;
     if (header == 'turno') {
-        row.cells[2].disabled = true;
-        row.cells[2].value = '';
-        row.cells[3].value = '';
+      row.cells[2].disabled = true;
+      row.cells[2].value = '';
+      row.cells[3].value = '';
       if (row.cells[0].value == null) {
         row.cells[1].disabled = true;
         row.cells[1].value = '';
-      }else{
+      } else {
         row.cells[1].value = '';
         row.cells[1].disabled = false;
         this.getComboGuardia(cell.value, row, false);
       }
-    } else if (header == 'guardia'){
+    } else if (header == 'guardia') {
       row.cells[2].value = '';
       row.cells[3].value = '';
       if (row.cells[1].value == null) {
         row.cells[2].disabled = true;
-      }else{
+      } else {
         row.cells[2].disabled = false;
         this.getComboColegiados(row, false);
       }
+    }
+    this.addCellChange(row);
+  }
+
+  addCellChange(row: Row) {
+
+    let repetida = false;
+
+    //Si es el primero lo añadimos directamente
+    if (this.rowGroupsActualizar.length == 0) {
+      this.rowGroupsActualizar[0] = row;
+      repetida = true;
+    } else {
+      //Recorremos el array de filas, si hay coincidencia ignoramos, si no esta la insertamos
+      for (let i = 0; i <= this.rowGroupsActualizar.length; i++) {
+        if (this.rowGroupsActualizar[i] == row) {
+          repetida = true;
+        }
+      }
+    }
+    if (!repetida) {
+      this.rowGroupsActualizar[this.rowGroupsActualizar.length] = row;
     }
   }
 
@@ -560,29 +590,30 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       if (row.cells[0].value == null) {
         row.cells[1].disabled = true;
         row.cells[1].value = '';
-      }else{
+      } else {
         row.cells[1].value = '';
         row.cells[1].disabled = false;
         this.getComboGuardia(cell.value, row, true);
       }
-    } else if (header == 'guardia'){
+    } else if (header == 'guardia') {
       row.cells[2].value = '';
       row.cells[3].value = '';
       if (row.cells[1].value == null) {
         row.cells[2].disabled = true;
-      }else{
+      } else {
         row.cells[2].disabled = false;
         this.getComboColegiados(row, true);
       }
     }
+    this.addCellChange(row);
   }
 
   getComboGuardia(idTurno, row, grupo) {
     this.comboGuardias = [];
     let url;
-    if (grupo){
+    if (grupo) {
       url = "busquedaGuardia_grupo";
-    }else {
+    } else {
       url = "busquedaGuardia_noGrupo";
     }
     this.sigaServices.getParam(
@@ -613,18 +644,21 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           let comboColegiados = JSON.parse(data.body).letradosGuardiaItem;
           let error = JSON.parse(data.body).error;
           comboColegiados.forEach(combo => {
-            if (grupo && combo.grupo != null){
+            if (grupo && combo.grupo != null) {
               this.comboColegiados.push({
-                label:"["+combo.grupo+"]" + " " + "("+combo.numeroColegiado+") "+combo.apellidos1+combo.apellidos2+", "+combo.nombre,
-                value:combo.grupo+"/"+combo.numeroColegiado});
-            }else if (grupo && combo.grupo == null){
+                label: "[" + combo.grupo + "]" + " " + "(" + combo.numeroColegiado + ") " + combo.apellidos1 + combo.apellidos2 + ", " + combo.nombre,
+                value: combo.grupo + "/" + combo.numeroColegiado
+              });
+            } else if (grupo && combo.grupo == null) {
               this.comboColegiados.push({
-                label:"("+combo.numeroColegiado+") "+combo.apellidos1+combo.apellidos2+", "+combo.nombre,
-                value:combo.grupo+"/"+combo.numeroColegiado});
-            }else{
+                label: "(" + combo.numeroColegiado + ") " + combo.apellidos1 + combo.apellidos2 + ", " + combo.nombre,
+                value: combo.grupo + "/" + combo.numeroColegiado
+              });
+            } else {
               this.comboColegiados.push({
-                label:"("+combo.numeroColegiado+") "+combo.apellidos1+combo.apellidos2+", "+combo.nombre,
-                value:combo.numeroColegiado});
+                label: "(" + combo.numeroColegiado + ") " + combo.apellidos1 + combo.apellidos2 + ", " + combo.nombre,
+                value: combo.numeroColegiado
+              });
             }
           });
         },
@@ -649,7 +683,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
 function compare2(a: string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
-function compareDateAndTime (date1:  any, date2:  any, isAsc: boolean){
+function compareDateAndTime(date1: any, date2: any, isAsc: boolean) {
   let objDate1 = null;
   let hour1 = null;
   let objDate2 = null;
@@ -657,63 +691,63 @@ function compareDateAndTime (date1:  any, date2:  any, isAsc: boolean){
   let fechaA1 = date1.split("/").join("-")
   let fechaA = fechaA1.split(" ")[0];
   let horaA = fechaA1.split(" ")[1].split(":").join("-");
-  if (fechaA!=null && horaA!=null){
-    const dayA = fechaA.substr(0, 2) ;
+  if (fechaA != null && horaA != null) {
+    const dayA = fechaA.substr(0, 2);
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
     const hourA = horaA.substr(0, 2);
     const minA = horaA.substr(3, 2);
     const segA = horaA.substr(6, 8);
     //console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
-    objDate1= {  day: dayA,month: monthA, year: yearA};
-    hour1={ hour: hourA,minute: minA,second: segA};
+    objDate1 = { day: dayA, month: monthA, year: yearA };
+    hour1 = { hour: hourA, minute: minA, second: segA };
   }
   let fechaB1 = date2.split("/").join("-")
   let fechaB = fechaB1.split(" ")[0];
   let horaB = fechaB1.split(" ")[1].split(":").join("-");
-  if (fechaB!=null){
-    const dayB = fechaB.substr(0, 2) ;
+  if (fechaB != null) {
+    const dayB = fechaB.substr(0, 2);
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
     const hourB = horaB.substr(0, 2);
     const minB = horaB.substr(3, 2);
     const segB = horaB.substr(6, 8);
     //console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
-    objDate2= {  day: dayB,month: monthB, year: yearB};
-    hour2={ hour: hourB,minute: minB,second: segB};
+    objDate2 = { day: dayB, month: monthB, year: yearB };
+    hour2 = { hour: hourB, minute: minB, second: segB };
   }
 
   //console.log("comparacionDate isAsc:"+ isAsc+";");
 
-  return  compareDateHour(objDate1, hour1, objDate2, hour2, isAsc);
+  return compareDateHour(objDate1, hour1, objDate2, hour2, isAsc);
 
 }
 
-function compareDateHour(dateObj1,hour1,dateObj2,hour2, isAsc){
+function compareDateHour(dateObj1, hour1, dateObj2, hour2, isAsc) {
 
-  let objDate1=new Date(dateObj1.year+'-'+dateObj1.month+"-"+dateObj1.day+
-  " "+ hour1.hour +":" + hour1.minute + ":" + hour1.second + ".000Z");
-  let objDate2=new Date(dateObj2.year+'-'+dateObj2.month+"-"+dateObj2.day+
-  " "+ hour2.hour +":" + hour2.minute + ":" + hour2.second + ".000Z");
+  let objDate1 = new Date(dateObj1.year + '-' + dateObj1.month + "-" + dateObj1.day +
+    " " + hour1.hour + ":" + hour1.minute + ":" + hour1.second + ".000Z");
+  let objDate2 = new Date(dateObj2.year + '-' + dateObj2.month + "-" + dateObj2.day +
+    " " + hour2.hour + ":" + hour2.minute + ":" + hour2.second + ".000Z");
 
   //return (objDate1.getTime() / 1000) > (objDate2.getTime() / 1000) ? true :false;
   return ((objDate1.getTime() / 1000) < (objDate2.getTime() / 1000) ? -1 : 1) * (isAsc ? 1 : -1);
 }
 
-function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+function compareDate(fechaA: any, fechaB: any, isAsc: boolean) {
 
   let dateA = null;
   let dateB = null;
-  if (fechaA!=null){
-    const dayA = fechaA.substr(0, 2) ;
+  if (fechaA != null) {
+    const dayA = fechaA.substr(0, 2);
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
     //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
     dateA = new Date(yearA, monthA, dayA);
   }
 
-  if (fechaB!=null){
-    const dayB = fechaB.substr(0, 2) ;
+  if (fechaB != null) {
+    const dayB = fechaB.substr(0, 2);
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
     //console.log("fecha b:"+ yearB+","+monthB+","+dayB);
@@ -738,13 +772,12 @@ function compare(a: number | string | Date, b: number | string | Date, isAsc: bo
 
   //console.log("compare isAsc:"+ isAsc+";");
 
-  if (a==null && b!=null){
-    return ( 1 ) * (isAsc ? 1 : -1);
+  if (a == null && b != null) {
+    return (1) * (isAsc ? 1 : -1);
   }
-  if (a!=null && b==null){
-    return ( -1 ) * (isAsc ? 1 : -1);
+  if (a != null && b == null) {
+    return (-1) * (isAsc ? 1 : -1);
   }
 
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-}					   
-
+}

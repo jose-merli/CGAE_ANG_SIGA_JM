@@ -36,8 +36,8 @@
 
 
               <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
-                <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFecha($event, cell)"
-                  (valueChangeInput)="fillFecha($event, cell)">
+                <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFecha($event, cell, row)"
+                  (valueChangeInput)="fillFecha($event, cell, row)">
                 </app-fecha>
               </span>
 
@@ -72,7 +72,7 @@
               </span>
 
               <span class="w100 cell-value" *ngIf="cell.type == 'textarea'">
-                <textarea pInputTextarea [(ngModel)]="cell.value" class="form-control"></textarea>
+                <textarea pInputTextarea (input)="changeSelect(row, cell)" [(ngModel)]="cell.value" class="form-control"></textarea>
               </span>
 
               <span class="w100 cell-value" *ngIf="cell.type == 'empty'">
