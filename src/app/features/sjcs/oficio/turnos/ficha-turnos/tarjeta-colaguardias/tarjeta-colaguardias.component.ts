@@ -311,7 +311,7 @@ export class TarjetaColaGuardias implements OnInit {
   }
   getColaGuardias() {
     this.turnosItem.historico = this.historico;
-    //this.progressSpinner = true;
+    this.progressSpinner = true;
     this.sigaServices.post("turnos_busquedaColaGuardia", this.turnosItem).subscribe(
       n => {
         // this.datos = n.turnosItem;
