@@ -400,27 +400,20 @@ export class FiltrosGuardiaComponent implements OnInit {
   }
 
   checkFilters() {
-
-    if ((this.filtros.area == null || this.filtros.area == undefined) &&
-      (this.filtros.jurisdiccion == null || this.filtros.jurisdiccion == undefined) &&
-      (this.filtros.grupoFacturacion == null || this.filtros.grupoFacturacion == undefined) &&
-      (this.filtros.grupoZona == null || this.filtros.grupoZona == undefined) &&
-      (this.filtros.zona == null || this.filtros.zona == undefined) &&
-      (this.filtros.materia == null || this.filtros.materia == undefined) &&
-      (this.filtros.partidaPresupuestaria == null || this.filtros.partidaPresupuestaria == undefined) &&
-      (this.filtros.tipoTurno == null || this.filtros.tipoTurno == undefined) &&
-      (this.filtros.idTurno == null || this.filtros.idTurno == undefined) &&
-      (this.filtros.idTipoGuardia == null || this.filtros.idTipoGuardia == undefined) &&
-      (this.filtros.nombre == null || this.filtros.nombre == undefined || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3)) {
-
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
-        this.filtros.nombre = this.filtros.nombre.trim();
+    if (this.filtros.nombre){
+      if(this.filtros.nombre.trim().length < 3){
+        this.showMessage("error",
+          this.translateService.instant("general.message.incorrect"), 
+          this.translateService.instant("cen.busqueda.error.busquedageneral")
+        );
+        return false;
       }
-
+      else{
+        this.filtros.nombre = this.filtros.nombre.trim();
+        return true;
+      }
+    }
+    else{
       return true;
     }
   }

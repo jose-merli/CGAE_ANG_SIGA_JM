@@ -363,48 +363,33 @@ ngOnDestroy() {
   }
   
   checkFilters() {
-    if((this.filtros.nombre == null ||
-        this.filtros.nombre == undefined ||
-        this.filtros.nombre.trim().length < 3) &&
-    (this.filtros.abreviatura == null ||
-        this.filtros.abreviatura == undefined ||
-        this.filtros.abreviatura.trim().length < 3) &&
-    (this.filtros.idarea == null ||
-        this.filtros.idarea == undefined || 
-        this.filtros.idarea == ""
-        ) &&
-    (this.filtros.idsubzona == null ||
-        this.filtros.idsubzona == undefined
-        || this.filtros.idsubzona == "") &&
-    (this.filtros.idmateria == null ||
-        this.filtros.idmateria == undefined 
-        || this.filtros.idmateria == "")&&
-    (this.filtros.idtipoturno == null ||
-        this.filtros.idtipoturno == undefined
-        ||  this.filtros.idtipoturno == "")&&
-    (this.filtros.idpartidapresupuestaria == null ||
-        this.filtros.idpartidapresupuestaria == undefined 
-        || this.filtros.idpartidapresupuestaria == "")&&
-    (this.filtros.idzona == null ||
-        this.filtros.idzona == undefined 
-        || this.filtros.idzona == "")&&
-    (this.filtros.jurisdiccion == null ||
-        this.filtros.jurisdiccion == undefined
-        || this.filtros.jurisdiccion == "" )&&
-    (this.filtros.grupofacturacion == null ||
-        this.filtros.grupofacturacion == undefined 
-        || this.filtros.grupofacturacion == ""))
-    {
-      this.showSearchIncorrect();
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.abreviatura != undefined && this.filtros.abreviatura != null && this.filtros.abreviatura != "") {
+    if(this.filtros.nombre || this.filtros.abreviatura){   
+      if (((this.filtros.nombre && this.filtros.nombre.trim().length < 3) && 
+        (this.filtros.abreviatura && this.filtros.abreviatura.trim().length < 3)) || 
+        (!this.filtros.nombre && (this.filtros.abreviatura && this.filtros.abreviatura.trim().length < 3)) ||
+        (!this.filtros.abreviatura && (this.filtros.nombre && this.filtros.nombre.trim().length < 3))){
+        this.showSearchIncorrect();
+        return false;
+      }
+      else if (((this.filtros.nombre && this.filtros.nombre.trim().length < 3) || !this.filtros.nombre) && 
+        (this.filtros.abreviatura && this.filtros.abreviatura.trim().length >= 3)){
         this.filtros.abreviatura = this.filtros.abreviatura.trim();
+        this.filtros.nombre = "";
+        return true;
       }
-      if (this.filtros.nombre != undefined && this.filtros.nombre != null && this.filtros.nombre != "") {
+      else if (((this.filtros.abreviatura && this.filtros.abreviatura.trim().length < 3) || !this.filtros.abreviatura) &&
+        (this.filtros.nombre && this.filtros.nombre.trim().length >= 3)){
         this.filtros.nombre = this.filtros.nombre.trim();
+        this.filtros.abreviatura = "";
+        return true;
       }
+      else{
+        if(this.filtros.nombre) {this.filtros.nombre = this.filtros.nombre.trim();}
+        if(this.filtros.abreviatura) {this.filtros.abreviatura = this.filtros.abreviatura.trim();}
+        return true;
+      }
+    } 
+    else{
       return true;
     }
   }
