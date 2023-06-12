@@ -561,29 +561,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
     this.onlyCheckDatos();
     if (this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" &&
       this.rowGroups[0].cells[4].value != "" && (this.rowGroups[0].cells[5].value != null && this.rowGroups[0].cells[5].value[0] != "")) {
-      let mess = this.translateService.instant('sjcs.oficio.bajastemporales.nuevo.mensajeConfirmacion');
-      let icon = "fa fa-question-circle";
-      let keyConfirmation = "deleteTurnosGuardias";
-      this.confirmationService.confirm({
-        key: keyConfirmation,
-        message: mess,
-        icon: icon,
-        accept: () => {
-          this.modDatos.emit(this.rowGroups);
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "info",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
-        }
-      });
-
+        this.modDatos.emit(this.rowGroups);
     } else {
       this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.camposObligatorios") });
     }
