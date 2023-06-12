@@ -283,9 +283,9 @@
                             class="cell-wrapper selectedRowClass w-100">
                                 <span class="column-title">{{cabeceras[z+1].name}}</span>
                                 <span class="w100 cell-value selectWrap"
-                                    *ngIf="cell.type == 'text'">{{cell.value}}</span>
+                                    *ngIf="cell.type == 'text'" [ngClass]="{'actuacionAnulada': row.cells[14].type=='actuacionAnulada'}">{{cell.value}}</span>
                                 <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'tooltip'"
-                                    [pTooltip]="cell.combo" tooltipPosition="bottom">{{cell.value}}</span>
+                                    [pTooltip]="cell.combo" tooltipPosition="bottom" [ngClass]="{'actuacionAnulada': row.cells[14].type=='actuacionAnulada'}">{{cell.value}}</span>
                                 <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button
                                         (click)="toDoButton(cell.value, rowGroup.id, rowGroup, rowGroupEl)"
                                         class="buttomStyle" pButton type="button" iconPos="left"
@@ -316,7 +316,7 @@
                                 <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
                                     <p-checkbox
                                         (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, false, i)"
-                                        [(ngModel)]="cell.value" binary="true" [disabled]="isLetrado || cell.combo">
+                                        [(ngModel)]="cell.value" binary="true" [disabled]="isLetrado || cell.combo || row.cells[14].type=='actuacionAnulada'">
                                     </p-checkbox>
                                 </span>
 
