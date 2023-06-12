@@ -299,7 +299,7 @@
                                             (click)="toDoButton(cell.value[1], rowGroup.id, rowGroup, rowGroupEl)"
                                             class="buttomStyle" pButton type="button" iconPos="left"
                                             [label]="cell.value[1]"
-                                            [disabled]="isLetrado || permisoProcedimiento"></button></div>
+                                            [disabled]="isLetrado || comprobarCombos(rowGroup)"></button></div>
                                     <div *ngIf="cell.value[1] != 'Nuevo' && permisosFichaAct"><a
                                             (click)="linkFichaActIfPermis(row, rowGroup)"
                                             class="enlace">{{cell.value[1]}}</a>
@@ -473,7 +473,7 @@
             <button [disabled]="isLetrado" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
                 (click)="guardar()">
             </button>
-            <button pButton [disabled]="selectedArray.length != 1 || !permisosFichaAct || isLetrado" type="button"
+            <button pButton [disabled]="selectedArray.length != 1 || !permisosFichaAct || isLetrado || comprobarCamposVacios()" type="button"
                 icon="fa fa-plus" iconPos="left" label="Nuevo" (click)="newFromSelected()">
             </button>
         </div>
