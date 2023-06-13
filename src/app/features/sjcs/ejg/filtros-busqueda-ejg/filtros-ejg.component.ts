@@ -11,6 +11,7 @@ import { MultiSelect } from 'primeng/multiselect';
 import { Location } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
 import { underscore } from '@angular-devkit/core/src/utils/strings';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-filtros-ejg',
@@ -49,7 +50,7 @@ export class FiltrosEjgComponent implements OnInit {
   comboTipoEJG = [];
   comboTipoEJGColegio = [];
   comboCreadoDesde = datos_combos.comboCreadoDesde;
-  comboEstadoEJG = [];
+  // comboEstadoEJG = [];
   comboTurno = [];
   comboGuardia = [];
   comboTipoLetrado = datos_combos.comboTipoLetrado;
@@ -88,7 +89,8 @@ export class FiltrosEjgComponent implements OnInit {
   dropdownList = [];
   selectRoles: boolean = true;
 
-
+  comboEstadoEJG: SelectItem[];
+  selectedEstados: any[];
 
   bodyDictamen = [];
   @Input() permisos;
@@ -500,18 +502,39 @@ export class FiltrosEjgComponent implements OnInit {
       n => {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
+        // this.comboEstadoEJG.push(this.comboEstadoEJG.values);
 
-        if (this.remesaFicha) {
-          let comboItem = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '7');
-          let comboItem2 = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '17');
+        //Preselecciono los estados 7-Listo remitir Comisión y 17-Listo remitir comisión act. designación
+        this.comboEstadoEJG.filter(comboEstadoEJG => comboEstadoEJG.value == '7' || comboEstadoEJG.value == '17');
+        // this.comboEstadoEJG.map((item) => this.selectedEstados.push(item.value));
+        this.selectedEstados = ['7', '17'];
+        this.comboEstadoEJG;
+        this.selectedEstados;
+        //Recorro el array de resultados y guardamos su posicion
+        // let posicionesPreseleccionar = [];
+        // for(let i=0; i<this.comboEstadoEJG.length; i++){
+        //   if(this.comboEstadoEJG[i].value === 7){
+        //     posicionesPreseleccionar[0] = i
+        //   }
 
-          this.comboEstadoEJG[0] = comboItem;
-          this.comboEstadoEJG[1] = comboItem2;
+        //   if(this.comboEstadoEJG[i].value === 17){
+        //     posicionesPreseleccionar[1] = i
+        //   }
+        // }
 
-          for (; this.comboEstadoEJG.length > 2;) {
-            this.comboEstadoEJG.pop();
-          }
-        }
+        // this.estadosPreseleccionados = this.comboEstadoEJG;
+
+        // if (this.remesaFicha) {
+          // let comboItem = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '7');
+        //   let comboItem2 = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '17');
+
+        //   this.comboEstadoEJG[0] = comboItem;
+        //   this.comboEstadoEJG[1] = comboItem2;
+
+          // for (; this.comboEstadoEJG.length > 2;) {
+          //   this.comboEstadoEJG.pop();
+          // }
+        // }
         //console.log("comboEstadoEJG -> ", this.comboEstadoEJG);
       },
       err => {
