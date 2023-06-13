@@ -679,7 +679,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
           }
           
         } else{
-          fechaJust = false;
+          fechaJust = "";
           fechaJustType = 'datePicker';
         }
         if(this.permisosFichaAct){
@@ -696,47 +696,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
         let moduloValue2 = actuacion.idProcedimiento;
         let moduloCombo2 = this.comboModulos;
-
-        if (finalizada) {
-          arr1 = [
-            { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto, actuacion.tieneDocumentacion], size: 120, combo: null },
-            { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
-            { type: 'text', value: actuacion.nig, size: 200, combo: null},
-            { type: 'text', value: actuacion.numProcedimiento, size: 200 , combo: null},
-            { type: 'tooltip', value: actuacion.categoriaProcedimiento, size: 400 , combo: actuacion.procedimiento,}, //modulo
-            { type: 'text', value:  this.formatDate(actuacion.fecha), size: 200 , combo: null},
-            { type: 'text', value:  fechaJust , size: 200, combo: null},
-            { type: linkOrText, value: acreditacionPorcentaje , size: 200, combo: null},
-            { type: 'checkbox', value: validaAct, size: 80 , combo: finalizada },
-            { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.idTipoAcreditacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.porcentaje , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.categoriaProcedimiento , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.idJurisdiccion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.complemento , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.permitirAniadirLetrado , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.numAsunto , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.idProcedimiento , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.idJuzgado , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.nombreJuzgado , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.fechaJustificacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.validada , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.idFacturacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.anioProcedimiento , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.descripcionFacturacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.docJustificacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.anulacion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.nigNumProcedimiento , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.permitirLetrado , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.anio , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.idTurno , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.idInstitucion , size: 0, combo: null},
-            { type: 'invisible', value:  actuacion.facturado , size: 0, combo: null}
-          ];
-        }else if(actuacion.anulacion=="1"){
+        if(actuacion.anulacion=="1"){
           arr1 = 
           [
           { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto, actuacion.tieneDocumentacion], size: 120, combo: null },
@@ -776,6 +736,46 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { type: 'invisible', value:  actuacion.idInstitucion , size: 0, combo: null},
           { type: 'invisible', value:  actuacion.facturado , size: 0, combo: null}
         ];
+        }
+        else if (finalizada) {
+          arr1 = [
+            { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto, actuacion.tieneDocumentacion], size: 120, combo: null },
+            { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
+            { type: 'text', value: actuacion.nig, size: 200, combo: null},
+            { type: 'text', value: actuacion.numProcedimiento, size: 200 , combo: null},
+            { type: 'tooltip', value: actuacion.categoriaProcedimiento, size: 400 , combo: actuacion.procedimiento,}, //modulo
+            { type: 'text', value:  this.formatDate(actuacion.fecha), size: 200 , combo: null},
+            { type: 'text', value:  fechaJust , size: 200, combo: null},
+            { type: linkOrText, value: acreditacionPorcentaje , size: 200, combo: null},
+            { type: 'checkbox', value: validaAct, size: 80 , combo: finalizada },
+            { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idTipoAcreditacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.porcentaje , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.categoriaProcedimiento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idJurisdiccion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.complemento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.permitirAniadirLetrado , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.numAsunto , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idProcedimiento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idJuzgado , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.nombreJuzgado , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.fechaJustificacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.validada , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idFacturacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.anioProcedimiento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.descripcionFacturacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.docJustificacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.anulacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.nigNumProcedimiento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.permitirLetrado , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.anio , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idTurno , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idInstitucion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.facturado , size: 0, combo: null}
+          ];
         }
         else if(!this.permisoEscritura){
           arr1 = 
@@ -950,7 +950,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         arr2.push(Object.assign({},obj1));
         obj1 = null;
        
-     })
+     });
 //console.log('designacion.actuaciones: ', designacion.actuaciones)
     //if (actuacion.permitirAniadirLetrado == "1"){ 
 
