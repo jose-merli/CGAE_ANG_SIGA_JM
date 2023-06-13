@@ -1141,6 +1141,10 @@ export class TablaResultadoMixComponent implements OnInit {
 
   habilitarBotones() {
     // Creamos Array con todas las filas selecionadas
+    this.habilitadoValidar = false;
+    this.habilitadoSolicitarBaja = false;
+    this.habilitadoCambiarFecha = false;
+    this.habilitadoDenegar = false;
     var rowsSelecteds = [];
     let validarInscripciones = '';
     let estadoNombre = '';
@@ -1209,11 +1213,12 @@ export class TablaResultadoMixComponent implements OnInit {
         this.habilitadoCambiarFecha = true;
       }
 
-      if (this.infoHabilitado.estadoNombre == "Alta" && (this.estadosDistintos)) {
+      if (this.infoHabilitado.estadoNombre == "Alta" && (!this.estadosDistintos)) {
         this.habilitadoSolicitarBaja = false;
+        this.habilitadoCambiarFecha = false;
       } else {
         this.habilitadoSolicitarBaja = true;
-
+        this.habilitadoCambiarFecha = true;
       }
 
       if (this.infoHabilitado.estadoNombre == null || this.infoHabilitado.estadoNombre == undefined || this.infoHabilitado.estadoNombre == "") {
