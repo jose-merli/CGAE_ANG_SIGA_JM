@@ -147,6 +147,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
     this.datosJustificacionAux = this.datosJustificacion;
 
+    this.checkPermisos();
+    this.checkAccesoFichaActuacion();
+    this.checkAccesoEJG();
+
     // Cargamos la fecha de justificación
     this.fechaFiltro = this.formatDate(new Date());
     await this.getJuzgados();
@@ -166,9 +170,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
       }
     );
 
-    this.checkPermisos();
-    this.checkAccesoFichaActuacion();
-    this.checkAccesoEJG();
   }
 
   getParams(param){
