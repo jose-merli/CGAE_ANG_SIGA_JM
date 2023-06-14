@@ -19,6 +19,7 @@ import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsiste
 import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { BuscadorAsistenciasComponent } from './buscador-asistencias/buscador-asistencias.component';
 import { ResultadoAsistenciasComponent } from '../resultado-asistencias/resultado-asistencias.component';
+import { ColegiadosSJCSItem } from '../../../../../models/ColegiadosSJCSItem';
 
 @Component({
   selector: 'app-asistencia-expres',
@@ -129,6 +130,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     if(sessionStorage.getItem("filtroAsistenciaExpresBusqueda") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "b"){
       this.searchExpres = true;
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistenciaExpresBusqueda"));
+      let oldIdPersona: ColegiadosSJCSItem = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       this.filtrosAE.filtro.diaGuardia = oldFiltro.diaGuardia;
       this.filtrosAE.getTurnosByColegiadoFecha();
       this.filtrosAE.filtro.idTurno = oldFiltro.idTurno;
@@ -136,7 +138,8 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.filtrosAE.filtro.idGuardia = oldFiltro.idGuardia;
       this.filtrosAE.onChangeGuardia();
       this.filtrosAE.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
-      this.filtrosAE.filtro.idPersona = oldFiltro.idPersona;
+      this.filtrosAE.filtro.idPersona = oldIdPersona.idPersona;
+      this.filtrosAE.filtro.idLetradoManual = oldIdPersona.nColegiado;
       this.filtrosAE.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
       this.filtrosAE.getComboRefuerzoSustitucion();
       this.filtrosAE.filtro.isSustituto = oldFiltro.isSustituto;

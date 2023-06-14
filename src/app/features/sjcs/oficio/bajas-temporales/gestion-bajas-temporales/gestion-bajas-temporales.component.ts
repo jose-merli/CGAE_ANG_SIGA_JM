@@ -75,6 +75,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   historico: boolean = false;
   isLetrado: boolean = false;
   isDisabled: boolean = true;
+  rowGroupsActualizar: Row[] = [];
 
   resaltadoDatos: boolean = false;
 
@@ -226,7 +227,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   validaCheck(texto) {
     return texto === 'Si';
   }
-  selectRow(rowId) {
+  selectRow(rowId, row) {
     if (this.selectedArray.includes(rowId)) {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
@@ -241,7 +242,29 @@ export class GestionBajasTemporalesComponent implements OnInit {
     } else {
       this.anySelected.emit(false);
     }
+
+    this.addCellChange(row);
   }
+
+  addCellChange(row: Row){
+    let repetida = false;
+    //Si es el primero lo añadimos directamente
+    if(this.rowGroupsActualizar.length == 0){
+      this.rowGroupsActualizar[0] = row;
+      repetida = true;
+    } else{
+      //Recorremos el array de filas, si hay coincidencia ignoramos, si no esta la insertamos
+      for(let i = 0; i <= this.rowGroupsActualizar.length; i  ++ ){
+        if(this.rowGroupsActualizar[i] == row){
+          repetida = true;
+        }
+      }
+    }
+    if(!repetida){
+      this.rowGroupsActualizar[this.rowGroupsActualizar.length] = row;
+    }
+  }
+
   isSelected(id) {
     if (this.selectedArray.includes(id)) {
       return true;
@@ -559,13 +582,13 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
   checkGuardar() {
     this.onlyCheckDatos();
-    if (this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" &&
-      this.rowGroups[0].cells[4].value != "" && (this.rowGroups[0].cells[5].value != null && this.rowGroups[0].cells[5].value[0] != "")) {
-        this.modDatos.emit(this.rowGroups);
+    if (this.rowGroupsActualizar[0].cells[2].value != "" && this.rowGroupsActualizar[0].cells[3].value != "" &&
+      this.rowGroupsActualizar[0].cells[4].value != "" && (this.rowGroupsActualizar[0].cells[5].value != null && this.rowGroupsActualizar[0].cells[5].value[0] != "")) {
+        this.modDatos.emit(this.rowGroupsActualizar);
     } else {
       this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.camposObligatorios") });
     }
-    this.totalRegistros = this.rowGroups.length;
+    this.totalRegistros = this.rowGroupsActualizar.length;
   }
 
   checkDenegar() {
