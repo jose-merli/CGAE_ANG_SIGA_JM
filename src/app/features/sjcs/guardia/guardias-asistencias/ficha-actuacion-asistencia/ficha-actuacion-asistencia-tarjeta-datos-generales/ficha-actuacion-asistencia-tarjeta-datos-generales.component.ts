@@ -365,6 +365,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboComisaria);
+        this.commonServices.arregloTildesContrariaCombo(this.comboComisaria);
       }
     );
 
@@ -381,6 +382,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboJuzgado);
+        this.commonServices.arregloTildesContrariaCombo(this.comboJuzgado);
       }
     );
 
@@ -397,6 +399,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         this.progressSpinner = false;
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboPrision);
+        this.commonServices.arregloTildesContrariaCombo(this.comboPrision);
       }
     );
 
