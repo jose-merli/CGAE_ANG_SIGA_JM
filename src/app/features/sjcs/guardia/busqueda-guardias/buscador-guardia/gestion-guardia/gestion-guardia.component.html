@@ -15,10 +15,10 @@
 
     <app-datos-conf-cola [openFicha]="openConfigCola" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaConfigCola]="tarjetaConfigCola" *ngIf="permisoEscrituraConfCola != undefined" [permisoEscritura]="permisoEscrituraConfCola" [modoEdicion]="modoEdicion"
       (modoEdicionSend)="modoEdicionSend($event)" (actualizaBotonConfCola)="getConfColaGuardiasPadre($event)" [modoVinculado]="modoVinculado"></app-datos-conf-cola>
-
+    <!--
     <app-datos-cola-guardia [openFicha]="openCola" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColaGuardia]="tarjetaColaGuardia" *ngIf="permisoEscrituraColaGuardia != undefined" [permisoEscritura]="permisoEscrituraColaGuardia"
       [modoEdicion]="modoEdicion" [modoVinculado]="modoVinculado" [dataConfColaGuardiaPadre]="configuracionOrdenacionColaGuardias"></app-datos-cola-guardia>
-
+    -->
     <app-datos-incompatibilidades [openFicha]="openIncompatibilidades" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaIncompatibilidades]="tarjetaIncompatibilidades" *ngIf="permisoEscrituraIncomp != undefined" [modoEdicion]="modoEdicion" [modoVinculado]="modoVinculado"></app-datos-incompatibilidades>
 
     <app-datos-baremos (opened)="manuallyOpened = $event" [openFicha]="openBaremos" (idOpened)="isCloseReceive($event)" [tarjetaBaremos]="tarjetaBaremos" *ngIf="permisoEscrituraBaremos != undefined" [modoEdicion]="modoEdicion" [modoVinculado]="modoVinculado"></app-datos-baremos>
