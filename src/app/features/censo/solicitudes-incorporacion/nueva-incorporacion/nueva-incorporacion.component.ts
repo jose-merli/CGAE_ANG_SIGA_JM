@@ -2086,7 +2086,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       sessionStorage.setItem("filtrosSolicitudesIncorporacion", JSON.stringify(filtros));
     }
 
-    this.location.back();
+    this.router.navigate(["/solicitudesIncorporacion"]);
   }
 
   // irAlterMutua() {
