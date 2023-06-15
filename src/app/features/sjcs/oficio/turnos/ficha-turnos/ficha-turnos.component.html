@@ -16,7 +16,9 @@
     <app-configuracion-colaoficio (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaConfiguracionColaOficio]="tarjetaConfiguracionColaOficio" [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'configuracioncolaoficio'" [openConfigColaOficio]="openConfigColaOficio"></app-configuracion-colaoficio>
     <app-tarjeta-colaoficio (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColaOficio]="tarjetaColaOficio" [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'tablacolaoficio'" [openColaOficio]="openColaOficio"></app-tarjeta-colaoficio>
     <app-tarjeta-guardias (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaGuardias]="tarjetaGuardias" [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'tarjetaguardias'" [openGuardias]="openGuardias"></app-tarjeta-guardias>
-    <app-tarjeta-colaguardias (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColaGuardias]="tarjetaColaGuardias" [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'tablacolaguardias'" [openColaGuardias]="openColaGuardias"></app-tarjeta-colaguardias>
+    <span  *ngIf="permisoTarjetaColaGuardias != undefined">
+      <app-tarjeta-colaguardias (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColaGuardias]="tarjetaColaGuardias" [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'tablacolaguardias'" [openColaGuardias]="openColaGuardias"></app-tarjeta-colaguardias>
+    </span>
     <app-tarjeta-inscripciones (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaInscripciones]="tarjetaInscripciones" [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'tarjetainscripciones'"></app-tarjeta-inscripciones>
   </div>
 </div>

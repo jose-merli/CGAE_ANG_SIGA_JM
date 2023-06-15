@@ -51,6 +51,7 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	tarjetaInscripciones: string;
 	newTurno: boolean = true;
 	origenGuarColeg:boolean;
+	permisoTarjetaColaGuardias:boolean;
 
 	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private router : Router) { }
 
@@ -62,6 +63,12 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	async ngOnInit() {
 		//this.progressSpinner = true;
 		this.datosTarjetaResumen = [];
+		//Comprueba el permiso para 
+		this.commonsService.checkAcceso(procesos_oficio.tarjetaColaGuardiaTurnos)
+		.then(respuesta => {
+			this.permisoTarjetaColaGuardias=respuesta;
+		});
+		//Comprueba el permiso 92M
 		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
 		.then(respuesta => {
 		  this.permisosTarjetaResumen = respuesta;
