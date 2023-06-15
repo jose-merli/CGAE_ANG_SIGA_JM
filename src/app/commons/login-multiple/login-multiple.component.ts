@@ -52,7 +52,7 @@ export class LoginMultipleComponent implements OnInit {
 		//     this.ocultar = true;
 		//   },
 		//   error => {
-		//     console.log("ERROR", error);
+		//     //console.log("ERROR", error);
 		//     if (error.status == 403) {
 		//       let codError = error.status;
 
@@ -139,7 +139,7 @@ export class LoginMultipleComponent implements OnInit {
 				}
 			},
 			(error) => {
-				console.log('ERROR', error);
+				//console.log('ERROR', error);
 				if (error.status == 403) {
 					let codError = error.status;
 

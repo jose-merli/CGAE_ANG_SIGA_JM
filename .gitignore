@@ -1160,3 +1160,5 @@ src/app/_services/authentication.service.ts
 .scannerwork/sonarts-bundle/node_modules/.bin/esparse
 .scannerwork/report-task.txt
 .scannerwork/.sonar_lock
+.scannerwork/
+.vscode/tasks.json

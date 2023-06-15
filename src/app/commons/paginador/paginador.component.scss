@@ -1,0 +1,84 @@
+::ng-deep {
+    
+    #paginador {
+
+        .ui-paginator {
+            text-align: right;
+            border: none !important;
+    
+            a {
+                background: none !important;
+                border: none !important;
+            }
+    
+            .ui-paginator-page.ui-state-active {
+                background: none;
+                border: none;
+                color: #8da3c1;
+            }
+        }
+
+    }
+
+}
+.toBottomLeft{
+    position: absolute !important;
+    bottom: 107px !important;
+    left: 25px !important;
+}
+.toBottomRight{
+    position: absolute;
+    bottom: 107px;
+    right: 25px;
+}
+.w90{
+    width: 90%;
+}
+.verticalAlign{
+    display: flex;
+    align-items: center;
+}
+.p-5{
+    padding: 5%;
+}
+.p-13{
+    padding: 13px;
+}
+@media (max-width: 788px) {
+    .toBottomLeft{
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        padding-top: 20px;
+    }
+    .toBottomRight{
+        width: 100% !important;
+        margin-bottom: 7px;
+    }
+  }
+
+  @media (max-width: 378px) {
+    .toBottomLeft{
+        
+        margin-bottom: 20px;
+    }
+    .toBottomRight{
+        width: 100% !important;
+        margin-bottom: 7px;
+    }
+    .paginador1 {
+        display: none !important;
+    }
+  }
+  @media (max-width: 456px) {
+    .paginador1 {
+        display: none !important;
+    }
+}
+
+    @media (max-width: 1880px) {
+        .paginador2 {
+            display: none !important;
+        }
+  }
+  
+  

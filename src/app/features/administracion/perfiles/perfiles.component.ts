@@ -92,7 +92,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         this.usuarios_rol = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     // this.isBuscar();
@@ -182,12 +182,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           this.sigaServices.get("usuarios_rol").subscribe(
             n => { },
             err => {
-              console.log(err);
+              //console.log(err);
             }
           );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           if (sessionStorage.getItem("first") != null) {
@@ -217,7 +217,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       },
       err => {
         this.showFail();
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -240,7 +240,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -278,7 +278,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         this.isBuscar();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -417,7 +417,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         // this.newPerfil.descripcionGrupo = newPerfil.descripcionGrupo;
         this.datos[0].idGrupo = "";
         this.datos[0].descripcionGrupo = "";
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -568,7 +568,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   isEliminar(selectedDatos) {
     this.selectedDatos = [];
     this.numSelected = 0;
-    console.log(selectedDatos);
+    //console.log(selectedDatos);
     this.sigaServices.post("perfiles_delete", selectedDatos).subscribe(
       data => {
         if (selectedDatos == 1) {
@@ -591,7 +591,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.isBuscar();
@@ -660,7 +660,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.table.reset();

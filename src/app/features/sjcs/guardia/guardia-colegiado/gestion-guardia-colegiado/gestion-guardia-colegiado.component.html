@@ -1,0 +1,45 @@
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>
+      {{'menu.justiciaGratuita.GuardiaMenu' | translate}}
+      <i class="fa fa-angle-right"></i>
+      Guardia de Colegiado
+  </div>
+  <div>
+      <!--SIGARNV-2885 INICIO-->
+      <!-- <app-turno-gestion-guardia-colegiado class="pb-50" (turnoColegiado) = "getTurnoColegiado($event)"> -->
+      <app-turno-gestion-guardia-colegiado class="pb-50" >
+      </app-turno-gestion-guardia-colegiado>
+      
+      <app-guardia-gestion-guardia-colegiado class="pb-50" (guardiaColegiado) = "getGuardiaColegiado($event)">
+      </app-guardia-gestion-guardia-colegiado>
+
+      <app-calendario-gestion-guardia-colegiado class="pb-50" >
+      </app-calendario-gestion-guardia-colegiado>
+
+      <!-- <app-colegiado-gestion-guardia-colegiado class="pb-50" (datosColegiado) = "getDatosColegiado($event)"> -->
+      <app-colegiado-gestion-guardia-colegiado class="pb-50" >
+      </app-colegiado-gestion-guardia-colegiado>
+
+      <app-datos-generales-gestion-guardia-colegiado class="pb-50" [modificar] = "modificar">
+      </app-datos-generales-gestion-guardia-colegiado>
+
+      <app-sustituciones-gestion-guardia-colegiado class="pb-50" >
+      </app-sustituciones-gestion-guardia-colegiado>
+
+      <!-- <app-permutas-gestion-guardia-colegiado class="pb-50" [datosSolicitante] = "datosSolicitante"> -->
+      <app-permutas-gestion-guardia-colegiado class="pb-50" [guardiaColegiado] = "guardiaColegiado">
+      </app-permutas-gestion-guardia-colegiado>
+      <!--SIGARNV-2885 FIN-->
+
+ <app-tarjeta-facturacion-generica *ngIf="permisoEscrituraFacturaciones != undefined" [datosEntrada]="guardia" [pantalla]="'GUARDIA'" (guardarDatos)="guardarDatos()">
+    </app-tarjeta-facturacion-generica>
+  </div>
+
+</div>
+<div class="mt-3 text-right main-button" id="down">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+    label="{{ 'general.boton.volver' | translate }}"></button>
+</div>

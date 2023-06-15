@@ -1,0 +1,148 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+
+<div class="card mt-3">
+  <div class="card-body p-0">
+    <p-table id="tablaCompra" #productsTable [value]="listaCompraProductos" [columns]="cols" [(selection)]="selectedRows"
+      selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
+      (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
+      (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+
+            {{ col.header | translate}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+              *ngIf="col.field == 'apellidosNombreAux'" pInputText type="text"
+              (input)="productsTable.filter(getLabelbyFilter($event.target.value), 'apellidosNombreAux', 'contains')" />
+              <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+              *ngIf="col.field != 'apellidosNombreAux'" pInputText type="text"
+              (input)="productsTable.filter($event.target.value, col.field, 'contains')" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+            <div *ngIf="col.field !='fechaSolicitud' && col.field != 'fechaEfectiva'" >
+              <span *ngIf="col.field == 'nSolicitud'" class="enlace" (click)="openTabFicha(rowData)">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTabProducto(rowData)">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'idEstadoSolicitud'">{{estadosCompraObject[rowData[col.field]-1].label}}</span>
+              <span *ngIf="col.field != 'concepto' && col.field != 'idEstadoSolicitud' && col.field != 'importe' && col.field != 'nSolicitud'">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'importe'">{{rowData[col.field]}} €</span>
+              <span *ngIf="col.field == apellidosNombreAux">{{rowData['apellidosNombre']}}</span>
+            </div>
+            <div *ngIf="col.field =='fechaSolicitud' || col.field == 'fechaEfectiva'" >
+              <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">Mostrando registros del {{productsTable.first + 1}} al
+            {{productsTable.first +
+            productsTable.rows}} de un total de {{productsTable.totalRecords}}</label>
+          <div>
+            <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
+              translate }}: {{numSelectedRows}}
+            </label>
+          </div>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="rowsPerPage" [options]="rowsPerPageSelectValues"
+            (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAllRows()" [(ngModel)]="selectAllRows" binary="true"
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+            </p-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+
+    <p-footer>
+      <div class="text-right main-button">
+      <!-- Aprobar -->
+        <button pButton *ngIf="!esColegiado"  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="selectedRows.length == 0"></button>
+      <!-- Denegar/Cancelar -->
+        <button pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.cancel' | translate}}" [disabled]="selectedRows.length == 0"></button>
+      <!-- Anular -->
+        <button pButton  (click)="checkAnularCompra()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.anular' | translate}}" [disabled]="selectedRows.length == 0 || controlAnular()"></button>
+      <!-- Facturar -->
+        <button pButton (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left" 
+          label="{{ 'general.boton.facturar' | translate}}"
+          [disabled]="selectedRows == undefined || selectedRows == null || selectedRows.length <= 0 || selectedRows.length > 1 || esColegiado || !permisoFacturarCompra"></button>
+      <!-- Descargar facturas -->
+         <button pButton  (click)="descargarFacturas()" type="button" icon="fa fa-search" iconPos="left"
+         label="{{ 'facturacion.productos.descargarFacturas' | translate}}" [disabled]="selectedRows.length == 0"></button>
+      <!-- Comunicaciones -->
+          <button pButton  (click)="nofuncional()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'facturacion.consultamorosos.literal.comunicaciones' | translate}}" [disabled]="selectedRows.length > 0"></button>
+      </div>
+    </p-footer>
+
+  </div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="anulPeticion" icon="icon"
+  width="425" #anulPeticion>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="{{ 'messages.si' | translate }}" (click)="anulPeticion.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="{{ 'general.boton.no' | translate }}" (click)="anulPeticion.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<!-- Modal para seleccionar la serie de facturación -->
+<p-dialog width="600" responsive="true" modal="modal" [draggable]="false" resizable="false"
+  [(visible)]="showModalSerieFacturacion">
+  <p-header class="title">
+    <label>{{ 'factPyS.mensaje.modalFac.header' | translate}}</label>
+  </p-header>
+  <div class="form-row">
+    <div class="form-group col-lg-12 col-md-12">
+      <label>{{ 'factPyS.mensaje.modalFac.label' | translate}} (*)</label>
+      <p-dropdown [(ngModel)]='serieFacturacionSeleccionada' class="select-form"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboSeriesFacturacion" [filter]="true"
+        filterBy="label,labelSinTilde" [showClear]="true"
+        [ngClass]="{'camposObligatorios': marcarObligatorio(serieFacturacionSeleccionada)}"></p-dropdown>
+    </div>
+    <div class="form-group col-lg-12 col-md-12">
+      <label>{{ 'factPyS.mensaje.modalFac.mensaje' | translate}}</label>
+    </div>
+    <div class="main-button text-right col-lg-12 col-md-12">
+      <button (click)="checkModalSerieFacturacion()" pButton type="button" icon="fa fa-edit" iconPos="left"
+        label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cerrarModalSerieFacturacion()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{'general.boton.close' | translate}}"></button>
+    </div>
+  </div>
+</p-dialog>
+
+

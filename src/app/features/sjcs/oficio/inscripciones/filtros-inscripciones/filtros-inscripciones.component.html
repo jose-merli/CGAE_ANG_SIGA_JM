@@ -1,0 +1,64 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.TurnosOficio' | translate}}
+    <i class="fa fa-angle-right"></i>{{ 'formacion.fichaCurso.inscripciones.cabecera' | translate}}
+  </p>
+</div>
+<div class="card">
+  <div class="card-body">
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div  class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{'censo.fichaIntegrantes.literal.estado'|translate}}</label>
+          <p-multiSelect class="select-form" [(ngModel)]='filtros.estado' placeholder="Seleccionar" [options]="comboEstados"
+            [filter]="true" [disabled]="disabledestado" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+            defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{'menu.justiciaGratuita.oficio.comboturno'|translate}}</label>
+          <p-multiSelect class="select-form" [(ngModel)]='filtros.idturno' placeholder="Seleccionar" [options]="turnos"
+            [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimit="10" styleClass="widthAll" 
+            defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
+        </div>
+        <div class="form-group col-lg-2 col-md-2">
+          <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
+          </label>
+          <app-fecha [(value)]="filtros.fechadesde" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
+        </div>
+        <div class="form-group col-lg-2 col-md-2">
+          <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
+          </label>
+          <app-fecha [(value)]="filtros.fechahasta" [disabled]="disabledFechaHasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
+        </div>
+        <div class="form-group col-lg-2 col-md-2">
+          <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
+          </label>
+          <app-fecha [(value)]="filtros.afechade" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
+        </div>
+      </div>
+    </div>
+    <p (click)="onHideDatosGenerales()" class="title-module">{{ "justiciaGratuita.justiciables.literal.colegiado" | translate}}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+    <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12">
+          <app-busqueda-colegiado-express [pantalla]="'ejg'" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)"></app-busqueda-colegiado-express>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <button (click)="newInscripcion()" [disabled]="!permisos || disableNuevo" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>

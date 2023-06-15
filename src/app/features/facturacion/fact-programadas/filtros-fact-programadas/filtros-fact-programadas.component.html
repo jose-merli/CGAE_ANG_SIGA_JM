@@ -1,0 +1,158 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{ "menu.facturacion" | translate }}
+    <i class="fa fa-angle-right"></i>{{ 'facturacion.factProgramadas.literal.busqueda' | translate }}
+  </p>
+</div>
+
+<div class="card">
+  <!-- Datos generales -->
+  <div class="card-body">
+    <p class="title-module" (click)="onHideDatosGenerales()">{{ "administracion.catalogos.titulo.datos.generales" | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.serieFactu' | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idSerieFacturacion' placeholder="Seleccionar"
+            [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'menu.productosYServicios.solicitudes.alta' | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.compraSuscripcion' placeholder="Seleccionar"
+            [options]="comboCompraSuscripcion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.cs.desde' | translate }}</label>
+          <app-fecha [(value)]="body.fechaCompraSuscripcionDesde" [maxDate]="body.fechaCompraSuscripcionHasta"
+            (valueChangeSelected)="fillFechaCompraSuscripcionDesde($event)" (valueChangeInput)="fillFechaCompraSuscripcionDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.cs.hasta' | translate }}</label>
+          <app-fecha [(value)]="body.fechaCompraSuscripcionHasta" [minDate]="body.fechaCompraSuscripcionDesde"
+            (valueChangeSelected)="fillFechaCompraSuscripcionHasta($event)" (valueChangeInput)="fillFechaCompraSuscripcionHasta($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.cs.importeDesde' | translate }}</label>
+          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeDesde" maxlength="10" pInputText>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.cs.importeHasta' | translate }}</label>
+          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeHasta" maxlength="10" pInputText>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estados -->
+    <p class="title-module" (click)="onHideEstados()">{{ 'facturacion.factProgramadas.estados' | translate }}
+      <i *ngIf="showEstados" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showEstados" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <div *ngIf="showEstados" class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.estados.fac' | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idEstadoConfirmacion' placeholder="Seleccionar"
+            [options]="comboEstadosFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.estados.pdf' | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idEstadoPDF' placeholder="Seleccionar"
+            [options]="comboEstadosFicheros" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.estados.env' | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idEstadoEnvio' placeholder="Seleccionar"
+            [options]="comboEstadosEnvio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3" *ngIf="controlEmisionFacturasSII">
+          <label>{{ 'facturacion.factProgramadas.estados.tras' | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idEstadoTraspaso' placeholder="Seleccionar"
+            [options]="comboEstadosTraspaso" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fechas -->
+    <p class="title-module" (click)="onHideFechas()">{{ 'facturacion.factProgramadas.fechas' | translate }}
+      <i *ngIf="showFechas" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showFechas" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <div *ngIf="showFechas" class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.fechas.prevGenDesde' | translate }}</label>
+          <app-fecha [(value)]="body.fechaPrevistaGeneracionDesde" [maxDate]="body.fechaPrevistaGeneracionHasta"
+            (valueChangeSelected)="fillFechaPrevistaGeneracionDesde($event)" (valueChangeInput)="fillFechaPrevistaGeneracionDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.fechas.prevGenHasta' | translate }}</label>
+          <app-fecha [(value)]="body.fechaPrevistaGeneracionHasta" [minDate]="body.fechaPrevistaGeneracionDesde"
+            (valueChangeSelected)="fillFechaPrevistaGeneracionHasta($event)" (valueChangeInput)="fillFechaPrevistaGeneracionHasta($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.fechas.prevConDesde' | translate }}</label>
+          <app-fecha [(value)]="body.fechaPrevistaConfirmDesde" [maxDate]="body.fechaPrevistaConfirmHasta"
+            (valueChangeSelected)="fillFechaPrevistaConfirmDesde($event)" (valueChangeInput)="fillFechaPrevistaConfirmDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.fechas.prevConHasta' | translate }}</label>
+          <app-fecha [(value)]="body.fechaPrevistaConfirmHasta" [minDate]="body.fechaPrevistaConfirmDesde"
+            (valueChangeSelected)="fillFechaPrevistaConfirmHasta($event)" (valueChangeInput)="fillFechaPrevistaConfirmHasta($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.fechas.genDesde' | translate }}</label>
+          <app-fecha [(value)]="body.fechaRealGeneracionDesde" [maxDate]="body.fechaRealGeneracionHasta"
+            (valueChangeSelected)="fillFechaRealGeneracionDesde($event)" (valueChangeInput)="fillFechaRealGeneracionDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.fechas.genHasta' | translate }}</label>
+          <app-fecha [(value)]="body.fechaRealGeneracionHasta" [minDate]="body.fechaRealGeneracionDesde"
+            (valueChangeSelected)="fillFechaRealGeneracionHasta($event)" (valueChangeInput)="fillFechaRealGeneracionHasta($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.fechas.conDesde' | translate }}</label>
+          <app-fecha [(value)]="body.fechaConfirmacionDesde" [maxDate]="body.fechaConfirmacionHasta"
+            (valueChangeSelected)="fillFechaConfirmacionDesde($event)" (valueChangeInput)="fillFechaConfirmacionDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.fechas.conHasta' | translate }}</label>
+          <app-fecha [(value)]="body.fechaConfirmacionHasta" [minDate]="body.fechaConfirmacionDesde"
+            (valueChangeSelected)="fillFechaConfirmacionHasta($event)" (valueChangeInput)="fillFechaConfirmacionHasta($event)">
+          </app-fecha>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+        label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="searchFacturaciones()" pButton type="button" icon="fa fa-search" iconPos="left"
+        label="{{'general.boton.search' | translate}}"></button>
+      <button *ngIf="permisoEscritura" (click)="nuevaFacturacion()" pButton type="button"  icon="fa fa-plus"
+        iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

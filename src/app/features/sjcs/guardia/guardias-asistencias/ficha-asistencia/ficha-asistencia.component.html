@@ -1,0 +1,107 @@
+<!-- Alertas -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- Alertas -->
+<div id="fichaAsistenciaGuardia">
+
+    <div>
+        <div id="top"></div>
+        <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+
+        <div class="tarjetaFija" *ngIf="tarjetaFija !== null">
+            <div class="card" style="z-index: 2;">
+                <div class="card-body p-0">
+                    <mat-accordion class="example-headers-align" multi>
+                        <mat-expansion-panel [disabled]="true">
+                            <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
+                                [expandedHeight]="'auto'">
+                                <app-tarjeta [image]="tarjetaFija.imagen" [cardTitle]="tarjetaFija.nombre"
+                                    [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono" [enlaces]="tarjetaFija.enlaces"
+                                    [fixed]="tarjetaFija.fixed" class="w-100" (isOpen)="isOpenReceive($event)">
+                                </app-tarjeta>
+                            </mat-expansion-panel-header>
+                            <ng-template matExpansionPanelContent>
+                            </ng-template>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+
+        </div>
+
+        <div>
+            <div *ngFor="let tarj of listaTarjetas; let i = index;">
+                <div class="card" [id]="tarj.id" *ngIf="tarj.visible != undefined">
+                    <div class="card-body p-0">
+                        <mat-accordion class="example-headers-align" multi>
+                            <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
+                                [disabled]="tarj.fixed || !tarj.detalle" [expanded]="tarj.opened">
+                                <!-- class="h-100" -->
+                                <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                                    <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
+                                        [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
+                                        [fixed]="tarj.fixed" class="w-100" [enlaceCardClosed]="tarj.enlaceCardClosed"
+                                        [datosLetrado]="tarj.letrado" [enlaceCardOpen]="tarj.enlaceCardOpen">
+                                    </app-tarjeta>
+                                </mat-expansion-panel-header>
+                                <ng-template matExpansionPanelContent>
+                                  <div *ngIf="(tarj.id == 'datosgenerales') && tarj.visible != undefined" id="datosgeneralesTemplate">
+                                    <app-ficha-asistencia-tarjeta-datos-generales [asistencia]="asistencia" (refreshDatosGenerales)="refreshDatosGenerales($event);" (eventoAnular)="eventoAnular($event)">
+                                    </app-ficha-asistencia-tarjeta-datos-generales>
+                                  </div>
+                                  <div *ngIf="(tarj.id == 'asistido' ) && tarj.visible != undefined" id="asistidoTemplate">
+                                    <app-ficha-asistencia-tarjeta-asistido [modoLectura]="modoLectura" [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable"
+                                    [idPersonaAsistido]="asistencia.idPersonaJg">
+                                    </app-ficha-asistencia-tarjeta-asistido>
+                                  </div>
+                                  <div *ngIf="(tarj.id == 'contrarios' ) && tarj.visible != undefined" id="contrariosTemplate">
+                                    <app-ficha-asistencia-tarjeta-contrarios [modoLectura]="modoLectura" [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-contrarios>
+                                  </div>
+                                  <div *ngIf="tarj.id == 'defensajuridica' && tarj.visible != undefined" id="defensaJuridicaTemplate">
+                                    <app-ficha-asistencia-tarjeta-defensa-juridica [modoLectura]="modoLectura" [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-defensa-juridica>
+                                  </div>
+                                  <div *ngIf="(tarj.id == 'observaciones' ) && tarj.visible != undefined" id="observacionesTemplate" >
+                                    <app-ficha-asistencia-tarjeta-observaciones [modoLectura]="modoLectura" [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-observaciones>
+                                  </div>
+                                  <div *ngIf="(tarj.id == 'relaciones') && tarj.visible != undefined" id="relacionesTemplate">
+                                    <app-ficha-asistencia-tarjeta-relaciones [modoLectura]="modoLectura" [asistencia] = "asistencia" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-relaciones>
+                                  </div>
+                                  <div *ngIf="(tarj.id == 'documentacion' ) && tarj.visible != undefined" id="documentacionTemplate">
+                                    <app-ficha-asistencia-tarjeta-documentacion [modoLectura]="modoLectura" [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-documentacion>
+                                  </div>
+                                  <div *ngIf="(tarj.id == 'caracteristicas' ) && tarj.visible != undefined" id="caracteristicasTemplate">
+                                      <app-ficha-asistencia-tarjeta-caracteristicas [modoLectura]="modoLectura" [asistencia] = "asistencia" [permisoEscritura]="visibleTarjetaCaract" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                      </app-ficha-asistencia-tarjeta-caracteristicas>
+                                  </div>
+                                  <div *ngIf="(tarj.id == 'actuaciones' ) && tarj.visible != undefined" id="actuacionesTemplate">
+                                    <app-ficha-asistencia-tarjeta-actuaciones [modoLectura]="modoLectura" [asistencia] = "asistencia" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable"></app-ficha-asistencia-tarjeta-actuaciones>
+                                  </div>
+                                </ng-template>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+            </div>
+            <app-tarjeta-facturacion-generica *ngIf="permisoEscrituraFacturaciones != undefined"  [datosEntrada]="{ asistencia: asistencia, isNew: nuevaAsistencia }"
+                [pantalla]="'ASISTENCIA'" (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac"
+                (opened)="openTarjetaFac = $event">
+            </app-tarjeta-facturacion-generica>
+        </div>
+        <div id="down"></div>
+    </div>
+
+</div>
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+<!-- Spinner -->
+<div class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
+</div>

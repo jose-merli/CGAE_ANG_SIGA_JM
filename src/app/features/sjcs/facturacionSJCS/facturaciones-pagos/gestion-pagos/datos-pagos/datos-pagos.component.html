@@ -1,0 +1,152 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div id="facSJCSFichaPagosDatosGen">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!showFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="onHideDatosGenerales()">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="onHideDatosGenerales()">
+            <label class="mr-auto title-ficha">{{ 'general.message.datos.generales' | translate }}
+            </label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate }}: <span>{{
+                body.nombre }}</span>
+            </label>
+            <i *ngIf="!showFicha" class="fa fa-angle-down float-right" (click)="onHideDatosGenerales()"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showFicha" class="header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="onHideDatosGenerales()">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'general.message.datos.generales' | translate }} </label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="showFicha" class="card-body">
+      <div class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-6 col-md-6">
+            <div>
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate }} (*)</label>
+              <p-dropdown class="select-form" filterBy="label,labelSinTilde" [showClear]="true" [filter]="true"
+                placeholder="{{'general.boton.seleccionar' | translate}}"
+                [disabled]='isPagoEjecutado() || isPagoEjecutando() || isPagoCerrado() || !permisos || modoEdicion'
+                [(ngModel)]='body.idFacturacion' [options]="facturaciones"
+                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.idFacturacion)}"></p-dropdown>
+            </div>
+            <div style="margin-top: 1em; margin-bottom: 1em;">
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate }} (*)</label>
+              <input pInputText class="form-control" type="text" maxlength="100" name="nombre"
+                [(disabled)]='isPagoEjecutado() || isPagoEjecutando() || isPagoCerrado() || !permisos' [(ngModel)]='body.nombre'
+                [ngClass]="{'camposObligatorios': marcarObligatorio('input', body.nombre)}"
+                (blur)="body.abreviatura = body.nombre.slice(0, 36)" />
+            </div>
+            <div>
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombreAbonoBanco' | translate }}
+                (*)</label>
+              <input pInputText class="form-control" type="text" maxlength="36" name="Banco"
+                [(disabled)]='isPagoEjecutado() || isPagoEjecutando() || isPagoCerrado() || !permisos' [(ngModel)]='body.abreviatura'
+                [ngClass]="{'camposObligatorios': marcarObligatorio('input', body.abreviatura)}" />
+            </div>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <p-table [value]="histEstados" [columns]="cols" [responsive]="true" #tabla class="tabla-listado"
+              [paginator]="true" [rows]="selectedItem" paginatorPosition="both">
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of cols">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate}}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                  <td class="text-center" *ngFor="let col of columns">
+                    <div *ngIf="col.field == 'fechaEstado'">
+                      <label>{{ dato[col.field] | date: 'dd/MM/yyyy H:mm'}}</label>
+                    </div>
+                    <div *ngIf="col.field != 'fechaEstado'">
+                      <span>{{dato[col.field]}}</span>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al
+                    {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
+                </div>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="showFicha">
+      <div class="text-right main-button">
+        <button *ngIf="idEstadoPago == '10'" pButton type="button" iconPos="left" icon="fa fa-play-circle"
+          [disabled]="disabledSimularPago() || !permisos || editingConceptos"
+          label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}" (click)="simularPago()"></button>
+        <button *ngIf="idEstadoPago != '30'" pButton type="button" iconPos="left" icon="fa fa-play"
+          [disabled]="disabledEjecutar() || !permisos || editingConceptos"
+          label="{{ 'general.boton.ejecutar' | translate }}" (click)="ejecutar()"></button>
+        <button *ngIf="idEstadoPago == '20'" pButton type="button" iconPos="left" icon="fa fa-close"
+          [disabled]="disabledCerrar() || !permisos || editingConceptos"
+          label="{{ 'facturacionSJCS.facturacionesYPagos.cerrarAbonar' | translate }}" (click)="cerrar()"></button>
+        <button *ngIf="idEstadoPago == '30'" pButton type="button" iconPos="left" icon="fa fa-lock-open"
+          [disabled]='disabledDeshacerCierre() || !permisos'
+          label="{{ 'facturacionSJCS.facturacionesYPagos.deshacerCierre' | translate }}"
+          (click)="confirmDeshacerCierre()"></button>
+        <button pButton type="button" iconPos="left" icon="fa fa-send" disabled
+          label="{{ 'general.boton.comunicar' | translate }}"></button>
+        <button pButton type="button" iconPos="left" icon="fa fa-undo" [disabled]="disabledRestablecer() || !permisos"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+        <button pButton type="button" iconPos="left" icon="fa fa-save" [disabled]="disabledSave() || !permisos"
+          label="{{ 'general.boton.guardar' | translate }}" (click)="guardar()"></button>
+        <button *ngIf="isVisibleDelete()" [disabled]="disabledDelete() || !permisos" pButton type="button"
+          iconPos="left" icon="fa fa-trash-alt" label="{{ 'general.boton.borrar' | translate }}"
+          (click)="deletePago()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
+  key="cdCompensacionFac" #cdCompensacionFac>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdCompensacionFac.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cdCompensacionFac.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
+  key="cdDeshacerCierre" #cdDeshacerCierre>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdDeshacerCierre.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cdDeshacerCierre.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

@@ -1,1 +1,24 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<!-- <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan> -->
+<div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="card">
+    <app-filtro-designaciones (permisosFichaAct)="getpermisosFichaAct($event)" (isColegDesig)="esColegiadoDesig($event)" (isColegJE)="esColegiadoJE($event)"
+    (busquedaJustificacionExpres)="busquedaJustificacionExpres()"
+    (busqueda)="busquedaDesignaciones($event)" (showTablaDesigna)="showTablaDesigna($event)"
+    (showTablaJustificacionExpres)="showTablaJustificacionExpres($event)" (checkRestriccionesasLetrado)="checkRestriccionesasLetrado($event)" [usuarioBusquedaExpressFromFicha]="usuarioBusquedaExpressFromFicha"></app-filtro-designaciones>
+
+</div>
+
+<div>
+    <app-gestion-designaciones *ngIf="muestraTablaDesignas" [datos]="datos" id="tablaFoco" (busqueda)="busquedaDesignaciones($event)"></app-gestion-designaciones>
+</div>
+
+<div>
+    <app-tabla-justificacion-expres *ngIf="muestraTablaJustificacion" [datosJustificacion]="datosJustificacion" [isLetrado]="isLetrado" [permisosFichaAct]="permisosFichaAct" [queryImprimir]="queryImprimir"
+        id="tablaFoco" (actuacionesToDleteArrEmit)="actuacionesToDleteArr($event)" (newActuacionItemEmit)="newActuacionItem($event)" (dataToUpdateArrEmit)="dataToUpdateArr($event)" ></app-tabla-justificacion-expres>
+
+</div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

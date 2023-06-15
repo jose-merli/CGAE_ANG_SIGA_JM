@@ -40,7 +40,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
   selectedDatosCertificados;
   @Input() tarjetaInteres: string;
   tarjetaInteresNum: string;
-
+  @Input() datosColegiado = new FichaColegialGeneralesItem();
   selectedItemColegiaciones: number = 10;
   tarjetaOtrasColegiaciones: string;
   datosColegiaciones: any[] = [];
@@ -61,6 +61,8 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
 
   @Input() esColegiado: boolean = null;
 
+  isLetrado:boolean = false;
+
 
   constructor(private sigaServices: SigaServices,
     private authenticationService: AuthenticationService,
@@ -68,6 +70,11 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     private router: Router) { }
 
   ngOnInit() {
+
+    if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
+
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -165,5 +172,98 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     this.router.navigate(["/turnoOficioCenso"]);
   }
 
- 
+  turnoInscrito(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/inscripciones"]);
+  }
+  designas(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/designaciones"]);
+  }
+  bajasTemporales(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/bajasTemporales"]);
+  }
+
+  comprasProductos(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("abogado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("fromFichaCen","true");
+    this.router.navigate(["/compraProductos"]);
+  }
+
+  cuotasSuscripciones(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("abogado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("fromFichaCen","true");
+    this.router.navigate(["/cuotasSuscripciones"]);
+  }
+
+  monederos(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("abogado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("fromFichaCen","true");
+    this.router.navigate(["/busquedaMonedero"]);
+  }
+
+  inscripcionesGuardia(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/inscripcionesGuardia"]);
+  }
+  guardiasColegiado(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/guardiasColegiado"]);
+  }
+  asistencias(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/guardiasAsistencias"]); //, { queryParams: { searchMode: 'a' } }
+  }
+  preAsistencia(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/guardiasSolicitudesCentralita"]);
+  }
+  facturas(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/facturas"]);
+  }
+  abonosSJCS(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/abonosSJCS"]);
+  }
+
 }

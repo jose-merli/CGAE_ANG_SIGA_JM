@@ -1,0 +1,99 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <br>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-9 col-md-9">
+
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{'censo.resultadosSolicitudesModificacion.literal.nColegiado' | translate}} (*)
+              </label>
+              <input [(ngModel)]="body.nColegiado" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="20" pInputText>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
+              </label>
+              <input [(ngModel)]="body.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+                pInputText>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"censo.busquedaClientes.literal.apellido1" | translate}} (*)
+              </label>
+              <input [(ngModel)]="body.apellido1" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="100"
+                pInputText>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"censo.busquedaClientes.literal.apellido2" | translate}}
+              </label>
+              <input type="text" class="form-control" [maxLength]="100" [(ngModel)]="body.apellido2" [disabled]="historico || !permisoEscritura"
+                pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idColProcurador' [filter]="true" filterBy="label,labelSinTilde" [disabled]="historico || !permisoEscritura"
+                [options]="comboColegios" [emptyFilterMessage]="resultadosPoblaciones" id="dropdown" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [showClear]="true">
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+
+        <div class="bloque col-lg-3 col-md-3">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio' | translate }}</label>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"administracion.parametrosGenerales.literal.codigo" | translate}}
+              </label>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="10" [(ngModel)]="body.codigoExt"
+                pInputText>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+    </div>
+  </div>
+</div>

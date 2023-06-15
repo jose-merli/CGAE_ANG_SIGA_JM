@@ -1,1 +1,28 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<!--<app-my-iframe url="{{ url }}"></app-my-iframe>-->
+
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.GuardiaMenu' | translate }}
+      <!--<i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.guardia.calendarios' | translate}}-->
+      <i class="fa fa-angle-right"></i>Calendarios Programados
+    </p>
+  </div>
+
+  <div class="busqueda-container" >
+    <app-filtros-guardia-calendarios  [permisoTotal]="permisoTotal" (isOpen)="isOpenReceive($event)" (filtrosValues)="getFiltrosValues($event)"></app-filtros-guardia-calendarios>
+    <app-tabla-resultado-mix *ngIf="buscar" [permisoTotal]="permisoTotal" [dataToDuplicate] = "dataToDuplicate" [calendarios] ="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
+    [cabeceras]="cabeceras" [incompatibilidades]="incompatibilidades" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardiasIncompatibles]="comboGuardiasIncompatibles" [filtrosValues]="filtrosValues"
+    (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (save)="save($event)"  (delete)="delete($event)" (deleteFromCombo)="deleteFromCombo($event)" (descargaLOG)="descargaLOG($event)"></app-tabla-resultado-mix>
+  </div>
+
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
+
+  <!-- PRIMERA CONFIRMACIÓN -->
+<p-confirmDialog key="first" header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
+
+

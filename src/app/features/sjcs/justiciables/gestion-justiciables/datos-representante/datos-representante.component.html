@@ -1,0 +1,170 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container" id="DivRepresentantes">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-gavel icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'justiciaGratuita.justiciables.rol.representante' | translate }}</label>
+        <div class="d-flex justify-content-start mb-1 ml-auto">
+          <label *ngIf="showEnlaceRepresentante" class="mr-3">
+            <i (click)="navigateToRepresentante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+            <a (click)="navigateToRepresentante();$event.stopPropagation();">
+              <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
+              </span>
+            </a>
+          </label>
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <div *ngIf="!showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-gavel icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.justiciables.rol.representante' | translate }}
+            </label>
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <label>NIF:
+                <span>{{ generalBody.nif }}</span>
+              </label>
+            </div>
+            <div class="col-5">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
+                <span>{{ generalBody.nombre }} {{ generalBody.apellidos }}</span>
+              </label>
+
+            </div>
+            <div *ngIf="!showEnlaceRepresentante" class="col-3"></div>
+            <div *ngIf="showEnlaceRepresentante" class="col-3">
+              <label *ngIf="!navigateToJusticiable">
+                <i (click)="navigateToRepresentante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+                <a (click)="navigateToRepresentante();$event.stopPropagation();">
+                  <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
+                  </span>
+                </a>
+              </label>
+              <label *ngIf="navigateToJusticiable">
+                <i class="fas fa-external-link-alt mr-2"></i>
+                <span style="color: gray; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
+                </span>
+              </label>
+            </div>
+            <div class="col-2">
+              <i class="fa fa-angle-down float-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-2 col-md-2 col-sm-2 p-2">
+          <div class="positionUpload img-colegiado text-center my-0 mx-auto">
+            <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
+          </div>
+        </div>
+        <div class="bloque col-lg-10 col-md-10 col-sm-10">
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} (*)
+              </label>
+              <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="generalBody.idtipoidentificacion" showClear="true" disabled></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
+              </label>
+              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" maxlength="20" pInputText (ngModelChange)="compruebaDNIInput()"
+                [disabled]="!permisoEscritura" />
+            </div>
+            <div class="form-group col-lg-3 col-md-3 main-button pt-3">
+              <label></label>
+              <button (click)="checkPermisosSearchRepresentanteByNif()" pButton type="button" icon="fa fa-search" iconPos="center" [disabled]="!permisoEscritura"></button>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
+              </label>
+              <input [(ngModel)]="generalBody.apellidos" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+                pInputText/>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+              </label>
+              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+                pInputText />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div [hidden]="!showTarjeta" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton (click)="checkPermisosRest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"
+          [disabled]="!permisoEscritura"></button>
+        <button pButton (click)="checkPermisosDisassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
+          [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
+        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"
+          [disabled]="!permisoEscritura"></button>
+        <button pButton (click)="checkPermisosAssociate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+          [disabled]="!permisoEscritura || disabledSave()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdCreateRepresentante"
+  #cdCreateRepresentante>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdCreateRepresentante.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdRepresentanteDisassociate"
+  #cdRepresentanteDisassociate>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdRepresentanteDisassociate.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="rejectDisassociate()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-dialog [(visible)]="showConfirmacion" responsive="true" [draggable]="false"  resizable="false" width="550">
+  <p-header>
+    <label>{{'general.gestionJusticiables.confirmacion' | translate}}</label>
+  </p-header>
+  <div class="row">
+    <div class="form-group col-lg-8 col-md-8">
+      <label>{{'general.gestionJusticiables.textoConfirmacionUp' | translate}}</label>
+    </div>
+  </div>
+  <div class="field-radiobutton">
+    <p-radioButton class="radio-style"  name="sustituir" value="s" label="{{'general.gestionJusticiables.confirmacionSustituir' | translate}}" [(ngModel)]='guardaOpcion'></p-radioButton>
+  </div>
+
+  <div class="field-radiobutton">
+    <p-radioButton class="radio-style" name="nuevo" value="n" label="{{'general.gestionJusticiables.confirmacionNuevo' | translate}}" [(ngModel)]='guardaOpcion'></p-radioButton>
+  </div>
+
+  <label>{{'general.gestionJusticiables.textoConfirmacionDown' | translate}}</label>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="guardar()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
+      <button (click)="cancelar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>

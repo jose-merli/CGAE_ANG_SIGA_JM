@@ -1,0 +1,76 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="sjcsDesigDoc">
+
+<div class="padding-interior w-100" id="paginador">
+  <app-paginador2 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)"
+    (toReg)="toReg($event)" [totalRegistros]="totalRegistros" [deseleccionarTodo]="deseleccionarTodo"
+    (deseleccionarTodoEvent)="deseleccionarTodoFuntion($event)"></app-paginador2>
+</div>
+
+<div class="table" matSort (matSortChange)="sortData($event)" #table>
+  <div class="table-header">
+    <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader
+      [style.minWidth]="cabecera.width">
+      <div>
+        <div [mat-sort-header]=cabecera.id>{{cabecera.name}}</div>
+        <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]" (ngModelChange)="searchChange(j)"
+          autocomplete="off" placeholder="Buscar">
+      </div>
+    </div>
+  </div>
+  <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
+    <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
+      [ngClass]="{'hoverBlue2': isSelected(row['id'])}" #rowSelected>
+      <div *ngFor="let cell of row['cells'] | slice:0:5" class="table-cell p-2 selectedRowClass"
+        [ngClass]="{'borders-child': isPar(i), 'text-left': emptyResults}" #cellSelected
+        [style.minWidth]="getTamanioColumn(cell)">
+        <div class="cell-wrapper selectedRowClass w-100">
+
+          <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span>
+
+          <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
+            <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
+              [options]="cell.combo" showClear="true" styleClass="widthAll" [disabled]="cell.disabled"
+              (onChange)="changeSelect(row, cell)">
+            </p-dropdown>
+          </span>
+
+          <span class="w100 cell-value" *ngIf="cell.type == 'textarea'">
+            <textarea pInputTextarea [(ngModel)]="cell.value" class="form-control"></textarea>
+          </span>
+
+          <span class="w100 cell-value" *ngIf="cell.type == 'empty'">
+            {{cell.value}}
+          </span>
+
+          <span class="w100 cell-value" *ngIf="cell.type == 'fichero'">
+            <p-fileUpload #pUploadFile name="file" mode="basic" accept=".doc,.docx,.pdf,.jpg,.png,.rtf,.txt"
+              chooseLabel="{{ 'general.boton.adjuntarFichero' | translate }}" class="edit my-0 mx-auto main-button"
+              auto="true" (onSelect)="getFile(cell, pUploadFile, $event)"></p-fileUpload>
+          </span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="padding-interior paginador-bottom"></div>
+
+<div class="card-footer" #footer>
+  <div class="text-right main-button butBottom">
+
+    <button pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"
+      [disabled]="selectedArray.length == 0 || modoLectura" (click)="eliminarArchivos()"></button>
+    <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.download' | translate}}"
+      [disabled]="selectedArray.length == 0 || modoLectura" (click)="descargarArchivos()"></button>
+    <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
+      (click)="nuevo()" [disabled]="modoLectura"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+      (click)="guardar()" [disabled]="modoLectura"></button>
+  </div>
+</div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

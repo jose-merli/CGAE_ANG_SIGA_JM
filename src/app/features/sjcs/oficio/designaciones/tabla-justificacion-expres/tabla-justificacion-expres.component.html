@@ -1,0 +1,43 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card mt-3">
+    <div *ngIf="!progressSpinner" class="card-body p-0">
+        <app-tabla-resultado-desplegable *ngIf="dataReady" [fechaFiltro]="fechaFiltro"
+            [permisosFichaAct]="permisosFichaAct" [isLetrado]="isLetrado" (dataToUpdate)="getDataToUpdate($event)"
+            (actuacionesToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)"
+            [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras"
+            [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos"
+            [comboJuzgados]="comboJuzgados" [permisosEJG]="permisosEJG"
+            [comboAcreditacion]="comboAcreditacionesPorModulo" (refreshData)="getrefreshData($event)"
+            (cargaAllModulos)="cargaAllModulos($event)" (cargaModulosPorJuzgado2)="cargaModulosPorJuzgado($event)"
+            (cargaAcreditacionesPorModulo2)="cargaAcreditacionesPorModulo($event)"
+            (numActuacionesModificadas)="setNumActuacionesModificadas($event)"
+            (numDesignasModificadas)="setnumDesignasModificadas($event)" [queryImprimir]="queryImprimir"
+            (totalActuaciones)="settotalActuaciones($event)"></app-tabla-resultado-desplegable>
+
+
+    </div>
+
+    <div class="card-footer">
+        <div class="row inline ajustar">
+            <div class="left col-lg-6 col-md-3">
+                <span>Cambio Designas {{numDesignasModificadas}}/{{totalDesignas}}</span>
+                <span class="ml-3">Cambio Actuaciones {{numActuacionesModificadas}}/{{totalActuaciones}}</span>
+            </div>
+        </div>
+        <br />
+        <div class="row inline">
+            <div class="col-lg-2 col-md-2">
+                <div class="form-inline">
+                    <label class="mr-3 textoAlineado form-group">Fecha Justificación</label>
+                    <app-fecha [(value)]='fechaFiltro' [utc]="false" (valueChangeSelected)="fillFechaFiltro($event)" [disabled]="isLetrado"
+                        (valueChangeInput)="fillFechaFiltro($event)"></app-fecha>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

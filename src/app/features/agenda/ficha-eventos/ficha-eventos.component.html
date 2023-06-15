@@ -75,6 +75,8 @@
           </div>
           <div class="row mb-3">
             <div class="col-lg-6 col-md-6">
+              <!-- <input *ngIf="!isInstitucionGeneral" type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title"
+                [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || (!isFiestaLocal && !isInstitucionGeneral) || selectedTipoLaboral || isFiestaAutonomica"> -->
               <label>{{'agenda.fichaEventos.datosGenerales.titulo' | translate}} (*)</label>
               <input [ngClass]="styleObligatorio('', newEvent.title)" type="text" class="form-control" pInputText name="titulo" (ngModelChange)="onlyCheckDatos()" [(ngModel)]="newEvent.title" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
             </div>

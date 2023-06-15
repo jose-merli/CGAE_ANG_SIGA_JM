@@ -7,13 +7,14 @@ import { esCalendar } from './../../../utils/calendar';
 import { ConsultaConsultasItem } from '../../../models/ConsultaConsultasItem';
 import { CampoDinamicoItem } from '../../../models/CampoDinamicoItem';
 import { saveAs } from 'file-saver/FileSaver';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { typeSourceSpan } from '@angular/compiler';
 import { DataTable } from 'primeng/datatable';
 import { Observable } from 'rxjs/Observable';
 import { truncate } from 'fs';
 import { findIndex } from 'rxjs/operators';
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
 	selector: 'app-dialogo-comunicaciones',
@@ -24,6 +25,7 @@ import { findIndex } from 'rxjs/operators';
 export class DialogoComunicacionesComponent implements OnInit {
 	msgs: any;
 	msgsDescarga: any;
+	msgsEnvio: any;
 	msgsDescargaFinalizada: any;
 	selectedItem: number = 10;
 	//Diálogo de comunicación
@@ -64,9 +66,12 @@ export class DialogoComunicacionesComponent implements OnInit {
 	selectedModelosSend: any = [];
 	selectAll: boolean = false;
 	@ViewChild('table') tableModelos: DataTable;
+	sentenciaImprimir: any;
 
 	constructor(
 		public sigaServices: SigaServices,
+		private datepipe: DatePipe,
+		public sigaCommons : CommonsService,
 		private translateService: TranslateService,
 		private location: Location
 	) { }
@@ -79,6 +84,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 
         if (sessionStorage.getItem('descargasPendientes') == undefined) {
             sessionStorage.setItem('descargasPendientes', '0');
+        }
+
+		if (sessionStorage.getItem('queryImprimir') != undefined) {
+            this.sentenciaImprimir = JSON.parse(sessionStorage.getItem('queryImprimir'));
+			sessionStorage.removeItem('queryImprimir');
         }
 
 		this.progressSpinner = true;
@@ -351,6 +361,37 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	enviarComunicacion() {
 		//this.progressSpinner = true;
+		
+		if (this.listaConsultas != null) {
+			for (let i = 0; this.listaConsultas.length > i; i++) {
+
+				if (this.listaConsultas[i].camposDinamicos != null) {
+					for (let j = 0; this.listaConsultas[i].camposDinamicos.length > j; j++) {
+
+						let find = this.valores.find((x) => x.campo == this.listaConsultas[i].camposDinamicos[j].campo);
+						if (find != undefined) {
+
+							if (find.valor != null && typeof find.valor == 'object') {
+								if (find.valor.ID != null && find.valor.ID != undefined) {
+									this.listaConsultas[i].camposDinamicos[j].valor = find.valor.ID;
+								}else{
+									if(find.valor instanceof  Date){
+										this.listaConsultas[i].camposDinamicos[j].valor =  this.datepipe.transform(find.valor, 'dd/MM/yyyy');
+									}else {
+									this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+									}
+								}
+							}else{
+								this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+							}
+							
+							this.listaConsultas[i].camposDinamicos[j].operacion = find.operacion;
+						}
+					}
+				}
+
+			}
+		}
 
 		this.valores.forEach((element) => {
 			if (element.valor != null && typeof element.valor == 'object') {
@@ -388,10 +429,13 @@ export class DialogoComunicacionesComponent implements OnInit {
 				ruta: this.rutaComunicacion,
 				fechaProgramada: this.bodyComunicacion.fechaProgramacion
 			};
-
+			this.showInfoPerenneEnv(
+				'Se ha iniciado el envio, puede continuar trabajando.'
+			);
+			this.showValores = false;
 			this.sigaServices.post('dialogo_generarEnvios', datos).subscribe(
 				(data) => {
-					this.showSuccess(
+					this.showSucessPerenneEnv(
 						this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.envio.generado')
 					);
 					this.showValores = false;
@@ -399,11 +443,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 				},
 				(err) => {
 					if (JSON.parse(err.error).description != undefined && JSON.parse(err.error).description != null) {
-						this.showFail(
+						this.showFailPerenneEnv(
 							JSON.parse(err.error).description
 						);
 					} else {
-						this.showFail(
+						this.showFailPerenneEnv(
 							this.translateService.instant(
 								'informesycomunicaciones.comunicaciones.mensaje.envio.error.generar'
 							)
@@ -417,7 +461,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				}
 			);
 		} else {
-			this.showFail(
+			this.showFailPerenneEnv(
 				this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.envio.error.datos')
 			);
 			this.progressSpinner = false;
@@ -499,7 +543,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 								if (find.valor.ID != null && find.valor.ID != undefined) {
 									this.listaConsultas[i].camposDinamicos[j].valor = find.valor.ID;
 								}else{
+									if(find.valor instanceof  Date){
+										this.listaConsultas[i].camposDinamicos[j].valor =  this.datepipe.transform(find.valor, 'dd/MM/yyyy');
+									}else {
 									this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+									}
 								}
 							}else{
 								this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
@@ -524,7 +572,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 			idInstitucion: this.idInstitucion,
 			consultas: this.listaConsultas,
 			comunicar: this.comunicar,
-			ruta: this.rutaComunicacion
+			ruta: this.rutaComunicacion,
+			sentenciaImprimir : this.sentenciaImprimir
 		};
 
 		let descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes'));
@@ -533,92 +582,43 @@ export class DialogoComunicacionesComponent implements OnInit {
         this.showInfoPerenne(
             'Se ha iniciado la descarga, puede continuar trabajando. Descargas Pendientes: ' + descargasPendientes
         );
-        this.showValores = false;
-
 		let filename;
-		this.sigaServices.post('dialogo_nombredoc', datos).subscribe(
-            (data) => {
-                if (data['body'] != '') {
-                    let fileInfo = JSON.parse(data['body']);
-                    if (fileInfo.name != 'ResultadoConsulta.xlsx') {
-						filename = fileInfo.name;
-					} else {
-							if (sessionStorage.getItem('nombreConsulta') != undefined) {
-								filename = sessionStorage.getItem('nombreConsulta');
-								filename += '.xlsx';
-							} else {
-								filename = fileInfo.name;
-							}
-						}
-						
-						this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
-							(data) => {
-								if (data.size != 0) {
-									// let a = JSON.parse(data);
-									const blob = new Blob([data], { type: 'text/csv' });
-
-									if (blob != undefined) {
-										// 	saveAs(blob, data.nombre);
-										// } else {
-										saveAs(blob, filename);
-										this.progressSpinner = false;
-									}
-									descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-									sessionStorage.setItem('descargasPendientes', descargasPendientes);
-									this.showInfoPerenne(
-										'La descarga ha finalizado. Descargas Pendientes: ' + descargasPendientes
-									);
-	
-									this.showValores = false;
-								} else {
-									descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-									sessionStorage.setItem('descargasPendientes', descargasPendientes);
-									this.showValores = false;
-									this.progressSpinner = false;
-									this.clearPerenne();
-									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
-								}
-							},
-							(error) => {
-								console.log(error);
-
-								this.progressSpinner = false;
-								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-								sessionStorage.setItem('descargasPendientes', descargasPendientes);
-								this.clearPerenne();
-								if (error.message != null && error.message != undefined) {
-									this.showFail(error.message);
-								} else {
-									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
-								}
-
-							},
-							() => {
-								this.progressSpinner = false;
-							}
-						);
-					}
-				},
-				(err) => {
-					this.progressSpinner = false;
-					this.showValores = false;
-					console.log(err);
-					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-					sessionStorage.setItem('descargasPendientes', descargasPendientes);
-					this.clearPerenne();
-					let mensaje = this.translateService.instant('informes.error.descargaDocumento');
-					if (err != null && err != undefined && err.error != null && err.error != undefined) {
-						let errDTO = JSON.parse(err.error);
-						if (errDTO.message != null && errDTO.message != undefined) {
-							mensaje = errDTO.message;
+        this.showValores = false;
+		this.sigaServices.post('dialogo_nombredoc', datos).toPromise().then( 
+			(data) => {
+			if (data['body'] != '') {
+				let fileInfo = JSON.parse(data['body']);
+				if (fileInfo.name != 'ResultadoConsulta.xlsx') {
+					filename = fileInfo.name;
+				} else {
+						if (sessionStorage.getItem('nombreConsulta') != undefined) {
+							filename = sessionStorage.getItem('nombreConsulta');
+							filename += '.xlsx';
+						} else {
+							filename = fileInfo.name;
 						}
 					}
-					this.showFail(mensaje);
-			},
-			() => {
-					this.progressSpinner = false;
+					
+					this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo, true, filename);
 				}
-			);
+			},
+			(err) => {
+				this.progressSpinner = false;
+				this.showValores = false;
+				console.log(err);
+				descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+				sessionStorage.setItem('descargasPendientes', descargasPendientes);
+				this.clearPerenne();
+				let mensaje = this.translateService.instant('informes.error.descargaDocumento');
+				if (err != null && err != undefined && err.error != null && err.error != undefined) {
+					let errDTO = JSON.parse(err.error);
+					if (errDTO.messageError != null && errDTO.messageError != undefined) {
+						mensaje = errDTO.messageError;
+					}
+				}
+				this.sigaCommons.showMessage('error','', mensaje)
+				this.showFail(mensaje);
+		});
 
 
 	}
@@ -675,6 +675,21 @@ export class DialogoComunicacionesComponent implements OnInit {
 	showInfo(mensaje: string) {
 		this.msgs = [];
 		this.msgs.push({ severity: 'info', summary: '', detail: mensaje });
+	}
+
+	showInfoPerenneEnv(mensaje: string) {
+		this.msgsEnvio = [];
+		this.msgsEnvio.push({ severity: 'info', summary: '', detail: mensaje });
+	}
+	
+	showSucessPerenneEnv(mensaje: string) {
+		this.msgsEnvio = [];
+		this.msgsEnvio.push({ severity: 'success', summary: '', detail: mensaje });
+	}
+	
+	showFailPerenneEnv(mensaje: string) {
+		this.msgsEnvio = [];
+		this.msgsEnvio.push({ severity: 'error', summary: '', detail: mensaje });
 	}
 
 	showInfoPerenne(mensaje: string) {

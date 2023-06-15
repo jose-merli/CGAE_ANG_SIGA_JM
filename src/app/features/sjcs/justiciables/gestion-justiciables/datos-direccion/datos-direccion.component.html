@@ -1,0 +1,201 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="!showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-map-marker icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{ 'censo.fichaCliente.datosDirecciones.cabecera' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label class="registros-ficha">{{'censo.datosDireccion.literal.fechaModificacion' | translate}}: {{fechaModificacion}}</label>
+            <i [ngClass]="{ 'fa fa-angle-up': showTarjeta, 'fa fa-angle-down': !showTarjeta} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-map-marker icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'censo.fichaCliente.datosDirecciones.cabecera' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="showTarjeta" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-6 col-md-6">
+
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-1 input-ayuda">
+              <label style="font-weight: bold;">{{ 'envios.definir.literal.datosdestino' | translate }}</label>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'censo.datosDireccion.literal.tipo.direccion' | translate }} (*)</label>
+              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idTipodir"
+                [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [options]="comboPais" [disabled]="historyDisable"
+                (onChange)="onChangePais()">
+              </p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>
+                {{"censo.consultaDirecciones.literal.direccion" | translate}}
+              </label>
+              <input [(ngModel)]="body.direccion" type="text" class="form-control" [disabled]="historyDisable" [maxLength]="99" pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"gratuita.busquedaAsistencias.literal.numero" | translate}}
+              </label>
+              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.numeroDir" (ngModelChange)="onChangeCodigoPostal()"
+                pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"gratuita.busquedaAsistencias.literal.escalera" | translate}}
+              </label>
+              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.escaleraDir" (ngModelChange)="onChangeCodigoPostal()"
+                pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"gratuita.personaJG.literal.pisodir" | translate}}
+              </label>
+              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.pisoDir" (ngModelChange)="onChangeCodigoPostal()"
+                pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"gratuita.personaJG.literal.puertadir" | translate}}
+              </label>
+              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.puertaDir" (ngModelChange)="onChangeCodigoPostal()"
+                pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"censo.datosDireccion.literal.pais2" | translate}}
+              </label>
+              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idPais" [showClear]="true"
+                [filter]="true" filterBy="label,labelSinTilde" [options]="comboPais">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"censo.ws.literal.codigopostal" | translate}} (*)
+              </label>
+              <input *ngIf="!poblacionExtranjera" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
+                pInputText>
+              <input *ngIf="poblacionExtranjera" [(ngModel)]="body.codigoPostal" type="text" class="form-control" [maxLength]="5" pInputText>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"censo.datosDireccion.literal.provincia" | translate}}
+              </label>
+              <!--  -->
+              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='provinciaSelecionada'
+                [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" [options]="comboProvincia">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Otra Provincia</label>
+              <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" #provincia [disabled]="" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"censo.consultaDirecciones.literal.poblacion" | translate}}
+              </label>
+              <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form" [(ngModel)]='body.idPoblacion'
+                [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
+                emptyFilterMessage="{{'resultadosPoblaciones' | translate}}">
+              </p-dropdown>
+            </div>
+
+          </div>
+        </div>
+        <!-- DATOS CONTACTO -->
+        <div class="bloque col-lg-6 col-md-6">
+
+          <div class="form-row">
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ 'censo.datosDireccion.literal.datos.contacto' | translate }}</label>
+            </div>
+            <div class="col-lg-12 col-md-12">
+              <!-- tabla -->
+              <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
+                [paginator]="false" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
+                (onRowSelect)="navigateTo(selectedDatos)">
+                <ng-template pTemplate="colgroup" let-columns>
+                  <colgroup>
+                    <col *ngFor="let col of columns" [style.width]="col.width">
+                  </colgroup>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                      {{ col.header | translate }}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                      <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+              col.field, 'contains')">
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                  <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                    <td class="text-center" *ngFor="let col of columns">
+                      <span *ngIf="col.field != 'pathDocumento'"> {{dato[col.field]}}</span>
+                      <span *ngIf="col.field == 'pathDocumento'">
+                        <i class="fa fa-download"></i>
+                      </span>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage" let-columns>
+                  <tr>
+                    <td [attr.colspan]="columns.length">
+                      No hay resultados.
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+
+            </div>
+            <div class="form-group main-button col-lg-12 col-md-12">
+              <button class="botontabla" (click)="newData();" [disabled]="" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+    </div>
+    <div *ngIf="showTarjeta" class="card-footer ">
+      <div class="text-right main-button ">
+        <!-- <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [disabled]="" icon="fa fa-reply-all" iconPos="left"
+          label="{{ 'general.boton.duplicar' | translate}}"></button> -->
+
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <!-- <button *ngIf="isLetrado" (click)="comprobarAuditoria('letrado')" pButton type="button" icon="far fa-save" iconPos="left"
+          [disabled]="" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button> -->
+
+        <!-- <button *ngIf="isLetrado && nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
+              label="{{ 'general.boton.solicitarNuevo' | translate}}"></button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

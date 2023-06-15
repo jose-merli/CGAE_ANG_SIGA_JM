@@ -1,0 +1,67 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<p-dataTable #table [value]="asistencias" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" loadingIcon="fa-spinner"
+class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="multiple" (onRowSelect)="onSelectRow($event.data)"
+(onRowUnselect)="actualizaSeleccionados()">
+  <p-column field="descripcionTurno" header="{{'menu.justiciaGratuita.oficio.comboturno' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+  </p-column>
+  <p-column field="descripcionGuardia" header="{{'justiciaGratuita.justiciables.literal.turnoGuardia' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+  </p-column>
+  <p-column header="{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}} / {{'gratuita.busquedaAsistencias.literal.numero' | translate}}" [style]="{'width': '7%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+    <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
+      <td class="text-center">
+        <div>
+          <a class="enlace" (click)="onClickEnlace(dato)"><span>A{{dato.anio}}/{{dato.numero}}</span></a>
+        </div>
+      </td>
+    </ng-template>
+  </p-column>
+  <p-column field="fechaAsistencia" header="{{'dato.jgr.guardia.saltcomp.fecha' | translate}}" [style]="{'width': '7%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="nombreColegiado" header="{{'busquedaSanciones.detalleSancion.letrado.literal' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="asistido" header="{{'justiciaGratuita.guardia.solicitudescentralita.asistido' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="descripcionEstado" header="{{'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate}}" [style]="{'width': '5%'}"  [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="validada" header="{{'justiciaGratuita.oficio.designas.actuaciones.validada' | translate}}" [style]="{'width': '5%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <ng-template pTemplate="paginatorLeft">
+    <div class="mostrar d-flex text-right justify-content-end">
+        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+            | translate }} {{table.totalRecords}} {{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}} : {{numSeleccionado}}</label>
+        <label>{{ 'general.message.mostrar' | translate}}</label>
+        <p-dropdown [(ngModel)]="rows" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+        <label class="pl-1">{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
+        <div class="ml-3 selectAll">
+          <p-checkbox (onChange)="onChangeSeleccionarTodo()" [(ngModel)]="seleccionarTodo" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+            name="groupname"></p-checkbox>
+        </div>
+        <!--<label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': seleccionMultiple}" (click)="onChangeSeleccionMultiple()">
+          <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>-->
+    </div>
+  </ng-template>
+  <p-footer>
+    <div class="text-right main-button">
+      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.comunicar' | translate}}" (click)="navigateComunicar()"
+      [disabled]="disableDelete"></button>
+      <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
+        (click)="eliminar()" [disabled]="disableDelete"></button>
+      <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.duplicar' | translate}}"
+        (click)="duplicar()" [disabled]="disableDuplicar"></button>
+    </div>
+  </p-footer>
+</p-dataTable>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmEliminar" width="425"
+  #confirmEliminar>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmEliminar.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmEliminar.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmDesvalidar" width="425"
+  #confirmDesvalidar>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmDesvalidar.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmDesvalidar.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

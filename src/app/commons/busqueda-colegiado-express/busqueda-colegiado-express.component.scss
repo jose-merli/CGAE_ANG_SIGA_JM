@@ -1,0 +1,55 @@
+.w100 {
+  width: 100%;
+}
+
+.w50 {
+  width: 50%;
+}
+
+.w20 {
+  width: 20%;
+}
+
+.w30 {
+  width: 30%;
+}
+
+input:disabled {
+  // background-color: gray;
+}
+
+.margin-form-row {
+  margin-left: -8px;
+  margin-right: -10px;
+}
+
+.camposObligatorios{
+  border-color: red !important;
+}
+
+.camposObligatorios > div{
+  border-color: red !important;
+}
+
+
+.camposObligatorios div{
+  border-color: red !important;
+}
+
+.camposObligatorios > input{
+  border-color: red !important;
+}
+
+.camposObligatorios > div .ui-multiselect{
+  border: 1px solid red !important;
+}
+
+.ui-inputtext .camposObligatorios{
+  border: 1px solid red !important;
+}
+
+::ng-deep {
+  .ui-growl-message p{
+    text-align: left;
+  }
+}

@@ -1,1 +1,201 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+        <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.maestros' | translate}}
+        <i class="fa fa-angle-right"></i>{{ 'menu.sjcs.tiposAsistencia' | translate}}
+    </p>
+</div>
+
+<div class="ficha-container">
+    <div class="card">
+        <div class="card-header header-ficha">
+            <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado">
+                    <i class="fas fa-align-left icon-ficha"></i>
+                </div>
+                <label class="title-ficha">{{ 'menu.sjcs.tiposAsistencia' | translate }}</label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+        </div>
+        <!--cuerpo datos generales-->
+        <div class="px-0 card-body card-body-ficha">
+
+            <p-table [value]="datos" [columns]="cols" [selectionMode]="selectionMode" [(selection)]="selectedDatos" [responsive]="true"
+                #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+                [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+                <ng-template pTemplate="colgroup" let-columns>
+                    <colgroup>
+                        <col *ngFor="let col of cols" [style.width]="col.width">
+                    </colgroup>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                            {{ col.header | translate }}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                                type="text" (input)="
+                table.filter($event.target.value, col.field, 'contains')
+              " />
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                    <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+
+                        <td class="text-center" *ngFor="let col of columns">
+
+                            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importeReal'">
+                                {{dato.importe | numberPipe}} €
+                            </span>
+
+                            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importemaximoReal' && col.field !='importeReal'">
+                                {{dato.importemaximo | numberPipe}} €
+                            </span>
+
+                            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importeReal' && col.field !='visiblemovil' 
+                            && col.field != 'importemaximoReal'&& col.field != 'pordefecto'">
+                                {{ dato[col.field] }}
+                            </span>
+
+                            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importeReal'">
+                                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.importe}} €</span>
+                            </div>
+
+                            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importemaximoReal'">
+                                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.importemaximo}} €</span>
+                            </div>
+
+                            <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importeReal' && col.field != 'importemaximoReal' && col.field !='visiblemovil' && col.field != 'pordefecto'">
+                                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                            </div>
+
+                            <span *ngIf="dato.editable && !setItalic(dato) && col.field != 'importeReal'">
+                            </span>
+
+                            <div *ngIf="dato.editable && col.field == 'tiposguardia'">
+                                <p-multiSelect #multiSelectPJ defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.seleccionadosReal" [options]="comboTiposGuardia"
+                                    optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
+                                    [overlayVisible]="dato.overlayVisible" (onChange)="editarTipoGuardia(dato);disabledSave()"></p-multiSelect>
+                            </div>
+
+                            <div *ngIf="dato.editable && col.field == 'tipoasistencia'">
+                                <input class="form-control paddingInput" [(ngModel)]="dato.tipoasistencia" name="tipoasistencia" type="text" maxLength="200"
+                                    on-focusout="editarTipoAsistencia(dato)" (onBlur)="editarTipoAsistencia(dato)" (input)="editarTipoAsistencia(dato)"
+                                />
+                            </div>
+
+
+                            <div *ngIf="dato.editable && col.field == 'importemaximoReal'">
+                                <app-precio [(value)]="dato.importemaximo" [dato]="dato" [maxLength]="maximaLong" [nuevo]="nuevo" [id]="id" [disabled]="historico"
+                                    (input)="editarImporteMaximo(dato)"></app-precio>
+
+                            </div>
+
+                            <div *ngIf="dato.editable && col.field == 'importeReal'">
+                                <app-precio [(value)]="dato.importe" [dato]="dato" [maxLength]="maximaLong" [nuevo]="nuevo" [id]="id" [disabled]="historico"
+                                    (input)="editarImporte(dato)"></app-precio>
+                            </div>
+
+                            <div *ngIf="col.field == 'visiblemovil'">
+                                <span *ngIf="disableAll || (dato.visibleMovilBoolean && (!((dato.editable))))">
+                                    ✔
+                                </span>
+                                <span *ngIf="disableAll|| (!dato.visibleMovilBoolean && (!((dato.editable))))">
+                                    ❌
+                                </span>
+                                <p-checkbox *ngIf="!disableAll &&((!nuevo && !selectMultiple && dato.editable)) || (nuevo && dato.acreditacionNueva)" [disabled]="disableAll"
+                                    (onChange)="editarVisibilidadMovil(dato)" [(ngModel)]="dato.visibleMovilBoolean" binary="true"
+                                    name="visiblemovil"></p-checkbox>
+                            </div>
+
+                            <div *ngIf="col.field == 'pordefecto'">
+                                <span *ngIf="disableAll || (dato.porDefectoBoolean && (!((dato.editable))))">
+                                    ✔
+                                </span>
+                                <span *ngIf="disableAll|| (!dato.porDefectoBoolean && (!((dato.editable))))">
+                                    ❌
+                                </span>
+                                <p-checkbox #check *ngIf="!disableAll && ((!nuevo && !selectMultiple && dato.editable)) || (nuevo && dato.acreditacionNueva)"
+                                    [disabled]="disableAll" (onChange)="editarPorDefecto(dato)" [(ngModel)]="dato.porDefectoBoolean"
+                                    binary="true" name="pordefecto"></p-checkbox>
+                            </div>
+                        </td>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage" let-columns>
+                    <tr>
+                        <td [attr.colspan]="columns.length">
+                            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="paginatorleft">
+                    <div class="mostrar d-flex text-right justify-content-end">
+                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first
+                            + 1}} al {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                            | translate }} {{table.totalRecords}}</label>
+                        <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+                        </label>
+                        <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+                        </label>
+                        <label>{{"general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+                        </p-dropdown>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <div class="ml-3 selectAll">
+                            <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                                name="groupname"></p-checkbox>
+                        </div>
+                        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple && permisoEscritura}" (click)="isSelectMultiple()">
+                            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="card-footer">
+            <div class="text-right main-button" *ngIf="origenBaremos != true">
+                <button [disabled]="historico || !permisoEscritura" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo"
+                    iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+
+                <button [disabled]="nuevo || editMode" *ngIf="!historico" (click)="checkPermisosSearchHistorical(); selectedDatos=[]" pButton
+                    type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+
+                <button [disabled]="nuevo" *ngIf="historico" (click)="checkPermisosSearchHistorical(); selectedDatos=[]" pButton type="button"
+                    icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
+                <button *ngIf="!historico" [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || editMode || !permisoEscritura || nuevo"
+                    (click)="checkPermisosDelete()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+
+                <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0))"
+                    (click)="checkPermisosActivate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+
+                <button pButton [disabled]="disabledSave()" (click)="checkPermisosSave()" type="button" icon="far fa-save" iconPos="left"
+                    label="{{ 'general.boton.guardar' | translate}}"></button>
+
+                <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisoEscritura" (click)="checkPermisosNewTipoAsistencia()"
+                    type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+
+            </div>
+        </div>
+    </div>
+    <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+        <p-footer>
+            <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+            <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+        </p-footer>
+    </p-confirmDialog>
+
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+
+<div class="mt-3 text-right main-button">
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
+</div>

@@ -136,7 +136,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         this.catalogoArray = n.comboCatalogoItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.cols2 = [{ field: "codigoExt", header: "general.codigoext" }];
@@ -385,7 +385,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -544,7 +544,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err); this.progressSpinner = false;
+        //console.log(err); this.progressSpinner = false;
       },
       () => {
         if (this.datosHist != null && this.datosHist != undefined) {
@@ -632,7 +632,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

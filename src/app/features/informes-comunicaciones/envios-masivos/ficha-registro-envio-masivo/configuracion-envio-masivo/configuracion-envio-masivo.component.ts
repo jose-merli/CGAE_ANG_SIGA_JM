@@ -143,7 +143,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
             }
           },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             }, () => {
               if (this.body.cuerpo != undefined) {
@@ -182,7 +182,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
             this.body.cuerpo = datos.cuerpo;
           },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             }, () => {
               
@@ -220,7 +220,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         let datosGuardar = {
@@ -297,7 +297,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             });
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => { }
@@ -398,7 +398,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               "informesycomunicaciones.comunicaciones.mensaje.errorCancelarEnvio"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => { }
       );
@@ -418,7 +418,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         if (sessionStorage.getItem("crearNuevoEnvio") != null) {
           this.body.fechaCreacion = new Date();
         }
-        console.log(this.body.fechaCreacion);
+        //console.log(this.body.fechaCreacion);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevoEnvio");
         sessionStorage.setItem(
@@ -438,7 +438,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             "informesycomunicaciones.enviosMasivos.ficha.envioError"
           )
         );
-        console.log(err);
+        //console.log(err);
       },
       () => {
         let datosGuardar = {

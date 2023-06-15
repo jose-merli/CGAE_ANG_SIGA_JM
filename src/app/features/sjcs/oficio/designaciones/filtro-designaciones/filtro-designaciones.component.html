@@ -1,0 +1,501 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="padding-interior">
+    <div class="form-group-interlineado">
+        <span class="mr-4">
+            <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="designas" (click)="changeFilters('designas')"
+                label="{{ 'justiciaGratuita.oficio.designas' | translate }}" [disabled]="!this.permisoDesigna"></p-radioButton>
+        </span>
+        <span class="mr-4">
+            <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="justificacion"
+                (click)="changeFilters('justificacion')"
+                label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}" [disabled]="!this.permisoJE"></p-radioButton>
+        </span>
+    </div>
+
+    <!-- FILTRO DESIGNAS -->
+    <div id="designas" *ngIf="showDesignas" class="form-group-interlineado">
+        <!-- datos identificacion -->
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="my-1" [expanded]="true">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="font-weight-bold">
+                        <p class="w100">{{ "justiciaGratuita.sjcs.designas.DatosIden" | translate }}</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <div class="form-row">
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.ano" | translate}}</label>
+                            <input type="number" class="form-control" [(ngModel)]='body.ano' maxLength="4" pInputText>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.numero" | translate}}</label>
+                            <input type="text" maxLength="10" class="form-control" [(ngModel)]='body.codigo' pInputText>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAdesde" | translate}}</label>
+                            <app-fecha [(value)]="fechaAperturaDesdeSelect"
+                                (valueChangeSelected)="fillFechaADesdeCalendar($event)"
+                                (valueChangeInput)="fillFechaADesdeCalendar($event)"></app-fecha>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.fchAhasta" | translate}}</label>
+                            <app-fecha [(value)]="fechaAperturaHastaSelect"
+                                (valueChangeSelected)="fillFechaAHastaCalendar($event)"
+                                [minDate]="fechaAperturaDesdeSelect"></app-fecha>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboEstados"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]='body.estados'></p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.tipoDesigna" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboTipoDesigna"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]="body.idTipoDesignaColegios">
+                            </p-multiSelect>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.turno" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboTurno"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]="body.idTurnos"></p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesV" | translate}}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='body.idActuacionesV ' [options]="actuacionesV">
+                            </p-dropdown>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.actuacionesDocu" | translate}}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='body.documentacionActuacion ' [options]="actuacionesDocu">
+                            </p-dropdown>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.art" | translate}}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='body.idArt27 ' [options]="comboArt">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <!-- colegiado -->
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="my-1" [expanded]="showColegiado">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="font-weight-bold">
+                        <p class="w100">{{ "justiciaGratuita.sjcs.designas.colegiado" | translate}}</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'designaciones'"
+                        [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                        [nombreAp]="usuarioBusquedaExpress.nombreAp" [disabled]="disabledBusquedaExpress"
+                        (colegiado)="changeColegiado($event)">
+                    </app-busqueda-colegiado-express>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <!-- Datos Generales-->
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="my-1" [expanded]="expanded">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="font-weight-bold">
+                        <p class="w100">{{ "justiciaGratuita.sjcs.designas.datosGenerales" | translate}}</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <div class="form-row">
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.juzgado" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboJuzgados"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]="body.idJuzgados"></p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.modulo" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" filterBy="label, labelSinTilde"
+                                [options]="comboModulos" [selectedItemsLabel]="textSelected" maxSelectedLabels="10"
+                                styleClass="widthAll" [(ngModel)]="body.idModulos"></p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.calidad" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboCalidad"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]="body.idCalidad"></p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.numAno" | translate}}</label>
+                            <input type="text" maxLength="10" class="form-control" [(ngModel)]="body.anoProcedimiento"
+                                (ngModelChange)="changeNumAno($event)" pInputText>
+                        </div>
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.procedimiento" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboProcedimientos"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]="body.idProcedimientos"></p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.NIG" | translate}}</label>
+                            <input type="number" maxLength="10" class="form-control" [(ngModel)]="body.nig" pInputText>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.asunto" | translate}}</label>
+                            <input type="text" maxLength="10" class="form-control" [(ngModel)]="body.asunto" pInputText>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <!-- Datos Actuaciones -->
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="my-1" [expanded]="expanded">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="font-weight-bold">
+                        <p class="w100">{{ "justiciaGratuita.sjcs.designas.datosActu" | translate}}</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <div class="form-row">
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.juzgado" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboJuzgados"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]="body.idJuzgadoActu"></p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.modulo" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" filterBy="label, labelSinTilde"
+                                [options]="comboModulos" [selectedItemsLabel]="textSelected" maxSelectedLabels="10"
+                                [(ngModel)]="body.idModuloActuaciones" styleClass="widthAll"></p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.procedimiento" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboProcedimientos"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]="body.idProcedimientoActuaciones">
+                            </p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "justiciaGratuita.sjcs.designas.datosActu.acreditacion" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboAcreditaciones"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]="body.idAcreditacion"></p-multiSelect>
+                        </div>
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "justiciaGratuita.sjcs.designas.datosActu.origen" | translate}}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='body.idOrigen' [options]="comboOrigenActuaciones">
+                            </p-dropdown>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.datosActu.fchaJustiDesde" | translate}}</label>
+                            <app-fecha [(value)]="fechaJustificacionDesdeSelect"
+                                (valueChangeSelected)="fillFechaJustificacionDesdeCalendar($event)"
+                                (valueChangeInput)="fillFechaJustificacionDesdeCalendar($event)"></app-fecha>
+
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "justiciaGratuita.sjcs.designas.datosActu.fchaJustiHasta" | translate}}</label>
+                            <app-fecha [(value)]="fechaJustificacionHastaSelect"
+                                (valueChangeSelected)="fillFechaJustificacionHastaCalendar($event)"
+                                [disabled]="disabledfechaJustificacion" [minDate]="fechaJustificacionDesdeSelect">
+                            </app-fecha>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <!-- Datos Interesados -->
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="my-1" [expanded]="expanded">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="font-weight-bold">
+                        <p class="w100">{{ "justiciaGratuita.sjcs.designas.datosInteresados" | translate}}</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <div class="form-row">
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "administracion.usuarios.literal.NIF" | translate}}</label>
+                            <input type="text" maxLength="20" class="form-control" [(ngModel)]="body.nif" pInputText>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
+                            <input type="text" class="form-control" maxLength="201" [(ngModel)]="body.apellidosInteresado" pInputText>
+                        </div>
+                        <div class="form-group-interlineado col-lg-2 col-md-2">
+                            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+                            <input type="text" class="form-control" maxLength="100" [(ngModel)]="body.nombreInteresado" pInputText>
+                        </div>
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ "administracion.usuarios.literal.rol" | translate}}</label>
+                            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [options]="comboRoles"
+                                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                                filterBy="label, labelSinTilde" [(ngModel)]="body.rol"></p-multiSelect>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+    <!-- FILTRO JUSTIFICACION EXPRESS -->
+    <div id="buscaJustiExp" *ngIf="showJustificacionExpress" class="form-group-interlineado">
+
+        <!-- colegiado -->
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="my-1" [expanded]="true">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="font-weight-bold">
+                        <p class="w100">{{ 'justiciaGratuita.justiciables.literal.colegiado' | translate }}</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'ejgexpress'"
+                        [numColegiado]="usuarioBusquedaExpress.numColegiado" [obligatorio]="true"
+                        [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
+                    </app-busqueda-colegiado-express>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- restricciones -->
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="mb-1" [expanded]="expanded">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="font-weight-bold">
+                        <p class="w100">{{ 'justiciaGratuita.oficio.justificacionExpres.RestriccionesBusqueda' |
+                            translate }}</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <div class="form-row">
+                        <div class="form-group-interlineado col-lg-3 col-md-3 vertical-center">
+                            <p-checkbox binary="true" [disabled]=""
+                                label="{{ 'justiciaGratuita.oficio.justificacionExpres.justYValidacionesPdtes' | translate }}"
+                                class="ml-0" [(ngModel)]="checkMostrarPendientes"
+                                (onChange)="onChangeCheckMostrarPendientes($event)"></p-checkbox>
+                        </div>
+
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <div class="form-row"> 
+                                <div class="form-group-interlineado col-lg-6 col-md-6">
+                                <label>{{ 'justiciaGratuita.oficio.justificacionExpres.fechaJustiDesde' | translate
+                                    }}</label>
+                                <app-fecha [(value)]="filtroJustificacion.justificacionDesde"
+                                    [maxDate]="filtroJustificacion.justificacionHasta"
+                                    (valueChangeInput)="fillFechasJustificacion($event, 'justificacionDesde')"
+                                    (valueChangeSelected)="fillFechasJustificacion($event, 'justificacionDesde')"
+                                    [(disabled)]="checkMostrarPendientes">
+                                </app-fecha>
+                            </div>
+                            
+                            <div class="form-group-interlineado col-lg-6 col-md-6">
+                                <label>{{ 'justiciaGratuita.oficio.justificacionExpres.fechaJustiHasta' | translate
+                                    }}</label>
+                                <app-fecha [(value)]="filtroJustificacion.justificacionHasta"
+                                    [minDate]="filtroJustificacion.justificacionDesde"
+                                    (valueChangeInput)="fillFechasJustificacion($event, 'justificacionHasta')"
+                                    (valueChangeSelected)="fillFechasJustificacion($event, 'justificacionHasta')"
+                                    [(disabled)]="checkMostrarPendientes">
+                                </app-fecha>
+                            </div>
+                        </div>
+                       
+                        </div>
+                        
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ 'censo.busquedaSolicitudesModificacion.literal.estado' | translate }}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='filtroJustificacion.estado' [options]="comboEstados"
+                                [(disabled)]="checkMostrarPendientes">
+                            </p-dropdown>
+                        </div>
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.actuacionesValidadas' | translate
+                                }}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='filtroJustificacion.actuacionesValidadas'
+                                [options]="comboActuacionesValidadas" [(disabled)]="checkMostrarPendientes">
+                            </p-dropdown>
+                        </div>
+
+                        <div [hidden]="ocultarRestricciones" class="form-group-interlineado col-lg-3 col-md-3 vertical-center">
+                            <p-checkbox binary="true" [disabled]="isLetrado"
+                                label="{{ 'justiciaGratuita.oficio.justificacionExpres.activarRestriccionesVisualizacion' | translate }}"
+                                class="ml-0" [(ngModel)]="checkRestricciones"
+                                (onChange)="onChangeCheckRestricciones($event)">
+                            </p-checkbox>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.incluirSinEJG' | translate }}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='filtroJustificacion.sinEJG' [options]="comboSinEJG"
+                                [(disabled)]="disableRestricciones">
+                            </p-dropdown>
+                        </div>
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.conEJGNoFavorables' | translate
+                                }}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='filtroJustificacion.conEJGNoFavorables' [options]="comboEJGnoFavorable"
+                                [(disabled)]="disableRestricciones">
+                            </p-dropdown>
+                        </div>
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.ejgSinResolucion' | translate
+                                }}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='filtroJustificacion.ejgSinResolucion' [options]="comboEJGSinResolucion"
+                                [(disabled)]="disableRestricciones">
+                            </p-dropdown>
+                        </div>
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.ejgResolucionPTECAJG' | translate
+                                }}</label>
+                            <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+                                [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                                [(ngModel)]='filtroJustificacion.resolucionPTECAJG' [options]="comboResoluciones"
+                                [(disabled)]="disableRestricciones">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- datos designacion -->
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="mb-1" [expanded]="expanded">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="font-weight-bold">
+                        <p class="w100">{{ 'justiciaGratuita.oficio.justificacionExpres.datosDesignacionEJG' | translate
+                            }}</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <div class="form-row">
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <div class="form-row">
+
+                            <div class="form-group-interlineado col-lg-6 col-md-6">
+                                <label>{{ 'justiciaGratuita.oficio.justificacionExpres.anioDesignacion' | translate
+                                    }}</label>
+                                <input [disabled]="" type="number" class="form-control"
+                                    [(ngModel)]='filtroJustificacion.anioDesignacion' maxLength="4" pInputText>
+                            </div>
+                            <div class="form-group-interlineado col-lg-6 col-md-6">
+                                <label>{{ 'justiciaGratuita.oficio.justificacionExpres.numDesignacion' | translate
+                                    }}</label>
+                                <input [disabled]="" type="text" maxLength="10" class="form-control"
+                                    [(ngModel)]='filtroJustificacion.numDesignacion' pInputText>
+                            </div>
+                        </div>
+                        </div>
+                        
+                    
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <div class="form-row">
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.fechaDesignacionDesde' | translate
+                                }}</label>
+                            <app-fecha [(value)]="filtroJustificacion.designacionDesde"
+                                [maxDate]="filtroJustificacion.designacionHasta"
+                                (valueChangeInput)="fillFechasJustificacion($event, 'designacionDesde')"
+                                (valueChangeSelected)="fillFechasJustificacion($event, 'designacionDesde')">
+                            </app-fecha>
+                        </div>
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.fechaDesignacionHasta' | translate
+                                }}</label>
+                            <app-fecha [(value)]="filtroJustificacion.designacionHasta"
+                                [minDate]="filtroJustificacion.designacionDesde"
+                                (valueChangeInput)="fillFechasJustificacion($event, 'designacionHasta')"
+                                (valueChangeSelected)="fillFechasJustificacion($event, 'designacionHasta')">
+                            </app-fecha>
+                        </div>
+                         </div>
+                            </div>
+
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.apellidosJusticiable' | translate }}</label>
+                            <input [disabled]="" pInputText type="text" class="form-control"
+                                [(ngModel)]='filtroJustificacion.apellidos' maxLength="60">
+                        </div>
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.nombresJusticiable' | translate }}</label>
+                            <input [disabled]="" pInputText type="text" class="form-control"
+                                [(ngModel)]='filtroJustificacion.nombre' maxLength="30">
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <div class="form-row">
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.anioEJG' | translate }}</label>
+                            <input [disabled]="" pInputText type="text" class="form-control"
+                                [(ngModel)]='filtroJustificacion.anioEJG' maxLength="4">
+                        </div>
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <label>{{ 'justiciaGratuita.oficio.justificacionExpres.numeroEJG' | translate }}</label>
+                            <input [disabled]="" pInputText type="text" class="form-control"
+                                [(ngModel)]='filtroJustificacion.numEJG' maxLength="30">
+                        </div>
+                        </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>
+
+
+<!-- FOOTER -->
+<div class="card-footer">
+    <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"
+            (click)="limpiar()">
+        </button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"
+            (click)="buscar()">
+        </button>
+        <button *ngIf="this.isButtonVisible && this.showDesignas" (click)="nuevo()" pButton type="button"
+            icon="fa fa-plus" iconPos="left" label="Nuevo">
+        </button>
+    </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="confirmacionGuardarJustificacionExpress"
+    icon="icon" width="425" #confirmacionGuardarJustificacionExpress>
+    <p-footer>
+        <button type="button" pButton icon="fa-check" label="OK"
+            (click)="confirmacionGuardarJustificacionExpress.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="Cancel"
+            (click)="confirmacionGuardarJustificacionExpress.reject()"></button>
+    </p-footer>
+</p-confirmDialog>

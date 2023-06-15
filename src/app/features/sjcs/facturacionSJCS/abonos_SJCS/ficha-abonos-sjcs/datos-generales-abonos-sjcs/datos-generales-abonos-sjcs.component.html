@@ -1,0 +1,181 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container" id="datosGenerales">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label> {{ "facturacionSJCS.facturacionesYPagos.importeCompensado" | translate }} 
+              <span> {{ this.datos.numeroAbono }}</span>
+            </label>
+            <label> {{ "justiciaGratuita.ejg.datosGenerales.FechaReunion" | translate }}
+              <span> {{ this.datos.fechaEmision | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label> {{ "facturacion.productos.importeNeto" | translate }} 
+              <span> {{ this.datos.importeTotalNeto }}</span>
+            </label>
+            <label> {{ "facturacionSJCS.filtros.abonosSJCS.importeIRPF" | translate }} 
+              <span> {{ this.datos.importeIRPF }}</span>
+              </label>
+            <label> {{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }} 
+              <span> {{ this.datos.importeTotal }}</span>
+            </label>
+            <label> {{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }} 
+              <span> {{ this.datos.importePendientePorAbonar }}</span>
+            </label>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="form-row">
+	  
+        <div class="bloque col-lg-5 col-md-5">
+          <div class="form-row">
+            <label><strong>{{ 'justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.inicial' | translate }}</strong></label>
+         
+      
+
+          </div>
+
+          <div class="form-row">
+              <div  class="form-group col-lg-4 col-md-4 ">
+                <label>{{ 'facturacionSJCS.filtros.abonosSJCS.numeroAbono' | translate }} (*)</label>
+                <input type="text" [(ngModel)]="this.datos.numeroAbono" class="form-control"
+                   pInputText [disabled]="true">
+              </div>
+
+              <div  class="form-group col-lg-4 col-md-4 ">
+                <label>{{ 'facturacion.facturas.datosGenerales.emision' | translate }} (*)</label>
+                <input type="text" [(ngModel)]="this.datos.fechaEmision" class="form-control"
+                   pInputText [disabled]="true">
+              </div>
+
+          </div>
+   
+          <div class="form-row">
+		  
+
+            <div  class="form-group col-lg-4 col-md-4 ">
+              <label>{{ 'facturacion.productos.importeNeto' | translate }} (*)</label>
+              <input type="text" [(ngModel)]="this.datos.importeTotalNeto" class="form-control"
+                 pInputText [disabled]="true">
+            </div>
+
+            <div  class="form-group col-lg-4 col-md-4 ">
+              <label>{{ 'facturacionSJCS.filtros.abonosSJCS.importeIRPF'| translate }} (*)</label>
+              <input type="text" [(ngModel)]="this.datos.importeIRPF" class="form-control"
+                 pInputText [disabled]="true">
+            </div>
+
+          
+            
+
+        </div>
+        <div class="form-row">
+		  
+
+          <div  class="form-group col-lg-4 col-md-4 ">
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }} (*)</label>
+            <input type="text" [(ngModel)]="this.datos.importeTotal" class="form-control"
+               pInputText [disabled]="true">
+          </div>
+
+
+        
+          
+
+      </div>
+ 
+      <br>
+    </div>
+
+    <div class="col-lg-6 col-md-6">
+      <div class="form-row">
+        <label><strong>{{ 'menu.facturacion.abonos' | translate }}</strong></label>
+      </div>
+
+      <div class="form-row">
+          <div  class="form-group col-lg-4 col-md-4 ">
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.importeCompensado' | translate }} (*)</label>
+            <input type="text" [(ngModel)]="this.datos.numeroAbono" class="form-control"
+               pInputText [disabled]="true">
+          </div>
+
+          <div  class="form-group col-lg-4 col-md-4 ">
+            <label>{{ 'facturacion.facturas.datosGenerales.impCaja' | translate }} (*)</label>
+            <input type="text" [(ngModel)]="this.datos.importeTotalAbonadoEfectivo" class="form-control"
+               pInputText [disabled]="true">
+          </div>
+
+        
+          
+
+      </div>
+      <div class="form-row">
+  
+
+        <div  class="form-group col-lg-4 col-md-4 ">
+          <label>{{ 'facturacion.facturas.datosGenerales.impBanco'  | translate }} (*)</label>
+          <input type="text" [(ngModel)]="this.datos.importeTotalAbonadoBanco" class="form-control"
+             pInputText [disabled]="true">
+        </div>
+
+        <div  class="form-group col-lg-4 col-md-4 ">
+          <label>{{ 'facturacion.facturas.datosGenerales.impAbTotal'  | translate }} (*)</label>
+          <input type="text" [(ngModel)]="this.datos.importeTotalAbonado" class="form-control"
+             pInputText [disabled]="true">
+        </div>
+
+      
+        
+
+    </div>
+    <div class="form-row">
+  
+
+      <div  class="form-group col-lg-4 col-md-4 ">
+        <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }} (*)</label>
+        <input type="text" [(ngModel)]="this.datos.importePendientePorAbonar" class="form-control"
+           pInputText [disabled]="true">
+      </div>
+
+
+    
+      
+
+  </div>
+
+</div>
+
+</div>
+<div *ngIf="openFicha" class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-save" iconPos="left"
+      (click)="comunicar()" label="{{ 'general.boton.comunicar' | translate }}"></button>
+  </div>
+</div>
+</div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

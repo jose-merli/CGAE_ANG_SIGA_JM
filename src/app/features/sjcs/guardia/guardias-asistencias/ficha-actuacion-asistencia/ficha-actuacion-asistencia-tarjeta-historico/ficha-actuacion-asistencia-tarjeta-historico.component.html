@@ -1,0 +1,46 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<p-table [value]="historicoItems" [columns]="columnasTabla" [(selection)]="selectedDatos" [responsive]="true" #table
+class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" 
+selectionMode="single"  id="tablaFoco" >
+
+
+  <ng-template pTemplate="colgroup" let-columns>
+    <colgroup>
+      <col *ngFor="let col of columnasTabla" [style.width]="col.width">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columnasTabla; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+        {{ col.header | translate }}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+        <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+          type="text" (input)="
+            table.filter($event.target.value, col.field, 'contains')
+          " />
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+      <td class="text-center" *ngFor="let col of columns">
+        <div [ngSwitch]="col.field">
+          <div *ngSwitchCase="'fecha'">  
+            <span *ngIf="dato['accion'] == 'Validar' && !validada" [ngClass]="{ historico: true }" > {{dato[col.field] | date : 'dd/MM/yyyy'}}</span>
+            <span *ngIf="dato['accion'] != 'Validar' || validada">{{dato[col.field] | date : 'dd/MM/yyyy'}}</span>
+
+          </div>
+
+          <div *ngSwitchDefault>
+            <span *ngIf="dato['accion'] == 'Validar' && !validada" [ngClass]="{ historico: true }">{{ dato[col.field] }}</span>
+            <span *ngIf="dato['accion'] != 'Validar' || validada" >{{ dato[col.field] }}</span>
+          </div>
+        </div>
+
+      </td>
+    </tr>
+  </ng-template>
+  </p-table>

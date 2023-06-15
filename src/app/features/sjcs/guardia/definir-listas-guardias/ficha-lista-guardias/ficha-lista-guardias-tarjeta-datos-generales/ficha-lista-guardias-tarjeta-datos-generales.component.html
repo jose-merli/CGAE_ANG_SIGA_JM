@@ -1,0 +1,44 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+  <div class="row w-100 m-0 padding-interior">
+    <div class="bloque col-lg-7 col-md-7 col-sm-7 pl-0 mb-3">
+      <div class="form-row">
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{'facturacion.productos.tipo' | translate}}</label>
+          <p-dropdown class="select-form"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+          [showClear]="true" [(ngModel)]="lista.idTipo" [ngClass]="styleObligatorioTipo(lista.idTipo)"
+          [ngModelOptions]="{standalone: true}" [options]="comboTipo"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
+          <input type="text" class="form-control" [(ngModel)]='lista.nombre' pInputText [ngModelOptions]="{standalone: true}" [ngClass]="styleObligatorio(lista.nombre)">
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{'justiciaGratuita.guardia.asistenciasexpress.cabeceralugar' | translate}}</label>
+          <input type="text" class="form-control" [(ngModel)]='lista.lugar' pInputText [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5 pr-0 mb-3">
+      <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12 w-100">
+          <label>{{'censo.nuevaSolicitud.observaciones' | translate}}</label>
+          <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" [(ngModel)]="lista.observaciones"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate}}"  [disabled]="!permisosEscritura" (click)="comunicar()">
+    </button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
+      (click)="restablecer(); " [disabled]="!permisosEscritura"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
+      (click)="saveDatosGenerales()" [disabled]="!permisosEscritura"></button>
+  </div>
+</div>

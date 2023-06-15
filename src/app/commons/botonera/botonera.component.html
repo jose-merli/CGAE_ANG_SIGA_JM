@@ -1,0 +1,8 @@
+<div class="text-right main-button">
+  <div *ngFor="let boton of botones">
+    <!-- <app-boton [icon]="boton.icon" [label]="boton.label"></app-boton> -->
+    <button (click)="buttonAction(boton)" [disabled]="boton.disabled" pButton type="button" [icon]="boton.icon" iconPos="left"
+      [label]="boton.label"></button>
+
+  </div>
+</div>

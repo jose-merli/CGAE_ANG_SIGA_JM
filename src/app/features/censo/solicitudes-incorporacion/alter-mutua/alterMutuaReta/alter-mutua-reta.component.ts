@@ -179,7 +179,7 @@ export class AlterMutuaRetaComponent implements OnInit {
             this.estadoSolicitudResponse = JSON.parse(result.body);
           },
           error => {
-            console.log(error);
+            //console.log(error);
           },
           () => {
             if (this.estadoSolicitudResponse.error == false) {
@@ -341,7 +341,7 @@ export class AlterMutuaRetaComponent implements OnInit {
           this.comboTipoIdentificacion = result.combooItems;
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
 
@@ -350,7 +350,7 @@ export class AlterMutuaRetaComponent implements OnInit {
         this.comboColegios = result.combooItems;
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -359,7 +359,7 @@ export class AlterMutuaRetaComponent implements OnInit {
         this.paises = result.combooItems;
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -368,7 +368,7 @@ export class AlterMutuaRetaComponent implements OnInit {
         this.provincias = n.combooItems;
       },
       error => {
-        console.log(error);
+        //console.log(error);
       },
       () => {
         this.mostrarDatosContacto();
@@ -380,7 +380,7 @@ export class AlterMutuaRetaComponent implements OnInit {
         this.comboTiposSolicitud = result.combooItems;
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -407,7 +407,7 @@ export class AlterMutuaRetaComponent implements OnInit {
           this.propuestas.mensaje);
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.showFail("No es posible solicitar el seguro alternativa al RETA");
       },
       () => {
@@ -732,7 +732,7 @@ export class AlterMutuaRetaComponent implements OnInit {
           this.propuestas = JSON.parse(result.body);
         },
         error => {
-          console.log(error);
+          //console.log(error);
         },
         () => {
           if (this.propuestas.error == true) {
@@ -1007,7 +1007,7 @@ export class AlterMutuaRetaComponent implements OnInit {
           this.poblaciones = result.combooItems;
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }

@@ -1,0 +1,46 @@
+#texto_cola_guardia{
+    width: 95%;
+  }
+
+.card-body-partida {
+  display: inline-block;
+}
+
+.first-table {
+  width: 60%;
+
+  ::ng-deep .ui-table {
+      //border-right: 1px solid;
+      //border-color: grey;
+      padding-right: 10px;
+  }
+}
+
+.table-body-wrap {
+  display: flex;
+}
+
+.second-table {
+  width: 40%;
+  padding-left: 10px;
+  padding-top: 42px;
+
+  ::ng-deep .ui-table {
+      padding-top: 11px;
+  }
+
+  .wrap-tabla-saltos {
+      ::ng-deep .ui-table {
+          padding-top: 5px;
+      }
+  }
+}
+
+.col-text-right > div {
+  text-align: right !important;
+}
+
+.col-text-center > div {
+  text-align: center !important;
+}
+

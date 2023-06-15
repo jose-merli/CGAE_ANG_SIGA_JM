@@ -1,0 +1,18 @@
+<label>{{titulo}}</label>
+<div class="form-row">
+    <div class="col-lg-4 col-md-4 pr-0 pl5">
+        <input [(ngModel)]="anio.value" type="text" class="form-control" [disabled] = "anio.disable" pInputText>
+    </div>
+    <div class="col-lg-1 col-md-1 text-center p-0">
+        /
+    </div>
+    <div class="col-lg-7 col-md-7 pl-0 pr5">
+        <div style="display: flex;">
+            <input [(ngModel)]="numero.value" type="text" class="form-control" [disabled]="disabledNumDes" (keypress)="numberOnly($event)" maxLength="10" pInputText/>
+            <div style="padding-top: 4%;" class="pointer">
+                <i *ngIf="disabledNumDes" class="candado fa fa-lock col-lg-1 col-md-1" aria-hidden="true" (click)="disableEnableNumDes()"></i>
+                <i *ngIf="!disabledNumDes" class="candado fa fa-unlock col-lg-1 col-md-1" aria-hidden="true" (click)="disableEnableNumDes()"></i>
+            </div>
+        </div>
+    </div>
+</div>

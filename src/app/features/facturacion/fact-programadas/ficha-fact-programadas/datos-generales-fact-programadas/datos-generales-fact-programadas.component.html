@@ -1,0 +1,206 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="datosGenerales">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
+            <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+
+            <label>{{ 'general.description' | translate }}:
+              <span>{{ body.descripcion }}</span></label>
+            <label>{{ 'justiciaGratuita.remesas.tabla.FechaGeneracion' | translate }}:
+              <span>{{ body.fechaPrevistaGeneracion | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.fechas.conf' | translate }}:
+              <span>{{body.fechaPrevistaConfirm | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.fechas.min' | translate }}:
+              <span>{{ body.fechaCompraSuscripcionDesde | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.fechas.max' | translate }}:
+              <span>{{ body.fechaCompraSuscripcionHasta | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}:
+              <span>{{ body.estadoConfirmacion }}</span></label>
+
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('datosGenerales')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-3 col-md-3">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label>{{ 'general.description' | translate }} (*)</label>
+              <input type="text" [(ngModel)]="body.descripcion" class="form-control" maxLength="255"
+                [disabled]="!permisoEscritura || !porProgramar" pInputText>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>{{ 'justiciaGratuita.remesas.tabla.FechaGeneracion' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaPrevistaGeneracion" [minDate]="fechaActual"
+                [inputStyleClass]="styleFechaGeneracion(body.fechaPrevistaGeneracion)"
+                (valueChangeSelected)="fillFechaRealGeneracion($event)"
+                (valueChangeInput)="fillFechaRealGeneracion($event)" [disabled]="!permisoEscritura || !porProgramar">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>{{ 'facturacion.factProgramadas.fechas.conf' | translate }}</label>
+              <app-fecha [(value)]="body.fechaPrevistaConfirm" [minDate]="body.fechaPrevistaGeneracion"
+                [inputStyleClass]="styleFechaConfirmacion(body.fechaPrevistaConfirm)"
+                (valueChangeSelected)="fillFechaConfirmacion($event)" (valueChangeInput)="fillFechaConfirmacion($event)"
+                [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)">
+              </app-fecha>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-6 col-md-6">
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.factProgramadas.datosGenerales.prodDesde' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaInicioProductos" [maxDate]="body.fechaFinProductos"
+                [inputStyleClass]="styleFechaProductos()" (valueChangeSelected)="fillFechaInicioProductos($event)"
+                (valueChangeInput)="fillFechaInicioProductos($event)" [disabled]="!permisoEscritura || !porProgramar">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.factProgramadas.datosGenerales.prodHasta' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaFinProductos" [minDate]="body.fechaInicioProductos"
+                [inputStyleClass]="styleFechaProductos()" (valueChangeSelected)="fillFechaFinProductos($event)"
+                (valueChangeInput)="fillFechaFinProductos($event)" [disabled]="!permisoEscritura || !porProgramar">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.factProgramadas.datosGenerales.susDesde' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaInicioServicios" [maxDate]="body.fechaFinServicios"
+                [inputStyleClass]="styleFechaServicios()" (valueChangeSelected)="fillFechaInicioServicios($event)"
+                (valueChangeInput)="fillFechaInicioServicios($event)" [disabled]="!permisoEscritura || !porProgramar">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.factProgramadas.datosGenerales.susHasta' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaFinServicios" [minDate]="body.fechaInicioServicios"
+                [inputStyleClass]="styleFechaServicios()" (valueChangeSelected)="fillFechaFinServicios($event)"
+                (valueChangeInput)="fillFechaFinServicios($event)" [disabled]="!permisoEscritura || !porProgramar">
+              </app-fecha>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-3 col-md-3">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label>{{ 'censo.datosDireccion.literal.fechaModificacion' | translate }}</label>
+              <app-fecha [(value)]="body.fechaModificacion" [disabled]="true">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
+              <div *ngIf="modoEdicion" class="row">
+                <div class="col-md-10">
+                  <input type="text" class="form-control" maxLength="255"
+                  disabled="true" pInputText [value]="body.estadoConfirmacion || ''">
+                </div>
+                <div class="col-md-2 verticalAlign px-0">
+                  <i *ngIf="modoEdicion" class="fa fa-info-circle" aria-hidden="true" (click)="getFasesFacturacionProgramada()"></i>
+                </div> 
+              </div> 
+              <input *ngIf="!modoEdicion" type="text" class="form-control" maxLength="255"
+                  disabled="true" pInputText [value]="body.estadoConfirmacion || ''">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button *ngIf="permisoEscritura" [disabled]="!modoEdicion || !(porProgramar || porConfirmarError)" pButton (click)="confirmEliminar()"
+          type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+
+        <button [disabled]="!(generada || porConfirmar || porConfirmarError || confirmada)" pButton (click)="descargarLog()"
+          type="button" icon="fa fa-download" iconPos="left"
+          label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
+
+        <button *ngIf="permisoEscritura && (generada || porConfirmarError || confirmada) && !body.archivarFact" pButton (click)="archivar()"
+          type="button" icon="fas fa-archive" iconPos="left"
+          label="{{ 'general.boton.archivar' | translate }}"></button>
+        <button *ngIf="permisoEscritura && (generada || porConfirmarError || confirmada) && body.archivarFact" pButton (click)="desarchivar()"
+          type="button" icon="fa fa-history" iconPos="left"
+          label="{{ 'form.busquedaCursos.literal.boton.desarchivar' | translate }}"></button>
+
+        <button *ngIf="permisoEscritura" [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
+          icon="fa fa-undo" iconPos="left" (click)="restablecer()"
+          label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button *ngIf="permisoEscritura" [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
+          icon="fa fa-save" iconPos="left" (click)="checkSave()"
+          label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRIMERA CONFIRMACIÓN -->
+<p-confirmDialog key="confirmEliminar" header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
+
+<!--DIALOG CAMBIA ESTADO-->
+<p-dialog width="1200" responsive="true" modal="modal" draggable="false" resizable="false"
+  [(visible)]="dialogVisible" (onHide)="cerrarDialog()">
+  <p-header>{{'factPyS.header.modal.fase' | translate}}</p-header>
+
+  <p-table #table [autoLayout]="true" [columns]="modalCols" [value]="datosMostrados" [responsive]="true"
+    class="tabla-listado overflow">
+
+    <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+        <col *ngFor="let col of columns" [style.width]="col.width">
+      </colgroup>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          {{ col.header | translate}}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+          <input pDroppable="false" *ngSwitchCase="col.field" pInputText type="text" (click)="$event.stopPropagation()"
+            (input)="table.filter($event.target.value, col.field, 'contains')"
+            placeholder="{{'general.boton.search' | translate}}" />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-dato let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns" class="text-center">
+          {{dato[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</p-dialog>
+
+<!-- Fin del bloque -->
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

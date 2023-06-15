@@ -170,7 +170,7 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
           this.actividadesDisponibles = n.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -231,7 +231,7 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -261,7 +261,7 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
         this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.tarjeta == "3" || this.tarjeta == "2") {
@@ -339,7 +339,7 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
           // });
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -420,7 +420,7 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -848,7 +848,7 @@ export class DatosRegistralesComponent implements OnInit, OnChanges {
         return result;
       });
 
-      console.log(data);
+      //console.log(data);
     });
   }
 

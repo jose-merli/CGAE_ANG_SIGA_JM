@@ -42,14 +42,18 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
   ngOnChanges() {
     if ((this.tarjetaAlterMutua == "2" || this.tarjetaAlterMutua == "3") && !this.viernes) {
 
-        this.viernes = true;
+      this.viernes = true;
+      setTimeout(() => {
         this.generalTratamiento = this.datosTratamientos;
-        let tratamiento = this.generalTratamiento.find(
-          item => item.value === this.generalBody.idTratamiento
-        );
-        if (tratamiento != undefined && tratamiento.label != undefined) {
-          this.tratamientoDesc = tratamiento.label;
+        if(this.generalTratamiento != undefined){
+          let tratamiento = this.generalTratamiento.find(
+            item => item.value === this.generalBody.idTratamiento
+          );
+          if (tratamiento != undefined && tratamiento.label != undefined) {
+            this.tratamientoDesc = tratamiento.label;
+          }
         }
+      }, 1000); 
     }
   }
   irAlterMutuaReta() {
@@ -103,7 +107,7 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
           this.router.navigate(["/alterMutuaReta"]);
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -160,7 +164,7 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
           this.router.navigate(["/alterMutuaOfertas"]);
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }

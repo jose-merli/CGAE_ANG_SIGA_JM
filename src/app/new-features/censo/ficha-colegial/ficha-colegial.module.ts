@@ -22,6 +22,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { FichaColegialComponent } from './ficha-colegial.component';
 import { DatosGeneralesComponent } from './datos-generales/datos-generales.component';
 import { DatosColegialesComponent } from './datos-colegiales/datos-colegiales.component';
+import { GrowlModule } from 'primeng/primeng';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { DatosColegialesComponent } from './datos-colegiales/datos-colegiales.co
     TooltipModule,
     ChipsModule,
     RadioButtonModule,
-    FileUploadModule
+    FileUploadModule,
+    GrowlModule
   ],
   declarations: [
     FichaColegialComponent,

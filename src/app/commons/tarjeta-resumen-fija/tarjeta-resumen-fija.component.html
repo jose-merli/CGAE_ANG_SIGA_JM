@@ -6,17 +6,39 @@
           <i [class]="iconClass"></i>
         </div>
       </div>
-      <div class="col-lg-11 col-md-10 ">
-        <div class="d-flex" style="margin-left: -1px;">
-          <label class="title-ficha">{{titulo | translate}}</label>
+      <div class="col-lg-11 col-md-10">
+        <!-- Nombres -->
+        <div class="col-md-12 form-row d-flex align-items-center pl-0">
+          <div class="d-flex flex-wrap" *ngFor="let dato of datos">
+            <label name>
+              <b>{{dato.label}}: </b>{{dato.value}}</label>
+          </div>
         </div>
-        <!-- <div class="d-flex justify-content-between" *ngIf="chincheta">
+        <!-- Enlaces-->
+        <div class="row ml-0">
+          <div class="d-flex flex-wrap mt-2 ml-0" *ngFor="let enlace of enlaces">
+            <label name>
+              <a (click)="goToCard(enlace.value, enlace.nombre)">
+                <span style="color: blue; text-decoration: underline"> {{enlace.label | translate }}
+                </span>
+              </a>
+            </label>
+          </div>
+          <i (click)="goDown()" class="fa fa-angle-down ml-auto pr-3"></i>
+          <i (click)="goTop()" class="fa fa-angle-up mr-3"></i>
+        </div>
+        
+      </div>
+      <!--<div class="col-lg-11 col-md-10 ">-->
+      <!--<div class="d-flex" style="margin-left: -1px;">
+          <label class="title-ficha">{{titulo | translate}}</label>
+        </div>-->
+      <!-- <div class="d-flex justify-content-between" *ngIf="chincheta">
           <br>
           <i ngClass="fas fa-thumbtack"></i>
         </div>-->
-      </div>
-      <div class="col-1"></div>
-      <div class="col-11 form-row">
+      <!--</div>-->
+      <!--<div class="col-lg-11 col-md-10 form-row d-flex align-items-center">
         <div class="d-flex flex-wrap" *ngFor="let dato of datos">
           <label name>
             <b>{{dato.label}}: </b>{{dato.value}}</label>
@@ -31,10 +53,10 @@
               </span>
             </a>
           </label>
-      </div>
-      <i (click)="goDown()" class="fa fa-angle-down ml-auto pr-3"></i>
-      <i (click)="goTop()" class="fa fa-angle-up"></i>
+        </div>
+        <i (click)="goDown()" class="fa fa-angle-down ml-auto pr-3"></i>
+        <i (click)="goTop()" class="fa fa-angle-up"></i>
+      </div>-->
     </div>
   </div>
-</div>
 </div>

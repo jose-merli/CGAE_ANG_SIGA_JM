@@ -1,0 +1,121 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<div id="sjcsDesigaDet">
+<div class="row w-100 m-0 padding-interior">
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-row">
+        <div class="col-lg-6 col-md-6 pl5" *ngFor="let inputTitle of inputs">
+          <label>{{ inputTitle.nombre }}</label>
+        <input type="text" [(ngModel)]="inputTitle.value" class="form-control" pInputText>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>{{ 'enviosMasivos.literal.asunto' | translate}}</label>
+      <input type="text" [(ngModel)]="asuntoValue" class="form-control" pInputText>
+    </div>
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate}}</label>
+      <p-dropdown class="select-form" [(ngModel)]="estadoValue"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="disableEstado" [options]="estadosOpciones"
+        [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+      </p-dropdown>
+    </div>
+ 
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-row">
+        <div class="col-lg-6 col-md-6 pl5" *ngFor="let datePickerTitle of datePickers; let i = index;">
+          <label>{{ datePickerTitle.nombre }}</label>
+          <app-fecha [utc]="true" [disabled]="i === 0" [(value)]='datePickerTitle.value'
+            (valueChangeInput)="fillFechaHastaCalendar($event, datePickerTitle.nombre)"
+            (valueChangeSelected)="fillFechaHastaCalendar($event, datePickerTitle.nombre)"></app-fecha>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
+      <p-dropdown class="select-form" [(ngModel)]="juzgadoValue"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [options]="juzgadoOpciones" [filter]="true"
+        (onChange)="changeJuzgado()" filterBy="label,labelSinTilde,labelTildeContraria"  [showClear]="true">
+      </p-dropdown>
+    </div>
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>{{'justiciaGratuita.maestros.Procedimiento' | translate}}</label>
+      <p-dropdown class="select-form" [(ngModel)]="procedimientoValue"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [options]="procedimientoOpciones" [filter]="true"
+        (onChange)="changeProcedimiento()" filterBy="label,labelSinTilde,labelTildeContraria" [showClear]="true">
+      </p-dropdown>
+    </div>
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>{{'justiciaGratuita.oficio.designas.actuaciones.modulo' | translate}}</label>
+      <p-dropdown class="select-form" [(ngModel)]="moduloValue"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [options]="moduloOpciones" [filter]="true"
+        (onChange)="changeModulo()" filterBy="label,labelSinTilde,labelTildeContraria" [showClear]="true">
+      </p-dropdown>
+    </div>
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}</label>
+      <p-multiSelect #someDropdown defaultLabel="{{'general.boton.seleccionar' | translate}}" autoWidth="false"
+        [(ngModel)]="delitosValue" [options]="delitosOpciones" maxSelectedLabels="10"
+        [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde,labelTildeContraria"
+        (onPanelShow)="focusInputField(someDropdown)">
+      </p-multiSelect>
+    </div>
+    <br>
+
+  </div>
+
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="" iconPos="left" label="Finalizar" [disabled]="disableFinalizar || isLetrado"
+      (click)="showMsg('success', 'Se ha finalizado correctamente', 'Finalizar')"></button>
+    <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Anular"
+      [disabled]="disableAnular || isLetrado"
+      (click)="showMsg('success', 'Se ha anulado correctamente', 'Anular')"></button>
+    <button pButton type="button" icon="" iconPos="left" label="Reactivar" [disabled]="disableReactivar || isLetrado"
+      (click)="showMsg('success', 'Se ha anulado correctamente', 'Reactivar')"></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
+      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')"
+      [disabled]="disableRestablecer"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+      (click)="showMsg('success', 'Se ha guardado correctamente', 'Guardar')" [disabled]="disableGuardar"></button>
+  </div>
+</div>
+</div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardar" width="425"
+  #confirmGuardar>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardar.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardar.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmAnular" width="425"
+  #confirmAnular>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmAnular.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmAnular.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardarCompensacion"
+  width="425" #confirmGuardarCompensacion>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Aceptar"
+      (click)="confirmGuardarCompensacion.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="Cancelar"
+      (click)="confirmGuardarCompensacion.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

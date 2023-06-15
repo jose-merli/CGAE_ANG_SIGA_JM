@@ -1,0 +1,98 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'general.message.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-down ml-auto"></i>
+      </div>
+      <div *ngIf="!showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'general.message.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo body gnerales-->
+    <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="col-lg-12 col-md-12">
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{ 'justiciaGratuita.maestros.fundamentosResolucion.codigoExterno' | translate }}
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="body.codigoExt" maxlength="20" [disabled]="historico || !permisoEscritura"
+                pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{ 'enviosMasivos.literal.descripcion' | translate }} (*)
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="body.descripcionFundamento" maxlength="512" [disabled]="historico || !permisoEscritura"
+                pInputText>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{ 'justiciaGratuita.maestros.fundamentosResolucion.resolucion' | translate }} (*)
+              </label>
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [style]="{'width':'100%'}" [(ngModel)]="body.idTipoResolucion"
+                [options]="resoluciones" [disabled]="historico || !permisoEscritura" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                showClear="true">
+              </p-dropdown>
+            </div>
+            <div class="form-group col-lg-9 col-md-9">
+              <label>
+                {{ 'justiciaGratuita.maestros.fundamentosResolucion.textoEnPlantilla' | translate }} 0
+              </label>
+              <textarea [rows]="10" [cols]="10" name="textoPlantilla" class="form-control textareaPlantilla" pInputTextarea [(ngModel)]="body.textoPlantilla"
+                autoResize="autoResize" [disabled]="historico || !permisoEscritura" maxLength="4000"></textarea>
+            </div>
+
+            <div class="form-group col-lg-9 col-md-9">
+              <label>
+                {{ 'justiciaGratuita.maestros.fundamentosResolucion.textoEnPlantilla' | translate }} 1
+              </label>
+              <textarea [rows]="10" [cols]="10" name="textoPlantilla" class="form-control textareaPlantilla" pInputTextarea [(ngModel)]="body.textoPlantilla2"
+                autoResize="autoResize" [disabled]="historico || !permisoEscritura" maxLength="4000"></textarea>
+            </div>
+
+            <div class="form-group col-lg-9 col-md-9">
+              <label>
+                {{ 'justiciaGratuita.maestros.fundamentosResolucion.textoEnPlantilla' | translate }} 2
+              </label>
+              <textarea [rows]="10" [cols]="10" name="textoPlantilla" class="form-control textareaPlantilla" pInputTextarea [(ngModel)]="body.textoPlantilla3"
+                autoResize="autoResize" [disabled]="historico || !permisoEscritura" maxLength="4000"></textarea>
+            </div>
+
+            <div class="form-group col-lg-9 col-md-9">
+              <label>
+                {{ 'justiciaGratuita.maestros.fundamentosResolucion.textoEnPlantilla' | translate }} 3
+              </label>
+              <textarea [rows]="10" [cols]="10" name="textoPlantilla" class="form-control textareaPlantilla" pInputTextarea [(ngModel)]="body.textoPlantilla4"
+                autoResize="autoResize" [disabled]="historico || !permisoEscritura" maxLength="4000"></textarea>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div [hidden]="!showTarjeta" class="card-footer">
+      <div class="text-right main-button">
+        <button [disabled]="historico || !permisoEscritura" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="disabledSave()" (click)="checkPermisosSave()" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

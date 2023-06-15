@@ -1,0 +1,100 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container" id="datosGenerales">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+      </div>
+    </div>
+    <div *ngIf="openFicha && datosGenerales != undefined" class="card-body card-body-ficha">
+      <div class="row col-12">
+        <!-- ListaGuardias -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{ "menu.justiciaGratuita.calendarios.ListaGuardias" | translate }} 
+          </label>
+          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="datosGenerales.listaGuarias.value"
+          [options]="comboConjuntoGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+          [showClear]="true" (onChange)="changeListaGuardia($event)">
+        </p-dropdown>
+        </div>
+         <!-- check -->
+
+         <div class="form-check col-lg-3 col-md-3">
+          <br />
+          <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">Solo generar vacios</span>
+          &nbsp;&nbsp;
+          <p-checkbox  id="checkedchecky" name="checkedchecky"  binary="true" [(ngModel)]="controlSoloGenerarVacio"></p-checkbox>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="form-group col-lg-6 col-md-6" >
+          <label>
+            {{"justiciaGratuita.Calendarios.Observaciones" | translate}} 
+          </label>
+            <input  type="text"  [disabled]="historico || !permisoEscritura" name="textoEnPlantilla" value="" class="box" class="form-control"
+             [(ngModel)]='datosGenerales.observaciones' 
+            maxLength="1000"  pInputText>
+        
+        
+          </div>
+        <!-- FechaDesde -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{ "justiciaGratuita.Calendarios.FechaDesde" | translate }} (*)
+          </label>
+          <app-fecha required="true" [(value)]="datosGenerales.fechaDesde"  [inputStyleClass]="styleObligatorio(datosGenerales.fechaCalendarioDesde)" 
+            (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
+        </div>
+
+        <!-- fechsHasta -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"justiciaGratuita.Calendarios.FechaHasta" | translate}} (*)
+          </label>
+          <app-fecha required="true" [(value)]="datosGenerales.fechaHasta" [inputStyleClass]="styleObligatorio(datosGenerales.fechaCalendarioDesde)" 
+            (valueChangeSelected)="fillFechaCalendarioHasta($event)"  (valueChangeInput)="fillFechaCalendarioHasta($event)"></app-fecha>
+        </div>
+
+        <!-- fechaProgramada -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"justiciaGratuita.Calendarios.FechaProgramada" | translate}}
+          </label>
+          <app-fecha disabled [(value)]="datosGenerales.fechaProgramacion" [showTime]="true"
+          (valueChangeSelected)="fillFechaProgramada($event)"  (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
+        </div>
+        <!-- Estado -->
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{"justiciaGratuita.Calendarios.Estado" | translate}} </label>   
+            <input type="text" name="estado" value="" class="box" class="form-control" [(ngModel)]='estadoNombre' pInputText
+            maxLength="40" disabled pInputText>
+            
+          </div>
+          
+
+      </div>
+
+    </div>
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button  pButton (click)="descargarLog()" type="button" icon="fa fa-download" iconPos="left"
+        label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
+
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()"  [disabled]="isDisabledByEstado"  pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

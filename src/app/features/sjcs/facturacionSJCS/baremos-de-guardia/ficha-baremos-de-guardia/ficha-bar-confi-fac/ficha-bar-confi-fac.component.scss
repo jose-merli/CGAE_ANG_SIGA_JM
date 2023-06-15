@@ -1,0 +1,124 @@
+::ng-deep {
+
+    #facSJCSFichaBarConfiFac {
+
+        .camposObligatorios {
+            border-color: red !important;
+        }
+
+        .camposObligatorios>div {
+            border-color: red !important;
+        }
+
+        .camposObligatorios>input {
+            border-color: red !important;
+        }
+
+        .camposObligatorios>div .ui-multiselect {
+            border: 1px solid red !important;
+        }
+
+        .ui-inputtext .camposObligatorios {
+            border: 1px solid red !important;
+        }
+
+        .verticalAlign {
+            display: flex;
+            align-items: end;
+        }
+
+    }
+
+}
+
+.enlace {
+    color: #0000EE !important;
+    text-decoration: underline;
+    cursor: pointer !important;
+}
+
+.divDiasSemana {
+    margin-top: -1.2rem;
+}
+
+.divLabelsDiasSemana {
+    margin-left: 0.2rem;
+}
+
+.labelDiasSemana {
+    padding-left: 0.95em;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+@media (min-width: 768px) {
+    .divfacturacionesImporte {
+        margin-top: 0.90rem;
+    }
+}
+
+.overlayPanelPrueba>.ui-overlaypanel {
+    //   top: 50% !important;
+    //   left: 40% !important;
+    // width: 30em !important;
+    left: 5% !important;
+    // border-radius: 2em;
+    width: 90%;
+}
+
+.overlayPanelCount>.ui-overlaypanel>.ui-overlaypanel-content {
+    text-align: center;
+    // vertical-align: middle;
+    // line-height: 4em;
+}
+
+.overlayPanelPrueba {
+    max-width: 60%;
+    max-height: 60%;
+    margin-right: 40%;
+    // position:absolute;
+    // margin-left:50%;
+    text-align: center;
+}
+
+.ui-overlaypanel {
+    border-radius: 2em;
+    width: auto;
+}
+
+::ng-deep div.ui-overlaypanel {
+    left: 0px !important;
+    margin-left: 6%;
+    margin-right: 6%;
+}
+
+.importesBaremos {
+    text-align: right;
+}
+
+.form-group-date p-checkbox,
+.form-group p-checkbox {
+    display: inline;
+    margin-left: 0.23em;
+}
+
+@media (max-width: 2063px) {
+    .estiloResponsive {
+        display: block !important;
+        
+    }
+    .estiloResponsiveFecha{
+        width: 100%;
+        margin-top: 20px !important;
+    }
+}

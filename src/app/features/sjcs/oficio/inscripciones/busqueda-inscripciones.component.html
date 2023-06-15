@@ -1,0 +1,10 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtrosinscripciones (busqueda)="searchPartidas($event)" [permisos]="permisoEscritura"></app-filtrosinscripciones>
+    <app-gestion-inscripciones *ngIf="buscar" [datos]="datos" (searchPartidas)="searchPartidas($event)" id="tablaFoco"></app-gestion-inscripciones>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>

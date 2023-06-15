@@ -1,0 +1,15 @@
+<div class="ficha-comunicacion-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.maestros' | translate}}
+      <i class="fa fa-angle-right"></i>{{'menu.facturacionSJCS.mantenimientoDocumentacionEJG' | translate}}</p>
+  </div>
+  <div>
+    <app-gestion-tipodocumento [documentacionEjgItem]="dato" (modoEdicionSend)="modoEdicionSend($event)"></app-gestion-tipodocumento>
+    <app-gestion-documentos [idTipoDoc]="idTipoDoc" [modoEdicion]="modoEdicion" [datos]="documentos" (searchHistoricalSend)="searchDocumentos($event)"></app-gestion-documentos>
+  </div>
+</div>
+<div class="mt-3 text-right main-button">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>

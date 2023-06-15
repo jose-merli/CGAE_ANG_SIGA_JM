@@ -1,0 +1,28 @@
+<div class="ficha-comunicacion-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.maestros' | translate }}
+      <i class="fa fa-angle-right"></i>{{'justiciaGratuita.maestros.procuradores.gestionProcuradores'|translate}}
+    </p>
+  </div>
+  <div>
+    <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+    <app-datos-generales-procuradores [historico]="historico" [permisoEscritura]="permisoEscritura" [body]="body" [modoEdicion]="modoEdicion"
+      (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-procuradores>
+
+    <app-datos-direcciones-procuradores [historico]="historico" [permisoEscritura]="permisoEscritura" [body]="body" [modoEdicion]="modoEdicion"></app-datos-direcciones-procuradores>
+  </div>
+</div>
+<div class="mt-3 text-right main-button ">
+  <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
+    iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+  <button (click)="checkPermisosSave()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
+    label="{{ 'general.boton.guardar' | translate}}"></button>
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

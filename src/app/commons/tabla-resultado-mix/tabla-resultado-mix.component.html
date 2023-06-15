@@ -1,0 +1,197 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="mb-50" id="tablaFoco">
+
+    <div class="padding-interior w-100">
+      <app-paginador (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)"
+        (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador>
+    </div>
+
+    <div class="table" matSort (matSortChange)="sortData($event)" matSortDirection="asc" #table>
+      <div class="table-header ">
+        <div class="table-header-child p-1" *ngFor="let cabecera of cabeceras; let j = index"
+          [ngStyle]="setMyStyles(cabecera.size)" #BorderedHeader>
+
+          <!--<div class="table-header-child p-1" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>-->
+          <div [ngStyle]="setMyStyles(cabecera.size)">
+            <div [ngStyle]="setMyStyles(cabecera.size)" [mat-sort-header]=cabecera.id disableClear>{{cabecera.name |
+              translate}}</div>
+            <input type="text" class="form-control" pInputText [(ngModel)]="searchText[j]"
+              (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
+          </div>
+        </div>
+      </div>
+      <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
+        <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
+          [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
+          <div *ngFor="let cell of row['cells'] | slice:firstColumn:lastColumn; let z = index"
+            class="table-cell p-2 selectedRowClass" [ngStyle]="setMyStyles(cell.size)"
+            [ngClass]="{'borders-child': isPar(row['id']), 'borders-child-last': isLast(i)}" #cellSelected>
+            <div [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass wrapName2">
+              <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'text' && calendarios">{{cell.value}}</span>
+              <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'text' && !calendarios">{{cell.value}}</span>
+              <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'timestamp' && !calendarios">{{cell.value |
+                date: 'dd/MM/yyyy'}}</span>
+              <span class="w100 cell-value wrapName2"
+                *ngIf="cell.type == 'dateTime' && calendarios">{{cell.value.label}}</span>
+              <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'link' && calendarios" class="enlace"
+                (click)="openTab(row)">{{cell.value}}</span>
+              <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'date' && calendarios" class="enlace"
+                (click)="openTab(row)">{{cell.value}}</span>
+              <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'input'"><input type="text"
+                  [disabled]="cell.disabled" class="form-control mt-2" pInputText [(ngModel)]="cell.value"
+                  (change)="inputChange($event, row['id'], z, cell)"></span>
+              <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'link'  && !calendarios" class="enlace"
+                (click)="llamarFicha(row)">{{cell.value}}</span>
+              <span class="w100 cell-value wrapName2"
+                *ngIf="cell.type == 'label'  && calendarios">{{cell.value.label}}</span>
+              <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'buttom'"><button pButton type="button"
+                  iconPos="left" [label]="cell.value"></button></span>
+              <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'checkbox'">
+                <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
+                </p-checkbox>
+              </span>
+              <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
+                <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
+                  (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
+                  (valueChangeInput)="fillFechaIncorporacionDesde($event)">
+                </app-fecha>
+              </span>
+              <span class="w100 cell-value" *ngIf="cell.type == 'select'">
+                <app-selector class="center" [i]="0" [textoVisible]="" [selector]="cell.value"></app-selector>
+              </span>
+              <span class="w100 cell-value" *ngIf="cell.type == 'turnoSelect'">
+                <p-dropdown class="select-form" [filter]="true" [(ngModel)]="cell.value" [options]="cell.combo"
+                  filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [showClear]="true" (onChange)="onChangeTurno($event, row, cell)"></p-dropdown>
+              </span>
+              <span class="w100 cell-value" *ngIf="cell.type == 'guardiaSelect'">
+                <p-dropdown class="select-form" [filter]="true" [(ngModel)]="cell.value" [options]="cell.combo"
+                  filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [showClear]="true" (onChange)="onChangeGuardia($event, row, cell)"></p-dropdown>
+              </span>
+              <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
+              <span class="w100 cell-value"
+                *ngIf="cell.type == 'link' && !calendarios && !inscripciones"><a>{{cell.value}}</a></span>
+              <span class="w100 cell-value" *ngIf="cell.type == 'download'">
+                <div (click)="showMsg('success', 'Documento descargado', '')"><i class="pointer fa fa-download"></i>
+                </div>
+              </span>
+              <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'">
+                <input type="text" class="form-control " pInputText size="10" [placeholder]="cell.value[0]">
+                <input type="text" class="form-control " pInputText size="10" [placeholder]="cell.value[1]">
+                <input type="text" class="form-control " pInputText size="10" [placeholder]="cell.value[2]">
+                <input type="text" class="form-control " pInputText size="10" [placeholder]="cell.value[3]">
+                <app-selector [textoVisible]="cell.value[4]" [i]="0" [selector]="cell.value"></app-selector>
+              </span>
+              <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'">
+                <app-selector [i]="0" [selector]="cell.value"></app-selector>
+                <input type="text" class="form-control mt-2" pInputText [placeholder]="cell.value">
+              </span>
+              <span class="w100 cell-value" *ngIf="cell.type == 'multiselect'">
+
+                <p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected"
+                  [defaultLabel]="textFilter" [options]="cell.combo" maxSelectedLabels="10" styleClass="widthAll"
+                  [disabled]="cell.disabled" [filter]="true" filterBy="label,labelSinTilde" (ngModelChange)="sortOptions(cell.value, cell.combo)"
+                  (onChange)="onChangeMulti($event, i, cell)">
+                </p-multiSelect>
+              </span>
+
+              <span class="w-100 cell-value" *ngIf="cell.type == 'textToolTip' && !calendarios">
+                <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{cell.value[1]}}</span>
+              </span>
+
+              <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'">
+                <input type="text" class="form-control " pInputText size="10" [placeholder]="cell.value[0]">
+                <input type="text" class="form-control " pInputText size="10" [placeholder]="cell.value[1]">
+                <input type="text" class="form-control " pInputText size="10" [placeholder]="cell.value[2]">
+                <input type="text" class="form-control " pInputText size="10" [placeholder]="cell.value[3]">
+                <app-selector [textoVisible]="cell.value[4]" [i]="0" [selector]="cell.value"></app-selector>
+              </span>
+              <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'">
+                <app-selector [i]="0" [selector]="cell.value"></app-selector>
+                <input type="text" class="form-control mt-2" pInputText [placeholder]="cell.value">
+              </span>
+              <!--<span class="w100 cell-value" *ngIf="cell.type == 'multiselect'"> REPETIDO
+
+                <p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected"
+                  [defaultLabel]="textFilter" [options]="cell.combo" maxSelectedLabels="10" styleClass="widthAll"
+                  [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell)">
+                </p-multiSelect>
+              </span>-->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card-footer h50">
+    <div class="col-lg-12 col-md-12 col-sm-12 flex2 text-right main-button">
+
+      <div *ngIf="inscripciones" class="col-lg-7 col-md-7 col-sm-7 flex2 align">
+        <div class="w-50 mr-5">
+          <label class="d-flex align-self-left"> {{ 'dato.jgr.guardia.saltcomp.fecha' | translate }} </label>
+          <app-fecha [disabled]="isDisabled" [(ngModel)]='fechaActual' (valueChangeInput)="changeFecha($event)"
+            (valueChangeSelected)="changeFecha($event)" name="fechaActual" ngDefaultControl></app-fecha>
+        </div>
+        <div class=" w-50">
+          <label class="d-flex align-self-left"> {{ 'gratuita.mantenimientoLG.literal.observaciones' | translate }}
+          </label>
+          <textarea class="textareains" [(ngModel)]='observaciones' [disabled]="isDisabled" class="form-control"
+            pInputTextarea autoResize="autoResize" maxLength="1024" name="observaciones" ngDefaultControl></textarea>
+        </div>
+
+      </div>
+
+
+
+      <div class="col-lg-5 col-md-5 col-sm-5 align auto">
+        <button *ngIf='inscripciones' pButton type="button" label="Validar" [disabled]="habilitadoValidar || selectedArray.length == 0"
+          (click)="validar()"></button>
+        <button *ngIf='inscripciones' pButton type="button" label="Denegar" [disabled]="habilitadoDenegar || selectedArray.length == 0"
+          (click)="denegar()"></button>
+        <button *ngIf='inscripciones' pButton type="button" label="Solicitar Baja" [disabled]="habilitadoSolicitarBaja || selectedArray.length == 0"
+          (click)="solicitarBaja()"></button>
+        <button *ngIf="selectedArray && selectedArray.length > 0" (click)="navigateComunicar(selectedArray)"
+            pButton type="button" icon="fa fa-comment" iconPos="left"
+            label="{{'general.boton.comunicar' | translate }}"></button>
+        <button *ngIf='inscripciones' pButton type="button" label="Cambiar Fecha" [disabled]="habilitadoCambiarFecha || selectedArray.length == 0"
+          (click)="cambiarFecha()"></button>
+
+
+
+        <button pButton *ngIf="!calendarios && !inscripciones" type="button" icon="far fa-save" iconPos="left"
+          label="Guardar" [disabled]="(isDisabled && !isLetrado && !permisoTotal) || isLetrado"
+          (click)="guardar()"></button>
+        <button *ngIf="!calendarios  && !inscripciones" pButton type="button" icon="fa fa-plus" iconPos="left"
+          label="Nuevo" [disabled]="(!anySelected && !isLetrado && !permisoTotal) || isLetrado"
+          (click)="nuevo()"></button>
+        <button pButton *ngIf="!inscripciones" type="button" icon="fa fa-trash-alt" iconPos="left" label="Eliminar"
+          [disabled]="(!anySelected && !isLetrado) || (this.selectedRowValue.length == 0 && !isLetrado) || isLetrado "
+          (click)="eliminar()"></button>
+        <button *ngIf="calendarios  && !inscripciones" pButton type="button" icon="fa fa-plus" iconPos="left"
+          label="Duplicar"
+          [disabled]="!anySelected || this.selectedRowValue.length == 0 || selectedArray.length == 0 || selectedArray.length > 1"
+          (click)="duplicar()"></button>
+        <button pButton *ngIf="(!inscripciones && !incompatibilidades) || calendarios " type="button" icon="fa fa-download" iconPos="left"
+          label="Descargar LOG" (click)="descargarLOG()"></button>
+       
+      </div>
+
+
+    </div>
+  </div>
+
+</div>
+
+<p-confirmDialog header="Confirmación" key="eliminarCalendario" icon="fa fa-question-circle" width="425"
+  #eliminarCalendario>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="eliminarCalendario.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="eliminarCalendario.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

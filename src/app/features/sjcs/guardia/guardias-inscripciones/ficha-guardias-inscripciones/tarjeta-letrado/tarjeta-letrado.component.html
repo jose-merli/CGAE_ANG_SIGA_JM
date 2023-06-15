@@ -1,0 +1,163 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="datosLetrado">
+  <div *ngIf="permisosTarjeta" class="card">
+    <div *ngIf="!openFicha" class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('datosLetrado')">
+      <div class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="far fa-address-card icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ "busquedaSanciones.detalleSancion.letrado.literal" | translate }}
+            </label>
+
+            <div class="d-flex justify-content-between">
+              <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
+              <span class="fa fa-angle-down"></span>
+            </div>
+          </div>
+          <div class="col-11 form-row p-1">
+            <div class="d-flex flex-wrap mr-auto campos ng-star-inserted">
+              <label class="text-dark">
+                <b>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}:</b>
+                {{datos.ncolegiado}}
+              </label>
+            </div>
+            <div class="d-flex flex-wrap mr-auto campos ng-star-inserted">
+              <label class="text-dark">
+                <b>{{ "administracion.parametrosGenerales.literal.nombre.apellidos" | translate }}:</b>
+                {{datos.apellidosnombre}}
+              </label>
+            </div>
+            <div class="d-flex flex-wrap mr-auto campos ng-star-inserted">
+              <label class="text-dark">
+                <b> {{ "censo.fichaCliente.literal.identificacion" | translate }}:</b>
+                {{datos.nifcif}}
+              </label>
+            </div>
+            <div class="d-flex flex-wrap mr-auto campos ng-star-inserted">
+              <label class="text-dark">
+                <b> {{ "censo.ws.literal.telefono" | translate }}:</b>
+                {{ datoTelefono}}
+              </label>
+            </div>
+            <div class="d-flex flex-wrap mr-auto campos ng-star-inserted">
+              <label class="text-dark">
+                <b> {{ "censo.datosDireccion.literal.movil" | translate }}:</b>
+                {{ datoMovil}}
+              </label>
+            </div>
+            <div class="d-flex flex-wrap mr-auto campos ng-star-inserted">
+              <label>
+                <i _ngcontent-c15="" class="fas fa-external-link-alt mr-2"></i>
+                <a (click)="navigateToFichaColegial()">
+                  <span
+                    style="color: blue; text-decoration: underline; cursor: pointer;">{{"informesycomunicaciones.comunicaciones.fichaColegial"
+                    | translate}}</span>
+                </a>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" (click)="abreCierraFicha('tarjetaLetrado')" class=" card-header header-ficha">
+      <div *ngIf="openFicha" class="header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="far fa-address-card icon-ficha"></i>
+        </div>
+        <label class="mr-auto title-ficha">{{ "busquedaSanciones.detalleSancion.letrado.literal" | translate
+          }}</label>
+        <span class="fa fa-angle-up ml-auto"></span>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-4 col-md-4">
+
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }} (*)
+              </label>
+              <input [(ngModel)]="datos.ncolegiado" disabled="true" type="text" class="form-control" [maxLength]="30"
+                pInputText>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
+              </label>
+              <input [(ngModel)]="letradoItem.nifcif" disabled="true" type="text" class="form-control" [maxLength]="30"
+                pInputText>
+            </div>
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label>
+                {{ "administracion.parametrosGenerales.literal.nombre.apellidos" | translate }} (*)
+              </label>
+              <input [(ngModel)]="datos.apellidosnombre" disabled="true" type="text" class="form-control"
+                [maxLength]="30" pInputText>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="bloque col-lg-4 col-md-4">
+          <div class="form-row">
+            <div class="form-group-interlineado col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{
+                'censo.datosDireccion.literal.datos.contacto'
+                | translate }}</label>
+            </div>
+            <p-table id="tablaLetrado" [value]="datosContacto" [columns]="cols" [responsive]="true" #table
+              class="tabla-listado" [first]="first">
+
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th [pSortableColumn]="col.header" *ngFor="let col of columns">
+                    {{col.header | translate}}
+                    <p-sortIcon [field]="col.header"></p-sortIcon>
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                  <td *ngFor="let col of columns">
+                    <span *ngIf="col.field !='valor'">{{ dato[col.field] | translate }}</span>
+                    <!-- <span *ngIf="col.field =='valor' && dato.value== 'tlf'">{{ dato[col.field]}}</span> -->
+                    <input *ngIf="col.field =='valor' && dato.value== 'tlf'" [(ngModel)]="dato.valor" type="text"
+                      class="form-control" [disabled]="disableDirecciones" pInputText />
+                    <input *ngIf="col.field =='valor' && dato.value== 'mvl'" [(ngModel)]="dato.valor" type="text"
+                      class="form-control" [disabled]="disableDirecciones" pInputText />
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}.
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+
+      </div>
+      <br>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <!-- <button (click)="rest()" pButton [disabled]="disableAll || historico" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
+      </div>
+    </div>
+  </div>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

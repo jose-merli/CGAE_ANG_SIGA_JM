@@ -1,0 +1,41 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div class="card-body card-body-ficha">
+      <div class="row">
+        <div class="col-lg-12 col-md-12">
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="body.descripcionzona" pInputText maxLength="60" [disabled]="historico"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button [disabled]="historico" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="!permisoEscritura || historico || disabledSave()" (click)="checkPermisosSave()" pButton type="button"
+          icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

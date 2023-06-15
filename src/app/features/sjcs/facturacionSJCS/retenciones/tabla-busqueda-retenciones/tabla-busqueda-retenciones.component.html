@@ -1,0 +1,110 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card mt-3">
+
+  <div class="card-body p-0" #tablaFoco>
+
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="modoSeleccion"
+      [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" paginatorPosition="both"
+      (onRowSelect)="actualizaSeleccionados($event)" (onRowUnselect)="actualizaDesSeleccionados()">
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="table.filter($event.target.value, col.field, 'contains')" />
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+
+          <td class="text-center" *ngFor="let col of columns">
+
+            <div *ngIf="(col.field == 'fechainicio' || col.field == 'fechaFin')">
+              <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+
+            <div *ngIf="(col.field == 'importe' || col.field == 'restante')">
+              <span [ngClass]="{'italic': isHistorico(dato)}">{{ dato[col.field] != '-'  ? ((this.numberParse(dato[col.field]) | number:'1.2-2':'es-ES' ) + ' €') : dato[col.field] }} </span>
+            </div>
+
+            <div *ngIf="col.field == 'ncolegiado'">
+              <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
+            </div>
+
+            <div *ngIf="col.field != 'fechainicio' && col.field != 'fechaFin' && col.field != 'ncolegiado' && col.field != 'importe' && col.field != 'restante'">
+              <span [ngClass]=" {'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
+            </div>
+
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+            translate }}{{table.first + 1}}
+            al {{table.first
+            + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+            {{table.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length >= 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+            {{selectedDatos.length}}
+          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length == undefined">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+            1
+          </label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button pButton [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura || isLetrado"
+        type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+
+      <button *ngIf="!historico" (click)="mostrarHistorico()" pButton type="button" icon="fa fa-history " iconPos="left"
+        label="{{'general.message.mostrarHistorico' | translate}}"></button>
+
+      <button *ngIf="historico" (click)="ocultarHistorico()" pButton type="button" icon="fa fa-history " iconPos="left"
+        label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
+      <button pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+        [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura || isLetrado || disableEliminar"
+        label="{{ 'general.boton.eliminar' | translate}}" (click)="confirmDelete()"></button>
+    </div>
+  </div>
+</div>
+
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+  <p-footer>
+    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

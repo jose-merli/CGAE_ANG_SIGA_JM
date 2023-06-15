@@ -74,7 +74,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -127,7 +127,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
       err => {
         this.showFail();
         this.correcto = false;
-        console.log(err);
+        //console.log(err);
         registroActualizado = false;
         sessionStorage.setItem(
           "registroAuditoriaUsuariosActualizado",

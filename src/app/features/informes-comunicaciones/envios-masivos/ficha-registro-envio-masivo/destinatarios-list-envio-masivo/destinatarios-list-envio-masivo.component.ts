@@ -227,7 +227,7 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                 // this.consultas = [];
             },
             err => {
-                console.log(err);
+                //console.log(err);
                 this.progressSpinner = false;
             },
             () => { }
@@ -251,10 +251,10 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                     }
                 }
                 this.datos = [...this.datos];
-                console.log(this.datos);
+                //console.log(this.datos);
             },
             err => {
-                console.log(err);
+                //console.log(err);
                 this.progressSpinner = false;
             },
             () => { }
@@ -283,7 +283,7 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                 //console.log("consultas combo", this.consultas);
             },
             err => {
-                console.log(err);
+                //console.log(err);
                 this.progressSpinner = false;
             },
             () => { }
@@ -326,14 +326,14 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
             this.getResultados();
             this.nuevaConsulta = false;
         }, error => {
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
             let errorResponse = JSON.parse(error.error);
             if (errorResponse.code == 400) {
                 this.showInfo(this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorListaDestinatarios"));
             } else {
                 this.showFail(this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
-                console.log(error);
+                //console.log(error);
             }
 
         });
@@ -384,7 +384,7 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                 err => {
                     this.showFail(
                         this.translateService.instant("informesycomunicaciones.consultas.errorEliminarConsulta"));
-                    console.log(err);
+                    //console.log(err);
                 },
                 () => {
                     this.getResultados();
@@ -406,7 +406,7 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
         let id = e.value;
         this.getFinalidad(id);
         this.getConsultaInstitucion(id);
-        console.log(id);
+        //console.log(id);
     }
 
     getConsultaInstitucion(id) {
@@ -454,10 +454,10 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
 							}
 							}
 						});
-                    // console.log(this.consultas);
+                    // //console.log(this.consultas);
                 },
                 err => {
-                    console.log(err);
+                    //console.log(err);
                     this.progressSpinner = false;
                 },
                 () => { }

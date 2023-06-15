@@ -1,7 +1,7 @@
 import { TranslateService } from "../translate/translation.service";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
-import { MenuItem } from "primeng/api";
+import { ConfirmationService, MenuItem } from "primeng/api";
 import { PanelMenuModule } from "primeng/panelmenu";
 import { SigaServices } from "../../_services/siga.service";
 
@@ -23,13 +23,12 @@ export class MenuComponent implements OnInit {
   selectedLabelOfChild: any;
   encontrado: boolean;
   progressSpinner: boolean = false;
-  openMockups: boolean = false;
-  showMockups: boolean = false;
 
   constructor(
     private router: Router,
     private sigaServices: SigaServices,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService
   ) { }
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
@@ -51,16 +50,7 @@ export class MenuComponent implements OnInit {
         //    });
       }
     );
-
-    this.sigaServices.getBackend("showMockups").subscribe(
-      n => {
-        this.showMockups = n.valor == 'true';
-      },
-      err => {
-        console.log(err);
-      });
   }
-
   onCloseMenu() {
     if (!this.bloquedMenu) {
       this.closeMenu = !this.closeMenu;
@@ -73,10 +63,16 @@ export class MenuComponent implements OnInit {
   }
 
   isRoute(ruta) {
-    var currentRoute = this.router.url;
 
+    var currentRoute = this.router.url;
     this.encontrado = false;
-    if (currentRoute.indexOf(ruta) != -1) {
+    //Si el booleano de vieneDeFichaJuzgado está en true y la ruta es la de módulos
+    if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "maestrosModulos"){
+      this.encontrado = false;
+    }
+    else if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "mantenimientoJuzgados"){
+      this.encontrado = true;
+    }else if (currentRoute == ('/' + ruta)) {
       this.encontrado = true;
     }
     return currentRoute === ruta || this.encontrado;
@@ -86,7 +82,34 @@ export class MenuComponent implements OnInit {
   }
 
   navigateTo(ruta) {
+    let keyConfirmation = "confirmacionGuardarJustificacionExpress";
+    if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda") == null 
+        && sessionStorage.getItem('rowIdsToUpdate') != null 
+          && sessionStorage.getItem('rowIdsToUpdate') != 'null' 
+            && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
+      //console.log('if')
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.navigate(ruta);
+        },
+        reject: () => {
+        }
+      });
+    } else {
+      //console.log('else')
+      this.navigate(ruta);
+    }
+
+  }
+  navigate(ruta: string) {
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     sessionStorage.removeItem("disabledPlantillaEnvio");
+    // Método para eliminar sesiones temporales.
+    this.eliminarOrigenNav();
+
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
         // this.closeMenu = !this.closeMenu;
@@ -99,8 +122,24 @@ export class MenuComponent implements OnInit {
           sessionStorage.removeItem("fichaColegialByMenu");
         }
 
-        this.onCloseMenu();
-        this.router.navigate([ruta]);
+        /*
+        if (ruta.includes("guardiasAsistencias") && ruta != "guardiasAsistenciasClassique") {
+          
+          //let searchMode: string = ruta.split("=")[1];
+          this.onCloseMenu();
+          this.router.navigate(["/guardiasAsistencias"]); //, { queryParams: { searchMode: searchMode } }
+
+        } else 
+        */
+        if (ruta.includes("ficherosTransferencia") && ruta.includes("fcs") && ruta != "ficherosTransferenciasClassique") {
+          let fcs: string = ruta.split("=")[1];
+          this.onCloseMenu();
+          this.router.navigate(["/ficherosTransferencia"], { queryParams: { fcs: fcs } });
+        } else {
+          this.onCloseMenu();
+          this.router.navigate([ruta]);
+        }
+
       }
 
       if (ruta == "permisos") {
@@ -138,8 +177,12 @@ export class MenuComponent implements OnInit {
     this.showChildOfChild = false;
   }
 
-  mockups() {
-    this.onCloseMenu();
-  }
+  eliminarOrigenNav(){
+    let rutasTemporales = ["contrariosEJG", "asistenciaAsistido","contrarios","datosFamiliares","interesados","origin"];
 
+    for (let index = 0; index < rutasTemporales.length; index++) {
+      sessionStorage.removeItem(rutasTemporales[index]);
+    }
+    
+  }
 }

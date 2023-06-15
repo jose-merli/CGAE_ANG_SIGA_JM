@@ -1,0 +1,11 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <app-filtro-busqueda-areas (busqueda)="searchAreas($event)" [permisos]="permisoEscritura"></app-filtro-busqueda-areas>
+  <app-tabla-busqueda-areas *ngIf="buscar" [datos]="datos" [comboPJ]="comboPJ" (searchAreasSend)="searchAreas($event)"></app-tabla-busqueda-areas>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
+</div>

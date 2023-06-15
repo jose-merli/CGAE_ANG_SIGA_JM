@@ -1,0 +1,135 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div id="facSJCSFichaRetDatRetJud">
+
+  <div class="card">
+
+    <div class="card-header header-ficha">
+
+      <div *ngIf="!showTarjeta" class="form-row">
+
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="onHideTarjeta()">
+            <i class="far fa-address-book icon-ficha"></i>
+          </div>
+        </div>
+
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="onHideTarjeta()">
+            <label class="mr-auto title-ficha">{{ 'facturacionSJCS.retenciones.ficha.datRetJud' | translate }}
+            </label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
+              <span>{{ getTextoTipoRetencion() }}</span>
+            </label>
+            <label>{{ 'facturacionSJCS.retenciones.retencion' | translate }}:
+              <span>{{ getTextoImporte() }}</span></label>
+            <label>{{ 'facturacionSJCS.retenciones.fechaDeNoti' | translate }}:
+              <span>{{ getTextoFechaDeNoti() }}</span></label>
+            <label>{{ 'facturacionSJCS.retenciones.fechaDeFin' | translate }}:
+              <span>{{ getTextoFechaFin() }}</span></label>
+            <label>{{ 'facturacionSJCS.retenciones.destinatario' | translate }}:
+              <span>{{ getTextoDestinatario() }}</span></label>
+            <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="onHideTarjeta()">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'facturacionSJCS.retenciones.ficha.datRetJud' | translate }} </label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+
+    </div>
+
+    <div *ngIf="showTarjeta" class="card-body card-body-ficha">
+
+      <div class="row">
+
+        <div class="bloque col-lg-6 col-md-6 col-sm-6 py-2 pl-2">
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }} (*)</label>
+              <p-dropdown class="select-form" filterBy="label,labelSinTilde" [showClear]="true" [filter]="true"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTiposRetencion"
+                [(ngModel)]="body.tipoRetencion" [disabled]="!permisoEscritura || disablePorEstado || isLetrado"
+                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.tipoRetencion)}"
+                (onChange)="onChangeTipoDeReten()"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.retenciones.retencion' | translate }} (*)</label>
+              <input *ngIf="body.tipoRetencion == 'F' || body.tipoRetencion == 'L'" pInputText class="form-control"
+                type="number" name="retencion" [(ngModel)]="body.importe"
+                [ngClass]="{'camposObligatorios': marcarObligatorio('inputNumber', body.importe)}"
+                (blur)="compruebaImporte(expRegImporte.test(body.importe))" [disabled]="!permisoEscritura || disabledImporte || disablePorEstado || isLetrado" />
+
+              <input *ngIf="body.tipoRetencion == 'P'" pInputText class="form-control" type="number" name="retencion"
+                [(ngModel)]="body.importe"
+                [ngClass]="{'camposObligatorios': marcarObligatorio('inputNumber', body.importe)}"
+                (blur)="compruebaImporte(expRegPorcentaje.test(body.importe))" [disabled]="!permisoEscritura || disabledImporte || disablePorEstado || isLetrado" />
+
+              <input *ngIf="body.tipoRetencion != 'F' && body.tipoRetencion != 'L' && body.tipoRetencion != 'P'"
+                pInputText class="form-control" type="number" name="retencion" [(ngModel)]="body.importe"
+                [ngClass]="{'camposObligatorios': marcarObligatorio('inputNumber', body.importe)}"
+                [disabled]="!permisoEscritura || disabledImporte || disablePorEstado || isLetrado" />
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.retenciones.fechaDeNoti' | translate }} (*)</label>
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaNoti($event)"
+                (valueChangeInput)="fillFechaNoti($event)" [(value)]="body.fechainicio" [disabled]="!permisoEscritura || disablePorEstado || isLetrado"
+                [inputStyleClass]="marcarObligatorio('datePicker', body.fechainicio) ? 'camposObligatorios': ''">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.retenciones.fechaDeFin' | translate }}</label>
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaFin($event)" [disabled]="!permisoEscritura || isLetrado"
+                (valueChangeInput)="fillFechaFin($event)" [minDate]="minDate" [(value)]="body.fechaFin">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.retenciones.destinatario' | translate }} (*)</label>
+              <p-dropdown class="select-form" filterBy="label,labelSinTilde" [showClear]="true" [filter]="true"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboDestinatarios"
+                [(ngModel)]="body.idDestinatario" [disabled]="!permisoEscritura || disablePorEstado || isLetrado"
+                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.idDestinatario)}">
+              </p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.retenciones.infoDesti' | translate }}</label>
+              <input [disabled]="!permisoEscritura || disablePorEstado || isLetrado" pInputText class="form-control" type="text" name="retencion" [(ngModel)]="body.descDestinatario" />
+            </div>
+          </div>
+        </div>
+
+        <div class="bloque col-lg-6 col-md-6 col-sm-6">
+          <div class="form-group col-lg-12 col-md-12 px-0">
+            <label>{{ 'facturacionSJCS.retenciones.observaciones' | translate }}</label>
+            <textarea [disabled]="!permisoEscritura || disablePorEstado || isLetrado" pInputTextarea [(ngModel)]="body.observaciones"></textarea>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card-footer" *ngIf="showTarjeta">
+      <div  class="text-right main-button">
+        <button *ngIf="permisoEscritura && !isLetrado" pButton type="button" iconPos="left" icon="fa fa-undo"
+          label="{{ 'general.boton.restablecer' | translate }}"
+          (click)="restablecer()"></button>
+        <button *ngIf="permisoEscritura && !isLetrado" pButton type="button" iconPos="left" icon="fa fa-save" label="{{ 'general.boton.guardar' | translate }}"
+          (click)="guardar()" ></button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

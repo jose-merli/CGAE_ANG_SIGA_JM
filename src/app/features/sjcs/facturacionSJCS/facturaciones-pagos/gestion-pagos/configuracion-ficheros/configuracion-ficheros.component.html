@@ -1,0 +1,91 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div id="facSJCSFichaPagosConfigFich">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!showFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="onHideFicha()">
+            <i class="fas fa-dollar icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="onHideFicha()">
+            <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.configuracionFicheros" |
+              translate }}
+            </label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.iban" | translate }}:
+              <span
+                *ngIf="comboCuentasBanc && comboCuentasBanc.length > 0 && configuracionFicheros.codBanco && configuracionFicheros.codBanco!= null && configuracionFicheros.codBanco.trim().length > 0">
+                {{ getIban() }}</span>
+            </label>
+            <i *ngIf="!showFicha" class="fa fa-angle-down float-right" (click)="onHideFicha()"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showFicha" class="header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="onHideFicha()">
+        <div class="img-colegiado">
+          <i class="fas fa-dollar icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ "facturacionSJCS.facturacionesYPagos.configuracionFicheros" | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="showFicha" class="card-body">
+      <div class="module vista-avanzada">
+        <div class="form-row">
+          <div class="col-lg-4 col-md-4">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.iban" | translate }} (*)</label>
+            <p-dropdown [options]="comboCuentasBanc" [(ngModel)]="configuracionFicheros.codBanco" class="select-form"
+              [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+              [showClear]="true" [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado() || isPagoEjecutando()'
+              [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.codBanco)}">
+            </p-dropdown>
+          </div>
+          <div class="col-lg-2 col-md-2">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.sufijo" | translate }} (*)</label>
+            <p-dropdown [options]="comboSufijos" [(ngModel)]="configuracionFicheros.idSufijo" class="select-form"
+              [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+              [showClear]="true" [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado() || isPagoEjecutando()'
+              [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.idSufijo)}">
+            </p-dropdown>
+          </div>
+          <div class="col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.propositoTransferencias" | translate }} SEPA (*)</label>
+            <p-dropdown [options]="comboPropTransSepa" [(ngModel)]="configuracionFicheros.idPropSepa"
+              class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true"
+              [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado() || isPagoEjecutando()'
+              [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.idPropSepa)}">
+            </p-dropdown>
+          </div>
+          <div class="col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.propositoTransferencias" | translate }} (*)</label>
+            <p-dropdown [options]="comboPropOtrTrans" [(ngModel)]="configuracionFicheros.idPropOtros"
+              class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              filterBy="label,labelSinTilde" [showClear]="true"
+              [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado() || isPagoEjecutando()'
+              [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.idPropOtros)}">
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="showFicha">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate }}" [disabled]='!permisos || disableRestablecer()'
+          (click)="restablecer()"></button>
+        <button pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
+          [disabled]='!permisos || disableGuardar()' (click)="guardar()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

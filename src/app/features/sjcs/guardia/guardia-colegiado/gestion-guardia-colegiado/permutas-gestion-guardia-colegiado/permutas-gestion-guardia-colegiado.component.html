@@ -1,0 +1,175 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="relaciones">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-link icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">Permutas</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div class="px-0 pt-0 pb-0 card-body card-body-ficha">
+      <p-table [value]="permutas" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
+        [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+        [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of cols" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{ col.header | translate }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+                *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value, col.field, 'contains')" />
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+            <td class="text-center" *ngFor="let col of columns">
+              <div>
+                <!--SIGARNV-2885 INICIO-->
+                <div *ngIf="col.field == 'fechasolicitud'">
+                  <span>
+                    <!-- {{dato[col.field] | date: 'dd/MM/yyyy'}} -->
+                    {{dato['fechasolicitud'] | date: 'dd/MM/yyyy'}}
+                  </span>
+                </div>
+                <div *ngIf="col.field == 'fechaconfirmacion'">
+                  <span>
+                    <!-- {{dato[col.field] | date: 'dd/MM/yyyy'}} -->
+                    {{dato['fechaconfirmacion'] | date: 'dd/MM/yyyy'}}
+                  </span>
+                </div>
+
+                <div *ngIf="col.field == 'turnoGuardiaSol'">
+                  {{guardiaColegiado.tipoTurno}} / {{guardiaColegiado.tipoGuardia}}
+                </div>
+
+                <div *ngIf="col.field == 'LetradoFechSol'">
+                  <!-- {{guardiaColegiado.letradosGuardia.replace(",", ", ")}} - {{fechaSolicitanteInicio | date: 'dd/MM/yyyy'}} -->
+                  {{guardiaColegiado.letradosGuardia.replace(",", ", ")}} - {{dato['fechainicioSolicitante'] | date: 'dd/MM/yyyy'}}
+                </div>
+
+                <div *ngIf="col.field == 'turnoGuardiaConf' && !permutas[rowIndex].nuevoRegistro">
+                  {{dato['nombreTurno']}} / {{dato['nombreGuardia']}}
+                </div>
+
+                <div *ngIf="col.field == 'LetradoFechConf' && !permutas[rowIndex].nuevoRegistro">
+                  {{dato['nombreColegiado']}} - {{dato['fechainicioConfirmador'] | date: 'dd/MM/yyyy'}}
+                </div>
+                <!--SIGARNV-2885 FIN -->
+                <div *ngIf="col.field != 'fechasolicitud' && col.field != 'fechaconfirmacion'">
+                  <span>
+                    {{dato[col.field]}}
+                  </span>
+                </div>
+                
+                <!-- <div *ngIf="col.field == 'nombreTurno' && clickPermuta &&  permutas[rowIndex].nuevoRegistro"> -->
+                <div *ngIf="col.field == 'turnoGuardiaConf' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
+                  <p-dropdown [(ngModel)]='valueComboTurno' class="select-form" placeholder="Seleccionar"
+                    [options]="comboTurnos" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeTurnos()"
+                    [showClear]="true"></p-dropdown>
+                </div>
+
+                <!-- <div *ngIf="col.field == 'nombreGuardia' && clickPermuta &&  permutas[rowIndex].nuevoRegistro"> -->
+                <div *ngIf="col.field == 'LetradoFechConf' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
+                  <p-dropdown [(ngModel)]='valueComboGuardia' class="select-form" placeholder="Seleccionar"
+                    [options]="comboGuardias" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+                  </p-dropdown>
+                </div>
+                <!--SIGARNV-2885 FIN-->
+
+                <div *ngIf="col.field == 'motivos' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
+                  <input [(ngModel)]='motivos' type="text" pInputText />
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+              translate }}{{table.first + 1}} al
+              {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
+              }} {{table.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{
+              'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{
+              'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+            </label>
+            <label>{{"general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
+            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll"
+                binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+            </div>
+          </div>
+        </ng-template>
+      </p-table>
+
+      <div class="card-footer">
+        <div class="text-right main-button">
+          <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || clickPermuta)"
+            (click)="nuevaFila()" type="button" iconPos="left" label="{{ 'general.boton.new' | translate }}"></button>
+
+          <button pButton *ngIf="esLetrado && esColegiado"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || !clickPermuta)"
+            (click)="checkPermutar()" type="button" iconPos="left"
+            label="{{ 'general.boton.solicitarPermuta' | translate }}"></button>
+
+          <button pButton *ngIf="!esLetrado && esColegiado"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || !clickPermuta)"
+            (click)="checkPermutar()" type="button" iconPos="left"
+            label="{{ 'general.boton.permutar' | translate }}"></button>
+
+          <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || clickPermuta)"
+            (click)="checkValidar()" type="button" icon="fa fa-save" iconPos="left"
+            label="{{'general.boton.validar' | translate}}"></button>
+
+          <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || !clickPermuta)"
+            (click)="restPermutas()" type="button" icon="fa fa-eraser" iconPos="left"
+            label="{{'general.boton.restablecer' | translate}}"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="perm" #perm>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="perm.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="perm.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="valida" #valida>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="valida.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="valida.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
+</div>

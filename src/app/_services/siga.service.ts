@@ -20,6 +20,29 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { RequestOptions, Headers, ResponseContentType } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
+import { endpoints_maestros } from "../utils/endpoints_maestros";
+import { endpoints_justiciables } from "../utils/endpoints_justiciables";
+import { endpoints_guardia } from "../utils/endpoints_guardia";
+import { endpoints_oficio } from "../utils/endpoints_oficio";
+import { endpoints_facturacionPyS } from "../utils/endpoints_facturacionPyS";
+import { endpoints_componentes } from "../utils/endpoints_components";
+import { endpoints_EJG } from "../utils/endpoints_EJG";
+import { endpoints_facturacionsjcs } from "../utils/endpoints_facturacionsjcs";
+import { endpoints_generales } from "../utils/endpoints_generales";
+import { endpoints_PyS } from "../utils/endpoints_PyS";
+import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
+import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
+import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
+import { endpoints_EJG_Comision } from '../utils/endpoints_EJG_Comision';
+import { endpoints_remesa } from '../utils/endpoints_remesa';
+import { endpoints_intercambios } from '../utils/endpoints_intercambios';
+import { NuevaComunicacionItem } from '../models/NuevaComunicacionItem';
+import { DocumentacionAsistenciaItem } from '../models/guardia/DocumentacionAsistenciaItem';
+import { DocumentoAsistenciaItem } from '../models/guardia/DocumentoAsistenciaItem';
+import { BehaviorSubject } from 'rxjs';
+import { endpoints_expedientes } from '../utils/endpoints_expedientes';
+import { DocumentacionIncorporacionItem } from '../models/DocumentacionIncorporacionItem';
+import { saveAs } from 'file-saver/FileSaver';
 
 @Injectable()
 export class SigaServices {
@@ -86,7 +109,8 @@ export class SigaServices {
 		auditoriaUsuarios_search: 'auditoriaUsuarios/search',
 		auditoriaUsuarios_update: 'auditoriaUsuarios/update',
 		permisos_update: 'permisos/update',
-		acces_control: '/accesControl',
+		// MODIFICADO -> acces_control: 'accesControl',
+		acces_control: 'accesControl',
 		acces_controls: '/accesControls',
 		acces_controlUrl: '/accesControlUrl',
 		entidad_lenguajeInstitucion: 'entidad/lenguajeInstitucion',
@@ -145,14 +169,21 @@ export class SigaServices {
 		busquedaPerJuridica_fileDownloadInformation: 'busquedaPerJuridica/fileDownloadInformation',
 		dialogo_nombredoc: 'dialogoComunicacion/nombredoc',
 		busquedaPerJuridica_downloadFile: 'busquedaPerJuridica/downloadFile',
+		retenciones_searchLiquidacionSociedad: 'retenciones/searchLiquidacionSociedad',
+		retenciones_searchSociedadColegiado: 'retenciones/selectRetencionesColegialYSociedades',
 		retenciones_tipoRetencion: 'retenciones/tipoRetencion',
 		retenciones_search: 'retenciones/search',
+		retenciones_searchColegiado: 'retenciones/searchRetencionColegiado',
 		retenciones_update: 'retenciones/update',
+		integrantes_buscarPagosColegiados: 'tarjetaIntegrantes/buscarPagosColegiados',
 		integrantes_search: 'busquedaPerJuridica/datosIntegrantesSearch',
 		integrantes_tipoColegio: 'tarjetaIntegrantes/tipoColegio',
 		integrantes_provincias: 'tarjetaIntegrantes/provincias',
 		integrantes_provinciaColegio: 'tarjetaIntegrantes/provinciaColegio',
 		integrantes_cargos: 'tarjetaIntegrantes/cargos',
+		integrantes_listadoHistoricoLiquidacion: 'tarjetaIntegrantes/listadoHistoricoLiquidacion',
+		integrantes_eliminarLiquidacion: 'tarjetaIntegrantes/eliminarLiquidacion',
+		integrantes_insertHistoricoLiquidacion: 'tarjetaIntegrantes/insertHistoricoLiquidacion',
 		direcciones_search: 'busquedaPerJuridica/datosDireccionesSearch',
 		direcciones_update: 'tarjetaDirecciones/update',
 		direcciones_insert: 'tarjetaDirecciones/create',
@@ -418,6 +449,64 @@ export class SigaServices {
 		solicitudModificacion_searchSolModifDatosCambiarFotoDetail:
 			'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
 		solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
+      
+      	    // Monederos
+    monederosBusqueda_searchListadoMonederos: 'pys/getMonederos',															 
+
+		 //INICIO PRODUCTOS Y SERVICIOS
+  
+    //PANTALLA TIPOS PRODUCTOS
+    tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
+    tiposProductos_searchListadoProductosHistorico: 'pys/listadoTipoProductoHistorico',
+    tiposProductos_activarDesactivarProducto: 'pys/activarDesactivarProducto',
+    tiposProductos_crearEditarProducto: 'pys/crearEditarProducto',
+    tiposProductos_comboProducto: 'combo/tipoProductos',
+
+    //PANTALLA TIPOS SERVICIOS
+    tiposServicios_searchListadoServicios: 'pys/listadoTipoServicio',
+    tiposServicios_searchListadoServiciosHistorico: 'pys/listadoTipoServicioHistorico',
+    tiposServicios_activarDesactivarServicio: 'pys/activarDesactivarServicio',
+    tiposServicios_crearEditarServicio: 'pys/crearEditarServicio',
+    tiposServicios_comboServicios: 'combo/tipoServicios',
+
+    //PANTALLAS BUSCADOR PRODUCTOS / FICHA PRODUCTOS
+    productosBusqueda_comboIva: 'combo/tipoIva',
+    productosBusqueda_comboFormaPago: 'combo/tipoFormaPago',
+    productosBusqueda_comboTipos: 'pys/listadoTipoProductoByIdCategoria',
+    productosBusqueda_busqueda: 'pys/buscarProductos',
+    productosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoProductos',
+    fichaProducto_detalleProducto: 'pys/detalleProducto',
+    fichaProducto_crearProducto: 'pys/nuevoProducto',
+    fichaProducto_editarProducto: 'pys/editarProducto',
+    fichaProducto_comboIvaNoDerogados: 'combo/tipoIvaNoDerogados',
+    fichaProducto_comboFormasDePagoInternet: 'combo/pagoInternet',
+    fichaProducto_comboFormasDePagoSecretaria: 'combo/comboPagoSecretaria',
+    fichaProducto_crearFormaDePago: 'pys/formasPagoProducto',
+    fichaProducto_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegio',
+
+    //PANTALLAS BUSCADOR SERVICIOS / FICHA SERVICIOS
+    serviciosBusqueda_busqueda: 'pys/buscarServicios',
+    serviciosBusqueda_comboTipos: 'pys/listadoTipoServicioByIdCategoria',
+    serviciosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoServicios',
+    fichaServicio_detalleServicio: 'pys/detalleServicio',
+    fichaServicio_crearServicio: 'pys/nuevoServicio',
+    fichaServicio_editarServicio: 'pys/editarServicio',
+    fichaServicio_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegioServicios',
+    fichaServicio_comboCondicionSuscripcion: 'combo/CondicionSuscripcion',
+    fichaServicio_crearFormaDePago: 'pys/formasPagoServicio',
+    fichaServicio_borrarSuscripcionesBajas: 'pys/borrarSuscripcionesBajas',
+    fichaServicio_obtenerPreciosServicio: 'pys/detalleTarjetaPrecios',
+    fichaServicio_comboPeriodicidad: 'combo/comboPeriodicidad',
+    fichaServicio_crearEditarPrecios: 'pys/crearEditarPrecios',
+    fichaServicio_eliminarPrecios: 'pys/eliminarPrecios',
+    constructorConsultas_obtenerDatosConsulta: 'consultas/pys/obtenerDatosConsulta',
+    constructorConsultas_guardarDatosConstructor: 'consultas/pys/constructorConsultas',
+    constructorConsultas_obtenerConfigColumnasQueryBuilder: 'consultas/pys/obtenerConfigColumnasQueryBuilder',
+    constructorConsultas_obtenerCombosQueryBuilder: 'consultas/pys/obtenerCombosQueryBuilder',
+
+    //FIN PRODUCTOS Y SERVICIOS
+      
+      
 		// FOTO
 		solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
 		solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',
@@ -464,7 +553,7 @@ export class SigaServices {
 		busquedaSanciones_updateSanction: 'busquedaSanciones/updateSanction',
 		busquedaSanciones_insertSanction: 'busquedaSanciones/insertSanction',
 		fichaDatosGenerales_etiquetasPersona: 'fichaDatosGenerales/etiquetasPersona',
-		getLetrado: '/getLetrado',
+		getLetrado: 'getLetrado',
 		fichaDatosCurriculares_solicitudUpdate: 'fichaDatosCurriculares/solicitudUpdate',
 		fichaDatosDirecciones_solicitudCreate: 'fichaDatosDirecciones/solicitudCreate',
 		fichaDatosDirecciones_solicitudUpdate: 'fichaDatosDirecciones/solicitudUpdate',
@@ -474,10 +563,11 @@ export class SigaServices {
 		busquedaPerJuridica_datosBancariosInsert: 'busquedaPerJuridica/datosBancariosInsert',
 		busquedaPerJuridica_solicitudInsertBanksData: 'busquedaPerJuridica/solicitudInsertBanksData',
 		fichaDatosColegiales_datosColegialesUpdate: '/fichaDatosColegiales/datosColegialesUpdate',
-		fichaDatosColegiales_datosColegialesUpdateMasivo:'/fichaDatosColegiales/datosColegialesUpdateMasivo',
+		fichaDatosColegiales_datosColegialesUpdateMasivo: '/fichaDatosColegiales/datosColegialesUpdateMasivo',
 		fichaDatosColegiales_datosColegialesInsertEstado: '/fichaDatosColegiales/datosColegialesInsertEstado',
 		fichaDatosColegiales_datosColegialesUpdateEstados: '/fichaDatosColegiales/datosColegialesUpdateEstados',
 		fichaDatosColegiales_datosColegialesDeleteEstado: '/fichaDatosColegiales/datosColegialesDeleteEstado',
+		fichaDatosColegiales_cuentaContableSJCSSearch: '/fichaDatosColegiales/cuentaContableSJCSSearch',
 		fichaDatosColegiales_searchTurnosGuardias: '/fichaDatosColegiales/searchTurnosGuardias',
 		fichaColegialRegTel_permisos: 'fichaColegialRegTel/permisos',
 		fichaColegialRegTel_searchListDoc: 'fichaColegialRegTel/searchListDoc',
@@ -532,6 +622,7 @@ export class SigaServices {
 		comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
 		comunicaciones_descargarDocumento: 'comunicaciones/detalle/descargarDocumento',
 		comunicaciones_descargarCertificado: 'comunicaciones/detalle/descargarCertificado',
+		comunicaciones_saveNuevaComm: 'comunicaciones/saveNuevaComm',
 		consultas_search: 'consultas/search',
 		consultas_borrar: 'consultas/borrarConsulta',
 		consultas_listadoPlantillas: 'consultas/plantillasconsulta',
@@ -609,25 +700,76 @@ export class SigaServices {
 		dialogo_envioTest: 'dialogoComunicacion/envioTest',
 		dialogo_maxModelos: 'dialogoComunicacion/maxModelos',
 
-		showMockups: 'showMockups'
+		//endpoints
+		...endpoints_EJG,
+		...endpoints_facturacionsjcs,
+		...endpoints_componentes,
+		...endpoints_generales,
+		...endpoints_justiciables,
+		...endpoints_oficio,
+		...endpoints_maestros,
+    ...endpoints_facturacionPyS,
+    ...endpoints_PyS,
+    ...endpoints_EJG_Comision,
+		...endpoints_remesa,
+		...endpoints_intercambios,
+		...endpoints_guardia,
+		...endpoints_expedientes
 	};
 
 	private menuToggled = new Subject<any>();
 	private iframeRemove = new Subject<any>();
 	private consultasRefresh = new Subject<any>();
+	private updateCombo = new Subject<any>();
+	private newIdOrdenacion = new Subject<any>();
 	private deshabilitarEditar = new Subject<any>();
 	private perfilesRefresh = new Subject<any>();
 	private modelosRefresh = new Subject<any>();
 	private habilitarDocs = new Subject<any>();
 	private desHabilitarDocs = new Subject<any>();
+	private sendFechaBaja = new Subject<any>();
+	private sendSelectedDatos = new Subject<any>();
+	private sendDatosRedy = new Subject<any>();
+
 	menuToggled$ = this.menuToggled.asObservable();
 	iframeRemove$ = this.iframeRemove.asObservable();
 	consultasRefresh$ = this.consultasRefresh.asObservable();
+	updateCombo$ = this.updateCombo.asObservable();
+	sendSelectedDatos$ = this.sendSelectedDatos.asObservable();
+	newIdOrdenacion$ = this.newIdOrdenacion.asObservable();
 	deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
 	perfilesRefresh$ = this.perfilesRefresh.asObservable();
 	modelosRefresh$ = this.modelosRefresh.asObservable();
 	habilitarDocs$ = this.habilitarDocs.asObservable();
 	desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
+
+	sendFechaBaja$ = this.sendFechaBaja.asObservable();
+	datosRedy$ = this.sendDatosRedy.asObservable();
+
+	private guardarDatosGeneralesJusticiable = new Subject<any>();
+	guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
+
+	private guardarDatosGeneralesRepresentante = new Subject<any>();
+	guardarDatosGeneralesRepresentante$ = this.guardarDatosGeneralesRepresentante.asObservable();
+
+	private guardarDatosSolicitudJusticiable = new Subject<any>();
+	guardarDatosSolicitudJusticiable$ = this.guardarDatosSolicitudJusticiable.asObservable();
+
+	private createJusticiable = new Subject<any>();
+	createJusticiable$ = this.createJusticiable.asObservable();
+
+	private documentosInformes = new Subject<any>();
+	documentotosInformes = this.documentosInformes.asObservable();
+
+	private rutaMenu = new BehaviorSubject<string>('');
+
+	rutaMenu$ = this.rutaMenu.asObservable();
+
+	setRutaMenu(ruta: string) {
+
+		this.rutaMenu.next(ruta);
+
+	}
 
 	constructor(private http: HttpClient, handler: HttpBackend, private httpbackend: HttpClient) {
 		this.httpbackend = new HttpClient(handler);
@@ -670,6 +812,7 @@ export class SigaServices {
 				return response;
 			});
 	}
+
 	postBackend(service: string, body: any): Observable<any> {
 		let headers = new HttpHeaders({
 			'Content-Type': 'application/json'
@@ -684,6 +827,8 @@ export class SigaServices {
 				return response;
 			});
 	}
+
+
 
 	post(service: string, body: any): Observable<any> {
 		let headers = new HttpHeaders({
@@ -713,11 +858,50 @@ export class SigaServices {
 		return obs;
 	}
 
-	postDownloadFiles(service: string, body: any): Observable<any> {
+	asyncDownloadInformes(fileObservable : Observable<any>, filename : String){
+		let descargasPendientes;
+		fileObservable.subscribe(
+			(data) => {
+				if (data.size != 0) {
+					// let a = JSON.parse(data);
+					const blob = new Blob([data], { type: 'text/csv' });
+
+					if (blob != undefined) {
+						// 	saveAs(blob, data.nombre);
+						// } else {
+						saveAs(blob, filename);
+					}
+					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+					sessionStorage.setItem('descargasPendientes', descargasPendientes);
+				} else {
+					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+					sessionStorage.setItem('descargasPendientes', descargasPendientes);
+					/*if(descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) != 0){
+						this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+					}*/
+					console.log('Descargar pendientes != 0');
+				}
+			},
+			(error) => {
+				descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+				sessionStorage.setItem('descargasPendientes', descargasPendientes);
+				/*this.clearPerenne();
+				if (error.message != null && error.message != undefined) {
+					this.showFail(error.message);
+				} else {
+					this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+				}*/
+				console.log(' No se pudo descargar. (Error de back)' , error);
+			}
+		);
+
+	}
+
+	postDownloadFiles(service: string, body: any, asyncDownload: boolean = false, fileName:String = '' ): Observable<any>  {
 		let headers = new HttpHeaders({
 			'Content-Type': 'application/json'
 		});
-		return this.http
+		const fileObservable : Observable<any> = this.http
 			.post(environment.newSigaUrl + this.endpoints[service], body, {
 				headers: headers,
 				observe: 'body', // si observe: "response" no sirve. Si se quita el observe sirve
@@ -725,9 +909,65 @@ export class SigaServices {
 			})
 			.map((response) => {
 				return response;
+			});
+			if(asyncDownload){
+				this.asyncDownloadInformes(fileObservable, fileName);
+			}
+				
+			return fileObservable;
+			
+		//   .catch((response) => {
+		//     return this.parseErrorBlob(response);
+		//   });
+	}
+	getDownloadFiles(service: string, body: any): any {
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], body, { observe: 'response', responseType: 'blob' }); // Si no funciona, poner "observe: 'response'" antes del responseType
+	}
+
+	postDownloadFilesWithFileName(service: string, body: any): Observable<any> {
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], body, {
+				headers: headers,
+				observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
+				responseType: 'blob'
+			})
+			.map((response) => {
+				let data = {
+					file: new Blob([response.body], { type: response.headers.get("Content-Type") }),
+					filename: response.headers.get("Content-Disposition"),
+					status: response.status
+				};
+				return data;
 			})
 			.catch((response) => {
 				return this.parseErrorBlob(response);
+			});
+	}
+
+	postDownloadFilesWithFileName2(service: string, body: any): Observable<any> {
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], body, {
+				headers: headers,
+				observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
+				responseType: 'blob'
+			})
+			.map((response) => {
+				let data = {
+					file: new Blob([response.body], { type: response.headers.get("Content-Type") }),
+					filename: response.headers.get("Content-Disposition"),
+					status: response.status
+				};
+				return data;
+			})
+			.catch((response) => {
+				return response;
 			});
 	}
 
@@ -770,6 +1010,30 @@ export class SigaServices {
 			});
 	}
 
+	postSendContentParams(service: string, params: any): Observable<any> {
+		let formData: FormData = new FormData();
+		let file = params[0];
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+			formData.append('fechaDesde', params[1]);
+			formData.append('fechaHasta', params[2]);
+			formData.append('observaciones', params[3]);
+		}
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'application/json');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers,
+				observe: 'body'
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
 	postSendFileAndParameters(service: string, file: any, idPersona: any): Observable<any> {
 		let formData: FormData = new FormData();
 		if (file != undefined) {
@@ -778,6 +1042,31 @@ export class SigaServices {
 
 		// pasar parametros por la request
 		formData.append('idPersona', idPersona);
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFileAndParametersArr(service: string, file: any, params: any): Observable<any> {
+		let formData: FormData = new FormData();
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
+
+		// pasar parametros por la request
+		formData.append('fechaDesde', params[0]);
+		formData.append('fechaHasta', params[1]);
+		formData.append('observaciones', params[2]);
 
 		let headers = new HttpHeaders();
 
@@ -803,6 +1092,231 @@ export class SigaServices {
 		formData.append('idPersona', idPersona);
 
 		formData.append('motivo', motivo);
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFileAndActuacion(service: string, documentos: Documento[], actuacion: ActuacionDesignaItem): Observable<any> {
+		let formData: FormData = new FormData();
+
+		let documentosActualizar = [];
+
+		documentos.forEach((el, i) => {
+
+			if (el.file != undefined && el.file != null) {
+				let doc = new DocumentoDesignaItem();
+
+				doc.anio = el.anio;
+				doc.numero = el.numero;
+				doc.idTurno = el.idTurno;
+				doc.idActuacion = el.idActuacion;
+				doc.observaciones = el.observaciones;
+				doc.idTipodocumento = '1';
+				doc.usuModificacion = el.usuModificacion;
+
+				formData.append(`uploadFile${i}`, el.file, el.file.name + ';' + JSON.stringify(doc));
+			} else {
+				let doc = new DocumentoDesignaItem();
+
+				doc.idDocumentaciondes = el.idDocumentaciondes;
+				doc.idTipodocumento = '1';
+				doc.idFichero = el.idFichero;
+				doc.idInstitucion = el.idInstitucion;
+				doc.anio = el.anio;
+				doc.numero = el.numero;
+				doc.idTurno = el.idTurno;
+				doc.idActuacion = el.idActuacion;
+				doc.observaciones = el.observaciones;
+				doc.usuModificacion = el.usuModificacion;
+				documentosActualizar.push(doc);
+			}
+		});
+
+		formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFileAndIdAsistencia(service: string, documentos: DocumentacionAsistenciaItem[], anioNumero: string): Observable<any> {
+		let formData: FormData = new FormData();
+		let documentosActualizar: DocumentoAsistenciaItem[] = [];
+		documentos.forEach((documento, i) => {
+
+			let documentoJSON: DocumentoAsistenciaItem = new DocumentoAsistenciaItem();
+			documentoJSON.asociado = documento.asociado;
+			documentoJSON.descAsociado = documento.descAsociado;
+			documentoJSON.descTipoDoc = documento.descTipoDoc;
+			documentoJSON.idDocumentacion = documento.idDocumentacion;
+			documentoJSON.fechaEntrada = documento.fechaEntrada;
+			documentoJSON.idFichero = documento.idFichero;
+			documentoJSON.idTipoDoc = documento.idTipoDoc;
+			documentoJSON.nombreFichero = documento.nombreFichero;
+			documentoJSON.observaciones = documento.observaciones
+
+			if (!documento.idDocumentacion && documento.fileData) {
+				formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
+			} else {
+				documentosActualizar.push(documentoJSON);
+			}
+
+		});
+
+		formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		formData.append('anioNumero', anioNumero);
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+
+	}
+	
+	postSendFileAndIdSolicitud(service: string, documentos: DocumentacionIncorporacionItem[], idSolicitud: string): Observable<any>{
+	let formData: FormData = new FormData();
+	documentos.forEach((documento, i )=>{
+
+		let documentoJSON : DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
+		documentoJSON.idDocumentacion = documento.idDocumentacion;
+		documentoJSON.codDocEXEA = documento.codDocEXEA;
+		documentoJSON.documento = documento.documento;
+		documentoJSON.observaciones = documento.observaciones;
+		documentoJSON.obligatorio = documento.obligatorio;
+		documentoJSON.idModalidad = documento.idModalidad;
+		documentoJSON.tipoColegiacion = documento.tipoColegiacion;
+		documentoJSON.tipoSolicitud = documento.tipoSolicitud;
+
+		if(!documento.idFichero && documento.fileData){
+			formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
+		}
+
+	});
+
+    let headers = new HttpHeaders();
+
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+
+	formData.append('idSolicitud', idSolicitud);
+
+	return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
+
+  }
+
+	postSendFileAndDesigna(service: string, documentos: any[], designa: any): Observable<any> {
+		let formData: FormData = new FormData();
+
+		let documentosActualizar = [];
+
+		documentos.forEach((el, i) => {
+
+			if (el.cells[5].value && el.cells[3].value != undefined && el.cells[3].value != null) {
+				let doc = new DocumentoDesignaItem();
+				doc.anio = designa.ano;
+				doc.numero = designa.numero;
+				doc.idTurno = designa.idTurno;
+				doc.idActuacion = el.cells[1].value == '0' ? null : el.cells[1].value;
+				doc.observaciones = el.cells[4].value;
+				doc.idTipodocumento = el.cells[2].value;
+
+				formData.append(`uploadFile${i}`, el.cells[3].value, el.cells[3].value.name + ';' + JSON.stringify(doc));
+			} else {
+				let doc = new DocumentoDesignaItem();
+				doc.anio = designa.ano;
+				doc.numero = designa.numero;
+				doc.idTurno = designa.idTurno;
+				doc.observaciones = el.cells[4].value;
+				doc.idDocumentaciondes = el.cells[6].value;
+				documentosActualizar.push(doc);
+			}
+		});
+
+		formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFileAndDesignaJustificacionExpres(service: string, files: any, designa: any): Observable<any> {
+		let formData: FormData = new FormData();
+		
+		if (files != undefined) {
+			for (let file of files) {
+				formData.append('uploadFile', file, file.name + ';' + JSON.stringify(designa));
+			}
+		}
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {
+		let formData: FormData = new FormData();
+
+		if (documentos.length > 0) {
+			documentos.forEach((el, i) => {
+
+				formData.append(`uploadFile${i}`, el, el.name + ';');
+			});
+		}
+
+		formData.append('nuevaComunicacion', JSON.stringify(nuevaComunicacion));
 
 		let headers = new HttpHeaders();
 
@@ -905,6 +1419,18 @@ export class SigaServices {
 		this.consultasRefresh.next();
 	}
 
+	notifyupdateCombo(send) {
+		this.updateCombo.next(send);
+	}
+
+	notifynewIdOrdenacion(send) {
+		this.newIdOrdenacion.next(send);
+	}
+
+	notifysendSelectedDatos(send) {
+		this.sendSelectedDatos.next(send);
+	}
+
 	notifyRefreshModelos() {
 		this.modelosRefresh.next();
 	}
@@ -925,7 +1451,35 @@ export class SigaServices {
 		this.desHabilitarDocs.next();
 	}
 
-	postSendContentAndParameter(service: string, param: string, file: any): Observable<any> {
+	notifyGuardarDatosGeneralesRepresentante(data) {
+		this.guardarDatosGeneralesRepresentante.next(data);
+	}
+
+	notifyGuardarDatosGeneralesJusticiable(data) {
+		this.guardarDatosGeneralesJusticiable.next(data);
+	}
+
+	notifyGuardarDatosSolicitudJusticiable(data) {
+		this.guardarDatosSolicitudJusticiable.next(data);
+	}
+
+	notifyCreateJusticiable(data) {
+		this.createJusticiable.next(data);
+	}
+
+	notifysendFechaBaja(fecha) {
+		this.sendFechaBaja.next(fecha);
+	}
+
+	notifysendDatosRedy(datos) {
+		this.sendDatosRedy.next(datos);
+	}
+
+	postSendContentAndParameter(
+		service: string,
+		param: string,
+		file: any
+	): Observable<any> {
 		let formData: FormData = new FormData();
 		if (file != undefined) {
 			formData.append('uploadFile', file, file.name);
@@ -943,4 +1497,34 @@ export class SigaServices {
 				return response;
 			});
 	}
+
+	postSendFileAndParameters2(service: string, file: File, params: any): Observable<any> {
+
+		let formData: FormData = new FormData();
+
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
+
+		let objectKeys = Object.keys(params);
+
+		// pasamos parametros por la request
+		objectKeys.forEach(el => {
+			formData.append(el, params[el]);
+		});
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
 }

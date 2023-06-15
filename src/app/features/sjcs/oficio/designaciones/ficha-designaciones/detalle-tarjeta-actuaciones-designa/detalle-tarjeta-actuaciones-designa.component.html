@@ -1,0 +1,74 @@
+<!-- Alertas -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- Alertas -->
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<!-- Spinner -->
+
+<!-- Tabla de actuaciones -->
+<div id="sjcsDesigAct">
+<p-table [value]="actuacionesDesignaItems" [columns]="cols" [responsive]="true" #table class="tabla-listado"
+  selectionMode="multiple" [(selection)]="actuacionesSeleccionadas" (onRowSelect)="onRowSelected($event)">
+
+  <ng-template pTemplate="colgroup" let-columns>
+    <colgroup>
+      <col *ngFor="let col of cols" [style.width]="col.width">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+        {{col.header | translate}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+        <input class="filtros" placeholder="{{'general.boton.search' | translate}}" pDroppable="false"
+          (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+            col.field, 'contains')">
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+      <td class="text-center" *ngFor="let col of columns">
+        <span *ngIf="col.field !='numeroAsunto'" [ngClass]="{'setItalic': isItalic(dato)}">{{dato[col.field]}}</span>
+        <span *ngIf="col.field =='numeroAsunto'" [ngClass]="{'setItalic': isItalic(dato)}">
+          <a (click)="editarActuacion(dato)" class="enlace">{{ dato[col.field]}}</a>
+        </span>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="columns.length">
+        {{ 'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}.
+      </td>
+    </tr>
+  </ng-template>
+
+</p-table>
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-comment" [disabled]="!isAnySelected() || historico || modoLectura"
+      iconPos="left" (click)="navigateComunicar()" label="{{'general.boton.comunicar' | translate }}"></button>
+    <button [disabled]="!isAnySelected() || historico || modoLectura" pButton type=" button" icon="fa fa-trash-alt"
+      iconPos="left" label="{{'general.boton.eliminar' | translate}}" (click)="eliminar()"></button>
+    <button *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left"
+      label="{{'general.message.mostrarHistorico' | translate}}" (click)="toogleHistory(true)"></button>
+    <button *ngIf="historico" pButton type="button" icon="fa fa-undo" iconPos="left"
+      label="{{'general.message.ocultarHistorico' | translate}}" (click)="toogleHistory(false)"></button>
+    <button *ngIf="!historico" [disabled]="!isAnySelected() || isLetrado || modoLectura" pButton type="button"
+      iconPos="left" label="{{ 'general.boton.anular' | translate}}" (click)="anular()"></button>
+    <button *ngIf="historico" [disabled]="!isAnySelected() || isLetrado || modoLectura" pButton type="button"
+      iconPos="left" label="{{ 'general.boton.reactivar' | translate}}" (click)="reactivar()"></button>
+    <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
+      (click)="nuevo()" [disabled]="(isLetrado && !permiteTurno) || modoLectura"></button>
+  </div>
+</div>
+</div>
+<!-- Tabla de actuaciones -->

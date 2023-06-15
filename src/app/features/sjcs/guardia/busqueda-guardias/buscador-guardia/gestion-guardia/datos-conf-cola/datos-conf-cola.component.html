@@ -1,0 +1,121 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container" id="configuracionCola">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 cabeza">
+          <div class="d-flex justify-content-end mb-1 pointer" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha">{{'justiciaGratuita.guardia.gestion.configuracionCola' | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between sub">
+            <!--<strong> {{ordenacion}}</strong>-->
+            <label>
+              {{"justiciaGratuita.guardia.gestion.porGrupos" | translate}}:
+              <strong *ngIf="!body.porGrupos">No</strong>
+              <strong *ngIf="body.porGrupos">Sí</strong>
+            </label>
+            <label>
+              {{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}:
+              <strong>{{resumenPesos}}</strong>
+            </label>
+            <label *ngIf="ordenacion != 'Por grupos'">
+              {{'dato.jgr.guardia.guardias.letradosGuardia' | translate}}:
+              <strong>{{numeroletradosguardia}}</strong>
+            </label>
+            <label *ngIf="ordenacion == 'Por grupos'">
+              {{"dato.jgr.guardia.guardias.minimoLetradosGrupo" | translate}}:
+              <strong>{{numeroletradosguardia}}</strong>
+            </label>
+            <i (click)="abreCierraFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" (click)="abreCierraFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'justiciaGratuita.guardia.gestion.configuracionCola' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-6 ">
+
+          <div class="form-row justify-content-between">
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.guardia.gestion.configuracionCola" | translate }}</label>
+            </div>
+
+            <!-- Por Grupos -->
+            <div class="form-group col-12 row p-4 m-1">
+              <label>
+                <strong>{{"justiciaGratuita.guardia.gestion.porGrupos" | translate}} </strong>
+              </label>
+              <p-checkbox binary="true" [(ngModel)]="body.porGrupos" [disabled]="historico || !permisoEscritura || tieneGuardiaPrincipal || isLetrado" (onChange)="cambiaGrupo()"></p-checkbox>
+            </div>
+
+            <!-- Letrados Guardia -->
+            <div class="form-group col-lg-12 col-md-12 p-4">
+              <label *ngIf="!body.porGrupos">
+                {{"dato.jgr.guardia.guardias.letradosGuardia" | translate}}
+              </label>
+              <label *ngIf="body.porGrupos">
+                {{"dato.jgr.guardia.guardias.minimoLetradosGrupo" | translate}}
+              </label>
+              <input [disabled]="!permisoEscritura || historico || tieneGuardiaPrincipal || isLetrado" [(ngModel)]="body.letradosGuardia" (onChange)="cambiaMinimo($event)" (keypress)="numberOnly($event)" type="text"
+                class="form-control" [maxLength]="200" pInputText [ngClass]="styleObligatorio(body.letradosGuardia)">
+            </div>
+
+
+            <!-- Rotar Componentes automaticamente -->
+            <div class="form-group col-12 row p-4 m-1">
+              <label>
+                <strong>{{"justiciaGratuita.guardia.gestion.rotarComponentesAuto" | translate}}</strong>
+              </label>
+              <p-checkbox [(ngModel)]="body.rotarComponentes" binary="true" [disabled]="historico || !permisoEscritura || !body.porGrupos || tieneGuardiaPrincipal || isLetrado"></p-checkbox>
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOQUE 2 -->
+
+        <div class="bloque col-6">
+          <div class="form-row p-4">
+            <div class="col-12 ">
+              <p-pickList class="pick-sufijos" [source]="pesosExistentes" [target]="pesosSeleccionados" sourceHeader="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"
+                targetHeader="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [responsive]="true" filterBy="label"
+                dragdrop="true" dragdropScope="pesosSeleccionados" sourceFilterPlaceholder="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}"
+                (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)" (onMoveToTarget)="cambioSeleccionados($event)"
+                targetFilterPlaceholder="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.buscarPerfil' | translate }}"
+                [showSourceControls]="false" [showTargetControls]="true" [sourceStyle]="{ height: '200px' }" [targetStyle]="{ height: '200px' }"
+                [disabled]="historico || !permisoEscritura || tieneGuardiaPrincipal || isLetrado">
+                <ng-template let-item pTemplate="item">
+                  <div>{{ item.por_filas}} {{ item.orden}}</div>
+                </ng-template>
+              </p-pickList>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura || tieneGuardiaPrincipal || isLetrado" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton  type="button" icon="far fa-save" iconPos="left" [disabled]="tieneGuardiaPrincipal || historico || !permisoEscritura || isLetrado" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

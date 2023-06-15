@@ -1,0 +1,124 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="comunicaciones">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('comunicaciones')">
+          <div class="img-colegiado">
+            <i class="far fa-comments icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('comunicaciones')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.facturas.comunicacionesCobrosRecobros' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+
+            <ng-container *ngIf="datos && datos.length != 0">
+              <label>{{ 'administracion.informes.literal.orden' | translate }}: 
+                <span>{{ datos[datos.length - 1].orden }}</span></label>
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}: 
+                <span>{{ datos[datos.length - 1].fechaEnvio | date: 'dd/MM/yyyy' }}</span></label>
+              <label>{{ 'justiciaGratuita.ejg.documentacion.Documento' | translate }}: 
+                <span>{{ datos[datos.length - 1].documento }}</span></label>
+            </ng-container>
+            
+            <i class="fa fa-angle-down float-right {{ !datos || datos.length == 0 ? 'ml-auto' : '' }}" (click)="abreCierraFicha('comunicaciones')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('comunicaciones')">
+        <div class="img-colegiado">
+          <i class="far fa-comments icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.facturas.comunicacionesCobrosRecobros' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
+      <!-- TABLA RESULTADOS -->
+      <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+        class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
+        selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of cols" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{ col.header | translate }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="
+                  table.filter($event.target.value, col.field, 'contains')
+                " placeholder="{{'general.boton.search' | translate}}" />
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              {{'justiciaGratuita.maestros.fundamentosCalificacion.tabla.sinResultados'|translate}}
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+            <td class="text-center" *ngFor="let col of columns">
+              
+              <span *ngIf="col.field == 'orden'" class="pull-right">{{ dato[col.field] }}</span>
+              <span *ngIf="col.field == 'fechaEnvio'">{{ dato[col.field] | date: "dd/MM/yyyy" }}</span>
+              <span *ngIf="col.field == 'documento'">{{ dato[col.field] }}</span>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+            </label>
+            <label>{{"general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
+            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <div class="ml-3 selectAll">
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                name="groupname"></p-checkbox>
+            </div>
+          </div>
+        </ng-template>
+
+      </p-table>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="comunicar()" label="{{ 'facturacion.facturas.comunicaciones.comunicar' | translate }}"></button>
+        <button pButton type="button" icon="fa fa-download" iconPos="left" [disabled]="selectedDatos.length == 0"
+        (click)="descargar()" label="{{ 'general.boton.download' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

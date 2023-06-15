@@ -1,0 +1,23 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body p-0">
+    <app-filtro-buscador-colegiados [nuevaInscripcion]="nuevaInscripcion" [filtroRecibido]="calendarioSelected" (buscar)="buscar()"></app-filtro-buscador-colegiados>
+  </div>
+</div>
+
+<div *ngIf="show">
+  <div class="card">
+    <div class="card-body">
+      <app-tabla-buscador-colegiados [datos]="datos"  (colegiado)="getColegiado($event)"></app-tabla-buscador-colegiados>
+    </div>
+  </div>
+</div>
+
+<div class="text-right main-button mt-2">
+  <button pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver" (click)="goBack()"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

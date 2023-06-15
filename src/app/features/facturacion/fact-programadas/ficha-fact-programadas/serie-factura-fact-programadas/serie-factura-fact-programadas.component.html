@@ -1,0 +1,93 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="serieFactura">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('serieFactura')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('serieFactura')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.factProgramadas.serieFactu' | translate }}</label>
+
+            <label *ngIf="modoEdicion" class="mr-3">
+              <i (click)="navigateToSerieFacturacion();$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2"></i>
+              <a (click)="navigateToSerieFacturacion();$event.stopPropagation();">
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  {{ 'facturacion.factProgramadas.serieFactu.enlace' | translate }}
+                </span>
+              </a>
+            </label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>{{ 'facturacionPyS.ficherosAdeudos.serie' | translate }}: 
+              <span>{{ serieFacturacionSeleccionada.abreviatura }}</span></label>
+            <label>{{ "general.description" | translate }}: 
+              <span>{{ serieFacturacionSeleccionada.descripcion }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.tipoProductos' | translate }}: 
+              <span>{{ tiposProductos }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.tipoServicios' | translate }}: 
+              <span>{{ tiposServicios }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('serieFactura')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('serieFactura')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.factProgramadas.serieFactu' | translate }}</label>
+
+        <label *ngIf="modoEdicion" class="ml-auto mr-3">
+          <i (click)="navigateToSerieFacturacion();$event.stopPropagation();"
+            class="fas fa-external-link-alt mr-2"></i>
+          <a (click)="navigateToSerieFacturacion();$event.stopPropagation();">
+            <span style="color: blue; text-decoration: underline;cursor:pointer;">
+              {{ 'facturacion.factProgramadas.serieFactu.enlace' | translate }}
+            </span>
+          </a>
+        </label>
+        <i class="fa fa-angle-up{{ !modoEdicion  ? ' ml-auto' : '' }}"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.serieFactu' | translate }} (*)</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idSerieFacturacion' placeholder="Seleccionar"
+              [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde" [disabled]="modoEdicion"
+              [ngClass]="styleObligatorio(body.idSerieFacturacion)" [showClear]="true" (onChange)="actualizarInputs()"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'general.description' | translate }}</label>
+          <input type="text" [(ngModel)]="serieFacturacionSeleccionada.descripcion" class="form-control" [disabled]="true" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.seriesFactura.tipoProductos' | translate }}</label>
+          <input type="text" [(ngModel)]="tiposProductos" class="form-control" [disabled]="true" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.seriesFactura.tipoServicios' | translate }}</label>
+          <input type="text" [(ngModel)]="tiposServicios" class="form-control" [disabled]="true" pInputText>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

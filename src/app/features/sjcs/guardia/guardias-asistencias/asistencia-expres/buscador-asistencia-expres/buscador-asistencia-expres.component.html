@@ -1,0 +1,91 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="buscadAsisExpr">
+
+    
+        <form [formGroup]="aeForm">
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel class="my-1" [expanded]="expanded">
+                    <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                        <div class="w100 font-weight-bold">
+                            <p class="w100">{{ titulo }}</p>
+                        </div>
+                    </mat-expansion-panel-header>
+                    <ng-template matExpansionPanelContent>
+                        <div class="form-row">
+                            <div class="form-group-interlineado col-lg-3 col-md-3">
+                                <label>{{'sjcs.guardia.asistencia.guardiadia' | translate}}</label>
+                                <app-fecha [(value)]="filtro.diaGuardia" (valueChangeSelected)="fillFechaFiltro($event)"  [inputStyleClass] = "styleObligatorio(filtro.diaGuardia)"
+                                (valueChangeInput)="fillFechaFiltro($event)"></app-fecha>
+                            </div>
+                            <div class="form-group-interlineado col-lg-3 col-md-3">
+                                <label>{{"justiciaGratuita.guardia.asistenciasexpress.turno" | translate}} (*)</label>
+                                <p-dropdown class="select-form"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [showClear]="true" [(ngModel)]="filtro.idTurno"
+                                    [ngModelOptions]="{standalone: true}" [options]="comboTurnos" [ngClass]="styleObligatorio(filtro.idTurno)"
+                                    (onChange)="onChangeTurno()"
+                                    [disabled]="disabledIfEmptyArgs(filtro.diaGuardia)">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-3 col-md-3">
+                                <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}} (*)</label>
+                                <p-dropdown class="select-form"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [showClear]="true" [(ngModel)]="filtro.idGuardia" [ngClass]="styleObligatorio(filtro.idGuardia)"
+                                    [ngModelOptions]="{standalone: true}" [options]="comboGuardias"
+                                    (onChange)="onChangeGuardia()"
+                                    [disabled]="disabledIfEmptyArgs(filtro.diaGuardia, filtro.idTurno)">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-3 col-md-3">
+                                <label>{{"sjcs.guardia.asistencia.tipoasistenciacolegio" | translate}}</label>
+                                <p-dropdown class="select-form"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [showClear]="true" [(ngModel)]="filtro.idTipoAsistenciaColegiado" (onChange)="onChangeTipoAsistencia()"
+                                    [ngModelOptions]="{standalone: true}" [options]="comboTiposAsistencia"
+                                    [disabled]="disabledIfEmptyArgs(filtro.diaGuardia, filtro.idTurno, filtro.idGuardia)">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group-interlineado col-lg-3 col-md-3">
+                                <label>{{"sjcs.guardia.asistencia.letradoguardia" | translate}} (*)</label>
+                                <p-dropdown class="select-form"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [showClear]="true" [(ngModel)]="filtro.idLetradoGuardia" (onChange)="onChangeLetradoGuardia($event)"
+                                    [ngModelOptions]="{standalone: true}" [options]="comboLetradosGuardia" [disabled]="isLetrado || deshabilitarLetradoGuardia">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-3 col-md-3">
+                                <label>{{"justiciaGratuita.guardia.asistenciasexpress.refuerzoSustitucion" | translate}}</label>
+                                &nbsp;&nbsp;
+                                <p-dropdown class="select-form"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [showClear]="true" [(ngModel)]="filtro.isSustituto" [disabled]="!filtro.idLetradoGuardia"
+                                    [ngModelOptions]="{standalone: true}" [options]="comboRefuerzoSustitucion" (onChange)="onChangeRefuerzoSustitucion($event)">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-5 col-md-5">
+                                <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                                    [pantalla]="'asistenciaAE'" (colegiado)="changeColegiado($event)" 
+                                    (idPersona)="getIdPersonaLetradoManual($event)" [disabled]="isLetrado || refuerzoSustitucionNoSeleccionado" [filtrosAE]="filtro"
+                                    [nombreAp]="usuarioBusquedaExpress.nombreAp">
+                                </app-busqueda-colegiado-express>
+                            </div>
+                            <div class="form-group-interlineado col-lg-1 col-md-1">
+                                <br>
+                                <p-checkbox [disabled]="isLetrado" (onChange)="onChangeCheckSalto($event)" (ngModel)="salto" binary="true"
+                                    label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate }}" name="groupname" [ngModelOptions]="{standalone: true}"
+                                ></p-checkbox>
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </form>
+
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

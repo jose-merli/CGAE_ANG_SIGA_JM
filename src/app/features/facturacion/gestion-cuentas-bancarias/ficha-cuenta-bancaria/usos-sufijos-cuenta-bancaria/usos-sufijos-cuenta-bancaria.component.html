@@ -1,0 +1,153 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="usosSufijos">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('usosSufijos')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('usosSufijos')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.cuentaBancaria.usosSufijos' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>{{ 'facturacion.productos.tipo' | translate }}: 
+                <span>{{ datos.length > 0 ? datos[0].tipo : ''}}</span></label>
+            <label>{{ 'administracion.parametrosGenerales.literal.abreviatura' | translate }}: 
+                <span>{{ datos.length > 0 ? datos[0].abreviatura : ''}}</span></label>
+            <label>{{ 'general.description' | translate }}: 
+              <span>{{ datos.length > 0 ? datos[0].descripcion : ''}}</span></label>
+            <label>{{ 'facturacion.cuentaBancaria.numPendientes' | translate }}: 
+              <span>{{ datos.length > 0 ? datos[0].numPendientes : ''}}</span></label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.sufijo' | translate }}: 
+                <span>{{ datos.length > 0 ? datos[0].sufijo : ''}}</span></label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total' | translate }}: 
+              <span>{{ datos.length }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('usosSufijos')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('usosSufijos')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.cuentaBancaria.usosSufijos' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+          class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
+          [ngClass]="{ 'customCursor': selectMultiple }" paginatorPosition="both" selectionMode="multiple">
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                {{col.header | translate}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false"
+                  (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text"
+                  (input)="table.filter($event.target.value,col.field, 'contains')">
+              </th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length">
+                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}.
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+              <td class="text-center" *ngFor="let col of columns">
+                <div [ngSwitch]="col.field">
+                  <div *ngSwitchCase="'abreviatura'">
+                    <span *ngIf="!dato['nuevo']"><a class="enlace" (click)="openTab(dato)">{{ dato[col.field] }}</a></span>
+                    <p-dropdown *ngIf="dato['nuevo']" class="select-form" [(ngModel)]="datos[rowIndex].idSerieFacturacion" placeholder="Seleccionar"
+                      [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDrop($event)" optionLabel="label1"
+                      [ngClass]="styleObligatorio(datos[rowIndex].idSerieFacturacion)" [showClear]="true"></p-dropdown>
+                  </div>
+                  <div *ngSwitchCase="'descripcion'">
+                    <span *ngIf="!dato['nuevo']">{{ dato[col.field] }}</span>
+                    <span *ngIf="dato['nuevo']">{{ descripcionSerie }}</span>
+                  </div>
+
+                  <div *ngSwitchCase="'sufijo'">
+                    <span *ngIf="!dato['nuevo']">{{ dato[col.field] }}</span>
+                    <p-dropdown *ngIf="dato['nuevo']" class="select-form" [(ngModel)]="datos[rowIndex].idSufijo" placeholder="Seleccionar"
+                      [options]="comboSufijos" [filter]="true" filterBy="label,labelSinTilde"
+                      [ngClass]="styleObligatorio(datos[rowIndex].idSufijo)" [showClear]="true"></p-dropdown>
+                  </div>
+                  <div *ngSwitchCase="'numPendientes'">
+                    <span class="pull-right">{{ dato[col.field] }}</span>
+                  </div>
+                  <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
+                </div>
+
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="paginatorleft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label
+                class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+                {{table.first + 1}} al {{table.first
+                + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                {{table.totalRecords}}
+              </label>
+              <label
+                class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+                {{selectedDatos.length}}
+              </label>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar
+              todo" name="groupname"></p-checkbox>
+              </div>
+            </div>
+          </ng-template>
+      </p-table>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton *ngIf="datos.length == 0 || !datos[0].nuevo" [disabled]="body.fechaBaja != undefined" type="button" icon="fa fa-plus" iconPos="left"
+          (click)="addSerie()" label="{{ 'general.boton.relacionar.serie' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="datos.length == 0 || !datos[0].nuevo"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="checkSave()" [disabled]="datos.length == 0 || !datos[0].nuevo" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -18,17 +18,21 @@
       </p>
       <div *ngIf="fichaBusqueda" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group-interlineado col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.oficio.designas.contrarios.identificador' | translate}}</label>
+            <input type="text" class="form-control" [(ngModel)]="bodySearch.idEnvio" pInputText>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
             <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
           </div>
-          <div class="form-group-interlineado col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'administracion.auditoriaUsuarios.fechaDesde' | translate}} (*)</label>
             <app-fecha [(value)]="bodySearch.fechaCreacion" [utc]="false"
               (valueChangeSelected)="fillFechaCreacion($event)" (valueChangeInput)="fillFechaCreacion($event)">
             </app-fecha>
           </div>
-          <div class="form-group-interlineado col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}}</label>
             <app-fecha [(value)]="bodySearch.fechaProgramacion" [utc]="false"
               (valueChangeSelected)="fillFechaProgramacion($event)" (valueChangeInput)="fillFechaProgramacion($event)">
@@ -37,7 +41,7 @@
         </div>
 
         <div class="form-row d-flex align-items-end">
-          <div class="form-group-interlineado col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
             <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
               [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"
@@ -48,7 +52,7 @@
           <label>{{'enviosMasivos.literal.tipoEnvio' | translate}}</label>
           <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" class="select-form"></p-dropdown>
         </div> -->
-          <div class="form-group-interlineado col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'enviosMasivos.literal.estado' | translate}}</label>
             <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
               filterBy="label,labelSinTilde" [options]="estados" [(ngModel)]="bodySearch.idEstado" class="select-form">
@@ -103,6 +107,8 @@
             'general.boton.clear'| translate }}"></button>
         <button (click)="buscar()" [disabled]="isButtonDisabled()" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+        <button [disabled]="!permisoIntPNJ || !permisoNuevaCom" (click)="checkPermisosNuevaCom()" pButton type="button" icon="fa fa-plus"
+          iconPos="left" label="{{'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -218,6 +224,152 @@
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </p-footer>
+  </p-dialog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- CREACIÓN NUEVA COMUNICACIÓN -->
+  <p-dialog [(visible)]="showNuevaComm" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="400" (onHide)="cerrarDialogNueva()" #nuevaComm>
+    <p-header class="title">
+      <label>{{ "informesycomunicaciones.comunicaciones.nuevaComunicacion" | translate}}</label>
+    </p-header>
+    <div class="form-row">
+      <div class="form-group-interlineado col-lg-4 col-md-4">
+        <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}} ({{'facturacionSJCS.retenciones.destinatario' | translate}}) (*)</label>
+        <p-dropdown class="select-form" [ngClass]="styleObligatorio(bodyNuevaComm.juzgado)" [(ngModel)]='bodyNuevaComm.juzgado' [options]="comboJuzgado" [filter]="true"
+          filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" ></p-dropdown>
+      </div>
+      <div class="form-group-interlineado col-lg-4 col-md-4">
+        <label class="d-block">{{'enviosMasivos.literal.plantillasEnvio' | translate}} (*)</label>
+        <p-dropdown [ngClass]="styleObligatorio(bodyNuevaComm.idPlantillaEnvios)"
+          [options]="comboPlantillas" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="bodyNuevaComm.idPlantillaEnvios" class="select-form" (onChange)="detallePlantilla()"></p-dropdown>
+      </div>
+      <div class="form-group-interlineado col-lg-4 col-md-4">
+        <label>{{"administracion.auditoriaUsuarios.literal.fechaEfectiva" | translate}} (*)</label>
+        <app-fecha [(value)]="bodyNuevaComm.fechaEfecto" [utc]="false" showTime="true"
+          (valueChangeSelected)="fillNuevaFechaEfecto($event)" [inputStyleClass]="styleObligatorio(bodyNuevaComm.fechaEfecto)" (valueChangeInput)="fillNuevaFechaEfecto($event)">
+        </app-fecha>
+      </div>
+      <div class="form-group-interlineado col-lg-6 col-md-6">
+        <label>{{ "enviosMasivos.literal.asunto" | translate }} (*)
+        </label>
+        <input type="text" class="form-control" [ngClass]="styleObligatorio(bodyNuevaComm.asunto)" [attr.maxlength]="100" pInputText [(ngModel)]="bodyNuevaComm.asunto" />
+      </div>
+      
+      <div class="form-group-interlineado col-lg-12 col-md-12">
+        <label>{{"informesycomunicaciones.comunicaciones.mensaje" | translate}}
+        </label>
+        <textarea pInputTextarea [(ngModel)]="bodyNuevaComm.mensaje" class="form-control ui-inputtext"
+          autoResize="autoResize" maxLength="65535 "></textarea>
+      </div>
+      <div class="form-group-interlineado col-lg-4 col-md-4">
+        <label>{{'gratuita.busquedaDesignas.literal.numProcedimiento' | translate}}</label>
+        <input type="text" class="form-control" pInputText [(ngModel)]="bodyNuevaComm.numProcedimiento">
+      </div>
+      <div class="form-group-interlineado col-lg-4 col-md-4">
+        <label>{{'justiciaGratuita.ejg.datosGenerales.NIG' | translate}}</label>
+        <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="bodyNuevaComm.nig">
+      </div>
+      <div class="form-group-interlineado col-lg-4 col-md-4">
+        <label>{{'informesYcomunicaciones.consultas.ficha.modelosComunicacion.modelo' | translate}}</label>
+        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [options]="comboModelos"
+          [(ngModel)]="bodyNuevaComm.idModeloComunicacion" class="select-form"
+          placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+      </div>
+      <div class="form-row">
+        <p-table [value]="bodyNuevaComm.docs" [columns]="colsDocNuevaComm" [responsive]="true" #tableDocsNuevaComm
+          class="tabla-listado" [paginator]="true" [rows]="3" selectionMode="multiple"
+          [(selection)]="selectedDocsNuevaComm" [responsive]="true" paginatorPosition="both" [first]="first"
+          [ngClass]="{ 'customCursor': selectMultiple}">
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                {{ col.header | translate }}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+              <td class="text-center" *ngFor="let col of columns">
+                <div>
+                  <span>{{ dato[col.field] }}</span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length">
+                {{ 'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}.
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label
+                class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}
+                {{tableDocsNuevaComm.first + 1}} al {{tableDocsNuevaComm.first
+                + tableDocsNuevaComm.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                {{tableDocsNuevaComm.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados"
+                *ngIf="selectedDocsNuevaComm  && selectedDocsNuevaComm.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+                {{selectedDocsNuevaComm.length}}
+              </label>
+              <label class="pr-3 numSeleccionados"
+                *ngIf="selectedDocsNuevaComm && selectedDocsNuevaComm.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+                0
+              </label>
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAllNewDocs()" [(ngModel)]="selectAllNewDocs" binary="true"
+                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+              </div>
+              <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
+            </div>
+          </ng-template>
+        </p-table>
+        <div class="text-right form-group main-button col-lg-12 col-md-12 pt-2">
+          <button [disabled]="selectedDocsNuevaComm.length == 0" (click)="deleteDocumentos()" pButton type="button"
+            icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+          <p-fileUpload #pUploadFile icon="fa fa-plus" iconPos="left" chooseLabel="{{ 'general.boton.new' | translate}}"
+            name="file" mode="basic"  class="edit my-0 mx-auto main-button" (onSelect)="seleccionarFichero($event)"
+            auto="true">
+          </p-fileUpload>
+        </div>
+      </div>
+    </div>
+    <!-- <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="checkSaveNuevaComm()" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </p-footer> -->
+    <div>
+      <div class="text-right main-button ">
+        <button (click)="checkSaveNuevaComm()" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
   </p-dialog>
 
 </div>

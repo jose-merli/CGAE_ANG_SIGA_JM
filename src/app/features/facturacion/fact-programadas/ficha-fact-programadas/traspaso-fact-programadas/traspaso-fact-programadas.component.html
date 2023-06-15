@@ -1,0 +1,81 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="traspaso">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('traspaso')">
+          <div class="img-colegiado">
+            <i class="fas fa-exchange-alt icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('traspaso')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.traspaso.literal' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>{{ 'facturacion.seriesFactura.generarPDF.auto' | translate }}: 
+                <span>{{body.traspasoFacturas ? "Sí" : "No" }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantilla' | translate }}: 
+                <span>{{body.traspasoPlantilla }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantillaAudit' | translate }}: 
+              <span>{{body.traspasoCodAuditoriaTraspaso }}</span></label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}: 
+              <span>{{body.estadoTraspaso }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('traspaso')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('traspaso')">
+        <div class="img-colegiado">
+          <i class="fas fa-exchange-alt icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.traspaso.literal' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-check col-lg-3 col-md-3 align-self-center d-flex justify-content-between">
+          <label class="form-group-label">{{ 'facturacion.seriesFactura.generarPDF.auto' | translate }}</label>
+          &nbsp;&nbsp;
+          <p-checkbox class="float-right" [(ngModel)]="body.traspasoFacturas" binary="true" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)"></p-checkbox>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.seriesFactura.traspaso.plantilla' | translate }}</label>
+          <input type="text" [(ngModel)]="body.traspasoPlantilla" class="form-control" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.seriesFactura.traspaso.plantillaAudit' | translate }}</label>
+          <input type="text" [(ngModel)]="body.traspasoCodAuditoriaDef" class="form-control" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
+          <input type="text" [(ngModel)]="body.estadoTraspaso" class="form-control" [disabled]="true" pInputText>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button [disabled]="!(confirmada && finalizado && logDisponible)" pButton (click)="confirmDescargar()"
+          type="button" icon="fa fa-download" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
+
+        <button *ngIf="permisoEscritura" [disabled]="deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button *ngIf="permisoEscritura" [disabled]="deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>

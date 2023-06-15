@@ -1,0 +1,60 @@
+.img-ficha,
+.icon-ficha {
+    text-align: center;
+
+    img {
+    width: 3rem;
+    border-radius: 50%;
+    }
+}
+
+.header-ficha-open {
+    padding-left: 0.67rem;
+    .img-ficha,
+    .icon-ficha {
+      text-align: center;
+      display: inline-block;
+      margin-right: 0.5rem;
+      img {
+        width: 2rem;
+        border-radius: 50%;
+      }
+      i {
+        font-size: 1rem;
+      }
+    }
+}
+
+.img-ficha {
+    border-radius: 0%;
+    width: 100%;
+    position: relative;
+    .ui-button,
+    .ui-widget.ui-button,
+    .ui-button {
+      background-color: transparent;
+      border: none;
+      color: white;
+      border-left: none;
+      padding: 0.9rem;
+      .ui-button-icon-left {
+        &:before {
+          content: "\f303";
+        }
+      }
+    }
+    .ui-button-text {
+      display: none;
+    }
+    .edit {
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding: 0.2rem;
+      color: white;
+      cursor: pointer;
+    }
+    img {
+      width: 100%;
+    }
+}

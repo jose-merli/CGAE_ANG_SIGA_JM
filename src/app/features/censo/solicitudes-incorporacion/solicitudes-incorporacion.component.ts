@@ -150,7 +150,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
         this.arregloTildesCombo(this.tiposSolicitud);
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -160,7 +160,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
         this.arregloTildesCombo(this.estadosSolicitud);
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -190,7 +190,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
           this.progressSpinner = false;
         },
         error => {
-          console.log(error);
+          //console.log(error);
         },
         () => {
           this.progressSpinner = false;
@@ -220,6 +220,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     let menuProcede = this.translateService.instant("menu.censo");
     sessionStorage.setItem("migaPan", migaPan);
     sessionStorage.setItem("menuProcede", menuProcede);
+    sessionStorage.setItem("origenSolicitudIncorporacion", "true");
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 

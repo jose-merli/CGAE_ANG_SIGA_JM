@@ -1,0 +1,46 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros' | translate}}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros.destinatariosRetenciones' | translate}}
+  </p>
+</div>
+<div class="card">
+  <div class="card-body">
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{'general.message.datos.generales' | translate}}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
+          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="250"
+            pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'administracion.informes.literal.orden' | translate}}</label>
+          <input type="text" name="orden" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"
+            value="" class="box" class="form-control" [(ngModel)]='filtros.orden' pInputText maxLength="4" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'censo.consultaDatosGenerales.literal.cuentaContable' | translate}}</label>
+          <input type="text" name="cuentacontable" value="" class="box" class="form-control" [(ngModel)]='filtros.cuentacontable' pInputText
+            maxLength="20" pInputText>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
+    </div>
+  </div>
+</div>

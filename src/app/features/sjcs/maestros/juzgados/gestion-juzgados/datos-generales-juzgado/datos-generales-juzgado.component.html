@@ -1,0 +1,160 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-gavel icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{ 'administracion.catalogos.titulo.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <br>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-gavel icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'administracion.catalogos.titulo.datos.generales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row">
+
+        <!-- BLOQUE IZQUIERDO -->
+        <div class="bloque col-lg-6 col-md-6">
+
+          <div class="form-row">
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ "censo.fichaCliente.literal.identificacion" | translate }}</label>
+            </div>
+
+            <!-- NOMBRE -->
+            <div class="form-group col-lg-12 col-md-12">
+              <label>
+                {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
+              </label>
+              <input [(ngModel)]="datos.nombre" (onChange)="changeNombre(dato)" [disabled]="!permisoEscritura || historico" type="text"
+                class="form-control" [maxLength]="200" pInputText>
+            </div>
+
+            <!-- CODIGO SELECCION -->
+            <div class="form-group col-lg-7 col-md-7">
+              <label>
+                {{ 'justiciaGratuita.maestros.gestionJuzgados.datosGenerales.codigoSeleccion' | translate }}
+              </label>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="10" [(ngModel)]="datos.codigoExt2"
+                pInputText>
+            </div>
+
+            <!-- MOVIL VISIBLE CHECK -->
+            <div class="form-group col-lg-3 col-md-3 pt-1">
+              <div>
+                <span>{{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate
+                }}</span>
+              </div>
+              
+              <div>
+                <p-checkbox [(ngModel)]="visibleMovilValue" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura" binary="true"></p-checkbox>
+              </div>
+            </div>
+
+            <!-- ES DECANO -->
+            <div class="form-group col-lg-2 col-md-2 pt-1">
+              <div>
+                <span>{{ 'justiciaGratuita.maestros.gestionJuzgados.datosGenerales.decano' | translate }}</span>
+              </div>
+
+              <div>
+                <p-checkbox [(ngModel)]="esDecanoValue" (onChange)="cambiaDecano()" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOQUE DERECHO -->
+        <div class="bloque col-lg-6 col-md-6">
+
+          <div class="form-row">
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio' | translate }}</label>
+            </div>
+
+            <!-- CODIGO -->
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"administracion.parametrosGenerales.literal.codigo" | translate}}
+              </label>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="10" [(ngModel)]="datos.codigoExt"
+                pInputText>
+            </div>
+
+            <!--  CODIGO PROCURADORES -->
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{ "justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.codigoProcuradores" | translate }}
+              </label>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="10" [(ngModel)]="datos.codigoProcurador"
+                pInputText>
+            </div>
+
+            <!-- FECHA CODIGO EJIS -->
+            <div class="form-group col-lg-4 col-md-4">
+              <label>
+                {{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.fechaCodigoEjis' | translate }}
+              </label>
+              <app-fecha [utc]="false" [(value)]="datos.fechaCodigoEjis" (valueChangeSelected)="fillFechaCodigoEjis($event)" (valueChangeInput)="fillFechaCodigoEjis($event)"
+                [disabled]="historico || !permisoEscritura"></app-fecha>
+            </div>
+
+            <!-- ES CODIGO EJIS CHECK -->
+            <div class="form-group col-lg-3 col-md-3 selectAll">
+              <div>
+                <label>{{ "justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.isCodigoEjis" | translate }}</label>
+              </div>
+              <div>
+                <p-checkbox [disabled]="historico || !permisoEscritura" (onChange)="cambiaCodigoEjis()" [(ngModel)]="isCodigoEjisValue" binary="true"></p-checkbox>
+              </div>
+            </div>
+
+            <!-- CODIGO EJIS -->
+            <div class="form-group col-lg-5 col-md-5">
+              <label>
+                {{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.codigoEjis' | translate }}
+              </label>
+              <input type="text" class="form-control" maxLength="10" [(ngModel)]="datos.codigoEjis" [disabled]="historico || !permisoEscritura"
+                pInputText>
+            </div>
+            
+          </div>
+        </div>
+        
+      </div>
+      <br>
+    </div>
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -1,0 +1,95 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+      <p>{{ "menu.facturacion" | translate }}
+      <i class="fa fa-angle-right"></i>{{ 'menu.facturacion.exportacionesyotros' | translate }}
+      <i class="fa fa-angle-right"></i>{{ "facturacionPyS.ficherosAdeudos.busqueda" | translate }}
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <!-- Datos generales -->
+      <div class="w100 font-weight-bold">
+        <p (click)="onHideDatosGenerales()" class="title-module">{{
+          "justiciaGratuita.sjcs.designas.datosGenerales" | translate }}
+          <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+          <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+        </p>
+      </div>
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.bancosCodigo' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboCuentasBancarias" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.sufijo" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idSufijo' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboSufijo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.ficherosAdeudos.fechaCreacionDesde" | translate }}</label>
+            <app-fecha [(value)]="body.fechaCreacionDesde" [maxDate]="body.fechaCreacionHasta" (valueChangeSelected)="fillFecha($event, 'creacionDesde')" (valueChangeInput)="fillFecha($event, 'creacionDesde')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.ficherosAdeudos.fechaCreacionHasta" | translate }}</label>
+            <app-fecha [(value)]="body.fechaCreacionHasta" [minDate]="(body.fechaCreacionDesde!=undefined ? body.fechaCreacionDesde : fechaHoy)" (valueChangeSelected)="fillFecha($event, 'creacionHasta')" (valueChangeInput)="fillFecha($event, 'creacionHasta')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "menu.expediente.sanciones.busquedaPorSanciones.origen.literal" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.origen' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboOrigen" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "menu.facturacion.asignacionDeConceptosFacturables" | translate }} </label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "menu.facturacion" | translate }} </label>
+            <input type="text" [(ngModel)]="body.facturacion" class="form-control" pInputText>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sumatorios -->
+      <div class="w100 font-weight-bold">
+        <p (click)="onHideSumatorio()" class="title-module">
+          {{ 'facturacion.ficherosAdeudos.sumatorio' |translate }}
+          <i *ngIf="showSumatorio" class="fa fa-angle-up float-right"></i>
+          <i *ngIf="!showSumatorio" class="fa fa-angle-down float-right"></i>
+        </p>
+      </div>
+      <div *ngIf="showSumatorio" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.ficherosAdeudos.importeTotalDesde' | translate }} </label>
+            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='body.importeTotalDesde' pInputText />
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.ficherosAdeudos.importeTotalHasta' | translate }} </label>
+            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='body.importeTotalHasta' pInputText />
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.ficherosAdeudos.numFacturasDesde' | translate }} </label>
+            <input pInputText type="number" class="form-control" [(ngModel)]='body.numRecibosDesde' />
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.ficherosAdeudos.numFacturasHasta' | translate }} </label>
+            <input pInputText type="number" class="form-control" [(ngModel)]='body.numRecibosHasta' />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="clearFilters()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+           label="{{ 'general.boton.clear' | translate}}"></button>
+        <button (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{'general.boton.search' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

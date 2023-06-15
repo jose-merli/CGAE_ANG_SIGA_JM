@@ -1,12 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { AuthenticationService } from '../../_services/authentication.service';
-import { SigaServices } from '../../_services/siga.service';
-import { Router } from '@angular/router';
-import { LoginCombo } from './login-develop.combo';
-import { ListboxModule } from 'primeng/listbox';
-import { ButtonModule } from 'primeng/button';
+import { Component, OnInit, HostListener } from "@angular/core";
+import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { SigaServices } from "../../_services/siga.service";
+import { Router } from "@angular/router";
+import { LoginCombo } from "./login-develop.combo";
+import { ListboxModule } from "primeng/listbox";
+import { ButtonModule } from "primeng/button";
+import { SigaStorageService } from "../../siga-storage.service";
 
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
 	selector: 'app-login-develop',
@@ -27,7 +31,7 @@ export class LoginDevelopComponent implements OnInit {
 	// value=N selected="">NO, no soy Letrado</option>
 	//                   <option value=S>SÍ, soy Letrado</option>
 	environment: string = "";
-	sigaFrontVersion: string = "";
+	sigaFrontVersion: string = this.localStorageService.version;
 	sigaWebVersion: string = "";
 
 	letrado: any[] = [{ label: 'No, no soy Letrado', value: 'N' }, { label: 'Sí, soy Letrado', value: 'S' }];
@@ -36,7 +40,7 @@ export class LoginDevelopComponent implements OnInit {
 		private service: AuthenticationService,
 		private sigaServices: SigaServices,
 		private router: Router,
-		
+		private localStorageService: SigaStorageService
 
 	) { }
 
@@ -45,10 +49,11 @@ export class LoginDevelopComponent implements OnInit {
 	ngOnInit() {
 		this.sigaServices.getBackend("environmentInfo").subscribe(n => {
 			this.environment = n.environment;
+			//this.sigaFrontVersion = n.sigaFrontVersion;
 			this.sigaWebVersion = n.sigaWebVersion;
 		});
 		//Modificar la version de front en cada entrega
-		this.sigaFrontVersion = '1.0.71_26';
+		//this.sigaFrontVersion = '1.0.71_17';
 		sessionStorage.removeItem('authenticated');
 		this.ocultar = true;
 		this.progressSpinner = true;
@@ -198,7 +203,13 @@ para poder filtrar el dato con o sin estos caracteres*/
 		//});
 	}
 
-	
+	@HostListener("document:keypress", ["$event"])
+  	onKeyPress(event: KeyboardEvent) {
+    	if (event.keyCode === KEY_CODE.ENTER) {
+      		this.submit();
+    	}
+  	}
+
 	isHabilitadoEntrar() {
 		if (
 			this.form.controls['tmpLoginPerfil'].value == '' ||

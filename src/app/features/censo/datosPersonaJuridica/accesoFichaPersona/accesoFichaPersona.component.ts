@@ -184,7 +184,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
           error => {
             this.bodySearch = JSON.parse(error["error"]);
             this.showFail(JSON.stringify(this.bodySearch.error.description));
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
           }
         );
@@ -219,7 +219,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
           this.bodySearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.bodySearch.error.description));
           this.showFail("Ha ocurrido un error");
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -251,7 +251,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
         error => {
           this.bodySearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.bodySearch.error.description));
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
           this.showFail("Ha habido un error al guardar");
         },
@@ -271,7 +271,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
         ).combooItems[0].value;
       },
       error => {
-        console.log(error);
+        //console.log(error);
       },
       () => {
         this.progressSpinner = true;
@@ -291,7 +291,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
             error => {
               this.bodySearch = JSON.parse(error["error"]);
               this.showFail(JSON.stringify(this.bodySearch.error.description));
-              console.log(error);
+              //console.log(error);
 
               this.showFail("Ha habido un error al crear el notario");
               this.progressSpinner = false;
@@ -342,7 +342,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
         //this.comprobarValidacion();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -468,7 +468,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
         this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => { 
         if(this.tarjeta == "3" || this.tarjeta == "2"){

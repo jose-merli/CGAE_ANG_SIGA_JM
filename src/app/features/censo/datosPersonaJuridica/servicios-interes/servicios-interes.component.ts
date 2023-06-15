@@ -106,7 +106,7 @@ export class ServiciosInteresComponent implements OnInit {
 				this.tarjeta = permisosArray[0].derechoacceso;
 			},
 			(err) => {
-				console.log(err);
+				//console.log(err);
 			},
 			() => { 
 				if(this.tarjeta == "3" || this.tarjeta == "2"){

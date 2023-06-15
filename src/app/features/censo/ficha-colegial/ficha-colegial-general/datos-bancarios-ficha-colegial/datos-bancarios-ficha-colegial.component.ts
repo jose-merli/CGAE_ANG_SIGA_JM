@@ -366,7 +366,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         }
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
       },
       () => {
@@ -408,7 +408,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
                 this.searchDatosBancariosIdPersona.error.description
               )
             );
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
           }, () => {
             if (this.datosBancarios.length > 0) {

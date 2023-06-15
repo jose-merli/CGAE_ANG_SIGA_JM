@@ -163,7 +163,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // if (this.derechoAcceso == 3) {
@@ -217,7 +217,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
     this.numSelected = this.selectedDatos.length;
     return (dato[0].selected = true);
   }
-  onRowUnSelect(dato) {
+  onRowUnselect(dato) {
     this.numSelected = this.selectedDatos.length;
 
     // if (this.selectMultiple && !dato[0].nueva) {
@@ -296,7 +296,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
               "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"
             )
           );
-          console.log(error);
+          //console.log(error);
         },
         () => {
           this.getDatos();
@@ -398,7 +398,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
               "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.getDatos();
@@ -422,7 +422,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -445,7 +445,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
         // this.plantillas.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {}
     );
@@ -496,7 +496,7 @@ export class TarjetaComunicacionesComponent implements OnInit {
 
   // onChangePorDefecto(e) {
 
-  //   console.log(e)
+  //   //console.log(e)
   //   if (e == true) {
   //     this.porDefecto = 'Si';
   //   } else {

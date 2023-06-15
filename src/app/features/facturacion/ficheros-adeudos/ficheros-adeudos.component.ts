@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { OldSigaServices } from '../../../_services/oldSiga.service'
-
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TranslateService } from '../../../commons/translate';
+import { procesos_facturacionPyS } from '../../../permisos/procesos_facturacionPyS';
+import { CommonsService } from '../../../_services/commons.service';
+import { SigaServices } from '../../../_services/siga.service';
+import { FiltrosBusquedaAdeudosComponent } from './filtros-busqueda-adeudos/filtros-busqueda-adeudos.component';
+import { TablaAdeudosComponent } from './tabla-adeudos/tabla-adeudos.component';
 
 @Component({
   selector: 'app-ficheros-adeudoss',
@@ -8,18 +12,90 @@ import { OldSigaServices } from '../../../_services/oldSiga.service'
   styleUrls: ['./ficheros-adeudos.component.scss'],
 
 })
+
 export class FicherosAdeudosComponent implements OnInit {
 
-  url;
+  datos;
+  msgs;
+  filtro;
 
-  constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("ficherosAdeudos");
+  progressSpinner: boolean = false;
+  buscar: boolean = false;
+  permisoEscritura: boolean = false;
+
+  @ViewChild(FiltrosBusquedaAdeudosComponent) filtros;
+  @ViewChild(TablaAdeudosComponent) tabla;
+
+  constructor(private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService) {
   }
 
   ngOnInit() {
+    this.buscar = false;
+    this.permisosFicheroAdeudos()
   }
 
+  permisosFicheroAdeudos(){
+    this.commonsService
+    .checkAcceso(procesos_facturacionPyS.ficheroAdeudos)
+    .then((respuesta) => {
+      this.permisoEscritura = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+  buscarFicherosAdeudos(event) {
+    this.filtro = JSON.parse(JSON.stringify(this.filtros.body));
 
+    this.progressSpinner = true;
 
+    this.sigaServices.post("facturacionPyS_getFicherosAdeudos", this.filtro).subscribe(
+      n => {
+        this.progressSpinner = false;
 
+        this.datos = JSON.parse(n.body).ficherosAdeudosItems;
+        this.buscar = true;
+        let error = JSON.parse(n.body).error;
+
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.table.sortOrder = 0;
+          this.tabla.table.sortField = '';
+          this.tabla.table.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+        }
+
+        //comprobamos el mensaje de info de resultados
+        if (error!=undefined && error!=null) {
+          this.showMessage("info",this.translateService.instant("general.message.informacion"), this.translateService.instant(error.message));
+        }
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        //console.log(err);
+      },
+      () => {
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+          this.commonsService.scrollTop();
+        }, 5);
+      }
+    );
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 }

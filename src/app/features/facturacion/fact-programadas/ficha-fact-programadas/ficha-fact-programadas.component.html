@@ -1,0 +1,31 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.facturacion" | translate }}
+      <i class="fa fa-angle-right"></i>{{ 'facturacion.factProgramadas.literal.busqueda' | translate }}
+    </p>
+  </div>
+
+  <div>
+    <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+    </app-tarjeta-resumen-fija>
+
+    <app-serie-factura-fact-programadas [modoEdicion]="modoEdicion" [openTarjetaSerieFactura]="openTarjetaSerieFactura" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (serieFacturacionChanged)="serieFacturacionChanged($event)"></app-serie-factura-fact-programadas>
+    <app-datos-generales-fact-programadas *ngIf="body && body.idSerieFacturacion != undefined" [modoEdicion]="modoEdicion" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" [bodyInicial]="body" [serie]="serie" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend($event)" (refreshData)="refreshData()" [permisoEscritura]="permisoEscritura"></app-datos-generales-fact-programadas>
+    <app-gen-adeudos-fact-programadas *ngIf="modoEdicion" [openTarjetaGenAdeudos]="openTarjetaGenAdeudos" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend($event)" [permisoEscritura]="permisoEscritura"></app-gen-adeudos-fact-programadas>
+    <app-info-factura-fact-programadas *ngIf="modoEdicion && visibleInformeFacturacion" [openTarjetaInfoFactura]="openTarjetaInfoFactura" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend($event)"></app-info-factura-fact-programadas>
+    <app-gen-factura-fact-programadas *ngIf="modoEdicion" [openTarjetaGenFactura]="openTarjetaGenFactura" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend($event)" [permisoEscritura]="permisoEscritura"></app-gen-factura-fact-programadas>
+    <app-envio-fact-programadas *ngIf="modoEdicion" [openTarjetaEnvio]="openTarjetaEnvio" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend($event)" [permisoEscritura]="permisoEscritura"></app-envio-fact-programadas>
+    <app-traspaso-fact-programadas *ngIf="modoEdicion && controlEmisionFacturasSII" [openTarjetaTraspaso]="openTarjetaTraspaso" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend($event)" [permisoEscritura]="permisoEscritura"></app-traspaso-fact-programadas>
+  </div>
+</div>
+
+<div class="mt-3 text-right main-button" id="down">
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

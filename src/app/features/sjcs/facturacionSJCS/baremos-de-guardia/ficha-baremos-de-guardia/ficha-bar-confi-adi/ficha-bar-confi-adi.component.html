@@ -1,0 +1,188 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="facSJCSFichaBarConfiAdi">
+
+    <div class="card">
+
+        <div class="card-header header-ficha">
+
+            <div *ngIf="!showTarjeta" class="form-row">
+
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado" (click)="onHideTarjeta()">
+                        <i class="fa fa-user icon-ficha"></i>
+                    </div>
+                </div>
+
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1" (click)="onHideTarjeta()">
+                        <label class="mr-auto title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiAdi' | translate
+                            }}</label>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <!--   <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
+                            <span>A</span>
+                        </label> -->
+                        <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center"
+                (click)="onHideTarjeta()">
+                <div class="img-colegiado">
+                    <i class="fa fa-user icon-ficha"></i>
+                </div>
+                <label class="title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiAdi' | translate }}</label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+
+        </div>
+
+        <div *ngIf="showTarjeta" class="card-body card-body-ficha">
+
+            <div class="row">
+
+                <div class="bloque col-lg-6 col-md-6 col-sm-6 py-2 pl-2">
+                    <div class="form-row">
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-checkbox name="facActuaciones" [disabled]="!permisoEscritura"
+                                [(ngModel)]="facActuaciones" value="facActuaciones"
+                                (onChange)="onChangeFacActuaciones($event)" binary="true"
+                                label="{{'facturacionSJCS.baremos.facActuacionesFuera' | translate}}" class="ml-0">
+                            </p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton [disabled]="!permisoEscritura || !disabledFacActuaciones"
+                                (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="unico"
+                                id="radioPrecioUnico" label="{{'facturacionSJCS.baremos.precioUnico' | translate}}">
+                            </p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton [disabled]="!permisoEscritura || !disabledFacActuaciones"
+                                (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="porTipos"
+                                id="radioPorTipos" label="{{'facturacionSJCS.baremos.precioTipos' | translate}}">
+                            </p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 ">
+                            <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }}</label>
+                            <input [disabled]=" !permisoEscritura || !disabledPrecioUnico || !disabledFacActuaciones"
+                                type="number" [(ngModel)]="filtrosAdi.importe" class="form-control importesBaremos" />
+                        </div>
+                        <div class="form-group col-lg-3 col-md-3 align-self-center mt-md-3 d-flex">
+                            <i _ngcontent-c15="" class="fas fa-external-link-alt mr-2 mt-1"></i>
+                            <a [ngClass]="{ 'enlace': this.precio == 'porTipos'}" (click)="show($event)"
+                                *ngIf="modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
+                            <p *ngIf="!modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</p>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-3 align-self-center mt-3">
+                            <!-- Check maximo al lado de ir a tipos -->
+                            <p-checkbox [disabled]="!modalTipos ||!disabledFacActuaciones" (onChange)="onChangemaxIrTiposFG($event)"
+                                [(ngModel)]="maxIrTiposFG" binary="true" name="maxIrTiposFG"
+                                label="{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}" class="ml-0">
+                            </p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
+                            <input type="number"
+                                [disabled]="!permisoEscritura || !disabledPrecioUnico || !disabledFacActuaciones"
+                                [(ngModel)]="filtrosAdi.importeMax" class="form-control importesBaremos"
+                                [disabled]="!disableImput || !permisoEscritura || !disabledPrecioUnico" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bloque col-lg-6 col-md-6 col-sm-6">
+                    <div class="form-row">
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-checkbox [disabled]="!permisoEscritura" [(ngModel)]="facAsuntosAntiguos"
+                                value="facAsuntosAntiguos" name="porDispo"
+                                (onChange)="onChangeFacAsuntosAntiguos($event)" binary="true"
+                                label="{{'facturacionSJCS.baremos.facAsuntosAntiguos' | translate}}" class="ml-0">n
+                            </p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 ">
+                            <p-checkbox [disabled]="!permisoEscritura" [(ngModel)]="procesoFac2014"
+                                value="procesoFac2014" name="porDispo" (onChange)="onChangeProcesoFac2014($event)"
+                                binary="true" label="{{'facturacionSJCS.baremos.procFac2014' | translate}}"
+                                class="ml-0 checkboxexRightCard">
+                            </p-checkbox>
+                            <i class="fas fa-info-circle"
+                                pTooltip="{{'sjcs.facturacionsjcs.baremoshitostooltipfac2014' | translate}}"
+                                tooltipPosition="right"></i>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-radioButton 
+                                [(ngModel)]="descontarCheck" value="descontarGuardAsis" name="descontarCheck"
+                                (onChange)="onChangeDescontar($event)" binary="true"
+                                label="{{'facturacionSJCS.baremos.descontarGuardAsis' | translate}}"
+                                class="ml-0 checkboxexRightCard">  <!-- Descontar Guardias que derivan en juicios rápidos contando Asistencias  -->
+                            </p-radioButton>
+                            <i class="fas fa-info-circle"
+                                pTooltip="{{'sjcs.facturacionsjcs.baremoshitostooltipenjuiciosrapidos' | translate}}"
+                                tooltipPosition="right"></i>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-radioButton 
+                                [(ngModel)]="descontarCheck" value="descontarGuardAct" name="descontarCheck"
+                                (onChange)="onChangeDescontar($event)" binary="true"
+                                label="{{'facturacionSJCS.baremos.descontarGuardAct' | translate}}" 
+                                class="ml-0 checkboxexRightCard"> <!-- Descontar Guardias que derivan en juicios rápidos contando Actuaciones  -->
+                            </p-radioButton>
+                            <i class="fas fa-info-circle"
+                                pTooltip="{{'sjcs.facturacionsjcs.baremoshitostooltipenjuiciosrapidos' | translate}}"
+                                tooltipPosition="right"></i>
+                        </div>
+                        <!--<div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton [disabled]="!permisoEscritura" value="asi" [(ngModel)]="contAsAc"
+                                binary="true" name="contAsAc" (click)="changeContAsAc()"
+                                label="{{'facturacionSJCS.baremos.contAsistencias' | translate}}"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton [disabled]="!permisoEscritura" value="act" [(ngModel)]="contAsAc"
+                                binary="true" name="contAsAc" (click)="changeContAsAc()"
+                                label="{{'facturacionSJCS.baremos.contActuaciones' | translate}}"></p-radioButton>
+                        </div>-->
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>{{ 'menu.justiciaGratuita.soj' | translate }}</label>
+                            <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeSOJ"
+                                class="form-control importesBaremos" />
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>{{ 'menu.justiciaGratuita.ejg' | translate }}</label>
+                            <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeEJG"
+                                class="form-control importesBaremos" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--<div class="row">
+                
+                <div class="form-group col-lg-6 col-md-6">
+                    <label>{{ 'menu.justiciaGratuita.soj' | translate }}</label>
+                    <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeSOJ" class="form-control importesBaremos" />
+                </div>
+                <div class="form-group col-lg-6 col-md-6">
+                    <label>{{ 'menu.justiciaGratuita.ejg' | translate }}</label>
+                    <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeEJG" class="form-control importesBaremos" />
+                </div>
+                
+
+            </div>-->
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<p-overlayPanel class="overlayPanelPrueba" (onBeforeHide)="hideOverlay($event)" [dismissable]="true"
+    [showCloseIcon]="true" #op>
+    <app-gestion-tiposasistencia *ngIf="contAsAc == 'asi' && showModal" [origenBaremos]="origenBaremos">
+    </app-gestion-tiposasistencia>
+    <app-gestion-tiposactuacion *ngIf="contAsAc == 'act' && showModal" [origenBaremos]="origenBaremos">
+    </app-gestion-tiposactuacion>
+</p-overlayPanel>

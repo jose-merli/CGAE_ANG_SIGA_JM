@@ -1,0 +1,27 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.GuardiaMenu' | translate }}
+      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.saltosYCompensaciones'|translate}}
+  </div>
+
+  <app-filtros-saltos-compensaciones-guardia [permisoEscritura]="permisoEscritura" (isBuscar)="isBuscar($event)" [dataFilterFromColaGuardia]="dataFilterFromColaGuardia">
+  </app-filtros-saltos-compensaciones-guardia>
+
+</div>
+
+<app-tabla-resultado-mix-saltos-comp-guardia *ngIf="showResults" [cabeceras]="cabeceras"
+  [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [rowGroupsAux]="rowGroupsAux"
+  [rowGroups]="rowGroups" (searchHistory)="searchHistory($event)" (anySelected)="notifyAnySelected($event)"
+  (selectedRow)="checkSelectedRow($event)" [rowGroupsInit]="rowGroupsInit" (anularEvent)="anular($event)"
+  (deleteEvent)="delete($event)" (saveEvent)="guardar($event)" [comboTurnos]="comboTurnos"
+  [comboTurnosGrupo]="comboTurnosGrupo" [comboTipos]="comboTipos" [emptyResults]="emptyResults">
+</app-tabla-resultado-mix-saltos-comp-guardia>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

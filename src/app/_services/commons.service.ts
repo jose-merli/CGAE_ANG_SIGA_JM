@@ -1,19 +1,30 @@
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import {  HttpBackend,  HttpClient} from '../../../node_modules/@angular/common/http';
-import { ComboItem } from '../models/ComboItem';
-import { ControlAccesoDto } from '../models/ControlAccesoDto';
-import { SigaServices } from './siga.service';
+import { Injectable } from "@angular/core";
+import { Http } from "@angular/http";
+import "rxjs/add/operator/catch";
+import "rxjs/add/operator/map";
+import {
+  HttpBackend,
+  HttpClient
+} from "../../../node_modules/@angular/common/http";
+
+import { ControlAccesoDto } from "../models/ControlAccesoDto";
+import { SigaServices } from "./siga.service";
+import { TranslateService } from '../commons/translate/translation.service';
+import { ComboItem } from "../models/ComboItem";
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Injectable()
 export class CommonsService {
+  DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
     private http: HttpClient,
     private sigaServices: SigaServices,
     handler: HttpBackend,
-    private httpbackend: HttpClient
+    private httpbackend: HttpClient,
+    private translateService: TranslateService
   ) {
     this.httpbackend = new HttpClient(handler);
   }
@@ -22,13 +33,12 @@ export class CommonsService {
     let correo = value;
     let EMAIL_REGEX = /^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/;
     let EMAIL_REGEX2 = /^[\w]+@{1}[\w]+\.[a-z]{2,3}$/;
-		let EMAIL_REGEX3 = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
-		//let EMAIL_REGEX3 = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let EMAIL_REGEX3 = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 
-    if (correo != undefined && correo != '' && EMAIL_REGEX3.test(correo)) {
+    if (correo != undefined && correo != "" && EMAIL_REGEX3.test(correo)) {
       return true;
     } else {
-      if (correo == '') {
+      if (correo == "") {
         return true;
       } else {
         return false;
@@ -39,10 +49,10 @@ export class CommonsService {
   validateWeb(value) {
     let web = value;
     let WEB_REGEX = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-    if (web != undefined && web != '' && WEB_REGEX.test(web)) {
+    if (web != undefined && web != "" && WEB_REGEX.test(web)) {
       return true;
     } else {
-      if (web == '') {
+      if (web == "") {
         return true;
       } else {
         return false;
@@ -57,10 +67,10 @@ export class CommonsService {
     //Teléfonos extranjeros
     let TLF_REGEX2 = /^(\(\+?\d{2,3}\)[\*|\s|\-|\.]?(([\d][\*|\s|\-|\.]?){6})(([\d][\s|\-|\.]?){2})?|(\+?[\d][\s|\-|\.]?){9}(([\d][\s|\-|\.]?){2}(([\d][\s|\-|\.]?){2})?)?)$/;
 
-    if (tlf != undefined && tlf != '' && TLF_REGEX2.test(tlf)) {
+    if (tlf != undefined && tlf != "" && TLF_REGEX2.test(tlf)) {
       return true;
     } else {
-      if (tlf == '') {
+      if (tlf == "") {
         return true;
       } else {
         return false;
@@ -75,10 +85,10 @@ export class CommonsService {
     //Teléfonos extranjeros
     let MVL_REGEX2 = /^(\(\+?\d{2,3}\)[\*|\s|\-|\.]?(([\d][\*|\s|\-|\.]?){6})(([\d][\s|\-|\.]?){2})?|(\+?[\d][\s|\-|\.]?){9}(([\d][\s|\-|\.]?){2}(([\d][\s|\-|\.]?){2})?)?)$/;
 
-    if (mvl != undefined && mvl != '' && MVL_REGEX2.test(mvl)) {
+    if (mvl != undefined && mvl != "" && MVL_REGEX2.test(mvl)) {
       return true;
     } else {
-      if (mvl == '') {
+      if (mvl == "") {
         return true;
       } else {
         return false;
@@ -91,10 +101,10 @@ export class CommonsService {
     let fax = value;
     let FAX_REGEX = /^(\(\+?\d{2,3}\)[\*|\s|\-|\.]?(([\d][\*|\s|\-|\.]?){6})(([\d][\s|\-|\.]?){2})?|(\+?[\d][\s|\-|\.]?){9}(([\d][\s|\-|\.]?){2}(([\d][\s|\-|\.]?){2})?)?)$/;
 
-    if (fax != undefined && fax != '' && FAX_REGEX.test(fax)) {
+    if (fax != undefined && fax != "" && FAX_REGEX.test(fax)) {
       return true;
     } else {
-      if (fax == '') {
+      if (fax == "") {
         return true;
       } else {
         return false;
@@ -102,59 +112,58 @@ export class CommonsService {
     }
   }
 
-  scrollTop() {
-    let top = document.getElementById('mainContainer');
-    if (top !== null) {
-      top.scrollIntoView();
-      top = null;
-    }
+  validateCodigoPostal(value): boolean {
+    return (
+      value &&
+      typeof value === "string" &&
+      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(value)
+    );
   }
 
-  getLabelbyFilter(string): string {
-    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-	para poder filtrar el dato con o sin estos caracteres*/
-    let labelSinTilde = string;
-    let accents =
-      'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
-    let accentsOut =
-      'aaaaaaaaaaaaaooooooooooooooeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz';
-    let i;
-    let x;
-    for (i = 0; i < labelSinTilde.length; i++) {
-      if ((x = accents.indexOf(labelSinTilde.charAt(i))) != -1) {
-        labelSinTilde = labelSinTilde.replace(
-          labelSinTilde.charAt(i),
-          accentsOut[x]
-        );
+
+
+  arregloTildesCombo(combo) {
+   
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
       }
-    }
-
-    return labelSinTilde;
+    });
   }
+          
+          
+         
+        
 
-  getLabelsSinTilde(array) {
-    // Recorremos un array (combos) y le ponemos el labelSinTilde para los filtros.
-    for (let i in array) {
-      array[i].labelSinTilde = this.getLabelbyFilter(array[i].label);
-    }
-    return array;
+  arregloTildesContrariaCombo(combo) {
+    
+    combo.map(e => {
+      let accents =
+        "ÁÉÍÓÚáéíóú";
+      let accentsOut =
+        "ÀÈÌÒÙàèìòù";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelTildeContraria = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelTildeContraria;
+        }
+      }
+    });
   }
-
-
-
-  scrollTablaFoco(idFoco)  {
-    let top = document.getElementById(idFoco);
-    if (top !== null) {
-      top.scrollIntoView();
-      top = null;
-    }
-  }
-
-  styleObligatorio(evento) {
-    if (evento == null || evento == undefined || evento == '') {
-      return 'camposObligatorios';
-    }
-  }
+          
+          
+         
 
   getLetrado = () => {
 		let isLetrado: ComboItem;
@@ -215,4 +224,165 @@ export class CommonsService {
     return activacionEditar;
 
   }
+
+  openOutlook(correo) {
+
+    let EMAIL_REGEX = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/;
+    if (correo != undefined && correo != "" && EMAIL_REGEX.test(correo)) {
+      let href = "mailto:" + correo;
+      window.open(href, "_blank");
+    }
+
+  }
+  
+  scrollTop() {
+    let top = document.getElementById('mainContainer');
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  isValidPassport(dni: String): boolean {
+    return (
+      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
+    );
+  }
+
+  isValidNIE(nie: String): boolean {
+    return (
+      nie &&
+      typeof nie === "string" &&
+      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
+    );
+  }
+
+  isValidCIF(cif: String): boolean {
+    return (
+      cif &&
+      typeof cif === "string" &&
+      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
+    );
+  }
+
+  isValidDNI(dni: String): boolean {
+    return (
+      dni &&
+      typeof dni === "string" &&
+      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+      dni.substr(8, 9).toUpperCase() ===
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    );
+  }
+
+  showMessage(severity, summary, msg) {
+    let msgs = [];
+    msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+
+    return msgs;
+  }
+
+  compruebaDNI(idtipoidentificacion, nif) {
+
+    if (this.isValidDNI(nif)) {
+      idtipoidentificacion = "10";
+      return idtipoidentificacion;
+    } else if (this.isValidPassport(nif)) {
+      idtipoidentificacion = "30";
+      return idtipoidentificacion;
+    } else if (this.isValidNIE(nif)) {
+      idtipoidentificacion = "40";
+      return idtipoidentificacion;
+    } else if (this.isValidCIF(nif)) {
+      idtipoidentificacion = "20";
+      return idtipoidentificacion;
+    } else {
+      idtipoidentificacion = "30";
+      return idtipoidentificacion;
+    }
+
+  }
+
+  checkPermisos(permiso: boolean, historico: boolean) {
+    if (!permiso) {
+      return this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+
+      if (historico != undefined && historico) {
+        return this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      } else {
+        return undefined;
+      }
+
+    }
+  }
+
+  checkPermisoAccion() {
+    return this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
+  }
+
+  arreglarFecha(fecha) {
+		let jsonDate = JSON.stringify(fecha);
+		let rawDate = jsonDate.slice(1, -1);
+		if (rawDate.length < 14) {
+		  let splitDate = rawDate.split("/");
+		  let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+		  fecha = new Date((arrayDate += "T00:00:00.001Z"));
+		} else {
+		  fecha = new Date(rawDate);
+		}
+	
+		return fecha;
+  }
+
+  getLabelbyFilter(string): string {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+	para poder filtrar el dato con o sin estos caracteres*/
+    let labelSinTilde = string;
+    let accents =
+      'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
+    let accentsOut =
+      'aaaaaaaaaaaaaooooooooooooooeeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz';
+    let i;
+    let x;
+    for (i = 0; i < labelSinTilde.length; i++) {
+      if ((x = accents.indexOf(labelSinTilde.charAt(i))) != -1) {
+        labelSinTilde = labelSinTilde.replace(
+          labelSinTilde.charAt(i),
+          accentsOut[x]
+        );
+      }
+    }
+
+    return labelSinTilde;
+  }
+
+  getLabelsSinTilde(array) {
+    // Recorremos un array (combos) y le ponemos el labelSinTilde para los filtros.
+    for (let i in array) {
+      array[i].labelSinTilde = this.getLabelbyFilter(array[i].label);
+    }
+    return array;
+  }
+
+
+
+  scrollTablaFoco(idFoco)  {
+    let top = document.getElementById(idFoco);
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  styleObligatorio(evento) {
+    if (evento == null || evento == undefined || evento == '') {
+      return 'camposObligatorios';
+    }
+  }
+
 }

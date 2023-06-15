@@ -4,7 +4,6 @@ import { ProgComunicacionItem } from '../../../../../models/ProgramacionComunica
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
-import { TramosLECComponent } from '../../../../sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { saveAs } from "file-saver/FileSaver";
@@ -196,7 +195,7 @@ export class ProgramacionComponent implements OnInit {
       err => {
         let msg = this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorEnvio");
         this.showFail(msg);
-        console.log(err);
+        //console.log(err);
       },
       () => {
       }
@@ -210,7 +209,7 @@ export class ProgramacionComponent implements OnInit {
         this.estados.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo") , value: '' });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

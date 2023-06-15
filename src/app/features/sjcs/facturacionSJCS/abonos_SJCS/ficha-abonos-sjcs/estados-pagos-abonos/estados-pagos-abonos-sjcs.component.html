@@ -1,0 +1,190 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="estadosPagos">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+          <div class="img-colegiado">
+            <i class="fas fa-archive icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.facturas.estadosPagos.literal' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+
+            <ng-container *ngIf="datos && datos.length != 0">
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}: 
+                <span>{{ datos[datos.length - 1].fechaModificaion | date: "dd/MM/yyyy" }}</span></label>
+              <label>{{ 'facturacion.facturas.estadosPagos.accion' | translate }}: 
+                <span>{{ datos[datos.length - 1].accion }}</span></label>
+              <label>{{ 'facturacion.facturas.estadosPagos.nota' | translate }}: 
+                <span>{{ datos[datos.length - 1].comentario }}</span></label>
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}: 
+                <span>{{ datos[datos.length - 1].estado }}</span></label>
+              <label>{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}: 
+                <span>(...{{ datos[datos.length - 1].cuentaBancaria }})</span></label>
+              <label>{{ 'facturacion.facturas.estadosPagos.movimiento' | translate }}: 
+                <span>{{ datos[datos.length - 1].movimiento + " €" }}</span></label>
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
+                <span>{{ datos[datos.length - 1].importePendiente + " €" }}</span></label>
+            </ng-container>
+            
+            <i class="fa fa-angle-down float-right {{ (datos && datos.length != 0) ? '' : ' ml-auto' }}" (click)="abreCierraFicha()"
+              *ngIf="!openFicha"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('estadosPagos')">
+        <div class="img-colegiado">
+          <i class="fas fa-archive icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.facturas.estadosPagos.literal' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <!-- TABLA RESULTADOS -->
+      <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [responsive]="true" #table
+        class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
+        paginatorPosition="both" id="tablaFoco">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of cols" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{ col.header | translate }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="
+                  table.filter($event.target.value, col.field, 'contains')
+                " placeholder="{{'general.boton.search' | translate}}" />
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              {{'justiciaGratuita.maestros.fundamentosCalificacion.tabla.sinResultados'|translate}}
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+            <td class="text-center" *ngFor="let col of columns">
+              <div [ngSwitch]="col.field">
+                <div *ngSwitchCase="'fecha'">
+                  <span>{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
+
+                  <!--
+                  <div *ngIf="dato.nuevo" class="form-group-interlineado col-lg-12 col-md-12">
+                    <app-fecha [(value)]="nuevoEstado.fecha" [disabled]="true"></app-fecha>
+                  </div>
+                  -->
+                </div>
+                <div *ngSwitchCase="'comentario'">
+                  <span *ngIf="!dato.nuevo && dato.comentario">{{ dato[col.field] }}</span>
+                  <span *ngIf="!dato.nuevo && dato.numeroAbono">{{ 'facturacion.facturas.estadosPagos.sjcs' | translate }} <a (click)="navigateToAbono(dato)" class="enlace">{{ dato['numeroAbono'] }}</a></span>
+                  <span *ngIf="!dato.nuevo && dato.numeroFactura">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a (click)="navigateToFactura(dato)" class="enlace">{{ dato['numeroFactura'] }}</a></span>
+                  <span *ngIf="!dato.nuevo && tieneFichero(dato)">{{ 'facturacion.cmc.fichero' | translate }} <a (click)="navigateToFicheroTransferencias(dato)" class="enlace">{{ dato['idDisqueteAbono'] }}</a></span>
+                
+                  <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_ABONO_COMPENSACION">
+                    <input type="text" class="form-control" [(ngModel)]="nuevoEstado.numeroFactura" maxlength="nuevoEstado.notaMaxLength" pInputText>
+                  </div>
+                  <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_ABONO_NUEVO_CAJA">
+                    <input type="text" class="form-control" [(ngModel)]="nuevoEstado.comentario" maxlength="nuevoEstado.notaMaxLength" pInputText>
+                  </div>
+                </div>
+                <div *ngSwitchCase="'estado'">
+                  <span *ngIf="!dato.nuevo">{{ dato[col.field] }}</span>
+
+                  <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_ABONO_RENEGOCIACION">                    
+                    <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.idEstado' placeholder="Seleccionar" [ngClass]="styleObligatorio(resaltadoEstado, nuevoEstado.idEstado)"
+                      [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" appendTo="body"></p-dropdown>
+                  </div>
+                </div>
+                <div *ngSwitchCase="'cuentaBancaria'">
+                  <span *ngIf="!dato.nuevo">{{ dato[col.field] }}</span>
+
+                  <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_ABONO_RENEGOCIACION">
+                    <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.idCuenta' placeholder="Seleccionar" [disabled]="!enabledComboCuentasBancarias()" [ngClass]="styleObligatorio(resaltadoBanco, nuevoEstado.cuentaBanco)"
+                      [options]="bodyInicial.cuentasBanco" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" appendTo="body"></p-dropdown>
+                  </div>
+                </div>
+                <div *ngSwitchCase="'movimiento'">
+                  <span *ngIf="!dato.nuevo">{{ dato[col.field] ? dato[col.field] + " €" : "-" }}</span>
+
+                  <div *ngIf="dato.nuevo && nuevoEstado.idAccion != ACCION_ABONO_RENEGOCIACION">
+                    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.movimiento" 
+                      maxlength="10" (change)="onChangeImporte()" [ngClass]="styleObligatorio(true, nuevoEstado.movimiento)" pInputText>
+                  </div>
+                </div>
+                <div *ngSwitchCase="'importePendiente'">
+                  <span *ngIf="!dato.nuevo">{{ dato[col.field] ? dato[col.field] + " €" : "-" }}</span>
+
+                  <div *ngIf="dato.nuevo && nuevoEstado.idAccion != ACCION_ABONO_RENEGOCIACION">
+                    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.importePendiente" 
+                      maxlength="10" (change)="onChangeImporte()" [disabled]="[ACCION_ABONO_COMPENSACION, ACCION_ABONO_NUEVO_CAJA].includes(nuevoEstado.idAccion)" [ngClass]="styleObligatorio(true, nuevoEstado.importePendiente)" pInputText>
+                  </div>
+                </div>
+                <div *ngSwitchDefault>
+                  <span>{{ dato[col.field] }}</span></div>
+              </div>
+              
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+            </label>
+            <label>{{"general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
+            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          </div>
+        </ng-template>
+
+      </p-table>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="nuevoEstado || disabledCompensar()"
+          (click)="compensar()" label="{{ 'facturacionSJCS.facturacionesYPagos.compensar' | translate }}"></button>
+        <button pButton type="button" icon="fas fa-exchange-alt" iconPos="left" [disabled]="nuevoEstado || disabledRenegociar()"
+          (click)="renegociar()" label="{{ 'general.boton.renegociar' | translate }}"></button>
+        <button pButton  type="button" icon="fa fa-plus" iconPos="left" [disabled]="nuevoEstado || disabledNuevoAbono()"
+          (click)="nuevoAbono()" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
+        <button pButton type="button" icon="fa fa-trash" iconPos="left" [disabled]="nuevoEstado || disabledEliminar()"
+          (click)="eliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
+
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!nuevoEstado"
+          label="{{'general.boton.restablecer' | translate}}"></button>
+        <button (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!nuevoEstado"
+          label="{{'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

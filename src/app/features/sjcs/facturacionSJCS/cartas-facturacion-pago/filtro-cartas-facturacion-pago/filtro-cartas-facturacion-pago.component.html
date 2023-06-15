@@ -1,0 +1,100 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <div class="form-row">
+      <div class="col-6">
+        <p-radioButton class="pr-2" name="carta" value="f"
+          label="{{ 'facturacionSJCS.facturacionesYPagos.cartaFacturacion' | translate }}" [(ngModel)]='modoBusqueda'
+          (click)="changeFilters()"></p-radioButton>
+        <p-radioButton name="carta" value="p" label="{{ 'facturacionSJCS.facturacionesYPagos.cartaPago' | translate }}"
+          [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
+      </div>
+    </div>
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+
+        <div *ngIf="modoBusquedaFacturacion" class="form-group col-lg-3 col-md-3">
+          <label>{{ 'menu.facturacion' | translate }}</label>
+          <p-multiSelect #facturacionMultiselect class="select-form" [(ngModel)]='filtros.idFacturacion'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboFacturacion" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} facturaciones seleccionadas'"
+            filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(facturacionMultiselect)"
+            (onChange)="onChangeMultiSelect($event, 'idFacturacion')">
+          </p-multiSelect>
+        </div>
+
+        <div *ngIf="!modoBusquedaFacturacion" class="form-group col-lg-3 col-md-3">
+          <label>{{ 'justiciaGratuita.guardia.gestion.pago' | translate }}</label>
+          <p-multiSelect #pagoMultiselect class="select-form" [(ngModel)]='filtros.idPago'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboPagos" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} pagos seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(pagoMultiselect)"
+            (onChange)="onChangeMultiSelect($event, 'idPago')">
+          </p-multiSelect>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.facturacionesYPagos.conceptos' | translate }}</label>
+          <p-multiSelect #conceptosMultiselect class="select-form" [(ngModel)]='filtros.idConcepto'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboConceptos" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} conceptos seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(conceptosMultiselect)"
+            (onChange)="onChangeMultiSelect($event, 'idConcepto')">
+          </p-multiSelect>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos' | translate }}</label>
+          <p-multiSelect #grupoTurnosMultiselect class="select-form" [(ngModel)]='filtros.idTurno'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboGrupoTurnos" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} turnos seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(grupoTurnosMultiselect)"
+            (onChange)="onChangeMultiSelect($event, 'idTurno')">
+          </p-multiSelect>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'dato.jgr.guardia.guardias.partidaPresupuestaria' | translate }}</label>
+          <p-multiSelect #partidaMultiselect class="select-form" [(ngModel)]='filtros.idPartidaPresupuestaria'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboPartidaPresupuestaria"
+            [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} partidas seleccionadas'"
+            filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(partidaMultiselect)"
+            (onChange)="onChangeMultiSelect($event, 'idPartidaPresupuestaria')">
+          </p-multiSelect>
+        </div>
+      </div>
+    </div>
+
+    <p (click)="onHideDatosColegiado()" class="title-module"> {{ 'justiciaGratuita.justiciables.literal.colegiado' |
+      translate }}
+      <i *ngIf="showDatosColegiado" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosColegiado" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <div *ngIf="showDatosColegiado" class="module vista-simple">
+      <app-busqueda-colegiado-express [numColegiado]="filtros.ncolegiado" [nombreAp]="filtros.apellidosNombre"
+        [disabled]="esColegiado || disabledLetradoFicha" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)"
+        [obligatorio]="obligatorio">
+      </app-busqueda-colegiado-express>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button pButton (click)="clearFilters()" type="button" icon="fa fa-eraser" iconPos="left"
+        label="{{ 'general.boton.clear' | translate}}"></button>
+      <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
+        label="{{ 'general.boton.search' | translate }}"></button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

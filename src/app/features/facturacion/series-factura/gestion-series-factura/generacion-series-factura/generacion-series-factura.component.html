@@ -1,0 +1,80 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="generacion">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('generacion')">
+          <div class="img-colegiado">
+            <i class="far fa-file-alt icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('generacion')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.generarPDF.literal' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>{{ 'facturacion.seriesFactura.generarPDF.auto' | translate }}: 
+              <span>{{ body.generarPDF ? "Sí" : "No" }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.generarPDF.modFact' | translate }}: 
+              <span>{{ findLabelInCombo(comboModeloFactura, body.idModeloFactura) }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.generarPDF.modFactRect' | translate }}: 
+              <span>{{ findLabelInCombo(comboModeloFacturaRectificativa, body.idModeloRectificativa) }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('generacion')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('generacion')">
+        <div class="img-colegiado">
+          <i class="far fa-file-alt icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.generarPDF.literal' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="form-row w-100">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label></label>
+            <p-checkbox [(ngModel)]="body.generarPDF" label="{{ 'facturacion.seriesFactura.generarPDF.auto' | translate }}" binary="true"></p-checkbox>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.seriesFactura.generarPDF.modFact' | translate }} (*)</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idModeloFactura' placeholder="{{'general.boton.seleccionar' | translate}}"
+                [options]="comboModeloFactura" [ngClass]="styleObligatorio(body.idModeloFactura)" [filter]="true" filterBy="label,labelSinTilde"
+                [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.seriesFactura.generarPDF.modFactRect' | translate }} (*)</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idModeloRectificativa' placeholder="{{'general.boton.seleccionar' | translate}}"
+                [options]="comboModeloFacturaRectificativa" [ngClass]="styleObligatorio(body.idModeloRectificativa)" [filter]="true" filterBy="label,labelSinTilde"
+                [showClear]="true"></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="deshabilitarGuardado()"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -1,0 +1,107 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
+          <input type="text" class="box" class="form-control" [maxlength]="200" [(ngModel)]='filtros.apellidos' pInputText pInputText>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}</label>
+          <input type="text" class="box" class="form-control" [maxLength]="100" [(ngModel)]='filtros.nombre' pInputText pInputText>
+        </div>
+
+        <div class="row col-lg-3 col-md-3">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}</label>
+            <input type="text" class="box" class="form-control" [maxLength]="20" [(ngModel)]='filtros.nif' pInputText pInputText>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p (click)="onHideDatosDirecciones()" class="title-module"> {{ 'envios.definir.literal.datosdestino' | translate }}
+      <i *ngIf="showDatosDirecciones" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosDirecciones" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosDirecciones" class="module vista-simple">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='filtros.idProvincia' placeholder="{{'general.boton.seleccionar' | translate}}"
+            [options]="comboProvincias" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeProvincia()" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"gratuita.partidosJudiciales.literal.poblaciones" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='filtros.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledPoblacion"
+            [options]="comboPoblacion" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [emptyFilterMessage]="resultadosPoblaciones" [showClear]="true">
+          </p-dropdown>
+        </div>
+        <div class="row col-lg-3 col-md-3">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ 'censo.ws.literal.codigopostal' | translate }}</label>
+            <input type="text" class="form-control" maxlength="5" [(ngModel)]="filtros.codigoPostal" [disabled]="!permisoEscritura" (input)='editarCodigoPostal($event,filtros.codigoPostal)'
+              pInputText>
+
+            <!-- <input type="text" name="codigoExt" value="" class="box" class="form-control" [(ngModel)]='filtros.codigoPostal' maxlength="10"
+              pInputText> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p (click)="onHideAsuntos()" class="title-module"> {{ 'justiciaGratuita.justiciables.literal.asuntos' | translate }}
+      <i *ngIf="showAsuntos" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showAsuntos" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showAsuntos" class="module vista-simple">
+      <div class="form-row">
+        <div class="form-row col-lg-3 col-md-3">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ 'gratuita.personaJG.literal.anioAsuntoDesde' | translate }}</label>
+            <input type="number" name="anioDesde" class="box" class="form-control" [(ngModel)]='filtros.anioDesde' max="9999" min="1900"
+              pInputText (input)='editarCompleto($event,filtros.anioDesde)'>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ 'gratuita.personaJG.literal.hasta' | translate }}</label>
+            <input type="number" name="anioHasta" class="box" class="form-control" [(ngModel)]='filtros.anioHasta' max="9999" min="1900"
+              pInputText (input)='editarCompleto($event,filtros.anioHasta)'>
+          </div>
+        </div>
+        <div class="form-row col-lg-3 col-md-3">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ 'administracion.usuarios.literal.rol' | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idRol' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboRoles"
+              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+     
+      <button *ngIf="checkOrigenAsuntos" (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <button [disabled]="!permisoEscritura" (click)="checkPermisosNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>

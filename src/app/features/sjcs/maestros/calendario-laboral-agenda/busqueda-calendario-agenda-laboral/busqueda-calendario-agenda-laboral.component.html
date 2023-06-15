@@ -1,0 +1,18 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>SJCS
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros' | translate }}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros.calendarioLaboralAgenda' | translate }}
+  </p>
+</div>
+
+<div class="busqueda-container">
+  <app-filtro-calendario-agenda-laboral (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura"></app-filtro-calendario-agenda-laboral>
+  <app-tabla-calendario-agenda-laboral *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="search($event)"></app-tabla-calendario-agenda-laboral>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -1,0 +1,82 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">Sustituciones</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div class="card-body card-body-ficha">
+      <div class="row">
+
+        <div class="bloque col-lg-6 col-md-6">
+          <div class="form-row">
+
+            <div class="form-group-interlineado col-lg-10 col-md-10">
+              <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'guardia'"
+                [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"
+                (colegiado)="changeColegiado($event)" [disabled]="modoLectura">
+              </app-busqueda-colegiado-express>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group-interlineado col-lg-5 col-md-5">
+              <label>Fecha Sustitucion</label>
+              <app-fecha [disabled]="true" [(value)]="fechaSustitucion" (valueChangeSelected)="fillFechaSustitucion($event)"
+              (valueChangeInput)="fillFechaSustitucion($event)">
+              </app-fecha>
+            </div>
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+              <p-checkbox [disabled] = "modoLectura || (esLetrado)" (onChange)="onChangeCheckSalto($event)" [(ngModel)]="salto" binary="true"
+                label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate }}" name="groupname"
+                ></p-checkbox>
+
+            </div>
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+              <p-checkbox [disabled] = "modoLectura || (esLetrado)" (onChange)="onChangeCheckCompensacion($event)" [(ngModel)]="compensacion" binary="true"
+                label="{{ 'justiciaGratuita.oficio.designas.letrados.compensacion' | translate }}" name="groupname"
+                ></p-checkbox>
+
+            </div>
+          </div>
+
+
+
+        </div>
+
+
+        <div class="bloque col-lg-6 col-md-6">
+          <div class="form-row">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
+              <label>{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}</label>
+              <textarea pInputTextarea [disabled]="modoLectura" [(ngModel)]="comensustitucion" class="form-control ui-inputtext" autoResize="autoResize"
+                maxLength="3900"></textarea>
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+
+    <div class="card-footer" >
+      <div class="text-right main-button ">
+        <button *ngIf="esLetrado && esColegiado" [disabled]="modoLectura || esLetrado || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.solicitarSustitucion' | translate}}"></button>
+
+        <button *ngIf="!esLetrado" [disabled]="modoLectura || esLetrado || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
+        label="{{ 'general.boton.sustituir' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

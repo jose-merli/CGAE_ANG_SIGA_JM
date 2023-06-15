@@ -1,0 +1,118 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000">
+</p-growl>
+<div class="card" id="incompatibilidades">
+  <div class="card-header header-ficha">
+    <div *ngIf="!openFicha" class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado" (click)="abreCierraFicha()">
+          <i class="fas fa-certificate icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10 cabeza">
+        <div class="d-flex justify-content-end mb-1 pointer" (click)="abreCierraFicha()">
+          <label class="mr-auto title-ficha">{{'dato.jgr.guardia.guardias.incompatibilidades' | translate}}</label>
+        </div>
+        <div class="d-flex justify-content-between sub">
+          <label>{{'dato.jgr.guardia.guardias.turno' | translate}}:
+            <strong> {{nombreTurno}}</strong>
+          </label>
+          <label>{{'menu.justiciaGratuita.GuardiaMenu' | translate}}:
+            <strong> {{nombreGuardia}}</strong>
+          </label>
+          <label>{{'dato.jgr.guardia.guardias.dias' | translate}}:
+            <strong> {{tipoDia}}</strong>
+          </label>
+          <label>{{'dato.jgr.guardia.guardias.motivos' | translate}}:
+            <strong> {{descripcionIncomp}}</strong>
+          </label>
+          <label>{{'dato.jgr.guardia.guardias.diasSeparacion' | translate}}:
+            <strong> {{diasSeparacion}}</strong>
+          </label>
+          <label>{{'justiciaGratuita.ejg.datosGenerales.numero.Documentos' | translate}}:
+            <strong> {{totalIncompatibilidades}}</strong>
+          </label>
+
+          <i (click)="abreCierraFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+      <div class="img-colegiado">
+        <i class="fas fa-certificate icon-ficha"></i>
+      </div>
+      <label class="title-ficha">{{'dato.jgr.guardia.guardias.incompatibilidades' | translate}}</label>
+      <i class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+  <div *ngIf="openFicha" class="card-body card-body-ficha">
+    <div class="row col-12">
+      <div class="form-group col-lg-12 col-md-12">
+        <label style="text-align:center; font-weight: bold;">{{ "dato.jgr.guardia.guardias.incompatibilidades" | translate }}</label>
+      </div>
+
+      <p-table [value]="datos" [columns]="cols" [first]="0" [responsive]="true" #tabla class="tabla-listado" [paginator]="true"
+        [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of cols" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{ col.header | translate }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="
+                  tabla.filter($event.target.value, col.field, 'contains')
+                " />
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+
+            <td class="text-center" *ngFor="let col of columns">
+
+              <span>
+                {{dato[nombre]}}
+                {{dato[col.field]}}
+              </span>
+
+            </td>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{tabla.first + 1}} al {{tabla.first
+              + tabla.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{tabla.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+            </label>
+            <label>{{"general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
+            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+
+
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

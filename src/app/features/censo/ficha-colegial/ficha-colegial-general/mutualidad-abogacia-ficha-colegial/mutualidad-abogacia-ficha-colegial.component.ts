@@ -54,14 +54,19 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
 
     if ((this.tarjetaMutualidad == "2" || this.tarjetaMutualidad == "3") && !this.jueves) {
       
-        this.jueves = true;
+      this.jueves = true;
+      setTimeout(() => {
         this.generalTratamiento = this.datosTratamientos;
-        let tratamiento = this.generalTratamiento.find(
-          item => item.value === this.generalBody.idTratamiento
-        );
-        if (tratamiento != undefined && tratamiento.label != undefined) {
-          this.tratamientoDesc = tratamiento.label;
-        }
+        if(this.generalTratamiento != undefined){
+          let tratamiento = this.generalTratamiento.find(
+            item => item.value === this.generalBody.idTratamiento
+          );
+          if (tratamiento != undefined && tratamiento.label != undefined) {
+            this.tratamientoDesc = tratamiento.label;
+          }
+        } 
+      }, 1000);
+      
     }
   }
 
@@ -139,7 +144,7 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
                     }
                   },
                   error => {
-                    console.log(error);
+                    //console.log(error);
                     this.progressSpinner = false;
 
                   }
@@ -186,14 +191,14 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
                     }
                   },
                   error => {
-                    console.log(error);
+                    //console.log(error);
                     this.progressSpinner = false;
 
                   }
                 );
             }
           }, error => {
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
 
           }
@@ -271,7 +276,7 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
                     }
                   },
                   error => {
-                    console.log(error);
+                    //console.log(error);
                     this.progressSpinner = false;
 
                   }
@@ -318,14 +323,14 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
                     }
                   },
                   error => {
-                    console.log(error);
+                    //console.log(error);
                     this.progressSpinner = false;
 
                   }
                 );
             }
           }, error => {
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
 
           }

@@ -98,7 +98,7 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.tipoSolGeneral = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     // Llamada al rest de estado
@@ -107,7 +107,7 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.estado = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -241,7 +241,7 @@ export class SolicitudesModificacionComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -253,7 +253,7 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.tipoSolGeneral = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.tipoModificacionSolGeneral = null;
@@ -336,7 +336,7 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -779,7 +779,7 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // if (this.tarjeta == "3" || this.tarjeta == "2") {
@@ -808,7 +808,7 @@ export class SolicitudesModificacionComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

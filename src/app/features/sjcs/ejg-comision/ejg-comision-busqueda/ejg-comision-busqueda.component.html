@@ -1,0 +1,454 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{"menu.justiciaGratuita" | translate}} </p>
+      <p><i class="fa fa-angle-right"></i>{{ "justiciaGratuita.ejg.datosGenerales.EJG" | translate}} </p>
+  </div>
+
+  <div class="card">
+    <!-- Datos de Identificación -->
+    <div class="card-body">
+      <p (click)="onHideDatosIdentificacion()" class="title-module">{{
+        "censo.busquedaClientes.literal.datosIdentificacion" | translate}}
+        <i *ngIf="showdatosIdentificacion" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showdatosIdentificacion" class="fa fa-angle-down float-right"></i>
+      </p>
+      <div *ngIf="showdatosIdentificacion" class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3" style="display: none;">
+          <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.colegio' placeholder="Seleccionar" [disabled]="inst2000"
+            [options]="comboColegio" (onChange)="cargarComboComision()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <div class="form-row">
+            <div class="col-lg-4 col-md-4 pl5">
+              <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
+                  translate}}</strong></label>
+              <input type="text" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)"
+                maxLength="4" pInputText>
+            </div>
+            <div class="col-log-8 col-md-8 pr5">
+              <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
+                  translate}}</strong></label>
+              <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="body.numero">
+            </div>
+          </div>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "gratuita.busquedaEJG.literal.fechaAperturaDesde" | translate }}
+          </label>
+          <app-fecha [(value)]="body.fechaAperturaDesd"
+            [maxDate]="getFechaHastaCalendar(body.fechaAperturaDesd, body.fechaAperturaHast)"
+            (valueChangeSelected)="fillFechaAperturaDesd($event)" (valueChangeInput)="fillFechaAperturaDesd($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "gratuita.busquedaEJG.literal.fechaAperturaHasta" | translate }}
+          </label>
+          <app-fecha [(value)]="body.fechaAperturaHast"
+            [minDate]="getFechaDesdeCalendar(body.fechaAperturaDesd, body.fechaAperturaHast)"
+            (valueChangeSelected)="fillFechaAperturaHast($event)" (valueChangeInput)="fillFechaAperturaHast($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}</label>
+          <p-multiSelect #tipoEJG class="select-form" [(ngModel)]='body.tipoEJG'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoEJG" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} tipos seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(tipoEJG)">
+          </p-multiSelect>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}</label>
+          <p-multiSelect #estadoEJG class="select-form" [(ngModel)]='body.estadoEJG'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstadoEJG" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} estados seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(estadoEJG)">
+          </p-multiSelect>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaEstadoDesd" | translate }}
+          </label>
+          <app-fecha [(value)]="body.fechaEstadoDesd"
+            [maxDate]="getFechaHastaCalendar(body.fechaEstadoDesd, body.fechaEstadoHast)"
+            (valueChangeSelected)="fillFechaEstadoDesd($event)" (valueChangeInput)="fillFechaEstadoDesd($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaEstadoHast" | translate }}
+          </label>
+          <app-fecha [(value)]="body.fechaEstadoHast"
+            [minDate]="getFechaDesdeCalendar(body.fechaEstadoDesd, body.fechaEstadoHast)"
+            (valueChangeSelected)="fillFechaEstadoHast($event)" (valueChangeInput)="fillFechaEstadoHast($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate }}</label>
+          <p-multiSelect #tipoEJGColegio class="select-form" [(ngModel)]='body.tipoEJGColegio'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoEJGColegio" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} colegios seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(tipoEJGColegio)">
+          </p-multiSelect>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.ejg.datosGenerales.CreadoDesde" | translate }}</label>
+          <p-multiSelect #creadoDesde class="select-form" [(ngModel)]='body.creadoDesde'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboCreadoDesde" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} elementos seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(creadoDesde)">
+          </p-multiSelect>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaLimiteDesd" | translate }}
+          </label>
+          <app-fecha [(value)]="body.fechaLimiteDesd"
+            [maxDate]="getFechaHastaCalendar(body.fechaLimiteDesd, body.fechaLimiteHast)"
+            (valueChangeSelected)="fillFechaLimiteDesd($event)" (valueChangeInput)="fillFechaLimiteDesd($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaLimiteHast" | translate }}
+          </label>
+          <app-fecha [(value)]="body.fechaLimiteHast"
+            [minDate]="getFechaDesdeCalendar(body.fechaLimiteDesd, body.fechaLimiteHast)"
+            (valueChangeSelected)="fillFechaLimiteHast($event)" (valueChangeInput)="fillFechaLimiteHast($event)">
+          </app-fecha>
+        </div>
+      </div>
+
+      <!-- Datos generales EJG -->
+      <div class="w100 font-weight-bold">
+        <p (click)="onHideDatosGeneralesEJG()" class="title-module">{{
+          "justiciaGratuita.ejg.datosGenerales.datosGeneralesEJG" | translate }}
+          <i *ngIf="showDatosGeneralesEJG" class="fa fa-angle-up float-right"></i>
+          <i *ngIf="!showDatosGeneralesEJG" class="fa fa-angle-down float-right"></i>
+        </p>
+      </div>
+
+      <div *ngIf="showDatosGeneralesEJG" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.Dictamen" | translate }}</label>
+            <p-multiSelect class="select-form" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.dictamen'
+            [options]="comboDictamen" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde,value"
+            maxSelectedLabels="10">
+          </p-multiSelect>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{
+              "justiciaGratuita.maestros.fundamentosCalificacion.fundamentos.fundamentosCalificacion"
+              |
+              translate }}</label>
+            <p-dropdown [(disabled)]="isDisabledFundamentosCalif" class="select-form" [(ngModel)]='body.fundamentoCalif'
+              placeholder="Seleccionar" [options]="comboFundamentoCalif" [filter]="true" filterBy="label,labelSinTilde"
+              [showClear]="true"></p-dropdown>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaDictamenDesd" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechaDictamenDesd"
+              [maxDate]="getFechaHastaCalendar(body.fechaDictamenDesd, body.fechaDictamenHast)"
+              (valueChangeSelected)="fillFechaDictamenDesd($event)" (valueChangeInput)="fillFechaDictamenDesd($event)">
+            </app-fecha>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaDictamenHast" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechaDictamenHast"
+              [minDate]="getFechaDesdeCalendar(body.fechaDictamenDesd, body.fechaDictamenHast)"
+              (valueChangeSelected)="fillFechaDictamenHast($event)" (valueChangeInput)="fillFechaDictamenHast($event)">
+            </app-fecha>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.maestros.fundamentosResolucion.resolucion" | translate
+              }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.resolucion' placeholder="Seleccionar"
+              [options]="comboResolucion" [filter]="true" filterBy="label,labelSinTilde"
+              (onChange)="onChangeResolucion()" [showClear]="true"></p-dropdown>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.fundamentoJuridico'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.fundamentoJuridico' placeholder="Seleccionar"
+              [options]="comboFundamentoJurid" [filter]="true" [(disabled)]="isDisabledFundamentosJurid"
+              filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "busquedaSanciones.fechaResolucionDesde.literal" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechaResolucionDesd"
+              [maxDate]="getFechaHastaCalendar(body.fechaResolucionDesd, body.fechaResolucionHast)"
+              (valueChangeSelected)="fillFechaResolucionDesd($event)"
+              (valueChangeInput)="fillFechaResolucionDesd($event)"></app-fecha>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "busquedaSanciones.fechaResolucionHasta.literal" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechaResolucionHast"
+              [minDate]="getFechaDesdeCalendar(body.fechaResolucionDesd, body.fechaResolucionHast)"
+              (valueChangeSelected)="fillFechaResolucionHast($event)"
+              (valueChangeInput)="fillFechaResolucionHast($event)"></app-fecha>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.Impugnacion'|translate}}</label>
+            <p-dropdown (onChange)="onChangeImpugnacion()" class="select-form" [(ngModel)]='body.impugnacion'
+              placeholder="Seleccionar" [options]="comboImpugnacion" [filter]="true" filterBy="label,labelSinTilde"
+              [showClear]="true"></p-dropdown>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.fundamentoImpugnacion'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.fundamentoImpuganacion' placeholder="Seleccionar"
+              [(disabled)]="isDisabledFundamentoImpug" [options]="comboFundamentoImpug" [filter]="true"
+              filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaImpugnacionDesd" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechaImpugnacionDesd"
+              [maxDate]="getFechaHastaCalendar(body.fechaImpugnacionDesd, body.fechaImpugnacionHast)"
+              (valueChangeSelected)="fillFechaImpugnacionDesd($event)"
+              (valueChangeInput)="fillFechaImpugnacionDesd($event)"></app-fecha>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaImpugnacionHast" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechaImpugnacionHast"
+              [minDate]="getFechaDesdeCalendar(body.fechaImpugnacionDesd, body.fechaImpugnacionHast)"
+              (valueChangeSelected)="fillFechaImpugnacionHast($event)"
+              (valueChangeInput)="fillFechaImpugnacionHast($event)"></app-fecha>
+          </div>
+        </div>
+      </div>
+
+      <!-- Datos de Defensa -->
+      <div class="w100 font-weight-bold">
+        <p (click)="onHideDatosDefensa()" class="title-module">
+          {{'justiciaGratuita.ejg.datosGenerales.datosDefensa'|translate}}
+          <i *ngIf="showDatosDefensa" class="fa fa-angle-up float-right"></i>
+          <i *ngIf="!showDatosDefensa" class="fa fa-angle-down float-right"></i>
+        </p>
+      </div>
+      <div *ngIf="showDatosDefensa" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.juzgado' placeholder="Seleccionar"
+              [options]="comboJuzgado" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.maestros.Procedimiento'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.procedimiento' placeholder="Seleccionar"
+              [options]="comboProcedimiento" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento'|translate}}</label>
+            <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText
+              [(ngModel)]="body.numAnnioProcedimiento">
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.NIG'|translate}}</label>
+            <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="body.NIG">
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{"enviosMasivos.literal.asunto" | translate}}</label>
+            <input type="text" class="form-control" maxLength="1023" pInputText [(ngModel)]="body.asunto">
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.calidad'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.calidad' placeholder="Seleccionar"
+              [options]="comboCalidad" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.Perceptivo'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.perceptivo' placeholder="Seleccionar"
+              [options]="comboPerceptivo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.Renuncia'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.renuncia' placeholder="Seleccionar"
+              [options]="comboRenuncia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+      <!-- CAJG -->
+      <div class="w100 font-weight-bold">
+        <p (click)="onHideCAJG()" class="title-module">{{ 'justiciaGratuita.ejg.datosGenerales.CAJG' |
+          translate}}
+          <i *ngIf="showCAJG" class="fa fa-angle-up float-right"></i>
+          <i *ngIf="!showCAJG" class="fa fa-angle-down float-right"></i>
+        </p>
+      </div>
+      <div *ngIf="showCAJG" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'justiciaGratuita.ejg.datosGenerales.annioCAJG' | translate}}</label>
+            <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText
+              [(ngModel)]="body.annioCAJG">
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'justiciaGratuita.ejg.datosGenerales.numCAJG' | translate}}</label>
+            <input type="text" class="form-control" maxLength="20" (keypress)="numberOnly($event)" pInputText
+              [(ngModel)]="body.numCAJG">
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'justiciaGratuita.ejg.datosGenerales.AnnioActa' | translate}}</label>
+            <input type="text" class="form-control" required (keypress)="numberOnly($event)" maxLength="4" pInputText
+              [(ngModel)]="body.annioActa">
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'justiciaGratuita.ejg.datosGenerales.numActa' | translate}}</label>
+            <input type="text" class="form-control"  maxLength="10" (keypress)="numberOnly($event)" pInputText
+              [(ngModel)]="body.numActa">
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'justiciaGratuita.ejg.datosGenerales.numRegistroRemesa' | translate}}</label>
+            <input type="text" class="form-control" maxLength="8" (keypress)="numberOnly($event)" pInputText
+              [(ngModel)]="body.numRegRemesa1">
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{"justiciaGratuita.ejg.datosGenerales.Ponente" | translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.ponente' placeholder="Seleccionar"
+              [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaPonenteDesd" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechaPonenteDesd"
+              [maxDate]="getFechaHastaCalendar(body.fechaPonenteDesd, body.fechaPonenteHast)"
+              (valueChangeSelected)="fillFechaPonenteDesd($event)" (valueChangeInput)="fillFechaPonenteDesd($event)">
+            </app-fecha>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaPonenteHast" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechaPonenteHast"
+              [minDate]="getFechaDesdeCalendar(body.fechaPonenteDesd, body.fechaPonenteHast)"
+              (valueChangeSelected)="fillFechaPonenteHast($event)" (valueChangeInput)="fillFechaPonenteHast($event)">
+            </app-fecha>
+          </div>
+        </div>
+      </div>
+      <!-- Datos Solicitante -->
+      <div class="w100 font-weight-bold">
+        <p (click)="onHideSolicitante()" class="title-module">{{ "justiciaGratuita.justiciables.rol.solicitante"
+          |
+          translate}}
+          <i *ngIf="showSolicitante" class="fa fa-angle-up float-right"></i>
+          <i *ngIf="!showSolicitante" class="fa fa-angle-down float-right"></i>
+        </p>
+      </div>
+      <div *ngIf="showSolicitante" class="module vista-avanzada">
+        <div class="form-row">
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
+            <input type="text" class="form-control" maxLength="20" [(ngModel)]='body.nif' pInputText>
+
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
+            <input type="text" class="form-control" maxLength="201" [(ngModel)]='body.apellidos' pInputText>
+
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
+            <input type="text" class="form-control" maxLength="100" pInputText [(ngModel)]="body.nombre">
+
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{"administracion.usuarios.literal.rol" | translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.rol' placeholder="Seleccionar" [options]="comboRol"
+              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+
+      <!-- TramitadorAsignacionDesignacion -->
+      <div class="w100 font-weight-bold">
+        <p (click)="onHideTramitador()" class="title-module">{{
+          "justiciaGratuita.ejg.datosGenerales.tramtiadorAsistenciaDesignacion" | translate}}
+          <i *ngIf="showTramitador" class="fa fa-angle-up float-right"></i>
+          <i *ngIf="!showTramitador" class="fa fa-angle-down float-right"></i>
+        </p>
+      </div>
+
+      <div *ngIf="showTramitador" class="module vista-avanzada">
+        <div class="form-row">
+
+          <div class="form-group-interlineado col-lg-12 col-md-12">
+            <app-busqueda-colegiado-express [tarjeta]="'tramitador'" [pantalla]="'ejg'"
+              [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp">
+            </app-busqueda-colegiado-express>
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.TipoLetrado'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.tipoLetrado' placeholder="Seleccionar"
+              (onChange)="onChangeTipoLetrado()" [options]="comboTipoLetrado" [filter]="true"
+              filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "dato.jgr.ejg.turnoTramitacion" | translate }}</label>
+            <p-dropdown class="select-form" (onChange)="onChangeTurnos()" [(ngModel)]='body.idTurno'
+              placeholder="Seleccionar" [options]="comboTurno" [filter]="true" filterBy="label,labelSinTilde"
+              [showClear]="true"></p-dropdown>
+
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idGuardia' [(disabled)]="isDisabledGuardia"
+              placeholder="Seleccionar" [options]="comboGuardia" [filter]="true" filterBy="label,labelSinTilde"
+              [showClear]="true"></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="clearFilters()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+           label="{{ 'general.boton.clear' | translate}}"></button>
+        <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{'general.boton.search' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

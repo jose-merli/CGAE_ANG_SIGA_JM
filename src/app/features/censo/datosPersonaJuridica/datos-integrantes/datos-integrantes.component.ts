@@ -225,7 +225,7 @@ export class DatosIntegrantesComponent implements OnInit {
         this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if(this.tarjeta == "3" || this.tarjeta == "2"){
@@ -269,7 +269,7 @@ export class DatosIntegrantesComponent implements OnInit {
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -370,7 +370,7 @@ export class DatosIntegrantesComponent implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { 
@@ -391,7 +391,7 @@ export class DatosIntegrantesComponent implements OnInit {
       .subscribe(
         data => { },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.editar = false;

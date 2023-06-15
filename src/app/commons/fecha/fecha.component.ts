@@ -24,6 +24,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 	@Output() valueChangeSelected = new EventEmitter();
 	@Output() valueChangeInput = new EventEmitter();
 	@Output() valueFocus = new EventEmitter();
+	@Output() fechaHoraSelectedButton = new EventEmitter();
 	@Input() minDate: Date;
 	@Input() maxDate: Date;
 	@Input() disabled: boolean;
@@ -33,6 +34,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 	@Input() disabledToday: boolean;
 	@Input() disabledDelete: boolean;
 	@Input() inputStyleClass: string;
+	@Input() appendTo = null;
 
 	es: any = esCalendar;
 	fechaSelectedFromCalendar: boolean = false;
@@ -103,6 +105,16 @@ export class FechaComponent implements OnInit, AfterViewInit {
 				this.borrarFecha();
 			}
 		} else {
+			if (this.value == null || this.value == undefined) {
+				if ( !(this.value instanceof Date) && newValue.toString() != 'Invalid Date') {
+					this.value = new Date(newValue);
+				}
+			}
+
+			if (this.value != null && this.value.toString().indexOf(':') != -1) {
+				this.value = new Date(newValue);
+			}
+			
 			this.valueChangeSelected.emit(this.value);
 		}
 	}
@@ -115,8 +127,13 @@ export class FechaComponent implements OnInit, AfterViewInit {
 				let newValue = e.target.value;
 				if (this.showTime) {
 					if (!REGEX.test(newValue)) {
-						let fecha = moment(newValue, 'DD/MM/YYYY hh:mm').toDate();
-						this.calendar.onSelect.emit(fecha);
+						if (newValue.length < 11) {
+							let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+							this.calendar.onSelect.emit(fecha);
+						} else {
+							let fecha = moment(newValue, 'DD/MM/YYYY hh:mm').toDate();
+							this.calendar.onSelect.emit(fecha);
+						}
 					} else {
 						this.calendar.overlayVisible = false;
 						this.value = null;
@@ -163,5 +180,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 		this.valueChangeSelected.emit(this.value);
 		this.calendar.overlayVisible = false;
 		this.fechaSelectedFromCalendar = true;
+		this.fechaHoraSelectedButton.emit(true);
 	}
+
 }

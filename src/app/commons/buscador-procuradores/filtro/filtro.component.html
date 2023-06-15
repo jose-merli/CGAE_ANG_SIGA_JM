@@ -1,0 +1,55 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"administracion.usuarios.literal.NIFCIF" | translate}}</label>
+          <input type="text" name="nifCif" value="" class="box" class="form-control" pInputText maxLength="9" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="40"
+            pInputText>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
+          <input type="text" name="apellido1" value="" class="box" class="form-control" [(ngModel)]='filtros.apellido1' pInputText
+            maxLength="40" pInputText>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
+          <input type="text" name="apellido2" value="" class="box" class="form-control" [(ngModel)]='filtros.apellido2' pInputText
+            maxLength="40" pInputText>
+        </div>
+
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate }}</label>
+          <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='filtros.inst' [options]="comboColegios" optionLabel="label"
+            [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" [panelStyle]="{width:'100%'}" [disabled]="!institucionGeneral"></p-multiSelect>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
+          <input type="text" name="numeroColegiado" value="" class="box" class="form-control" [(ngModel)]='filtros.nColegiado' pInputText
+            maxLength="40" pInputText>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+    </div>
+  </div>
+</div>

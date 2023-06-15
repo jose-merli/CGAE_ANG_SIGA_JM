@@ -5,6 +5,9 @@ export class CargaMasivaItem {
   usuario: String;
   registrosCorrectos: number;
   fechaCarga: String;
+  fechaCargaDesde : String;
+  fechaCargaHasta : String;
+  fechaSolicitudDesde: String;
   tipoCarga: String;
   errores: ErrorItem;
   idFichero: number;

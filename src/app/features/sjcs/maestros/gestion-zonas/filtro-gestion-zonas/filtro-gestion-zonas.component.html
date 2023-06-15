@@ -1,0 +1,51 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.maestros' | translate }}
+    <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.maestros.grupoZonasyZonas' | translate }}
+    <!-- {{ 'censo.busquedaClientes.busquedaNoColegiados.titulo' | translate}}-->
+  </p>
+</div>
+<div class="card">
+  <div class="card-body">
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12 form-row">
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ 'justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera' | translate }}</label>
+            <input type="text" name="grupoZona" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcionzona' pInputText
+              maxLength="60" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ 'justiciaGratuita.maestros.zonasYSubzonas.zona' | translate }}</label>
+            <input type="text" name="zona" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcionsubzona' pInputText
+              maxLength="60" pInputText>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ 'agenda.fichaEvento.tarjetaGenerales.partidoJudicial' | translate }}</label>
+            <input type="text" name="partidoJudicial" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcionpartido'
+              maxLength="200" pInputText>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <button [disabled]="!permisoEscritura" (click)="checkPermisosNewZoneGroup()" pButton type="button" icon="fa fa-plus" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>

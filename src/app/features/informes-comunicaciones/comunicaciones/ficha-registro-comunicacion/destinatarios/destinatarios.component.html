@@ -52,14 +52,14 @@
                   </label>
                 </div>
                 <div class="d-flex justify-content-between">
-                  <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinarios.documentoIdentidad' | translate
+                  <label *ngIf= "destinatario.idPersona > 0">{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinarios.documentoIdentidad' | translate
                     }}:
                     <span>{{destinatario.nifcif}}</span>
                   </label>
                   <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
                     <span>{{destinatario.nombre}}</span>
                   </label>
-                  <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}:
+                  <label *ngIf= "destinatario.idPersona > 0">{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}:
                     <span>{{destinatario.apellidos1}} {{destinatario.apellidos2}} </span>
                   </label>
                   <label *ngIf="body.idTipoEnvios == 1">{{"censo.datosDireccion.literal.correo" | translate}}:
@@ -72,7 +72,7 @@
                     <span>{{destinatario.movil}}</span>
                   </label>
 
-                  <label class="mr-3">
+                  <!--<label class="mr-3" *ngIf= "destinatario.idPersona > 0">
                     <i (click)="navigateTo(destinatario);$event.stopPropagation();"
                       class="fas fa-external-link-alt mr-2"></i>
                     <a (click)="navigateTo(destinatario);$event.stopPropagation();">
@@ -80,7 +80,8 @@
                         {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
                       </span>
                     </a>
-                  </label>
+                  </label>-->
+
                   <i *ngIf="!destinatario.open" class="fa fa-angle-down float-right"></i>
                 </div>
               </div>
@@ -93,15 +94,15 @@
                 class="title-ficha">{{ "informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinatarios.singular" | translate }}
               </label>
               <div class="d-flex justify-content-start mb-1 ml-auto">
-                <i (click)="navigateTo(destinatario);$event.stopPropagation();"
-                  class="fas fa-external-link-alt mr-2 float-right"></i>
-                <label class="mr-3">
+              <!--   <i (click)="navigateTo(destinatario);$event.stopPropagation();"
+                  class="fas fa-external-link-alt mr-2 float-right" *ngIf= "destinatario.idPersona > 0"></i>
+                <label class="mr-3" *ngIf= "destinatario.idPersona > 0">
                   <a (click)="navigateTo(destinatario);$event.stopPropagation();">
                     <span style="color: blue; text-decoration: underline;cursor:pointer;">
                       {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
                     </span>
                   </a>
-                </label>
+                </label> -->
                 <i class="fa fa-angle-up ml-auto"></i>
               </div>
             </div>
@@ -116,7 +117,7 @@
               </div>
               <div class="bloque col-lg-10 col-md-9">
                 <div class="form-row d-flex align-items-center">
-                  <div class="form-group col-lg-4 col-md-4">
+                  <div class="form-group col-lg-4 col-md-4" *ngIf= "destinatario.idPersona > 0">
                     <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
                     </label>
                     <input type="text" class="form-control" [(ngModel)]="destinatario.nifcif" [attr.maxlength]="20"
@@ -130,13 +131,19 @@
                     <input [(ngModel)]="destinatario.nombre" type="text" class="form-control" [disabled]="true"
                       pInputText />
                   </div>
-                  <div class="form-group col-lg-34 col-md-4">
+                  <div class="form-group col-lg-34 col-md-4" *ngIf= "destinatario.idPersona < 0">
+                    <label>{{ "censo.datosDireccion.literal.direccion" | translate }}
+                    </label>
+                    <input [(ngModel)]="destinatario.domicilio" type="text" class="form-control" [disabled]="true"
+                      pInputText />
+                  </div>
+                  <div class="form-group col-lg-34 col-md-4" *ngIf= "destinatario.idPersona > 0">
                     <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }}
                     </label>
                     <input [(ngModel)]="destinatario.apellidos1" type="text" class="form-control" [disabled]="true"
                       pInputText />
                   </div>
-                  <div class="form-group col-lg-4 col-md-4">
+                  <div class="form-group col-lg-4 col-md-4" *ngIf= "destinatario.idPersona > 0">
                     <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
                     </label>
                     <input [(ngModel)]="destinatario.apellidos2" type="text " class="form-control" [disabled]="true"

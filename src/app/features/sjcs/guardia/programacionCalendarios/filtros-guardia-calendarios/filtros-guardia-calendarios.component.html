@@ -1,0 +1,96 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div class="module vista-simple">
+      <div class="form-row">
+        <!-- SIGARNV-2833 eromanlopez Inicio en el desplegable cerrado salen listados todos los seleccionados -->
+
+        <!-- TURNO -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
+          <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" (onChange)="onChangeTurno($event)" [(ngModel)]='filtros.idTurno'
+            [options]="comboTurno" maxSelectedLabels="3" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectTurno)">
+          </p-multiSelect>
+        </div>
+
+        <!-- GUARDIA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.inscripciones.guardia" | translate}}</label>
+          <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" (onChange)="checkFilters()" [(ngModel)]='filtros.idGuardia'
+            [options]="comboGuardia" maxSelectedLabels="3" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde">
+          </p-multiSelect>
+        </div>
+
+        <!-- LISTA DE GUARDIAS -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.calendarios.ListaGuardias" | translate}}</label>
+          <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" (onChange)="checkFilters()" [(ngModel)]='filtros.listaGuardias'
+            [options]="comboConjuntoGuardias" maxSelectedLabels="3" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde">
+          </p-multiSelect>
+        </div>
+
+        <!-- ESTADO -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.calendarios.Estado" | translate}}</label>
+          <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" (onChange)="checkFilters()" [(ngModel)]='filtros.estado'
+            [options]="comboEstado" maxSelectedLabels="3" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde">
+          </p-multiSelect>
+        </div>
+        <!-- SIGARNV-2833 eromanlopez Fin -->
+
+        <!-- FECHA CALENDARIO DESDE -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.Calendarios.FechaDesde" | translate}}</label>
+          <app-fecha [(value)]="filtros.fechaCalendarioDesde" [inputStyleClass]="styleObligatorio(filtros.fechaCalendarioDesde)" 
+            (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
+        </div>
+
+        <!-- FECHA CALENDARIO HASTA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.Calendarios.FechaHasta" | translate}}</label>
+          <app-fecha [(value)]="filtros.fechaCalendarioHasta" [minDate]="getFechaCalendarioHasta(filtros.fechaCalendarioDesde,filtros.fechaCalendarioHasta)" 
+            (valueChangeSelected)="fillFechaCalendarioHasta($event)"  (valueChangeInput)="fillFechaCalendarioHasta($event)"></app-fecha>
+        </div>
+
+         <!-- FECHA PROGRAMADA DESDE -->
+         <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.Calendarios.FechaProgramadaDesde" | translate}}</label>
+          <app-fecha [(value)]="filtros.fechaProgramadaDesde" [minDate]="getFechaProgramadaDesde(filtros.fechaProgramadaDesde,filtros.fechaProgramadaHasta)"
+            (valueChangeSelected)="fillFechaProgramadaDesde($event)"  (valueChangeInput)="fillFechaProgramadaDesde($event)"></app-fecha>
+        </div>
+
+        <!-- FECHA PROGRAMADA HASTA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.Calendarios.FechaProgramadaHasta" | translate}}</label>
+          <app-fecha [(value)]="filtros.fechaProgramadaHasta" [minDate]="getFechaProgramadaHasta(filtros.fechaProgramadaDesde,filtros.fechaProgramadaHasta)"
+            (valueChangeSelected)="fillFechaProgramadaHasta($event)"  (valueChangeInput)="fillFechaProgramadaHasta($event)"></app-fecha>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button pButton (click)="rest()" type="button" icon="fa fa-eraser" iconPos="left"
+        label="{{ 'general.boton.clear' | translate}}"></button>
+      <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
+        label="{{ 'general.boton.search' | translate }}"></button>
+      <!--<button [disabled]="emptyFilters" pButton (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>-->
+        <button pButton  [disabled]="!permisoTotal" (click)="nuevo()" type="button" icon="fa fa-plus" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,116 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+
+<div class="card mt-3">
+  <div class="card-body p-0">
+    <p-table #monederosTable [value]="listaMonederosActivos" [columns]="cols" [(selection)]="selectedRows"
+      selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
+      (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
+      (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+              *ngSwitchCase="col.field" pInputText type="text"
+              (input)="monederosTable.filter($event.target.value, col.field, 'contains')" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+            <div *ngIf="!isLiquidado(rowData)">
+              <div *ngIf="col.field =='fecha'" >
+                <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div> 
+              <div *ngIf="col.field !='fecha'" >
+                <span *ngIf="col.field == 'descripcion'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
+                <span *ngIf="col.field == 'nombreCompleto' || col.field == 'nifCif'">{{rowData[col.field]}}</span>
+                <span *ngIf="col.field == 'importeUsado' || col.field == 'importeInicial' || col.field == 'importeRestante'">{{rowData[col.field]}} €</span>
+              </div> 
+            </div>
+            <div *ngIf="isLiquidado(rowData)">
+              <div *ngIf="col.field =='fecha'" >
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div> 
+              <div *ngIf="col.field !='fecha'" >
+                <span *ngIf="col.field == 'descripcion'" class="enlace" (click)="openTab(rowData)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
+                <span *ngIf="col.field == 'nombreCompleto' || col.field == 'nifCif'" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
+                <span *ngIf="col.field == 'importeUsado' || col.field == 'importeInicial' || col.field == 'importeRestante'" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}} €</span>
+              </div> 
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">Mostrando registros del {{monederosTable.first + 1}} al
+            {{monederosTable.first +
+            monederosTable.rows}} de un total de {{monederosTable.totalRecords}}</label>
+          <div>
+            <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
+              translate }}: {{numSelectedRows}}
+            </label>
+          </div>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="rowsPerPage" [options]="rowsPerPageSelectValues"
+            (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAllRows()" [(ngModel)]="selectAllRows" binary="true"
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+            </p-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+
+    <p-footer>
+      <div class="text-right main-button">
+        <!-- Mostrar/Ocultar Historico -->
+        <button *ngIf="!historico" (click)="searchHistorical()" pButton type="button" iconPos="left"
+          label="{{ 'general.message.mostrarHistorico' | translate}}" icon="fa fa-history"></button>
+        <button *ngIf="historico" (click)="searchHistorical()" pButton type="button"
+          icon="fa fa-history" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+        <!-- Liquidar -->
+        <!-- REVISAR pendiente de introducir etiquete e implementacion -->
+            <button pButton  (click)="checkLiquidar()" type="button" icon="fa fa-search" iconPos="left"
+            label="{{'facturacion.productosyservicios.monedero.botonliquidar' | translate}}" [disabled]="selectedRows.length == 0"></button>
+        </div>
+    </p-footer>
+
+  </div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

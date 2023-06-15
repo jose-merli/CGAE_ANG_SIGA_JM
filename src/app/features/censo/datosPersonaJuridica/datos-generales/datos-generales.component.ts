@@ -288,7 +288,7 @@ export class DatosGenerales implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },()=>{
           
         }
@@ -343,7 +343,7 @@ export class DatosGenerales implements OnInit {
           this.createItems = this.etiquetasPersonaJuridicaSelecionados;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -354,14 +354,14 @@ export class DatosGenerales implements OnInit {
         this.idiomas = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
 
   datosGeneralesSearch() {
     this.progressSpinner = true;
-    console.log("entra");
+    //console.log("entra");
     this.body.idPersona = this.idPersona;
     this.body.idLenguaje = "";
     this.body.idInstitucion = "";
@@ -394,7 +394,7 @@ export class DatosGenerales implements OnInit {
         error => {
           this.personaSearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.personaSearch.error.description));
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -448,7 +448,7 @@ export class DatosGenerales implements OnInit {
       error => {
         this.personaSearch = JSON.parse(error["error"]);
         this.showFail(JSON.stringify(this.personaSearch.error.description));
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -483,8 +483,8 @@ export class DatosGenerales implements OnInit {
 
         // this.body.motivo = "registro creado";
 
-        console.log("BODY", this.body);
-        // console.log("NEWBODY", newBody);
+     
+        // //console.log("NEWBODY", newBody);
         this.sigaServices
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
@@ -719,7 +719,7 @@ export class DatosGenerales implements OnInit {
           this.cargarImagen(this.idPersona);
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -1018,8 +1018,6 @@ export class DatosGenerales implements OnInit {
       data.map(result => {
         result.cardGeneral = this.isValidate;
       });
-      console.log(data);
-      console.log("DAtos generales", this.progressSpinner);
     });
   }
 
@@ -1063,7 +1061,7 @@ export class DatosGenerales implements OnInit {
         this.sortOptions();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },()=>{
         // this.datosTarjetaResumen = [
         //   {
@@ -1399,7 +1397,7 @@ export class DatosGenerales implements OnInit {
         this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.tarjeta == "3" || this.tarjeta == "2") {

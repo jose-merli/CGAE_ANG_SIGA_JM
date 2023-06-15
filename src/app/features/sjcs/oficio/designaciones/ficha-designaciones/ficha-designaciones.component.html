@@ -1,0 +1,149 @@
+<!-- Alertas -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- Alertas -->
+<div id="fichaDesignacionOficio">
+
+    <div>
+        <div id="top"></div>
+        <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+        <div class="info-limit mb-2" *ngIf="mostrarAnularCompensacion">
+            <img src="./assets/images/icons/warning.png">
+            <div class="d-inline-block">
+                <div>
+                    <span class="pr-2 text-left">Recuerde que si introdujo una compensación debería anularla</span>
+                </div>
+            </div>
+        </div>
+        <div class="tarjetaFija" *ngIf="tarjetaFija !== null">
+
+            <div class="card" style="z-index: 2;">
+                <div class="card-body p-0">
+                    <mat-accordion class="example-headers-align" multi>
+                        <mat-expansion-panel [disabled]="true">
+                            <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
+                                [expandedHeight]="'auto'">
+                                <app-tarjeta [cardTitle]="tarjetaFija.nombre"
+                                    [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono"
+                                    [enlaces]="tarjetaFija.enlaces" [fixed]="tarjetaFija.fixed" class="w-100"
+                                    (isOpen)="isOpenReceive($event)">
+                                </app-tarjeta>
+                            </mat-expansion-panel-header>
+                            <ng-template matExpansionPanelContent>
+                            </ng-template>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+
+        </div>
+
+        <div>
+            <div *ngFor="let tarj of listaTarjetas; let i = index;">
+                <div class="card" [id]="tarj.id">
+                    <div class="card-body p-0">
+                        <mat-accordion class="example-headers-align" multi>
+                            <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
+                                [disabled]="tarj.fixed || !tarj.detalle" [expanded]="tarj.opened">
+                                <!-- class="h-100" -->
+                                <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                                    <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
+                                        [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
+                                        [fixed]="tarj.fixed" class="w-100" [enlaceCardClosed]="tarj.enlaceCardClosed"
+                                        [datosLetrado]="tarj.letrado">
+                                    </app-tarjeta>
+                                </mat-expansion-panel-header>
+                                <ng-template matExpansionPanelContent>
+                                    <div *ngIf="tarj.nombre == 'Datos Generales'">
+                                        <app-detalle-tarjeta-datos-generales-ficha-designacion-oficio [campos]="campos"
+                                            (actualizaFicha)="actualizaFicha($event)" (searchRelacionesAs)="searchRelacionesAs($event)"
+                                            (refreshData)="refreshDataGenerales($event)">
+                                        </app-detalle-tarjeta-datos-generales-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Detalle Designación'">
+                                        <app-detalle-tarjeta-detalle-ficha-designacion-oficio [campos]="campos"
+                                            (refreshData)="refreshData($event)">
+                                        </app-detalle-tarjeta-detalle-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Datos Adicionales'">
+                                        <app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio
+                                            [campos]="campos" (refreshAditionalData)="refreshAditionalData($event)">
+                                        </app-detalle-tarjeta-datos-adicionales-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Datos Facturación'">
+                                        <app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio
+                                            (changeDataDatosFacEvent)="changeDataDatosFacEvent($event)"
+                                            [campos]="campos">
+                                        </app-detalle-tarjeta-datos-facturacion-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Documentación'" >
+                                        <app-detalle-tarjeta-documentacion-ficha-designacion-oficio
+                                            [documentos]="documentos" [campos]="campos" [isLetrado]="isLetrado"
+                                            [actuacionesDesignaItems]="actuacionesDesignaItems"
+                                            (buscarDocDesignaEvent)="getDocumentosDesigna()">
+                                        </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Contrarios'">
+                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio
+                                            [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)" id="sjcsDesigContra"
+                                            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
+                                        </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Procurador'" >
+                                        <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras"
+                                            [campos]="campos.fechaEntradaInicio"
+                                            [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
+                                            [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
+                                            [procuradores]="procurador"
+                                            (mostrar)="mostrar()"
+                                            (restablecer)="restablecer()">
+                                        </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Cambio Letrado'">
+                                        <app-detalle-tarjeta-letrados-designa [letrados]="letrados" >
+                                        </app-detalle-tarjeta-letrados-designa>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Interesados'">
+                                        <app-detalle-tarjeta-interesados-ficha-designacion-oficio  [campos]="campos"
+                                            [interesados]="interesados" (searchInteresados)="searchInteresados($event)" id="sjcsDesigInt"
+                                            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
+                                        </app-detalle-tarjeta-interesados-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Actuaciones'">
+                                        <app-detalle-tarjeta-actuaciones-ficha-designacion-oficio [campos]="campos"
+                                            [actuacionesDesignaItems]="actuacionesDesignaItems"
+                                            [relaciones]="relaciones" (buscarEvent)="getActuacionesDesigna($event)"
+                                            [permiteTurno]="permiteTurno"
+                                            (buscarDocumentosEvent)="getDocumentosDesigna()">
+                                        </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Relaciones'">
+                                        <app-detalle-tarjeta-relaciones-designa [relaciones]="relaciones"
+                                            (searchRelaciones)="searchRelaciones()" (relacion)="relacion()">
+                                        </app-detalle-tarjeta-relaciones-designa>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Comunicaciones'">
+                                        <app-detalle-tarjeta-comunicaciones-designa [comunicaciones]="comunicaciones"
+                                            (searchComunicaciones)="searchComunicaciones()">
+                                        </app-detalle-tarjeta-comunicaciones-designa>
+                                    </div>
+                                </ng-template>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="down"></div>
+    </div>
+
+</div>
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+<!-- Spinner -->
+<div class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
+</div>

@@ -1,0 +1,60 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    
+    <div class="card-body card-body-ficha">
+      <div class="row">
+
+        <div class="bloque col-lg-6 col-md-6">
+          <div class="form-row">
+
+            <div *ngIf="modificar" class="form-group-interlineado col-lg-6 col-md-6">
+               <label>{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}</label>
+               <app-fecha [(disabled)] = "modificar" [(value)]="campoFechaIni" (valueChangeSelected)="fillFechaGuardiaIni($event)"
+                 (valueChangeInput)="fillFechaGuardiaIni($event)">
+                </app-fecha>
+                <label>{{ "censo.consultaDatos.literal.fechaFin" | translate }}</label>
+                <app-fecha [(disabled)] = "modificar" [(value)]="campoFechaFin" (valueChangeSelected)="fillFechaGuardiaFin($event)"
+                  (valueChangeInput)="fillFechaGuardiaFin($event)">
+                </app-fecha>
+            </div>
+            <div *ngIf="!modificar" class="form-group-interlineado col-lg-6 col-md-6">
+                <label>Fechas Disponibles</label>
+                <p-dropdown class="select-form" [(ngModel)]='body.fechaIntro'
+                    placeholder="{{'general.boton.seleccionar' | translate}}" [options]="fechasDisponibles"
+                    [filter]="false" filterBy="label,labelSinTilde" ></p-dropdown>
+            
+           </div>
+
+
+            <div class="form-group-interlineado col-lg-6 col-md-6">
+              <label>Motivo de Anulacion</label>
+              <textarea pInputTextarea [(ngModel)]="body.observacionesAnulacion"
+                class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900"></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="text-right main-button ">
+        <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
+</div>

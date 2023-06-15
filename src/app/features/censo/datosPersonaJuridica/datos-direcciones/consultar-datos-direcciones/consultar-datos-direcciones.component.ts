@@ -17,6 +17,7 @@ import { Checkbox } from "../../../../../../../node_modules/primeng/primeng";
 import { findIndex } from 'rxjs/operators';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { MultiSelect } from 'primeng/multiselect';
+import { RevisionAutLetradoItem } from "../../../../../models/RevisionAutLetradoItem";
 
 @Component({
   selector: "app-consultar-datos-direcciones",
@@ -287,7 +288,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
     this.checkBody = JSON.parse(JSON.stringify(this.body));
@@ -940,6 +941,11 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.sigaServices.post("direcciones_update", this.body).subscribe(
         data => {
           this.progressSpinner = false;
+          //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+          let peticion = new RevisionAutLetradoItem();
+          peticion.idPersona = this.body.idPersona.toString();
+          peticion.fechaProcesamiento = new Date();
+          this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
           this.body = JSON.parse(data["body"]);
           //this.showSuccessAddress();
         },
@@ -951,7 +957,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           } else {
             this.showGenericFail();
           }
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -979,6 +985,11 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.sigaServices.post("direcciones_insert", this.body).subscribe(
         data => {
           this.progressSpinner = false;
+          //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+          let peticion = new RevisionAutLetradoItem();
+          peticion.idPersona = this.body.idPersona.toString();
+          peticion.fechaProcesamiento = new Date();
+          this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
           this.body = JSON.parse(data["body"]);
           this.backTo();
         },
@@ -989,7 +1000,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           } else {
             this.showGenericFail();
           }
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -1021,7 +1032,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       error => {
         this.bodySearch = JSON.parse(error["error"]);
         this.showFail(this.bodySearch.error.message.toString());
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
       }
     );
@@ -1119,7 +1130,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         error => {
           this.bodySearch = JSON.parse(error["error"]);
           this.showGenericFail();
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
           this.displayAuditoria = false;
         }

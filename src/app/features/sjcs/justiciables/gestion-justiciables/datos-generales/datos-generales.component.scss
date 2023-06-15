@@ -1,0 +1,45 @@
+
+  .camposObligatorios{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > div{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > input{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > div .ui-multiselect{
+    border: 1px solid red !important;
+  }
+
+  @media (max-width: 767px) {
+    .hiddenBorder {
+      border-right: none !important;
+    }
+  }
+  .cell-value {
+    text-align: right;
+  }
+  .w100 {
+    width: 100%;
+  }
+
+  .field-radiobutton {
+    margin-top: 0px;
+    margin-bottom: 25px;
+  }
+
+  .radio-style{
+    display:flex;
+
+    ::ng-deep .ui-radiobutton {
+      .ui-radiobutton-box {
+         .ui-radiobutton-icon {
+          vertical-align: middle;
+        }
+      }
+    }
+  }

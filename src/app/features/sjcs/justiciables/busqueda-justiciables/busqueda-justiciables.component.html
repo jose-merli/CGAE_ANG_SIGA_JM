@@ -1,0 +1,23 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>SJCS
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.justiciables' | translate }}
+  </p>
+</div>
+
+<div class="busqueda-container">
+  <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura" [modoRepresentante]="modoRepresentante" [nuevaUniFamiliar]="nuevaUniFamiliar" [nuevoContrarioEJG]="nuevoContrarioEJG"></app-filtro-justiciables>
+  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" [nuevoInteresado]="nuevoInteresado" [nuevoContrario]="nuevoContrario" [nuevaUniFamiliar]="nuevaUniFamiliar" [nuevoSOJ]="nuevoSoj"
+  (searchHistoricalSend)="search($event)" [modoRepresentante]="modoRepresentante" [nuevoContrarioEJG]="nuevoContrarioEJG" [nuevoContrarioAsistencia]="nuevoContrarioAsistencia" 
+  [nuevoAsistido]="nuevoAsistido"></app-tabla-justiciables>
+</div>
+
+<div *ngIf="modoRepresentante || searchJusticiable" class="mt-3 text-right main-button ">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

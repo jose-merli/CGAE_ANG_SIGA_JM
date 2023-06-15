@@ -1,0 +1,41 @@
+::ng-deep {
+
+    #divCont{
+        margin-left: 0px;
+    }
+    
+    #divPeq1{
+        padding-left: 1px;
+        padding-right: 8px;
+    
+    }
+    #divPeq2{
+        padding-left: 7px;
+        padding-right: 3px;
+    }
+    #rowCalidad{
+        padding-left: 0.3rem !important;
+        padding-right: 0.3rem !important;
+    }
+
+    #checkUltimoEstado {
+
+        p-checkbox {
+            margin-left: 0px !important;
+            font-weight: bold;
+        }
+
+    }
+
+    
+
+}
+
+.opcionesComboBaja{
+    text-decoration-line: line-through;
+    font-style: italic;
+}
+
+.opcionesComboBold{
+    font-weight: bold;
+}

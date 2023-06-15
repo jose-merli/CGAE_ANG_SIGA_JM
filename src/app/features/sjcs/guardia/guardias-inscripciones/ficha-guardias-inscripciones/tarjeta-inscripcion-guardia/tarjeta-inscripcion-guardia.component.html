@@ -1,0 +1,108 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<!--cuerpo datos generales-->
+<div class="busqueda-container" id="datosInscripcion">
+  <div class="card">
+  <div class="card-header header-ficha">
+    <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+      
+        <div class="img-colegiado">
+          <i class="fas fa-link icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}</label>
+      </div>
+    </div>
+    <div class="card-body card-body-ficha">
+      <div class="row">
+        <!-- <div class="bloque col-lg-4 col-md-4"> -->
+
+        <!-- <div class="form-row"> -->
+        <p-table #table [columns]="cols" [value]="inscripcionesItem" [(selection)]="selectedDatos"
+          [selectionMode]="selectionMode" [responsive]="true" class="tabla-listado" [paginator]="true"
+          [rows]="selectedItem" paginatorPosition="both" dataKey="nombreTurno" sortMode="multiple" >
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of cols" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns; let i = index" [pSortableColumn]="col.field" [ngSwitch]="col.field">
+                {{ col.header | translate }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+                  *ngSwitchCase="col.field" pInputText type="text" (input)="
+                  table.filter($event.target.value, col.field, 'contains')">
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" 
+            let-columns="columns">
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header" *ngIf="rowData.turnoPrincipal">
+              <td *ngFor="let col of columns">   
+                <div class= "displayFlex">
+                  <div *ngIf="col.field =='nombreTurno'">       
+                  <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' (onChange)="seleccionarPadre(rowData,$event)"
+				   binary="true"></p-checkbox>      
+                  </div>                     
+                <a [pRowToggler]="rowData">
+                  <div class="text-center" *ngIf="col.field == 'nombreTurno'">                       
+                      <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                      <a style="color: blue;text-decoration: underline;" (click)="openTab(rowData, 'Turno')"><span >{{rowData[col.field]}}</span></a>
+                  </div>
+                </a>
+              </div>
+                <div class="text-center" *ngIf="col.field !='nombreTurno' ">
+                  <!-- && col.field !='descripcion_tipo_guardia' -->
+                  <span>{{rowData[col.field]}}</span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros'
+                |
+                translate }}{{table.first + 1}}
+                al {{table.first
+                + table.rows}}
+                {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                {{table.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length >= 0">{{
+                'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+                {{selectedDatos.length}}
+              </label>
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length == undefined">{{
+                'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+                1
+              </label>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1">
+                {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="rowexpansion" let-dato let-columns="columns">
+            <tr [pSelectableRow]="dato">        
+              <td *ngFor="let col of columns">
+                <div *ngIf="col.field == 'nombreTurno'" class="displayMargin">    
+                    <p-checkbox [disabled]="disabledGuardias || disableAll" [(ngModel)]="dato.selectedBoolean" (onChange)="seleccionarFila(dato, $event)" binary="true"></p-checkbox>    
+                    <a style="color: blue;text-decoration: underline;" (click)="openTab(dato, 'Guardia')" class="form-group-label"><span>{{dato.nombreGuardia}}</span></a>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+</div>
+      
+    
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

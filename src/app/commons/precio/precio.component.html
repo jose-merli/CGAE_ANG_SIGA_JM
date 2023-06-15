@@ -1,0 +1,3 @@
+<input #importe class="form-control paddingInput" [(ngModel)]="value" name="importe" type="text" on-focusout="validateImporte()"
+  (onBlur)="validateImporte()" (keypress)="numberOnly($event)" (input)="validateImporte()" [maxLength]="maxLength"
+  pInputText />

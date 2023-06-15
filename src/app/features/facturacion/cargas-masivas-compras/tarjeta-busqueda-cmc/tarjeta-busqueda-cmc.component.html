@@ -1,0 +1,44 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p class="title-module" (click)="abreCierraTipo()">{{ 'facturacion.cargasmasivascompras.titulotarjetabusqueda' | translate }}
+      <i (click)="abreCierraTipo()" *ngIf="!showTipo" class="fa fa-angle-up float-right"></i>
+      <i (click)="abreCierraTipo()" *ngIf="showTipo" class="fa fa-angle-down float-right"></i>
+    </p>
+    <div *ngIf="showTipo" class="module vista-simple">
+      <div class="row">
+        <div class="col-lg-3 col-md-3">
+          <label>{{ "facturacion.cmc.fechaSubidaDesde" | translate }}
+          </label>
+          <app-fecha [(value)]="filtrosBusquedaCargaMasivasCompras.fechaCargaDesde"
+            [maxDate]="getFechaHastaCalendar(filtrosBusquedaCargaMasivasCompras.fechaCargaDesde, filtrosBusquedaCargaMasivasCompras.fechaCargaHasta)"
+            (valueChangeSelected)="fillFechaCargaDesde($event)" (valueChangeInput)="fillFechaCargaDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="ol-lg-3 col-md-3">
+          <label>{{ "facturacion.cmc.fechaSubidaHasta" | translate }}
+          </label>
+          <app-fecha [(value)]="filtrosBusquedaCargaMasivasCompras.fechaCargaHasta"
+            [minDate]="getFechaDesdeCalendar(filtrosBusquedaCargaMasivasCompras.fechaCargaDesde, filtrosBusquedaCargaMasivasCompras.fechaCargaHasta)"
+            (valueChangeSelected)="fillFechaCargaHasta($event)" (valueChangeInput)="fillFechaCargaHasta($event)">
+          </app-fecha>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTON TARJETA -->
+  <div class="card-footer">  
+    <div class="text-right main-button">
+      <!-- LIMPIAR -->
+      <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"
+      (click)="limpiar()">
+      </button>
+      <!-- BUSCAR -->
+      <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left"
+      label="{{ 'general.boton.search' | translate}}"></button>
+    </div>
+  </div>
+
+</div>

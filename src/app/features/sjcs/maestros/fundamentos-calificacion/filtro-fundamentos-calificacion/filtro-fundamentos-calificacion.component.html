@@ -1,0 +1,34 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{'justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen'|translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='filtros.descripcionDictamen' placeholder="Seleccionar" [options]="comboDictamen"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{"general.description"| translate}} </label>
+          <input type="text" class="box" class="form-control" [(ngModel)]='filtros.descripcionFundamento' maxLength="200" pInputText>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{'general.boton.clear' | translate}}"></button>
+      <button (click)="guardaBusca()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate }}"></button>
+      <button [disabled]="!permisoEscritura" (click)="checkPermisosNewFundamento()" pButton type="button" icon="fa fa-plus" iconPos="left"
+        label="{{'general.boton.new' | translate }}"></button>
+    </div>
+  </div>
+</div>

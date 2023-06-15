@@ -1,0 +1,71 @@
+.e-query-builder .e-btn-group input:checked + label.e-btn,
+.e-query-builder .e-btn-group .e-btn.e-qb-toggle.e-active-toggle {
+  background: #004375;
+  border-color: #004375;
+  color: #fff;
+}
+
+.e-input-group:not(.e-float-icon-left):not(.e-float-input)::before,
+.e-input-group:not(.e-float-icon-left):not(.e-float-input)::after,
+.e-input-group.e-float-icon-left:not(.e-float-input) .e-input-in-wrap::before,
+.e-input-group.e-float-icon-left:not(.e-float-input) .e-input-in-wrap::after,
+.e-input-group.e-control-wrapper:not(.e-float-icon-left):not(.e-float-input)::before,
+.e-input-group.e-control-wrapper:not(.e-float-icon-left):not(.e-float-input)::after,
+.e-input-group.e-control-wrapper.e-float-icon-left:not(.e-float-input)
+  .e-input-in-wrap::before,
+.e-input-group.e-control-wrapper.e-float-icon-left:not(.e-float-input)
+  .e-input-in-wrap::after {
+  background: #004375;
+}
+
+.e-radio:checked + label::before {
+  background-color: #fff;
+  border-color: #004375;
+}
+
+.e-radio:checked + label::after {
+  background-color: #004375;
+  color: #004375;
+}
+
+.e-radio:checked + label:hover::after {
+  background-color: #004375;
+}
+
+.e-radio:checked:focus + label::after {
+  background-color: #004375;
+}
+
+//To customize the radiobutton on hover
+.e-radio + label:hover::before {
+  border-color: #004375;
+}
+
+//To customize the checked radiobutton on hover
+.e-radio:checked:focus + label::before,
+.e-radio:checked + label:hover::before {
+  border-color: #004375;
+  color: #004375;
+}
+
+.e-ripple {
+  color: #004375;
+}
+
+.e-rule-filter{
+  width: 250px;
+}
+.e-dropdownbase .e-list-item.e-item-focus,
+.e-dropdownbase .e-list-item.e-active,
+.e-dropdownbase .e-list-item.e-active.e-hover,
+.e-dropdownbase .e-list-item.e-hover {
+  color: #004375;
+}
+
+.e-popup.e-popup-open {
+  width: 300px !important;  
+}
+
+::selection {
+  background: #004375;
+}

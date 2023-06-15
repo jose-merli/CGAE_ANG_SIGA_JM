@@ -1,0 +1,32 @@
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.left {
+    text-align: left;
+}
+
+.inline {
+    display: flex;
+    align-items: flex-end;
+}
+
+.padding-interior {
+    padding-right: 1.25rem !important;
+    padding-left: 1.25rem !important;
+}
+
+.padding-superior {
+    padding-top: 0.6rem;
+}
+
+.padding-inferior {
+    padding-bottom: 0.6rem;
+}
+.card-footer{
+    height: 150px;
+  }

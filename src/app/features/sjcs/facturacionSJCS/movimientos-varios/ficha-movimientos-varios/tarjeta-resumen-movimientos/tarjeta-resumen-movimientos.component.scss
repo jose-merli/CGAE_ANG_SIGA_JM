@@ -1,0 +1,16 @@
+#cabeza {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+.card .header-ficha label {
+    color: black;
+}
+.card-header.header-ficha {
+    overflow: overlay;
+}
+.d-flex.flex-wrap.ng-star-inserted {
+    margin-right: auto;
+    margin-left:0.25rem;
+}

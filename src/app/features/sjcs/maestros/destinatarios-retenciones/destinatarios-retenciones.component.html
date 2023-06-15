@@ -1,1 +1,10 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtrosretenciones (busqueda)="searchPartidas($event)"></app-filtrosretenciones>
+    <app-gestion-retenciones *ngIf="buscar" [datos]="datos" [permisos]="permisoEscritura" (searchPartidas)="searchPartidas($event)"></app-gestion-retenciones>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>

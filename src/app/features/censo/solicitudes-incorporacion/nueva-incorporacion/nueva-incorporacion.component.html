@@ -84,10 +84,22 @@
                             </div>
                             <div class="form-group col-lg-4 col-md-5" style="float:right">
                                 <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }} (*)</label>
-                                <app-fecha [inputStyleClass]="styleObligatorioAprobar(solicitudEditar.fechaSolicitud)"
+                                <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaSolicitud)"
                                     [(value)]="solicitudEditar.fechaSolicitud" [disabled]="consulta" [utc]="false"
                                     (valueChangeSelected)="fillFechaSolicitud($event)"
                                     (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6 col-md-6">
+                                <label>{{'exp.expedientesexea.numeroregistro' | translate}}</label>
+                                <input [(ngModel)]="solicitudEditar.numRegistro" [disabled]="true" type="text"
+                                class="form-control" pInputText>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6">
+                                <label>{{'exp.expedientesexea.numeroexp' | translate}}</label>
+                                <input [(ngModel)]="solicitudEditar.numExpediente"  style="color: blue; text-decoration: underline; cursor: pointer;" (click)="openEXEA()" readonly type="text"
+                                class="form-control" pInputText>
                             </div>
                         </div>
                     </div>
@@ -122,7 +134,10 @@
                             <label>{{ "censo.nuevaSolicitud.tipoSolicitud" | translate}}
                                 <span>{{solicitudEditar.tipoSolicitud}}</span>
                             </label>
-                            <label>{{"censo.nuevaSolicitud.modalidad" | translate}}
+                            <label *ngIf="!isActivoEXEA">{{"censo.nuevaSolicitud.modalidad" | translate}}
+                                <span>{{solicitudEditar.modalidad}}</span>
+                            </label>
+                            <label *ngIf="isActivoEXEA">Procedencia
                                 <span>{{solicitudEditar.modalidad}}</span>
                             </label>
                             <i (click)="abreCierraFichaColegiacion()" *ngIf="!fichaColegiacion"
@@ -145,36 +160,37 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.solicitudDe" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorioAprobar(tipoSolicitudSelected)" [filter]="true" [showClear]="true"
+                        <p-dropdown [ngClass]="styleObligatorio(tipoSolicitudSelected)" [filter]="true" [showClear]="true"
                             filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
-                            [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud"
+                            [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud" (onChange)="onChangeCombosDoc()"
                             placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.tipoColegiacion" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorioAprobar(tipoColegiacionSelected)" [filter]="true" [showClear]="true"
-                            filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
+                        <p-dropdown [ngClass]="styleObligatorio(tipoColegiacionSelected)" [filter]="true" [showClear]="true"
+                            filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form" (onChange)="onChangeCombosDoc()"
                             [(ngModel)]="tipoColegiacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [options]="tipoColegiacion"></p-dropdown>
                     </div>
-                    <div class="form-group col-lg-3 col-md-4">
-                        <label>{{"censo.nuevaSolicitud.modDocumentacion" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorioAprobar(modalidadDocumentacionSelected)" [filter]="true"
+                    <div *ngIf="tipoSolicitudSelected != '60'" class="form-group col-lg-3 col-md-4">
+                        <label *ngIf="!isActivoEXEA">{{"censo.nuevaSolicitud.modDocumentacion" | translate}} (*)</label>
+                        <label *ngIf="isActivoEXEA">Procedencia (*)</label>
+                        <p-dropdown [ngClass]="styleObligatorio(modalidadDocumentacionSelected)" [filter]="true"
                             [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
-                            [(ngModel)]="modalidadDocumentacionSelected"
+                            [(ngModel)]="modalidadDocumentacionSelected" (onChange)="onChangeCombosDoc()"
                             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="modalidadDocumentacion">
                         </p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.nuevaIncorporacion.literal.fechaPrimerEstado" | translate}} (*)</label>
-                        <app-fecha [inputStyleClass]="styleObligatorioAprobar(solicitudEditar.fechaEstado)"
+                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaEstado)"
                             [(value)]="solicitudEditar.fechaEstado" [disabled]="consulta" [utc]="false"
                             (valueChangeSelected)="fillFechaEstado($event)" (valueChangeInput)="fillFechaEstado($event)">
                         </app-fecha>
                     </div>
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.fechaincorporacion" | translate}} (*)</label>
-                        <app-fecha [inputStyleClass]="styleObligatorioAprobar(solicitudEditar.fechaIncorporacion)"
+                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaIncorporacion)"
                             [(value)]="solicitudEditar.fechaIncorporacion" [disabled]="consulta" [utc]="false"
                             (valueChangeSelected)="fillFechaIncorporacion($event)"
                             (valueChangeInput)="fillFechaIncorporacion($event)"></app-fecha>
@@ -627,7 +643,10 @@
                         <input type="text" class="form-control" 
                             [disabled]="consulta" [(ngModel)]="solicitudEditar.iban" (ngModelChange)="autogenerarDatos()"
                             pInputText>
-                        <div *ngIf="(!validarIban() || solicitudEditar.banco == '' || solicitudEditar.banco == undefined) && solicitudEditar.iban != undefined && solicitudEditar.iban != '' && solicitudEditar.iban != ' '">
+                        <div *ngIf="(validarIban() && (solicitudEditar.banco == '' || solicitudEditar.banco == undefined)) && solicitudEditar.iban != undefined && solicitudEditar.iban != '' && solicitudEditar.iban != ' '">
+                            <small class="input-error">No existe banco para dicho IBAN</small>
+                        </div>
+                        <div *ngIf="!validarIban() && solicitudEditar.iban != undefined && solicitudEditar.iban != '' && solicitudEditar.iban != ' '">
                             <small class="input-error">IBAN incorrecto</small>
                         </div>
                     </div>
@@ -661,6 +680,152 @@
                         <p-checkbox [ngClass]="{'checkbox-obligatorio': (!cargo && !abono && !abonoJCS) && !checkCampoEsVacio(solicitudEditar.iban) }" [disabled]="consulta" (onChange)="onChangeAbonoSJCS()" binary="true" label="Cuenta SJCS"
                             [(ngModel)]="abonoJCS"></p-checkbox>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FICHA DOCUMENTACION -->
+    <div id="nueIncoDoc" *ngIf="isActivoEXEA">
+        <div class="card">
+            <div class="card-header header-ficha">
+                <div [hidden]="fichaDocumentacion" class="form-row">
+                    <div class="col-lg-1 col-md-2">
+                        <div class="img-colegiado" (click)="abreCierraFichaDocumentacion()">
+                            <i  class="fa fa-briefcase icon-ficha"></i>
+                        </div>
+                    </div>
+                    <div class="col-lg-11 col-md-10">
+                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaDocumentacion()">
+                            <label  class="mr-auto title-ficha">
+                                {{"justiciaGratuita.ejg.documentacion.doc" | translate}}</label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <!--<label *ngIf="solicitudEditar.documentos && solicitudEditar.documentos.length > 0">
+                                Número total: 
+                                <span>{{solicitudEditar.titular}}</span>
+                            </label>-->
+                            <label>
+                                <span></span>
+                            </label>
+                            <i (click)="abreCierraFichaDocumentacion()" *ngIf="!fichaDocumentacion"
+                                class="fa fa-angle-down float-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="fichaDocumentacion" (click)="abreCierraFichaDocumentacion()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                    <div class="img-colegiado" (click)="abreCierraFichaDocumentacion()">
+                        <i class="fa fa-briefcase icon-ficha"></i>
+                    </div>
+                    <label (click)="abreCierraFichaDocumentacion()" class="title-ficha">
+                        {{"justiciaGratuita.ejg.documentacion.doc" | translate}}</label>
+                    <i (click)="abreCierraFichaDocumentacion()" class="fa fa-angle-up ml-auto"></i>
+                </div>
+            </div>
+
+            <!--cuerpo documentacion-->
+            <div [hidden]="!fichaDocumentacion" class="card-body card-body-ficha">
+                <div *ngIf="showInfoDoc" class="info-limit d-flex justify-content-center align-items-center mb-1">
+                    <i class="fa fa-info-circle pr-2"></i>
+                    <div class="d-inline-block" >
+                        <div>
+                            <span class="pr-2 text-left">
+                                Para cargar la documentación requerida es necesario rellenar los campos Solicitud de, Tipo Colegiación y Procedencia.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <p-table [value]="documentos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
+                        [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+                        (onRowUnselect)="actualizaSeleccionados()" (onRowSelect)="actualizaSeleccionados()"
+                        paginatorPosition="both">
+                        <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                            <col *ngFor="let col of cols" [style.width]="col.width">
+                            </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                                {{ col.header | translate }}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+                                *ngSwitchCase="col.field" pInputText type="text" (input)="
+                            table.filter($event.target.value, col.field, 'contains')
+                        " />
+                            </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                            <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                                <td class="text-center" *ngFor="let col of columns">
+                                    <div *ngIf="col.field != 'nombreDoc' && !dato.nuevoRegistro">
+                                        <label>{{ dato[col.field]}}</label>
+                                    </div>
+                                    <div *ngIf="dato.nuevoRegistro && col.field == 'documento'">
+                                        <input type="text" class="form-control" [(ngModel)]="dato.documento" pInputText>
+                                    </div>
+                                    <div *ngIf="dato.nuevoRegistro && col.field == 'obligatorio'">
+                                        <label>{{ dato[col.field]}}</label>
+                                    </div>
+                                    <div *ngIf="dato.nuevoRegistro && col.field == 'observaciones'">
+                                        <input type="text" class="form-control" [(ngModel)]="dato.observaciones" pInputText>
+                                    </div>
+                                    <span *ngIf="col.field == 'nombreDoc' && !dato.idFichero" class="w100">
+                                        <p-fileUpload #pUploadFile name="file" mode="basic" accept=".doc,.docx,.pdf,.jpg,.png,.rtf,.txt"
+                                            chooseLabel="{{ 'general.boton.adjuntarFichero' | translate }}" class="edit my-0 mx-auto main-button"
+                                            auto="true" (onSelect)="getFile(dato, pUploadFile, $event)" [disabled]="solicitudEditar.idEstado == '20'"></p-fileUpload>
+                                    </span>
+                                    <span *ngIf="col.field == 'nombreDoc' && dato.idFichero" class="w100">
+                                        <label>{{ dato[col.field]}}</label>
+                                    </span>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                            <td [attr.colspan]="columns.length">
+                                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                            </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="paginatorleft">
+                            <div class="mostrar d-flex text-right justify-content-end">
+                            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+                                translate }}{{table.first + 1}} al
+                                {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
+                                }} {{table.totalRecords}}</label>
+                            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{
+                                'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+                            </label>
+                            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{
+                                'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+                            </label>
+                            <label>{{"general.message.mostrar" | translate}}</label>
+                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+                            </p-dropdown>
+                            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                            <div class="ml-3 selectAll">
+                                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll"
+                                binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+                            </div>
+                            </div>
+                        </ng-template>
+                    </p-table>
+                    <div class="card-footer" style="width: 100%; float: right;">
+                        <div class="text-right main-button">
+                
+                            <button pButton type="button" icon="fa fa-download" [disabled]="disableDownload || !isActivoEXEA || !solicitudEditar.idSolicitud" iconPos="left" label="{{'general.boton.download' | translate}}" (click)="downloadDoc()"
+                            ></button>
+                            <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}" (click)="newDoc()" [disabled]="!isActivoEXEA || !solicitudEditar.idSolicitud || consulta"
+                            ></button>
+                            <button pButton type="button" icon="fa fa-trash-alt" [disabled]="disableDelete || !isActivoEXEA || !solicitudEditar.idSolicitud || consulta" iconPos="left" label="{{'general.boton.eliminar' | translate}}" (click)="delete()"
+                            ></button>
+                            <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" (click)="validateSizeFile()" [disabled]="!isActivoEXEA || !solicitudEditar.idSolicitud || consulta"></button>
+                
+                        </div>
+                      </div>
                 </div>
             </div>
         </div>
@@ -743,17 +908,19 @@
     <div class="mt-3 text-right main-button ">
         <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
             label="{{ 'general.boton.volver' | translate}}"></button>
-        <!-- GUARDAR -->
-        <button *ngIf="!consulta" id = "buttonGuardar" (click)="checkDatos()" pButton type="button " icon="fa fa-save" iconPos="left"
-            label="Guardar" [disabled]="consulta"></button>
-        <!-- APROBAR -->
+        <button *ngIf="!consulta || isActivoEXEA" id = "buttonGuardar" (click)="checkDatos()" pButton type="button " icon="fa fa-save" iconPos="left"
+            label="Guardar" [disabled]="consulta || (isActivoEXEA && solicitudEditar.idEstado == '20')"></button>
         <button (click)="checkDatosAprobar()" [disabled]="isLetrado"
-            *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
+            *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30') && !isActivoEXEA"
             pButton type="button " icon="fas fa-check" iconPos="left" label="Aprobar "></button>
         <button (click)="denegarSolicitud()" [disabled]="isLetrado"
-            *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
+            *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30') && !isActivoEXEA"
             pButton type="button " icon="fas fa-times" iconPos="left" label="Denegar"></button>
-        <button (click)="SolicitarCertificado()" *ngIf="consulta" disabled pButton type="button "
+        <button [disabled]="isLetrado || solicitudEditar.idEstado != '10'" *ngIf="isActivoEXEA" 
+            pButton type="button " icon="fas fa-check" iconPos="left" label="Iniciar EXEA" (click)="openDialog()"></button>
+        <button *ngIf="isActivoEXEA"  [disabled]="!solicitudEditar.claveConsulta"
+            pButton type="button " icon="fa fa-download" iconPos="left" label="Descargar Justificante" (click)="downloadJustificante()"></button>
+        <button (click)="SolicitarCertificado()" *ngIf="consulta && !isActivoEXEA" disabled pButton type="button "
             icon="fas fa-certificate" iconPos="left" label="Solicitar certificado"></button>
     </div>
     <app-dialog></app-dialog>
@@ -763,3 +930,28 @@
     <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
     <div class="loader"></div>
 </div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmEliminar" width="425"
+  #confirmEliminar>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmEliminar.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmEliminar.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-dialog [(visible)]="showDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+    <p-header>
+      <label>Inicio de trámite</label>
+    </p-header>
+    <div class="row">
+      <div class="form-group col-lg-12 col-md-12">
+        <label>Asunto</label>
+        <textarea [(ngModel)]="asunto" type="text" [rows]="10" [cols]="10" pInputTextarea class="form-control"></textarea>
+      </div>
+    </div>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="closeDialog()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+        <button (click)="checkDatosAprobar()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.submit' | translate}}" pButton></button>
+      </div>
+    </p-footer>
+  </p-dialog>

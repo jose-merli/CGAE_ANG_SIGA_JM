@@ -1,0 +1,15 @@
+.enlace {
+    color: #0000EE !important
+  }
+
+@media screen and (max-width: 640px) {
+  .dropM {
+    width: 100%; 
+  }
+}
+
+@media screen and (min-width: 640px) {
+  .dropM {
+    max-width: 310px !important;
+  }
+}

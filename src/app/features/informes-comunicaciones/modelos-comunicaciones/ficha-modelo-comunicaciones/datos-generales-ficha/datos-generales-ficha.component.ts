@@ -38,6 +38,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   selectedClaseCom: boolean = false;
   progressSpinner: boolean = false;
   resaltadoDatos: boolean = false;
+  informeUnico: boolean = false;
   fichasPosibles = [
     {
       key: "generales",
@@ -137,7 +138,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // if (this.derechoAcceso == 3) {
@@ -163,11 +164,19 @@ export class DatosGeneralesFichaComponent implements OnInit {
       }else{
         this.selectedClaseCom = false;
       }
+      this.informeUnico = this.body.informeUnico == "1" ? true : false;
       this.habilitarBotones();
       this.isEdicion = true;
     } else {
       this.body.visible = 1;
     }
+  }
+
+  checkValue(event){
+    if(this.informeUnico)
+      this.body.informeUnico = "1"
+    else
+      this.body.informeUnico = "0"
   }
 
   guardar() {
@@ -199,7 +208,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
                     this.sigaServices.notifyRefreshPerfiles();
                   },
                   err => {
-                    console.log(err);
+                    //console.log(err);
                     this.showFail(
                       this.translateService.instant(
                         "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
@@ -216,7 +225,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.showFail(
               this.translateService.instant(
                 "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
@@ -240,7 +249,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.showFail(
               this.translateService.instant(
                 "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
@@ -320,7 +329,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
         // this.colegios.unshift({ label: "", value: "" });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -348,7 +357,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -436,7 +445,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       },
@@ -482,7 +491,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

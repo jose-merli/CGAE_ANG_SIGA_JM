@@ -1,0 +1,28 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
+  <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+  
+  <!-- Pantalla Facturacion > Busqueda Monederos -->
+  <div>
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{'menu.facturacion' | translate}}
+          <i class="fa fa-angle-right"></i>{{'menu.facturacion.busquedaMonedero' | translate}}
+    </div>
+    <!-- Buscador de monederos -->
+    <div class="card">
+      <app-tarjeta-filtro-monederos (busqueda)="busquedaMonederos()" id="filtroMonederos"></app-tarjeta-filtro-monederos>
+    </div>
+    <!-- Listado de monederos -->
+    <div>
+      <app-tarjeta-lista-monederos [hidden]="!muestraTablaMonederos" 
+        (actualizarLista)="busquedaMonederos()" [listaMonederos]="listaMonederos" [listaMonederosActivos]="listaMonederosActivos" 
+        [filtrosBusqueda]="filtrosBusqueda" id="tablaMonederos">
+      </app-tarjeta-lista-monederos>
+    </div>
+    <div *ngIf="fromFichaCen" class="mt-3 text-right main-button" id="down">
+      <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+    </div>
+  </div>
+  

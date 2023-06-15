@@ -1,0 +1,129 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'facturacion.productos.Cliente' | translate }}</label>
+        <div class="d-flex justify-content-start mb-1 ml-auto">
+          <label *ngIf="ficha.idPersona != null && ficha.idPersona != undefined" class="mr-3">
+            <i (click)="$event.stopPropagation();irFichaColegial()" class="fas fa-external-link-alt mr-2"></i>
+            <a (click)="$event.stopPropagation();irFichaColegial()">
+              <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'facturacion.productos.Cliente' | translate }}
+              </span>
+            </a>
+          </label>
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <div *ngIf="!showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fa fa-user icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ 'facturacion.productos.Cliente' | translate }}
+            </label>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
+                <span>{{ ficha.numeroColegiado }}</span>
+              </label>
+
+            </div>
+            <div class="col-3">
+              <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}
+                <span>{{ ficha.nif }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+                <span>{{ ficha.nombre }} {{ ficha.apellidos }}</span>
+              </label>
+
+            </div>
+            <div *ngIf="showEnlaceCliente" class="col-2">
+              <label *ngIf="ficha.idPersona != null && ficha.idPersona != undefined">
+                <i (click)="$event.stopPropagation();irFichaColegial()" class="fas fa-external-link-alt mr-2"></i>
+                <a (click)="$event.stopPropagation();irFichaColegial()">
+                  <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'facturacion.productos.Cliente' | translate }}
+                  </span>
+                </a>
+              </label>
+              <label *ngIf="ficha.idPersona == null || ficha.idPersona == undefined">
+                <i class="fas fa-external-link-alt mr-2"></i>
+                <span style="color: gray; text-decoration: underline;cursor:pointer;"> {{ 'facturacion.productos.Cliente' | translate }}
+                </span>
+              </label>
+            </div>
+            <div *ngIf="showEnlaceCliente" class="col-1">
+              <div class="d-flex justify-content-start mb-1 ml-auto">
+                <i class="fa fa-angle-down ml-auto"></i>
+              </div>
+            </div>
+            <div *ngIf="!showEnlaceCliente" class="col-3">
+              <div class="d-flex justify-content-start mb-1 ml-auto">
+                <i class="fa fa-angle-down ml-auto"></i>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-2 col-md-2 col-sm-2 p-2">
+          <div class="positionUpload img-colegiado text-center my-0 mx-auto">
+            <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
+          </div>
+        </div>
+        <div class="bloque col-lg-10 col-md-10 col-sm-10">
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }}
+              </label>
+              <p-dropdown [ngClass]="styleObligatorio(ficha.idPersona)" class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="ficha.idtipoidentificacion" showClear="true" disabled></p-dropdown>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
+              </label>
+              <input [ngClass]="styleObligatorio(ficha.idPersona)" [(ngModel)]="ficha.nif" type="text" class="form-control" disabled pInputText/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
+              </label>
+              <input [ngClass]="styleObligatorio(ficha.idPersona)" [(ngModel)]="ficha.apellidos" type="text" disabled class="form-control" 
+                pInputText/>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+              </label>
+              <input [ngClass]="styleObligatorio(ficha.idPersona)" [(ngModel)]="ficha.nombre" type="text" disabled class="form-control" 
+                pInputText />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div [hidden]="!showTarjeta" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton *ngIf="!esColegiado && ficha.fechaPendiente == null"  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -1,0 +1,21 @@
+.form-group-date p-checkbox, .form-group p-checkbox {
+    margin-left: 0;
+}
+
+
+.field-radiobutton {
+    margin-top: 0px;
+    margin-bottom: 25px;
+  }
+
+  .radio-style{
+    display:flex;
+
+    ::ng-deep .ui-radiobutton {
+      .ui-radiobutton-box {
+         .ui-radiobutton-icon {
+          vertical-align: middle;
+        }
+      }
+    }
+  }
