@@ -435,6 +435,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         this.progressSpinner = false;
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboTipoActuacion);
+        this.commonServices.arregloTildesContrariaCombo(this.comboTipoActuacion);
       }
     );
   }
