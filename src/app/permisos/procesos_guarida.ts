@@ -8,6 +8,7 @@ export const procesos_guardia: any = {
     conf_cola: "92G",
     conf_calendario: "92H",
     cola_guardia: "91L",
+    tarjeta_cola_guardia: "92Y",
     inscripciones: "92I",
     baremos: "92J",
     incompatibilidades: "919",

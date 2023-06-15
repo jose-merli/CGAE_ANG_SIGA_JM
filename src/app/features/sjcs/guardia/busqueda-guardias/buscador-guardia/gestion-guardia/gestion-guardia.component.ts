@@ -315,7 +315,7 @@ export class GestionGuardiaComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
-    this.commonService.checkAcceso(procesos_guardia.cola_guardia)
+    this.commonService.checkAcceso(procesos_guardia.tarjeta_cola_guardia)
       .then(respuesta => {
 
         this.permisoEscrituraColaGuardia = respuesta;
