@@ -50,8 +50,8 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     if (this.numColegiado && this.numColegiado != '') {
       this.colegiadoForm.get('numColegiado').setValue(this.numColegiado);
       sessionStorage.setItem("numColegiado",this.numColegiado);
-      if(sessionStorage.getItem("personaBody")!= null && sessionStorage.getItem("personaBody") != undefined){
-        this.nombreAp = JSON.parse(sessionStorage.getItem("personaBody")).nombre
+      if(sessionStorage.getItem("buscadorColegiados")){
+        this.nombreAp = JSON.parse(sessionStorage.getItem("buscadorColegiados")).apellidos + ", " + JSON.parse(sessionStorage.getItem("buscadorColegiados")).nombre;
       }
       let usuarioBusquedaExpress = {
         numColegiado: this.numColegiado,
@@ -95,8 +95,8 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       this.colegiadoForm.get('nombreAp').setValue("");
       sessionStorage.setItem("numColegiado","");
       this.changeValue();
-      if (sessionStorage.getItem("datosColegiado")) {
-        sessionStorage.removeItem("datosColegiado");
+      if (sessionStorage.getItem("buscadorColegiados")) {
+        sessionStorage.removeItem("buscadorColegiados");
       }
     }
 
@@ -169,6 +169,9 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
               this.apellidosNombre = "";
               this.numColegiado = ""
               form.numColegiado = "";
+              sessionStorage.setItem("numColegiado", "");
+              sessionStorage.setItem("nombreAp", "");
+              sessionStorage.setItem("buscadorColegiados","");
               this.idPersona.emit("");
 
               this.showMessage("warn", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.justificacionExpres.colegiadoNoEncontrado"));

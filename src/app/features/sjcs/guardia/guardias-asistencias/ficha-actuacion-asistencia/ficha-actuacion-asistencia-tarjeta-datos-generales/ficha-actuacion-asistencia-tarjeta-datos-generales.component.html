@@ -31,7 +31,7 @@
         <label>{{'justiciaGratuita.maestros.gestionCostesFijos.tipoActuacion' | translate}} (*) </label>
         <p-dropdown class="select-form"
         placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
-        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.tipoActuacion" (onChange)="onChangeTipoActuacion()"
+        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.tipoActuacion" (onChange)="onChangeTipoActuacion()" filterBy="label,labelSinTilde,labelTildeContraria"
         [ngModelOptions]="{standalone: true}" [options]="comboTipoActuacion" [ngClass]="styleObligatorio(datosGeneralesActuacion.tipoActuacion)"></p-dropdown>
       </div>
     </div>
@@ -64,7 +64,7 @@
         <label>{{'justiciaGratuita.guardia.fichaasistencia.comisaria' | translate}}</label>
         <p-dropdown class="select-form"
         placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
-        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.comisaria" (onChange)="onChangeComisaria()"
+        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.comisaria" (onChange)="onChangeComisaria()" filterBy="label,labelSinTilde,labelTildeContraria"
         [ngModelOptions]="{standalone: true}" [options]="comboComisaria"></p-dropdown>
       </div>
     </div>
@@ -73,7 +73,7 @@
         <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
         <p-dropdown class="select-form"
         placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
-        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.juzgado" (onChange)="onChangeJuzgado()"
+        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.juzgado" (onChange)="onChangeJuzgado()" filterBy="label,labelSinTilde,labelTildeContraria"
         [ngModelOptions]="{standalone: true}" [options]="comboJuzgado"></p-dropdown>
       </div>
     </div>
@@ -82,7 +82,7 @@
         <label>{{'justiciaGratuita.guardia.fichaactuacion.prision' | translate}}</label>
         <p-dropdown class="select-form"
         placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.prision" [disabled]="!editable"
+        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.prision" [disabled]="!editable" filterBy="label,labelSinTilde,labelTildeContraria"
         [ngModelOptions]="{standalone: true}" [options]="comboPrision"></p-dropdown>
       </div>
     </div>

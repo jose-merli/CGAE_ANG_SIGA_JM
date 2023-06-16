@@ -7,7 +7,7 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
 (onRowUnselect)="actualizaSeleccionados()">
   <p-column field="descripcionTurno" header="{{'menu.justiciaGratuita.oficio.comboturno' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
   </p-column>
-  <p-column field="descripcionGuardia" header="{{'justiciaGratuita.justiciables.literal.turnoGuardia' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+  <p-column field="descripcionGuardia" header="{{'menu.justiciaGratuita.GuardiaMenu' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
   </p-column>
   <p-column header="{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}} / {{'gratuita.busquedaAsistencias.literal.numero' | translate}}" [style]="{'width': '7%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
     <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">

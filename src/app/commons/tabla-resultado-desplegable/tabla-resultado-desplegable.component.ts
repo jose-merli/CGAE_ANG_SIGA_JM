@@ -257,17 +257,40 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     
   }
 
-  selectRow(rowSelected, rowId, child) {
-    // Disabled de Módulo y Juzgado.
+  comprobarCamposVacios(){
+    let rowId = this.selectedArray[0];
     let filaSeleccionada = this.rowGroups.filter(row => row.id == rowId);
     if (filaSeleccionada.length > 0 && filaSeleccionada[0].rows != undefined) {
-      if (filaSeleccionada[0].rows[0].cells[4].value === ""||filaSeleccionada[0].rows[0].cells[1].value === ""||filaSeleccionada[0].rows[0].cells[1].value === undefined) {
-        this.permisoProcedimiento = true;
+      if (filaSeleccionada[0].rows[0].cells[4].value != ""
+      && filaSeleccionada[0].rows[0].cells[1].value != ""
+      && filaSeleccionada[0].rows[0].cells[4].value != null
+      && filaSeleccionada[0].rows[0].cells[1].value != null) {
+        return false;
       } 
       else {
-        this.permisoProcedimiento = false;
+        return true;
       }
     }
+  }
+
+  comprobarCombos(rowGroup){
+    if (rowGroup.rows.length > 0 && rowGroup.rows != undefined) {
+      if (rowGroup.rows[0].cells[4].value != ""
+      && rowGroup.rows[0].cells[1].value != ""
+      && rowGroup.rows[0].cells[4].value != null
+      && rowGroup.rows[0].cells[1].value != null) {
+        return false;
+      } 
+      else {
+        return true;
+      }
+    }else{
+      return true;
+    }
+  }
+
+  selectRow(rowSelected, rowId, child) {
+    let filaSeleccionada = this.rowGroups.filter(row => row.id == rowId);
 
     if (child == undefined) {
       this.disableDelete = true;

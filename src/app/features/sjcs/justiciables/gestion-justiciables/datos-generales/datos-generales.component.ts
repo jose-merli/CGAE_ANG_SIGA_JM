@@ -620,7 +620,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.progressSpinner = true;
     let url = "";
-    this.body.validacionRepeticion = false;
+    this.body.validacionRepeticion = true;
     this.idPersonaAntiguoJusticiable = this.body.idpersona;
 
     if ((this.body.edad != undefined && JSON.parse(this.body.edad) < this.edadAdulta && this.body.idrepresentantejg != undefined) || this.body.edad == undefined
@@ -879,6 +879,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     }
 
     this.body.tipojusticiable = SigaConstants.SCS_JUSTICIABLE;
+    this.body.validacionRepeticion = true;
     this.sigaServices.post(url, this.body).subscribe(
       data => {
         this.progressSpinner = false;

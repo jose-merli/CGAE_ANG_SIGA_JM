@@ -1,33 +1,40 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { DatePipe } from '../../../../../../../../../node_modules/@angular/common';
 import { CommonsService } from '../../../../../../../_services/commons.service';
-import { TablaDinamicaColaGuardiaComponent } from '../../../../../../../commons/tabla-dinamica-cola-guardia/tabla-dinamica-cola-guardia.component';
 import { TranslateService } from '../../../../../../../commons/translate';
 import { Row, TablaResultadoOrderCGService } from '../../../../../../../commons/tabla-resultado-order/tabla-resultado-order-cg.service';
 import { TablaResultadoOrderComponent } from '../../../../../../../commons/tabla-resultado-order/tabla-resultado-order.component';
 import { ConfiguracionCola, GlobalGuardiasService } from '../../../../guardiasGlobal.service';
 import { Subscription } from 'rxjs';
+import { SaltoCompItem } from '../../../../../../../models/guardia/SaltoCompItem';
 
 @Component({
   selector: 'app-datos-cola-guardia',
   templateUrl: './datos-cola-guardia.component.html',
   styleUrls: ['./datos-cola-guardia.component.scss']
 })
-export class DatosColaGuardiaComponent implements OnInit {
+export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
 
   msgs = [];
   @Input() openFicha: boolean = false;
   permitirGuardar: boolean = false;
   rowsPerPage;
   cols = [];
+  colsSaltos = [];
+  colsCompensaciones = [];
+  selectedDatos = [];
+  numSelected = 0;
   fecha;
   datosInicial;
   body = new GuardiaItem();
   guardiaComunicar : GuardiaItem;
-  datos;
+  datos: any[];
+  datosSaltos: any[];
+  datosCompensaciones: any[];
+  idTurno: string;
   nuevo;
   historico: boolean = false;
   progressSpinner: boolean = false;
@@ -43,6 +50,8 @@ export class DatosColaGuardiaComponent implements OnInit {
   rowGroups: Row[];
   rowGroupsAux: Row[];
   datosConfColaGuardias: any;
+  selectedItem: number = 10;
+  selectedItemSaltosCompensaciones: number = 3;
   cabeceras = [
     /*{
       id: "ordenCola",
@@ -71,14 +80,6 @@ export class DatosColaGuardiaComponent implements OnInit {
     {
       id: "fechabaja",
       name: "dato.jgr.guardia.guardias.fechaBaja"
-    },
-    {
-      id: "compensaciones",
-      name: "justiciaGratuita.oficio.turnos.compensaciones"
-    },
-    {
-      id: "saltos",
-      name: "justiciaGratuita.oficio.turnos.saltos"
     }
   ];
   configuracionCola: ConfiguracionCola = {
@@ -105,6 +106,9 @@ export class DatosColaGuardiaComponent implements OnInit {
   minimoLetrado = 0;
   //@ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
   @ViewChild(TablaResultadoOrderComponent) tablaOrder;
+  @ViewChild("table") table;
+  @ViewChild("tableComp") tableComp;
+  @ViewChild("tableSaltos") tableSaltos;
 
   @Input() dataConfColaGuardiaPadre: String;
 
@@ -116,7 +120,9 @@ export class DatosColaGuardiaComponent implements OnInit {
     public commonsService: CommonsService,
     public translateService: TranslateService,
     private trmService: TablaResultadoOrderCGService,
-    private globalGuardiasService: GlobalGuardiasService) { }
+    private globalGuardiasService: GlobalGuardiasService,
+    private sigaServices: SigaServices,
+    private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
       this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
@@ -130,6 +136,11 @@ export class DatosColaGuardiaComponent implements OnInit {
       });
       this.inicio();
   }
+
+  ngAfterViewInit(): void {
+    this.initTablas();
+  }
+
  ngOnDestroy(){
   this.suscription.unsubscribe();
  }
@@ -413,6 +424,7 @@ inicio(){
             return it;
           });
           this.transformData();
+          this.getSaltosYCompensaciones();
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           if (this.datos && this.datos.length > 0){
 
@@ -422,7 +434,7 @@ inicio(){
             this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado
             this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
 
-            this.nInscritos = this.datos.length;
+            this.nInscritos = this.datos.length.toString();
 
           if (this.body.idPersonaUltimo && this.datos.length > 0)
             this.body.idGrupoUltimo = this.datos[this.datos.length - 1].idGrupoGuardia;
@@ -468,8 +480,6 @@ inicio(){
           { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
           { type: 'text', value: datoObj.fechabaja },
-          { type: 'text', value: datoObj.compensaciones },
-          { type: 'text', value: datoObj.saltos },
           { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
           { type: 'invisible', value: datoObj.ordenCola },
           { type: 'invisible', value: datoObj.idturno },
@@ -492,8 +502,6 @@ inicio(){
           { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
           { type: 'text', value: datoObj.fechabaja },
-          { type: 'text', value: datoObj.compensaciones },
-          { type: 'text', value: datoObj.saltos },
           { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
           { type: 'invisible', value: datoObj.ordenCola },
           { type: 'invisible', value: datoObj.idturno },
@@ -537,7 +545,6 @@ inicio(){
       let datCopy = {
         apellido1: "",
         apellido2: "",
-        compensaciones: "",
         fechaSuscripcion: '',
         fechaValidacion: "",
         fechabaja: null,
@@ -553,12 +560,10 @@ inicio(){
         orden: "",
         ordenCola: "",
         order: '',
-        saltos: "",
         ultimoCola: ""
       };
       datCopy.apellido1 = rg.cells[3].value.split(",")[0];
       datCopy.apellido2 = rg.cells[3].value.split(",")[1];
-      datCopy.compensaciones = rg.cells[6].value;
       if (rg.cells[13] != undefined)
         datCopy.fechaSuscripcion = rg.cells[13].value;
       datCopy.fechaValidacion = rg.cells[4].value;
@@ -577,7 +582,6 @@ inicio(){
       datCopy.orden = rg.cells[1].value;
       datCopy.ordenCola = rg.cells[9].value;
       //datCopy.order = rg.cells[];
-      datCopy.saltos = rg.cells[7].value;
       //if (rg.cells[])
       if (rg.cells[16] != undefined){
         datCopy.ultimoCola = rg.cells[16].value;
@@ -600,7 +604,6 @@ inicio(){
       let datCopy = {
         apellido1: "",
         apellido2: "",
-        compensaciones: "",
         fechaSuscripcion: '',
         fechaValidacion: "",
         fechabaja: null,
@@ -616,7 +619,6 @@ inicio(){
         orden: "",
         ordenCola: "",
         order: '',
-        saltos: "",
         ultimoCola : ""
       };
       let ordenCola = row.cells[1];
@@ -813,5 +815,81 @@ if (rest){
         })
   }
 
+  private initTablas(): void {
+    this.getCols();
+    this.cdRef.detectChanges();
+    if (this.table) {
+      this.table.sortOrder = 0;
+      this.table.sortField = '';
+      this.table.reset();
+      this.tableComp.sortOrder = 0;
+      this.tableComp.sortField = '';
+      this.tableComp.reset();
+      this.tableSaltos.sortOrder = 0;
+      this.tableSaltos.sortField = '';
+      this.tableSaltos.reset();
+    }
+  }
+
+  private getCols(): void {
+
+    this.colsCompensaciones = [
+      { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fecha", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
+    ];
+
+    this.colsSaltos = [
+      { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fecha", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  actualizaSeleccionados(selectedDatos) {
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = []
+    }
+    if (selectedDatos != undefined) {
+      this.numSelected = selectedDatos.length;
+    }
+  }
+
+  getSaltosYCompensaciones() {
+    let filtros: SaltoCompItem = new SaltoCompItem();
+    if (sessionStorage.getItem("filtrosSaltosCompOficio")) {
+      filtros = JSON.parse(sessionStorage.getItem("filtrosSaltosCompOficio"));
+    }
+    if (sessionStorage.getItem("saltos-compesacionesItem")) {
+      filtros = JSON.parse(sessionStorage.getItem("saltos-compesacionesItem"));
+    }
+    filtros.idTurno = this.idTurno;
+    this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
+      n => {
+        let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
+        this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
+        this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
+        let error = JSON.parse(n.body).error;
+      });
+  }
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, SimpleChanges, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, DatePipe } from '@angular/common';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -16,6 +16,7 @@ import { GuardiaObject } from '../../../../../models/guardia/GuardiaObject';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { ResultadoInscripciones } from '../ResultadoInscripciones.model';
 import { ResultadoInscripcionesBotones } from '../ResultadoInscripcionesBotones.model';
+import { View } from 'fullcalendar';
 
 
 @Component({
@@ -76,6 +77,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	idClasesComunicacionArray: string[] = [];
 	idClaseComunicacion: String;
 	keys: any[] = [];
+
+	@ViewChild("app-tarjeta-gestion-inscripcion-guardia") tarjetaGestionInscripcionGuardia;
 
 	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute,
 		private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,
@@ -563,25 +566,20 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 		this.objetoValidacion.push(objVal);
 
-		this.sigaServices.post(
-			"guardiasInscripciones_denegarInscripciones", this.objetoValidacion).subscribe(
-				data => {
-
-					this.progressSpinner = false;
-
-					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
-				},
-				err => {
-					this.progressSpinner = false;
-					//console.log(err);
-
-					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-				},
-				() => {
-					this.commonsService.scrollTablaFoco('tablaFoco');
-				});
+		this.sigaServices.post("guardiasInscripciones_denegarInscripciones", this.objetoValidacion).subscribe(
+			data => {
+				this.progressSpinner = false;
+				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+			},
+			err => {
+				this.progressSpinner = false;
+				//console.log(err);
+				this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+			},
+			() => {
+				this.commonsService.scrollTablaFoco('tablaFoco');
+			}
+		);
 	}
 
 	/* llamadaBackDenegar() {

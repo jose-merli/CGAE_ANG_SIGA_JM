@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" life="30000"></p-growl>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
 <div class="card">
     <div class="card-body">
