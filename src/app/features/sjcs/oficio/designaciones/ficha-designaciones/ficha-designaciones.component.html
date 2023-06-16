@@ -83,7 +83,7 @@
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Contrarios'">
-                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio
+                                        <app-detalle-tarjeta-contrarios-ficha-designacion-oficio [tengoPermiso] = "tengoPermiso"
                                             [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)" id="sjcsDesigContra"
                                             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>

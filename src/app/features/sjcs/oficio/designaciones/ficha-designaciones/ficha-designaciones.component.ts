@@ -24,6 +24,8 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TurnosItem } from '../../../../../models/sjcs/TurnosItem';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
+import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
+
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -61,6 +63,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
   openTarjetaDesignaContrarios: boolean;
   openTarjetaDesignaInteresados: Boolean;
   datosJusticiables: JusticiableItem;
+  tengoPermiso: boolean;
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
   @ViewChild(DetalleTarjetaInteresadosFichaDesignacionOficioComponent) tarjetaInteresados;
@@ -245,8 +248,12 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private localStorageService: SigaStorageService,
     private persistenceService: PersistenceService) { }
+    
 
   ngOnInit() {
+
+    this.checkTengoPermiso();
+
     if(sessionStorage.getItem("designaItemLink")!= null && sessionStorage.getItem("designaItemLink") != undefined && sessionStorage.getItem("designaItemLink") != "undefined"){
       this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     }
@@ -804,6 +811,32 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
     this.progressSpinner = false;
   }
+
+  checkTengoPermiso(){
+
+    let derechoAcceso;
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = procesos_justiciables.fichaDesignaTarjetaContrarios;
+    this.sigaServices.post("acces_control",controlAcceso).subscribe(
+      data => {
+        let permisosTree = JSON.parse(data.body);
+        let permisosArray = permisosTree.permisoItems;
+        derechoAcceso = permisosArray[0].derechoacceso;
+
+        
+      
+        if (derechoAcceso == 3) {
+          //permiso total
+          this.tengoPermiso = true;
+        } else {
+          this.tengoPermiso = false;
+        }
+
+      }
+    );
+  }
+
+  
 
   ngOnChanges() {
     if (sessionStorage.getItem("buscadorColegiados")) {

@@ -23,10 +23,13 @@
     <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-          <div *ngIf="!isEliminado(dato)">
+          <div *ngIf="!isEliminado(dato) && tengoPermiso">
             <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
           </div>
-          <div *ngIf="isEliminado(dato)">
+          <div *ngIf="!tengoPermiso">
+            <span>{{dato[col.field]}}</span>
+          </div>
+          <div *ngIf="isEliminado(dato)  && tengoPermiso">
             <a (click)="openTab(dato)"><span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span></a>
           </div>
         </td>
@@ -70,7 +73,7 @@
         label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
       <button *ngIf="historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{'general.message.ocultarHistorico' | translate}}"></button>
-      <button *ngIf="!historicoContrario"
+      <button *ngIf="!historicoContrario" [disabled]="!tengoPermiso"
         (click)="NewContrario()" pButton type="button" icon="fa fa-plus" iconPos="left"
         label="{{ 'general.boton.new' | translate}}"></button>
       <button *ngIf="!historicoContrario" pButton [disabled]="selectedDatos.length == 0" type="button"
