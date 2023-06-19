@@ -580,8 +580,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               });
             } else if (!isReturn && this.cabeceras[j].id == "modulo") {
               isReturn = rowGroup.rows.some(row => {
-                if (row.cells[1].type == 'select' && row.cells[1].combo != undefined) {
-                  let item = row.cells[1].combo.find(e => e.value == row.cells[1].value);
+                if (row.cells[4].type == 'select' && row.cells[4].combo != undefined) {
+                  let item = row.cells[4].combo.find(e => e.value == row.cells[4].value);
                   if (item != undefined && item.label != undefined) {
                     return item.label.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
                   }
