@@ -824,10 +824,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
          arr1 = 
           [
           { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto, actuacion.tieneDocumentacion], size: 120, combo: null },
-          { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
+          { type: 'text', value: actuacion.nombreJuzgado, size: 400 , combo: this.comboJuzgados }, //juzgado
           { type: 'input', value: actuacion.nig, size: 200, combo: null},
           { type: numProcType, value: actuacion.numProcedimiento, size: 200 , combo: null},
-          { type: moduloType, value: moduloValue2, size: 400 , combo: moduloCombo2 }, //modulo
+          { type: 'text', value: actuacion.procedimiento, size: 400 , combo: actuacion.procedimiento }, //modulo
           { type: fechaActType, value:  this.formatDate(actuacion.fecha), size: 200 , combo: null},
           { type: fechaJustType, value:  fechaJust , size: 200, combo: null},
           { type: linkOrText, value: acreditacionPorcentaje , size: 200, combo: null},
