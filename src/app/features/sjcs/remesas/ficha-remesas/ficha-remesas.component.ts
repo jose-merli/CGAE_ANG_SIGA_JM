@@ -574,6 +574,7 @@ export class FichaRemesasComponent implements OnInit {
   openTab() {
     this.progressSpinner = true;
     sessionStorage.setItem('datoParaEjg', 'true');
+    sessionStorage.setItem('vengoRemesas', 'true');
     this.router.navigate(["/ejg"]);
     if(this.remesaFromTabla){
       localStorage.setItem('remesa', JSON.stringify(this.remesaTabla)); 

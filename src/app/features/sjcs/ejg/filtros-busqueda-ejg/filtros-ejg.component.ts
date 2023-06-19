@@ -502,10 +502,13 @@ export class FiltrosEjgComponent implements OnInit {
       n => {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
-
-        //Preselecciono los estados 7-Listo remitir Comisión y 17-Listo remitir comisión act. designación
-        this.comboEstadoEJG.filter(comboEstadoEJG => comboEstadoEJG.value == '7' || comboEstadoEJG.value == '17');
-        this.selectedEstados = ['7', '17'];
+        
+        //Si venimos de Remesas preselecciono los estados 7-Listo remitir Comisión y 17-Listo remitir comisión act. designación
+        if(sessionStorage.getItem('vengoRemesas')){
+          sessionStorage.removeItem('vengoRemesas');
+          this.comboEstadoEJG.filter(comboEstadoEJG => comboEstadoEJG.value == '7' || comboEstadoEJG.value == '17');
+          this.selectedEstados = ['7', '17'];
+        }
 
         //Recorro el array de resultados y guardamos su posicion
         // let posicionesPreseleccionar = [];
