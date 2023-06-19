@@ -9,6 +9,8 @@ import { JusticiableItem } from '../../../../../../models/sjcs/JusticiableItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { AsistenciasItem } from '../../../../../../models/sjcs/AsistenciasItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { procesos_justiciables } from '../../../../../../permisos/procesos_justiciables';
 
 
 @Component({
@@ -36,6 +38,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
   reactivarDisabled : boolean = true;
   mostrarHistorico : boolean = false;
   asistencia: AsistenciasItem;
+  @Input() tengoPermiso: boolean;
 
   fichasPosibles = [
     {
@@ -69,9 +72,13 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices : SigaServices,
     private router : Router,
-    private persistenceService : PersistenceService) { }
+    private persistenceService : PersistenceService, 
+    private commonService : CommonsService) { }
 
   ngOnInit() {
+
+    this.checkTengoPermiso();
+    
 
     this.columnas =[
       {field: 'nif', header: this.translateService.instant("administracion.usuarios.literal.NIF")},
@@ -103,6 +110,13 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
     }
   }
 
+  checkTengoPermiso(){
+    this.commonService.checkAcceso(procesos_justiciables.justiciables).then(respuesta=>{
+      this.tengoPermiso = respuesta;
+    })
+    
+  }
+  
   getListaContrarios(){
     //this.progressSpinner = true;
     this.sigaServices.getParam("busquedaGuardias_searchListaContrarios","?anioNumero="+this.idAsistencia+"&mostrarHistorico="+this.mostrarHistorico).subscribe(

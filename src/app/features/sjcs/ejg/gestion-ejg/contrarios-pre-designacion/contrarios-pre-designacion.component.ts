@@ -8,6 +8,7 @@ import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { Message } from 'primeng/components/common/api';
 import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 
 
 @Component({
@@ -16,16 +17,13 @@ import { CommonsService } from '../../../../../_services/commons.service';
   styleUrls: ['./contrarios-pre-designacion.component.scss']
 })
 export class ContrariosPreDesignacionComponent implements OnInit {
+
   msgs: Message[];
   openCon: boolean = false;
-
   contrariosEJG = [];
   historicoContrario: boolean = false;
-
   ejg: EJGItem;
-
   primero;
-
   selectedItem: number = 10;
   datos;
   cols;
@@ -37,14 +35,15 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   eliminar: boolean = false;
   openFicha: boolean = false;
   selectedDatos: any = [];
-
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   resaltadoDatosGenerales: boolean = false;
   activacionTarjeta: boolean = false;
-
-  @Input() permisoEscritura: boolean = false;
   permisoContrarios:boolean = false;
+
+  @Input() tengoPermiso: boolean;
+  @Input() permisoEscritura: boolean = false;
+  
   @Output() opened = new EventEmitter<boolean>();
   @Output() idOpened = new EventEmitter<boolean>();
   
@@ -61,12 +60,13 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
     private router: Router,
-    private commonsService: CommonsService
-  ) { }
+    private commonService: CommonsService) { }
 
 
   ngOnInit() {
+
     this.checkAcceso(procesos_ejg.contrarios);
+    this.checkTengoPermiso();
 
     this.getCols();
     this.ejg = this.persistenceService.getDatosEJG();
@@ -89,7 +89,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
 
   }
   checkAcceso(contrarios: String) {
-    this.commonsService.checkAcceso(contrarios)
+    this.commonService.checkAcceso(contrarios)
       .then(respuesta => {
         //this.progressSpinner = true;
         if(respuesta==undefined){
@@ -110,6 +110,13 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       ).catch(error => console.error(error));
   }
 
+  checkTengoPermiso(){
+
+    this.commonService.checkAcceso(procesos_justiciables.justiciables).then(respuesta=>{
+      this.tengoPermiso = respuesta;
+    })
+  }
+  
   ngOnChanges(changes: SimpleChanges): void {
     this.datos = this.contrariosEJG;
     if(this.permisoEscritura && this.permisoContrarios){

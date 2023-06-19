@@ -78,7 +78,7 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <div *ngIf="!isEliminado(dato)">
+              <div *ngIf="!isEliminado(dato) && tengoPermiso">
                 <div *ngIf="col.field == 'nif' || col.field == 'apellidosnombre'">
                   <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
                 </div>
@@ -86,7 +86,10 @@
                   <span>{{dato[col.field]}}</span>
                 </div>
               </div>
-              <div *ngIf="isEliminado(dato)">
+              <div *ngIf="!tengoPermiso">
+                <span>{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="isEliminado(dato) && tengoPermiso"> 
                 <div *ngIf="col.field == 'nif' || col.field == 'apellidosnombre'">
                   <a class="enlace" (click)="openTab(dato)"><span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span></a>
                 </div>
@@ -133,7 +136,7 @@
           <button *ngIf="historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo"
             iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}" [disabled]="!permisoContrarios"></button>
           <button *ngIf="!historicoContrario" (click)="NewContrario()" pButton type="button" icon="fa fa-plus"
-            iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="!nuevo || !permisoContrarios"></button>
+            iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="!nuevo || !permisoContrarios || !tengoPermiso"></button>
           <button *ngIf="!historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !eliminar || !permisoContrarios" type="button"
             (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left" 
             label="{{ 'general.boton.eliminar' | translate}}"></button>
