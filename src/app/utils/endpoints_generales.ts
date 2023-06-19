@@ -5,6 +5,7 @@ export let endpoints_generales: any = {
     combo_turnos_filtrados: "combo/turnosFiltrados",
     combo_turnos_inscritos: "combo/turnosInscritos",
     combo_guardiaPorTurno: "combo/guardias",
+    combo_guardiaPorTurnoDiasSemana: "combo/guardiasDiasSemana",
     combo_estadosAsistencia: "combo/comboEstadosAsistencia",
     combo_guardiaPorTurnoInscritos: "combo/guardiasInscritas",
     componenteGeneralJG_busquedaGeneralSJCS: "componenteGeneralJG/busquedaGeneralSJCS",
