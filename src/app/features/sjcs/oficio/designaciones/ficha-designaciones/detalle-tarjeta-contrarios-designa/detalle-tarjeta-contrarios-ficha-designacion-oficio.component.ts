@@ -5,6 +5,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { Router } from '@angular/router';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/JusticiableBusquedaItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-detalle-tarjeta-contrarios-ficha-designacion-oficio',
@@ -27,6 +28,7 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
   selectMultiple: boolean = false;
   selectionMode: string = "single";
   numSelected = 0;
+  @Input() tengoPermiso: boolean;
   
   selectedDatos: any = [];
 
@@ -41,12 +43,15 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
     private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
     private router: Router,
+    private commonService : CommonsService,
     ) { }
 
   ngOnInit() {
     this.getCols(); 
     this.datos=this.contrarios;
+    
   }
+
 
   ngOnChanges(changes: SimpleChanges): void {
     this.datos=this.contrarios;
