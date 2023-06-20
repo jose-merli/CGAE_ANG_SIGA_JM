@@ -147,7 +147,11 @@ export class InformeCalificacionComponent implements OnInit {
   getComboTipoDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
       n => {
-        this.comboDictamen = n.combooItems;
+        n.combooItems.forEach(element => {
+          if(element.bloqueado == "N" || element.value == this.dictamen.idTipoDictamen){
+            this.comboDictamen.push(element);
+          }
+        });
         this.commonServices.arregloTildesCombo(this.comboDictamen);
         //Craear entrada en la base de datos
         // this.comboDictamen.push({ label: "Indiferente", value: "-1" });
