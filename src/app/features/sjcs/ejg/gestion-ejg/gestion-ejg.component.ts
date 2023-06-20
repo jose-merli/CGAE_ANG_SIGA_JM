@@ -340,7 +340,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResumen = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -349,7 +349,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDatosGenerales = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -358,7 +358,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraServiciosTramitacion = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -367,7 +367,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraUnidadFamiliar = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -376,7 +376,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraExpedientesEconomicos = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -385,18 +385,45 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRelaciones = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
     this.progressSpinner = false;
+
+    //DefensaJuridica
+    this.commonsService.checkAcceso(procesos_ejg.defensaJuridica)
+    .then(respuesta => {
+      this.permisoDefensaJuridica = respuesta;
+      recibidos++;
+      if (recibidos == 18) this.enviarEnlacesTarjeta();
+    }
+    ).catch(error => console.error(error));
+
+    //Contrarios
+    this.commonsService.checkAcceso(procesos_ejg.contrarios)
+    .then(respuesta => {
+      this.permisoContrarios = respuesta;
+      recibidos++;
+      if (recibidos == 18) this.enviarEnlacesTarjeta();
+    }
+    ).catch(error => console.error(error));
+
+    //Procurador
+    this.commonsService.checkAcceso(procesos_ejg.procurador)
+    .then(respuesta => {
+      this.permisoProcurador = respuesta;
+      recibidos++;
+      if (recibidos == 18) this.enviarEnlacesTarjeta();
+    }
+    ).catch(error => console.error(error));
 
     //Estados
     this.commonsService.checkAcceso(procesos_ejg.estados)
       .then(respuesta => {
         this.permisoEscrituraEstados = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -405,7 +432,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDocumentacion = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -414,7 +441,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraInformeCalif = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -423,7 +450,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResolucion = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -432,7 +459,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraImpugnacion = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -441,7 +468,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRegtel = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -450,7 +477,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraComunicaciones = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -459,15 +486,16 @@ export class GestionEjgComponent implements OnInit {
     .then(respuesta => {
       this.permisoEscrituraFacturaciones = respuesta;
       recibidos++;
-      if (recibidos == 15) this.enviarEnlacesTarjeta();
+      if (recibidos == 18) this.enviarEnlacesTarjeta();
     }
     ).catch(error => console.error(error));
 
+    //Lista Intercambios
     this.commonsService.checkAcceso(procesos_ejg.intercambiosPericles)
       .then(respuesta => {
         this.permisoListasIntercambiosPericles = respuesta;
         recibidos++;
-        if (recibidos == 15) this.enviarEnlacesTarjeta();
+        if (recibidos == 18) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
