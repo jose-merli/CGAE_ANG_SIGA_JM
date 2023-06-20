@@ -36,13 +36,14 @@
             </label>
           </div>
 
-         <!-- <label class="w-70">
+          <!-- <label class="w-70">
             <strong>{{resumenColaGuardia}}</strong>
           </label>
           <label class="w-30">
             <strong>{{resumenColaGuardiaLast}}</strong>
           </label>-->
-          <i (click)="abreCierraFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          <i (click)="abreCierraFicha()"
+            [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
 
 
 
@@ -50,7 +51,8 @@
         </div>
       </div>
     </div>
-    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      (click)="abreCierraFicha()">
       <div class="img-colegiado">
         <i class="fas fa-file icon-ficha"></i>
       </div>
@@ -61,65 +63,124 @@
 
 
   <div *ngIf="openFicha" class="card-body card-body-ficha">
-    <div class="row">
+    <div class="row col-12">
 
-      <div class="form-row">
+      <div class="form-row" style="width: inherit; margin: auto;">
 
         <div class="form-group col-lg-12 col-md-12">
-          <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.oficio.turnos.coladeguardias" | translate }}</label>
+          <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.oficio.turnos.coladeguardias" |
+            translate }}</label>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <div class="form-group-interlineado col-lg-12 col-md-12">
-          <label>{{"justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate}}</label>
-          <app-fecha [(value)]="body.letradosIns" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
-            [disabled]="!permisoEscritura || historico"></app-fecha>
-    	  </div>
-	</div>
+          <!-- <div class="form-group-interlineado col-lg-12 col-md-12"> -->
+            <label>{{"justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate}}</label>
+            <app-fecha [(value)]="body.letradosIns" (valueChangeSelected)="fillFecha($event)"
+              (valueChangeInput)="fillFecha($event)" [disabled]="!permisoEscritura || historico"></app-fecha>
+          <!-- </div> -->
+        </div>
         <div class="form-group col-lg-3 col-md-3">
-          <div class="form-row">
-          <label>{{"justiciaGratuita.oficio.turnos.seleccionarguardia" | translate}}</label>
-          <input [(ngModel)]="body.nombre" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
-      </div>
-    </div>
+          <!-- <div class="form-row"> -->
+            <label>{{"justiciaGratuita.oficio.turnos.seleccionarguardia" | translate}}</label>
+            <input [(ngModel)]="body.nombre" [disabled]="true" type="text" class="form-control" [maxLength]="300"
+              pInputText>
+          <!-- </div> -->
+        </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}</label>
-          <input id="texto_cola_guardia"  [(ngModel)]="ultimoLetrado" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
+          <input id="texto_cola_guardia" [(ngModel)]="ultimoLetrado" [disabled]="true" type="text" class="form-control"
+            [maxLength]="300" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}</label>
-          <input id="texto_cola_guardia"  [(ngModel)]="apeyNombreUltimo" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
+          <input id="texto_cola_guardia" [(ngModel)]="apeyNombreUltimo" [disabled]="true" type="text"
+            class="form-control" [maxLength]="300" pInputText>
         </div>
       </div>
-        <div class="col-12">
-          <div class="table-body-wrap">
+      
+      <div class="col-12">
+        <div class="table-body-wrap">
 
-            <!-- Tabla inscripciones -->
-            <div class="card-body-partida first-table" style="border-right-style: inset;">
-              <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" | translate}}</strong>
-              
-              <app-tabla-resultado-order [permisoEscritura]="permisoEscritura" [pantalla]="'colaGuardias'"
-                [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="true" [cabeceras]="cabeceras"
-                [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="6"
-                [minimoLetrado]="minimoLetrado" [porGrupos]="porGrupos" [guardiaComunicar]="guardiaComunicar"
-                (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)"
-                (colaGuardiaModified)="updateColaGuardia($event)" (colaGuardiaOrdenada)="colaGuardiaOrdenada($event)"
-                (rest)="rest($event)" (dupli)="duplicar($event)">
-                [dataConfOrdColaHered]="dataConfColaGuardiaPadre"
-              </app-tabla-resultado-order>
-            </div>
+          <!-- Tabla inscripciones -->
+          <div class="card-body-partida first-table" style="border-right-style: inset;">
+            <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" |
+              translate}}</strong>
 
-            <!-- Tabla compensaciones -->
-            <div class="card-body-partida second-table">
-              <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.tituloCompensaciones" |
-                translate}}</strong>
-              <p-table [value]="datosCompensaciones" [columns]="colsCompensaciones" [(selection)]="selectedDatos"
-                [selectionMode]="none" [responsive]="true" #tableComp class="tabla-listado" [paginator]="true"
-                [rows]="selectedItemSaltosCompensaciones" (onRowSelect)="actualizaSeleccionados()"
-                (onRowUnselect)="actualizaSeleccionados()" [ngClass]="{ 'customCursor': selectMultiple}"
-                paginatorPosition="bottom">
+            <app-tabla-resultado-order [permisoEscritura]="permisoEscritura" [pantalla]="'colaGuardias'"
+              [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="true"
+              [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0"
+              [toSlice]="6" [minimoLetrado]="minimoLetrado" [porGrupos]="porGrupos"
+              [guardiaComunicar]="guardiaComunicar" (anySelected)="notifyAnySelected($event)"
+              (selectedRow)="checkSelectedRow($event)" (colaGuardiaModified)="updateColaGuardia($event)"
+              (colaGuardiaOrdenada)="colaGuardiaOrdenada($event)" (rest)="rest($event)" (dupli)="duplicar($event)">
+              [dataConfOrdColaHered]="dataConfColaGuardiaPadre"
+            </app-tabla-resultado-order>
+          </div>
+
+          <!-- Tabla compensaciones -->
+          <div class="card-body-partida second-table">
+            <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.tituloCompensaciones" |
+              translate}}</strong>
+            <p-table [value]="datosCompensaciones" [columns]="colsCompensaciones" [(selection)]="selectedDatos"
+              [selectionMode]="none" [responsive]="true" #tableComp class="tabla-listado" [paginator]="true"
+              [rows]="selectedItemSaltosCompensaciones" (onRowSelect)="actualizaSeleccionados()"
+              (onRowUnselect)="actualizaSeleccionados()" [ngClass]="{ 'customCursor': selectMultiple}"
+              paginatorPosition="bottom">
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of colsCompensaciones" [style.width]="col.width">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                    <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                      type="text" (input)="
+                                tableComp.filter($event.target.value, col.field, 'contains')
+                                " />
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                  <ng-container *ngFor="let col of columns; let  i = index">
+                    <td [ngClass]="i == 0 ? 'col-text-right' : 'col-text-center'">
+                      <div *ngIf="col.field !='fecha'">
+                        <span>{{dato[col.field]}}</span>
+                      </div>
+                      <div *ngIf="col.field =='fecha'">
+                        <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+                      </div>
+                    </td>
+                  </ng-container>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">{{tableComp.first + 1}} al {{tableComp.first
+                    + tableComp.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                    {{tableComp.totalRecords}}</label>
+                </div>
+              </ng-template>
+            </p-table>
+
+            <!-- Tabla saltos -->
+            <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.tituloSaltos" | translate}}</strong>
+            <div class="wrap-tabla-saltos">
+              <p-table [value]="datosSaltos" [columns]="colsSaltos" [responsive]="true" #tableSaltos
+                class="tabla-listado" [paginator]="true" [rows]="selectedItemSaltosCompensaciones"
+                [selectionMode]="none" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="bottom">
                 <ng-template pTemplate="colgroup" let-columns>
                   <colgroup>
-                    <col *ngFor="let col of colsCompensaciones" [style.width]="col.width">
+                    <col *ngFor="let col of colsSaltos" [style.width]="col.width">
                   </colgroup>
                 </ng-template>
                 <ng-template pTemplate="header" let-columns>
@@ -129,7 +190,7 @@
                       <p-sortIcon [field]="col.field"></p-sortIcon>
                       <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
                         type="text" (input)="
-                                tableComp.filter($event.target.value, col.field, 'contains')
+                                  tableSaltos.filter($event.target.value, col.field, 'contains')
                                 " />
                     </th>
                   </tr>
@@ -137,7 +198,7 @@
                 <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
                   <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                     <ng-container *ngFor="let col of columns; let  i = index">
-                      <td [ngClass]="i == 0 ? 'col-text-right' : 'col-text-center'">
+                      <td [ngClass]="i == 0? 'col-text-right' : 'col-text-center'">
                         <div *ngIf="col.field !='fecha'">
                           <span>{{dato[col.field]}}</span>
                         </div>
@@ -157,73 +218,20 @@
                 </ng-template>
                 <ng-template pTemplate="paginatorleft">
                   <div class="mostrar d-flex text-right justify-content-end">
-                    <label class="pr-3 registros-totales">{{tableComp.first + 1}} al {{tableComp.first
-                      + tableComp.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-                      {{tableComp.totalRecords}}</label>
+                    <label class="pr-3 registros-totales">{{tableSaltos.first + 1}} al {{tableSaltos.first
+                      + tableSaltos.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                      {{tableSaltos.totalRecords}}</label>
                   </div>
                 </ng-template>
               </p-table>
-
-              <!-- Tabla saltos -->
-              <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.tituloSaltos" | translate}}</strong>
-              <div class="wrap-tabla-saltos">
-                <p-table [value]="datosSaltos" [columns]="colsSaltos" [responsive]="true" #tableSaltos class="tabla-listado"
-                  [paginator]="true" [rows]="selectedItemSaltosCompensaciones" [selectionMode]="none"
-                  [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="bottom">
-                  <ng-template pTemplate="colgroup" let-columns>
-                    <colgroup>
-                      <col *ngFor="let col of colsSaltos" [style.width]="col.width">
-                    </colgroup>
-                  </ng-template>
-                  <ng-template pTemplate="header" let-columns>
-                    <tr>
-                      <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-                        {{ col.header | translate }}
-                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                        <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
-                          type="text" (input)="
-                                  tableSaltos.filter($event.target.value, col.field, 'contains')
-                                " />
-                      </th>
-                    </tr>
-                  </ng-template>
-                  <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-                    <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-                      <ng-container *ngFor="let col of columns; let  i = index">
-                        <td [ngClass]="i == 0? 'col-text-right' : 'col-text-center'">
-                          <div *ngIf="col.field !='fecha'">
-                            <span>{{dato[col.field]}}</span>
-                          </div>
-                          <div *ngIf="col.field =='fecha'">
-                            <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-                          </div>
-                        </td>
-                      </ng-container>
-                    </tr>
-                  </ng-template>
-                  <ng-template pTemplate="emptymessage" let-columns>
-                    <tr>
-                      <td [attr.colspan]="columns.length">
-                        {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
-                      </td>
-                    </tr>
-                  </ng-template>
-                  <ng-template pTemplate="paginatorleft">
-                    <div class="mostrar d-flex text-right justify-content-end">
-                      <label class="pr-3 registros-totales">{{tableSaltos.first + 1}} al {{tableSaltos.first
-                        + tableSaltos.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-                        {{tableSaltos.totalRecords}}</label>
-                    </div>
-                  </ng-template>
-                </p-table>
-              </div>
             </div>
           </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div *ngIf="openFicha" class="card-footer ">
-    <div class="text-right main-button ">
-      <!--<button pButton [disabled]="historico || !permisoEscritura || !body.porGrupos || duplicarDisabled()" (click)="duplicar()"
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <!--<button pButton [disabled]="historico || !permisoEscritura || !body.porGrupos || duplicarDisabled()" (click)="duplicar()"
         type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
       <button pButton [disabled]="historico || !permisoEscritura || true" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
       <button pButton [disabled]="disabledUltimo()" (click)="ultimo(tabla.selectedDatos)" type="button" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
@@ -232,9 +240,9 @@
         label="{{ 'general.boton.restablecer' | translate}}"></button>
       <button pButton [disabled]="historico || !permisoEscritura || disabledSave()" type="button" (click)="save()" label="{{'general.boton.guardar' | translate}}"
         icon="fa fa-save" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>-->
+      </div>
     </div>
   </div>
-</div>
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
