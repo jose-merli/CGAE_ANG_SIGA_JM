@@ -138,6 +138,7 @@ export class GestionGuardiaComponent implements OnInit {
     }
     else {
       this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
+      
     }
 
     this.sigaServices.post("busquedaGuardias_getGuardia", this.datos).subscribe(
@@ -502,13 +503,6 @@ export class GestionGuardiaComponent implements OnInit {
 
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
-    pruebaTarjeta = {
-      label: "menu.justiciaGratuita.oficio.inscripciones",
-      value: document.getElementById("inscripciones"),
-      nombre: "inscripciones",
-    };
-
-    this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
     pruebaTarjeta = {
       label: "dato.jgr.guardia.guardias.turno",

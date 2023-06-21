@@ -25,7 +25,6 @@
 
     <app-calendarios (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaCalendarios]="tarjetaCalendarios" *ngIf="permisoEscrituraCalen != undefined"></app-calendarios>
 
-    <app-datos-incripciones-guardias (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaInscripcionesGuardias]="tarjetaInscripcionesGuardias" *ngIf="permisoEscrituraInscripciones != undefined" [modoEdicion]="modoEdicion" [modoVinculado]="modoVinculado"></app-datos-incripciones-guardias>
 
     <app-datos-turno-guardias (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaTurnoGuardias]="tarjetaTurnoGuardias" *ngIf="permisoEscrituraTurno != undefined" [modoEdicion]="modoEdicion"></app-datos-turno-guardias>
   </div>

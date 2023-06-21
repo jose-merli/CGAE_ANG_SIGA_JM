@@ -81,7 +81,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
     this.getComboTurno();
 
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
-
+    this.filtros.afechade = new Date( new Date().setFullYear(new Date().getFullYear()));
+      
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
@@ -97,7 +98,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
     if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("FichaInscripciones") != undefined) {
       this.filtros = this.persistenceService.getFiltros();
       if (this.filtros.afechade != null && this.filtros.afechade != undefined) {
-        this.filtros.afechade = this.transformaFecha(this.filtros.afechade);
+        this.filtros.afechade  = new Date (this.transformaFecha(this.filtros.afechade));
       }
       if (this.filtros.fechadesde != null && this.filtros.fechadesde != undefined) {
         this.filtros.fechadesde = this.transformaFecha(this.filtros.fechadesde);
