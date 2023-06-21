@@ -129,8 +129,11 @@ export class InformeCalificacionComponent implements OnInit {
       "?list_dictamen=" + this.dictamen.idTipoDictamen
     ).subscribe(
       n => {
-        // this.isDisabledFundamentosCalif = false;
-        this.comboFundamentoCalif = n.combooItems;
+        n.combooItems.forEach(element => {
+          if(element.bloqueado == 'N'){
+            this.comboFundamentoCalif.push(element);
+          }
+        });
         this.commonServices.arregloTildesCombo(this.comboFundamentoCalif);
 
         this.comboFundamentoCalif.forEach(pres => {
@@ -384,7 +387,12 @@ export class InformeCalificacionComponent implements OnInit {
       this.progressSpinner = false;
       this.isDisabledFundamentosCalif = false;
     }
-    this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+    if(this.dictamen.fechaDictamen != null){
+      this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+    }else{
+      this.dictamen.fechaDictamen = null;
+    }
+    
   }
 
   comunicacion() {
