@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
+import { Router } from '@angular/router';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { DatePipe } from '../../../../../../../../../node_modules/@angular/common';
 import { CommonsService } from '../../../../../../../_services/commons.service';
@@ -10,6 +11,7 @@ import { TablaResultadoOrderComponent } from '../../../../../../../commons/tabla
 import { ConfiguracionCola, GlobalGuardiasService } from '../../../../guardiasGlobal.service';
 import { Subscription } from 'rxjs';
 import { SaltoCompItem } from '../../../../../../../models/guardia/SaltoCompItem';
+
 
 @Component({
   selector: 'app-datos-cola-guardia',
@@ -112,10 +114,16 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
 
   @Input() dataConfColaGuardiaPadre: String;
 
+  @Input() TarjetaInscripciones;
+  filtroInscripciones = {
+    idGuardia : '',
+    idTurno : ''
+  }
   //colaOrderConf : String;
 
   constructor(private sigaService: SigaServices,
     private persistenceService: PersistenceService,
+    private router : Router,
     public datepipe: DatePipe,
     public commonsService: CommonsService,
     public translateService: TranslateService,
@@ -141,6 +149,17 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
     this.initTablas();
   }
 
+  goToInscripciones(){
+
+    if(this.persistenceService.getDatos() && !this.modoVinculado){
+      this.filtroInscripciones.idGuardia = this.persistenceService.getDatos().idGuardia != undefined ? this.persistenceService.getDatos().idGuardia : JSON.parse(this.persistenceService.getDatos()).idGuardia;
+      this.filtroInscripciones.idTurno = this.persistenceService.getDatos().idTurno != undefined ? this.persistenceService.getDatos().idTurno : JSON.parse(this.persistenceService.getDatos()).idTurno;
+      sessionStorage.setItem("filtroFromFichaGuardia",JSON.stringify(this.filtroInscripciones));
+      this.router.navigate(["/inscripcionesGuardia"]);
+
+    }
+
+  }
  ngOnDestroy(){
   this.suscription.unsubscribe();
  }

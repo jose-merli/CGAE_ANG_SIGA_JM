@@ -308,7 +308,11 @@ export class DesignacionesComponent implements OnInit {
           }
         );
         this.progressSpinner=false;
-        this.showTablaDesigna(true);
+        if(sessionStorage.getItem("vieneDeJE") !== "true") {
+          this.showTablaDesigna(true);
+        } else{
+          sessionStorage.removeItem("vieneDeJE");
+        }
         this.commonsService.scrollTablaFoco("tablaFoco");
         if (error != null && error.description != null) {
           this.msgs = [];

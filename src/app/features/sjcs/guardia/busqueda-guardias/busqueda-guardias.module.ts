@@ -33,7 +33,6 @@ import { DatosGeneralesGuardiasComponent } from './buscador-guardia/gestion-guar
 import { DatosIncompatibilidadesComponent } from './buscador-guardia/gestion-guardia/datos-incompatibilidades/datos-incompatibilidades.component';
 import { GestionGuardiaComponent } from './buscador-guardia/gestion-guardia/gestion-guardia.component';
 import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-guardias.component';
-import { DatosIncripcionesGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-incripciones-guardias/datos-incripciones-guardias.component';
 import { DatosTurnoGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-turno-guardias/datos-turno-guardias.component';
 import { TablaResultadoOrderModule } from '../../../../commons/tabla-resultado-order/tabla-resultado-order.module';
 
@@ -64,7 +63,7 @@ import { TablaResultadoOrderModule } from '../../../../commons/tabla-resultado-o
 
 
   ],
-  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent, DatosColaGuardiaComponent, DatosIncompatibilidadesComponent, CalendariosComponent, DatosIncripcionesGuardiasComponent, DatosTurnoGuardiasComponent],
+  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent, DatosColaGuardiaComponent, DatosIncompatibilidadesComponent, CalendariosComponent, DatosTurnoGuardiasComponent],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
