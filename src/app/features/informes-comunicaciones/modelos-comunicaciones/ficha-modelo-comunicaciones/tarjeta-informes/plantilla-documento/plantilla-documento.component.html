@@ -73,7 +73,7 @@
                       </p-fileUpload>
                       <span class="d-block text-center" *ngIf="col.field=='nombreDocumento' && dato.nombreDocumento !=''">{{dato.nombreDocumento}}</span>
                       <p-dropdown *ngIf="col.field=='idioma' && !dato.guardada" placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true"
-                        [showClear]="true" filterBy="label,labelSinTilde" class="select-form" [options]="idiomas" [(ngModel)]="dato.idIdioma"
+                        [showClear]="true" filterBy="label,labelSinTilde" class="select-form" [options]="idiomasFiltrados" [(ngModel)]="dato.idIdioma"
                         (ngModelChange)="onChangeIdioma($event)">
                       </p-dropdown>
                       <span *ngIf="col.field=='idioma' && dato.guardada">{{dato.idioma}}</span>
@@ -135,7 +135,7 @@
                       </p-fileUpload>
                       <span class="d-block text-center" *ngIf="col.field=='nombreDocumento' && dato.nombreDocumento !=''">{{dato.nombreDocumento}}</span>
                       <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
-                        *ngIf="col.field=='idioma' && !dato.guardada" class="select-form" [options]="idiomas" [(ngModel)]="dato.idIdioma"
+                        *ngIf="col.field=='idioma' && !dato.guardada" class="select-form" [options]="idiomasFiltrados" [(ngModel)]="dato.idIdioma"
                         (ngModelChange)="onChangeIdioma($event)">
                       </p-dropdown>
                       <span *ngIf="col.field=='idioma' && dato.guardada">{{dato.idioma}}</span>
@@ -224,7 +224,7 @@
               " pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
           <button [disabled]="!(selectedDocs && selectedDocs !='' && selectedDocs.length == 1)" (click)="downloadDocumento(selectedDocs)
               " pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.plantilla' | translate}}"></button>
-          <button [disabled]="esPorDefecto" (click)="addDocumento()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
+          <button [disabled]="esPorDefecto || this.idiomas.length ==  this.body.plantillas.length" (click)="addDocumento()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
         </div>
       </div>
     </div>

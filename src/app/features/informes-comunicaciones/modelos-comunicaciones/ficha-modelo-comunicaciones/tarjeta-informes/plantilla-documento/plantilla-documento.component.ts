@@ -62,6 +62,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   documentos: any = [];
   colsDocumentos: any = [];
   idiomas: any = [];
+  idiomasFiltrados: any = [];
   progressSpinner: boolean = false;
   finalidad: string;
   showDatosGenerales: boolean = true;
@@ -120,9 +121,8 @@ export class PlantillaDocumentoComponent implements OnInit {
     //sessionStorage.removeItem('esPorDefecto');
 
     this.firstDocs = 0;
-
-    this.getDatos();
     this.busquedaIdioma();
+    this.getDatos();
     this.getConsultasDisponibles();
 
     this.getSteps();
@@ -193,6 +193,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.get("etiquetas_lenguaje").subscribe(
       n => {
         this.idiomas = n.combooItems;
+        this.idiomasFiltrados = n.combooItems
       },
       err => {
         //console.log(err);
@@ -490,6 +491,11 @@ export class PlantillaDocumentoComponent implements OnInit {
           e.guardada = true;
         });
         this.body.plantillas = JSON.parse(JSON.stringify(this.documentos));
+
+        this.idiomasFiltrados = this.idiomas.filter(idioma =>
+          !this.body.plantillas.some( plantilla => plantilla.idIdioma === idioma.value)
+        )
+        
         this.docsInicial = JSON.parse(JSON.stringify(this.documentos));
       },
       err => {
@@ -1025,7 +1031,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   onChangeIdioma(e) {
-    this.selectedIdioma = e.value;
+    this.selectedIdioma = e;
   }
 
   getFinalidad(id) {
