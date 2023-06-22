@@ -1476,6 +1476,22 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
             let tarjRelaciones = this.listaTarjetas.find(tarjRelaciones => tarjRelaciones.id === 'sjcsDesigRel');
             // Convertir fecha a Date.
             let fechaAsunto = this.datepipe.transform(new Date(this.relaciones[0].fechaasunto), 'dd/MM/yyyy');
+            // Preparar mensaje Resolucion
+            let msgResolucion = "";
+            let msgFechaRes = "";
+            if(this.relaciones[0].impugnacion){
+              msgFechaRes = this.datepipe.transform(new Date(this.relaciones[0].fechaimpugnacion), 'dd/MM/yyyy');
+              msgResolucion = "Imp: " + msgFechaRes + " - " + this.relaciones[0].impugnacion;
+            } else if(!this.relaciones[0].impugnacion && this.relaciones[0].resolucion){
+              msgFechaRes = this.relaciones[0].fecharesolucion ? this.datepipe.transform(new Date(this.relaciones[0].fecharesolucion), 'dd/MM/yyyy') : "";
+              msgResolucion = "Res: " + msgFechaRes + " - " + this.relaciones[0].resolucion;
+            } else if(!this.relaciones[0].impugnacion && !this.relaciones[0].resolucion && this.relaciones[0].dictamen){
+              msgFechaRes = this.relaciones[0].fechadictamen ? this.datepipe.transform(new Date(this.relaciones[0].fechadictamen), 'dd/MM/yyyy') : "";
+              msgResolucion = "Dic: " + msgFechaRes + " - " + this.relaciones[0].dictamen;
+            } else {
+              msgResolucion = this.relaciones[0].resolucion;
+            }
+            
 
             if (tarjRelaciones != undefined) {
               // IDENTIFICACION RELACION
@@ -1491,12 +1507,12 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
               // DILNUMPROC RELACION
               {
                 "key": this.translateService.instant('justiciaGratuita.designas.relaciones.dilnigproc'),
-                "value": this.relaciones[0].dilnigproc
+                "value": this.relaciones[0].dilnigproc.replace(" null/null", " Sin número")
               },
               // RESOLUCION RELACION
               {
                 "key": this.translateService.instant('justiciaGratuita.maestros.fundamentosResolucion.resolucion'),
-                "value": this.relaciones[0].resolucion
+                "value": msgResolucion
               },
               // TOTAL RELACIONES
               {
