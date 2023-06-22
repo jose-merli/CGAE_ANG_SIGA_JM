@@ -147,8 +147,9 @@
               (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde,value"
               maxSelectedLabels="10">
               <ng-template let-dictamen pTemplate="item">
-                <span [ngClass]="{'opcionesComboBaja': dictamen.bloqueado==='S',
-                                  'opcionesComboBold': dictamen.bloqueado!=='S'&&dictamen.bloqueado!=='N'}">
+                                  
+                <span [ngClass]="{'opcionesComboBaja': dictamen.fechaBaja != null,
+                'opcionesComboBold': (dictamen.bloqueado!=='S'&&dictamen.bloqueado!=='N')}">
                   {{dictamen.label}}
                 </span>
               </ng-template> 

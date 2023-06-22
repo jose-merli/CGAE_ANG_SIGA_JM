@@ -308,7 +308,7 @@ export class FiltrosEjgComponent implements OnInit {
   getComboDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
       n => {
-        this.comboDictamen.push({ label: "<Indiferente>", value: "-1" });
+        //this.comboDictamen.push({ label: "<Indiferente>", value: "-1" });
         this.comboDictamen.push({ label: "<Sin dictamen informado>", value: "0" });
         if (n.combooItems != null && n.combooItems != undefined) {
           n.combooItems.forEach(element => {
@@ -316,11 +316,12 @@ export class FiltrosEjgComponent implements OnInit {
           });
           this.commonServices.arregloTildesCombo(this.comboDictamen);
         }
-        this.bodyDictamen.push("-1");
+        //this.bodyDictamen.push(null);
       },
       err => {
         //console.log(err);
       }
+      
     );
   }
   getComboRol() {

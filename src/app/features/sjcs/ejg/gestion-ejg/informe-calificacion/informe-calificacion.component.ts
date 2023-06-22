@@ -130,7 +130,7 @@ export class InformeCalificacionComponent implements OnInit {
     ).subscribe(
       n => {
         n.combooItems.forEach(element => {
-          if(element.bloqueado == 'N'){
+          if(element.fechaBaja == null || element.value == this.dictamen.fundamentoCalif ){
             this.comboFundamentoCalif.push(element);
           }
         });
@@ -151,7 +151,7 @@ export class InformeCalificacionComponent implements OnInit {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
       n => {
         n.combooItems.forEach(element => {
-          if(element.bloqueado == "N" || element.value == this.dictamen.idTipoDictamen){
+          if(element.fechaBaja == null || element.value == this.dictamen.idTipoDictamen){
             this.comboDictamen.push(element);
           }
         });
