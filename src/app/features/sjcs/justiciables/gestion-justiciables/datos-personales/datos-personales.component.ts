@@ -250,6 +250,7 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   save() {
+
     this.progressSpinner = true;
     let url = "";
     this.body.validacionRepeticion = false;
@@ -262,6 +263,7 @@ export class DatosPersonalesComponent implements OnInit {
       this.menorEdadJusticiable = true;
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
     }
+
     // Rellenar Dirección Postal
     // Calle XXXX, Nº XX X X, XXXX XXXXX,XXXX(XXXXX)
     this.getComboPais();
@@ -287,26 +289,22 @@ export class DatosPersonalesComponent implements OnInit {
             this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
             this.progressSpinner = false;
           } else {
-              if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable) {
-                this.callConfirmationUpdate();
-             
-              } else {
-                let url = "gestionJusticiables_updateJusticiable";
-                this.validateCampos(url);
-              }
-            
+
+            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
+              this.callConfirmationUpdate();
+
+            } else {
+              let url = "gestionJusticiables_updateJusticiable";
+              this.validateCampos(url);
+            }
           }
         } else {
           if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
             this.callConfirmationUpdate();
 
           } else {
-            if (this.body.nif == null || this.body.nif.length == 0){
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.nombreVacioJusticiable"));
-            } else {
-              let url = "gestionJusticiables_updateJusticiable";
-              this.validateCampos(url);
-            }
+            let url = "gestionJusticiables_updateJusticiable";
+            this.validateCampos(url);
           }
         }
 
