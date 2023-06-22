@@ -416,7 +416,6 @@ export class FiltroDesignacionesComponent implements OnInit {
             this.radioTarjeta = 'justificacion';
             this.buscar();
 
-            sessionStorage.removeItem("vieneDeJE");
           } else {
             this.cargaInicial();
           }

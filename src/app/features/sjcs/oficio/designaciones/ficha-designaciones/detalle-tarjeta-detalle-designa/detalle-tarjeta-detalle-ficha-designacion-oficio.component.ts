@@ -112,7 +112,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             } else {
               this.asuntoValue = this.campos.datosDefensaJuridica;
             }
-            
+
             /*
             * SIGARNV-3381 - Elimina espacio en blanco en caso de que ya haya modificado el valor a vacio
             */
@@ -901,7 +901,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     if (updateDetalle.idPretension == 0) {
       updateDetalle.idPretension = null;
     }
-    
+
     /*
     * SIGARNV-3381 - Añade espacio en blanco en caso de que se quiera modificar el valor a vacio
     * Debido a restriccion en back - updateByPrimaryKeySelective (no se puede hacer update a valor nulo o vacio)

@@ -308,8 +308,8 @@ export class FiltrosEjgComponent implements OnInit {
   getComboDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
       n => {
-        this.comboDictamen.push({ label: "< Indiferente >", value: "-1" });
-        this.comboDictamen.push({ label: "< Sin dictamen informado>", value: "0" });
+        this.comboDictamen.push({ label: "<Indiferente>", value: "-1" });
+        this.comboDictamen.push({ label: "<Sin dictamen informado>", value: "0" });
         if (n.combooItems != null && n.combooItems != undefined) {
           n.combooItems.forEach(element => {
             this.comboDictamen.push(element);
@@ -502,14 +502,14 @@ export class FiltrosEjgComponent implements OnInit {
       n => {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
-        // this.comboEstadoEJG.push(this.comboEstadoEJG.values);
+        
+        //Si venimos de Remesas preselecciono los estados 7-Listo remitir Comisión y 17-Listo remitir comisión act. designación
+        if(sessionStorage.getItem('vengoRemesas')){
+          sessionStorage.removeItem('vengoRemesas');
+          this.comboEstadoEJG.filter(comboEstadoEJG => comboEstadoEJG.value == '7' || comboEstadoEJG.value == '17');
+          this.selectedEstados = ['7', '17'];
+        }
 
-        //Preselecciono los estados 7-Listo remitir Comisión y 17-Listo remitir comisión act. designación
-        this.comboEstadoEJG.filter(comboEstadoEJG => comboEstadoEJG.value == '7' || comboEstadoEJG.value == '17');
-        // this.comboEstadoEJG.map((item) => this.selectedEstados.push(item.value));
-        this.selectedEstados = ['7', '17'];
-        this.comboEstadoEJG;
-        this.selectedEstados;
         //Recorro el array de resultados y guardamos su posicion
         // let posicionesPreseleccionar = [];
         // for(let i=0; i<this.comboEstadoEJG.length; i++){

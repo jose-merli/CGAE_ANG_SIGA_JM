@@ -230,7 +230,11 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
       sessionStorage.setItem("idTurnoAsistencia", this.asistencia.idTurno);
 
-      this.sigaServices.getParam("combo_guardiaPorTurno", "?idTurno=" + this.asistencia.idTurno).subscribe(
+      // this.sigaServices.getParam("combo_guardiaPorTurno", "?idTurno=" + this.asistencia.idTurno).subscribe(
+      //   n => {
+      //     this.comboGuardias = n.combooItems;
+      //   },
+      this.sigaServices.getParam("combo_guardiaPorTurnoDiasSemana", "?idTurno=" + this.asistencia.idTurno + "&fecha=" + this.asistencia.fechaAsistencia).subscribe(
         n => {
           this.comboGuardias = n.combooItems;
         },
@@ -242,6 +246,9 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
         }
       );
 
+    } else{
+      this.asistencia.idTipoAsistenciaColegio = null;
+      this.asistencia.idLetradoGuardia = null;
     }
   }
 
@@ -326,6 +333,9 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
             //console.log(err);
           }
         );
+    } else{
+      this.asistencia.idTipoAsistenciaColegio = null;
+      this.asistencia.idLetradoGuardia = null;
     }
   }
 

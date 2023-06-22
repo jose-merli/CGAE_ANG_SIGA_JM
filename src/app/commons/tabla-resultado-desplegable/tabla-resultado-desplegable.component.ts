@@ -580,8 +580,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               });
             } else if (!isReturn && this.cabeceras[j].id == "modulo") {
               isReturn = rowGroup.rows.some(row => {
-                if (row.cells[1].type == 'select' && row.cells[1].combo != undefined) {
-                  let item = row.cells[1].combo.find(e => e.value == row.cells[1].value);
+                if (row.cells[4].type == 'select' && row.cells[4].combo != undefined) {
+                  let item = row.cells[4].combo.find(e => e.value == row.cells[4].value);
                   if (item != undefined && item.label != undefined) {
                     return item.label.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
                   }
@@ -973,7 +973,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       }
     } else if (this.pantalla == 'JE' && row != undefined) {
-      this.actuacionesToAdd=rowGroup;
       //actuacion
       if (row.cells[8].value != true) {
         if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
@@ -1592,6 +1591,61 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     return esPosibleCrearNuevo;
   }
+
+  comprobarDatosActuaciones(){
+    let faltaDatoObligatorio = false;
+    let msg = ""
+    if(this.rowIdsToUpdate.length != 0){
+      let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
+      this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
+      this.rowIdsToUpdate.forEach(rowIdToUpdate => {
+        if(rowIdToUpdate != undefined){
+          let rowGroup = this.rowGroups.find(e => e.id == rowIdToUpdate);
+          for (let i = 1; i < rowGroup.rows.length-1; i++) {
+            let celdaFin = rowGroup.rows[i].cells[0].value[1];
+            let fechaActuacion = rowGroup.rows[i].cells[5].value;
+            //Condición que controla que la row no sea de una actuación sin justificar
+            if(celdaFin != undefined && celdaFin != ""){
+              //Condición que controla que exista la fecha de actuación
+              if(fechaActuacion == "" || fechaActuacion == null || fechaActuacion == undefined){
+                faltaDatoObligatorio = true;
+                msg = this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.fechaActuacionObligatoria")
+              // Si no, comprueba que la fecha no es anterior a la fecha de designa
+              } else if (!faltaDatoObligatorio) {
+                let valoresFechaActuacion = fechaActuacion.split("/");
+                let fechaActuacionDate = new Date(valoresFechaActuacion[2],valoresFechaActuacion[1],valoresFechaActuacion[0]);
+                let valoresFechaDesigna = rowGroup.id.substring(12,22).split("/");
+                let fechaDesignaDate = new Date(parseInt(valoresFechaDesigna[2]),parseInt(valoresFechaDesigna[1]),parseInt(valoresFechaDesigna[0]));
+                if(fechaActuacionDate < fechaDesignaDate){
+                  faltaDatoObligatorio = true;
+                  msg = this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.fechaActuacionPosterior");
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+    if (this.newActuacionesArr.length != 0) {
+      let newActuacionesArrNOT_REPEATED = new Set(this.newActuacionesArr);
+      this.newActuacionesArr = Array.from(newActuacionesArrNOT_REPEATED);
+      this.newActuacionesArr.forEach(newActuacion => {
+        let acreditacion = newActuacion.cells[7].value;
+        //Condición que comprueba si se ha seleccionado una acreditación
+        if (!faltaDatoObligatorio && (acreditacion == "" || acreditacion == null || acreditacion == undefined)) {
+          faltaDatoObligatorio = true;
+          msg = this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.acreditacionObligatoria");
+        }
+      });
+    }
+    if(faltaDatoObligatorio){
+      this.showMsg('error', "Error", msg);
+    } 
+    else {
+      this.guardar();
+    }
+  }
+
   guardar() {
     let esPosibleCrearNuevo = true;
     let actuaciones;
@@ -1646,7 +1700,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     let rowValidadasNOT_REPEATED = new Set(this.rowValidadas);
     this.rowValidadas = Array.from(rowValidadasNOT_REPEATED);
 
-    if (this.rowIdsToUpdate.length && this.newActuacionesArr.length == 0) {
+    if (this.rowIdsToUpdate.length) {
       let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
       this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
       this.rowGroups.forEach(row => {

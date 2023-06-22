@@ -471,7 +471,7 @@
             </button>
 
             <button [disabled]="isLetrado" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-                (click)="guardar()">
+                (click)="comprobarDatosActuaciones()">
             </button>
             <button pButton [disabled]="selectedArray.length != 1 || !permisosFichaAct || isLetrado || comprobarCamposVacios()" type="button"
                 icon="fa fa-plus" iconPos="left" label="Nuevo" (click)="newFromSelected()">
