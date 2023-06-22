@@ -2209,8 +2209,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             //act.idAcreditacion = rowGroup.rows[0].cells[10].value;
             //act.numeroAsunto = rowGroup.rows[0].cells[19].value;
           }
+
           // Para que en la query busque entre actuaciones anuladas y no anuladas (true), solo no anuladas(false)
-          act.anulada = true;
+          if(row != null){
+            act.anulada = true;
+          }
+          
           let actuacion: Actuacion = {
             isNew: (row == null),
             designaItem: des,
