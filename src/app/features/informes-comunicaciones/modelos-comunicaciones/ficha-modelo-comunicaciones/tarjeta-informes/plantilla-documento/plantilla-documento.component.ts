@@ -953,7 +953,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   guardarConsultas() {
     let destinatarios = this.datos.map(e => {
-      if (typeof e.idConsulta != "undefined" && e.idConsulta != "" && e.idObjetivo == "1") {
+      if (typeof e.idConsulta != "undefined" && e.idConsulta != "" ) {
         return true;
       } else {
         return false;
@@ -962,9 +962,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     if (destinatarios.indexOf(true) != -1 || this.body.idClaseComunicacion == "5") {
       this.guardarConsultasOk();
-    } else {
-      this.showFail(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.mensaje.seleccionaConsulta.destinatarios"));
-    }
+    } 
   }
 
   guardarConsultasOk() {
