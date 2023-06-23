@@ -52,6 +52,8 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       sessionStorage.setItem("numColegiado",this.numColegiado);
       if(sessionStorage.getItem("buscadorColegiados")){
         this.nombreAp = JSON.parse(sessionStorage.getItem("buscadorColegiados")).apellidos + ", " + JSON.parse(sessionStorage.getItem("buscadorColegiados")).nombre;
+        this.numColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados")).nColegiado;
+        sessionStorage.removeItem("buscadorColegiados");
       }
       let usuarioBusquedaExpress = {
         numColegiado: this.numColegiado,
