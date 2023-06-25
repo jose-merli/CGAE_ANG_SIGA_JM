@@ -437,7 +437,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   onlyCheckDatos(){
-    if(this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" &&
+    if(this.rowGroups[0].cells[2].value != "" && 
       this.rowGroups[0].cells[4].value != "" && (this.rowGroups[0].cells[5].value != null && this.rowGroups[0].cells[5].value[0] != "")){
       this.resaltadoDatos=false;
     } else{
@@ -582,7 +582,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
   checkGuardar() {
     this.onlyCheckDatos();
-    if (this.rowGroupsActualizar[0].cells[2].value != "" && this.rowGroupsActualizar[0].cells[3].value != "" &&
+    if (this.rowGroupsActualizar[0].cells[2].value != "" && 
       this.rowGroupsActualizar[0].cells[4].value != "" && (this.rowGroupsActualizar[0].cells[5].value != null && this.rowGroupsActualizar[0].cells[5].value[0] != "")) {
         this.modDatos.emit(this.rowGroupsActualizar);
     } else {
