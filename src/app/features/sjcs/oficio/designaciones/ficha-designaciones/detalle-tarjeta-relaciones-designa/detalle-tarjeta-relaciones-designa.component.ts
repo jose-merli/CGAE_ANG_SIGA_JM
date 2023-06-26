@@ -66,6 +66,9 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
           }
         }
         element.fechaasunto = this.formatDate(element.fechaasunto);
+        if(element.fechaimpugnacion) {element.fechaimpugnacion = this.formatDate(element.fechaimpugnacion);}
+        if(element.fecharesolucion) {element.fecharesolucion = this.formatDate(element.fecharesolucion);}
+        if(element.fechadictamen) {element.fechadictamen = this.formatDate(element.fechadictamen);}
       });
       this.body = JSON.parse(sessionStorage.getItem("designaItemLink"));
     } else {

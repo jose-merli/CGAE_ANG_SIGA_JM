@@ -39,9 +39,16 @@
               </span>
             </div>
             <div *ngIf="col.field == 'dilnigproc'">
-              {{ dato['dilnigproc'].replace(" null/null", "Sin número") }}
+              {{ dato['dilnigproc'].replace(" null/null", " Sin número") }}
             </div>
-            <span *ngIf="col.field != 'letrado' && col.field != 'interesado' && col.field != 'dilnigproc'">{{dato[col.field]}}</span>
+            <div *ngIf="col.field == 'resolucion'">
+              <span *ngIf="dato['impugnacion']">Imp: {{ dato['fechaimpugnacion'] }} - {{ dato['impugnacion'] }}</span>
+              <span *ngIf="!dato['impugnacion'] && dato['resolucion'] && dato['fecharesolucion']">Res: {{ dato['fecharesolucion'] }} - {{ dato['resolucion'] }}</span>
+              <span *ngIf="!dato['impugnacion'] && dato['resolucion'] && !dato['fecharesolucion']">Res: - {{ dato['resolucion'] }}</span>               
+              <span *ngIf="!dato['impugnacion'] && !dato['resolucion'] && dato['dictamen']">Dic: {{ dato['fechadictamen'] }} - {{ dato['dictamen'] }}</span>
+              <span *ngIf="!dato['impugnacion'] && !dato['resolucion'] && !dato['dictamen']"></span>
+            </div>
+            <span *ngIf="col.field != 'letrado' && col.field != 'interesado' && col.field != 'dilnigproc' && col.field != 'resolucion'">{{dato[col.field]}}</span>
           </div>
         </td>
       </tr>

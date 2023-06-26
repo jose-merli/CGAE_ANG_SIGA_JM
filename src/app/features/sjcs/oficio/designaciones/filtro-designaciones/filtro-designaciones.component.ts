@@ -306,7 +306,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     if (sessionStorage.getItem('buscadorColegiados')) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
 
-      sessionStorage.removeItem("buscadorColegiados");
+      // sessionStorage.removeItem("buscadorColegiados");
 
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
