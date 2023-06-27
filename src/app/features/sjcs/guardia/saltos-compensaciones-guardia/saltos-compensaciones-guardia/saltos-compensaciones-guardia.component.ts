@@ -45,7 +45,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     },
     {
       id: "nColegiado",
-      name: "dato.jgr.guardia.saltcomp.ncolegiadoGrupo",
+      name:  "dato.jgr.guardia.saltcomp.ncolegiadoGrupo.parentesis", //"dato.jgr.guardia.saltcomp.ncolegiadoGrupo",
       width: '15%'
     },
     {
@@ -362,16 +362,16 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         dato.letradosGrupo.forEach((element,i, letrados) => {
           dato.letrado.push(element.letrado);
           let siguienteElemento = i + 1 < letrados.length ? true : false; //Compruebo si hay más elementos
-          nColegiado = nColegiado + dato.letradosGrupo[i].colegiado + "/" + dato.grupo;
+          nColegiado = nColegiado+"["+dato.grupo+"] ("+dato.letradosGrupo[i].colegiado+")";//nColegiado + dato.letradosGrupo[i].colegiado + "/" + dato.grupo;
           if(siguienteElemento){
-            nColegiado = nColegiado + ", ";
+            nColegiado = nColegiado + ",\n";
           }
         });
         dato.nColegiado = `${nColegiado}`;
       }
 
     } else {
-      dato.nColegiado = dato.colegiadoGrupo;
+      dato.nColegiado = "("+dato.colegiadoGrupo+")";
     }
 
     return dato;
