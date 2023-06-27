@@ -410,7 +410,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
   changeColegiado(event) {
 
-    if(event.nombreAp && event.nColegiado){
+    if(event != null && event.nombreAp && event.nColegiado){
       this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
       this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
       //sessionStorage.setItem("modoBusqueda","b");
