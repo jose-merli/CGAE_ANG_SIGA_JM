@@ -1317,8 +1317,10 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   changeColegiado(event) {
-    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
-    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    if(event != null){
+      this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+      this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    }
   }
 
   //búsqueda con enter
