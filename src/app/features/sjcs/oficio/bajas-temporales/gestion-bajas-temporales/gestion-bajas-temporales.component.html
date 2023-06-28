@@ -42,7 +42,7 @@
                                 <app-fecha [inputStyleClass]="styleObligatorio(cell.value[0])"
                                     [(value)]="cell.value[0]" [utc]="false" [disabled]="disableAll"
                                     (valueChangeSelected)="fillFecha2($event, cell, row)"
-                                    (valueChangeInput)="fillFecha2($event, cell, row)" [minDate]="cell.value[1]">
+                                    (valueChangeInput)="fillFecha2Input($event, cell, row)" [minDate]="cell.value[1]">
                                 </app-fecha>
                             </span>
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">

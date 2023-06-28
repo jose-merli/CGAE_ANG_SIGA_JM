@@ -157,7 +157,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 
 	input(e) {
 		this.fechaSelectedFromCalendar = false;
-		this.valueChangeInput.emit(this.value);
+		this.valueChangeInput.emit(e);
 		//evento necesario para informar de las fechas que borren manualmente (teclado)
 		if (e.inputType == 'deleteContentBackward' && !this.showTime) {
 			this.borrarFecha();
