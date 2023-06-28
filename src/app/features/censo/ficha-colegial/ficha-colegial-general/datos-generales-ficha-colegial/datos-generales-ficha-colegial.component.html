@@ -232,7 +232,7 @@
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "censo.fichaCliente.situacion.cabecera" | translate }}
               </label>
-              <input type="text " class="form-control " disabled [(ngModel)]="situacionPersona" [maxLength]="19" pInputText />
+              <input type="text " class="form-control " disabled [ngModel]="situacionPersona" [maxLength]="19" pInputText />
             </div>
             <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }} (*)

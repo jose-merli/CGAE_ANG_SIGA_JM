@@ -37,7 +37,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   @Input() tarjetaColegiales;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() datosTarjetaResumenEmit = new EventEmitter<any>();
   resaltadoDatosColegiales: boolean = false;
+  datosTarjetaResumen;
 
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   openFicha: boolean = false;
@@ -1783,6 +1785,14 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           this.cerrarAuditoria();
           this.onInitColegiales();
           this.searchDirecciones();
+
+          this.datosTarjetaResumen = [
+            {
+              label: "Situación Ejercicio Actual",
+              value: this.datosColegiales[0].idEstado + "/" + this.datosColegiales[0].idInstitucion
+            }
+          ];
+          this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
 
           if (JSON.parse(data.body).error != null &&
             JSON.parse(data.body).error != undefined &&

@@ -524,6 +524,17 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.checkGeneralBody.colegiado = this.esColegiado;
       this.tipoCambioAuditoria = null;
 
+      this.sigaServices
+        .post("busquedaColegiados_searchSituacionGlobal", this.generalBody.idPersona)
+        .subscribe(
+          data => {   
+            sessionStorage.setItem("situacionGlobal", this.getSituacionGlobal(JSON.parse(data.body).combooItems));    
+          },
+          err => {
+            //console.log(err);
+          }
+        );   
+
     }
 
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
@@ -541,19 +552,41 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     // Se obtienen los tratamientos disponibles
     this.getTratamientos();
   }
+
+  getSituacionGlobal(rawList): string{
+    let result = "";
+    let fallecido = false;
+    let activo = false;
+
+    if(sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == "false") {
+      // Si no es colegiado hay que mostrarlo
+      result = "No colegiado";
+    } else if(rawList){
+      rawList.forEach( e => {
+        if (e.value == "60"){ fallecido = true; }
+        if (e.value == "10" || e.value == "20"){ activo = true; }
+      });
+
+      if (fallecido){ result = "Fallecido"; } 
+      else if (activo){ result = "Activo"; } 
+      else { result = "De baja"; }
+    }
+
+    return result;
+  }
   
-   stringAComisiones() {
-      if (this.generalBody.comisiones == "1") {
-        this.comisiones = true;
-      } else {
-        this.comisiones = false;
-      }
-      if (this.generalBody.noAparecerRedAbogacia == "1") {
-        this.publicarDatosContacto = true;
-      } else {
-        this.publicarDatosContacto = false;
-      }
-  
+  stringAComisiones() {
+    if (this.generalBody.comisiones == "1") {
+      this.comisiones = true;
+    } else {
+      this.comisiones = false;
+    }
+    if (this.generalBody.noAparecerRedAbogacia == "1") {
+      this.publicarDatosContacto = true;
+    } else {
+      this.publicarDatosContacto = false;
+    }
+
   }
 
   getTratamientos() {
@@ -614,6 +647,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
 
     }else{
     sessionStorage.removeItem("personaBody");
+    sessionStorage.removeItem("situacionGlobal");
     sessionStorage.removeItem("esNuevoNoColegiado");
     sessionStorage.removeItem("filtrosBusquedaColegiados");
     sessionStorage.removeItem("filtrosBusquedaNoColegiados");
@@ -893,7 +927,57 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   }
   datosTarjetaResumenEvent(event) {
     if (event != undefined) {
-      this.datosTarjetaResumen = event;
+      // Venimos de la tarjeta datos colegiales - cambio estado colegio
+      if(event.length == 1){
+        this.sigaServices
+        .post("busquedaColegiados_searchSituacionGlobal", this.generalBody.idPersona)
+        .subscribe(
+          data => {  
+            //estado_colegio[0] = nuevoEstado -- estado_colegio[1] = colegio 
+            let estado_colegio = event[0].value.split("/");
+            let fallecido = false;
+            let activo = false;
+
+            JSON.parse(data.body).combooItems.forEach( e => {
+              if(e.label == estado_colegio[1]){
+                switch(estado_colegio[0]){
+                  case "10":
+                  case "20":
+                    activo = true; break;
+                  case "60":
+                    fallecido = true; break;
+                  default:
+                    fallecido = fallecido || false;
+                    activo = activo || false;
+                    break;
+                }
+              }
+              else{
+                if (e.value == "60"){ fallecido = true; }
+                if (e.value == "10" || e.value == "20"){ activo = true; }   
+              }              
+            });
+      
+            if (fallecido){ sessionStorage.setItem("situacionGlobal","Fallecido") } 
+            else if (activo){ sessionStorage.setItem("situacionGlobal","Activo") } 
+            else { sessionStorage.setItem("situacionGlobal","De baja") }
+
+            // Se podria controlar mejor 
+            // De momento solo hay 4 objetos y la situacion es siempre la ultima
+            this.datosTarjetaResumen.splice(3,1,{
+              label: "Situación Ejercicio Actual",
+              value: sessionStorage.getItem("situacionGlobal")
+            })
+              
+          },
+          err => {
+            //console.log(err);
+          }
+        );
+      }
+      else {
+        this.datosTarjetaResumen = event;
+      }      
     }
   }
 
