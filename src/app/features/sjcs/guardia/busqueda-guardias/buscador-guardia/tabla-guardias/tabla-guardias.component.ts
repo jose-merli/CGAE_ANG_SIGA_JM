@@ -35,10 +35,17 @@ export class TablaGuardiasComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
-  disabledActivar : boolean = true;
+  disabledActivar: boolean = true;
 
   //Resultados de la busqueda
-  @Input() guardias : GuardiaItem[] = [];
+  @Input() guardias: GuardiaItem[] = [];
+
+  displayDialogEliminar: boolean;
+  displayDialogActivar: boolean;
+  selectedDatosToDelete: any[];
+  checkNumber: number;
+  checkFecha;
+
 
   datos;
 
@@ -183,7 +190,7 @@ export class TablaGuardiasComponent implements OnInit {
       this.datos.idTurno = evento.idTurno;
       this.persistenceService.setDatos(this.datos);
       // Informar datos De Guardias.
-      sessionStorage.setItem('saltos-compesacionesItem',JSON.stringify(this.datos));
+      sessionStorage.setItem('saltos-compesacionesItem', JSON.stringify(this.datos));
       this.persistenceService.setHistorico(evento.fechabaja ? true : false);
       this.router.navigate(["/gestionGuardias"]);
     } else {
@@ -193,19 +200,46 @@ export class TablaGuardiasComponent implements OnInit {
     }
   }
 
-  checkSelectedRow(event){
-    if(this.historico && event.data.fechabaja){
+  checkSelectedRow(event) {
+    if (this.historico && event.data.fechabaja) {
       this.disabledActivar = false;
-    }else{
+    } else {
       this.disabledActivar = true;
     }
   }
 
   delete() {
-    if (this.permisoEscritura) {
+    this.displayDialogEliminar = true; // Muestra el diálogo
+    this.selectedDatosToDelete = this.selectedDatos; // Guarda los datos seleccionados para eliminar
+  }
+
+  cancelDelete() {
+    this.displayDialogEliminar = false;
+
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "info",
+        detail: this.translateService.instant(
+          "general.message.accion.cancelada"
+        )
+      }
+    ];
+  }
+
+  checkEliminarNumber(number: number) {
+    return number == this.selectedDatosToDelete.reduce((total, obj) => total + obj.letradosIns, 0);
+  }
+
+
+  confirmDelete() {
+
+    if (this.checkEliminarNumber(this.checkNumber)) {
       let guardiaDelete = new GuardiaObject();
-      guardiaDelete.guardiaItems = this.selectedDatos;
+      guardiaDelete.guardiaItems = this.selectedDatosToDelete;
       this.progressSpinner = true;
+      this.displayDialogEliminar = false;
+
       this.sigaServices.post("busquedaGuardias_deleteGuardias", guardiaDelete).subscribe(
 
         data => {
@@ -228,9 +262,100 @@ export class TablaGuardiasComponent implements OnInit {
           this.progressSpinner = false;
         }
       );
+    } else {
+      this.msgs = [
+        {
+          severity: "error",
+          summary: this.translateService.instant("general.message.incorrect"),
+          detail: this.translateService.instant("justiciaGratuita.inscripciones.mensaje.eliminar.error")
+        } // MENSAJE numero introducido no coincide con el numero total de  letrados inscritos.
+      ];
+    }
+
+  }
+
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
+      }
+    } else {
+      fecha = undefined;
+    }
+
+    return fecha;
+  }
+
+  fillAfechaCheck(event) {
+    if (event != null) {
+      this.checkFecha = this.transformaFecha(event);
+      // Ignora el error provocado por la estructura de datos de InscripcionesItem
+      // @ts-ignore
+      // this.filtros.estado = ["1","2"];
+      // this.disabledestado = true;
+    } else {
+      this.checkFecha = undefined;
+     
     }
   }
 
+  fillFechaCheck(event) {
+    this.checkFecha = this.transformaFecha(event);
+  }
+
+
+  activar(){
+    this.displayDialogActivar = true; // Muestra el diálogo
+    this.selectedDatosToDelete = this.selectedDatos; // Guarda los datos seleccionados para eliminar
+  }
+
+  confirmActive(conFecha:boolean){
+    if((this.checkFecha != null && this.checkFecha != undefined && conFecha) || !conFecha ){
+      this.progressSpinner = true;
+      this.displayDialogActivar = false;
+      let guardiaActivate = new GuardiaObject();
+
+      if (conFecha){
+        this.selectedDatosToDelete = this.selectedDatosToDelete.map(obj => {
+          return { ...obj, fechabaja: this.checkFecha };
+        });
+      }else{
+        this.selectedDatos = this.selectedDatos.map(obj => {
+          return { ...obj, fechabaja: null };
+        });
+      }
+      guardiaActivate.guardiaItems = this.selectedDatos; // Con modal --> selectedDatosToDelete
+
+      this.sigaServices.post("busquedaGuardias_activateGuardias", guardiaActivate).subscribe(
+        data => {
+          JSON.parse(data.body).error.description
+          //this.selectedDatosToDelete = [];
+          this.selectedDatos = []
+          this.searchHistoricalSend.emit(true);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        },
+        err => {
+
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }
+  }
 
   activate() {
     let guardiaActivate = new GuardiaObject();
@@ -257,7 +382,7 @@ export class TablaGuardiasComponent implements OnInit {
       }
     );
   }
-  confirmDelete() {
+  /*confirmDelete() {
     if (this.permisoEscritura) {
 
       let mess = 'Al dar de baja la guardia acepta dar de baja todas las inscripciones de los colegiados inscritos a dicha guardia. ¿Desea continuar?';
@@ -281,16 +406,16 @@ export class TablaGuardiasComponent implements OnInit {
         }
       });
     }
-  }
+  }*/
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
-    if(!this.numSelected || this.numSelected == 0){
+    if (!this.numSelected || this.numSelected == 0) {
       this.disabledActivar = true;
-    }else if(this.historico && this.selectedDatos.every(dato => dato.fechabaja)){
+    } else if (this.historico && this.selectedDatos.every(dato => dato.fechabaja)) {
       this.disabledActivar = false;
-    }else if(this.historico && this.selectedDatos.every(dato => !dato.fechabaja)){
+    } else if (this.historico && this.selectedDatos.every(dato => !dato.fechabaja)) {
       this.disabledActivar = true;
     }
   }

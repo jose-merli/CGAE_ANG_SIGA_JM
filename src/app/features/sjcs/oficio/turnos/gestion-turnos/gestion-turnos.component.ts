@@ -67,6 +67,12 @@ export class TablaTurnosComponent implements OnInit {
   idClaseComunicacion: String;
   keys: any[] = [];
 
+  displayDialogEliminar: boolean;
+  displayDialogActivar: boolean;
+  selectedDatosToDelete: any[];
+  checkNumber: number;
+  checkFecha;
+
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
@@ -361,9 +367,173 @@ export class TablaTurnosComponent implements OnInit {
     //   this.selectionMode = "multiple";
     // }
   }
-
-
+  
   delete() {
+    this.displayDialogEliminar = true; // Muestra el diálogo
+    this.selectedDatosToDelete = this.selectedDatos; // Guarda los datos seleccionados para eliminar
+  }
+
+  activar(){
+    this.displayDialogActivar = true; // Muestra el diálogo
+    this.selectedDatosToDelete = this.selectedDatos; // Guarda los datos seleccionados para eliminar
+  }
+
+  checkEliminarNumber(number:number){
+    return number == this.selectedDatosToDelete.reduce((total, obj) => total + obj.nletrados, 0);
+  }
+
+  confirmActive(conFecha:boolean){
+    if ((this.checkFecha != null && this.checkFecha != undefined && conFecha) || !conFecha) {
+      this.progressSpinner = true;
+      let turnosDelete = new TurnosObject();
+      this.displayDialogActivar = false;
+      if (conFecha){
+        this.selectedDatosToDelete = this.selectedDatosToDelete.map(obj => {
+          return { ...obj, fechabaja: this.checkFecha };
+        });
+      }else{
+        this.selectedDatos = this.selectedDatos.map(obj => {
+          return { ...obj, fechabaja:null };
+        });
+      }
+       
+      turnosDelete.turnosItem = this.selectedDatos; //Con el diablo -> selectedDatosToDelete
+
+      this.sigaServices.post("turnos_activarTurnos", turnosDelete).subscribe(
+        data => {
+          this.selectedDatos = [];
+          this.searchPartidas.emit(false);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        },
+        err => {
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          this.historico = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        }
+      );
+    }
+  }
+
+  cancelActive(){
+    this.displayDialogActivar = false; 
+  
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "info",
+        detail: this.translateService.instant(
+          "general.message.accion.cancelada"
+        )
+      }
+    ];
+  }
+
+  confirmDelete() {
+
+    if(this.checkEliminarNumber(this.checkNumber)){
+      this.progressSpinner = true;
+      let turnosDelete = new TurnosObject();
+      this.displayDialogEliminar = false; 
+  
+      turnosDelete.turnosItem = this.selectedDatosToDelete; 
+    
+      this.sigaServices.post("turnos_eliminateTurnos", turnosDelete).subscribe(
+        data => {
+          this.selectedDatos = [];
+          this.searchPartidas.emit(false);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        },
+        err => {
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          this.historico = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        }
+      );
+      
+     
+    }else{
+      this.msgs = [
+        {
+          severity: "error",
+          summary: this.translateService.instant("general.message.incorrect"),
+          detail: this.translateService.instant("justiciaGratuita.inscripciones.mensaje.eliminar.error")
+        } // MENSAJE numero introducido no coincide con el numero total de  letrados inscritos.
+      ];
+    }
+   
+  }
+
+  cancelDelete() {
+    this.displayDialogEliminar = false; 
+  
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "info",
+        detail: this.translateService.instant(
+          "general.message.accion.cancelada"
+        )
+      }
+    ];
+  }
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
+      }
+    } else {
+      fecha = undefined;
+    }
+
+    return fecha;
+  }
+
+  fillAfechaCheck(event) {
+    if (event != null) {
+      this.checkFecha = this.transformaFecha(event);
+      // Ignora el error provocado por la estructura de datos de InscripcionesItem
+      // @ts-ignore
+      // this.filtros.estado = ["1","2"];
+      // this.disabledestado = true;
+    } else {
+      this.checkFecha = undefined;
+     
+    }
+  }
+
+  fillFechaCheck(event) {
+    this.checkFecha = this.transformaFecha(event);
+  }
+
+  /*delete() {
 
     let keyConfirmation = "deletePlantillaDoc";
 
@@ -412,7 +582,7 @@ export class TablaTurnosComponent implements OnInit {
         ];
       }
     });
-  }
+  }*/
 
   onChangeSelectAll() {
     if (this.selectAll === true) {

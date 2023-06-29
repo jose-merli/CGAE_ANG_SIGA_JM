@@ -35,9 +35,10 @@ import { TarjetaColaGuardias } from './ficha-turnos/tarjeta-colaguardias/tarjeta
 import { TarjetaGuardias } from './ficha-turnos/tarjeta-guardias/tarjeta-guardias.component';
 import { routingOficio } from '../oficio-routing.module';
 import { TarjetaInscripciones } from './ficha-turnos/tarjeta-inscripciones/tarjeta-inscripciones.component';
-
+import {DialogModule} from 'primeng/dialog';
 @NgModule({
   imports: [
+    DialogModule,
     CommonModule,
     routingOficio,
     DataTableModule,

@@ -35,9 +35,11 @@ import { GestionGuardiaComponent } from './buscador-guardia/gestion-guardia/gest
 import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-guardias.component';
 import { DatosTurnoGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-turno-guardias/datos-turno-guardias.component';
 import { TablaResultadoOrderModule } from '../../../../commons/tabla-resultado-order/tabla-resultado-order.module';
+import {DialogModule} from 'primeng/dialog';
 
 @NgModule({
   imports: [
+    DialogModule,
     CommonModule,
     DataTableModule,
     PaginatorModule,
