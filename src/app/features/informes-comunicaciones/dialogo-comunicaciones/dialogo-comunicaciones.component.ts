@@ -427,7 +427,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 				consultas: this.listaConsultas,
 				comunicar: this.comunicar,
 				ruta: this.rutaComunicacion,
-				fechaProgramada: this.bodyComunicacion.fechaProgramacion
+				fechaProgramada: this.bodyComunicacion.fechaProgramacion,
+				descripcionDefecto: this.bodyComunicacion.descripcionDefecto
 			};
 			this.showInfoPerenneEnv(
 				'Se ha iniciado el envio, puede continuar trabajando.'
