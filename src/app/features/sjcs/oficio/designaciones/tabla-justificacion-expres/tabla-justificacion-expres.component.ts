@@ -1206,8 +1206,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
   
   tableDataToJson(){
     this.actuacionesToDelete.forEach(actObj => {
-    let actuacionesCells : Cell[];
-    actuacionesCells = actObj;
+    let actuacionesCells;
+    actuacionesCells=actObj;
     this.actuacionesItem = this.actCellToJson(actuacionesCells);
     this.actuacionesToDleteArr.push(this.actuacionesItem);
   });
@@ -1262,12 +1262,13 @@ actCellToJson(actuacionesCells){
   let permitirAniadirLetrado = actuacionesCells[18].value;
   let numAsunto = actuacionesCells[19].value;
   let idProcedimiento = actuacionesCells[20].value;
-  let idJuzgado = actuacionesCells[1].value;
+  let idJuzgado;
   let nombreJuzgado;
   if (actuacionesCells[1] != null && actuacionesCells[1].combo != null && typeof actuacionesCells[1].combo === 'string' ) {
     nombreJuzgado = actuacionesCells[1].combo;
   } else if (actuacionesCells[1] != null && actuacionesCells[1].combo != null) {
-    nombreJuzgado = actuacionesCells[1].combo.find(item => item.value == idJuzgado).label;
+    nombreJuzgado  = actuacionesCells[1].value; //actuacionesCells[1].combo.find(item => item.label == idJuzgado).label;
+    idJuzgado= actuacionesCells[1].combo.find(item => item.label == nombreJuzgado)?.value;
   }
   let fechaJustificacion = actuacionesCells[6].value;
   if (actuacionesCells[8].value == true){
