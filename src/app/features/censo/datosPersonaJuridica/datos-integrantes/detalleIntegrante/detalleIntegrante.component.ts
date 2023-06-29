@@ -886,7 +886,7 @@ export class DetalleIntegranteComponent implements OnInit {
       updateIntegrante.colegio = this.body.colegio;
     }
 
-    let numParticipacion = this.body.capitalSocial;
+    let numParticipacion: any = this.body.capitalSocial;
 
     if (
       (isParticipacionNumerico && numParticipacion <= 100) ||
@@ -1080,7 +1080,7 @@ export class DetalleIntegranteComponent implements OnInit {
       ) {
         newIntegrante.colegio = this.body.colegio;
       }
-      let numParticipacion = this.body.capitalSocial;
+      let numParticipacion: any = this.body.capitalSocial;
       if (
         (isParticipacionNumerico && numParticipacion <= 100) ||
         newIntegrante.capitalSocial == undefined
@@ -1231,7 +1231,7 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.tipo = "";
       }
-      let numParticipacion = this.body.capitalSocial;
+      let numParticipacion: any = this.body.capitalSocial;
       if (
         (isParticipacionNumerico && numParticipacion <= 100) ||
         newIntegrante.capitalSocial == undefined

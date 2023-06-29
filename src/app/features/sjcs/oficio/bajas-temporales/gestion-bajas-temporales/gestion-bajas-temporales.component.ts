@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { min } from 'moment';
 
 interface GuardiaI {
   label: string,
@@ -76,6 +77,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   isLetrado: boolean = false;
   isDisabled: boolean = true;
   rowGroupsActualizar: Row[] = [];
+  
 
   resaltadoDatos: boolean = false;
 
@@ -399,12 +401,14 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   fillFecha(event, cell, row) {
+    
     this.styleObligatorio(event);
     this.onlyCheckDatos();
     if(event != null && event != undefined){
       if (cell.value[0] != undefined) {
         cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy');
         row.cells[5].value[1] = new Date(event);
+        
       } else {
         cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
         row.cells[5].value[1] = new Date(event);
@@ -415,19 +419,67 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
   }
 
-  fillFecha2(event, cell, row) {
+  fillFecha2Input(event, cell, row) {            // Método que se utiliza cuando se introduce una fecha manualmente
+    
     this.styleObligatorio(event);
     this.onlyCheckDatos();
     if(event != null && event != undefined){
-      if (cell.value[0] != undefined) {
-        cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy');
-        cell.value[1] = new Date(row.cells[4].value);
-      } else {
-        cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+      
+      if (cell.value[0] === undefined) {
+        cell.value = [];
+        
       }
+
+      if(typeof event === 'string'){
+        cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy')
+      } else if(event.target?.value?.length === 10){ 
+       cell.value[0]= this.formatDate(event.target.value);
+      }
+    
     } else{
-      this.rowGroups[0].cells[5].value = '';
+      this.rowGroups[0].cells[5].value[0] = '';
+
     }
+  }
+
+  fillFecha2(event, cell, row) {     // Método que se utiliza cuando se selecciona una fecha desde el calendario desplegable
+    
+    this.styleObligatorio(event);
+    this.onlyCheckDatos();
+    if(event != null && event != undefined){
+      
+      if (cell.value[0] === undefined) {
+        cell.value = [];
+         
+      }
+      if(typeof event === 'string'){
+        cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy')
+      } else {
+        cell.value[0]= this.formatDate(event.toString());
+      }
+    
+    } else{
+      this.rowGroups[0].cells[5].value[0] = '';
+
+    }
+    
+  }
+
+  formatDate(input: string): string {
+    let fecha: Date;
+    let partes = input.split('/');
+    if (partes.length === 3) {
+      let dia = parseInt(partes[0]);
+      let mes = parseInt(partes[1]) - 1;  
+      let año = parseInt(partes[2]);
+      fecha = new Date(año, mes, dia);
+    }
+    else {
+  fecha = new Date(input);
+    } if (isNaN(fecha.getTime())) {
+      return null;  
+    }
+  return this.pipe.transform(fecha, 'dd/MM/yyyy');
   }
 
   styleObligatorio(evento){
@@ -437,8 +489,10 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   onlyCheckDatos(){
-    if(this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" &&
-      this.rowGroups[0].cells[4].value != "" && (this.rowGroups[0].cells[5].value != null && this.rowGroups[0].cells[5].value[0] != "")){
+
+    if (this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[4].value != "" && this.rowGroups[0].cells[4].value != null && (this.rowGroups[0].cells[5].value != null && this.rowGroups[0].cells[5].value[0] != "") 
+    && (this.rowGroups[0].cells[5].value[0] >= this.rowGroups[0].cells[4].value )){
+
       this.resaltadoDatos=false;
     } else{
       this.resaltadoDatos=true;
@@ -582,14 +636,55 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
   checkGuardar() {
     this.onlyCheckDatos();
-    if (this.rowGroupsActualizar[0].cells[2].value != "" && this.rowGroupsActualizar[0].cells[3].value != "" &&
-      this.rowGroupsActualizar[0].cells[4].value != "" && (this.rowGroupsActualizar[0].cells[5].value != null && this.rowGroupsActualizar[0].cells[5].value[0] != "")) {
-        this.modDatos.emit(this.rowGroupsActualizar);
-    } else {
-      this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.message.camposObligatorios") });
+
+    
+    if (this.rowGroupsActualizar.length > 0) {
+      let fechaInicio: string = this.rowGroupsActualizar[0].cells[4].value;
+      let fechaFin: string = this.rowGroupsActualizar[0].cells[5].value[0];
+
+  
+      if (fechaInicio !== "" && fechaFin !== "") {
+
+        
+        let partesFechaInicio: string[] = fechaInicio.split('/');
+        let partesFechaFin: string[] = fechaFin.split('/');
+  
+        let diaInicio: number = parseInt(partesFechaInicio[0], 10);
+        let mesInicio: number = parseInt(partesFechaInicio[1], 10);
+        let anioInicio: number = parseInt(partesFechaInicio[2], 10);
+  
+        let diaFin: number = parseInt(partesFechaFin[0], 10);
+        let mesFin: number = parseInt(partesFechaFin[1], 10);
+        let anioFin: number = parseInt(partesFechaFin[2], 10);
+  
+        let fechaInicioComparacion: Date = new Date(anioInicio, mesInicio - 1, diaInicio);
+        let fechaFinComparacion: Date = new Date(anioFin, mesFin - 1, diaFin);
+
+  
+        if (fechaFinComparacion.getTime() >= fechaInicioComparacion.getTime()) {
+          this.modDatos.emit(this.rowGroupsActualizar);
+        } else {
+          this.showMessage({
+            severity: "error",
+            summary: this.translateService.instant("general.message.incorrect"),
+            msg: this.translateService.instant("sjcs.oficio.bajastemporales.errorfechafinbaja")
+          });
+        }
+      } else {
+        this.showMessage({
+          severity: "error",
+          summary: this.translateService.instant("general.message.incorrect"),
+          msg: this.translateService.instant("general.message.camposObligatorios")
+        });
+      }
     }
+  
+
+    
+    
     this.totalRegistros = this.rowGroupsActualizar.length;
   }
+
 
   checkDenegar() {
     this.denegar.emit(this.selectedArray);

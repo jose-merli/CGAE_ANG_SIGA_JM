@@ -56,7 +56,7 @@
         </app-contrarios-pre-designacion>
         
         <app-procurador-pre-designacion *ngIf="permisoProcurador != undefined && modoEdicion" [permisoEscritura]="modoEdicion" 
-            id="procuradorPreDesigna">
+            id="procuradorPreDesigna" (actualizarEstados)="actualizarEstados ($event)">
         </app-procurador-pre-designacion>
 
         <app-estados *ngIf="permisoEscrituraEstados != undefined && modoEdicion" (opened)="manuallyOpened = $event"

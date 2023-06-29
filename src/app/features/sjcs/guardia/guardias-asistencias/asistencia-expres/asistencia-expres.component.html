@@ -18,7 +18,8 @@
                 label="{{ 'general.boton.clear' | translate}}" (click)="clearForm();"></button>
             <button type="submit" pButton icon="fa fa-search" iconPos="left"
                 label="{{'general.boton.search' | translate}}"
-                (click)="buscarAE()"></button>
+                (click)="search()"></button>
+                <!-- (click)="buscarAE()"></button> -->
         </div>
     </div>
     <div *ngIf="!searchExpres" class="card-footer">

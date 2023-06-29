@@ -28,8 +28,7 @@
                                     (change)="inputValueChange($event, i, z, cell)"></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text"
                                     class="form-control mt-2" pInputText [(ngModel)]="cell.value"
-                                    (change)="inputChange($event, i, z)" [disabled]="disableAll"
-                                    [ngClass]="{'camposObligatorios': (cell.value == '' || cell.value == null)}"></span>
+                                    (change)="inputChange($event, i, z)" [disabled]="disableAll"></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'text'"
                                 [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
@@ -43,7 +42,7 @@
                                 <app-fecha [inputStyleClass]="styleObligatorio(cell.value[0])"
                                     [(value)]="cell.value[0]" [utc]="false" [disabled]="disableAll"
                                     (valueChangeSelected)="fillFecha2($event, cell, row)"
-                                    (valueChangeInput)="fillFecha2($event, cell, row)" [minDate]="cell.value[1]">
+                                    (valueChangeInput)="fillFecha2Input($event, cell, row)" [minDate]="cell.value[1]">
                                 </app-fecha>
                             </span>
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">

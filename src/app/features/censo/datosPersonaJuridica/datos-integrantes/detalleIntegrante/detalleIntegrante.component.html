@@ -255,7 +255,7 @@
               <span>{{ body.fechaBajaCargo }}</span>
             </label>
             <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}
-              <span>{{ descripcionCargo.label }}</span>
+              <span *ngIf="descripcionCargo != undefined && descripcionCargo != null">{{ descripcionCargo.label }}</span>
             </label>
           </div>
         </div>

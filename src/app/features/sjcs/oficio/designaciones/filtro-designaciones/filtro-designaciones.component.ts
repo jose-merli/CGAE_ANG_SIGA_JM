@@ -306,7 +306,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     if (sessionStorage.getItem('buscadorColegiados')) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
 
-      sessionStorage.removeItem("buscadorColegiados");
+      // sessionStorage.removeItem("buscadorColegiados");
 
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
@@ -1317,8 +1317,10 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   changeColegiado(event) {
-    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
-    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    if(event != null){
+      this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+      this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    }
   }
 
   //búsqueda con enter

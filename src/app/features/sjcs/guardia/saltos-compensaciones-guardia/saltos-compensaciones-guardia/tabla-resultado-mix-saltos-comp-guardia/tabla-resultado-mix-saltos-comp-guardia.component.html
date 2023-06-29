@@ -25,7 +25,7 @@
             class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'text-left': emptyResults}" #cellSelected>
             <div class="cell-wrapper selectedRowClass w-100">
 
-              <span class="w100 cell-value" *ngIf="cell.type == 'text'"
+              <span class="w100 cell-value" *ngIf="cell.type == 'text'" style="white-space: break-spaces"
                 [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
 
               <span class="w100 cell-value" *ngIf="cell.type == 'arrayText'">
@@ -66,7 +66,7 @@
               <span class="w100 cell-value" *ngIf="cell.type == 'multiselect-grupo'">
                 <p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected"
                   [defaultLabel]="textFilter" [options]="cell.combo" maxSelectedLabels="10" styleClass="widthAll"
-                  [filter]="true" filterBy="label,labelSinTilde" (onChange)="changeMultiSelectGrupo(row, cell)" id="notSelectAll"
+                  [filter]="true" filterBy="label,labelSinTilde" (onChange)="changeMultiSelectGrupo($event, row, cell)" id="notSelectAll"
                   [disabled]="cell.disabled">
                 </p-multiSelect>
               </span>

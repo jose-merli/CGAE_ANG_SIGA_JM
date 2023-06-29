@@ -499,7 +499,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     this.addCellChange(row);
   }
 
-  changeMultiSelectGrupo(row, cell) {
+  changeMultiSelectGrupo(event, row, cell) {
     while (cell.value.length > 1) {
       cell.value.shift();
     }
@@ -508,10 +508,9 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       //Marcar todos los values que empiecen por grupo
       let values = [];
       row.cells[2].combo.forEach(element => {
-        console.log(row.cells[2].value[0]);
         if (element.label.startsWith("(") && row.cells[2].value[0].startsWith("null")) {
           values.push(element.value);
-        } else if (element.label.startsWith("[" + row.cells[2].value[0].split('/')[0] + "]")) {
+        } else if (element.label.startsWith(this.buscarNumeroGrupo(row, event.value))) {//"[" + row.cells[2].value[0].split('/')[0] + "]"
           values.push(element.value);
         }
       });
@@ -531,6 +530,16 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       row.cells[13].value = null;
     }
     this.addCellChange(row);
+  }
+
+  buscarNumeroGrupo(row, valor){
+    //"[" + row.cells[2].value[0].split('/')[0] + "]"
+    //Tenemos que encontrar el número de grupo de la opción de combo que tenga el id propio de la row.cells[2].value[0].blabla
+    let numeroGrupo = row.cells[2].combo.find(opcion => {
+      return opcion.value==valor;
+    });
+    //row.cells[2].combo.forEach
+    return numeroGrupo.label.split(']')[0];//mitrocito.label.split(']')[0]
   }
 
   changeSelect(row, cell) {
@@ -646,7 +655,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           comboColegiados.forEach(combo => {
             if (grupo && combo.grupo != null) {
               this.comboColegiados.push({
-                label: "[" + combo.grupo + "]" + " " + "(" + combo.numeroColegiado + ") " + combo.apellidos1 + combo.apellidos2 + ", " + combo.nombre,
+                label: "[" + combo.numeroGrupo + "]" + " " + "(" + combo.numeroColegiado + ") " + combo.apellidos1 + combo.apellidos2 + ", " + combo.nombre,
                 value: combo.grupo + "/" + combo.numeroColegiado
               });
             } else if (grupo && combo.grupo == null) {

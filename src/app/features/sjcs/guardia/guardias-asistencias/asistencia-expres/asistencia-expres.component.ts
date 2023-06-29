@@ -251,34 +251,40 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
 
   search(){
-    this.filtrosAE.filtroAux = this.filtrosAE.filtro;
-    this.sigaServices.post("busquedaGuardias_buscarAsistenciasExpress", this.filtrosAE.filtro)
-      .subscribe(
-        n => {
-          let asistenciasDTO = JSON.parse(n["body"]);
-          if(asistenciasDTO.error){
-            this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
-          }else if(asistenciasDTO.tarjetaAsistenciaItems2 != undefined){
-            if(asistenciasDTO.tarjetaAsistenciaItems2.length === 0){
-              //this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
-            }
-            this.fromJsonToRowGroups(asistenciasDTO.tarjetaAsistenciaItems2);
-          } else{
-            this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
-          } 
-          this.progressSpinner = false;
-          this.show=true;
-        },
-        err => {
-          //console.log(err);
-        },
-        () =>{
-          this.progressSpinner = false;
-          setTimeout(() => {
-            this.commonServices.scrollTablaFoco('tablaFoco1');
-          }, 5);
-        }
-      );
+    //Si se selecciona refuerzo o sustitución pero NO selecciona un colegiado, lanzamos error
+    if((this.filtrosAE.busquedaColegiado.numColegiado == "" || this.filtrosAE.busquedaColegiado.numColegiado == null) 
+      && !this.compruebaColegiadoSinLetrado()){
+        this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
+    }else{
+      this.filtrosAE.filtroAux = this.filtrosAE.filtro;
+      this.sigaServices.post("busquedaGuardias_buscarAsistenciasExpress", this.filtrosAE.filtro)
+        .subscribe(
+          n => {
+            let asistenciasDTO = JSON.parse(n["body"]);
+            if(asistenciasDTO.error){
+              this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
+            }else if(asistenciasDTO.tarjetaAsistenciaItems2 != undefined){
+              if(asistenciasDTO.tarjetaAsistenciaItems2.length === 0){
+                //this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+              }
+              this.fromJsonToRowGroups(asistenciasDTO.tarjetaAsistenciaItems2);
+            } else{
+              this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+            } 
+            this.progressSpinner = false;
+            this.show=true;
+          },
+          err => {
+            //console.log(err);
+          },
+          () =>{
+            this.progressSpinner = false;
+            setTimeout(() => {
+              this.commonServices.scrollTablaFoco('tablaFoco1');
+            }, 5);
+          }
+        );
+    }
   }
 
   fromJsonToRowGroups(asistencias : TarjetaAsistenciaItem[]){
@@ -867,8 +873,13 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             sessionStorage.removeItem("volver");
             sessionStorage.removeItem("modoBusqueda");
           }else{
-            this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
+            // this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
             this.show = false;
+
+            //Si se selecciona refuerzo o sustitución pero SI un colegiado si podemos buscar
+            if((this.filtrosAE.busquedaColegiado.numColegiado != "" && this.filtrosAE.busquedaColegiado.numColegiado != null)){
+              this.search();
+            }
           }
           //ARR
           //this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
