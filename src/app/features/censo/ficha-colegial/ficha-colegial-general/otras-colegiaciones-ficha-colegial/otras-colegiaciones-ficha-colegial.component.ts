@@ -191,6 +191,11 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
         data => {
           this.progressSpinner = false;
           this.otrasColegiacionesBody = JSON.parse(data["body"]);
+          this.otrasColegiacionesBody.colegiadoItem.forEach((colegiado, index) =>{
+            if(colegiado.idInstitucion==this.generalBody.idInstitucion){
+              this.otrasColegiacionesBody.colegiadoItem.splice(index);
+            }
+          });
           this.datosColegiaciones = this.otrasColegiacionesBody.colegiadoItem;
         },
         err => {
