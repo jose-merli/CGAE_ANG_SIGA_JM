@@ -357,6 +357,20 @@ export class TablaGuardiasComponent implements OnInit {
     }
   }
 
+  cancelActive(){
+    this.displayDialogActivar = false; 
+  
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "info",
+        detail: this.translateService.instant(
+          "general.message.accion.cancelada"
+        )
+      }
+    ];
+  }
+
   activate() {
     let guardiaActivate = new GuardiaObject();
     guardiaActivate.guardiaItems = this.selectedDatos;
