@@ -100,7 +100,7 @@ export class GestionEjgComponent implements OnInit {
   comunicaciones;
 
   @ViewChild(ServiciosTramitacionComponent) tramitacion;
-  @ViewChild(EstadosComponent) tarjetaEstadosEJG;
+  @ViewChild(EstadosComponent) tarjetaEstadosEJG: EstadosComponent;
   @ViewChild(ContrariosPreDesignacionComponent) contrariosPreDesigna;
   @ViewChild(DefensaJuridicaComponent) defensaJuridica;
   @ViewChild(ProcuradorPreDesignacionComponent) procuradorPreDesigna;
@@ -214,6 +214,7 @@ export class GestionEjgComponent implements OnInit {
       if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
         this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
       }
+      
         this.datos = [
           {
             label: "Año/Numero EJG",
@@ -847,6 +848,10 @@ export class GestionEjgComponent implements OnInit {
     if (this.listaIntercambiosDocumentacionEjg != undefined) {
       this.listaIntercambiosDocumentacionEjg.actualizarDatosTarjeta();
     }
+  }
+
+  actualizarEstados($event){
+    this.tarjetaEstadosEJG.ngOnInit();
   }
 
 }

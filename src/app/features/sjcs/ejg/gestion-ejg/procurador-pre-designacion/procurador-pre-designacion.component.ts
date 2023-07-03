@@ -33,6 +33,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	fechaCabecera: Date = null;
 	nombreCabecera: string = "";
 
+	@Output() actualizarEstados = new EventEmitter<boolean>();
 	@Input() permisoEscritura:boolean;
 	permisoProcurador:boolean;
 
@@ -262,6 +263,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			(n) => {
 				this.progressSpinner = false;
 				if (n.statusText == "OK") {
+					this.actualizarEstados.emit(true);
 					this.showMessage(
 						'success',
 						this.translateService.instant('general.message.correct'),

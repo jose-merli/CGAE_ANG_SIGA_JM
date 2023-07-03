@@ -28,8 +28,7 @@
                                     (change)="inputValueChange($event, i, z, cell)"></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text"
                                     class="form-control mt-2" pInputText [(ngModel)]="cell.value"
-                                    (change)="inputChange($event, i, z)" [disabled]="disableAll"
-                                    [ngClass]="{'camposObligatorios': (cell.value == '' || cell.value == null)}"></span>
+                                    (change)="inputChange($event, i, z)" [disabled]="disableAll"></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'text'"
                                 [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
