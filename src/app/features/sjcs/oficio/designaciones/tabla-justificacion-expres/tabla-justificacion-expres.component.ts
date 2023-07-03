@@ -34,7 +34,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   fechaFiltro;
   totalRegistros = 0;
   
-  datosJustificacionAux: JustificacionExpressItem = new JustificacionExpressItem();
+  // datosJustificacionAux: JustificacionExpressItem = new JustificacionExpressItem();
 
   rutas = ['SJCS', 'Designaciones'];
   msgs: Message[] = [];
@@ -145,7 +145,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     this.progressSpinner=true;
 
-    this.datosJustificacionAux = this.datosJustificacion;
+    // this.datosJustificacionAux = this.datosJustificacion;
 
     this.checkPermisos();
     this.checkAccesoFichaActuacion();
@@ -343,6 +343,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let idTipoEJGAux;
     //console.log('this.datosJustificacion: ', this.datosJustificacion)
 
+    if(this.datosJustificacion != null && this.datosJustificacion.length != null){ //Controllo nullpointer de datosJustificacion
     const datosJustificacionArray = this.datosJustificacion.map((designacion, i) => ({designacion, i}));
     for (const {designacion, i} of datosJustificacionArray) {
       
@@ -1146,6 +1147,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       arr2 = [];
       expedientes = "";
     }
+  }
     
     resultModified = Object.assign({},{'data': data});
 //console.log('resultModified: ', resultModified)
