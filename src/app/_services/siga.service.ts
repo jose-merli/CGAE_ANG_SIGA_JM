@@ -200,6 +200,7 @@ export class SigaServices {
 
 		fichaDatosDirecciones_datosDireccionesSearch: 'fichaDatosDirecciones/datosDireccionesSearch',
 		busquedaColegiados_situacion: 'busquedaColegiados/situacion',
+		busquedaColegiados_searchSituacionGlobal: 'busquedaColegiado/getSituacionGlobalColegiado',
 		busquedaColegiados_estadoCivil: 'busquedaColegiados/estadoCivil',
 		busquedaColegiados_categoriaCurricular: 'busquedaColegiados/categoriaCurricular',
 		busquedaColegiados_poblacion: '/busquedaColegiados/poblacion',

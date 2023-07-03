@@ -765,6 +765,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
                 let asistenciaItems: TarjetaAsistenciaItem[] = asistenciasDTO.tarjetaAsistenciaItems;
                 this.filtro.filtroAux = Object.assign({},this.filtro.filtro);
                 this.asistencias = asistenciaItems;
+
+                this.asistencias.forEach(element => {
+                  element.anioNumero = 'A' + element.anio + '/' + element.numero;
+                })
+
                 this.show = true;
               }    
               this.progressSpinner = false;

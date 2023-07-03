@@ -263,7 +263,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.generalBody.idInstitucion = enviar.idInstitucion;
         this.generalBody.apellidos2 = enviar.apellido2;
         this.generalBody.idTratamiento = undefined;
-        this.situacionPersona = enviar.idEstado;
+        this.situacionPersona = sessionStorage.getItem("situacionGlobal") ? sessionStorage.getItem("situacionGlobal") : enviar.idEstado;
         if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
           this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
         }
@@ -280,7 +280,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.generalBody.idInstitucion = enviar.idInstitucion;
         this.generalBody.apellidos2 = enviar.apellido2;
         this.generalBody.idTratamiento = undefined;
-        this.situacionPersona = enviar.idEstado;
+        this.situacionPersona = sessionStorage.getItem("situacionGlobal") ? sessionStorage.getItem("situacionGlobal") : enviar.idEstado;
         if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
           this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
         }
@@ -819,7 +819,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                 },
                 {
                   label: "Situación Ejercicio Actual",
-                  value: this.situacionPersona
+                  value: sessionStorage.getItem("situacionGlobal") ? sessionStorage.getItem("situacionGlobal") : this.situacionPersona
                 },
               ];
               this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
@@ -841,7 +841,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                 },
                 {
                   label: "Situación Ejercicio Actual",
-                  value: this.situacionPersona
+                  value: sessionStorage.getItem("situacionGlobal") ? sessionStorage.getItem("situacionGlobal") : this.situacionPersona
                 },
               ];
               this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
@@ -874,6 +874,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               "personaBody",
               JSON.stringify([this.generalBody])
             );
+
             this.checkGeneralBody = new FichaColegialGeneralesItem();
 
             this.checkGeneralBody = JSON.parse(
@@ -952,7 +953,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                 },
                 {
                   label: "Situación Ejercicio Actual",
-                  value: this.situacionPersona
+                  value: sessionStorage.getItem("situacionGlobal") ? sessionStorage.getItem("situacionGlobal") : this.situacionPersona
                 },
               ];
               this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
@@ -974,7 +975,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                 },
                 {
                   label: "Situación Ejercicio Actual",
-                  value: this.situacionPersona
+                  value: sessionStorage.getItem("situacionGlobal") ? sessionStorage.getItem("situacionGlobal") : this.situacionPersona
                 },
               ];
               this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
@@ -1029,6 +1030,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               "personaBody",
               JSON.stringify(this.generalBody)
             );
+
             this.checkGeneralBody = new FichaColegialGeneralesItem();
             if (this.file != undefined) {
               this.solicitudGuardarImagen(this.idPersona);
@@ -2188,7 +2190,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                         newBody.fechapresentacion = this.colegialesBody.fechapresentacion;
                         newBody.fechaJura = this.colegialesBody.fechaJura;
                         sessionStorage.setItem("personaBody", JSON.stringify(newBody));
-
                       },
                       error => {
                         //console.log(error);
@@ -2423,22 +2424,28 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     return fecha;
   }
   getSituacionPersona() {
-    if (this.colegialesBody.situacion == "60") {
-      this.situacionPersona = "Fallecido";
-    } else if (
-      this.colegialesBody.situacion == "20" ||
-      this.colegialesBody.situacion == "10"
-    ) {
-      if (this.colegialesBody.comunitario == "1") {
-        this.situacionPersona = "Abogado Inscrito";
-      } else {
-        this.situacionPersona = "Activo";
-      }
-    } else if (this.colegialesBody.situacion != undefined) {
-      this.situacionPersona = "De baja";
-    } else {
-      this.situacionPersona = "";
+    if (sessionStorage.getItem("situacionGlobal")){
+      this.situacionPersona = sessionStorage.getItem("situacionGlobal");
     }
+    else {
+      if (this.colegialesBody.situacion == "60") {
+        this.situacionPersona = "Fallecido";
+      } else if (
+        this.colegialesBody.situacion == "20" ||
+        this.colegialesBody.situacion == "10"
+      ) {
+        if (this.colegialesBody.comunitario == "1") {
+          this.situacionPersona = "Abogado Inscrito";
+        } else {
+          this.situacionPersona = "Activo";
+        }
+      } else if (this.colegialesBody.situacion != undefined) {
+        this.situacionPersona = "De baja";
+      } else {
+        this.situacionPersona = "";
+      }
+    }
+    
     if (this.esColegiado) {
       this.datosTarjetaResumen = [
         {
@@ -2456,7 +2463,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         },
         {
           label: "Situación Ejercicio Actual",
-          value: this.situacionPersona
+          value: sessionStorage.getItem("situacionGlobal") ? sessionStorage.getItem("situacionGlobal") : this.situacionPersona
         },
       ];
       this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
@@ -2472,7 +2479,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         },
         {
           label: "Situación Ejercicio Actual",
-          value: this.situacionPersona
+          value: sessionStorage.getItem("situacionGlobal") ? sessionStorage.getItem("situacionGlobal") : this.situacionPersona
         },
       ];
       this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);

@@ -985,6 +985,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
         this.refreshData.emit(true);
       }
+      if(cell.value==row.cells[4].value && row.cells[7].type=='multiselect3'){//si la celda que nos pasan es igual a la celda cuarta de la row que nos pasan y la celda 7 es multiselect3
+      let modulo = row.cells[4].value;
+      let arrData=[];
+      arrData.push(modulo);
+      this.cargaAcreditacionesPorModulo(arrData, 'designa', rowGroup);
+      }
     } else {
       if (this.pantalla == 'JE' && rowGroup.rows != undefined) {
         rowGroup.rows[0].cells[4].value = cell.value;
@@ -1511,7 +1517,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               this.comboModulos = [];
               let data: String[] = [];
               data.push("0");
-              data.push(this.idTurno);
+              data.push(desig[4].value);//this.idTurno);
+              console.log(desig[4].value);
+              console.log(desig[6].value);
+              console.log(desig);
               this.cargaAcreditacionesPorModulo(data, designacion, rowGroup);
             } else if (this.configComboDesigna == "4" || this.configComboDesigna == "5") {
               this.cargaModulos(designacion, rowGroup);
@@ -1773,7 +1782,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.eliminaActuacion=this.compruebaNoLectura(rowG, "eliminar");
             if(this.eliminaActuacion){
               let rowIdChild = child;
-              let rowId = rowIdChild.slice(0, -1);
+              let rowId = rowIdChild.split(')')[0]+')';
               this.childNumber = Number(rowIdChild.slice(rowId.length, rowIdChild.length));
               this.selectedArray.forEach(idToDelete => {
                 if (rowIdChild == idToDelete && rowG.id == rowId) {
@@ -2039,7 +2048,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               }
 
             }
-          })
+          });
+
+          rowGroup.rows.forEach(row=>{
+            if(row.cells[7].type=='multiselect3' && row.cells[4].value==$event[0]){
+              row.cells[7].combo=this.comboAcreditacion;
+            }
+          });
+
         },
         err => {
           //console.log(err);
@@ -2089,7 +2105,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         let data: String[] = [];
         let desig = rowGroup.rows[0].cells;
         this.idTurno = desig[17].value;
-        data.push(this.comboModulos[0].value);
+        data.push(rowGroup.rows[0].cells[4].value);
         data.push(this.idTurno);
         this.cargaAcreditacionesPorModulo(data, designacion, rowGroup);
         this.progressSpinner = false;

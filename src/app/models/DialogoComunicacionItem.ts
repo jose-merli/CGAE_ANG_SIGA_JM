@@ -9,5 +9,6 @@ export class DialogoComunicacionesItem {
   idPlantillaEnvios: String;
   modelos: any[];
   comunicar: Boolean;
+  descripcionDefecto: String;
   constructor() { }
 }

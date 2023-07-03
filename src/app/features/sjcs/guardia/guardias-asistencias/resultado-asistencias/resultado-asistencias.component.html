@@ -5,24 +5,24 @@
 <p-dataTable #table [value]="asistencias" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" loadingIcon="fa-spinner"
 class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="multiple" (onRowSelect)="onSelectRow($event.data)"
 (onRowUnselect)="actualizaSeleccionados()">
-  <p-column field="descripcionTurno" header="{{'menu.justiciaGratuita.oficio.comboturno' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+  <p-column field="descripcionTurno" header="{{'menu.justiciaGratuita.oficio.comboturno' | translate}}" [style]="{'width': '14%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
   </p-column>
-  <p-column field="descripcionGuardia" header="{{'menu.justiciaGratuita.GuardiaMenu' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+  <p-column field="descripcionGuardia" header="{{'menu.justiciaGratuita.GuardiaMenu' | translate}}" [style]="{'width': '14%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
   </p-column>
-  <p-column header="{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}} / {{'gratuita.busquedaAsistencias.literal.numero' | translate}}" [style]="{'width': '7%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
-    <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
-      <td class="text-center">
-        <div>
-          <a class="enlace" (click)="onClickEnlace(dato)"><span>A{{dato.anio}}/{{dato.numero}}</span></a>
+  <p-column field="anioNumero"  header="{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}} / {{'gratuita.busquedaAsistencias.literal.numero' | translate}}" [style]="{'width': '14%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+    <ng-template  let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
+      <td>
+        <div class="centrado">
+          <a  class="enlace" (click)="onClickEnlace(dato)"><span>{{dato.anioNumero}}</span></a>
         </div>
       </td>
     </ng-template>
   </p-column>
-  <p-column field="fechaAsistencia" header="{{'dato.jgr.guardia.saltcomp.fecha' | translate}}" [style]="{'width': '7%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
-  <p-column field="nombreColegiado" header="{{'busquedaSanciones.detalleSancion.letrado.literal' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
-  <p-column field="asistido" header="{{'justiciaGratuita.guardia.solicitudescentralita.asistido' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
-  <p-column field="descripcionEstado" header="{{'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate}}" [style]="{'width': '5%'}"  [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
-  <p-column field="validada" header="{{'justiciaGratuita.oficio.designas.actuaciones.validada' | translate}}" [style]="{'width': '5%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="fechaAsistencia" header="{{'dato.jgr.guardia.saltcomp.fecha' | translate}}" [style]="{'width': '10%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="nombreColegiado" header="{{'busquedaSanciones.detalleSancion.letrado.literal' | translate}}"  [style]="{'width': '14%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="asistido" header="{{'justiciaGratuita.guardia.solicitudescentralita.asistido' | translate}}"  [style]="{'width': '14%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="descripcionEstado" header="{{'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate}}" [style]="{'width': '10%'}"  [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="validada" header="{{'justiciaGratuita.oficio.designas.actuaciones.validada' | translate}}" [style]="{'width': '10%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
   <ng-template pTemplate="paginatorLeft">
     <div class="mostrar d-flex text-right justify-content-end">
         <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first

@@ -172,6 +172,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   sessionInfo(){
     sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
       sessionStorage.removeItem("personaBody");
+      sessionStorage.removeItem("situacionGlobal");
       sessionStorage.setItem("esColegiado", "true");
       sessionStorage.setItem(
         "filtrosBusquedaColegiados",

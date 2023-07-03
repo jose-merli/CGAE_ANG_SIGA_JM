@@ -84,10 +84,14 @@
         label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
       <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{'general.message.ocultarHistorico' | translate}}"></button>
-      <button *ngIf="!historico" pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-        (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <!--<button *ngIf="historico" pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+        (click)="activar()" type="button" icon="fa fa-check" iconPos="left" label="Reactivar"></button> -->
+       
+        <button *ngIf="!historico" pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+        (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button> 
+
       <button *ngIf="historico" pButton [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-        (click)="delete()" type="button" icon="fa fa-check" iconPos="left" label="Reactivar"></button>
+        (click)="confirmActive(false)" type="button" icon="fa fa-check" iconPos="left" label="Reactivar"></button>
       <button *ngIf="permisos && selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)"
           pButton type="button" icon="fa fa-comment" iconPos="left"
           label="{{'general.boton.comunicar' | translate }}"></button>
@@ -95,13 +99,35 @@
   </div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon" width="425"
-  #deletePlantillaDoc>
+
+<p-dialog header="{{ 'general.cabecera.confirmacion' | translate }}" [(visible)]="displayDialogEliminar" [modal]="true" [width]="425">
+  <label>{{ "justiciaGratuita.inscripciones.mensaje.eliminar" | translate}}</label>
+  <input type="number" class="form-control" [(ngModel)]='checkNumber' maxLength="4" pInputText>
+  
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+    <div class="text-right main-button">
+      <button (click)="confirmDelete()" pButton type="button" icon="fa-check" iconPos="left" label="{{'general.boton.confirmar' | translate}}" ></button>
+      <button (click)="cancelDelete()" pButton type="button"  icon="fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
   </p-footer>
-</p-confirmDialog>
+
+</p-dialog>
+
+<!-- <p-dialog header="{{ 'general.cabecera.confirmacion' | translate }}" [(visible)]="displayDialogActivar" [modal]="true" [width]="425">
+  <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
+  </label>
+  <app-fecha [(value)]="checkFecha" (valueChangeInput)="fillFechaCheck($event)" (valueChangeSelected)="fillAfechaCheck($event)"></app-fecha>
+
+  
+  <p-footer>
+    <div class="text-right main-button">
+      <button (click)="confirmActive(true)" pButton type="button" icon="fa-check" iconPos="left" label="Si" ></button>
+      <button (click)="confirmActive(false)" pButton type="button" icon="fa-check" iconPos="left" label="Si" ></button>
+      <button (click)="cancelActive()" pButton type="button"  icon="fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </p-footer>
+
+</p-dialog> -->
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

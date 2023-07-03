@@ -11,6 +11,7 @@ export let endpoints_oficio: any = {
     turnos_busquedaTurnos: "oficio/turnos/busquedaTurnos",
     turnos_busquedaFichaTurnos: "oficio/turnos/busquedaFichaTurnos",
     turnos_eliminateTurnos: "oficio/turnos/eliminateTurnos",
+    turnos_activarTurnos: "oficio/turnos/activarTurnos",
     turnos_updateDatosGenerales: "oficio/turnos/updateDatosGenerales",
     turnos_createnewTurno: "oficio/turnos/createnewTurno",
     fichaZonas_searchSubzones: "maestros/fichaZonas/searchSubzones",
