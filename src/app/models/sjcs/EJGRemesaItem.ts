@@ -16,6 +16,6 @@ export class EJGRemesaItem {
     idEjgRemesa?: number;
 
     constructor() { }
-
+    
 }
 

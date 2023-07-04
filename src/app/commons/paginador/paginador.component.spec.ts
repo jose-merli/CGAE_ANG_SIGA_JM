@@ -8,9 +8,9 @@ describe('PaginadorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PaginadorComponent]
+      declarations: [ PaginadorComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   });
 
   beforeEach(() => {

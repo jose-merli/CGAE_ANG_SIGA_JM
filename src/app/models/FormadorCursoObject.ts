@@ -4,5 +4,5 @@ import { FormadorCursoItem } from "./FormadorCursoItem";
 export class FormadorCursoObject {
   error: ErrorItem;
   formadoresCursoItem: FormadorCursoItem[] = [];
-  constructor() { }
+  constructor() {}
 }

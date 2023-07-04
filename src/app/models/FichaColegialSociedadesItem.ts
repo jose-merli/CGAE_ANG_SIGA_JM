@@ -7,5 +7,5 @@ export class FichaColegialSociedadesItem {
   numeroIntegrantes: String;
   error: Error;
 
-  constructor() { }
+  constructor() {}
 }

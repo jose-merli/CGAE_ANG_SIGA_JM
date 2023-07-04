@@ -7,7 +7,7 @@ import { Location } from '@angular/common';
 @Component({
 	selector: 'app-comunicacion-sociedades',
 	templateUrl: './comunicacion-sociedades.component.html',
-	styleUrls: ['./comunicacion-sociedades.component.scss'],
+	styleUrls: [ './comunicacion-sociedades.component.scss' ],
 	encapsulation: ViewEncapsulation.None
 })
 export class ComunicacionSociedadesComponent implements OnInit {
@@ -40,7 +40,7 @@ export class ComunicacionSociedadesComponent implements OnInit {
 				this.url = JSON.parse(sessionStorage.getItem('url'));
 				document.getElementById('noViewContent').className = 'mainFrameWrapper2';
 				document.getElementById('noViewContent').className = 'mainFrameWrapper2';
-				this.router.navigate(['/facturasSociedad']);
+				this.router.navigate([ '/facturasSociedad' ]);
 			}, 2000);
 		} else {
 			this.url = JSON.parse(sessionStorage.getItem('url'));
@@ -55,8 +55,8 @@ export class ComunicacionSociedadesComponent implements OnInit {
 		}
 	}
 
-	ngOnInit() { }
+	ngOnInit() {}
 	volver() {
-		this.router.navigate(['/fichaPersonaJuridica']);
+		this.router.navigate([ '/fichaPersonaJuridica' ]);
 	}
 }

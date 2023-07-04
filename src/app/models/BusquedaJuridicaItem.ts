@@ -11,5 +11,5 @@ export class BusquedaJuridicaItem {
   nombresIntegrantes: String;
   fechaBaja: Date;
   situacion: String;
-  constructor() { }
+  constructor() {}
 }

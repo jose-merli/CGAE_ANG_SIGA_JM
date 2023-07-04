@@ -13,7 +13,7 @@ import { ConfirmationService } from "primeng/api";
   encapsulation: ViewEncapsulation.None
 })
 export class ConfirmDialogComponent {
-  constructor(private confirmationService: ConfirmationService) { }
+  constructor(private confirmationService: ConfirmationService) {}
 
   confirm() {
     this.confirmationService.confirm({

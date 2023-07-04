@@ -27,5 +27,5 @@ export class DatosGeneralesItem {
   prefijoNumsspp: String;
   sufijoNumsspp: String;
   contadorNumsspp: String;
-  constructor() { }
+  constructor() {}
 }

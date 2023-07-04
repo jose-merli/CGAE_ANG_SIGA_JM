@@ -6,8 +6,8 @@ export class DatosPolizaMutualidadItem {
   textoOtros: String;
   cuotaMensual: String;
   capitalObjetivo: String;
-  idCobertura: String;
-
+  idCobertura:String;
+  
 
   constructor() { }
 }

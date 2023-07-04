@@ -54,7 +54,7 @@ export class TarjetaComponent implements OnInit {
   }
 
   //Meter los datos del letrado en session
-  irFichaColegial() {
+  irFichaColegial(){
     //console.log("DATOS LETRADO", this.datosLetrado);
     let bodyColegiado: DatosColegiadosItem = new DatosColegiadosItem();
     bodyColegiado.nif = this.datosLetrado.nif;
@@ -66,7 +66,7 @@ export class TarjetaComponent implements OnInit {
         '?numPagina=1',
         bodyColegiado
       )
-      .subscribe((data) => {
+            .subscribe((data) => {
         let colegiadoSearch = JSON.parse(data['body']);
         let datosColegiados = colegiadoSearch.colegiadoItem;
 
@@ -85,7 +85,7 @@ export class TarjetaComponent implements OnInit {
           this.router.navigate(['/fichaColegial']);
         }
       },
-        (err) => {
+                (err) => {
           this.progressSpinner = false;
 
         });
@@ -93,8 +93,8 @@ export class TarjetaComponent implements OnInit {
 
   getNoColegiado() {
     let bodyNoColegiado: DatosColegiadosItem = new DatosColegiadosItem();
-    bodyNoColegiado.nif = this.datosLetrado.nif;
-    bodyNoColegiado.idInstitucion = this.datosLetrado.numeroInstitucion;
+      bodyNoColegiado.nif = this.datosLetrado.nif;
+      bodyNoColegiado.idInstitucion = this.datosLetrado.numeroInstitucion;
 
     this.sigaServices
       .postPaginado(
@@ -102,40 +102,40 @@ export class TarjetaComponent implements OnInit {
         '?numPagina=1',
         bodyNoColegiado
       )
-      .subscribe((data) => {
+            .subscribe((data) => {
         this.progressSpinner = false;
         let noColegiadoSearch = JSON.parse(data['body']);
         let datosNoColegiados = noColegiadoSearch.noColegiadoItem;
 
-        if (datosNoColegiados[0].fechaNacimiento != null) {
-          datosNoColegiados[0].fechaNacimiento = this.personaBodyFecha(
-            datosNoColegiados[0].fechaNacimiento
+          if (datosNoColegiados[0].fechaNacimiento != null) {
+            datosNoColegiados[0].fechaNacimiento = this.personaBodyFecha(
+              datosNoColegiados[0].fechaNacimiento
+            );
+          }
+
+          sessionStorage.setItem(
+            'esColegiado',
+            JSON.stringify(false)
           );
-        }
 
-        sessionStorage.setItem(
-          'esColegiado',
-          JSON.stringify(false)
-        );
+          sessionStorage.setItem(
+            'personaBody',
+            JSON.stringify(datosNoColegiados[0])
+          );
 
-        sessionStorage.setItem(
-          'personaBody',
-          JSON.stringify(datosNoColegiados[0])
-        );
-
-        this.router.navigate(['/fichaColegial']);
+          this.router.navigate(['/fichaColegial']);
       },
-        (err) => {
+                 (err) => {
           this.progressSpinner = false;
 
         });
   }
 
-  goToSede(urlSede: string) {
+  goToSede(urlSede : string){
     window.open(urlSede, '_blank');
   }
 
-  goToDetalleEXEA(urlDetalle: string) {
+  goToDetalleEXEA(urlDetalle : string){
     window.open(urlDetalle, '_blank');
   }
 

@@ -114,7 +114,7 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_eliminar: "oficio/designas/eliminarActDesigna",
     actuaciones_designacion_guardar: "oficio/designas/guardarNewActDesigna",
     actuaciones_designacion_editar: "oficio/designas/actualizarActDesigna",
-    actuaciones_designacion_numProcedimiento: "oficio/desgignas/formatoProcedimiento",
+    actuaciones_designacion_numProcedimiento : "oficio/desgignas/formatoProcedimiento",
     actuaciones_designacion_validar: "oficio/designas/validarActDesigna",
     actuaciones_designacion_desvalidar: "oficio/designas/desvalidarActDesigna",
     actuaciones_designacion_updateJustiActDesigna: "oficio/designas/updateJustiActDesigna",
@@ -129,23 +129,23 @@ export let endpoints_oficio: any = {
     combo_motivosCambio_actuDesigna: "oficio/comboMotivosCambioActDesigna",
     combo_prisiones: "oficio/comboPrisiones",
     combo_comboTipoDocDocumentacionDesigna: "combo/comboTipoDocumentacionDesigna",
-    designaciones_updateRepresentanteInteresado: "oficio/designas/updateRepresentanteInteresado",
-    designaciones_updateRepresentanteContrario: "oficio/designas/updateRepresentanteContrario",
-    designaciones_updateAbogadoContrario: "oficio/designas/updateAbogadoContrario",
-    designaciones_updateProcuradorContrario: "oficio/designas/updateProcuradorContrario",
-    designaciones_updateDetalleDesignacion: "oficio/designas/updateDetalleDesignacion",
-    designaciones_searchAbogadoByIdPersona: "oficio/designas/searchAbogadoByIdPersona",
-    designacionesBusquedaRelaciones: "oficio/designas/busquedaRelaciones",
-    designaciones_eliminarRelacion: "oficio/designas/eliminarRelacion",
-    designaciones_eliminarRelacionAsistenciaDes: "oficio/designas/eliminarRelacionAsistenciaDesigna",
-    designaciones_busquedaDesignacionActual: "oficio/designas/busquedaDesignacionActual",
-    designaciones_busquedaLetradosDesignacion: "oficio/designas/busquedaLetradosDesignacion",
-    designaciones_eliminarDesignaciones: "oficio/designas/deleteDesigna",
-    designaciones_updateDesigna: "oficio/designas/updateDesigna",
-    designaciones_busquedaNueva: "oficio/busquedaNuevaDesigna",
+    designaciones_updateRepresentanteInteresado:"oficio/designas/updateRepresentanteInteresado",
+    designaciones_updateRepresentanteContrario:"oficio/designas/updateRepresentanteContrario",
+    designaciones_updateAbogadoContrario:"oficio/designas/updateAbogadoContrario",
+    designaciones_updateProcuradorContrario:"oficio/designas/updateProcuradorContrario",
+    designaciones_updateDetalleDesignacion:"oficio/designas/updateDetalleDesignacion",
+    designaciones_searchAbogadoByIdPersona:"oficio/designas/searchAbogadoByIdPersona",
+    designacionesBusquedaRelaciones:"oficio/designas/busquedaRelaciones",
+    designaciones_eliminarRelacion:"oficio/designas/eliminarRelacion",
+    designaciones_eliminarRelacionAsistenciaDes:"oficio/designas/eliminarRelacionAsistenciaDesigna",
+    designaciones_busquedaDesignacionActual:"oficio/designas/busquedaDesignacionActual",
+    designaciones_busquedaLetradosDesignacion:"oficio/designas/busquedaLetradosDesignacion",
+    designaciones_eliminarDesignaciones:"oficio/designas/deleteDesigna",
+    designaciones_updateDesigna:"oficio/designas/updateDesigna",
+    designaciones_busquedaNueva:"oficio/busquedaNuevaDesigna",
     designacionesBusquedaComunicaciones: "oficio/designas/busquedaComunicaciones",
-    designaciones_updateLetradoDesignacion: "oficio/designas/updateLetradoDesigna",
-    designaciones_compruebaLetradoInscritoEnTurno: "oficio/designas/compruebaLetradoInscritoEnTurno",
+    designaciones_updateLetradoDesignacion:"oficio/designas/updateLetradoDesigna",
+    designaciones_compruebaLetradoInscritoEnTurno:"oficio/designas/compruebaLetradoInscritoEnTurno",
     designaciones_updateDatosFacturacion: "oficio/designas/updatePartidaPresupuestaria",
     designacion_getDocumentosPorDesigna: "oficio/designas/getDocumentosPorDesigna",
     designacion_subirDocumentoDesigna: "oficio/designas/subirDocumentoDesigna",
@@ -156,8 +156,8 @@ export let endpoints_oficio: any = {
     designacion_asociarEjgDesigna: "oficio/designas/asociarEjgDesigna",
     designacion_asociarAsistenciaDesigna: "oficio/designas/asociarAsistenciaDesigna",
     designacion_getPreDesignaEJG: "oficio/designas/getPreDesignaEJG",
-
-    designacion_queryImprimirJustificacionExpres: "oficio/designas/queryImprimirJustificacionExpress",
+  
+    designacion_queryImprimirJustificacionExpres :"oficio/designas/queryImprimirJustificacionExpress",
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",
@@ -168,5 +168,5 @@ export let endpoints_oficio: any = {
 
 
 
-    designaciones_existeDesignaJuzgadoProcedimiento: "oficio/designas/existeDesginaJuzgadoProcedimiento"
+    designaciones_existeDesignaJuzgadoProcedimiento:"oficio/designas/existeDesginaJuzgadoProcedimiento"
 }

@@ -147,8 +147,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   ngOnInit() {
 
-    if (sessionStorage.getItem("origenSolicitudIncorporacion") == "true") {
-      this.origenSolicitudIncorporacion = true;
+    if(sessionStorage.getItem("origenSolicitudIncorporacion") == "true"){
+      this.origenSolicitudIncorporacion=true;
     }
 
     if (sessionStorage.getItem("origin") == "AbogadoContrario") {
@@ -160,12 +160,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
       sessionStorage.removeItem('fromDesignaciones');
     }
 
-    if (sessionStorage.getItem("origin") == "AbogadoContrarioEJG") {
+    if(sessionStorage.getItem("origin") == "AbogadoContrarioEJG"){
       this.fromAbogadoContrarioEJG = true;
     }
-    else if (sessionStorage.getItem("origin") == "newCliente") {
+    else if(sessionStorage.getItem("origin")=="newCliente"){
       sessionStorage.removeItem('origin');
-      this.fromCliente = true;
+      this.fromCliente=true;
     }
 
     //sessionStorage.removeItem('origin');
@@ -595,9 +595,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
         this.bodyProc.apellido1.trim().length < 3) &&
       /* (this.bodyProc.apellido2 == null ||
         this.bodyProc.apellido2.trim().length < 3) && */
-    (this.bodyProc.nColegiado == undefined
+      (this.bodyProc.nColegiado == undefined 
       //  || this.bodyProc.nColegiado.trim().length < 3 
-    ) /*&&
+      ) /*&&
       (this.bodyProc.idColProcurador == undefined ||
         this.bodyProc.idColProcurador == null ||
         this.bodyProc.idColProcurador.length < 1)
@@ -606,22 +606,22 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.progressSpinner = false;
       return false;
     } else { */
-    // quita espacios vacios antes de buscar
-    if (this.bodyProc.nombre != undefined) {
-      this.bodyProc.nombre = this.bodyProc.nombre.trim();
-    }
-    if (this.bodyProc.apellido1 != undefined) {
-      this.bodyProc.apellido1 = this.bodyProc.apellido1.trim();
-    }
-    /* if (this.bodyProc.apellido2 != undefined) {
-      this.bodyProc.apellido2 = this.bodyProc.apellido2.trim();
-    } */
-    if (this.bodyProc.nColegiado != undefined) {
-      this.bodyProc.nColegiado = this.bodyProc.nColegiado.trim();
-    }
+      // quita espacios vacios antes de buscar
+      if (this.bodyProc.nombre != undefined) {
+        this.bodyProc.nombre = this.bodyProc.nombre.trim();
+      }
+      if (this.bodyProc.apellido1 != undefined) {
+        this.bodyProc.apellido1 = this.bodyProc.apellido1.trim();
+      }
+      /* if (this.bodyProc.apellido2 != undefined) {
+        this.bodyProc.apellido2 = this.bodyProc.apellido2.trim();
+      } */
+      if (this.bodyProc.nColegiado != undefined) {
+        this.bodyProc.nColegiado = this.bodyProc.nColegiado.trim();
+      }
 
-    return true;
-    // }
+      return true;
+   // }
   }
 
   checkFilterJuridic() {
@@ -713,7 +713,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
           this.bodyFisica.addDestinatarioIndv = this.addDestinatarioIndv;
         }
 
-        if (this.fromDesignaciones != null) {
+        if (this.fromDesignaciones != null){
           this.bodyFisica.fromDesignaciones = this.fromDesignaciones;
         }
 
@@ -818,7 +818,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
         );
       }
     }
-    else if (this.persona == 'j') {
+    else if(this.persona == 'j') {
       if (this.checkFilterJuridic()) {
         if (this.selectedTipo != undefined && this.selectedTipo.value == '') {
           this.bodyJuridica.tipo = '';
@@ -892,7 +892,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
               }, 5);
             }
           );
-      } else {
+      }else{
         this.progressSpinner = false;
       }
     }
@@ -919,20 +919,20 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   irFichaColegial(id) {
-
+    
     //let colegioSelec = this.colegios_seleccionados[0].idInstitucion;
     // En caso que venga de una ficha de contrario
     if (this.fromAbogadoContrario || this.fromAbogadoContrarioEJG || this.fromCliente) {
       sessionStorage.setItem('abogado', JSON.stringify(id));
-      if (this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
+      if(this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
       else sessionStorage.setItem("origin", "ContrarioEJG");
       this.location.back();
     }
     //En caso que se este seleccionando un nuevo porcurador
     else if (this.nuevoProcurador) {
       sessionStorage.setItem('datosProcurador', JSON.stringify(id));
-      if (this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
-      else if (this.fromAbogadoContrarioEJG) sessionStorage.setItem("origin", "ContrarioEJG");
+      if(this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
+      else if(this.fromAbogadoContrarioEJG) sessionStorage.setItem("origin", "ContrarioEJG");
       this.location.back();
     }
     // ir a ficha de notario
@@ -950,16 +950,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
         this.router.navigate(['fichaPersonaJuridica']);
       }
-    } else if (sessionStorage.getItem('nuevoMovVarios') == 'true') {
-      sessionStorage.setItem('datosPersonaFisica', JSON.stringify(id));
-      sessionStorage.setItem('showDatosCliente', "true");
+    } else if( sessionStorage.getItem('nuevoMovVarios') == 'true'){
+      sessionStorage.setItem('datosPersonaFisica',JSON.stringify(id));
+      sessionStorage.setItem('showDatosCliente',"true");
       this.location.back();
     }
     // else if (sessionStorage.getItem('nuevoProcurador')) {
     //   sessionStorage.setItem('datosProcurador', JSON.stringify(id));
     //   this.backTo();
     // }
-    else if (
+     else if (
       (sessionStorage.getItem('newIntegrante') != null || sessionStorage.getItem('newIntegrante') != undefined) &&
       sessionStorage.getItem('abrirRemitente') != 'true'
     ) {
@@ -1228,13 +1228,13 @@ export class BusquedaGeneralComponent implements OnDestroy {
         message: mess,
         icon: icon,
         accept: () => {
-
+          
           let enviar = new SolicitudIncorporacionItem();
           if (sessionStorage.getItem('nuevoNoColegiadoGen') == 'true' || sessionStorage.getItem("busquedaColegiadoDesigna") == 'true') {
-            if (sessionStorage.getItem("busquedaColegiadoDesigna")) {
+            if(sessionStorage.getItem("busquedaColegiadoDesigna") ){
               sessionStorage.removeItem('busquedaColegiadoDesigna')
-              sessionStorage.setItem("nuevoNoColegiadoDesigna", 'true')
-            }
+              sessionStorage.setItem("nuevoNoColegiadoDesigna",'true') 
+          }
             sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
             sessionStorage.setItem('esColegiado', 'false');
             sessionStorage.setItem('esNuevoNoColegiado', 'true');
@@ -1437,8 +1437,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   backTo() {
-    if (this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
-    else if (this.fromAbogadoContrarioEJG) sessionStorage.setItem("origin", "ContrarioEJG");
+    if(this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
+    else if(this.fromAbogadoContrarioEJG) sessionStorage.setItem("origin", "ContrarioEJG");
     this.location.back();
   }
 

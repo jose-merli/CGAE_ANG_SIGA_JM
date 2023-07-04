@@ -11,9 +11,9 @@ export class HeaderGestionEntidadService {
   constructor(sigaServices: SigaServices) {
     this.url.next(
       sigaServices.getNewSigaUrl() +
-      sigaServices.getServucePath("header_logo") +
-      "?random=" +
-      new Date().getTime()
+        sigaServices.getServucePath("header_logo") +
+        "?random=" +
+        new Date().getTime()
     );
   }
 

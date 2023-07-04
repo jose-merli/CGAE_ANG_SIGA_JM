@@ -3,5 +3,5 @@ export class SoliModTableItem {
   estado: any;
   modificacion: any;
 
-  constructor() { }
+  constructor() {}
 }

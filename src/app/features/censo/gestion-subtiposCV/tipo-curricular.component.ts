@@ -145,13 +145,13 @@ export class TipoCurricularComponent {
 
     this.numSelected = this.selectedDatos.length;
 
-    if (this.selectedDatos.length > 1) {
+    if(this.selectedDatos.length > 1){
       this.datos.forEach(element => {
         element.isMod = false;
       });
-
+     
     }
-    else {
+    else{
       this.editable = true;
     }
   }
@@ -180,16 +180,16 @@ export class TipoCurricularComponent {
 
 
   actualizaSeleccionados(selectedDatos) {
-
+    
     this.table.reset();
     this.numSelected = selectedDatos.length;
-    if (this.numSelected <= 1) {
+    if(this.numSelected <= 1){
       this.editable = true;
       this.selectedDatos.forEach(element => {
         element.isMod = true;
       });
     }
-    if (this.numSelected == 0) {
+    if(this.numSelected == 0){
       this.datos.forEach(element => {
         element.isMod = false;
       });
@@ -237,7 +237,7 @@ export class TipoCurricularComponent {
         },
         () => {
           this.progressSpinner = false;
-          setTimeout(() => {
+          setTimeout(()=>{
             this.commonsService.scrollTablaFoco('tablaFoco');
           }, 5);
         }
@@ -428,7 +428,7 @@ export class TipoCurricularComponent {
       message: mess,
       icon: icon,
       accept: () => {
-        if (selectedDatosEliminar.length > 0) {
+        if(selectedDatosEliminar.length > 0){
           this.removeElement(selectedDatosEliminar);
         }
         else {
@@ -440,9 +440,9 @@ export class TipoCurricularComponent {
                 "messages.deleted.error.curricular"
               )
             }
-          ];
+          ];   
         }
-
+        
       },
       reject: () => {
         this.msgs = [

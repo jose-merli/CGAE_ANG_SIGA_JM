@@ -5,5 +5,5 @@ export class MultiidiomaCatalogoUpdateDto {
   nombreTabla: String;
   idInstitucion: String;
   local: String;
-  constructor() { }
+  constructor() {}
 }

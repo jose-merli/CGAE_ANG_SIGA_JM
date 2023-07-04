@@ -6,6 +6,6 @@ export const procesos_comision: any = {
     guardadoRemesasEnvio: "983",
     borradoExpedienteRemesaEnvio: "984",
     remesasInformacionEconomica: "98I",
-    remesasResultado: "982",
-    remesasResoluciones: "98R"
+    remesasResultado : "982",
+    remesasResoluciones : "98R"
 }

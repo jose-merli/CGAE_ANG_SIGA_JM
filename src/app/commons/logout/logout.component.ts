@@ -9,14 +9,14 @@ export class LogoutComponent implements OnInit {
   codError: number;
   descError: string;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
-    setTimeout(function () {
-      window.open('', '_self').close();
+    setTimeout(function() {
+      window.open('', '_self').close();
       //debugger; 
       //window.open('','_parent',''); 
-      //window.close();  
-    }, 5000);
+      //window.close();  
+      }, 5000);
   }
 }

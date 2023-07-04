@@ -3,5 +3,5 @@ import { ErrorItem } from "./ErrorItem";
 export class CuentasBancariasObject {
   error: ErrorItem;
   datosBancariosItem: CuentasBancariasItem[] = [];
-  constructor() { }
+  constructor() {}
 }

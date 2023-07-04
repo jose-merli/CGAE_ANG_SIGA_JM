@@ -15,7 +15,7 @@ export class ModelosComunicacionesItem {
   porDefecto: String;
   idInforme: String;
   plantillas: any;
-  generarExcel: number;
+  generarExcel:number;
   data: boolean;
   fechaBaja: any;
   constructor() { }

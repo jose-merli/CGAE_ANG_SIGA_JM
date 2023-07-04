@@ -1,6 +1,6 @@
 export class AsuntosJusticiableItem {
 
-	idInstitucion: String;
+  idInstitucion: String;
 	asunto: String;
 	turnoGuardia: String;
 	letrado: String;
@@ -20,12 +20,12 @@ export class AsuntosJusticiableItem {
 	idTipoSoj: String;
 	idTipoDesigna: String;
 	idEstadoDesigna: String;
-	anioProcedimiento: String;
+	anioProcedimiento: String; 
 	numProcedimiento: String;
 	idJuzgado: String;
 	nig: String;
 	nif: String;
-	idPersonaColegiado: String;
+	idPersonaColegiado: String; 
 	idTipoEjg: String;
 	idTipoEjColegio: String;
 	idEstadoPorEjg: String;
@@ -39,5 +39,5 @@ export class AsuntosJusticiableItem {
 	nColegiado: String;
 	dilnigproc: String;
 
-	constructor() { }
+  constructor() { }
 }

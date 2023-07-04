@@ -151,7 +151,7 @@ export class TranslateService {
     });
   }
 
-
+  
   // public getTranslations(): any {
   //   this.service.get("diccionarios").subscribe(response => {
   //     this._translations = response.DiccionarioItems;
@@ -172,7 +172,7 @@ export class TranslateService {
 
         this.service.get("menu").subscribe(res => {
           resolve(res.menuItems);
-        }, err => {
+        }, err =>{
           //console.log(err);
         });
 

@@ -13,5 +13,5 @@ export class AuditoriaComponent implements OnInit {
     this.url = JSON.parse(sessionStorage.getItem("url"));
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 }

@@ -18,7 +18,7 @@ export class ResolucionEJGItem {
     turnadoRatificacion: boolean;
     requiereNotificarProc: boolean;
     notasCAJG: String;
-    anio: number;
+    anio : number;
     numero: number;
     idInstitucion: number;
     idTipoEJG: number;

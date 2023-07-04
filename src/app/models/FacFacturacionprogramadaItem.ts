@@ -1,78 +1,78 @@
 export class FacFacturacionprogramadaItem {
 
-  // Datos generales
-  idSerieFacturacion: string;
-  compraSuscripcion: string;
-  fechaInicioServicios: Date;
-  fechaInicioProductos: Date;
-  fechaFinServicios: Date;
-  fechaFinProductos: Date;
-  importe: string;
+    // Datos generales
+    idSerieFacturacion: string;
+    compraSuscripcion: string;
+    fechaInicioServicios: Date;
+    fechaInicioProductos: Date;
+    fechaFinServicios: Date;
+    fechaFinProductos: Date;
+    importe: string;
 
-  fechaCompraSuscripcionDesde: Date;
-  fechaCompraSuscripcionHasta: Date;
-  importeDesde: string;
-  importeHasta: string;
+    fechaCompraSuscripcionDesde: Date;
+    fechaCompraSuscripcionHasta: Date;
+    importeDesde: string;
+    importeHasta: string;
+  
+    // Estados
+    idEstadoConfirmacion: string;
+    estadoConfirmacion: string;
+    idEstadoPDF: string;
+    estadoPDF: string;
+    idEstadoEnvio: string;
+    estadoEnvio: string;
+    idEstadoTraspaso: string;
+    estadoTraspaso: string;
+  
+    // Fechas
+    fechaPrevistaGeneracion: Date;
+    fechaPrevistaGeneracionDesde: Date;
+    fechaPrevistaGeneracionHasta: Date;
 
-  // Estados
-  idEstadoConfirmacion: string;
-  estadoConfirmacion: string;
-  idEstadoPDF: string;
-  estadoPDF: string;
-  idEstadoEnvio: string;
-  estadoEnvio: string;
-  idEstadoTraspaso: string;
-  estadoTraspaso: string;
+    fechaPrevistaConfirm: Date;
+    fechaPrevistaConfirmDesde: Date;
+    fechaPrevistaConfirmHasta: Date;
 
-  // Fechas
-  fechaPrevistaGeneracion: Date;
-  fechaPrevistaGeneracionDesde: Date;
-  fechaPrevistaGeneracionHasta: Date;
+    fechaRealGeneracion: Date;
+    fechaRealGeneracionDesde: Date;
+    fechaRealGeneracionHasta: Date;
 
-  fechaPrevistaConfirm: Date;
-  fechaPrevistaConfirmDesde: Date;
-  fechaPrevistaConfirmHasta: Date;
+    fechaConfirmacion: Date;
+    fechaConfirmacionDesde: Date;
+    fechaConfirmacionHasta: Date;
 
-  fechaRealGeneracion: Date;
-  fechaRealGeneracionDesde: Date;
-  fechaRealGeneracionHasta: Date;
+    // Ficha
+    idProgramacion: string;
+    descripcion: string;
+    nombreAbreviado: string;
+    fechaProgramacion: Date;
+    archivarFact: boolean;
+    usuModificacion: string;
+    fechaModificacion: Date;
+    nombreFichero: string;
+    logError: string;
+    logTraspaso: string;
+    traspasoFacturas: boolean;
+    generaPDF: boolean;
+    envio: boolean;
+    idTipoPlantillaMail: string;
+    tipoPlantillaMail: string;
+    traspasoPlantilla: string;
+    traspasoCodAuditoriaDef: string;
 
-  fechaConfirmacion: Date;
-  fechaConfirmacionDesde: Date;
-  fechaConfirmacionHasta: Date;
+    fechaPresentacion: Date;
+    fechaRecibosPrimeros: Date;
+    fechaRecibosRecurrentes: Date;
+    fechaRecibosCOR1: Date;
+    fechaRecibosB2B: Date;
 
-  // Ficha
-  idProgramacion: string;
-  descripcion: string;
-  nombreAbreviado: string;
-  fechaProgramacion: Date;
-  archivarFact: boolean;
-  usuModificacion: string;
-  fechaModificacion: Date;
-  nombreFichero: string;
-  logError: string;
-  logTraspaso: string;
-  traspasoFacturas: boolean;
-  generaPDF: boolean;
-  envio: boolean;
-  idTipoPlantillaMail: string;
-  tipoPlantillaMail: string;
-  traspasoPlantilla: string;
-  traspasoCodAuditoriaDef: string;
+    idModeloFactura: string;
+    idModeloRectificativa: string;
+    modeloFactura: string;
+    modeloRectificativa: string;
 
-  fechaPresentacion: Date;
-  fechaRecibosPrimeros: Date;
-  fechaRecibosRecurrentes: Date;
-  fechaRecibosCOR1: Date;
-  fechaRecibosB2B: Date;
-
-  idModeloFactura: string;
-  idModeloRectificativa: string;
-  modeloFactura: string;
-  modeloRectificativa: string;
-
-  // Distingue la ficha de datos generales
-  esDatosGenerales: boolean;
-
-  constructor() { }
-}
+    // Distingue la ficha de datos generales
+    esDatosGenerales: boolean;
+  
+    constructor() { }
+  }

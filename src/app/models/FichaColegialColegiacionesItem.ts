@@ -9,5 +9,5 @@ export class FichaColegialColegiacionesItem {
   telFijo: String;
   telMovil: String;
 
-  constructor() { }
+  constructor() {}
 }

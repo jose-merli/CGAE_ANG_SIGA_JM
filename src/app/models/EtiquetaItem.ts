@@ -4,5 +4,5 @@ export class EtiquetaItem {
   idLenguajeBuscar: String;
   idLenguajeTraducir: String;
   descripcionTraduccion: String;
-  constructor() { }
+  constructor() {}
 }

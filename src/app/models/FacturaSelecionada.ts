@@ -1,8 +1,8 @@
 export class FacturaSeleccionada {
-  estado: string;
-  formaPago: string;
-  numFacturas: number;
-  total: number;
-  totalPendiente: number;
-  constructor() { }
-}
+    estado: string;
+    formaPago: string;
+    numFacturas: number;
+    total:number;
+    totalPendiente:number;
+    constructor() {}
+  }

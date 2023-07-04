@@ -6,5 +6,5 @@ export class CalendarObject {
   error: Error;
   calendarItems: CalendarItem[] = [];
   calendar: CalendarItem;
-  constructor() { }
+  constructor() {}
 }

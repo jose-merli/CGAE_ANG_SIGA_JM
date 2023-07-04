@@ -8,9 +8,9 @@ describe('ComisionesCargosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComisionesCargosComponent]
+      declarations: [ ComisionesCargosComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

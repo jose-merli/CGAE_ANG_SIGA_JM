@@ -33,7 +33,7 @@ export let endpoints_EJG: any = {
     gestionejg_comboCDetencion: "ejg/gestion-ejg/comboCDetencion",
     gestionejg_comboTipoencalidad: "ejg/gestion-ejg/comboTipoencalidad",
     gestionejg_comboDelitos: "ejg/gestion-ejg/comboDelitos",
-
+    
     //Busqueda EJG
     gestionejg_descargarExpedientesJG: "ejg/gestion-ejg/descargarExpedientesJG",
     filtrosejg_anadirExpedienteARemesa: "ejg/filtros-ejg/anadirExpedienteARemesa",
@@ -47,7 +47,7 @@ export let endpoints_EJG: any = {
     gestionejg_getDatosExpInsos: "ejg/gestion-ejg/getDatosExpInsos",
 
     //Servicios de tramitacion
-    gestionejg_guardarServiciosTramitacion: "ejg/gestion-ejg/guardarServiciosTramitacion",
+    gestionejg_guardarServiciosTramitacion:"ejg/gestion-ejg/guardarServiciosTramitacion",
 
     //Unidad Familiar
     gestionejg_borrarFamiliar: "ejg/gestion-ejg/borrarFamiliar",
@@ -111,7 +111,7 @@ export let endpoints_EJG: any = {
 
     //REGTEL
     gestionejg_searchListDocEjg: 'ejg/gestion-ejg/searchListDocEjg',
-    gestionejg_insertCollectionEjg: 'ejg/gestion-ejg/insertCollectionEjg',
+	gestionejg_insertCollectionEjg: 'ejg/gestion-ejg/insertCollectionEjg',
 
     //comunicaciones
     gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones",

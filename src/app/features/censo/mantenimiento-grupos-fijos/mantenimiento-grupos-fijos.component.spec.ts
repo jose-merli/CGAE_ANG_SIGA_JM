@@ -8,9 +8,9 @@ describe('MantenimientoGruposFijosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MantenimientoGruposFijosComponent]
+      declarations: [ MantenimientoGruposFijosComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

@@ -194,7 +194,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
         },
         () => {
           this.progressSpinner = false;
-          setTimeout(() => {
+          setTimeout(()=>{
             this.commonsService.scrollTablaFoco('tablaFoco');
           }, 5);
         }

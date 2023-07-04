@@ -5,5 +5,5 @@ export class DatosRetencionesObject {
   idPersona: String;
   retencionesItemList: DatosRetencionesItem[] = [];
   activo: boolean;
-  constructor() { }
+  constructor() {}
 }

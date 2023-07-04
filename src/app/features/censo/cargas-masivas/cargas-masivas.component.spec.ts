@@ -8,9 +8,9 @@ describe('CargasMasivasComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CargasMasivasComponent]
+      declarations: [ CargasMasivasComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

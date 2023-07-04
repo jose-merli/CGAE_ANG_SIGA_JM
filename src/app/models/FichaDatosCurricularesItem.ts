@@ -20,5 +20,5 @@ export class FichaDatosCurricularesItem {
   motivo: string;
   certificado: string;
   isLetrado: string;
-  constructor() { }
+  constructor() {}
 }

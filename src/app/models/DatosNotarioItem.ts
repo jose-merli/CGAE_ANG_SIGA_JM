@@ -15,5 +15,5 @@ export class DatosNotarioItem {
   status: String;
   idPersonaAsociar: String;
   tipoIdentificacion: String;
-  constructor() { }
+  constructor() {}
 }

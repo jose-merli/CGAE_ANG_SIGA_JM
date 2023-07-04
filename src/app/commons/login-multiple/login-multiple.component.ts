@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { LoginCombo } from './login-multiple.combo';
 import { ListboxModule } from 'primeng/listbox';
 import { ButtonModule } from 'primeng/button';
-import { LoginMultipleItem } from '../../models/LoginMultipleItem';
+import { LoginMultipleItem} from '../../models/LoginMultipleItem';
 
 @Component({
 	selector: 'app-login-multiple',
@@ -21,8 +21,8 @@ export class LoginMultipleComponent implements OnInit {
 	isEntrar: boolean = true;
 	//tmpLoginMPerfil: String[];
 	tmpLoginRol: String[];
-	body: LoginMultipleItem = new LoginMultipleItem();
-	bodySearch: LoginMultipleItem = new LoginMultipleItem();
+	body : LoginMultipleItem = new LoginMultipleItem();
+	bodySearch : LoginMultipleItem = new LoginMultipleItem();
 	entorno: String;
 	ocultar: boolean = false;
 	progressSpinner: boolean = false;
@@ -63,7 +63,7 @@ export class LoginMultipleComponent implements OnInit {
 		//     }
 		//   }
 		// );
-
+		
 		this.ocultar = true;
 
 		this.sigaServices.getBackend("institucionesUsuario").subscribe(n => {
@@ -77,22 +77,22 @@ export class LoginMultipleComponent implements OnInit {
 			} else {
 				/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 					para poder filtrar el dato con o sin estos caracteres*/
-				this.instituciones.map(e => {
-					let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-					let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-					let i;
-					let x;
-					for (i = 0; i < e.label.length; i++) {
-						if ((x = accents.indexOf(e.label[i])) != -1) {
-							e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-							return e.labelSinTilde;
+					this.instituciones.map(e => {
+						let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+						let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+						let i;
+						let x;
+						for (i = 0; i < e.label.length; i++) {
+							if ((x = accents.indexOf(e.label[i])) != -1) {
+								e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+								return e.labelSinTilde;
+							}
 						}
-					}
-				});
-				//this.progressSpinner = false;
-				this.form.controls["location"].setValue(this.instituciones[0].value);
-				this.form.controls['tmpLoginInstitucion'].setValue(this.instituciones[0].value);
-				this.onChangeInstitucion(this.instituciones[0]);
+					});
+					//this.progressSpinner = false;
+					this.form.controls["location"].setValue(this.instituciones[0].value);
+					this.form.controls['tmpLoginInstitucion'].setValue(this.instituciones[0].value);
+					this.onChangeInstitucion(this.instituciones[0]);
 			}
 		});
 		this.ocultar = true;
@@ -106,7 +106,7 @@ export class LoginMultipleComponent implements OnInit {
 			rol: new FormControl(""),
 			posMenu: new FormControl(0)
 		});
-
+		
 		this.form.controls["tmpLoginInstitucion"].valueChanges.subscribe(
 			newValue => {
 				this.form.controls["location"].setValue(newValue);
@@ -149,7 +149,7 @@ export class LoginMultipleComponent implements OnInit {
 				}
 			}
 		);
-
+		
 	}
 
 	onChangeInstitucion(newValue) {
@@ -170,10 +170,10 @@ export class LoginMultipleComponent implements OnInit {
 	}
 	onChangeRol(newValue) {
 		this.form.controls['tmpLoginRol'].setValue(newValue.value);
-		if (this.instituciones.length == 1 && this.roles.length == 1) {
+		if(this.instituciones.length==1 && this.roles.length==1){
 			this.form.controls["rol"].setValue(newValue.value);
 			this.submit();
-		} else {
+		}else{
 			this.progressSpinner = false;
 		}
 	}

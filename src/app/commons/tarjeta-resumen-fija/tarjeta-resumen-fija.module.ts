@@ -18,7 +18,7 @@ import { CheckboxModule } from "primeng/checkbox";
         TableModule,
         GrowlModule,
         CheckboxModule,
-        DropdownModule],
+        DropdownModule ],
     declarations: [
         TarjetaResumenFijaComponent,
     ],

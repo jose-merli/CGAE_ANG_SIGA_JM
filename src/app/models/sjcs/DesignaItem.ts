@@ -29,7 +29,7 @@ export class DesignaItem {
 	idPretension: number;
 	idProcedimientos: String[];
 	idProcedimiento: number;
-	idProcurador: number;
+	idProcurador:number;
 	idTipoDesignaColegios: String[];
 	idTipoDesignaColegio: number;
 	idTurnos: String[];
@@ -84,5 +84,5 @@ export class DesignaItem {
 	idPersona: String;
 	salto: String;
 	error: Error;
-	constructor() { }
-}
+    constructor() { }
+  }

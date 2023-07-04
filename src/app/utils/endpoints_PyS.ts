@@ -38,14 +38,14 @@ export let endpoints_PyS: any = {
     PyS_updatesMovimientosMonedero: "pys/updateMovimientosMonedero",
     PyS_getListaMovimientosMonedero: "pys/getListaMovimientosMonedero",
     PyS_updateServiciosMonedero: "pys/updateServiciosMonedero",
-    PyS_getListaServiciosMonedero: "pys/getListaServiciosMonedero",
+    PyS_getListaServiciosMonedero: "pys/getListaServiciosMonedero", 
     PyS_anadirAnticipoCompra: "pys/anadirAnticipoCompra",
     PyS_liquidarMonederos: "pys/liquidarMonederos",
     PyS_actualizacionColaSuscripcionesPersona: "pys/actualizacionColaSuscripcionesPersona",
     PyS_comboPreciosServPers: "combo/comboPreciosServPers",
     PyS_getSeleccionSerieFacturacion: "facturacionRapidaPyS/getSeleccionSerieFacturacion",
-    //INICIO PRODUCTOS Y SERVICIOS
-
+     //INICIO PRODUCTOS Y SERVICIOS
+  
     //PANTALLA TIPOS PRODUCTOS
     tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
     tiposProductos_searchListadoProductosHistorico: 'pys/listadoTipoProductoHistorico',

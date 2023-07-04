@@ -48,7 +48,7 @@ export class PersistenceService {
     clearFiltrosEJG() {
         sessionStorage.removeItem(this.filtrosEJGName);
     }
-
+    
     setVolverEJG() {
         sessionStorage.setItem(this.volverEJGName, "true");
     }
@@ -194,9 +194,8 @@ export class PersistenceService {
 
     getPermisos() {
         let data = sessionStorage.getItem(this.permisosName);
-        if (data != undefined) {
-            return JSON.parse(data);
-        }
+        if(data != undefined)
+        return JSON.parse(data);
     }
 
     clearPermisos() {

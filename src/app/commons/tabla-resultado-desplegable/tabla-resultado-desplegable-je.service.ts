@@ -8,7 +8,7 @@ export class RowGroup {
   id3: string;
   estadoDesignacion: string;
   estadoEx: string;
-  resolucionDesignacion: String;
+  resolucionDesignacion:String;
 }
 
 export class Row {
@@ -38,10 +38,8 @@ export class TablaResultadoDesplegableJEService {
           "": [
             {
               a1: [
-                {
-                  type: '', value: '', size: '', combo: [{ label: "", value: "" },
-                  { label: "", value: "" }]
-                },
+                { type: '', value: '' , size: '', combo: [{label: "", value: ""},
+                                                  {label: "", value: ""}]},
               ],
               position: 'collapse'
             }
@@ -50,31 +48,29 @@ export class TablaResultadoDesplegableJEService {
           "2": "",
           "estadoDesignacion": "",
           "estadoEx": "",
-          "resolucionDesignacion": ""
+          "resolucionDesignacion":""
         },
 
         {
           "": [
             {
               b1: [
-                {
-                  type: '', value: '', size: '', combo: [{ label: "", value: "" },
-                  { label: "", value: "" }]
-                },
+                { type: '', value: '', size: '' , combo: [{label: "", value: ""},
+                {label: "", value: ""}]},
               ],
               position: 'collapse'
-
+            
             },
           ],
           "1": "",
           "2": "",
           "estadoDesignacion": "",
           "estadoEx": "",
-          "resolucionDesignacion": ""
+          "resolucionDesignacion":""
         },
       ],
     };
-
+  
     resultado = result;
     let rowGroups: RowGroup[] = [];
     resultado.data.forEach((rowGroup, index) => {
@@ -87,7 +83,7 @@ export class TablaResultadoDesplegableJEService {
         Array.from(Object.values(row)[0]).forEach((cell) => {
           let cellObject: Cell = new Cell();
           cellObject.type = cell['type'];
-          if (cell['value'] != null && cell['value'] != 'null') {
+          if (cell['value'] != null && cell['value'] != 'null'){
             cellObject.value = cell['value'];
           } else {
             cellObject.value = '';
@@ -107,7 +103,7 @@ export class TablaResultadoDesplegableJEService {
       rowGroupObject.estadoDesignacion = Object.keys(rowGroup)[3];
       rowGroupObject.estadoEx = Object.keys(rowGroup)[4];
       rowGroupObject.resolucionDesignacion = Object.keys(rowGroup)[5];
-
+      
       rowGroupObject.rows = rows;
 
       rowGroups.push(rowGroupObject);

@@ -60,5 +60,5 @@ export class ColegiadoItem {
 
   subTipoCV1: string;
   subTipoCV2: string;
-  constructor() { }
+  constructor() {}
 }

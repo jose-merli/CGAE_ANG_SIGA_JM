@@ -8,9 +8,9 @@ describe('SearchNoColegiadosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SearchNoColegiadosComponent]
+      declarations: [ SearchNoColegiadosComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

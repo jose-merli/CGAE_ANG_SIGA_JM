@@ -62,17 +62,17 @@ export class GuardiaItem {
     fechaValidacion;
     idCalendarioGuardias;
     idCalendarioProgramado;
-    orden: string;
-    idListaGuardia: string;
+    orden : string;
+    idListaGuardia : string;
     tipoGuardia;
     idConjuntoGuardia;
     numMinimoSimple;
-    simpleOImporteIndividual;
-    naPartir;
-    maximo;
-    porDia;
+	simpleOImporteIndividual;
+	naPartir;
+	maximo;
+	porDia;
     nDias;
-    observacionesAnulacion: string;
+    observacionesAnulacion:string;
     constructor() { }
 
 }

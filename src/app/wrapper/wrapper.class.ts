@@ -74,7 +74,7 @@ export class SigaWrapper {
   // );
   // }
 
-  createInstanceFromObject<T>(objType: { new(): T }, input: any) {
+  createInstanceFromObject<T>(objType: { new (): T }, input: any) {
     const newObj = new objType();
 
     for (const prop in input) {

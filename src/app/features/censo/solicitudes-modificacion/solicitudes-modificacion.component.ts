@@ -611,7 +611,7 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   onSelectRow(selectedDatos) {
     this.selectedDatos = selectedDatos;
-
+    
     if (selectedDatos[0].especifica == "1") {
       sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
       sessionStorage.setItem("search", JSON.stringify(this.data));

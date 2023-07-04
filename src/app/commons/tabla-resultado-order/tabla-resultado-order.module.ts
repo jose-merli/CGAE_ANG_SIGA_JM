@@ -1,5 +1,5 @@
 
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';  
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSortModule } from "@angular/material/sort";
 import { FormsModule } from "@angular/forms";
@@ -12,31 +12,31 @@ import { FechaModule } from '../fecha/fecha.module';
 import { PaginadorModule } from '../paginador/paginador.module';
 import { TableModule } from 'primeng/table';
 @NgModule({
-  declarations: [TablaResultadoOrderComponent],
-  imports: [
-    CommonModule,
-    DataTableModule,
-    PaginatorModule,
-    InputTextModule,
-    ButtonModule,
-    DropdownModule,
-    CheckboxModule,
-    FormsModule,
-    GrowlModule,
-    PipeTranslationModule,
-    SelectorModule,
-    MatSortModule,
-    FormsModule,
-    FechaModule,
-    PaginadorModule,
-    CheckboxModule,
-    ConfirmDialogModule,
-    TableModule
+    declarations: [TablaResultadoOrderComponent],
+    imports: [
+        CommonModule,
+        DataTableModule,
+        PaginatorModule,
+        InputTextModule,
+        ButtonModule,
+        DropdownModule,
+        CheckboxModule,
+        FormsModule,
+        GrowlModule,
+        PipeTranslationModule,
+        SelectorModule,
+        MatSortModule,
+        FormsModule,
+        FechaModule,
+        PaginadorModule,
+        CheckboxModule,
+        ConfirmDialogModule,
+        TableModule
+        
+    ],
 
-  ],
-
-  providers: [],
-  exports: [
+    providers: [],
+	  exports: [
     TablaResultadoOrderComponent,
   ]
 })

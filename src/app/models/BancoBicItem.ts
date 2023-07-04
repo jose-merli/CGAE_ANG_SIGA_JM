@@ -3,5 +3,5 @@ export class BancoBicItem {
   bic: String;
   bicEspanol: String;
 
-  constructor() { }
+  constructor() {}
 }

@@ -1,6 +1,6 @@
 export class ColegiadosSJCSItem {
-
-	idProcurador: string;
+	
+  	idProcurador: string;
 	nombre: string;
 	apellidos: string;
 	nColegiado: string;
@@ -31,5 +31,5 @@ export class ColegiadosSJCSItem {
 	tieneGuardia: string;
 	tieneTurno: string;
 
-	constructor() { }
+  constructor() { }
 }

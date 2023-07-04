@@ -3,5 +3,5 @@ export class CatalogoDeleteRequestDto {
   tabla: String;
   local: String;
   idInstitucion: String;
-  constructor() { }
+  constructor() {}
 }

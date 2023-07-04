@@ -1,7 +1,7 @@
 import { ListaDescuentosPeticionItem } from "./ListaDescuentosPeticionItem";
 
 export class ListaDescuentosPeticionDTO {
-
-	listaDescuentosPeticionItems: ListaDescuentosPeticionItem[];
+	
+	listaDescuentosPeticionItems: ListaDescuentosPeticionItem[] ;
 	error: Error;
 }

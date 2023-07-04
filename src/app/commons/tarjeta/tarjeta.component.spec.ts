@@ -8,9 +8,9 @@ describe('TarjetaMigueComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [TarjetaComponent]
+      declarations: [ TarjetaComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

@@ -14,7 +14,7 @@ import "rxjs/add/operator/switchMap";
 
 @Pipe({ name: "image" })
 export class ImagePipe implements PipeTransform {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   transform(url: string): Observable<Blob> {
     //const options = {
@@ -38,7 +38,7 @@ export class ImagePipe implements PipeTransform {
           return Observable.create(observer => {
             const reader = new FileReader();
             reader.readAsDataURL(blob); // convert blob to base64
-            reader.onloadend = function () {
+            reader.onloadend = function() {
               observer.next(reader.result); // emit the base64 string result
             };
           });

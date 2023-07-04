@@ -10,7 +10,7 @@ export const procesos_oficio: any = {
     tarjetaListadoInscripciones: "93M",
     tarjetaPosicionCola: "9S5",
     tarjetaColaGuardiaTurnos: "91K",
-    CambioNumDesigna: "931",
+    CambioNumDesigna:"931",
     //FIN TURNOS
 
 

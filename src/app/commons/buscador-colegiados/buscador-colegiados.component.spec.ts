@@ -8,9 +8,9 @@ describe('BuscadorColegiadosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BuscadorColegiadosComponent]
+      declarations: [ BuscadorColegiadosComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

@@ -19,7 +19,7 @@ export const DNI_VALIDATOR: any = {
   providers: [DNI_VALIDATOR]
 })
 export class DniValidator implements Validator {
-  constructor(private validators: CustomValidators) { }
+  constructor(private validators: CustomValidators) {}
 
   validate(control: AbstractControl) {
     return this.validators.dni(control);

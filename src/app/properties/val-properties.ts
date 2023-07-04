@@ -31,7 +31,7 @@ export const TIPOUSUARIOBEAN: Map<string, Array<string>> = new Map([
 export const TIPOUSUARIO_VALIDATIONFIELDSCONTROL: Map<
   string,
   boolean
-> = new Map([["cdgoTipUsu", false], ["txtoTipUsu", false]]);
+  > = new Map([["cdgoTipUsu", false], ["txtoTipUsu", false]]);
 
 export const TIPOFUNCBEAN: Map<string, Array<string>> = new Map([
   ["tipoFunc", ["notNullOrEmpty"]],
@@ -125,12 +125,12 @@ export const TRAINSTATUSBEAN: Map<string, Array<string>> = new Map([
 export const TRAINS_STATUS_VALIDATIONFIELDSCONTROL: Map<
   string,
   boolean
-> = new Map([
-  ["cdgoEstadODS", false],
-  ["cdgoTipoAcce", false],
-  ["txtoDesc", false],
-  ["txtoNombre", false]
-]);
+  > = new Map([
+    ["cdgoEstadODS", false],
+    ["cdgoTipoAcce", false],
+    ["txtoDesc", false],
+    ["txtoNombre", false]
+  ]);
 
 export const EQUIPMENTRELATIONSHIPBEAN: Map<string, Array<string>> = new Map([
   ["cdgoTipoTren", ["notNullOrEmpty"]],
@@ -160,7 +160,7 @@ export const SEATPREFERENCEBEAN: Map<string, Array<string>> = new Map([
 export const SEAT_PREFS_VALIDATIONFIELDSCONTROL: Map<
   string,
   boolean
-> = new Map([["cdgoPreferenc", false], ["txtoDesc", false]]);
+  > = new Map([["cdgoPreferenc", false], ["txtoDesc", false]]);
 
 export const TRAINRELATIONSHIPBEAN: Map<string, Array<string>> = new Map([
   ["cdgoTrenNSK", ["notNullOrEmpty"]],
@@ -171,11 +171,11 @@ export const TRAINRELATIONSHIPBEAN: Map<string, Array<string>> = new Map([
 export const TRAINS_REL_VALIDATIONFIELDSCONTROL: Map<
   string,
   boolean
-> = new Map([
-  ["cdgoTrenNSK", false],
-  ["cdgoTrenRenf", false],
-  ["cdgoTipTRen", false]
-]);
+  > = new Map([
+    ["cdgoTrenNSK", false],
+    ["cdgoTrenRenf", false],
+    ["cdgoTipTRen", false]
+  ]);
 
 export const TRAINROUTENSKBEAN: Map<string, Array<string>> = new Map([
   ["cdgoEstaDest", ["notNullOrEmpty"]],
@@ -191,16 +191,16 @@ export const TRAINROUTENSKBEAN: Map<string, Array<string>> = new Map([
 export const TRAINS_ROUTE_VALIDATIONFIELDSCONTROL: Map<
   string,
   boolean
-> = new Map([
-  ["cdgoEstaDest", false],
-  ["cdgoEstaOrig", false],
-  ["cdgoTipoTren", false],
-  ["cdgoTrenNSK", false],
-  ["txtoCriterio", false],
-  ["txtoRuta", false],
-  ["txtoSentido", false],
-  ["txtoTime3Env", false]
-]);
+  > = new Map([
+    ["cdgoEstaDest", false],
+    ["cdgoEstaOrig", false],
+    ["cdgoTipoTren", false],
+    ["cdgoTrenNSK", false],
+    ["txtoCriterio", false],
+    ["txtoRuta", false],
+    ["txtoSentido", false],
+    ["txtoTime3Env", false]
+  ]);
 
 export const FULL_OCCU_BEAN: Map<string, Array<string>> = new Map([
   ["date", ["notNullOrEmpty"]],
@@ -758,7 +758,7 @@ export const USER_VAL_MSG: Map<string, Map<string, string>> = new Map([
 export const MATRIX_REL: Map<
   Map<string, any[]>,
   Map<string, Map<string, string>>
-> = new Map([
-  // Bean structures
-  [USER_VALIDATIONS, USER_VAL_MSG]
-]);
+  > = new Map([
+    // Bean structures
+    [USER_VALIDATIONS, USER_VAL_MSG]
+  ]);

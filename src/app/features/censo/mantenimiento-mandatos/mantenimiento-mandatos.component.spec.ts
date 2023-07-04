@@ -8,9 +8,9 @@ describe('MantenimientoMandatosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MantenimientoMandatosComponent]
+      declarations: [ MantenimientoMandatosComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

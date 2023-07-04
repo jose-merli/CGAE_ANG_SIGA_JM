@@ -42,7 +42,7 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_deleteConceptosFac: "facturacionsjcs/deleteConceptosFac",
     facturacionsjcs_datospagos: "facturacionsjcs/datospagos",
     facturacionsjcs_numApuntes: "facturacionsjcs/numApuntes",
-    factuarcionsjscs_buscarAbonos: "facturacionsjcs/buscarAbonosSJCS",
+    factuarcionsjscs_buscarAbonos : "facturacionsjcs/buscarAbonosSJCS",
 
     facturacionsjcs_getAgrupacionDeTurnosPorTurno: "facturacionsjcs/getAgrupacionDeTurnosPorTurno",
     facturacionsjcs_descargarLogFacturacion: "facturacionsjcs/getFicheroErroresFacturacion",
@@ -145,5 +145,5 @@ export let endpoints_facturacionsjcs: any = {
     certificaciones_subirFicheroCAM: "certificaciones/subirFicheroCAM",
     certificaciones_descargaInformeCAM: "certificaciones/descargaInformeCAM",
     certificaciones_perteneceInstitucionCAMoXunta: "certificaciones/perteneceInstitucionCAMoXunta",
-    certificaciones_buscarErroresCAM: "certificaciones/buscarErroresCAM",
+    certificaciones_buscarErroresCAM:"certificaciones/buscarErroresCAM",
 }

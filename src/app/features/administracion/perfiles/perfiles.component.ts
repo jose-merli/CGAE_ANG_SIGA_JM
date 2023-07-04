@@ -155,9 +155,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
-    if (this.numSelected > 1) {
+    if(this.numSelected > 1) {
       this.isforNew = false;
-    } else {
+    }else{
       this.isforNew = true;
     }
   }
@@ -172,7 +172,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
         data => {
-
+           
 
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
@@ -227,7 +227,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     );
   }
   paginate(event) {
-
+     
   }
 
   checkAcceso() {
@@ -260,8 +260,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
 
   onChangeDrop(event, dato) {
-
-
+     
+     
   }
   rolDefecto(event, dato) {
     let item = new PerfilItem();
@@ -305,7 +305,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     }
   }
   editRol(event, dato) {
-
+     
     this.datos.forEach((value: PerfilItem, key: number) => {
       if (value.idGrupo == dato.idGrupo) {
         value.editar = true;
@@ -527,9 +527,9 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   irEditarUsuario(id) {
     this.numSelected = id.length;
-    if (id.length > 1) {
+    if(id.length > 1){
       this.selectMultiple = true;
-    } else {
+    }else{
       this.selectMultiple = false;
     }
     if (!this.selectMultiple) {
@@ -652,7 +652,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
         data => {
-
+           
 
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
@@ -700,7 +700,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
   setItalic(dato) {
     this.selectedDatos = [];
-    this.numSelected = 0;
+      this.numSelected = 0;
     if (dato.fechaBaja == null) return false;
     else return true;
   }
@@ -722,7 +722,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
   focusInputField(dato) {
     setTimeout(() => {
-      this.someDropdown.filterInputChild.nativeElement.focus();
+      this.someDropdown.filterInputChild.nativeElement.focus();  
     }, 300);
   }
 

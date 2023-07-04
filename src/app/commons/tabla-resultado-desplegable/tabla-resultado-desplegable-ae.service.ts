@@ -13,8 +13,8 @@ export class Cell {
   type: string;
   value: any;
   combo: Combo[];
-  size: number;
-  showTime: boolean;
+  size : number;
+  showTime : boolean;
 }
 
 export class Combo {
@@ -140,13 +140,13 @@ export class TablaResultadoDesplegableAEService {
           let cellObject: Cell = new Cell();
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];
-          if (cell['combo'] != null && cell['combo'] != undefined) {
+          if(cell['combo'] != null && cell['combo'] != undefined){
             cellObject.combo = cell['combo'];
           }
-          if (cell['showTime']) {
+          if(cell['showTime']){
             cellObject.showTime = cell['showTime'];
           }
-          if (cell['size']) {
+          if(cell['size']){
             cellObject.size = cell['size'];
           }
           cells.push(cellObject);

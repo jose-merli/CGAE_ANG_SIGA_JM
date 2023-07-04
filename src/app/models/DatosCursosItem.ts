@@ -49,5 +49,5 @@ export class DatosCursosItem {
   aviso: string;
   numTemas: string;
 
-  constructor() { }
+  constructor() {}
 }

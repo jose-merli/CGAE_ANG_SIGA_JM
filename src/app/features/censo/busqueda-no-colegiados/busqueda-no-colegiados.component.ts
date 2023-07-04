@@ -544,7 +544,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
-            setTimeout(() => {
+            setTimeout(()=>{
               this.commonsService.scrollTablaFoco('tablaFoco');
             }, 5);
           }
@@ -1038,7 +1038,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   focusInputField() {
     setTimeout(() => {
-      this.someDropdown.filterInputChild.nativeElement.focus();
+      this.someDropdown.filterInputChild.nativeElement.focus();  
     }, 300);
   }
 }

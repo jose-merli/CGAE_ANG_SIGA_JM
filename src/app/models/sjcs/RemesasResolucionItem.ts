@@ -13,7 +13,7 @@ export class RemesasResolucionItem {
     numRemesaNumero?: string;
     observaciones?: string;
     numCompleto?: string;
-    log?: number;
-    idTipoRemesa?: number;
+    log ?: number;
+    idTipoRemesa ?: number;
     constructor() { }
 }

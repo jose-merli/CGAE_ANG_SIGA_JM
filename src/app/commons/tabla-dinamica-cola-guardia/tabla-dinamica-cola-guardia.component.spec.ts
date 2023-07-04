@@ -8,9 +8,9 @@ describe('TablaDinamicaColaGuardiaComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [TablaDinamicaColaGuardiaComponent]
+      declarations: [ TablaDinamicaColaGuardiaComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

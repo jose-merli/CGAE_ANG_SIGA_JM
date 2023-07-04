@@ -1,6 +1,6 @@
 export class FilaHistoricoPeticionItem {
-
-    fecha: Date;
-    estado: String;
+    
+    fecha:Date;
+    estado:String;
     constructor() { }
 }

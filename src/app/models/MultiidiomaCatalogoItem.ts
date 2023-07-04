@@ -8,5 +8,5 @@ export class MultiidiomaCatalogoItem {
   idRecursoAlias: String;
   local: String;
   editar: boolean;
-  constructor() { }
+  constructor() {}
 }

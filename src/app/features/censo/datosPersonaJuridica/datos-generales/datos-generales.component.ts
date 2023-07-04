@@ -82,7 +82,7 @@ export class DatosGenerales implements OnInit {
   usuarioBody: any;
   edadCalculada: String;
   textSelected: String = "{0} etiquetas seleccionados";
-  idPersona: string;
+  idPersona: String;
   tipoPersonaJuridica: String;
   datos: any[];
   selectedTipo: any;

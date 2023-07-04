@@ -9,5 +9,5 @@ export class SolModifDatosBancariosItem {
   numeroCuenta: String;
   titular: String;
 
-  constructor() { }
+  constructor() {}
 }

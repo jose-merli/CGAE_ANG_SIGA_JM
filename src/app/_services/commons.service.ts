@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Http } from "@angular/http";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
 import {
@@ -122,7 +123,7 @@ export class CommonsService {
 
 
   arregloTildesCombo(combo) {
-
+   
     combo.map(e => {
       let accents =
         "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
@@ -138,13 +139,13 @@ export class CommonsService {
       }
     });
   }
-
-
-
-
+          
+          
+         
+        
 
   arregloTildesContrariaCombo(combo) {
-
+    
     combo.map(e => {
       let accents =
         "ÁÉÍÓÚáéíóú";
@@ -160,12 +161,12 @@ export class CommonsService {
       }
     });
   }
-
-
-
+          
+          
+         
 
   getLetrado = () => {
-    let isLetrado: ComboItem;
+		let isLetrado: ComboItem;
     let respuesta = undefined;
 
     respuesta = new Promise((resolve, reject) => {
@@ -179,12 +180,13 @@ export class CommonsService {
           }
         },
         (err) => {
+          //console.log(err);
           reject(undefined);
         }
-      );
+        );
     });
     return respuesta;
-  }
+	}
 
   checkAcceso = (idProceso) => {
     let activacionEditar = undefined;
@@ -201,6 +203,7 @@ export class CommonsService {
           derechoAcceso = permisosArray[0].derechoacceso;
         },
         err => {
+          //console.log(err);
           reject(undefined);
         },
         () => {
@@ -231,21 +234,22 @@ export class CommonsService {
     }
 
   }
-
+  
   scrollTop() {
     let top = document.getElementById('mainContainer');
     if (top !== null) {
       top.scrollIntoView();
+      top = null;
     }
   }
 
-  isValidPassport(dni: string): boolean {
+  isValidPassport(dni: String): boolean {
     return (
       dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
     );
   }
 
-  isValidNIE(nie: string): boolean {
+  isValidNIE(nie: String): boolean {
     return (
       nie &&
       typeof nie === "string" &&
@@ -253,7 +257,7 @@ export class CommonsService {
     );
   }
 
-  isValidCIF(cif: string): boolean {
+  isValidCIF(cif: String): boolean {
     return (
       cif &&
       typeof cif === "string" &&
@@ -261,7 +265,7 @@ export class CommonsService {
     );
   }
 
-  isValidDNI(dni: string): boolean {
+  isValidDNI(dni: String): boolean {
     return (
       dni &&
       typeof dni === "string" &&
@@ -322,22 +326,22 @@ export class CommonsService {
   }
 
   arreglarFecha(fecha) {
-    let jsonDate = JSON.stringify(fecha);
-    let rawDate = jsonDate.slice(1, -1);
-    if (rawDate.length < 14) {
-      let splitDate = rawDate.split("/");
-      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-      fecha = new Date((arrayDate += "T00:00:00.001Z"));
-    } else {
-      fecha = new Date(rawDate);
-    }
-
-    return fecha;
+		let jsonDate = JSON.stringify(fecha);
+		let rawDate = jsonDate.slice(1, -1);
+		if (rawDate.length < 14) {
+		  let splitDate = rawDate.split("/");
+		  let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+		  fecha = new Date((arrayDate += "T00:00:00.001Z"));
+		} else {
+		  fecha = new Date(rawDate);
+		}
+	
+		return fecha;
   }
 
   getLabelbyFilter(string): string {
     /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-  para poder filtrar el dato con o sin estos caracteres*/
+	para poder filtrar el dato con o sin estos caracteres*/
     let labelSinTilde = string;
     let accents =
       'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
@@ -367,10 +371,11 @@ export class CommonsService {
 
 
 
-  scrollTablaFoco(idFoco) {
+  scrollTablaFoco(idFoco)  {
     let top = document.getElementById(idFoco);
     if (top !== null) {
       top.scrollIntoView();
+      top = null;
     }
   }
 

@@ -3,5 +3,5 @@ export class PermisosPerfilesCalendarItem {
   nombrePerfil: any;
   idCalendario: any;
   derechoacceso: any;
-  constructor() { }
+  constructor() {}
 }

@@ -3,5 +3,5 @@ import { ErrorItem } from "./ErrorItem";
 export class DatosMandatosObject {
   error: ErrorItem;
   mandatosItem: DatosMandatosItem[] = [];
-  constructor() { }
+  constructor() {}
 }

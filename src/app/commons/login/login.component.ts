@@ -38,39 +38,39 @@ export class LoginComponent implements OnInit {
   onSubmit() { }
 
   ngOnInit() {
-    this.progressSpinner = true;
-    this.service.autenticate().subscribe(
-      response => {
-        if (response) {
-          this.progressSpinner = false;
-          sessionStorage.setItem("tipoLogin", "loginDefault");
-          this.router.navigate(["/home"]);
-        } else {
-          this.progressSpinner = false;
-          this.router.navigate(["/landpage"]);
-        }
-      },
-      err => {
-        //console.log(err);
-        if (err.status == 403) {
-          let codError = err.status;
-
-          sessionStorage.setItem("codError", codError);
-          sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
-          this.router.navigate(["/errorAcceso"]);
-          this.progressSpinner = false;
-        }
-        if (err.status == 500) {
-          let codError = err.status;
-
-          sessionStorage.setItem("codError", codError);
-          sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
-          this.router.navigate(["/errorAcceso"]);
-          this.progressSpinner = false;
-        }
-        this.progressSpinner = false;
-      }
-    );
+        this.progressSpinner = true;
+        this.service.autenticate().subscribe(
+          response => {
+            if (response) {
+              this.progressSpinner = false;
+              sessionStorage.setItem("tipoLogin", "loginDefault");
+              this.router.navigate(["/home"]);
+            } else {
+              this.progressSpinner = false;
+              this.router.navigate(["/landpage"]);
+            }
+          },
+          err => {
+            //console.log(err);
+            if (err.status == 403) {
+              let codError = err.status;
+    
+              sessionStorage.setItem("codError", codError);
+              sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
+              this.router.navigate(["/errorAcceso"]);
+              this.progressSpinner = false;
+            }
+             if (err.status == 500) {
+              let codError = err.status;
+    
+              sessionStorage.setItem("codError", codError);
+              sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
+              this.router.navigate(["/errorAcceso"]);
+              this.progressSpinner = false;
+            }
+            this.progressSpinner = false;
+          }
+        );     
   }
 
   submit() {
@@ -93,7 +93,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
           this.progressSpinner = false;
         }
-        if (error.status == 500) {
+         if (error.status == 500) {
           let codError = error.status;
 
           sessionStorage.setItem("codError", codError);

@@ -8,9 +8,9 @@ describe('SolicitudesIncorporacionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SolicitudesIncorporacionComponent]
+      declarations: [ SolicitudesIncorporacionComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

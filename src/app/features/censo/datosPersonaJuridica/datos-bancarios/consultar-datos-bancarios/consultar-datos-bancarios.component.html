@@ -11,9 +11,9 @@
   </div> -->
 
   <div class="header-title">
-    <em class="fa fa-square"></em>
-    <p>{{ 'menu.censo' | translate}} <em class="fa fa-angle-right"></em>
-      {{ migaPan }} <em class="fa fa-angle-right"></em>
+    <i class="fa fa-square"></i>
+    <p>{{ 'menu.censo' | translate}} <i class="fa fa-angle-right"></i>
+      {{ migaPan }} <i class="fa fa-angle-right"></i>
       {{"censo.consultaDatosBancarios.cabecera" | translate}}</p>
   </div>
   <!-- Datos cuenta bancaria -->
@@ -23,7 +23,7 @@
         <div *ngIf="!openFichaCuentaBancaria" class="form-row">
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado" (click)="abrirFichaCuentaBancaria()">
-              <em class="fa fa-credit-card icon-ficha"></em>
+              <i class="fa fa-credit-card icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
@@ -41,18 +41,18 @@
               <label>{{"censo.mutualidad.literal.iban" | translate}}
                 <span>{{ body.iban }}</span>
               </label>
-              <em (click)="abrirFichaCuentaBancaria()"
-                [ngClass]="{ 'fa fa-angle-up': openFichaCuentaBancaria, 'fa fa-angle-down': !openFichaCuentaBancaria} "></em>
+              <i (click)="abrirFichaCuentaBancaria()"
+                [ngClass]="{ 'fa fa-angle-up': openFichaCuentaBancaria, 'fa fa-angle-down': !openFichaCuentaBancaria} "></i>
             </div>
           </div>
         </div>
         <div *ngIf="openFichaCuentaBancaria" (click)="abrirFichaCuentaBancaria()" class="header-ficha-open d-flex justify-content-start align-items-center">
           <div class="img-colegiado" (click)="abrirFichaCuentaBancaria()">
-            <em (click)="abrirFichaCuentaBancaria()" class="fa fa-credit-card icon-ficha"></em>
+            <i (click)="abrirFichaCuentaBancaria()" class="fa fa-credit-card icon-ficha"></i>
           </div>
           <label (click)="abrirFichaCuentaBancaria()"
             class="title-ficha">{{"configuracion.literal.cuentas" | translate}}</label>
-          <em (click)="abrirFichaCuentaBancaria()" class="fa fa-angle-up ml-auto"></em>
+          <i (click)="abrirFichaCuentaBancaria()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
 
@@ -152,7 +152,7 @@
         <div *ngIf="!openFichaDatosMandatos" class="form-row">
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado" (click)="abrirFichaDatosMandatos()">
-              <em class="fa fa-hand-o-right icon-ficha"></em>
+              <i class="fa fa-hand-o-right icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10 ">
@@ -162,18 +162,18 @@
             </div>
             <div class="d-flex justify-content-between">
               <br>
-              <em (click)="abrirFichaDatosMandatos()"
-                [ngClass]="{ 'fa fa-angle-up': openFichaDatosMandatos, 'fa fa-angle-down': !openFichaDatosMandatos} "></em>
+              <i (click)="abrirFichaDatosMandatos()"
+                [ngClass]="{ 'fa fa-angle-up': openFichaDatosMandatos, 'fa fa-angle-down': !openFichaDatosMandatos} "></i>
             </div>
           </div>
         </div>
         <div *ngIf="openFichaDatosMandatos" (click)="abrirFichaDatosMandatos()" class=" header-ficha-open d-flex justify-content-start align-items-center">
           <div class="img-colegiado" (click)="abrirFichaDatosMandatos()">
-            <em (click)="abrirFichaDatosMandatos()" class="fa fa-hand-o-right icon-ficha"></em>
+            <i (click)="abrirFichaDatosMandatos()" class="fa fa-hand-o-right icon-ficha"></i>
           </div>
           <label (click)="abrirFichaDatosMandatos()"
             class="title-ficha">{{"administracion.catalogos.titulo.datos.mandatos" | translate}}</label>
-          <em (click)="abrirFichaDatosMandatos()" class="fa fa-angle-up ml-auto"></em>
+          <i (click)="abrirFichaDatosMandatos()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
 
@@ -319,7 +319,7 @@
         <div *ngIf="!openFichaListadoFicherosAnexos" class="form-row">
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado" (click)="abrirFichaListadoFicherosAnexos()">
-              <em class="fa fa-list-ul icon-ficha"></em>
+              <i class="fa fa-list-ul icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
@@ -329,19 +329,19 @@
             </div>
             <div class="d-flex justify-content-between">
               <br>
-              <em (click)="abrirFichaListadoFicherosAnexos()"
-                [ngClass]="{ 'fa fa-angle-up': openFichaListadoFicherosAnexos, 'fa fa-angle-down': !openFichaListadoFicherosAnexos} "></em>
+              <i (click)="abrirFichaListadoFicherosAnexos()"
+                [ngClass]="{ 'fa fa-angle-up': openFichaListadoFicherosAnexos, 'fa fa-angle-down': !openFichaListadoFicherosAnexos} "></i>
             </div>
           </div>
         </div>
         <div *ngIf="openFichaListadoFicherosAnexos" (click)="abrirFichaListadoFicherosAnexos()"
           class=" header-ficha-open d-flex justify-content-start align-items-center">
           <div class="img-colegiado " (click)="abrirFichaListadoFicherosAnexos()">
-            <em class="fa fa-list-ul icon-ficha"></em>
+            <i class="fa fa-list-ul icon-ficha"></i>
           </div>
           <label (click)="abrirFichaListadoFicherosAnexos()"
             class="title-ficha">{{"censo.fichaCliente.bancos.mandatos.ficheros.listado" | translate}}</label>
-          <em (click)="abrirFichaListadoFicherosAnexos()" class="fa fa-angle-up ml-auto"></em>
+          <i (click)="abrirFichaListadoFicherosAnexos()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
 

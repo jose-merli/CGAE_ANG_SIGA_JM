@@ -5,5 +5,5 @@ export class EnviosMasivosSearchItem {
   fechaProgramacion: Date;
   idEstado: String;
   idEnvio: String;
-  constructor() { }
+  constructor() {}
 }

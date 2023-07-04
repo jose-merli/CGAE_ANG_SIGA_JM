@@ -7,7 +7,7 @@ import { Location } from '@angular/common';
 @Component({
 	selector: 'app-turnoOficio',
 	templateUrl: './turnoOficio.component.html',
-	styleUrls: ['./turnoOficio.component.scss'],
+	styleUrls: [ './turnoOficio.component.scss' ],
 	encapsulation: ViewEncapsulation.None
 })
 export class TurnoOficioComponent implements OnInit {
@@ -30,14 +30,14 @@ export class TurnoOficioComponent implements OnInit {
 			// "%2C" +
 			// sessionStorage.getItem("idInstitucionFichaColegial")  +
 			// "%2CNINGUNO%2C1&filaSelD=1";
-
-			if (sessionStorage.getItem("tipollamada") == "busquedaColegiados") {
+ 
+ 			if(sessionStorage.getItem("tipollamada") == "busquedaColegiados"){
 				this.url = oldsigaServices.getOldSigaUrl('busquedaColegiados');
-			} else if (sessionStorage.getItem("tipollamada") == "busquedaNoColegiado") {
+			 }else if(sessionStorage.getItem("tipollamada") == "busquedaNoColegiado"){
 				this.url = oldsigaServices.getOldSigaUrl('busquedaNoColegiados');
-			} else if (sessionStorage.getItem("tipollamada") == "fichaColegial") {
+			 }else if(sessionStorage.getItem("tipollamada") == "fichaColegial"){
 				this.url = oldsigaServices.getOldSigaUrl('fichaColegial');
-			}
+			 }
 
 			//this.url =JSON.stringify(us)
 			sessionStorage.removeItem('reload');
@@ -48,7 +48,7 @@ export class TurnoOficioComponent implements OnInit {
 				this.url = JSON.parse(sessionStorage.getItem('url'));
 				document.getElementById('noViewContent').className = 'mainFrameWrapper2';
 				document.getElementById('noViewContent').className = 'mainFrameWrapper2';
-				this.router.navigate(['/turnoOficioCenso']);
+				this.router.navigate([ '/turnoOficioCenso' ]);
 			}, 2000);
 		} else {
 			this.url = JSON.parse(sessionStorage.getItem('url'));
@@ -63,8 +63,8 @@ export class TurnoOficioComponent implements OnInit {
 		}
 	}
 
-	ngOnInit() { }
+	ngOnInit() {}
 	volver() {
-		this.router.navigate(['/fichaColegial']);
+		this.router.navigate([ '/fichaColegial' ]);
 	}
 }

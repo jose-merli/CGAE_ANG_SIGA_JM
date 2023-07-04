@@ -19,5 +19,5 @@ export class FormadorCursoItem {
 
   color: string;
   editar: boolean;
-  constructor() { }
+  constructor() {}
 }

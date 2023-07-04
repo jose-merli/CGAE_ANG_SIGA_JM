@@ -3,5 +3,5 @@ import { DatosPersonaEventoItem } from "./DatosPersonaEventoItem";
 export class DatosPersonaEventoObject {
   error: ErrorItem;
   personaEventoItem: DatosPersonaEventoItem[] = [];
-  constructor() { }
+  constructor() {}
 }

@@ -9,12 +9,12 @@ export class DocushareItem {
   sizeKB: String;
   summary: String;
   originalFilename: String;
-  idPersona: String;
+  idPersona:String;
   parent: String;
   idTipoEjg: String;
-  anio: String;
-  numero: String;
-  constructor() { }
+	anio: String;
+	numero: String;
+  constructor() {}
 }
 // export enum DocuShareTipo {
 //   COLLECTION,

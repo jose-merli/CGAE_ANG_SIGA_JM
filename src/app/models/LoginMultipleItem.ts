@@ -3,5 +3,5 @@ export class LoginMultipleItem {
   rol: String;
   Perfil: String;
 
-  constructor() { }
+  constructor() {}
 }

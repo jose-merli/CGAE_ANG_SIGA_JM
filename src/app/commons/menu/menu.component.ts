@@ -67,12 +67,12 @@ export class MenuComponent implements OnInit {
     var currentRoute = this.router.url;
     this.encontrado = false;
     //Si el booleano de vieneDeFichaJuzgado está en true y la ruta es la de módulos
-    if (sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "maestrosModulos") {
+    if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "maestrosModulos"){
       this.encontrado = false;
     }
-    else if (sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "mantenimientoJuzgados") {
+    else if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "mantenimientoJuzgados"){
       this.encontrado = true;
-    } else if (currentRoute == ('/' + ruta)) {
+    }else if (currentRoute == ('/' + ruta)) {
       this.encontrado = true;
     }
     return currentRoute === ruta || this.encontrado;
@@ -83,10 +83,10 @@ export class MenuComponent implements OnInit {
 
   navigateTo(ruta) {
     let keyConfirmation = "confirmacionGuardarJustificacionExpress";
-    if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda") == null
-      && sessionStorage.getItem('rowIdsToUpdate') != null
-      && sessionStorage.getItem('rowIdsToUpdate') != 'null'
-      && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
+    if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda") == null 
+        && sessionStorage.getItem('rowIdsToUpdate') != null 
+          && sessionStorage.getItem('rowIdsToUpdate') != 'null' 
+            && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
       //console.log('if')
       this.confirmationService.confirm({
         key: keyConfirmation,
@@ -177,12 +177,12 @@ export class MenuComponent implements OnInit {
     this.showChildOfChild = false;
   }
 
-  eliminarOrigenNav() {
-    let rutasTemporales = ["contrariosEJG", "asistenciaAsistido", "contrarios", "datosFamiliares", "interesados", "origin"];
+  eliminarOrigenNav(){
+    let rutasTemporales = ["contrariosEJG", "asistenciaAsistido","contrarios","datosFamiliares","interesados","origin"];
 
     for (let index = 0; index < rutasTemporales.length; index++) {
       sessionStorage.removeItem(rutasTemporales[index]);
     }
-
+    
   }
 }

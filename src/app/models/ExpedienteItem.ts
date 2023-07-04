@@ -2,22 +2,23 @@ import { DocumentacionAsistenciaItem } from "./guardia/DocumentacionAsistenciaIt
 import { HistoricoExpedienteItem } from "./HistoricoExpedienteItem";
 
 export class ExpedienteItem {
-  idExpedienteEXEA: string;
-  idTipoExpediente: string;
-  anioExpediente: string;
+  idExpedienteEXEA : string;
+  idTipoExpediente : string;
+  anioExpediente : string;
   tipoExpediente: string;
   numExpediente: string;
   estadoExpediente: string;
   fechaApertura: string;
   relacion: string;
-  idInstitucionTipoExpediente: string;
-  descInstitucion: string;
-  documentos: DocumentacionAsistenciaItem[];
-  hitos: HistoricoExpedienteItem[];
-  numRegistro: string;
-  fechaRegistro: string;
+  idInstitucionTipoExpediente : string;
+  descInstitucion : string;
+  documentos : DocumentacionAsistenciaItem [];
+  hitos : HistoricoExpedienteItem [];
+  numRegistro : string;
+  fechaRegistro : string;
   exea: boolean;
-  titular: string;
-  idFase: string;
-  constructor() { }
+  titular : string;
+  idFase : string;
+  constructor(){}
 }
+  

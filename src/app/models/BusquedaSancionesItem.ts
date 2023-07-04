@@ -63,9 +63,9 @@ export class BusquedaSancionesItem {
 
   tipoFecha: String;
 
-  numExpediente: String;
+  numExpediente : String;
 
   restablecer: boolean;
 
-  constructor() { }
+  constructor() {}
 }

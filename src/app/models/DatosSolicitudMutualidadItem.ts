@@ -64,5 +64,5 @@ export class DatosSolicitudMutualidadItem {
   estado: String;
   estadomutualista: String;
 
-  constructor() { }
+  constructor() {}
 }

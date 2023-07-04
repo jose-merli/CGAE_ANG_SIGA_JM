@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ParametroRequestDto } from '../../models/ParametroRequestDto';
 import { SigaServices } from '../../_services/siga.service';
-
+ 
 @Component({
   selector: 'app-selector',
   templateUrl: './selector.component.html',
@@ -18,93 +18,93 @@ export class SelectorComponent implements OnInit {
   @Output() busquedaProcedimiento = new EventEmitter<boolean>();
   @Output() busquedaModulo = new EventEmitter<boolean>();
   @Output() value = new EventEmitter<any>();
-  opcionSeleccionado: [number] = [0];
+  opcionSeleccionado: [number]  = [0];
   verSeleccion: [number];
   nuevaDesigna: any;
   disable: boolean;
   textoJuzgado: any;
   textoProcedimiento: any;
-  textoModulo: any;
+  textoModulo:any;
   progressSpinner: boolean = false;
-
+  
   constructor(private sigaServices: SigaServices) { }
-
+ 
   ngOnInit(): void {
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     // if(this.selector.nombre == "Estado" && !this.nuevaDesigna){
-    if (this.selector.nombre == "Estado") {
+    if(this.selector.nombre == "Estado"){
       this.textoVisible = this.selector.opciones[0].label;
-      if (this.textoVisible == "Activo") {
-        this.selector.opciones = [
-          { label: this.selector.opciones[0].label, value: 'V' },
-          { label: 'Finalizado', value: 'F' },
-          { label: 'Anulada', value: 'A' }];
-      } else if (this.textoVisible == "Finalizado") {
-        this.selector.opciones = [
-          { label: 'Activo', value: 'V' },
-          { label: this.selector.opciones[0].label, value: 'F' },
-          { label: 'Anulada', value: 'A' }];
-      } else if (this.textoVisible == "Anulada") {
-        this.selector.opciones = [
-          { label: 'Activo', value: 'V' },
-          { label: 'Finalizado', value: 'F' },
-          { label: this.selector.opciones[0].label, value: 'A' }];
+      if(this.textoVisible == "Activo"){
+        this.selector.opciones =[ 
+          {label:this.selector.opciones[0].label, value:'V'},
+          {label:'Finalizado', value:'F'},
+          {label:'Anulada', value:'A'}];
+      }else if(this.textoVisible == "Finalizado"){
+        this.selector.opciones =[ 
+          {label:'Activo', value:'V'},
+          {label:this.selector.opciones[0].label, value:'F'},
+          {label:'Anulada', value:'A'}];
+      }else if(this.textoVisible == "Anulada"){
+        this.selector.opciones =[ 
+          {label:'Activo', value:'V'},
+          {label:'Finalizado', value:'F'},
+          {label:this.selector.opciones[0].label, value:'A'}];
       }
-
+      
       this.disable = false;
     }
-    if (this.selector.nombre == "Juzgado" && !this.nuevaDesigna) {
+    if(this.selector.nombre == "Juzgado" && !this.nuevaDesigna){
       // this.textoJuzgado = this.selector.opciones[0].label;
       this.opcionSeleccionado = [this.selector.opciones[0].value];
       this.getComboJuzgados(this.selector);
       this.disable = false;
-    } else if (this.selector.nombre == "Juzgado" && this.nuevaDesigna) {
+    }else if(this.selector.nombre == "Juzgado" && this.nuevaDesigna){
       this.opcionSeleccionado = [-1];
       this.getComboJuzgados(this.selector);
     }
-    if (this.selector.nombre == "Procedimiento" && !this.nuevaDesigna) {
+    if(this.selector.nombre == "Procedimiento" && !this.nuevaDesigna){
       this.opcionSeleccionado = [this.selector.opciones[0].value];
       this.getComboProcedimientos(this.selector);
       this.disable = false;
-    } else if (this.selector.nombre == "Procedimiento" && this.nuevaDesigna) {
+    }else if(this.selector.nombre == "Procedimiento" && this.nuevaDesigna){
       this.opcionSeleccionado = [-1];
     }
-    if (this.selector.nombre == "Módulo" && !this.nuevaDesigna) {
+    if(this.selector.nombre == "Módulo" && !this.nuevaDesigna){
       this.opcionSeleccionado = [this.selector.opciones[0].value];
       this.getComboModulos(this.selector);
       this.disable = false;
-    } else if (this.selector.nombre == "Módulo" && this.nuevaDesigna) {
+    }else if(this.selector.nombre == "Módulo" && this.nuevaDesigna){
       this.opcionSeleccionado = [-1];
-
+      
     }
-    if (this.selector.nombre == "Partida Presepuestaria" && !this.nuevaDesigna) {
+    if(this.selector.nombre == "Partida Presepuestaria" && !this.nuevaDesigna){
       this.opcionSeleccionado = [this.selector.opciones[0].value];
-      this.getComboPartidaPresupuestaria(this.selector);
-      this.disable = false;
-
-    } else if (this.selector.nombre == "Partida Presepuestaria" && this.nuevaDesigna) {
+        this.getComboPartidaPresupuestaria(this.selector);
+        this.disable = false;
+      
+    }else if(this.selector.nombre == "Partida Presepuestaria" && this.nuevaDesigna){
       this.opcionSeleccionado = [-1];
       this.getComboPartidaPresupuestaria(this.selector);
     }
-    if (!this.nuevaDesigna) {
+    if(!this.nuevaDesigna){
       this.cargaCombosDesigna();
     }
     this.verSeleccion = this.opcionSeleccionado;
-    if (this.selector.nombre == "Estado" || this.selector.nombre == "Delitos") {
-      this.verSeleccion = [this.selector.opciones[0].label];
+    if(this.selector.nombre == "Estado" || this.selector.nombre == "Delitos"){
+      this.verSeleccion=[this.selector.opciones[0].label];
     }
     this.value.emit(this.verSeleccion);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.refresh != undefined) {
-      if (changes.refresh.currentValue != undefined && changes.refresh.currentValue != null && changes.refresh.currentValue != "") {
+    if(changes.refresh != undefined){
+      if(changes.refresh.currentValue != undefined && changes.refresh.currentValue != null && changes.refresh.currentValue != ""){
         this.opcionSeleccionado = changes.refresh.currentValue;
       }
-      if (changes.refreshProcedimiento.currentValue != undefined && changes.refreshProcedimiento.currentValue != null && changes.refreshProcedimiento.currentValue != "") {
+      if(changes.refreshProcedimiento.currentValue != undefined && changes.refreshProcedimiento.currentValue != null && changes.refreshProcedimiento.currentValue != ""){
         this.opcionSeleccionado = changes.refreshProcedimiento.currentValue;
       }
-      if (changes.refreshModulo.currentValue != undefined && changes.refreshModulo.currentValue != null && changes.refreshModulo.currentValue != "") {
+      if(changes.refreshModulo.currentValue != undefined && changes.refreshModulo.currentValue != null && changes.refreshModulo.currentValue != ""){
         this.opcionSeleccionado = changes.refreshModulo.currentValue;
       }
     }
@@ -115,7 +115,7 @@ export class SelectorComponent implements OnInit {
     this.verSeleccion = [Number(this.opcionSeleccionado)];
     // this.value = this.verSeleccion[0];
     this.value.emit(this.verSeleccion);
-    if (this.selector.nombre == "Juzgado") {
+    if(this.selector.nombre == "Juzgado"){
       sessionStorage.setItem(
         "juzgadoSeleccioadno",
         JSON.stringify(this.verSeleccion)
@@ -123,15 +123,15 @@ export class SelectorComponent implements OnInit {
       this.busqueda.emit(false);
     }
 
-    if (this.selector.nombre == "Procedimiento") {
+    if(this.selector.nombre == "Procedimiento"){
       sessionStorage.setItem(
         "procedimientoSeleccionado",
         JSON.stringify(this.verSeleccion)
       );
       this.busquedaProcedimiento.emit(false);
     }
-
-    if (this.selector.nombre == "Módulo") {
+    
+    if(this.selector.nombre == "Módulo"){
       sessionStorage.setItem(
         "moduloSeleccionado",
         JSON.stringify(this.verSeleccion)
@@ -141,7 +141,7 @@ export class SelectorComponent implements OnInit {
   }
   getComboJuzgados(selectorJuzgado) {
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboJuzgadoDesignaciones", '0').subscribe(
+    this.sigaServices.post("combo_comboJuzgadoDesignaciones",'0').subscribe(
       n => {
         selectorJuzgado.opciones = n.combooItems;
         this.progressSpinner = false;
@@ -151,7 +151,7 @@ export class SelectorComponent implements OnInit {
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(selectorJuzgado.opciones);
-        selectorJuzgado.opciones.sort((a, b) => {
+        selectorJuzgado.opciones.sort( (a, b) => {
           return a.label.localeCompare(b.label);
         });
         this.progressSpinner = false;
@@ -193,7 +193,7 @@ export class SelectorComponent implements OnInit {
       });
   }
 
-
+  
   getComboProcedimientos(selectorProcedimiento) {
     this.progressSpinner = true;
     this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
@@ -226,7 +226,7 @@ export class SelectorComponent implements OnInit {
       }
     );
   }
-  cargaCombosDesigna() {
+  cargaCombosDesigna(){
     this.progressSpinner = true;
     let valorParametro;
 
@@ -239,9 +239,9 @@ export class SelectorComponent implements OnInit {
       .subscribe(
         data => {
           valorParametro = JSON.parse(data.body).parametro;
-        });
+      });
 
-    if (this.selector.nombre == "Juzgado" && this.selector.opciones[0].value != null && this.selector.opciones[0].value != undefined && this.selector.opciones[0].value != "") {
+    if (this.selector.nombre == "Juzgado" && this.selector.opciones[0].value !=null && this.selector.opciones[0].value !=undefined && this.selector.opciones[0].value !="") {
       if (valorParametro == 1) {
         this.getComboProcedimientosConJuzgado(this.selector[1].value);
         this.getcCmboModulosConProcedimientos(this.selector[2].value);
@@ -265,77 +265,77 @@ export class SelectorComponent implements OnInit {
       sessionStorage.removeItem("juzgadoSeleccioadno");
     }
     this.progressSpinner = false;
-  }
+    }
 
-  getComboProcedimientosConJuzgado(idJuzgado) {
-    this.progressSpinner = true;
-    this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
-      n => {
-        this.selector[2].opciones = JSON.parse(n.body).combooItems;
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        this.arregloTildesCombo(this.selector[2].opciones);
-        this.progressSpinner = false;
-      }
-    );
-  }
+    getComboProcedimientosConJuzgado(idJuzgado) {
+      this.progressSpinner = true;
+      this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
+        n => {
+          this.selector[2].opciones = JSON.parse(n.body).combooItems;
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.arregloTildesCombo(this.selector[2].opciones);
+          this.progressSpinner = false;
+        }
+      );
+    }
+  
+    getComboProcedimientosConModulo(idProcedimiento) {
+      this.progressSpinner = true;
+      this.sigaServices.post("combo_comboProcedimientosConModulo", idProcedimiento).subscribe(
+        n => {
+          this.selector[2].opciones = JSON.parse(n.body).combooItems;
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.arregloTildesCombo(this.selector[2].opciones);
+          this.progressSpinner = false;
+        }
+      );
+    }
+  
+    getComboModulosConJuzgado(idJuzgado) {
+      this.progressSpinner = true;
+      this.sigaServices.getParam("combo_comboModulosConJuzgado","?idJuzgado=" +  idJuzgado).subscribe(
+        n => {
+          this.selector[3].opciones = JSON.parse(n.body).combooItems;
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.arregloTildesCombo(this.selector[3].opciones);
+          this.progressSpinner = false;
+        }
+      );
+    }
+  
+    getcCmboModulosConProcedimientos(idPretension) {
+      this.progressSpinner = true;
+      this.sigaServices.getParam("combo_comboModulosConProcedimientos","?idPretension="+ idPretension).subscribe(
+        n => {
+          this.selector[3].opciones = JSON.parse(n.body).combooItems;
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.arregloTildesCombo(this.selector[3].opciones);
+          this.progressSpinner = false;
+        }
+      );
+    }
 
-  getComboProcedimientosConModulo(idProcedimiento) {
-    this.progressSpinner = true;
-    this.sigaServices.post("combo_comboProcedimientosConModulo", idProcedimiento).subscribe(
-      n => {
-        this.selector[2].opciones = JSON.parse(n.body).combooItems;
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        this.arregloTildesCombo(this.selector[2].opciones);
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  getComboModulosConJuzgado(idJuzgado) {
-    this.progressSpinner = true;
-    this.sigaServices.getParam("combo_comboModulosConJuzgado", "?idJuzgado=" + idJuzgado).subscribe(
-      n => {
-        this.selector[3].opciones = JSON.parse(n.body).combooItems;
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        this.arregloTildesCombo(this.selector[3].opciones);
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  getcCmboModulosConProcedimientos(idPretension) {
-    this.progressSpinner = true;
-    this.sigaServices.getParam("combo_comboModulosConProcedimientos", "?idPretension=" + idPretension).subscribe(
-      n => {
-        this.selector[3].opciones = JSON.parse(n.body).combooItems;
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        this.arregloTildesCombo(this.selector[3].opciones);
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  refreshDataCombos(event) {
-    this.cargaCombosDesigna();
-  }
+    refreshDataCombos(event){
+      this.cargaCombosDesigna();
+   }
 }

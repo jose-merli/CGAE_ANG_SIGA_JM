@@ -13,5 +13,5 @@ export class PersonaItem {
   estadoColegial: String;
   residencia: String;
   tipoIdentificacion: String;
-  constructor() { }
+  constructor() {}
 }

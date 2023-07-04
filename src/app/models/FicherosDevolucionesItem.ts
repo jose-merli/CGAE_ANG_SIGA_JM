@@ -1,5 +1,5 @@
 export class FicherosDevolucionesItem {
-
+    
     idInstitucion: string;
     idDisqueteDevoluciones: string;
     fechaCreacion: Date;
@@ -18,5 +18,5 @@ export class FicherosDevolucionesItem {
     facturacion: string;
     numRecibos: string;
 
-    constructor() { }
+    constructor() {}
 }

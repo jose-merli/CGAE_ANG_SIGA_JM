@@ -11,11 +11,11 @@ export class ExpInsosItem {
     idTurno: string;
     nombre: string;
     idpersonasolicitante: string;
-    nifsolicitante: string;
-    nombresolicitante: string;
-    apellido1solicitante: string;
-    apellido2solicitante: string;
-    numprocedimiento: string;
+	nifsolicitante: string;
+	nombresolicitante: string;
+	apellido1solicitante: string;
+	apellido2solicitante: string;
+	numprocedimiento: string;
 
     constructor() { }
 }

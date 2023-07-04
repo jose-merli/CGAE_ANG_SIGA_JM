@@ -1,22 +1,24 @@
 import {
-  ChangeDetectorRef,
   Component,
-  HostListener,
   OnInit,
+  ViewEncapsulation,
   ViewChild,
-  ViewEncapsulation
+  ChangeDetectorRef,
+  HostListener
 } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Message } from "primeng/components/common/api";
-import { DataTable } from "primeng/datatable";
-import { CommonsService } from '../../../_services/commons.service';
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { Router, ActivatedRoute } from "@angular/router";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { Message } from "primeng/components/common/api";
 import { ContadorItem } from "./../../../../app/models/ContadorItem";
 import { ContadorResponseDto } from "./../../../../app/models/ContadorResponseDto";
-import { SigaServices } from "./../../../_services/siga.service";
+import { DataTable } from "primeng/datatable";
+import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
+import { esCalendar } from "./../../../utils/calendar";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -247,7 +249,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         .postPaginado("contadores_search", "?numPagina=1", this.body)
         .subscribe(
           data => {
-
+             
 
             this.search = JSON.parse(data["body"]);
             this.datos = this.search.contadorItems;
@@ -262,7 +264,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               this.table.first = first;
               sessionStorage.removeItem("first");
             }
-            setTimeout(() => {
+            setTimeout(()=>{
               this.commonsService.scrollTablaFoco('tablaFoco');
             }, 5);
           }
@@ -306,7 +308,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   paginate(event) {
-
+     
   }
 
   reset() {

@@ -33,7 +33,7 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
   disabledSave: boolean = true;
   isEventoCumplidoOrCancelado: boolean = false;
 
-  constructor(private sigaServices: SigaServices, private location: Location) { }
+  constructor(private sigaServices: SigaServices, private location: Location) {}
 
   ngOnInit() {
     this.progressSpinner = true;

@@ -3,5 +3,5 @@ export class DatosDireccionesCodigoPostalItem {
   poblacion: ComboItem;
   provincia: String;
 
-  constructor() { }
+  constructor() {}
 }

@@ -13,5 +13,5 @@ export class SoliModiDireccionesItem {
   poblacion: String;
   poblacionExtranjera: String;
 
-  constructor() { }
+  constructor() {}
 }

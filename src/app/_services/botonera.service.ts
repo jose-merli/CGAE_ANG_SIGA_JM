@@ -10,7 +10,7 @@ export class BotoneraService {
 
     ) { }
 
-    boton(data: string[]) {
+    boton(data: String[]) {
         let botones = [];
         for (let i in data) {
             switch (data[i]) {

@@ -4,7 +4,7 @@ export class BorrarSuscripcionItem {
     idservicio: number; //Tipo Servicio
     idserviciosinstitucion: number; //Servicio
     opcionaltasbajas: string = "0";
-    checkboxDialogServicioAutomaticoAManual: boolean;
+    checkboxDialogServicioAutomaticoAManual : boolean;
     fechaeliminacionaltas: Date = new Date();
     incluirbajasmanuales: string = "0";
 

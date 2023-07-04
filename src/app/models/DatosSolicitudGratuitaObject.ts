@@ -11,5 +11,5 @@ export class DatosSolicitudGratuitaObject {
   datosPoliza: DatosPolizaMutualidadItem;
   datosBeneficiario: DatosBeneficiarioMutualidadItem;
 
-  constructor() { }
+  constructor() {}
 }

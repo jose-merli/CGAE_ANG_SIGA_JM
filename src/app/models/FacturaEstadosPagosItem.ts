@@ -1,6 +1,6 @@
 export class FacturaEstadosPagosItem {
-
-	fechaModificaion: Date;
+    
+    fechaModificaion: Date;
 	fechaMin: Date;
 
 	idAccion: string;
@@ -17,13 +17,13 @@ export class FacturaEstadosPagosItem {
 	impTotalPorPagar: number;
 
 	IDSJCS: string;
-
+	
 	idCargos: string;
 	idDevoluciones: string;
 
 	idFactura: string;
 	numeroFactura: string;
-
+	
 	idAbono: string;
 	numeroAbono: string;
 
@@ -46,5 +46,5 @@ export class FacturaEstadosPagosItem {
 
 	nuevo: boolean;
 
-	constructor() { }
+    constructor() {}
 }
