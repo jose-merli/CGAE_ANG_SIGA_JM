@@ -4,5 +4,5 @@ export class FichaColegialCertificadosItem {
   idPersona: String;
   fechaEmision: String;
 
-  constructor() {}
+  constructor() { }
 }

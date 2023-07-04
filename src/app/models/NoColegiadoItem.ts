@@ -45,5 +45,5 @@ export class NoColegiadoItem {
 
   colegio: string[];
 
-  constructor() {}
+  constructor() { }
 }

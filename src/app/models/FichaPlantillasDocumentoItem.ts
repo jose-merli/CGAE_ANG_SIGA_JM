@@ -17,7 +17,7 @@ export class FichaPlantillasDocument {
   plantillas: PlantillaDocumentoItem[] = [];
   consultas: ConsultasPlantillasInformesItem[] = [];
   sufijos: SufijoItem[] = [];
-  generacionExcel:number;  
+  generacionExcel: number;
   constructor() { }
 }
 

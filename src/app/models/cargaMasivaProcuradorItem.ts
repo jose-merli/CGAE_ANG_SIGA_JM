@@ -1,4 +1,4 @@
-export class CargaMasivaProcuradorItem { 
+export class CargaMasivaProcuradorItem {
     fechaCarga?: string;
     fechaModificacion?: string;
     idCargaMasiva?: number;
@@ -11,5 +11,5 @@ export class CargaMasivaProcuradorItem {
     tipoCarga?: string;
     usuario?: string;
 
-    constructor(){}
+    constructor() { }
 }

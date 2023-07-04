@@ -2,7 +2,7 @@ import { ComboItem } from "./ComboItem";
 
 export class FacturasItem {
 
-    tipo: string;//"FACTURA" o "ABONO"
+	tipo: string;//"FACTURA" o "ABONO"
 
 	idFactura: string;
 	idAbono: string;
@@ -59,7 +59,7 @@ export class FacturasItem {
 	identificadorAdeudos: string;
 	identificadorTransferencia: string;
 	identificadorDevolucion: string;
-	idAccion:String;
+	idAccion: String;
 
 	//cliente
 	idCliente: string;
@@ -69,16 +69,16 @@ export class FacturasItem {
 	nombre: string;
 
 	//pago
-	idFormaPago:string;
-	nombreFormaPago:string;
+	idFormaPago: string;
+	nombreFormaPago: string;
 
 	//EstadoPago
-	estadoUlt:string;
-	importePorPagarUlt:string;
-	impTotalPagadoUlt:string;
-	idAccionUlt:string;
-	fechaModificacionUlt:string;
-	
+	estadoUlt: string;
+	importePorPagarUlt: string;
+	impTotalPagadoUlt: string;
+	idAccionUlt: string;
+	fechaModificacionUlt: string;
+
 
 	//deudor
 	idDeudor: string;

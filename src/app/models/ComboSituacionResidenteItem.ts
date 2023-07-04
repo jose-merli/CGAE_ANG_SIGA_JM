@@ -3,5 +3,5 @@ export class ComboSituacionResidenteItem {
   situacion: string;
   residente: string;
 
-  constructor() {}
+  constructor() { }
 }

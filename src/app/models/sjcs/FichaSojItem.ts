@@ -30,7 +30,7 @@ export class FichaSojItem {
     ejgNumero: string;
 
     facturado: string;
-    pagado: string; 
+    pagado: string;
 
     idTipoSojColegio: string;
     actualizaDatos: string;
@@ -38,5 +38,5 @@ export class FichaSojItem {
     ncolegiado: string;
     nombreAp: string;
 
-    constructor() {}
+    constructor() { }
 }

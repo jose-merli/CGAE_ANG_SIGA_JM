@@ -10,7 +10,7 @@ export let endpoints_generales: any = {
     combo_guardiaPorTurnoInscritos: "combo/guardiasInscritas",
     componenteGeneralJG_busquedaGeneralSJCS: "componenteGeneralJG/busquedaGeneralSJCS",
     componenteGeneralJG_busquedaColegiadoEJG: "componenteGeneralJG/busquedaColegiadoEJG",
-    componenteGeneralJG_comboTurnos:"componenteGeneralJG/comboTurnos",
+    componenteGeneralJG_comboTurnos: "componenteGeneralJG/comboTurnos",
 
     combo_comboTipoEjg: "combo/comboTipoEjg",
     combo_comboTipoEjgColegio: "combo/comboTipoEjgColegio",
@@ -24,11 +24,11 @@ export let endpoints_generales: any = {
     combo_comboJuzgado: "combo/comboJuzgado",
     combo_comboComisariaCdgoExt: "combo/comboComisariaCdgoExt",
     combo_comboJuzgadoCdgoExt: "combo/comboJuzgadoCdgoExt",
-    combo_comboTipoDocAsistencia : "combo/comboTipoDocAsistencia",
-    combo_comboAsociadoAsistencia : "combo/comboAsociadoAsistencia",
-    combo_comboOrigenContacto : "combo/comboOrigenContacto",
-    combo_comboTipoActuacion : "combo/comboTipoActuacionAsistencia",
-    combo_comboCosteFijo : "combo/comboCosteFijoActuacionAsistencia",
+    combo_comboTipoDocAsistencia: "combo/comboTipoDocAsistencia",
+    combo_comboAsociadoAsistencia: "combo/comboAsociadoAsistencia",
+    combo_comboOrigenContacto: "combo/comboOrigenContacto",
+    combo_comboTipoActuacion: "combo/comboTipoActuacionAsistencia",
+    combo_comboCosteFijo: "combo/comboCosteFijoActuacionAsistencia",
     combo_comboProcedimientosEXEA: "combo/comboProcedimientosEXEA",
 
     gestionJusticiables_busquedaClaveAsuntosEJG: "gestionJusticiables/busquedaClaveAsuntosEJG",
@@ -45,11 +45,11 @@ export let endpoints_generales: any = {
     gestionSoj_saveDocumentosSOJ: "soj/subirDocumentoSOJ",
     gestionSoj_deleteDocumentosSOJ: "soj/eliminarDocumentoSOJ",
 
-    
+
     gestionJusticiables_copyDesigna2Soj: 'gestionJusticiables/copyDesigna2Soj',
     gestionJusticiables_copyDesigna2Asis: 'gestionJusticiables/copyDesigna2Asis',
     gestionJusticiables_copyDesigna2Ejg: 'gestionJusticiables/copyDesigna2Ejg',
-    
+
     gestionJusticiables_copyEjg2Soj: 'gestionJusticiables/copyEjg2Soj',
     gestionJusticiables_copyEjg2Asis: 'gestionJusticiables/copyEjg2Asis',
     gestionJusticiables_copyEjg2Designa: 'gestionJusticiables/copyEjg2Designa',
@@ -58,6 +58,6 @@ export let endpoints_generales: any = {
     gestionJusticiables_copyAsis2Ejg: 'gestionJusticiables/copyAsis2Ejg',
     gestionJusticiables_copyAsis2Designa: 'gestionJusticiables/copyAsis2Designa',
 
-    
-   
+
+
 }

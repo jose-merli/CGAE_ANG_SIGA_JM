@@ -3,5 +3,5 @@ export class UsuarioDeleteRequestDto {
   idUsuario: String[] = [];
   activo: String;
   idInstitucion: String;
-  constructor() {}
+  constructor() { }
 }

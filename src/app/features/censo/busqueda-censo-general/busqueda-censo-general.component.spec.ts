@@ -8,9 +8,9 @@ describe('BusquedaCensoGeneralComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BusquedaCensoGeneralComponent ]
+      declarations: [BusquedaCensoGeneralComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

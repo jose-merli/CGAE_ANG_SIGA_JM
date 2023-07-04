@@ -7,7 +7,7 @@ import { Location } from '@angular/common';
 @Component({
 	selector: 'app-facturacion-sociedades-censo',
 	templateUrl: './facturacion-sociedades-censo.component.html',
-	styleUrls: [ './facturacion-sociedades-censo.component.scss' ],
+	styleUrls: ['./facturacion-sociedades-censo.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
 export class FacturacionSociedadesCensoComponent implements OnInit {
@@ -40,7 +40,7 @@ export class FacturacionSociedadesCensoComponent implements OnInit {
 				this.url = JSON.parse(sessionStorage.getItem('url'));
 				document.getElementById('noViewContent').className = 'mainFrameWrapper2';
 				document.getElementById('noViewContent').className = 'mainFrameWrapper2';
-				this.router.navigate([ '/facturasSociedad' ]);
+				this.router.navigate(['/facturasSociedad']);
 			}, 2000);
 		} else {
 			this.url = JSON.parse(sessionStorage.getItem('url'));
@@ -55,8 +55,8 @@ export class FacturacionSociedadesCensoComponent implements OnInit {
 		}
 	}
 
-	ngOnInit() {}
+	ngOnInit() { }
 	volver() {
-		this.router.navigate([ '/fichaPersonaJuridica' ]);
+		this.router.navigate(['/fichaPersonaJuridica']);
 	}
 }

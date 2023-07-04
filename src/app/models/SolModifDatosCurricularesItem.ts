@@ -8,5 +8,5 @@ export class SolModifDatosCurricularesItem {
   fechaHasta: Date;
   descripcion: String;
 
-  constructor() {}
+  constructor() { }
 }

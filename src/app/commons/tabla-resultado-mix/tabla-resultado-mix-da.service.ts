@@ -34,23 +34,23 @@ export class TablaResultadoMixDAService {
       { type: 'input', value: 'Euskara ResultadoConsulta' }
     ]
   ];
-constructor() {}
+  constructor() { }
 
-public getTableData() {
-let finalRows: Row[] = [];
-this.result.forEach((rows) => {    
-let rowObject: Row = new Row();
-let cells: Cell[] = [];
-rows.forEach((cell) => {
-  let cellObject: Cell = new Cell();
-  cellObject.type = cell['type'];
-  cellObject.value = cell['value'];
-  cells.push(cellObject);
-});
-rowObject.cells = cells;
-finalRows.push(rowObject);
-});
-return finalRows;
-}
+  public getTableData() {
+    let finalRows: Row[] = [];
+    this.result.forEach((rows) => {
+      let rowObject: Row = new Row();
+      let cells: Cell[] = [];
+      rows.forEach((cell) => {
+        let cellObject: Cell = new Cell();
+        cellObject.type = cell['type'];
+        cellObject.value = cell['value'];
+        cells.push(cellObject);
+      });
+      rowObject.cells = cells;
+      finalRows.push(rowObject);
+    });
+    return finalRows;
+  }
 }
 

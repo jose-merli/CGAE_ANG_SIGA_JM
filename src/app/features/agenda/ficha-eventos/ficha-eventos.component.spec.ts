@@ -8,9 +8,9 @@ describe('FichaEventosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FichaEventosComponent ]
+      declarations: [FichaEventosComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

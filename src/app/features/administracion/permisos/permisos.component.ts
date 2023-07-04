@@ -61,7 +61,7 @@ export class PermisosComponent implements OnInit {
   permisosChange: Map<String, PermisosAplicacionesDto> = new Map<
     String,
     PermisosAplicacionesDto
-    >();
+  >();
 
   @ViewChild("widthContent") widthContent: any;
 
@@ -171,25 +171,25 @@ para poder filtrar el dato con o sin estos caracteres*/
         idGrupo: this.idGrupo
       })
       .subscribe(
-      data => {
-        let permisosTree = JSON.parse(data.body);
-        this.permisosTree = permisosTree.permisoItems;
-        this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
-        this.permisosTree.forEach(node => {
-          this.totalRecursive(node);
-        });
-        this.accesoTotal = 0;
-        this.accesoLectura = 0;
-        this.accesoDenegado = 0;
-        this.sinAsignar = 0;
+        data => {
+          let permisosTree = JSON.parse(data.body);
+          this.permisosTree = permisosTree.permisoItems;
+          this.treeInicial = JSON.parse(JSON.stringify(this.permisosTree));
+          this.permisosTree.forEach(node => {
+            this.totalRecursive(node);
+          });
+          this.accesoTotal = 0;
+          this.accesoLectura = 0;
+          this.accesoDenegado = 0;
+          this.sinAsignar = 0;
 
-        this.permisosTree.forEach(node => {
-          this.totalAccesosRecursive(node);
-        });
-      },
-      err => {
-        //console.log(err);
-      }
+          this.permisosTree.forEach(node => {
+            this.totalAccesosRecursive(node);
+          });
+        },
+        err => {
+          //console.log(err);
+        }
       );
 
     // this.permisosTree =
@@ -390,12 +390,12 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   savePermisos() {
-        let permisosUpdate = new PermisosAplicacionesDto();
-        permisosUpdate.derechoacceso = "3";
-        permisosUpdate.idGrupo = this.idGrupo;
-        permisosUpdate.id = 0;
+    let permisosUpdate = new PermisosAplicacionesDto();
+    permisosUpdate.derechoacceso = "3";
+    permisosUpdate.idGrupo = this.idGrupo;
+    permisosUpdate.id = 0;
 
-        this.permisosChange.set("0", permisosUpdate);
+    this.permisosChange.set("0", permisosUpdate);
     this.permisosChange.forEach(
       (value: PermisosAplicacionesDto, key: String) => {
         this.sigaServices.post("permisos_update", value).subscribe(

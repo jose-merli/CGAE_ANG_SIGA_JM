@@ -1,6 +1,6 @@
 export class FicherosAbonosItem {
 
-    idInstitucion: String;
+	idInstitucion: String;
 	idDisqueteAbono: String;
 	nombreFichero: String;
 	bancosCodigo: String;
@@ -20,5 +20,5 @@ export class FicherosAbonosItem {
 	propOtros: string;
 	fcs: boolean;
 
-    constructor() { }
+	constructor() { }
 }

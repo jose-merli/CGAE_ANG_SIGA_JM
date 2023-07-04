@@ -87,7 +87,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.onInitSessionStorage();
     if (sessionStorage.getItem("filtrosBusquedaSociedadesFichaSociedad") != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaSociedadesFichaSociedad"));
-      if(this.body.fechaConstitucion != undefined){
+      if (this.body.fechaConstitucion != undefined) {
         this.body.fechaConstitucion = new Date(this.body.fechaConstitucion);
         this.fillFechaConstitucion(this.body.fechaConstitucion);
       }

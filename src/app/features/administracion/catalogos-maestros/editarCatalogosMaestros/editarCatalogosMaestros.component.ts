@@ -21,7 +21,7 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
   body: CatalogoRequestDto = new CatalogoRequestDto();
   checkBody: CatalogoRequestDto = new CatalogoRequestDto();
   upd: CatalogoUpdateRequestDto = new CatalogoUpdateRequestDto();
-  textFilter: String;
+  textFilter: string;
   editar: boolean = true;
   correcto: boolean = false;
   blockSeleccionar: boolean = false;

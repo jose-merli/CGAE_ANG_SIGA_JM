@@ -17,8 +17,8 @@ export class BaremosGuardiaItem {
     precioHito;
     idInstitucion;
     idHito;
-    nomturno:any;
-    nomguardia:any;
+    nomturno: any;
+    nomguardia: any;
     idTurno;
     idGuardia;
     idhitoconfiguracion;
@@ -39,5 +39,5 @@ export class BaremosGuardiaItem {
     importeMax;
     agrupar;
     dispAsuntosAsAc;
-    hitos:string[];
+    hitos: string[];
 }

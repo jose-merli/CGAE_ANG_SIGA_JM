@@ -35,6 +35,6 @@ export class ContrarioDesignaItem {
     idinstitucionorigen: number;
 
     fechabaja: Date;
-    
+
     constructor() { }
 }

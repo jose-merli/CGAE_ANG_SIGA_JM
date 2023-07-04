@@ -1,4 +1,4 @@
-export class ListaMovimientosMonederoItem{
+export class ListaMovimientosMonederoItem {
     fecha: Date;
     concepto: string;
     cuentaContable: string;

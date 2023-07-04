@@ -27,5 +27,5 @@ export class Impreso190Item {
     idtipoidentificacion: String;
     extension: String;
     idFichero: String;
-    fechageneracion:Date;
+    fechageneracion: Date;
 }

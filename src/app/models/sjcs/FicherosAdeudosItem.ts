@@ -3,7 +3,7 @@ import { FacturasItem } from "../FacturasItem";
 
 export class FicherosAdeudosItem {
 
-    idInstitucion: String;
+	idInstitucion: String;
 	idDisqueteCargos: String;
 	nombreFichero: String;
 	bancosCodigo: String;
@@ -34,9 +34,9 @@ export class FicherosAdeudosItem {
 	fechaRecibosCOR: Date;
 	fechaRecibosB2B: Date;
 	fechaUltimaModificacion: Date;
-	
+
 	facturasGeneracion: string[];
 	facturacionesGeneracion: FacFacturacionprogramadaItem[];
 
-    constructor() { }
+	constructor() { }
 }

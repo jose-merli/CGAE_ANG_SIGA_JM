@@ -5,5 +5,5 @@ export class CargaMasivaInscripcionObject {
   error: Error;
   cargaMasivaInscripcionesItem: CargaMasivaInscripcionItem[] = [];
   cursoItem: DatosCursosItem;
-  constructor() {}
+  constructor() { }
 }

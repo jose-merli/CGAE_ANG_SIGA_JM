@@ -1,7 +1,7 @@
-export class InscripcionesObject{
+export class InscripcionesObject {
     inscripcionesItem: any;
 
 
 
-    contructor(){}
+    contructor() { }
 }

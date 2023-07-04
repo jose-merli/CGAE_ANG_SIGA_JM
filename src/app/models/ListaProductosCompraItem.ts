@@ -1,4 +1,4 @@
-export class ListaProductosCompraItem{
+export class ListaProductosCompraItem {
     orden: string;
     descripcion: string;
     observaciones: string;
@@ -15,7 +15,7 @@ export class ListaProductosCompraItem{
     impIva: string;
     impNeto: string;
 
-    solicitarBaja : string;
+    solicitarBaja: string;
 
     idPeticion: string;
 }

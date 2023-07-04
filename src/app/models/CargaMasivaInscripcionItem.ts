@@ -8,5 +8,5 @@ export class CargaMasivaInscripcionItem {
 	inscripcionesCorrectas: string;
 	idFichero: string;
 	idFicheroLog: string;
-	constructor() {}
+	constructor() { }
 }

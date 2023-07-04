@@ -1,6 +1,6 @@
 export class FiltrosBusquedaCargasMasivasComprasItem {
     fechaCargaDesde: Date;
-    fechaCargaHasta: Date; 
+    fechaCargaHasta: Date;
 
     constructor() { }
 }

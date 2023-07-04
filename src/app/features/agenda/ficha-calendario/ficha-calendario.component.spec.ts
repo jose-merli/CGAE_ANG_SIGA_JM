@@ -8,9 +8,9 @@ describe('FichaCalendarioComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FichaCalendarioComponent ]
+      declarations: [FichaCalendarioComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

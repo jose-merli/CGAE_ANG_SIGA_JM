@@ -6,5 +6,5 @@ export class ComboItemColegiado {
   situacion: string;
   residente: string;
 
-  constructor() {}
+  constructor() { }
 }

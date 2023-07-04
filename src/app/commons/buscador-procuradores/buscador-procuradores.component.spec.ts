@@ -8,9 +8,9 @@ describe('BuscadorProcuradoresComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BuscadorProcuradoresComponent ]
+      declarations: [BuscadorProcuradoresComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -24,5 +24,5 @@ export class ContadorItem {
   fechacreacion: Date;
   usucreacion: String;
 
-  constructor() {}
+  constructor() { }
 }

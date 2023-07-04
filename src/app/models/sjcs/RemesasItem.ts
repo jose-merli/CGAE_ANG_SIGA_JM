@@ -1,4 +1,4 @@
-export class RemesasItem { 
+export class RemesasItem {
     descripcion?: string;
     estado?: string;
     fechaEnvio?: string;

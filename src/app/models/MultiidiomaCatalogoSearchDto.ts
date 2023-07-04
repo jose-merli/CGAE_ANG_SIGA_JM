@@ -3,5 +3,5 @@ export class MultiidiomaCatalogoSearchDto {
   idiomaBusqueda: String;
   idiomaTraduccion: String;
   local: String;
-  constructor() {}
+  constructor() { }
 }

@@ -11,5 +11,5 @@ export class PerfilItem {
   fechaBaja: Date;
   editar: boolean = false;
   new: boolean = false;
-  constructor() {}
+  constructor() { }
 }

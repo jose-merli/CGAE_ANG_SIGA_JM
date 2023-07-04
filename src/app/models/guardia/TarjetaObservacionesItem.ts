@@ -1,8 +1,8 @@
-export class TarjetaObservacionesItem{
+export class TarjetaObservacionesItem {
 
     observaciones: string;
     incidencias: string;
 
-   constructor(){}
+    constructor() { }
 
 }

@@ -19,7 +19,7 @@ export class TarjetaResumenFijaComponent implements OnInit {
   @Output() isOpen = new EventEmitter<any>();
   iconClass;
   checkTitulo;
-  enlaceAnterior:any[];
+  enlaceAnterior: any[];
   constructor(private translateService: TranslateService) { }
 
   ngOnInit() {
@@ -47,22 +47,22 @@ export class TarjetaResumenFijaComponent implements OnInit {
   goToCard(enlace, nombre) {
     let findDato; // Comprobar si estoy pulsando el mismo enlace que pulsé por primera vez
 
-   
-    if(this.enlaceAnterior != undefined && this.enlaceAnterior.length > 0){
-     this.enlaceAnterior.forEach(element => {
-       if(element == enlace.id){
-         findDato = element;
-       }
-     });
+
+    if (this.enlaceAnterior != undefined && this.enlaceAnterior.length > 0) {
+      this.enlaceAnterior.forEach(element => {
+        if (element == enlace.id) {
+          findDato = element;
+        }
+      });
     }
-    
+
     //if(findDato == undefined){
-      enlace.scrollIntoView({ block: "center", behavior: 'smooth',inline: "start" });
-      this.isOpen.emit(nombre);
-      this.enlaceAnterior = [];
-      this.enlaceAnterior.push(enlace.id);
+    enlace.scrollIntoView({ block: "center", behavior: 'smooth', inline: "start" });
+    this.isOpen.emit(nombre);
+    this.enlaceAnterior = [];
+    this.enlaceAnterior.push(enlace.id);
     //}
-    
+
   }
 
 }

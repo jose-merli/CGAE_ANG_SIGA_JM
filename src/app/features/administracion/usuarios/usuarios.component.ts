@@ -351,7 +351,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       .postPaginado("usuarios_search", "?numPagina=1", this.filtrosIniciales)
       .subscribe(
         data => {
-          
+
           this.progressSpinner = false;
           this.searchUser = JSON.parse(data["body"]);
           this.datos = this.searchUser.usuarioItem;
@@ -455,7 +455,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   actualizaSeleccionados(selectedDatos) {
     if (this.selectedDatos != undefined) {
-      if(this.selectedDatos.length == 1){
+      if (this.selectedDatos.length == 1) {
         this.activacionEditar = true;
       }
       this.numSelected = selectedDatos.length;
@@ -520,7 +520,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         .postPaginado("usuarios_search", "?numPagina=1", this.body)
         .subscribe(
           data => {
-            
+
             this.progressSpinner = false;
             this.searchUser = JSON.parse(data["body"]);
             this.datos = this.searchUser.usuarioItem;
@@ -562,7 +562,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               }
             });
             this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-            setTimeout(()=>{
+            setTimeout(() => {
               this.commonsService.scrollTablaFoco('tablaFoco');
             }, 5);
           }
@@ -654,7 +654,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   paginate(event) {
-     
+
   }
 
   setItalic(datoH) {
@@ -709,7 +709,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   editUsuario(event) {
     if (event != undefined) {
       this.numSelected = this.selectedDatos.length
-      if(this.numSelected > 1){
+      if (this.numSelected > 1) {
         this.activacionEditar = false;
       }
     }
@@ -1001,7 +1001,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.sigaServices.post("usuarios_update", this.updateUsuarios).subscribe(
         data => {
           this.showSuccess();
-          
+
         },
         err => {
           this.showFail();
@@ -1041,7 +1041,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   focusInputField() {
     setTimeout(() => {
-      this.someDropdown.filterInputChild.nativeElement.focus();  
+      this.someDropdown.filterInputChild.nativeElement.focus();
     }, 300);
   }
 

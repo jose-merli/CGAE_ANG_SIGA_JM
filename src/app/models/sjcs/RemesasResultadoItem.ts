@@ -1,4 +1,4 @@
-export class RemesasResultadoItem{
+export class RemesasResultadoItem {
 
     idRemesaResultado?: number;
     numRemesaPrefijo?: string;
@@ -9,7 +9,7 @@ export class RemesasResultadoItem{
     numRegistroSufijo?: string;
     nombreFichero?: string;
     fechaRemesaDesde?: string;
-	fechaRemesaHasta?: string;
+    fechaRemesaHasta?: string;
     fechaCargaDesde?: string;
     fechaCargaHasta?: string;
 
@@ -22,7 +22,7 @@ export class RemesasResultadoItem{
     sufijoRemesa?: string;
     descripcionRemesa?: string;
 
-    numRegistroRemesaCompleto?:  number;
+    numRegistroRemesaCompleto?: number;
     numRemesaCompleto?: string;
 
     constructor(obj: Object) {
@@ -49,6 +49,6 @@ export class RemesasResultadoItem{
         this.numRegistroRemesaCompleto = obj['numRegistroRemesaCompleto'];
         this.numRemesaCompleto = obj['numRemesaCompleto'];
 
-     }
-     
+    }
+
 }

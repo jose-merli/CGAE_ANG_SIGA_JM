@@ -21,12 +21,12 @@ export const datos_combos: any = {
         {
             label: "Demandado",
             //value: "O"
-            value:0
+            value: 0
         },
         {
             label: "Demandante",
             //value: "D"
-            value:1
+            value: 1
         }
     ],
     comboCreadoDesde: [

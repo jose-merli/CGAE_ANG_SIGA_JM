@@ -5,48 +5,48 @@ import { ListaServiciosSuscripcionItem } from "./ListaServiciosSuscripcionItem";
 
 export class FichaCompraSuscripcionItem {
 
-    //TARJETA CLIENTE
-    idInstitucion: string;
-    idPersona: string;
-    nombre: string;
-    apellidos: string;
-    idtipoidentificacion: string;
-    nif: string;
-    numeroColegiado:string;
+  //TARJETA CLIENTE
+  idInstitucion: string;
+  idPersona: string;
+  nombre: string;
+  apellidos: string;
+  idtipoidentificacion: string;
+  nif: string;
+  numeroColegiado: string;
 
-    //TARJETA SOLICITUD
-    nSolicitud: string; //Equivaldria al idpeticion de la tabla PYS_PETICIONCOMPRASUSCRIPCION
-    usuModificacion: string;
-    fechaPendiente: Date;
-    fechaDenegada: Date;
-    fechaAceptada: Date;
-    fechaSolicitada: Date;
-    fechaSolicitadaAnulacion: Date;
-    fechaAnulada: Date;
+  //TARJETA SOLICITUD
+  nSolicitud: string; //Equivaldria al idpeticion de la tabla PYS_PETICIONCOMPRASUSCRIPCION
+  usuModificacion: string;
+  fechaPendiente: Date;
+  fechaDenegada: Date;
+  fechaAceptada: Date;
+  fechaSolicitada: Date;
+  fechaSolicitadaAnulacion: Date;
+  fechaAnulada: Date;
 
-    
-    //TARJETA PRODUCTOS
-    idFormasPagoComunes: string;
-    idFormaPagoSeleccionada: string;
-    totalNeto: string;
-    totalIVA: string;
-    impTotal: string;
-    pendPago: number;
-    cuentaBancSelecc: string;
-    productos: ListaProductosCompraItem[];
 
-    //TRARJETA FACTURACION
-    aFechaDeServicio: Date;
-    facturas: ListaFacturasPeticionItem[];
+  //TARJETA PRODUCTOS
+  idFormasPagoComunes: string;
+  idFormaPagoSeleccionada: string;
+  totalNeto: string;
+  totalIVA: string;
+  impTotal: string;
+  pendPago: number;
+  cuentaBancSelecc: string;
+  productos: ListaProductosCompraItem[];
 
-    //TARJETA DESCUENTOS Y ANTICIPOS
-    impAnti: number;
+  //TRARJETA FACTURACION
+  aFechaDeServicio: Date;
+  facturas: ListaFacturasPeticionItem[];
 
-    //TARJETA SERVICIOS
-    servicios: ListaServiciosSuscripcionItem[]; 
+  //TARJETA DESCUENTOS Y ANTICIPOS
+  impAnti: number;
 
-    idEstadoPeticion: string;
-    nuevo:boolean;
-    
-    constructor() {}
-  }
+  //TARJETA SERVICIOS
+  servicios: ListaServiciosSuscripcionItem[];
+
+  idEstadoPeticion: string;
+  nuevo: boolean;
+
+  constructor() { }
+}

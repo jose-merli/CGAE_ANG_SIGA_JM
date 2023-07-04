@@ -166,7 +166,7 @@ export class BusquedaColegiadosComponentI implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
   backTo() {
     this.location.back();
   }

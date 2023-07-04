@@ -11,5 +11,5 @@ export class NuevaSancionItem {
   fechaConstitucion: String;
   idInstitucion: String;
 
-  constructor() {}
+  constructor() { }
 }

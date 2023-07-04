@@ -1,4 +1,4 @@
-export class RemesasBusquedaItem { 
+export class RemesasBusquedaItem {
     annioEJG?: number;
     descripcion?: string;
     estado?: string;
@@ -16,5 +16,5 @@ export class RemesasBusquedaItem {
     ficha?: boolean;
     informacionEconomica?: boolean;
 
-    constructor(){}
+    constructor() { }
 }

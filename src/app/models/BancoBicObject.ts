@@ -3,5 +3,5 @@ import { ErrorItem } from "./ErrorItem";
 export class BancoBicObject {
   error: ErrorItem;
   bancoBicItem: BancoBicItem[] = [];
-  constructor() {}
+  constructor() { }
 }

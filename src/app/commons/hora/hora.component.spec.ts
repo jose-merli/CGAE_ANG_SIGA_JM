@@ -8,9 +8,9 @@ describe('HoraComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HoraComponent ]
+      declarations: [HoraComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

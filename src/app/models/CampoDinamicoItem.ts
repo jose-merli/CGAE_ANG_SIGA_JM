@@ -6,7 +6,7 @@ export class CampoDinamicoItem {
   tipoDato: String;
   valorDefecto: String;
   valorNulo: boolean;
-  valores: any [];
+  valores: any[];
   valor: any = "";
   constructor() { }
 }

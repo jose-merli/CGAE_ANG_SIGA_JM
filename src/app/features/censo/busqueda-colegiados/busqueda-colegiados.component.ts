@@ -169,65 +169,65 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   table: DataTable;
   selectedDatos;
 
-  sessionInfo(){
+  sessionInfo() {
     sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
-      sessionStorage.removeItem("personaBody");
-      sessionStorage.removeItem("situacionGlobal");
-      sessionStorage.setItem("esColegiado", "true");
+    sessionStorage.removeItem("personaBody");
+    sessionStorage.removeItem("situacionGlobal");
+    sessionStorage.setItem("esColegiado", "true");
+    sessionStorage.setItem(
+      "filtrosBusquedaColegiados",
+      JSON.stringify(this.body)
+    );
+    sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
+    if (
+      this.fechaIncorporacionDesdeSelect != null ||
+      this.fechaIncorporacionDesdeSelect != undefined
+    ) {
       sessionStorage.setItem(
-        "filtrosBusquedaColegiados",
-        JSON.stringify(this.body)
+        "fechaIncorporacionDesdeSelect",
+        JSON.stringify(this.fechaIncorporacionDesdeSelect)
       );
-      sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
-      if (
-        this.fechaIncorporacionDesdeSelect != null ||
-        this.fechaIncorporacionDesdeSelect != undefined
-      ) {
-        sessionStorage.setItem(
-          "fechaIncorporacionDesdeSelect",
-          JSON.stringify(this.fechaIncorporacionDesdeSelect)
-        );
-      }
-      sessionStorage.removeItem("fechaIncorporacionHastaSelect");
-      if (
-        this.fechaIncorporacionHastaSelect != null ||
-        this.fechaIncorporacionHastaSelect != undefined
-      ) {
-        sessionStorage.setItem(
-          "fechaIncorporacionHastaSelect",
-          JSON.stringify(this.fechaIncorporacionHastaSelect)
-        );
-      }
+    }
+    sessionStorage.removeItem("fechaIncorporacionHastaSelect");
+    if (
+      this.fechaIncorporacionHastaSelect != null ||
+      this.fechaIncorporacionHastaSelect != undefined
+    ) {
+      sessionStorage.setItem(
+        "fechaIncorporacionHastaSelect",
+        JSON.stringify(this.fechaIncorporacionHastaSelect)
+      );
+    }
 
 
-      if (this.fechaNacimientoDesdeSelect != null ||
-        this.fechaNacimientoDesdeSelect != undefined) {
-        sessionStorage.setItem(
-          "fechaNacimientoDesdeSelect",
-          JSON.stringify(this.fechaNacimientoDesdeSelect)
-        );
-      }
-      if (this.fechaNacimientoHastaSelect != null ||
-        this.fechaNacimientoHastaSelect != undefined) {
-        sessionStorage.setItem(
-          "fechaNacimientoHastaSelect",
-          JSON.stringify(this.fechaNacimientoHastaSelect)
-        );
-      }
-    
+    if (this.fechaNacimientoDesdeSelect != null ||
+      this.fechaNacimientoDesdeSelect != undefined) {
+      sessionStorage.setItem(
+        "fechaNacimientoDesdeSelect",
+        JSON.stringify(this.fechaNacimientoDesdeSelect)
+      );
+    }
+    if (this.fechaNacimientoHastaSelect != null ||
+      this.fechaNacimientoHastaSelect != undefined) {
+      sessionStorage.setItem(
+        "fechaNacimientoHastaSelect",
+        JSON.stringify(this.fechaNacimientoHastaSelect)
+      );
+    }
+
   }
   ngOnInit() {
-    
+
     this.commonsService.checkAcceso(procesos_censo.generarExcel)
       .then(respuesta => {
-        if(respuesta != undefined){
+        if (respuesta != undefined) {
           this.permisoExcel = respuesta;
         }
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_censo.comunicar)
       .then(respuesta => {
-        if(respuesta != undefined){
+        if (respuesta != undefined) {
           this.permisoComunicar = respuesta;
         }
       }).catch(error => console.error(error));
@@ -236,7 +236,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
     this.commonsService.checkAcceso(procesos_censo.generarExcel)
       .then(respuesta => {
-        if(respuesta != undefined){
+        if (respuesta != undefined) {
           this.permisoExcel = respuesta;
         }
       }).catch(error => console.error(error));
@@ -255,7 +255,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
     let idInstitucion = this.authenticationService.getInstitucionSession();
     if (idInstitucion > 3000 || idInstitucion == 2000) {
-       this.isConsejo = true;
+      this.isConsejo = true;
     }
 
     if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {
@@ -344,7 +344,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.selection = "multiple";
 
     setTimeout(() => {
-      this.inputNumColegiado.nativeElement.focus();  
+      this.inputNumColegiado.nativeElement.focus();
     }, 300);
   }
 
@@ -354,9 +354,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   onHideDatosColegiales() {
     this.showDatosColegiales = !this.showDatosColegiales;
-    if(this.showDatosColegiales){
+    if (this.showDatosColegiales) {
       setTimeout(() => {
-        this.inputNumColegiado.nativeElement.focus();  
+        this.inputNumColegiado.nativeElement.focus();
       }, 300);
     }
   }
@@ -371,7 +371,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   irEditarColegiado(id) {
     id = [id]
-     if (id.length >= 1) {
+    if (id.length >= 1) {
       // orden es, fallecido, colegiado, de baja, no colegiado
       this.getSituacion(id);
 
@@ -909,7 +909,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       } else {
         var posIni = element.fechaEstadoStr.indexOf("-");
         var posFin = element.fechaEstadoStr.lastIndexOf("-");
-        var day = element.fechaEstadoStr.substring(posFin+1, posFin+3);
+        var day = element.fechaEstadoStr.substring(posFin + 1, posFin + 3);
         var year = element.fechaEstadoStr.substring(0, posIni);
         var month = element.fechaEstadoStr.substring(posIni + 1, posFin);
         element.fechaEstadoDate = new Date(year, month - 1, day);
@@ -1293,12 +1293,12 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.body.fechaNacimientoRango = [];
     this.body.fechaNacimientoRango[1] = this.fechaNacimientoHastaSelect;
     this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
-    
+
     let descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes'));
     descargasPendientes = descargasPendientes + 1;
     sessionStorage.setItem('descargasPendientes', descargasPendientes);
     this.showInfoPerenne(
-        'Se ha iniciado la descarga, puede continuar trabajando. Descargas Pendientes: ' + descargasPendientes
+      'Se ha iniciado la descarga, puede continuar trabajando. Descargas Pendientes: ' + descargasPendientes
     );
 
 
@@ -1308,7 +1308,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         if (data == null) {
           this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
           descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-          sessionStorage.setItem('descargasPendientes', descargasPendientes);        
+          sessionStorage.setItem('descargasPendientes', descargasPendientes);
         } else {
           let nombre = this.translateService.instant("censo.nombre.fichero.generarexcel") + new Date().getTime() + ".xlsx";
           saveAs(data, nombre);
@@ -1324,7 +1324,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
         this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
       }, () => {
-        
+
       });
 
   }
@@ -1424,17 +1424,17 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   focusInputField() {
     setTimeout(() => {
-      this.someDropdown.filterInputChild.nativeElement.focus();  
+      this.someDropdown.filterInputChild.nativeElement.focus();
     }, 300);
   }
   focusInputField2() {
     setTimeout(() => {
-      this.someDropdown2.filterInputChild.nativeElement.focus();  
+      this.someDropdown2.filterInputChild.nativeElement.focus();
     }, 300);
   }
   focusInputField3() {
     setTimeout(() => {
-      this.someDropdown3.filterInputChild.nativeElement.focus();  
+      this.someDropdown3.filterInputChild.nativeElement.focus();
     }, 300);
   }
 }

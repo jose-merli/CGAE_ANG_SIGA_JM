@@ -25,7 +25,7 @@ export class SerieFacturacionItem {
 	idPlantillaMail: string;
 
 	traspasoFacturas: boolean;
-	traspasoPlantilla:string;
+	traspasoPlantilla: string;
 	traspasoCodAuditoriaDef: string;
 
 	confDeudor: string;
@@ -47,7 +47,7 @@ export class SerieFacturacionItem {
 
 	idSerieFacturacionPrevia: string;
 	serieGenerica: boolean = false;
-    
+
 	constructor() { };
 
 }

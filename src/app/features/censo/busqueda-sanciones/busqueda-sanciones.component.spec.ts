@@ -8,9 +8,9 @@ describe('BusquedaSancionesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BusquedaSancionesComponent ]
+      declarations: [BusquedaSancionesComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

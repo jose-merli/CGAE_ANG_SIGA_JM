@@ -19,7 +19,7 @@ export class InputDivididoComponent implements OnInit {
   msgs: String = "";
   constructor(private commonsServices: CommonsService,
     private translateService: TranslateService) {
-   }
+  }
 
   ngOnInit(): void {
     //console.log(this.anio);

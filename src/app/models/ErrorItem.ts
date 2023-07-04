@@ -4,5 +4,5 @@ export class ErrorItem {
   infoURL: String;
   message: String;
   errorDetail: string;
-  constructor() {}
+  constructor() { }
 }

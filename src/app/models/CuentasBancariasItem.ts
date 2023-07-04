@@ -1,10 +1,10 @@
-export class CuentasBancariasItem{
+export class CuentasBancariasItem {
 
     bancosCodigo;
     codBanco;
     codSucursal;
     fechaBaja: Date;
-    
+
     iban: string = "";
     nombre: string;
     descripcion: string;
@@ -30,6 +30,6 @@ export class CuentasBancariasItem{
     idSufijoSjcs: string;
     sufijoSjcs: string;
     concepto: string;
-    
-    constructor(){}
+
+    constructor() { }
 }

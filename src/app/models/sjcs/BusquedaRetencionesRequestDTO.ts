@@ -1,14 +1,14 @@
 export class BusquedaRetencionesRequestDTO {
-    
-    idInstitucionList: string [] = [];
-    idPartidaPresupuestariaList: string [] = [];
-    idGrupoFacturacionList: string [] = [];
-    idHitoGeneralList: string [] = [];
+
+    idInstitucionList: string[] = [];
+    idPartidaPresupuestariaList: string[] = [];
+    idGrupoFacturacionList: string[] = [];
+    idHitoGeneralList: string[] = [];
     nombre: string;
-    idEstadoCertificacionList: string [] = [];
+    idEstadoCertificacionList: string[] = [];
     fechaDesde: Date;
     fechaHasta: Date;
     idCertificacion: string;
 
-    constructor(){}
+    constructor() { }
 }

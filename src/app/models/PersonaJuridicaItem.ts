@@ -13,5 +13,5 @@ export class PersonaJuridicaItem {
 	idPersona: String;
 	idPersonaDelete: String[] = [];
 	fechaBaja: Date;
-	constructor() {}
+	constructor() { }
 }

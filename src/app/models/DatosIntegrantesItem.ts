@@ -35,5 +35,5 @@ export class DatosIntegrantesItem {
   colegio: String;
   numeroInstitucion: String;
   descripcionCargo: String;
-  constructor() {}
+  constructor() { }
 }

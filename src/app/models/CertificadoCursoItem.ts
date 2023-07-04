@@ -9,5 +9,5 @@ export class CertificadoCursoItem {
   calificacion: string;
   idCertificadoCurso: string;
   clave: string;
-  constructor() {}
+  constructor() { }
 }

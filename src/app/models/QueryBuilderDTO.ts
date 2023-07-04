@@ -8,8 +8,7 @@ export class QueryBuilderDTO {
     idinstitucion: string;
 
     condition: string;
-	rules: QueryBuilderItem[] = [];
-	error: Error;
+    rules: QueryBuilderItem[] = [];
+    error: Error;
     constructor() { }
-  }
-  
+}

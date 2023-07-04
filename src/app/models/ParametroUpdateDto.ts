@@ -5,5 +5,5 @@ export class ParametroUpdateDto {
   idInstitucion: String;
   idRecurso: String;
   descripcion: String;
-  constructor() {}
+  constructor() { }
 }

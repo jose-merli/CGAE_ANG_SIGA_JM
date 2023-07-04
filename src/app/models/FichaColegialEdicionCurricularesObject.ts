@@ -3,5 +3,5 @@ import { ErrorItem } from "./ErrorItem";
 export class FichaColegialEdicionCurricularesObject {
   error: ErrorItem;
   FichaColegialEdicionCurricularesItem: FichaColegialEdicionCurricularesItem[] = [];
-  constructor() {}
+  constructor() { }
 }

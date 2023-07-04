@@ -8,9 +8,9 @@ describe('InputDivididoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InputDivididoComponent ]
+      declarations: [InputDivididoComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

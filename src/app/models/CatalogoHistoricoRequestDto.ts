@@ -5,5 +5,5 @@ export class CatalogoHistoricoRequestDto {
   idRegistro: String;
   idInstitucion: String;
   local: String;
-  constructor() {}
+  constructor() { }
 }

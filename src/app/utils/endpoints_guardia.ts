@@ -75,7 +75,7 @@ export let endpoints_guardia: any = {
     guardiaCalendario_generar: "guardia/generarCalendario",
     guardiaCalendario_descargarExcelLog: "guardia/descargarExcelLog",
     guardiaCalendario_zipLog: "guardia/descargarZipExcelLog",
-    guardiaCalendario_descargarLogCalendarioProgramado : "guardia/descargarLogCalendarioProgramado",
+    guardiaCalendario_descargarLogCalendarioProgramado: "guardia/descargarLogCalendarioProgramado",
 
 
     //Asistencia
@@ -147,15 +147,15 @@ export let endpoints_guardia: any = {
     guardiasInscripciones_buscarGuardiasAsocTurnos: "guardias/inscripciones/buscarGuardiasAsocTurnos",
     guardiasInscripciones_TarjetaColaGuardia: "guardias/inscripciones/inscripcionesCombo",
     guardiasInscripciones_TarjetaGestionInscripciones: "guardias/inscripciones/historicoInscripcion",
-    guardiasInscripciones_inscripcionesDisponibles:"guardias/inscripciones/inscripcionesDisponibles",
-    guardiasInscripciones_inscripcionesDisponiblesGuardia:"guardias/inscripciones/inscripcionesDisponiblesGuardia",
+    guardiasInscripciones_inscripcionesDisponibles: "guardias/inscripciones/inscripcionesDisponibles",
+    guardiasInscripciones_inscripcionesDisponiblesGuardia: "guardias/inscripciones/inscripcionesDisponiblesGuardia",
     guardiasInscripciones_inscripcionPorguardia: "guardias/inscripciones/inscripcionPorguardia",
     guardiasInscripciones_updateInscripcion: "guardias/inscripciones/updateInscripcion",
     guardiasInscripciones_insertSolicitarAlta: "guardias/inscripciones/insertSolicitarAlta",
 
 
     //guardias colegiado
-    guardiasColegiado_fechasDisponibles:"guardia/getComboDiasDisponiblesGC",
+    guardiasColegiado_fechasDisponibles: "guardia/getComboDiasDisponiblesGC",
     guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
     guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
     guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
@@ -190,11 +190,11 @@ export let endpoints_guardia: any = {
     cargasMasivasGuardia_uploadFileC: "guardia/cargasMasivasGuardia/uploadFileC",
 
 
-   //listas guardias
-   listasGuardias_searchListaGuardias: "listaguardias/buscarListaGuardias",
-   listasGuardias_saveListaGuardias: "listaguardias/guardarListaGuardias",
-   listasGuardias_searchGuardiasFromLista: "listaguardias/searchGuardiasFromLista",
-   listasGuardias_searchTipoDiaGuardia: "guardia/searchTipoDiaGuardia",
-   listasGuardias_guardarGuardiasEnLista: "listaguardias/guardarGuardiasEnLista",
-   listasGuardias_eliminarGuardiasFromLista: "listaguardias/eliminarGuardiasFromLista"
+    //listas guardias
+    listasGuardias_searchListaGuardias: "listaguardias/buscarListaGuardias",
+    listasGuardias_saveListaGuardias: "listaguardias/guardarListaGuardias",
+    listasGuardias_searchGuardiasFromLista: "listaguardias/searchGuardiasFromLista",
+    listasGuardias_searchTipoDiaGuardia: "guardia/searchTipoDiaGuardia",
+    listasGuardias_guardarGuardiasEnLista: "listaguardias/guardarGuardiasEnLista",
+    listasGuardias_eliminarGuardiasFromLista: "listaguardias/eliminarGuardiasFromLista"
 }

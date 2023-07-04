@@ -1,6 +1,6 @@
 export class FacturaLineaItem {
 
-    idFactura: string;
+	idFactura: string;
 	numeroLinea: string;
 	descripcion: string;
 	precioUnitario: number;
@@ -14,5 +14,5 @@ export class FacturaLineaItem {
 
 	modoEdicion: boolean;
 
-    constructor() {}
+	constructor() { }
 }

@@ -9,7 +9,7 @@ describe('ComunicacionSociedadesComponent', () => {
 	beforeEach(
 		async(() => {
 			TestBed.configureTestingModule({
-				declarations: [ ComunicacionSociedadesComponent ]
+				declarations: [ComunicacionSociedadesComponent]
 			}).compileComponents();
 		})
 	);

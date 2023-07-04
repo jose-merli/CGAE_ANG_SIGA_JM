@@ -12,6 +12,6 @@ export class PlantillaEnvioItem {
     idPersona: String;
     idDireccion: String;
     idInstitucionDir: String;
-    combooItems: any [];
+    combooItems: any[];
     constructor() { };
 }

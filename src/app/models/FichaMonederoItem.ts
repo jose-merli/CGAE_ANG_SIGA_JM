@@ -3,23 +3,23 @@ import { ListaServiciosMonederoItem } from "./ListaServiciosMonederoItem";
 
 export class FichaMonederoItem {
 
-    //TARJETA DATOS GENERALES
-    idInstitucion: string;
-    idPersona: string;
-    nombre: string;
-    apellidos: string;
-    idtipoidentificacion: string;
-    nif: string;
-    nColegiado: string;
+  //TARJETA DATOS GENERALES
+  idInstitucion: string;
+  idPersona: string;
+  nombre: string;
+  apellidos: string;
+  idtipoidentificacion: string;
+  nif: string;
+  nColegiado: string;
 
-    //TARJETA MOVIMIENTOS
-    movimientos: ListaMovimientosMonederoItem[];
+  //TARJETA MOVIMIENTOS
+  movimientos: ListaMovimientosMonederoItem[];
 
-    //TARJETA SERVICIOS
-    servicios: ListaServiciosMonederoItem[]; 
+  //TARJETA SERVICIOS
+  servicios: ListaServiciosMonederoItem[];
 
-    idAnticipo: string; //Identificador del monedero
-    anioAnticipo : string;
-    
-    constructor() {}
-  }
+  idAnticipo: string; //Identificador del monedero
+  anioAnticipo: string;
+
+  constructor() { }
+}

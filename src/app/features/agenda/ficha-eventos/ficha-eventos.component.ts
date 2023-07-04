@@ -708,7 +708,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.sigaServices.get("fichaEventos_getEventStates").subscribe(
       n => {
         this.comboEstados = n.combooItems;
-        
+
       },
       err => {
         //console.log(err);
@@ -857,47 +857,47 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
     }
 
-    if(dateStart > new Date() && this.newEvent.idEstadoEvento == '2'){
+    if (dateStart > new Date() && this.newEvent.idEstadoEvento == '2') {
       this.showMessage(
-          "error",
-          this.translateService.instant("general.message.incorrect"),
-          this.translateService.instant("message.error.evento.cumplido")
-        );
-         this.progressSpinner = false;
-  }else{
-    if (
-      sessionStorage.getItem("modoEdicionEventoByAgenda") == "true" ||
-      (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
-      this.modoEdicionEvento
-    ) {
-      if (this.newEvent.idEvento != null) {
-        url = "fichaEventos_updateEventCalendar";
-        if (this.newEvent.idEventoOriginal != null && this.newEvent.idEventoOriginal != undefined) {
-          let utcStart = new Date(dateStart.getUTCFullYear(), dateStart.getUTCMonth(), dateStart.getUTCDate(), dateStart.getUTCHours(), dateStart.getUTCMinutes(), dateStart.getUTCSeconds());
-          let dateEnd = new Date(this.newEvent.end);
-          let utcEnd = new Date(dateEnd.getUTCFullYear(), dateEnd.getUTCMonth(), dateEnd.getUTCDate(), dateEnd.getUTCHours(), dateEnd.getUTCMinutes(), dateEnd.getUTCSeconds());
+        "error",
+        this.translateService.instant("general.message.incorrect"),
+        this.translateService.instant("message.error.evento.cumplido")
+      );
+      this.progressSpinner = false;
+    } else {
+      if (
+        sessionStorage.getItem("modoEdicionEventoByAgenda") == "true" ||
+        (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
+        this.modoEdicionEvento
+      ) {
+        if (this.newEvent.idEvento != null) {
+          url = "fichaEventos_updateEventCalendar";
+          if (this.newEvent.idEventoOriginal != null && this.newEvent.idEventoOriginal != undefined) {
+            let utcStart = new Date(dateStart.getUTCFullYear(), dateStart.getUTCMonth(), dateStart.getUTCDate(), dateStart.getUTCHours(), dateStart.getUTCMinutes(), dateStart.getUTCSeconds());
+            let dateEnd = new Date(this.newEvent.end);
+            let utcEnd = new Date(dateEnd.getUTCFullYear(), dateEnd.getUTCMonth(), dateEnd.getUTCDate(), dateEnd.getUTCHours(), dateEnd.getUTCMinutes(), dateEnd.getUTCSeconds());
 
-          if (this.newEvent.start.toString() != dateStart.toString() || this.newEvent.end.toString() != dateEnd.toString()) {
-            this.checkRepeatedEvents(url);
+            if (this.newEvent.start.toString() != dateStart.toString() || this.newEvent.end.toString() != dateEnd.toString()) {
+              this.checkRepeatedEvents(url);
+            } else {
+              this.callSaveEvent(url);
+            }
           } else {
             this.callSaveEvent(url);
           }
         } else {
+          url = "fichaEventos_saveEventCalendar";
           this.callSaveEvent(url);
         }
+      } else if (this.newEvent.idEvento != undefined) {
+        url = "fichaEventos_updateEventCalendar";
+        this.callSaveEvent(url);
       } else {
         url = "fichaEventos_saveEventCalendar";
         this.callSaveEvent(url);
       }
-    } else if (this.newEvent.idEvento != undefined) {
-      url = "fichaEventos_updateEventCalendar";
-      this.callSaveEvent(url);
-    } else {
-      url = "fichaEventos_saveEventCalendar";
-      this.callSaveEvent(url);
     }
   }
-}
 
   checkRepeatedEvents(url) {
 
@@ -2601,7 +2601,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   abreCierraFicha(key) {
-    if(!this.openFicha){
+    if (!this.openFicha) {
       this.onlyCheckDatos();
     }
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -2811,7 +2811,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.resaltadoDatosOpcionales = true;
   }
 
-  muestraCamposObligatoriosTodos(){
+  muestraCamposObligatoriosTodos() {
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatosOpcionales = true;
     this.resaltadoDatos = true;
@@ -2836,14 +2836,14 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   onlyCheckDatos() {
     if (this.validateForm()) {
       if (this.newEvent.fechaInicioRepeticion == undefined && this.newEvent.fechaFinRepeticion == undefined && this.newEvent.valoresRepeticion == undefined) {
-        this.resaltadoDatos=true;
+        this.resaltadoDatos = true;
       } else {
         if (this.newEvent.fechaInicioRepeticion != undefined || this.newEvent.fechaFinRepeticion != undefined || this.newEvent.valoresRepeticion != undefined) {
-          this.resaltadoDatos=true;
+          this.resaltadoDatos = true;
         } else {
-          this.resaltadoDatos=true;
+          this.resaltadoDatos = true;
         }
       }
-    } 
+    }
   }
 }

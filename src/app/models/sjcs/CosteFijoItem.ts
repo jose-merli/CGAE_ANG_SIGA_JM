@@ -13,8 +13,8 @@ export class CosteFijoItem {
   opcionTipoActuacion: ComboItem[];
 
   idCosteFijoOld: string;
-	idTipoAsistenciaOld: string;
-	idTipoActuacionOld: string;
+  idTipoAsistenciaOld: string;
+  idTipoActuacionOld: string;
   constructor() { }
 }
 

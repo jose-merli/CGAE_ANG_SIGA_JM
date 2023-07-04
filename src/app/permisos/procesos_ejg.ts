@@ -2,8 +2,8 @@ export const procesos_ejg: any = {
     //buscador
     ejg: "946",
 
-   //detalle ejg
-    tarjetaResumen: "93Y", 
+    //detalle ejg
+    tarjetaResumen: "93Y",
     datosGenerales: "943",
     cambioNumEJG: "930",
     serviciosTramitacion: "944",

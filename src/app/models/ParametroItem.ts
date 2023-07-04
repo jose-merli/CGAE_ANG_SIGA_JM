@@ -6,6 +6,6 @@ export class ParametroItem {
   fechaBaja: Date;
   idRecurso: String;
   posibleEliminar: String
-	idinstitucionActual: String;
-  constructor() {}
+  idinstitucionActual: String;
+  constructor() { }
 }

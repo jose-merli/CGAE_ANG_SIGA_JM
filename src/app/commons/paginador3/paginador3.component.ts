@@ -51,80 +51,80 @@ export class Paginador3Component implements OnInit {
 
   ngOnInit(): void {
     this.selectedPerPage = 10;
-    this.from = this.pagNumber *this.selectedPerPage + 1;
-    if (this.pagNumber + 1 == this.lastPage){
+    this.from = this.pagNumber * this.selectedPerPage + 1;
+    if (this.pagNumber + 1 == this.lastPage) {
       this.to = this.totalRegistros;
-     } else {
-      this.to = (this.pagNumber+1)*this.selectedPerPage;
+    } else {
+      this.to = (this.pagNumber + 1) * this.selectedPerPage;
 
-     }
+    }
     this.fromReg.emit(this.from);
     this.toReg.emit(this.to);
   }
-  selectedAll(){
+  selectedAll() {
     this.selected = !this.selected;
     this.seleccionarTodo.emit(this.selected);
   }
-  onChangeRowsPerPages(event){
+  onChangeRowsPerPages(event) {
     this.calculatingElementsLastPage();
     this.pagNumber = 0;
     this.perPage.emit(event.value);
-    this.from = this.pagNumber*this.selectedPerPage + 1;
-   if (this.pagNumber  + 1 == this.lastPage){
-    this.to = this.totalRegistros;
-   } else {
-    this.to = (this.pagNumber+1)*this.selectedPerPage;
-   }
-    this.to = (this.pagNumber+1)*this.selectedPerPage;
+    this.from = this.pagNumber * this.selectedPerPage + 1;
+    if (this.pagNumber + 1 == this.lastPage) {
+      this.to = this.totalRegistros;
+    } else {
+      this.to = (this.pagNumber + 1) * this.selectedPerPage;
+    }
+    this.to = (this.pagNumber + 1) * this.selectedPerPage;
     this.fromReg.emit(this.from);
     this.toReg.emit(this.to);
     this.comeFrom = "TO1";
     this.pagBot.changePage(1);
     this.pagTop.changePage(1);
-    this.comeFrom  = "";
+    this.comeFrom = "";
 
   }
-  fn1(event){
+  fn1(event) {
     this.calculatingElementsLastPage();
-    if (this.comeFrom != "FN2" && this.comeFrom != "TO1"){
-    this.pagNumber = Math.ceil(event.first/event.rows);
-    this.comeFrom = "FN1";
-    this.pagBot.changePage(this.pagNumber);
-    this.from = this.pagNumber *this.selectedPerPage + 1;
-    if (this.pagNumber + 1 == this.lastPage){
-      this.to = this.totalRegistros;
-     } else {
-      this.to = (this.pagNumber+1)*this.selectedPerPage;
-     }
-    this.fromReg.emit(this.from);
-    this.toReg.emit(this.to);
-    this.comeFrom = "";
+    if (this.comeFrom != "FN2" && this.comeFrom != "TO1") {
+      this.pagNumber = Math.ceil(event.first / event.rows);
+      this.comeFrom = "FN1";
+      this.pagBot.changePage(this.pagNumber);
+      this.from = this.pagNumber * this.selectedPerPage + 1;
+      if (this.pagNumber + 1 == this.lastPage) {
+        this.to = this.totalRegistros;
+      } else {
+        this.to = (this.pagNumber + 1) * this.selectedPerPage;
+      }
+      this.fromReg.emit(this.from);
+      this.toReg.emit(this.to);
+      this.comeFrom = "";
     }
   }
-  fn2(event){
+  fn2(event) {
     this.calculatingElementsLastPage();
-    if (this.comeFrom != "FN1" && this.comeFrom != "TO1"){
-    this.pagNumber = Math.ceil(event.first/event.rows);
-    this.comeFrom = "FN2";
-    this.pagTop.changePage(this.pagNumber);
-    this.from = this.pagNumber *this.selectedPerPage + 1;
-    if (this.pagNumber + 1 == this.lastPage){
-      this.to = this.totalRegistros;
-     } else {
-      this.to = (this.pagNumber+1)*this.selectedPerPage;
-     }
-    this.fromReg.emit(this.from);
-    this.toReg.emit(this.to);
-    this.comeFrom = "";
+    if (this.comeFrom != "FN1" && this.comeFrom != "TO1") {
+      this.pagNumber = Math.ceil(event.first / event.rows);
+      this.comeFrom = "FN2";
+      this.pagTop.changePage(this.pagNumber);
+      this.from = this.pagNumber * this.selectedPerPage + 1;
+      if (this.pagNumber + 1 == this.lastPage) {
+        this.to = this.totalRegistros;
+      } else {
+        this.to = (this.pagNumber + 1) * this.selectedPerPage;
+      }
+      this.fromReg.emit(this.from);
+      this.toReg.emit(this.to);
+      this.comeFrom = "";
     }
   }
 
-  calculatingElementsLastPage(){
-    let rounded = Math.ceil(this.totalRegistros/ this.selectedPerPage);
-    let notRounded = this.totalRegistros/ this.selectedPerPage;
+  calculatingElementsLastPage() {
+    let rounded = Math.ceil(this.totalRegistros / this.selectedPerPage);
+    let notRounded = this.totalRegistros / this.selectedPerPage;
     let resto = this.totalRegistros % this.selectedPerPage;
     this.lastPage = rounded;
-    if (rounded > notRounded){
+    if (rounded > notRounded) {
       this.elementsInLastPage = resto;
     } else {
       this.elementsInLastPage = this.selectedPerPage;

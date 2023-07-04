@@ -46,9 +46,9 @@ export class BotoneraComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-
-
+		//No hay ejecución.
 	}
+
 	ngAfterViewChecked() {
 		setTimeout(() => {
 			for (let i in this.botones) {

@@ -7,8 +7,8 @@ export class DeleteCalendariosProgDatosEntradaItem {
     fechaDesde;
     fechaHasta;
     contadorGenerados;
-    facturado:boolean;
-    asociadoAsistencias:boolean;
+    facturado: boolean;
+    asociadoAsistencias: boolean;
     constructor() { }
 
 }

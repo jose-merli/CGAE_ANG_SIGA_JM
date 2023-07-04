@@ -11,7 +11,7 @@ export class Cell {
   value: any;
   combo: Combo[];
   size: number;
-  disabled : boolean;
+  disabled: boolean;
 }
 
 export class Combo {
@@ -80,6 +80,6 @@ export class TablaResultadoMixIncompService {
       finalRows.push(rowObject);
     }));
     return finalRows;
-}
+  }
 
 }

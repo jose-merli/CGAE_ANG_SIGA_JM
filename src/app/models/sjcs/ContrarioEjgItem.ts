@@ -33,6 +33,6 @@ export class ContrarioEjgItem {
     tmpejisletnif: string;
 
     fechabaja: Date;
-    
+
     constructor() { }
 }

@@ -1,48 +1,38 @@
-import { Injectable } from '@angular/core';
 import {
-	HttpClient,
-	HttpResponse,
-	HttpParams,
-	HttpResponseBase,
-	HttpHeaders,
 	HttpBackend,
-	HttpErrorResponse
+	HttpClient,
+	HttpErrorResponse,
+	HttpHeaders
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { saveAs } from 'file-saver/FileSaver';
+import { MenuItem } from 'primeng/api';
+import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import { environment } from '../../environments/environment';
-import { MenuItem } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
-import { RequestOptions, Headers, ResponseContentType } from '@angular/http';
-import { Subject } from 'rxjs/Subject';
-import { endpoints_maestros } from "../utils/endpoints_maestros";
-import { endpoints_justiciables } from "../utils/endpoints_justiciables";
-import { endpoints_guardia } from "../utils/endpoints_guardia";
-import { endpoints_oficio } from "../utils/endpoints_oficio";
-import { endpoints_facturacionPyS } from "../utils/endpoints_facturacionPyS";
-import { endpoints_componentes } from "../utils/endpoints_components";
-import { endpoints_EJG } from "../utils/endpoints_EJG";
-import { endpoints_facturacionsjcs } from "../utils/endpoints_facturacionsjcs";
-import { endpoints_generales } from "../utils/endpoints_generales";
-import { endpoints_PyS } from "../utils/endpoints_PyS";
 import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
-import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
-import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
-import { endpoints_EJG_Comision } from '../utils/endpoints_EJG_Comision';
-import { endpoints_remesa } from '../utils/endpoints_remesa';
-import { endpoints_intercambios } from '../utils/endpoints_intercambios';
+import { DocumentacionIncorporacionItem } from '../models/DocumentacionIncorporacionItem';
 import { NuevaComunicacionItem } from '../models/NuevaComunicacionItem';
 import { DocumentacionAsistenciaItem } from '../models/guardia/DocumentacionAsistenciaItem';
 import { DocumentoAsistenciaItem } from '../models/guardia/DocumentoAsistenciaItem';
-import { BehaviorSubject } from 'rxjs';
+import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
+import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
+import { endpoints_EJG } from "../utils/endpoints_EJG";
+import { endpoints_EJG_Comision } from '../utils/endpoints_EJG_Comision';
+import { endpoints_PyS } from "../utils/endpoints_PyS";
+import { endpoints_componentes } from "../utils/endpoints_components";
 import { endpoints_expedientes } from '../utils/endpoints_expedientes';
-import { DocumentacionIncorporacionItem } from '../models/DocumentacionIncorporacionItem';
-import { saveAs } from 'file-saver/FileSaver';
+import { endpoints_facturacionPyS } from "../utils/endpoints_facturacionPyS";
+import { endpoints_facturacionsjcs } from "../utils/endpoints_facturacionsjcs";
+import { endpoints_generales } from "../utils/endpoints_generales";
+import { endpoints_guardia } from "../utils/endpoints_guardia";
+import { endpoints_intercambios } from '../utils/endpoints_intercambios';
+import { endpoints_justiciables } from "../utils/endpoints_justiciables";
+import { endpoints_maestros } from "../utils/endpoints_maestros";
+import { endpoints_oficio } from "../utils/endpoints_oficio";
+import { endpoints_remesa } from '../utils/endpoints_remesa';
 
 @Injectable()
 export class SigaServices {
@@ -450,64 +440,64 @@ export class SigaServices {
 		solicitudModificacion_searchSolModifDatosCambiarFotoDetail:
 			'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
 		solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
-      
-      	    // Monederos
-    monederosBusqueda_searchListadoMonederos: 'pys/getMonederos',															 
 
-		 //INICIO PRODUCTOS Y SERVICIOS
-  
-    //PANTALLA TIPOS PRODUCTOS
-    tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
-    tiposProductos_searchListadoProductosHistorico: 'pys/listadoTipoProductoHistorico',
-    tiposProductos_activarDesactivarProducto: 'pys/activarDesactivarProducto',
-    tiposProductos_crearEditarProducto: 'pys/crearEditarProducto',
-    tiposProductos_comboProducto: 'combo/tipoProductos',
+		// Monederos
+		monederosBusqueda_searchListadoMonederos: 'pys/getMonederos',
 
-    //PANTALLA TIPOS SERVICIOS
-    tiposServicios_searchListadoServicios: 'pys/listadoTipoServicio',
-    tiposServicios_searchListadoServiciosHistorico: 'pys/listadoTipoServicioHistorico',
-    tiposServicios_activarDesactivarServicio: 'pys/activarDesactivarServicio',
-    tiposServicios_crearEditarServicio: 'pys/crearEditarServicio',
-    tiposServicios_comboServicios: 'combo/tipoServicios',
+		//INICIO PRODUCTOS Y SERVICIOS
 
-    //PANTALLAS BUSCADOR PRODUCTOS / FICHA PRODUCTOS
-    productosBusqueda_comboIva: 'combo/tipoIva',
-    productosBusqueda_comboFormaPago: 'combo/tipoFormaPago',
-    productosBusqueda_comboTipos: 'pys/listadoTipoProductoByIdCategoria',
-    productosBusqueda_busqueda: 'pys/buscarProductos',
-    productosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoProductos',
-    fichaProducto_detalleProducto: 'pys/detalleProducto',
-    fichaProducto_crearProducto: 'pys/nuevoProducto',
-    fichaProducto_editarProducto: 'pys/editarProducto',
-    fichaProducto_comboIvaNoDerogados: 'combo/tipoIvaNoDerogados',
-    fichaProducto_comboFormasDePagoInternet: 'combo/pagoInternet',
-    fichaProducto_comboFormasDePagoSecretaria: 'combo/comboPagoSecretaria',
-    fichaProducto_crearFormaDePago: 'pys/formasPagoProducto',
-    fichaProducto_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegio',
+		//PANTALLA TIPOS PRODUCTOS
+		tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
+		tiposProductos_searchListadoProductosHistorico: 'pys/listadoTipoProductoHistorico',
+		tiposProductos_activarDesactivarProducto: 'pys/activarDesactivarProducto',
+		tiposProductos_crearEditarProducto: 'pys/crearEditarProducto',
+		tiposProductos_comboProducto: 'combo/tipoProductos',
 
-    //PANTALLAS BUSCADOR SERVICIOS / FICHA SERVICIOS
-    serviciosBusqueda_busqueda: 'pys/buscarServicios',
-    serviciosBusqueda_comboTipos: 'pys/listadoTipoServicioByIdCategoria',
-    serviciosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoServicios',
-    fichaServicio_detalleServicio: 'pys/detalleServicio',
-    fichaServicio_crearServicio: 'pys/nuevoServicio',
-    fichaServicio_editarServicio: 'pys/editarServicio',
-    fichaServicio_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegioServicios',
-    fichaServicio_comboCondicionSuscripcion: 'combo/CondicionSuscripcion',
-    fichaServicio_crearFormaDePago: 'pys/formasPagoServicio',
-    fichaServicio_borrarSuscripcionesBajas: 'pys/borrarSuscripcionesBajas',
-    fichaServicio_obtenerPreciosServicio: 'pys/detalleTarjetaPrecios',
-    fichaServicio_comboPeriodicidad: 'combo/comboPeriodicidad',
-    fichaServicio_crearEditarPrecios: 'pys/crearEditarPrecios',
-    fichaServicio_eliminarPrecios: 'pys/eliminarPrecios',
-    constructorConsultas_obtenerDatosConsulta: 'consultas/pys/obtenerDatosConsulta',
-    constructorConsultas_guardarDatosConstructor: 'consultas/pys/constructorConsultas',
-    constructorConsultas_obtenerConfigColumnasQueryBuilder: 'consultas/pys/obtenerConfigColumnasQueryBuilder',
-    constructorConsultas_obtenerCombosQueryBuilder: 'consultas/pys/obtenerCombosQueryBuilder',
+		//PANTALLA TIPOS SERVICIOS
+		tiposServicios_searchListadoServicios: 'pys/listadoTipoServicio',
+		tiposServicios_searchListadoServiciosHistorico: 'pys/listadoTipoServicioHistorico',
+		tiposServicios_activarDesactivarServicio: 'pys/activarDesactivarServicio',
+		tiposServicios_crearEditarServicio: 'pys/crearEditarServicio',
+		tiposServicios_comboServicios: 'combo/tipoServicios',
 
-    //FIN PRODUCTOS Y SERVICIOS
-      
-      
+		//PANTALLAS BUSCADOR PRODUCTOS / FICHA PRODUCTOS
+		productosBusqueda_comboIva: 'combo/tipoIva',
+		productosBusqueda_comboFormaPago: 'combo/tipoFormaPago',
+		productosBusqueda_comboTipos: 'pys/listadoTipoProductoByIdCategoria',
+		productosBusqueda_busqueda: 'pys/buscarProductos',
+		productosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoProductos',
+		fichaProducto_detalleProducto: 'pys/detalleProducto',
+		fichaProducto_crearProducto: 'pys/nuevoProducto',
+		fichaProducto_editarProducto: 'pys/editarProducto',
+		fichaProducto_comboIvaNoDerogados: 'combo/tipoIvaNoDerogados',
+		fichaProducto_comboFormasDePagoInternet: 'combo/pagoInternet',
+		fichaProducto_comboFormasDePagoSecretaria: 'combo/comboPagoSecretaria',
+		fichaProducto_crearFormaDePago: 'pys/formasPagoProducto',
+		fichaProducto_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegio',
+
+		//PANTALLAS BUSCADOR SERVICIOS / FICHA SERVICIOS
+		serviciosBusqueda_busqueda: 'pys/buscarServicios',
+		serviciosBusqueda_comboTipos: 'pys/listadoTipoServicioByIdCategoria',
+		serviciosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoServicios',
+		fichaServicio_detalleServicio: 'pys/detalleServicio',
+		fichaServicio_crearServicio: 'pys/nuevoServicio',
+		fichaServicio_editarServicio: 'pys/editarServicio',
+		fichaServicio_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegioServicios',
+		fichaServicio_comboCondicionSuscripcion: 'combo/CondicionSuscripcion',
+		fichaServicio_crearFormaDePago: 'pys/formasPagoServicio',
+		fichaServicio_borrarSuscripcionesBajas: 'pys/borrarSuscripcionesBajas',
+		fichaServicio_obtenerPreciosServicio: 'pys/detalleTarjetaPrecios',
+		fichaServicio_comboPeriodicidad: 'combo/comboPeriodicidad',
+		fichaServicio_crearEditarPrecios: 'pys/crearEditarPrecios',
+		fichaServicio_eliminarPrecios: 'pys/eliminarPrecios',
+		constructorConsultas_obtenerDatosConsulta: 'consultas/pys/obtenerDatosConsulta',
+		constructorConsultas_guardarDatosConstructor: 'consultas/pys/constructorConsultas',
+		constructorConsultas_obtenerConfigColumnasQueryBuilder: 'consultas/pys/obtenerConfigColumnasQueryBuilder',
+		constructorConsultas_obtenerCombosQueryBuilder: 'consultas/pys/obtenerCombosQueryBuilder',
+
+		//FIN PRODUCTOS Y SERVICIOS
+
+
 		// FOTO
 		solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
 		solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',
@@ -709,9 +699,9 @@ export class SigaServices {
 		...endpoints_justiciables,
 		...endpoints_oficio,
 		...endpoints_maestros,
-    ...endpoints_facturacionPyS,
-    ...endpoints_PyS,
-    ...endpoints_EJG_Comision,
+		...endpoints_facturacionPyS,
+		...endpoints_PyS,
+		...endpoints_EJG_Comision,
 		...endpoints_remesa,
 		...endpoints_intercambios,
 		...endpoints_guardia,
@@ -859,12 +849,11 @@ export class SigaServices {
 		return obs;
 	}
 
-	asyncDownloadInformes(fileObservable : Observable<any>, filename : String){
+	asyncDownloadInformes(fileObservable: Observable<any>, filename: string) {
 		let descargasPendientes;
 		fileObservable.subscribe(
 			(data) => {
 				if (data.size != 0) {
-					// let a = JSON.parse(data);
 					const blob = new Blob([data], { type: 'text/csv' });
 
 					if (blob != undefined) {
@@ -877,32 +866,23 @@ export class SigaServices {
 				} else {
 					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
 					sessionStorage.setItem('descargasPendientes', descargasPendientes);
-					/*if(descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) != 0){
-						this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
-					}*/
 					console.log('Descargar pendientes != 0');
 				}
 			},
 			(error) => {
 				descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
 				sessionStorage.setItem('descargasPendientes', descargasPendientes);
-				/*this.clearPerenne();
-				if (error.message != null && error.message != undefined) {
-					this.showFail(error.message);
-				} else {
-					this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
-				}*/
-				console.log(' No se pudo descargar. (Error de back)' , error);
+				console.log(' No se pudo descargar. (Error de back)', error);
 			}
 		);
 
 	}
 
-	postDownloadFiles(service: string, body: any, asyncDownload: boolean = false, fileName:String = '' ): Observable<any>  {
+	postDownloadFiles(service: string, body: any, asyncDownload: boolean = false, fileName: string = ''): Observable<any> {
 		let headers = new HttpHeaders({
 			'Content-Type': 'application/json'
 		});
-		const fileObservable : Observable<any> = this.http
+		const fileObservable: Observable<any> = this.http
 			.post(environment.newSigaUrl + this.endpoints[service], body, {
 				headers: headers,
 				observe: 'body', // si observe: "response" no sirve. Si se quita el observe sirve
@@ -911,12 +891,12 @@ export class SigaServices {
 			.map((response) => {
 				return response;
 			});
-			if(asyncDownload){
-				this.asyncDownloadInformes(fileObservable, fileName);
-			}
-				
-			return fileObservable;
-			
+		if (asyncDownload) {
+			this.asyncDownloadInformes(fileObservable, fileName);
+		}
+
+		return fileObservable;
+
 		//   .catch((response) => {
 		//     return this.parseErrorBlob(response);
 		//   });
@@ -937,12 +917,11 @@ export class SigaServices {
 				responseType: 'blob'
 			})
 			.map((response) => {
-				let data = {
+				return {
 					file: new Blob([response.body], { type: response.headers.get("Content-Type") }),
 					filename: response.headers.get("Content-Disposition"),
 					status: response.status
 				};
-				return data;
 			})
 			.catch((response) => {
 				return this.parseErrorBlob(response);
@@ -960,12 +939,11 @@ export class SigaServices {
 				responseType: 'blob'
 			})
 			.map((response) => {
-				let data = {
+				return {
 					file: new Blob([response.body], { type: response.headers.get("Content-Type") }),
 					filename: response.headers.get("Content-Disposition"),
 					status: response.status
 				};
-				return data;
 			})
 			.catch((response) => {
 				return response;
@@ -1202,43 +1180,43 @@ export class SigaServices {
 			});
 
 	}
-	
-	postSendFileAndIdSolicitud(service: string, documentos: DocumentacionIncorporacionItem[], idSolicitud: string): Observable<any>{
-	let formData: FormData = new FormData();
-	documentos.forEach((documento, i )=>{
 
-		let documentoJSON : DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
-		documentoJSON.idDocumentacion = documento.idDocumentacion;
-		documentoJSON.codDocEXEA = documento.codDocEXEA;
-		documentoJSON.documento = documento.documento;
-		documentoJSON.observaciones = documento.observaciones;
-		documentoJSON.obligatorio = documento.obligatorio;
-		documentoJSON.idModalidad = documento.idModalidad;
-		documentoJSON.tipoColegiacion = documento.tipoColegiacion;
-		documentoJSON.tipoSolicitud = documento.tipoSolicitud;
+	postSendFileAndIdSolicitud(service: string, documentos: DocumentacionIncorporacionItem[], idSolicitud: string): Observable<any> {
+		let formData: FormData = new FormData();
+		documentos.forEach((documento, i) => {
 
-		if(!documento.idFichero && documento.fileData){
-			formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
-		}
+			let documentoJSON: DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
+			documentoJSON.idDocumentacion = documento.idDocumentacion;
+			documentoJSON.codDocEXEA = documento.codDocEXEA;
+			documentoJSON.documento = documento.documento;
+			documentoJSON.observaciones = documento.observaciones;
+			documentoJSON.obligatorio = documento.obligatorio;
+			documentoJSON.idModalidad = documento.idModalidad;
+			documentoJSON.tipoColegiacion = documento.tipoColegiacion;
+			documentoJSON.tipoSolicitud = documento.tipoSolicitud;
 
-	});
+			if (!documento.idFichero && documento.fileData) {
+				formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
+			}
 
-    let headers = new HttpHeaders();
+		});
 
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
+		let headers = new HttpHeaders();
 
-	formData.append('idSolicitud', idSolicitud);
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
 
-	return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
+		formData.append('idSolicitud', idSolicitud);
 
-  }
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+
+	}
 
 	postSendFileAndDesigna(service: string, documentos: any[], designa: any): Observable<any> {
 		let formData: FormData = new FormData();
@@ -1286,7 +1264,7 @@ export class SigaServices {
 
 	postSendFileAndDesignaJustificacionExpres(service: string, files: any, designa: any): Observable<any> {
 		let formData: FormData = new FormData();
-		
+
 		if (files != undefined) {
 			for (let file of files) {
 				formData.append('uploadFile', file, file.name + ';' + JSON.stringify(designa));

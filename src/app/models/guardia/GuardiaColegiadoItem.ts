@@ -21,7 +21,7 @@ export class GuardiaColegiadoItem {
     numeroColegiado;
     nomColegiado;
     apeColegiado;
-    constructor(){
+    constructor() {
 
     }
 }

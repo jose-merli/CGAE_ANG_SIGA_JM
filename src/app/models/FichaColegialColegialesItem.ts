@@ -25,18 +25,18 @@ export class FichaColegialColegialesItem {
 	idInstitucion: String;
 	idPersona: String;
 	motivo: String;
-    nombrePoblacion: String;
-    direccion: String;
-    idPoblacion: String;
-    idPais: String;
-    idProvincia: String;
-    codigoPostal: String;
-    telefono1: String;
-    telefono2: String;
-    fax1: String;
-    fax2: String;
-    movil: String;
-    correoelectronico: String;
+	nombrePoblacion: String;
+	direccion: String;
+	idPoblacion: String;
+	idPais: String;
+	idProvincia: String;
+	codigoPostal: String;
+	telefono1: String;
+	telefono2: String;
+	fax1: String;
+	fax2: String;
+	movil: String;
+	correoelectronico: String;
 
-	constructor() {}
+	constructor() { }
 }

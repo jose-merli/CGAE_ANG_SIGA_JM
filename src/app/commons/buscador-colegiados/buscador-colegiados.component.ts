@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input,Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { Location } from '@angular/common';
 import { FiltroBuscadorColegiadosComponent } from './filtro-buscador-colegiados/filtro-buscador-colegiados.component';
@@ -19,24 +19,24 @@ export class BuscadorColegiadosComponent implements OnInit {
   progressSpinner: boolean = false;
   msgs: Message[] = [];
   show = false;
-  nuevaInscripcion:boolean = false;
-  nuevaInscripcionGuardia:boolean = false;
+  nuevaInscripcion: boolean = false;
+  nuevaInscripcionGuardia: boolean = false;
 
   datos: ColegiadosSJCSItem = new ColegiadosSJCSItem();
 
   @ViewChild(FiltroBuscadorColegiadosComponent) filtro;
-  
+
   @ViewChild(TablaBuscadorColegiadosComponent) tabla;
 
   @Input() volver;
   calendarioSelected = {
-    'duplicar' : '',
+    'duplicar': '',
     'tabla': [],
-    'turno':'',
+    'turno': '',
     'nombre': '',
     'generado': '',
     'numGuardias': '',
-    'listaGuarias': {label: '', value: ''},
+    'listaGuarias': { label: '', value: '' },
     'fechaDesde': '',
     'fechaHasta': '',
     'fechaProgramacion': null,
@@ -45,7 +45,7 @@ export class BuscadorColegiadosComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
-    'orden' : '',
+    'orden': '',
     'idConjunto': '',
     'idCalendarioGuardias': ''
   };
@@ -53,7 +53,7 @@ export class BuscadorColegiadosComponent implements OnInit {
 
   ngOnInit() {
     //console.log('sessionStorage.getItem("calendariosProgramados"): ', sessionStorage.getItem("calendariosProgramados"))
-    if(sessionStorage.getItem("calendariosProgramados") ){
+    if (sessionStorage.getItem("calendariosProgramados")) {
       this.calendarioSelected = JSON.parse(sessionStorage.getItem("calendarioSeleccinoado"));
       //console.log('calendarioSelected: ', this.calendarioSelected)
     }
@@ -62,17 +62,17 @@ export class BuscadorColegiadosComponent implements OnInit {
     }
 
     //Comprobar si viene del botón nuevo de busqueda de inscripciones
-    if (sessionStorage.getItem("origin") =="newInscrip") {
+    if (sessionStorage.getItem("origin") == "newInscrip") {
       sessionStorage.removeItem('origin');
-      this.nuevaInscripcion=true;
+      this.nuevaInscripcion = true;
     }
 
-     //Comprobar si viene del botón nuevo de busqueda de inscripciones
-     if (sessionStorage.getItem("sesion") =="nuevaInscripcion") {
+    //Comprobar si viene del botón nuevo de busqueda de inscripciones
+    if (sessionStorage.getItem("sesion") == "nuevaInscripcion") {
       sessionStorage.removeItem('sesion');
-      this.nuevaInscripcionGuardia=true;
+      this.nuevaInscripcionGuardia = true;
     }
-    
+
 
   }
 
@@ -100,16 +100,16 @@ export class BuscadorColegiadosComponent implements OnInit {
   goBack() {
     sessionStorage.setItem("volver", "true");
     sessionStorage.setItem("buscadorColegiados", "");
-    if(sessionStorage.getItem('filtroAsistencia')){
-      sessionStorage.setItem("modoBusqueda","a");
+    if (sessionStorage.getItem('filtroAsistencia')) {
+      sessionStorage.setItem("modoBusqueda", "a");
     }
     this.location.back();
   }
 
-  buscar(){
+  buscar() {
     sessionStorage.setItem("volver", "true");
-    if(!sessionStorage.getItem("modoBusqueda")){
-      sessionStorage.setItem("modoBusqueda","a");
+    if (!sessionStorage.getItem("modoBusqueda")) {
+      sessionStorage.setItem("modoBusqueda", "a");
     }
 
     let guardia = "";
@@ -123,7 +123,7 @@ export class BuscadorColegiadosComponent implements OnInit {
     // }
 
     // if(this.filtro.filtro.idTurno != null && this.filtro.filtro.idGuardia != "" &&  this.filtro.filtro.idTurno instanceof Array){
-     
+
     //   this.filtro.filtro.idTurno = this.filtro.filtro.idTurno.toString();
     //   // this.filtro.filtro.idTurno.forEach(element => {
     //   //   turno+=element + ",";
@@ -133,13 +133,13 @@ export class BuscadorColegiadosComponent implements OnInit {
     // THIS.FILTRO.FILTRO.IDGUARDIA = GUARDIA;
     // THIS.FILTRO.FILTRO.IDTURNO = TURNO;
 
-    if(this.filtro.filtro.length!=0){
+    if (this.filtro.filtro.length != 0) {
       this.progressSpinner = true;
-      
+
       this.sigaServices.post("componenteGeneralJG_busquedaColegiadoEJG", this.filtro.filtro).subscribe(
         data => {
           this.progressSpinner = false;
-          this.show=true;
+          this.show = true;
           this.datos = JSON.parse(data.body).colegiadosSJCSItem;
           let error = JSON.parse(data.body).error;
 
@@ -163,27 +163,27 @@ export class BuscadorColegiadosComponent implements OnInit {
     }
   }
 
-  getColegiado(event){
-    if(this.nuevaInscripcion){
+  getColegiado(event) {
+    if (this.nuevaInscripcion) {
       this.persistenceService.setDatos(event);
       //sessionStorage.setItem("turno", JSON.stringify(event));
-      sessionStorage.setItem("origin","newInscrip");
+      sessionStorage.setItem("origin", "newInscrip");
       this.router.navigate(["/gestionInscripciones"]);
 
-    } else if(this.nuevaInscripcionGuardia){
+    } else if (this.nuevaInscripcionGuardia) {
       this.persistenceService.setDatos(event);
-      sessionStorage.setItem("sesion","nuevaInscripcion");
+      sessionStorage.setItem("sesion", "nuevaInscripcion");
       this.router.navigate(["/fichaInscripcionesGuardia"]);
-    
+
       //ir a la ficha de movimientos varios
-    }else if(sessionStorage.getItem("nuevoMovimientoVarios") =="true") {
-        sessionStorage.setItem("datosColegiado",JSON.stringify(event));
-        this.router.navigate(["/fichaMovimientosVarios"]);
-      
-    }else   if(sessionStorage.getItem("calendariosProgramados")){
+    } else if (sessionStorage.getItem("nuevoMovimientoVarios") == "true") {
+      sessionStorage.setItem("datosColegiado", JSON.stringify(event));
+      this.router.navigate(["/fichaMovimientosVarios"]);
+
+    } else if (sessionStorage.getItem("calendariosProgramados")) {
       sessionStorage.removeItem('calendariosProgramados')
       this.calendarioSelected = JSON.parse(sessionStorage.getItem("calendarioSeleccinoado"));
-       //redirigimos a fichaGuardiasColegiado
+      //redirigimos a fichaGuardiasColegiado
       let guardia = new GuardiaItem()
       guardia.idGuardia = this.calendarioSelected.idGuardia;
       guardia.idTurno = this.calendarioSelected.idTurno;
@@ -220,11 +220,11 @@ export class BuscadorColegiadosComponent implements OnInit {
       tipoTurno: "T.O PENAL BENIDORM"
       validada: "1"*/
       this.persistenceService.setDatos(guardia);
-      sessionStorage.setItem("infoGuardiaColeg",JSON.stringify(guardia));
-      sessionStorage.setItem("originGuardiaColeg","true");
-      sessionStorage.setItem("crearGuardiaColegiado","true");
+      sessionStorage.setItem("infoGuardiaColeg", JSON.stringify(guardia));
+      sessionStorage.setItem("originGuardiaColeg", "true");
+      sessionStorage.setItem("crearGuardiaColegiado", "true");
       this.router.navigate(['/gestionGuardiaColegiado']);
-    }else if(sessionStorage.getItem("pantalla") == "designaciones"){
+    } else if (sessionStorage.getItem("pantalla") == "designaciones") {
       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
       sessionStorage.removeItem("pantalla");
       this.router.navigate(['/designaciones']);

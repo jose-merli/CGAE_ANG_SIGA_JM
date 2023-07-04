@@ -9,5 +9,5 @@ export class UsuarioUpdate {
   idGrupo: String[];
   idUsuario: String;
   idInstitucion: String;
-  constructor() {}
+  constructor() { }
 }

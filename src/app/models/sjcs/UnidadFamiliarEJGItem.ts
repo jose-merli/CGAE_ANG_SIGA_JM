@@ -27,24 +27,24 @@ export class UnidadFamiliarEJGItem {
     estadoDes: string;
     fechaSolicitud: Date
     fechaBaja: string;
-    
+
     circunsExcep: number;
     incapacitado: number;
-    
+
     idParentesco: number;
     idTipoGrupoLab: number;
     idTipoIngreso: number;
-    
+
     descrIngrAnuales: string;
     bienesInmu: string;
     bienesMu: string;
     otrosBienes: string;
-    
+
     impIngrAnuales: number;
     impBienesInmu: number;
     impBienesMu: number;
     impOtrosBienes: number;
-    
+
     observaciones: string;
 
     isRepresentante: boolean;

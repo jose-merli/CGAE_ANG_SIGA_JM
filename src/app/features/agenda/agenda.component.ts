@@ -174,7 +174,7 @@ export class AgendaComponent implements OnInit {
         }
 
         let allDayText = this.calendarioSchedule.el.nativeElement.children[0].children[1].children[0].children[0].children[1].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].firstChild.children[0].innerTextHTML = "jol";
-    
+
         this.progressSpinner = false;
       },
       err => {

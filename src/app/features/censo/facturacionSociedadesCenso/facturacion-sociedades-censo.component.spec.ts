@@ -9,7 +9,7 @@ describe('FacturacionSociedadesCensoComponent', () => {
 	beforeEach(
 		async(() => {
 			TestBed.configureTestingModule({
-				declarations: [ FacturacionSociedadesCensoComponent ]
+				declarations: [FacturacionSociedadesCensoComponent]
 			}).compileComponents();
 		})
 	);

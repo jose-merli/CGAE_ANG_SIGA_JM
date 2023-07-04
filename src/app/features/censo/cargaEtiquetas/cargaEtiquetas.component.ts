@@ -4,7 +4,7 @@ import { OldSigaServices } from '../../../_services/oldSiga.service';
 @Component({
 	selector: 'app-cargaEtiquetas',
 	templateUrl: './cargaEtiquetas.component.html',
-	styleUrls: [ './cargaEtiquetas.component.scss' ]
+	styleUrls: ['./cargaEtiquetas.component.scss']
 })
 export class CargaEtiquetasComponent2 {
 	url;
@@ -13,5 +13,5 @@ export class CargaEtiquetasComponent2 {
 		this.url = sigaServices.getOldSigaUrl('cargaEtiquetas');
 	}
 
-	ngOnInit() {}
+	ngOnInit() { }
 }

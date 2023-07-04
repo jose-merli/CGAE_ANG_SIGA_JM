@@ -3,5 +3,5 @@ export class ParametroDeleteDto {
   parametro: String;
   valor: String;
   idInstitucion: String;
-  constructor() {}
+  constructor() { }
 }

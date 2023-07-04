@@ -7,5 +7,5 @@ export class DatosPersonaEventoItem {
   fechaModificacion: Date;
   fechabaja: Date;
 
-  constructor() {}
+  constructor() { }
 }

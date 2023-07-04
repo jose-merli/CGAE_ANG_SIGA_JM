@@ -3,5 +3,5 @@ export class HistoricoUsuarioUpdateDto {
   idHistorico: String;
   motivo: String;
   idInstitucion: String;
-  constructor() {}
+  constructor() { }
 }

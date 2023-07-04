@@ -10,6 +10,6 @@ export class CenCargamasiva {
     numregistroserroneos?: number;
     tipocarga?: string;
     usumodificacion?: number;
-    constructor() {}
+    constructor() { }
 }
 

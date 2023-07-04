@@ -82,10 +82,10 @@ export class SolicitudIncorporacionItem {
   nombreBanco: string;
   tipoDireccion: string;
 
-  numRegistro : string;
-  claveConsulta : string;
-  numExpediente : string;
-  documentos : DocumentacionIncorporacionItem [];
+  numRegistro: string;
+  claveConsulta: string;
+  numExpediente: string;
+  documentos: DocumentacionIncorporacionItem[];
 
   constructor() { }
 }

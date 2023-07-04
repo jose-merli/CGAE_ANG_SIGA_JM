@@ -9,7 +9,7 @@ import { ButtonModule } from "primeng/button";
 import { SigaStorageService } from "../../siga-storage.service";
 
 export enum KEY_CODE {
-  ENTER = 13
+	ENTER = 13
 }
 
 @Component({
@@ -204,11 +204,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 	}
 
 	@HostListener("document:keypress", ["$event"])
-  	onKeyPress(event: KeyboardEvent) {
-    	if (event.keyCode === KEY_CODE.ENTER) {
-      		this.submit();
-    	}
-  	}
+	onKeyPress(event: KeyboardEvent) {
+		if (event.keyCode === KEY_CODE.ENTER) {
+			this.submit();
+		}
+	}
 
 	isHabilitadoEntrar() {
 		if (

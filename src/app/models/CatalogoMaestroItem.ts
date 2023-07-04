@@ -10,5 +10,5 @@ export class CatalogoMaestroItem {
   local: String;
   longitudDescripcion: String;
   longitudCodigoExt: String;
-  constructor() {}
+  constructor() { }
 }

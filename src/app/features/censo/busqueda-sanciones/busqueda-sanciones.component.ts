@@ -88,7 +88,7 @@ export class BusquedaSancionesComponent implements OnInit {
 
       if (sessionStorage.getItem("back") == "true") {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
-        if(this.body.chkArchivadas == true){
+        if (this.body.chkArchivadas == true) {
           this.historico();
         }
         this.transformDates(this.body);
@@ -314,7 +314,7 @@ export class BusquedaSancionesComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
-            setTimeout(()=>{
+            setTimeout(() => {
               this.commonsService.scrollTablaFoco('tablaFoco');
             }, 5);
           }
@@ -435,7 +435,7 @@ export class BusquedaSancionesComponent implements OnInit {
 
   onRowSelect(selectedDatos) {
     if (!this.selectMultiple) {
-      if(this.isHistory){
+      if (this.isHistory) {
         this.body.chkArchivadas = true;
       }
       // Guardamos los filtros
@@ -523,10 +523,10 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
   clickFila(event) {
-    if (event.data && event.data.archivada == 'No' && this.isHistory){
+    if (event.data && event.data.archivada == 'No' && this.isHistory) {
       this.selectedDatos.pop();
     }
-      
+
   }
   showFail(mensaje: string) {
     this.msgs = [];
@@ -661,7 +661,7 @@ export class BusquedaSancionesComponent implements OnInit {
 
   focusInputField() {
     setTimeout(() => {
-      this.someDropdown.filterInputChild.nativeElement.focus();  
+      this.someDropdown.filterInputChild.nativeElement.focus();
     }, 300);
   }
 }

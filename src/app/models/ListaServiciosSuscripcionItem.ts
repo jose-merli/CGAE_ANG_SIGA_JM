@@ -1,4 +1,4 @@
-export class ListaServiciosSuscripcionItem{
+export class ListaServiciosSuscripcionItem {
     orden: string;
     descripcion: string;
     observaciones: string;
@@ -24,7 +24,7 @@ export class ListaServiciosSuscripcionItem{
 
     idComboPrecio: string;
 
-    solicitarBaja : string;
+    solicitarBaja: string;
     automatico: string;
 
     idPeticion: string;

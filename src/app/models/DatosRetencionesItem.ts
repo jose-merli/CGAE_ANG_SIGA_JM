@@ -12,5 +12,5 @@ export class DatosRetencionesItem {
   value: String;
   label: String;
   idLenguaje: String;
-  constructor() {}
+  constructor() { }
 }

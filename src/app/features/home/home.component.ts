@@ -23,8 +23,8 @@ import { ColegiadoItem } from '../../models/ColegiadoItem';
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices,private authenticationService: AuthenticationService, handler: HttpBackend, 
-		private localStorageService: SigaStorageService, private  ngZone:NgZone) {
+	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices, private authenticationService: AuthenticationService, handler: HttpBackend,
+		private localStorageService: SigaStorageService, private ngZone: NgZone) {
 		this.http = new HttpClient(handler);
 		this.oldSigaServices = oldSigaServices;
 	}
@@ -33,14 +33,14 @@ export class HomeComponent implements OnInit {
 	ngOnInit() {
 		this.sigaServices.get('getLetrado').subscribe(
 			(data) => {
-			  if (data.value == 'S') {
-				this.localStorageService.isLetrado = true;
-			  } else {
-				this.localStorageService.isLetrado = false;
-			  }
+				if (data.value == 'S') {
+					this.localStorageService.isLetrado = true;
+				} else {
+					this.localStorageService.isLetrado = false;
+				}
 			},
 			(err) => {
-			  //console.log(err);
+				//console.log(err);
 			}
 		);
 		this.getLetrado();
@@ -52,17 +52,17 @@ export class HomeComponent implements OnInit {
 	}
 
 	oldSigaLogin() {
-		
+
 		this.sigaServices.get('getTokenOldSiga').subscribe(
 			token => {
 				sessionStorage.setItem('AuthOldSIGA', token.valor);
 				this.authenticationService.oldSigaLogin().subscribe(
 					response => {
 						//console.log("Login en SIGA Classique correcto");
-						},
-						err => {
+					},
+					err => {
 						//console.log(err);
-						}
+					}
 				);
 			},
 			(err) => {
@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
 				//console.log(err);
 			}
 		);
-		
+
 	}
 
 	getLetrado() {
@@ -153,7 +153,7 @@ export class HomeComponent implements OnInit {
 			this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
 				usr => {
 					let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
-					if(usuarioLogado) {
+					if (usuarioLogado) {
 						this.localStorageService.idPersona = usuarioLogado.idPersona;
 						this.localStorageService.numColegiado = usuarioLogado.numColegiado;
 					}

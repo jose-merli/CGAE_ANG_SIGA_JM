@@ -13,4 +13,4 @@ import { CheckboxModule } from "primeng/checkbox";
   exports: [DniValidator],
   providers: [CustomValidators, ValidationService]
 })
-export class ValidationModule {}
+export class ValidationModule { }

@@ -7,5 +7,5 @@ export class CatalogoUpdateRequestDto {
   idLenguaje: String;
   local: String;
   error: String;
-  constructor() {}
+  constructor() { }
 }

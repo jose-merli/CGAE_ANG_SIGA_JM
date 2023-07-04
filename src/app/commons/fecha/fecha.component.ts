@@ -106,7 +106,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 			}
 		} else {
 			if (this.value == null || this.value == undefined) {
-				if ( !(this.value instanceof Date) && newValue.toString() != 'Invalid Date') {
+				if (!(this.value instanceof Date) && newValue.toString() != 'Invalid Date') {
 					this.value = new Date(newValue);
 				}
 			}
@@ -114,7 +114,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 			if (this.value != null && this.value.toString().indexOf(':') != -1) {
 				this.value = new Date(newValue);
 			}
-			
+
 			this.valueChangeSelected.emit(this.value);
 		}
 	}

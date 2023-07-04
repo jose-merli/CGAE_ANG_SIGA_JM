@@ -1,4 +1,4 @@
-export class CargaMasivaComprasItem { 
+export class CargaMasivaComprasItem {
     fechaCarga?: string;
     fechaModificacion?: string;
     idCargaMasiva?: number;
@@ -11,5 +11,5 @@ export class CargaMasivaComprasItem {
     tipoCarga?: string;
     usuario?: string;
 
-    constructor(){}
+    constructor() { }
 }

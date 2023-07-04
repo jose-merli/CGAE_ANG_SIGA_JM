@@ -14,22 +14,22 @@ export class TablaSimpleComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  selectRow(rowId){
-    if(this.selectedArray.includes(rowId)){
+  selectRow(rowId) {
+    if (this.selectedArray.includes(rowId)) {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
-    }else{
+    } else {
       this.selectedArray.push(rowId);
     }
-    if(this.selectedArray.length != 0){
+    if (this.selectedArray.length != 0) {
       this.anySelected.emit(true);
-    }else{
+    } else {
       this.anySelected.emit(false);
     }
-    
+
   }
-  isSelected(id){
-    if(this.selectedArray.includes(id)){
+  isSelected(id) {
+    if (this.selectedArray.includes(id)) {
       return true;
     } else {
       return false;

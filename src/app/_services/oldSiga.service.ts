@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable, Subscriber } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpResponse, HttpParams, HttpResponseBase } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class OldSigaServices {
@@ -60,7 +60,7 @@ export class OldSigaServices {
 		cobrosRecobros: 'Dispatcher.do?proceso=2F0',
 		facturasEmitidas: 'Dispatcher.do?proceso=2A1',
 
-    	//Productos y Servicios
+		//Productos y Servicios
 		categoriasProducto: 'Dispatcher.do?proceso=400',
 		categoriasServicios: 'Dispatcher.do?proceso=401',
 		mantenimientoProductos: 'Dispatcher.do?proceso=34',
@@ -159,7 +159,7 @@ export class OldSigaServices {
 		catalogosMaestros: 'Dispatcher.do?proceso=78',
 
 		//EJG
-		expedienteDatAudi: 'Dispatcher.do?proceso=300', 
+		expedienteDatAudi: 'Dispatcher.do?proceso=300',
 		detalleSOJ: 'Dispatcher.do?proceso=94A',
 
 		//expedienteDatAudi: 'EXP_Auditoria_DatosGenerales.do?soloSeguimiento=false&editable=1&modo=&avanzada=&metodo=abrirNuevoEjg&numeroEjg=80&numEJGDisciplinario=20120&idTipoEjg=3&anioEjg=2021&nifSolicitante=&nombreSolicitante=++&idInstitucion_TipoExpediente=2005&numeroProcedimiento=&anioProcedimiento=&procedimiento=1231&asunto=&juzgado=114&juzgadoInstitucion=&pretension=128&pretensionInstitucion=2005&idturnoDesignado=3931&nombreDesignado=2005001421&numColDesignado=&idclasificacion=1&solicitanteEjgNif=&solicitanteEjgNombre=&solicitanteEjgApellido1=&solicitanteEjgApellido2=',
@@ -169,32 +169,28 @@ export class OldSigaServices {
 		login: 'login.do'
 	};
 
-	constructor(private http: HttpClient) {}
+	constructor(private http: HttpClient) { }
 
 	getOldSigaUrl(service: string) {
-		if(service=="login"||service=="loginDevelop"){
+		if (service == "login" || service == "loginDevelop") {
 			return environment.oldSigaUrl + this.oldServices[service] + '?token=' + sessionStorage.getItem('AuthOldSIGA');
-		}else{
+		} else {
 			return environment.oldSigaUrl + this.oldServices[service] + '&token=' + sessionStorage.getItem('AuthOldSIGA');
 		}
 	}
 
 	getBackend(service: string): Observable<any> {
 		return this.http
-		  .get(this.getOldSigaUrl(service))
-		  .map(response => {
-			return response;
-		  });
-	  }
+			.get(this.getOldSigaUrl(service))
+			.map(response => {
+				return response;
+			});
+	}
 
 	get(url: string): Observable<any> {
 		let headers = new HttpHeaders({
 			'X-UA-Compatible': 'IE=EmulateIE7'
 		});
-		// let options = { headers: headers, responseType: 'blob' }
-		// options.responseType = ResponseContentType.Blob;
-
-		// return this.http.get(url, { headers: headers, responseType: 'blob' });
 
 		return new Observable((observer: Subscriber<any>) => {
 			let objectUrl: string = null;

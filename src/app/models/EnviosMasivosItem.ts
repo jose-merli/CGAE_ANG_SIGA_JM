@@ -23,6 +23,6 @@ export class EnviosMasivosItem {
   csv: String;
   destinatario: String;
   numDestinatarios: String;
- 
+
   constructor() { }
 }
