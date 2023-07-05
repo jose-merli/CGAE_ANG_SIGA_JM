@@ -13,6 +13,7 @@ import { OldSigaServices } from '../../../../_services/oldSiga.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
 import { element } from 'protractor';
+import { ColegiadoItem } from '../../../../models/ColegiadoItem';
 
 @Component({
   selector: 'app-designaciones',
@@ -57,16 +58,56 @@ export class DesignacionesComponent implements OnInit {
       sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
     }
 
-    if (sessionStorage.getItem("colegiadoRelleno") == "true"){
+    if (sessionStorage.getItem("colegiadoRelleno") == "true" 
+        && sessionStorage.getItem("datosColegiado") != null && sessionStorage.getItem("datosColegiado") != undefined){
       const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
         this.usuarioBusquedaExpressFromFicha.numColegiado = numColegiado; //pasar al filtro
         this.usuarioBusquedaExpressFromFicha.nombreAp = nombre.replace(/,/g,""); //pasar al filtro
+    }else{
+      sessionStorage.setItem("colegiadoRelleno","false");
     }
 
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;
     this.numColegiadoLogado = this.localStorageService.numColegiado;
+    if(this.isLetrado==undefined){
+      this.commonsService.getLetrado()
+      .then(respuesta => {
+        this.isLetrado = respuesta;
+        if(this.isLetrado){
+          this.getDataLoggedUser();
+        }
+      });
+    }
+  }
+
+  getDataLoggedUser() {
+    this.progressSpinner = true;
+  
+    this.sigaServicesNew.get("usuario_logeado").subscribe(n => {
+  
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+  
+      this.sigaServicesNew.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+        usr => {
+          let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+					if(usuarioLogado) {
+						this.idPersonaLogado = usuarioLogado.idPersona;
+						this.numColegiadoLogado = usuarioLogado.numColegiado;
+					}
+
+          this.progressSpinner = false;
+  
+         }, err =>{
+          this.progressSpinner = false;
+        },
+        ()=>{
+          this.progressSpinner = false;
+        });
+      });
   }
 
   showTablaJustificacionExpres(event){
