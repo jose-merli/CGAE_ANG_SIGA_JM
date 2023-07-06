@@ -772,9 +772,9 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.estadoEJG = "";
           this.selectedEstados.forEach(element => {
             if(this.body.estadoEJG != ""){
-            this.body.estadoEJG += ",'" + element + "'";
+            this.body.estadoEJG += "," + element;
             }else{
-              this.body.estadoEJG = "'" + element + "'";
+              this.body.estadoEJG = element;
             }
           });
         }
