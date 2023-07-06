@@ -123,20 +123,10 @@ export class EJGComponent implements OnInit {
       }else{
           filtros.estadoEJG = undefined;
         }
-    }else if(this.filtros.selectedEstados){
-      let estadosEJG : string="";
-      this.filtros.selectedEstados.forEach(estado=>{
-        if(estadosEJG==""){
-          estadosEJG+=estado;
-        }else{
-          estadosEJG+=", "+estado;
-        }
-      });
-      filtros.estadoEJG=estadosEJG;
-    }else if(this.filtros.remesaFicha){
-        filtros.estadoEJG = this.filtros.comboEstadoEJG[0].value.toString() + ", " + this.filtros.comboEstadoEJG[1].value.toString();
     }else{
-      filtros.estadoEJG = "";
+      if(this.filtros.remesaFicha){
+        filtros.estadoEJG = this.filtros.comboEstadoEJG[0].value.toString() + ", " + this.filtros.comboEstadoEJG[1].value.toString();
+      }
     }
 
     this.sigaServices.post("filtrosejg_busquedaEJG", filtros).subscribe(
