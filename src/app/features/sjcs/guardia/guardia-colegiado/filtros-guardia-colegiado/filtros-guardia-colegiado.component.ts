@@ -127,8 +127,18 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     this.filtros.fechadesde = new Date( new Date().setFullYear(new Date().getFullYear()-1));
   }
 
-  if (this.isColegiado) {
+  if(this.isColegiado || this.isColegiado == undefined){
+    if(this.isColegiado==undefined){
+      this.commonServices.getLetrado()
+      .then(respuesta => {
+        this.isColegiado = respuesta;
+        if(this.isColegiado){
+          this.getDataLoggedUser();
+        }
+      });
+    }else{
     this.getDataLoggedUser();
+    }
   }
 
   /*if (this.isColegiado && sessionStorage.getItem("origin") == "fichaColegial") {

@@ -76,6 +76,16 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
     sessionStorage.removeItem("modoBusqueda");
 
     this.isLetrado = this.localStorageService.isLetrado;
+    if(this.isLetrado == undefined){
+      this.commonsService.getLetrado()
+        .then(respuesta => {
+          this.isLetrado = respuesta;
+        });
+      setTimeout(() => {
+        //esperando isLetrado
+        console.log("Se ha refrescado la pantalla");
+      }, 500);
+    }
 
     // Filtros cuando insertamos nuevas Incripciones
     if (sessionStorage.getItem("filtroInsertInscripcion")) {
@@ -244,10 +254,9 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
 
 
   newInscripcion() {
-    let isLetrado = this.localStorageService.isLetrado;
     this.progressSpinner = true;
     this.persistenceService.setFiltros(this.filtros);
-    if (isLetrado) {
+    if (this.isLetrado) {
       let colegiadoConectado = new ColegiadoItem();
       this.sigaServices.get("usuario_logeado").subscribe(n => {
         colegiadoConectado.nif = n.usuarioLogeadoItem[0].dni;

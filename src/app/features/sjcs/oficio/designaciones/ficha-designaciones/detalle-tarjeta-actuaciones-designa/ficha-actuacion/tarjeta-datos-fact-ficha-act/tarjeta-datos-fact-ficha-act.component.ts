@@ -63,6 +63,12 @@ export class TarjetaDatosFactFichaActComponent implements OnInit {
 
         this.getComboPartidaPresupuestaria();
         this.isLetrado = this.localStorageService.isLetrado;
+        if(this.isLetrado == undefined){
+          this.commonsService.getLetrado()
+          .then(respuesta => {
+            this.isLetrado = respuesta;
+          });
+      }
 
       }
       ).catch(error => console.error(error));

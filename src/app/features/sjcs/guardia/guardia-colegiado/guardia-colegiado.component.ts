@@ -64,10 +64,18 @@ export class GuardiaColegiadoComponent implements OnInit {
       }
       ).catch(error => console.error(error));
       
-      if(this.localStorageService.isLetrado){
-          
-          this.isColegiado = true;
+      this.isColegiado = this.localStorageService.isLetrado;
 
+      if(this.isColegiado == undefined){
+          this.commonsService.getLetrado()
+          .then(respuesta => {
+            this.isColegiado = respuesta;
+            
+          });
+        setTimeout(() => {
+          //esperando isLetrado
+          console.log("Se ha refrescado la pantalla");
+        }, 500);
       }
       
       this.progressSpinner = false;

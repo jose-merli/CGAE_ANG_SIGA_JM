@@ -14,6 +14,7 @@ import { UsuarioLogado } from '../detalle-tarjeta-actuaciones-designa/ficha-actu
 import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDesignaItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { Router } from '@angular/router';
+import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 
 interface Cabecera {
   id: string;
@@ -115,6 +116,14 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
         if (this.isLetrado) {
           this.usuarioLogado.idPersona = this.localStorageService.idPersona;
           this.usuarioLogado.numColegiado = this.localStorageService.numColegiado;
+        }else{
+          this.commonsService.getLetrado()
+            .then(respuesta => {
+              this.isLetrado = respuesta;
+              if(this.isLetrado){
+                this.getDataLoggedUser();
+              }
+            });
         }
 
         this.getComboAsociado();
@@ -126,6 +135,26 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       })
       .catch(err => console.log(err));
 
+  }
+
+  getDataLoggedUser() {
+    if (this.isLetrado) {
+      this.progressSpinner = true;
+
+      this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+        const usuario = n.usuarioLogeadoItem;
+        const colegiadoItem = new ColegiadoItem();
+        colegiadoItem.nif = usuario[0].dni;
+
+        this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+          usr => {
+            this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+            this.progressSpinner = false;
+          });
+
+      });
+    }
   }
 
   cargaInicial() {

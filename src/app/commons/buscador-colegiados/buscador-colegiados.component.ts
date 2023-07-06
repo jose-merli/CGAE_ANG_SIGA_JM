@@ -228,16 +228,16 @@ export class BuscadorColegiadosComponent implements OnInit {
       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
       sessionStorage.removeItem("pantalla");
       this.router.navigate(['/designaciones']);
+    }else if(sessionStorage.getItem("pantalla") == "ejgexpress"){
+      sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
+      sessionStorage.setItem("vieneDeJE", "true");
+      sessionStorage.removeItem("pantalla");
+      this.router.navigate(['/designaciones']);
     }else{
       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
-
       sessionStorage.getItem('nuevo');
-      
       this.location.back();
     }
-
-  
-
   }
 
   showMessage(severity, summary, msg) {

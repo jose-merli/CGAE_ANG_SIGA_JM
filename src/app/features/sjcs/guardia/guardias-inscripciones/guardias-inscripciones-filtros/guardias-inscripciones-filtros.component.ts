@@ -81,6 +81,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
     this.getComboTurno();
 
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
+
     this.filtros.afechade = new Date( new Date().setFullYear(new Date().getFullYear()));
       
     if (this.persistenceService.getHistorico() != undefined) {
@@ -117,6 +118,16 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
     if (this.isLetrado) {
       this.getDataLoggedUser();
     }
+    
+    if(this.isLetrado == undefined){
+			this.commonsService.getLetrado()
+			.then(respuesta => {
+				this.isLetrado = respuesta;
+        if (this.isLetrado) {
+          this.getDataLoggedUser();
+        }
+			});
+		}
 
     if (sessionStorage.getItem("colegiadoRelleno")) {
       const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));

@@ -135,7 +135,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
        this.progressSpinner = false;
     }
     else {
-      this.defaultsearch(form)
+      this.defaultsearch(form);
     }
 
     if(this.idTurno!=null  && this.idGuardia!=null){

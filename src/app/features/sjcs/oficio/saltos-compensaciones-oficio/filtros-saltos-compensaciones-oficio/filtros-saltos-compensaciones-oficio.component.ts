@@ -56,6 +56,16 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
       this.idTurno = this.activatedRoute.snapshot.queryParamMap.get('idturno');
     }
     this.isLetrado = this.localStorageService.isLetrado;
+    if(this.isLetrado == undefined){
+      this.commonServices.getLetrado()
+        .then(respuesta => {
+          this.isLetrado = respuesta;
+        });
+      setTimeout(() => {
+        //esperando isLetrado
+        console.log("Se ha refrescado la pantalla");
+      }, 500);
+    }
     if (this.isLetrado) {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();

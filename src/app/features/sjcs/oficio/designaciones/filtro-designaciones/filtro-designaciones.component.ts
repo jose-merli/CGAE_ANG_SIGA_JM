@@ -103,10 +103,19 @@ export class FiltroDesignacionesComponent implements OnInit {
     numColegiado: '',
     nombreAp: ''
   };
+
   constructor(private translateService: TranslateService, private sigaServices: SigaServices, private location: Location, private router: Router,
     private localStorageService: SigaStorageService, private commonsService: CommonsService, private confirmationService: ConfirmationService,) { }
 
   ngOnInit(): void {
+    //Si venimos de busqueda de colegiado desde justificacion expres
+    // if(sessionStorage.getItem("pantalla") != null && sessionStorage.getItem("pantalla") == "ejgexpress"){ //Para usar esto quitar el remove de buscador-colegiados.component.ts
+    if(sessionStorage.getItem("vieneDeJE") != null){
+      this.showJustificacionExpress = true;
+      this.showDesignas = false;
+      // sessionStorage.setItem("vieneDeJE", "true");
+    }
+    
     sessionStorage.removeItem("modoBusqueda");
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     // let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
@@ -114,14 +123,13 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkAccesoDesigna();
     this.checkAccesoFichaActuacion();
     this.getParamsEJG(false);
-
+    
     //console.log('this.usuarioBusquedaExpressFromFicha*********', this.usuarioBusquedaExpressFromFicha)
     if (sessionStorage.getItem("buscadorColegiados")) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
       this.showColegiado = true;
-
       this.buscar();
     } else if (this.usuarioBusquedaExpressFromFicha != undefined) {
       this.usuarioBusquedaExpress.nombreAp = this.usuarioBusquedaExpressFromFicha.nombreAp;
@@ -196,21 +204,36 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   cargaInicial() {
     this.isLetrado = this.localStorageService.isLetrado;
+    if(this.isLetrado == undefined){
+        this.commonsService.getLetrado()
+        .then(respuesta => {
+          this.isLetrado = respuesta;
+          if (this.isLetrado) {
+            this.getDataLoggedUser();
+            this.disableRestricciones = true;
+            this.ocultarRestricciones = true;
+            this.disabledBusquedaExpress = true;
+          } else {
+            this.disableRestricciones = false;
+          }
+        });
+    }
 
     if (!this.esColegiado) {
       this.isButtonVisible = true;
     } else {
       this.isButtonVisible = true;// DEBE SER FALSE
     }
+
     if (this.localStorageService.institucionActual == "2003") {
       this.isButtonVisible = false;
     }
+    
     this.filtroJustificacion = new JustificacionExpressItem();
     this.showDesignas = true;
     this.showJustificacionExpress = false;
     this.esColegiado = false;
     this.progressSpinner = true;
-    this.showDesignas = true;
     this.checkRestricciones = false;
 
     //justificacion expres
@@ -231,6 +254,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       if (this.isLetrado) {
         this.disableRestricciones = true;
         this.ocultarRestricciones = true;
+        this.disabledBusquedaExpress = true;
       } else {
         this.disableRestricciones = false;
       }
@@ -255,10 +279,21 @@ export class FiltroDesignacionesComponent implements OnInit {
 
     //combo comun
     this.getComboEstados();
+    this.progressSpinner = false;
   }
 
   cargaInicialJE() {
     this.isLetrado = this.localStorageService.isLetrado;
+    if(this.isLetrado == undefined){
+        this.commonsService.getLetrado()
+        .then(respuesta => {
+          this.isLetrado = respuesta;
+        });
+      setTimeout(() => {
+        //esperando isLetrado
+        console.log("Se ha refrescado la pantalla");
+      }, 500);
+    }
 
     if (!this.esColegiado) {
       this.isButtonVisible = false;
@@ -276,7 +311,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.filtroJustificacion = new JustificacionExpressItem();
     }
 
-   
+    this.showDesignas = false;
     this.showJustificacionExpress = true;
     this.esColegiado = false;
     this.progressSpinner = true;
@@ -293,7 +328,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
       this.disableRestricciones = true;
-    } else if(!sessionStorage.getItem("volver")) {
+    } else /*if(!sessionStorage.getItem("volver"))*/ {
       this.disableRestricciones = false;
       this.disabledBusquedaExpress = false;
       this.filtroJustificacion.ejgSinResolucion = "2";
@@ -335,8 +370,32 @@ export class FiltroDesignacionesComponent implements OnInit {
 
     this.filtroJustificacion.muestraPendiente = this.checkMostrarPendientes;
     this.filtroJustificacion.restriccionesVisualizacion = this.checkRestricciones;
-
     
+    //Recuperamos los filtros de antes de la busqueda de colegiado
+    if(sessionStorage.getItem("filtroJustificacionExpres") != null){
+      let filtroJustExpAux = JSON.parse(sessionStorage.getItem("filtroJustificacionExpres"));
+
+      if(this.filtroJustificacion.ejgSinResolucion == null){
+        this.filtroJustificacion.ejgSinResolucion = filtroJustExpAux.ejgSinResolucion;
+      }
+
+      if(this.filtroJustificacion.sinEJG == null){
+        this.filtroJustificacion.sinEJG = filtroJustExpAux.sinEJG;
+      }
+
+      if(this.filtroJustificacion.resolucionPTECAJG == null){
+        this.filtroJustificacion.resolucionPTECAJG = filtroJustExpAux.resolucionPTECAJG;
+      }
+
+      if(this.filtroJustificacion.conEJGNoFavorables == null){
+        this.filtroJustificacion.conEJGNoFavorables = filtroJustExpAux.conEJGNoFavorables;
+      }
+
+      if(this.filtroJustificacion.anioDesignacion == null){
+        this.filtroJustificacion.anioDesignacion = filtroJustExpAux.anioDesignacion;
+      }
+    }
+
     sessionStorage.removeItem("filtroDesignas");
     sessionStorage.setItem("filtroJustificacionExpres", JSON.stringify(this.filtroJustificacion));
   }
@@ -416,6 +475,7 @@ export class FiltroDesignacionesComponent implements OnInit {
             this.radioTarjeta = 'justificacion';
             this.buscar();
 
+            sessionStorage.removeItem("vieneDeJE");
           } else {
             this.cargaInicial();
           }
@@ -438,7 +498,7 @@ export class FiltroDesignacionesComponent implements OnInit {
               this.radioTarjeta = 'justificacion';
               this.buscar();
               
-            }else if(sessionStorage.getItem("cargaEJ")==null){
+            }else if(sessionStorage.getItem("cargaJE")==null){
               this.buscar();
             }
           }
@@ -1027,9 +1087,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     designa.nombreInteresado = this.body.nombreInteresado;
     designa.rol = this.body.rol;
 
-    sessionStorage.setItem(
-      "filtroDesignas",
-      JSON.stringify(designa));
+    sessionStorage.setItem("filtroDesignas", JSON.stringify(designa));
   }
 
   cargarFiltros(){
@@ -1095,7 +1153,7 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.guardarFiltrosJustificacion();
 
         if (this.compruebaFiltroJustificacion()) {
-          this.showTablaJustificacionExpres.emit(false);
+          this.showTablaJustificacionExpres.emit(false); //Si se marca como true llama a tabla-justificacion-express.component.ts pero no lleva datosJustificacion relleno y falla
           this.busquedaJustificacionExpres.emit(true);
         }
 

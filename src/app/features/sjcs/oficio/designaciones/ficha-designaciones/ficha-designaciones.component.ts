@@ -264,6 +264,16 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;
     this.numColegiadoLogado = this.localStorageService.numColegiado;
+    if(this.isLetrado==undefined){
+      this.commonsService.getLetrado()
+      .then(respuesta => {
+        this.isLetrado = respuesta;
+        if(this.isLetrado){
+          this.getDataLoggedUser();
+        }
+      });
+      
+    }
 
     this.msjEliminarDesignacion = this.translateService.instant("justiciaGratuita.oficio.designaciones.eliminarDesignacion");
     this.msjGuardarProcurador = this.translateService.instant("justiciaGratuita.oficio.designaciones.guardarProcurador");
@@ -1561,6 +1571,10 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
           usr => {
             this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+            if(this.usuarioLogado) {
+              this.idPersonaLogado = this.usuarioLogado.idPersona;
+              this.numColegiadoLogado = this.usuarioLogado.numColegiado;
+            }
             this.progressSpinner = false;
             this.searchComunicaciones();
           });
