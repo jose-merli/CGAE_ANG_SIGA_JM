@@ -768,6 +768,17 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.numColegiado = sessionStorage.getItem("numColegiado");
         }
 
+        if(this.selectedEstados != null && this.selectedEstados != undefined && this.selectedEstados.length > 0){
+          this.body.estadoEJG = "";
+          this.selectedEstados.forEach(element => {
+            if(this.body.estadoEJG != ""){
+            this.body.estadoEJG += "," + element;
+            }else{
+              this.body.estadoEJG = element;
+            }
+          });
+        }
+
         if (this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != "") {
           this.body.dictamen = this.bodyDictamen.toString()
         }

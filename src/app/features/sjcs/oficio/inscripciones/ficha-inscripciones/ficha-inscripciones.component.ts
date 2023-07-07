@@ -106,6 +106,17 @@ export class FichaInscripcionesComponent implements OnInit {
 
 		this.isLetrado = this.localStorageService.isLetrado;
 
+		if(this.isLetrado == undefined){
+			this.commonsService.getLetrado()
+			.then(respuesta => {
+			  this.isLetrado = respuesta;
+			});
+		  setTimeout(() => {
+			//esperando isLetrado
+        	console.log("Se ha refrescado la pantalla");
+		  }, 500);
+		}
+
 		if (this.persistenceService.getPermisos()) {
 			this.permisos = true;
 		} else {

@@ -204,6 +204,20 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   cargaInicial() {
     this.isLetrado = this.localStorageService.isLetrado;
+    if(this.isLetrado == undefined){
+        this.commonsService.getLetrado()
+        .then(respuesta => {
+          this.isLetrado = respuesta;
+          if (this.isLetrado) {
+            this.getDataLoggedUser();
+            this.disableRestricciones = true;
+            this.ocultarRestricciones = true;
+            this.disabledBusquedaExpress = true;
+          } else {
+            this.disableRestricciones = false;
+          }
+        });
+    }
 
     if (!this.esColegiado) {
       this.isButtonVisible = true;
@@ -240,6 +254,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       if (this.isLetrado) {
         this.disableRestricciones = true;
         this.ocultarRestricciones = true;
+        this.disabledBusquedaExpress = true;
       } else {
         this.disableRestricciones = false;
       }
@@ -269,6 +284,16 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   cargaInicialJE() {
     this.isLetrado = this.localStorageService.isLetrado;
+    if(this.isLetrado == undefined){
+        this.commonsService.getLetrado()
+        .then(respuesta => {
+          this.isLetrado = respuesta;
+        });
+      setTimeout(() => {
+        //esperando isLetrado
+        console.log("Se ha refrescado la pantalla");
+      }, 500);
+    }
 
     if (!this.esColegiado) {
       this.isButtonVisible = false;

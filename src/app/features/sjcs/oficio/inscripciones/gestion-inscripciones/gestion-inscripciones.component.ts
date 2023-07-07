@@ -97,6 +97,16 @@ export class TablaInscripcionesComponent implements OnInit {
   ngOnInit() {
     this.currentRoute = this.router.url;
     this.isLetrado = this.localStorageService.isLetrado;
+    if(this.isLetrado == undefined){
+      this.commonsService.getLetrado()
+        .then(respuesta => {
+          this.isLetrado = respuesta;
+        });
+      setTimeout(() => {
+        //esperando isLetrado
+        console.log("Se ha refrescado la pantalla");
+      }, 500);
+    }
     this.selectedDatos = [];
     this.datos.fechaActual = new Date();
     this.getCols();

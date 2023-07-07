@@ -1139,7 +1139,7 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'fichaFacturacion',
+		path: 'fichaFacturacionClassique',
 		component: FichaFacturacionComponent,
 		canActivate: [AuthGuard]
 	},
