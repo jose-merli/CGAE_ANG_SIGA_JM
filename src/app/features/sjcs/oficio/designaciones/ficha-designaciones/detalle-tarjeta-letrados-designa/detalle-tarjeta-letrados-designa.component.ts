@@ -85,7 +85,6 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
       (err) => {
       }
     );
-    this.isLetrado = this.localStorageService.isLetrado;
   }
 
   irFichaColegial(){

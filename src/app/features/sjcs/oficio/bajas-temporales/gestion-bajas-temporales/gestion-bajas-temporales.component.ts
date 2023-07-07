@@ -570,6 +570,12 @@ export class GestionBajasTemporalesComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("nCol");
     }
 
+    if(this.usuarioBusquedaExpress.numColegiado == null || this.usuarioBusquedaExpress.numColegiado == undefined){
+      let filtros = JSON.parse(sessionStorage.getItem("filtros"));
+      this.usuarioBusquedaExpress.nombreAp = filtros.nombre;
+      this.usuarioBusquedaExpress.numColegiado = filtros.ncolegiado;
+    }
+
     sessionStorage.removeItem("nombCol");
     sessionStorage.removeItem("nCol");
 

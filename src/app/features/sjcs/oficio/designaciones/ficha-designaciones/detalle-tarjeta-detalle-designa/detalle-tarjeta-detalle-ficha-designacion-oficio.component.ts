@@ -133,10 +133,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.datePickers[0].value = this.formatDate(this.campos.fechaEstado);
             this.datePickers[1].value = this.formatDate(this.campos.fechaFin);
             if (this.valorParametro == 1) {
+              if (this.juzgadoValue != null && this.juzgadoValue != "" && this.juzgadoValue != undefined){
               this.getComboProcedimientosConJuzgado(this.juzgadoValue);
               if (this.procedimientoValue != null && this.procedimientoValue != "" && this.procedimientoValue != undefined) {
                 this.getcCmboModulosConProcedimientos(this.procedimientoValue, this.datosInicial.fechaEntradaInicio);
-              }
+              }}
             }
             if (this.valorParametro == 2) {
               this.getComboModulosConJuzgado(this.juzgadoValue, this.datosInicial.fechaEntradaInicio);
@@ -292,17 +293,29 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.getComboProcedimientos();
       this.getComboModulos();
     }
+
+    if (this.juzgadoValue == null || this.juzgadoValue == ''){
+      this.changeProcedimiento();
+    }
   }
 
   changeModulo() {
     if (this.valorParametro == 2) {
       this.getComboProcedimientosConModulo(this.moduloValue);
     }
+    if (this.procedimientoValue == null || this.procedimientoValue == ''){
+      this.moduloValue = null;
+    }
   }
 
   changeProcedimiento() {
     if (this.valorParametro == 1) {
       this.getcCmboModulosConProcedimientos(this.procedimientoValue, this.datosInicial.fechaEntradaInicio);
+    }
+
+    if (this.juzgadoValue == null || this.juzgadoValue == ''){
+      this.procedimientoValue = null;
+      this.changeModulo();
     }
   }
 
@@ -739,7 +752,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.progressSpinner = true;
     this.sigaServices.getParam("combo_comboModulosConProcedimientos", "?idPretension=" + idPretension + "&fecha=" + fecha).subscribe(
       n => {
-        this.moduloOpciones = JSON.parse(n.body).combooItems;
+        if(n.combooItems){
+          //this.moduloOpciones = JSON.parse(n.body).combooItems;
+          this.moduloOpciones = n.combooItems;
+        }
         if (this.campos.modulo != "") {
           this.moduloOpciones.push({ label: this.campos.modulo, value: this.campos.idModulo });
         }

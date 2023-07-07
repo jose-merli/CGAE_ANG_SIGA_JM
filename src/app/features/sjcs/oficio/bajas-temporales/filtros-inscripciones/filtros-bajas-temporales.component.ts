@@ -92,8 +92,18 @@ export class FiltrosBajasTemporales implements OnInit {
       sessionStorage.removeItem("datosColegiado");
     }​​
 
-    if(this.isLetrado){
+    if(this.isLetrado || this.isLetrado == undefined){
+      if(this.isLetrado==undefined){
+        this.commonsService.getLetrado()
+        .then(respuesta => {
+          this.isLetrado = respuesta;
+          if(this.isLetrado){
+            this.getDataLoggedUser();
+          }
+        });
+      }else{
       this.getDataLoggedUser();
+      }
     }
   }
 
@@ -113,6 +123,7 @@ export class FiltrosBajasTemporales implements OnInit {
           this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
 
           this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+          this.isBuscar();
           this.progressSpinner = false;
 
          }, err =>{
@@ -120,7 +131,6 @@ export class FiltrosBajasTemporales implements OnInit {
         },
         ()=>{
           this.progressSpinner = false;
-          this.isBuscar();
         });
       });
 }

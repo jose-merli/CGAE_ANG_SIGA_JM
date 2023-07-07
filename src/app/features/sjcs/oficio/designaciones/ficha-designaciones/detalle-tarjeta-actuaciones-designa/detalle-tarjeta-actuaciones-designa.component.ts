@@ -113,6 +113,12 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
         }
 
         this.isLetrado = this.localStorageService.isLetrado;
+        if(this.isLetrado == undefined){
+          this.commonsService.getLetrado()
+          .then(respuesta => {
+            this.isLetrado = respuesta;
+          });
+      }
 
       })
       .catch(err => console.log(err));
