@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { LoginCombo } from './login-multiple.combo';
 import { ListboxModule } from 'primeng/listbox';
 import { ButtonModule } from 'primeng/button';
-import { LoginMultipleItem } from '../../models/LoginMultipleItem';
+import { LoginMultipleItem} from '../../models/LoginMultipleItem';
 
 @Component({
 	selector: 'app-login-multiple',

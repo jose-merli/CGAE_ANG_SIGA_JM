@@ -1,38 +1,48 @@
-import {
-	HttpBackend,
-	HttpClient,
-	HttpErrorResponse,
-	HttpHeaders
-} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { saveAs } from 'file-saver/FileSaver';
-import { MenuItem } from 'primeng/api';
-import { BehaviorSubject } from 'rxjs';
+import {
+	HttpClient,
+	HttpResponse,
+	HttpParams,
+	HttpResponseBase,
+	HttpHeaders,
+	HttpBackend,
+	HttpErrorResponse
+} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { environment } from '../../environments/environment';
+import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { RequestOptions, Headers, ResponseContentType } from '@angular/http';
+import { Subject } from 'rxjs/Subject';
+import { endpoints_maestros } from "../utils/endpoints_maestros";
+import { endpoints_justiciables } from "../utils/endpoints_justiciables";
+import { endpoints_guardia } from "../utils/endpoints_guardia";
+import { endpoints_oficio } from "../utils/endpoints_oficio";
+import { endpoints_facturacionPyS } from "../utils/endpoints_facturacionPyS";
+import { endpoints_componentes } from "../utils/endpoints_components";
+import { endpoints_EJG } from "../utils/endpoints_EJG";
+import { endpoints_facturacionsjcs } from "../utils/endpoints_facturacionsjcs";
+import { endpoints_generales } from "../utils/endpoints_generales";
+import { endpoints_PyS } from "../utils/endpoints_PyS";
 import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
-import { DocumentacionIncorporacionItem } from '../models/DocumentacionIncorporacionItem';
+import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
+import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
+import { endpoints_EJG_Comision } from '../utils/endpoints_EJG_Comision';
+import { endpoints_remesa } from '../utils/endpoints_remesa';
+import { endpoints_intercambios } from '../utils/endpoints_intercambios';
 import { NuevaComunicacionItem } from '../models/NuevaComunicacionItem';
 import { DocumentacionAsistenciaItem } from '../models/guardia/DocumentacionAsistenciaItem';
 import { DocumentoAsistenciaItem } from '../models/guardia/DocumentoAsistenciaItem';
-import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
-import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
-import { endpoints_EJG } from "../utils/endpoints_EJG";
-import { endpoints_EJG_Comision } from '../utils/endpoints_EJG_Comision';
-import { endpoints_PyS } from "../utils/endpoints_PyS";
-import { endpoints_componentes } from "../utils/endpoints_components";
+import { BehaviorSubject } from 'rxjs';
 import { endpoints_expedientes } from '../utils/endpoints_expedientes';
-import { endpoints_facturacionPyS } from "../utils/endpoints_facturacionPyS";
-import { endpoints_facturacionsjcs } from "../utils/endpoints_facturacionsjcs";
-import { endpoints_generales } from "../utils/endpoints_generales";
-import { endpoints_guardia } from "../utils/endpoints_guardia";
-import { endpoints_intercambios } from '../utils/endpoints_intercambios';
-import { endpoints_justiciables } from "../utils/endpoints_justiciables";
-import { endpoints_maestros } from "../utils/endpoints_maestros";
-import { endpoints_oficio } from "../utils/endpoints_oficio";
-import { endpoints_remesa } from '../utils/endpoints_remesa';
+import { DocumentacionIncorporacionItem } from '../models/DocumentacionIncorporacionItem';
+import { saveAs } from 'file-saver/FileSaver';
 
 @Injectable()
 export class SigaServices {

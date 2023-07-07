@@ -78,7 +78,7 @@ import { FicherosTransferenciaComponent } from './features/facturacion/ficheros-
 import { ContabilidadComponent } from './features/facturacion/contabilidad/contabilidad.component';
 import { CobrosRecobrosComponent } from './features/facturacion/cobros-recobros/cobros-recobros.component';
 import { FacturasEmitidasComponent } from './features/facturacion/informes/facturas-emitidas/facturas-emitidas.component';
-import { MonederoComponent } from './features/facturacion/monederos/monederos.component';
+import { MonederoComponent} from './features/facturacion/monederos/monederos.component';
 
 //Productos y Servicios
 import { CategoriasProductoComponent } from './features/productosYServicios/categoriasProducto/categoriasProducto.component';

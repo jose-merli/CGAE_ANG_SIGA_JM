@@ -1,22 +1,24 @@
 import {
-  ChangeDetectorRef,
   Component,
-  HostListener,
   OnInit,
+  ViewEncapsulation,
   ViewChild,
-  ViewEncapsulation
+  ChangeDetectorRef,
+  HostListener
 } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Message } from "primeng/components/common/api";
-import { DataTable } from "primeng/datatable";
-import { CommonsService } from '../../../_services/commons.service';
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { Router, ActivatedRoute } from "@angular/router";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { Message } from "primeng/components/common/api";
 import { ContadorItem } from "./../../../../app/models/ContadorItem";
 import { ContadorResponseDto } from "./../../../../app/models/ContadorResponseDto";
-import { SigaServices } from "./../../../_services/siga.service";
+import { DataTable } from "primeng/datatable";
+import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
+import { esCalendar } from "./../../../utils/calendar";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13

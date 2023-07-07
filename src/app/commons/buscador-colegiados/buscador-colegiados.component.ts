@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input,Output, EventEmitter} from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { Location } from '@angular/common';
 import { FiltroBuscadorColegiadosComponent } from './filtro-buscador-colegiados/filtro-buscador-colegiados.component';

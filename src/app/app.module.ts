@@ -68,7 +68,7 @@ import { MultiSelectModule } from "primeng/multiselect";
 
 
 import { PickListModule } from "primeng/picklist";
-import { OrderListModule } from 'primeng/orderlist';
+import {OrderListModule} from 'primeng/orderlist';
 import { ProgressSpinnerModule } from "primeng/progressspinner";
 
 
@@ -412,7 +412,7 @@ import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaE
 import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
 
-import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule, ScrollPanel, ScrollPanelModule, SliderModule } from 'primeng/primeng';
+import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule, ScrollPanel, ScrollPanelModule, SliderModule} from 'primeng/primeng';
 
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
 import { CargasMasivasComponent } from './features/censo/cargas-masivas/cargas-masivas.component';
@@ -511,7 +511,7 @@ import { HoraComponent } from './commons/hora/hora.component';
 import { InputDivididoComponent } from './commons/input-dividido/input-dividido.component';
 import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
 import { Paginador3Module } from './commons/paginador3/paginador3.module'
-import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 //OFICIO
 import { TablaResultadoDesplegableComponent } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
@@ -591,8 +591,8 @@ import { DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent } from '
 import { DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion.component';
 import { TarjetaSolicitudCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-solicitud-compra-suscripcion/tarjeta-solicitud-compra-suscripcion.component';
 import { FichaCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component';
-import { FiltrosSeriesFacturaComponent } from './features/facturacion/series-factura/filtros-series-factura/filtros-series-factura.component';
-import { TablaSeriesFacturaComponent } from './features/facturacion/series-factura/tabla-series-factura/tabla-series-factura.component';
+ import { FiltrosSeriesFacturaComponent } from './features/facturacion/series-factura/filtros-series-factura/filtros-series-factura.component';
+ import { TablaSeriesFacturaComponent } from './features/facturacion/series-factura/tabla-series-factura/tabla-series-factura.component';
 import { GestionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component';
 import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
 import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
@@ -616,7 +616,7 @@ import { ContadorRectSeriesFacturaComponent } from './features/facturacion/serie
 import { GeneracionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/generacion-series-factura/generacion-series-factura.component';
 import { EnvioSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/envio-series-factura/envio-series-factura.component';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
-import { RadioButtonModule as RadioButtonEJSModule } from '@syncfusion/ej2-angular-buttons';
+import { RadioButtonModule as RadioButtonEJSModule} from '@syncfusion/ej2-angular-buttons';
 import { TarjetaDescuentosAnticiposCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion.component';
 import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
 import { FiltrosBusquedaAdeudosComponent } from './features/facturacion/ficheros-adeudos/filtros-busqueda-adeudos/filtros-busqueda-adeudos.component';
@@ -656,7 +656,7 @@ import { TarjetaSubidaFicheroCmcComponent } from './features/facturacion/cargas-
 import { TarjetaBusquedaCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-busqueda-cmc/tarjeta-busqueda-cmc.component';
 import { TarjetaListadoCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-listado-cmc/tarjeta-listado-cmc.component';
 import { MonederoComponent } from './features/facturacion/monederos/monederos.component';
-import { TarjetaListaMonederosComponent } from './features/facturacion/monederos/tarjeta-lista-monederos/tarjeta-lista-monederos.component';
+import { TarjetaListaMonederosComponent } from  './features/facturacion/monederos/tarjeta-lista-monederos/tarjeta-lista-monederos.component';
 import { TarjetaFiltroMonederosComponent } from './features/facturacion/monederos/tarjeta-filtro-monederos/tarjeta-filtro-monederos.component';
 import { FichaMonederoComponent } from './features/facturacion/monederos/ficha-monedero/ficha-monedero.component';
 import { DatosGeneralesMonederoComponent } from './features/facturacion/monederos/ficha-monedero/datos-generales-monedero/datos-generales-monedero.component';
@@ -678,7 +678,7 @@ import { ComunicacionesFacturasComponent } from './features/facturacion/facturas
 import { ClienteFacturasComponent } from './features/facturacion/facturas/gestion-facturas/cliente-facturas/cliente-facturas.component';
 import { DeudorFacturasComponent } from './features/facturacion/facturas/gestion-facturas/deudor-facturas/deudor-facturas.component';
 import { FacturacionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/facturacion-facturas/facturacion-facturas.component';
-import { TablaExportacionesContabilidadComponent } from './features/facturacion/contabilidad/tabla-exportaciones-contabilidad/tabla-exportaciones-contabilidad.component';
+import { TablaExportacionesContabilidadComponent} from './features/facturacion/contabilidad/tabla-exportaciones-contabilidad/tabla-exportaciones-contabilidad.component';
 import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/abonos-sjcs.component';
 import { FiltrosAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/filtros-abonos-sjcs/filtros-abonos-sjcs.component';
 import { TablaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-sjcs.component';
@@ -769,7 +769,7 @@ import { TablaRemesasResolucionesComponent } from './features/sjcs/remesas-resol
 import { FiltroRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/filtro-remesas-resoluciones/filtro-remesas-resoluciones.component';
 import { FichaRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/ficha-remesas-resoluciones.component';
 import { TarjetaDatosGeneralesRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/tarjeta-datos-generales-remesas-resoluciones/tarjeta-datos-generales-remesas-resoluciones.component';
-import { FiltroCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/filtro-carga-designa-procurador/filtro-carga-designa-procurador.component';
+import { FiltroCargaDesignaProcuradorComponent} from './features/sjcs/intercambios/carga-designa-procurador/filtro-carga-designa-procurador/filtro-carga-designa-procurador.component';
 import { TablaCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/tabla-carga-designa-procurador/tabla-carga-designa-procurador.component';
 import { FichaCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/ficha-carga-designa-procurador/ficha-carga-designa-procurador.component';
 import { TarjetaDatosCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/ficha-carga-designa-procurador/tarjeta-datos-carga-designa-procurador/tarjeta-datos-carga-designa-procurador.component';
