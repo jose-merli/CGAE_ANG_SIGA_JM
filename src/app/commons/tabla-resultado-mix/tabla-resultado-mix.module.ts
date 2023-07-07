@@ -11,7 +11,7 @@ import { PaginadorModule } from '../paginador/paginador.module';
 import { FechaModule } from '../fecha/fecha.module';
 import { SelectorModule } from '../selector/selector.module';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import {​ TooltipModule }​ from "primeng/tooltip";
+import { TooltipModule } from "primeng/tooltip";
 
 
 @NgModule({

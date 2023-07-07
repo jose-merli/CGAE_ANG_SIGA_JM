@@ -1,23 +1,21 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
-	HttpClient,
-	HttpHeaders,
-	HttpEvent,
-	HttpInterceptor,
-	HttpHandler,
-	HttpRequest,
-	HttpBackend
+    HttpClient,
+    HttpEvent,
+    HttpInterceptor,
+    HttpHandler,
+    HttpRequest,
+    HttpBackend
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
-import { forkJoin } from 'rxjs/observable/forkJoin';
 import { OldSigaServices } from '../_services/oldSiga.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-	    private oldSigaServices: OldSigaServices;
+    private oldSigaServices: OldSigaServices;
     private http: HttpClient;
     constructor(handler: HttpBackend, oldSigaServices: OldSigaServices, private router: Router) {
         this.http = new HttpClient(handler);
