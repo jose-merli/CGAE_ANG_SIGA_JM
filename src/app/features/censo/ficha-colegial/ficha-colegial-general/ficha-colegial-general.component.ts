@@ -561,6 +561,12 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     if(sessionStorage.getItem("esColegiado") && sessionStorage.getItem("esColegiado") == "false") {
       // Si no es colegiado hay que mostrarlo
       result = "No colegiado";
+      // Comprobamos que no este fallecido
+      if(rawList){
+        rawList.forEach( e => {
+          if (e.value == "60"){ result = "Fallecido"; }
+        });
+      }
     } else if(rawList){
       rawList.forEach( e => {
         if (e.value == "60"){ fallecido = true; }
