@@ -1,6 +1,6 @@
 export const procesos_guardia: any = {
     guardias: "916",
-
+    guardias_colegiados_permutas: "98A",
     // ----------- Tarjetas ----------
     resumen: "92E",
     turno: "92F",

@@ -10,6 +10,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { InscripcionesComponent } from '../../../../oficio/inscripciones/busqueda-inscripciones.component';
+import { procesos_guardia } from '../../../../../../permisos/procesos_guarida';
 
 @Component({
   selector: 'app-permutas-gestion-guardia-colegiado',
@@ -22,10 +23,11 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   rowsPerPage: any = [];
   selectMultiple: boolean;
   selectedDatos = [];
+  selectedDatosAux = [];
   selectAll;
   numSelected: number = 0;
   selectedItem: number = 10;
-  permisoEscritura;
+  permisoEscritura: boolean;
   progressSpinner;
   msgs;
   permutas;
@@ -39,6 +41,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   permutasAux;
   esLetrado: boolean=true;
   esColegiado: boolean=true;
+  validarTambien: boolean=false;
   // SIGARNV-2885 INICIO
   fechaSolicitanteInicio;
   // SIGARNV-2885 FIN
@@ -54,7 +57,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   @Input() guardiaColegiado: GuardiaItem;
   //SIGARNV-2885 FIN
 
-  ngOnInit() {
+  async ngOnInit() {
     //this.progressSpinner = true;
     this.esLetrado = JSON.parse(sessionStorage.getItem('isLetrado'));
     this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
@@ -68,7 +71,12 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     //  this.recuperaFechaSolicitante();
      this.getCols();
     }
-    this.progressSpinner = false
+    await this.commonServices.checkAcceso(procesos_guardia. guardias_colegiados_permutas)
+    .then(respuesta => {
+      this.permisoEscritura = respuesta;
+    }
+    ).catch(error => console.error(error)); 
+    this.progressSpinner = false 
 }
 
   getCols() {
@@ -107,11 +115,10 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   }
 
   getPermutas(){
-    
-    let permutaItem = new PermutaItem();
-    permutaItem.idturno = Number(this.body.idTurno);
-    permutaItem.idguardia = Number(this.body.idGuardia);
-    permutaItem.idpersona = Number(this.body.idPersona);
+    let permutaItem2 = new PermutaItem();
+    permutaItem2.idturno = Number(this.body.idTurno);
+    permutaItem2.idguardia = Number(this.body.idGuardia);
+    permutaItem2.idpersona = Number(this.body.idPersona);
     let myDate;
     if (this.body.fechadesde == "[object String]" && this.body.fechadesde.includes('/')) {
       let parts = this.body.fechadesde.split('/');
@@ -120,14 +127,14 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     else {
       myDate = new Date(this.body.fechadesde);
     }
-    permutaItem.fechasolicitud = myDate;
+    permutaItem2.fechasolicitud = myDate;
 
       //this.progressSpinner = true
-      this.sigaServices.post("guardiasColegiado_getPermutasColegiado", permutaItem).subscribe(
+      this.sigaServices.post("guardiasColegiado_getPermutasColegiado", permutaItem2).subscribe(
         n => {
           let error = JSON.parse(n.body).error;
           this.permutas = JSON.parse(n.body).permutaItems;
-          this.progressSpinner = false
+          this.progressSpinner = false;
           if (error != null && error.description != null) {
             this.showMessage( 'info',  this.translateService.instant("general.message.informacion"), error.description );
           }
@@ -171,8 +178,8 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     });
   }
 
-  checkValidar(){
- 
+  checkValidar(){  
+    
     let icon = "fa fa-edit";
 
     this.confirmationService.confirm({
@@ -196,8 +203,17 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   
 }
 
-  validar(){
+disableValidar(){
+  //this.selectedDatos.length>0 && (this.valueComboGuardia && this.valueComboTurno && this.motivos)
+  if(this.valueComboTurno && this.valueComboGuardia && this.motivos && !this.esLetrado && !this.esColegiado && this.selectedDatos.length>0 && this.permisoEscritura){
+    return false;
+  }
+  else{
+    return true;
+  }
+}
 
+  validar(){
      this.progressSpinner = true
     this.sigaServices.post("guardiasColegiado_validarPermuta", this.selectedDatos).subscribe(
       n => {
@@ -205,11 +221,13 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.restPermutas();
           this.getPermutas();
+          this.validarTambien=false;
       },
       err => {
         //console.log(err);
         this.progressSpinner = false
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.validarTambien=false;
       }, () => {
         
       }
@@ -256,6 +274,21 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     
   }
 
+  check(){
+    if(this.esColegiado){
+      this.checkValidar();
+    }else if(!this.esColegiado && !this.esLetrado && this.permisoEscritura){//Si no es letrado, no es colegiado y tiene permiso de escritura
+      this.selectedDatos.forEach(dato => {
+        if(dato.nuevoRegistro){
+          this.validarTambien=true; 
+          this.checkPermutar();
+        }
+      });
+      if(!this.validarTambien){
+        this.checkValidar();
+      }     
+    }
+  }
   permutaColegiado(){
     let datosConfirmador = this.valueComboGuardia.split('|');
     let permutaItem = new PermutaItem();
@@ -271,7 +304,9 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     permutaItem.idturnoSolicitante = this.body.idTurno;
     permutaItem.fechainicioSolicitante = this.body.fechadesde;
     permutaItem.idcalendarioguardiasSolicitan = this.body.idCalendarioGuardias;
-    
+    if(this.validarTambien){
+      permutaItem.fechaconfirmacion = new Date();
+    } 
     //console.log(permutaItem);
 
      this.progressSpinner = true
@@ -286,6 +321,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
         //console.log(err);
         this.progressSpinner = false
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.validarTambien=false;
       }, () => {
         
       }
@@ -293,6 +329,12 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
 
     console.log("El valor de valueComboGuardia: " + this.valueComboGuardia);
     console.log("El valor de valueComboTurno: " + this.valueComboTurno);
+    /*
+    if(this.validarTambien){
+      //Buscamos de nuestras permutas la que acabamos de permutar para meterla en el array de seleccionadas y poder validarla
+      this.checkValidar();
+    }
+    */
   }
 
   restPermutas(){
