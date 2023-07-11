@@ -1,6 +1,6 @@
+import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
-import { Location } from '@angular/common';
 import { DataTable } from 'primeng/primeng';
 import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 

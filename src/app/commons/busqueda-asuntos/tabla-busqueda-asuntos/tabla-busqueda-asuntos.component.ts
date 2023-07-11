@@ -1,12 +1,9 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { DataTable } from '../../../../../node_modules/primeng/primeng';
-import { SigaServices } from '../../../_services/siga.service';
-import { PersistenceService } from '../../../_services/persistence.service';
-import { AsuntosJusticiableItem } from '../../../models/sjcs/AsuntosJusticiableItem';
-import { CommonsService } from '../../../_services/commons.service';
 import { Location } from '@angular/common';
-import { DesignaItem } from '../../../models/sjcs/DesignaItem';
-import { EJGItem } from '../../../models/sjcs/EJGItem';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { DataTable } from '../../../../../node_modules/primeng/primeng';
+import { PersistenceService } from '../../../_services/persistence.service';
+import { SigaServices } from '../../../_services/siga.service';
+import { AsuntosJusticiableItem } from '../../../models/sjcs/AsuntosJusticiableItem';
 
 
 @Component({

@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, HostListener, SimpleChanges } from '@angular/core';
-import { ProcuradoresItem } from '../../../models/sjcs/ProcuradoresItem';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '../../../../../node_modules/@angular/router';
-import { TranslateService } from '../../translate';
-import { SigaServices } from '../../../_services/siga.service';
-import { PersistenceService } from '../../../_services/persistence.service';
 import { CommonsService } from '../../../_services/commons.service';
+import { PersistenceService } from '../../../_services/persistence.service';
+import { SigaServices } from '../../../_services/siga.service';
+import { ProcuradoresItem } from '../../../models/sjcs/ProcuradoresItem';
+import { TranslateService } from '../../translate';
 
 
 export enum KEY_CODE {

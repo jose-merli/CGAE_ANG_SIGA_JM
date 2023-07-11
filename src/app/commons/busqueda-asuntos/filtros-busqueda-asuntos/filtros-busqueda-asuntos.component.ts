@@ -1,33 +1,32 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  HostListener,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-  Input,
-  Output,
-  EventEmitter
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    Validators
 } from "../../../../../node_modules/@angular/forms";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { esCalendar } from "../../../utils/calendar";
-import { SigaServices } from "../../../_services/siga.service";
-import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
-import { AsistenciasItem } from "../../../models/sjcs/AsistenciasItem";
-import { PersistenceService } from "../../../_services/persistence.service";
 import { CommonsService } from '../../../_services/commons.service';
+import { PersistenceService } from "../../../_services/persistence.service";
+import { SigaServices } from "../../../_services/siga.service";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
+import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
 import { AsuntosJusticiableItem } from "../../../models/sjcs/AsuntosJusticiableItem";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { esCalendar } from "../../../utils/calendar";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
 
 export enum KEY_CODE {
   ENTER = 13

@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
-import { SigaStorageService } from "../../siga-storage.service";
 import { PersistenceService } from '../../_services/persistence.service';
+import { SigaStorageService } from "../../siga-storage.service";
 import { TranslateService } from "../translate";
 import { SigaServices } from "./../../_services/siga.service";
-import { ColegiadosSJCSItem } from "../../models/ColegiadosSJCSItem";
 
 @Component({
   selector: "app-busqueda-colegiado-express",

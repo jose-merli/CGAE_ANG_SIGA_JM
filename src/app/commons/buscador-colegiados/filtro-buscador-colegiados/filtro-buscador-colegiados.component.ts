@@ -1,8 +1,8 @@
-import { Component, Output, OnInit, EventEmitter, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { stringToNumber } from '@syncfusion/ej2-charts';
-import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
+import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 import { TranslateService } from '../../translate';
 
 

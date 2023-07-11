@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild, Input,Output, EventEmitter} from '@angular/core';
-import { Message } from 'primeng/components/common/api';
 import { Location } from '@angular/common';
-import { FiltroBuscadorColegiadosComponent } from './filtro-buscador-colegiados/filtro-buscador-colegiados.component';
-import { SigaServices } from '../../_services/siga.service';
-import { TranslateService } from '../translate';
-import { ColegiadosSJCSItem } from '../../models/ColegiadosSJCSItem';
-import { TablaBuscadorColegiadosComponent } from './tabla-buscador-colegiados/tabla-buscador-colegiados.component';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
+import { Message } from 'primeng/components/common/api';
 import { PersistenceService } from '../../_services/persistence.service';
+import { SigaServices } from '../../_services/siga.service';
+import { ColegiadosSJCSItem } from '../../models/ColegiadosSJCSItem';
 import { GuardiaItem } from '../../models/guardia/GuardiaItem';
+import { TranslateService } from '../translate';
+import { FiltroBuscadorColegiadosComponent } from './filtro-buscador-colegiados/filtro-buscador-colegiados.component';
+import { TablaBuscadorColegiadosComponent } from './tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 
 @Component({
   selector: 'app-buscador-colegiados',

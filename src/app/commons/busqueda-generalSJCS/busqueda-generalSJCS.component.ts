@@ -1,13 +1,12 @@
+import { Location } from "@angular/common";
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '../../../../node_modules/@angular/router';
+import { CommonsService } from '../../_services/commons.service';
 import { PersistenceService } from '../../_services/persistence.service';
 import { SigaServices } from '../../_services/siga.service';
-import { CommonsService } from '../../_services/commons.service';
 import { TranslateService } from '../../commons/translate';
-import { Router } from '../../../../node_modules/@angular/router';
 import { FiltrosGeneralSJCSComponent } from './filtros-generalSJCS/filtros-generalSJCS.component';
 import { TablaGeneralSJCSComponent } from './tabla-generalSJCS/tabla-generalSJCS.component';
-import { procesos_maestros } from '../../permisos/procesos_maestros';
-import { Location } from "@angular/common";
 
 @Component({
   selector: 'app-busqueda-generalSJCS',

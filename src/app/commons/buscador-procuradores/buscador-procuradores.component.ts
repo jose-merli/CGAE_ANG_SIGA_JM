@@ -7,10 +7,6 @@ import { CommonsService } from '../../_services/commons.service';
 import { PersistenceService } from '../../_services/persistence.service';
 import { TranslateService } from '../translate';
 import { Router } from '../../../../node_modules/@angular/router';
-import { ProcuradoresItem } from '../../models/sjcs/ProcuradoresItem';
-import { ProcuradoresObject } from '../../models/sjcs/ProcuradoresObject';
-import { procesos_maestros } from '../../permisos/procesos_maestros';
-import { endpoints_componentes } from '../../utils/endpoints_components';
 
 @Component({
   selector: 'app-buscador-procuradores',

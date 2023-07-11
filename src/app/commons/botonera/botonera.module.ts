@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BotoneraComponent } from './botonera.component';
-import { CalendarModule } from 'primeng/calendar';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule } from 'primeng/primeng';
-import { PipeTranslationModule } from '../translate/pipe-translation.module';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CalendarModule } from 'primeng/calendar';
+import { ButtonModule, CheckboxModule, ConfirmDialogModule, DropdownModule } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
+import { PipeTranslationModule } from '../translate/pipe-translation.module';
+import { BotoneraComponent } from './botonera.component';
 
 @NgModule({
   imports: [

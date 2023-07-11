@@ -1,9 +1,11 @@
+import { Location } from '@angular/common';
 import {
   Component,
   OnInit,
   ViewChild,
   ViewEncapsulation
 } from "@angular/core";
+import { ConfirmationService } from 'primeng/api';
 import { DataTable } from "primeng/datatable";
 import {
   FormBuilder,
@@ -11,21 +13,19 @@ import {
   FormGroup,
   Validators
 } from "../../../../node_modules/@angular/forms";
-import { USER_VALIDATIONS } from "../../properties/val-properties";
-import { SigaWrapper } from "../../wrapper/wrapper.class";
-import { esCalendar } from "./../../utils/calendar";
-import { SigaServices } from "./../../_services/siga.service";
-import { Location } from '@angular/common'
-import { TranslateService } from '../translate';
 import { PersistenceService } from '../../_services/persistence.service';
-import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
-import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
-import { ConfirmationService } from 'primeng/api';
 import { TarjetaAsistenciaItem } from "../../models/guardia/TarjetaAsistenciaItem";
-import { DesignaItem } from "../../models/sjcs/DesignaItem";
 import { AsuntosJusticiableItem } from "../../models/sjcs/AsuntosJusticiableItem";
+import { DesignaItem } from "../../models/sjcs/DesignaItem";
 import { EJGItem } from "../../models/sjcs/EJGItem";
 import { ScsDefendidosDesignasItem } from '../../models/sjcs/ScsDefendidosDesignasItem';
+import { USER_VALIDATIONS } from "../../properties/val-properties";
+import { SigaWrapper } from "../../wrapper/wrapper.class";
+import { TranslateService } from '../translate';
+import { SigaServices } from "./../../_services/siga.service";
+import { esCalendar } from "./../../utils/calendar";
+import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
+import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
 
 export enum KEY_CODE {
   ENTER = 13

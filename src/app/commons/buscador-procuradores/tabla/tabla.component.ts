@@ -1,11 +1,9 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { DataTable } from '../../../../../node_modules/primeng/primeng';
-import { TranslateService } from '../../translate';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '../../../../../node_modules/@angular/router';
-import { SigaServices } from '../../../_services/siga.service';
+import { DataTable } from '../../../../../node_modules/primeng/primeng';
 import { PersistenceService } from '../../../_services/persistence.service';
-import { ProcuradoresItem } from '../../../models/sjcs/ProcuradoresItem';
-import { ProcuradoresObject } from '../../../models/sjcs/ProcuradoresObject';
+import { SigaServices } from '../../../_services/siga.service';
+import { TranslateService } from '../../translate';
 
 @Component({
   selector: 'app-tabla-buscador-procurador',
