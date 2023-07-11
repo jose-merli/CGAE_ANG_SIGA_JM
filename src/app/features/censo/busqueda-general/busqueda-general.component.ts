@@ -728,6 +728,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
                 this.existe = true;
               }
               this.datos = [];
+              if(this.bodyFisica.nif == ''){
+                this.showWarning("No se han encontrado resultados en la busqueda. Pruebe a introducir el Número de identificación");
+              }
             } else {
               this.datos = [];
               this.datos = this.searchFisica.busquedaFisicaItems;
@@ -854,6 +857,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
                   this.existe = true;
                 }
                 this.datos = [];
+                if(this.bodyJuridica.nif == ''){
+                  this.showWarning("No se han encontrado resultados en la busqueda. Pruebe a introducir el Número de identificación");
+                }
               } else {
                 this.datos = [];
                 this.datos = this.searchJuridica.busquedaPerJuridicaItems;
