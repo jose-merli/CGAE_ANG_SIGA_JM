@@ -1,21 +1,21 @@
 import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  HostListener
+    ChangeDetectorRef,
+    Component,
+    HostListener,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
-import { SigaServices } from "./../../../../_services/siga.service";
+import { Router } from "@angular/router";
+import { Message } from "primeng/components/common/api";
+import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
 import { TranslateService } from "../../../../commons/translate/translation.service";
+import { EtiquetaDto } from "../../../../models/EtiquetaDto";
+import { EtiquetaSearchDto } from "../../../../models/EtiquetaSearchDto";
+import { EtiquetaUpdateDto } from "../../../../models/EtiquetaUpdateDto";
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
-import { Message } from "primeng/components/common/api";
-import { EtiquetaUpdateDto } from "../../../../models/EtiquetaUpdateDto";
-import { EtiquetaSearchDto } from "../../../../models/EtiquetaSearchDto";
-import { EtiquetaDto } from "../../../../models/EtiquetaDto";
-import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
-import { Router } from "@angular/router";
+import { SigaServices } from "./../../../../_services/siga.service";
 export enum KEY_CODE {
   ENTER = 13
 }

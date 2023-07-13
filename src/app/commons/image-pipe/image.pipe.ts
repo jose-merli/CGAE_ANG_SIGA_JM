@@ -1,12 +1,8 @@
 import { Pipe, PipeTransform } from "@angular/core";
 //import { Http, RequestOptions, Headers, ResponseContentType } from @angular/common/http';
 import {
-  HttpClient,
-  HttpResponse,
-  HttpParams,
-  HttpResponseBase,
-  HttpHeaders,
-  HttpBackend
+    HttpClient,
+    HttpHeaders
 } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";

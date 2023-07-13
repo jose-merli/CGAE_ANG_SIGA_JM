@@ -1,11 +1,10 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { DataTable, ConfirmationService } from '../../../../../node_modules/primeng/primeng';
-import { TranslateService } from '../../../commons/translate';
-import { Router } from '../../../../../node_modules/@angular/router';
-import { SigaServices } from '../../../_services/siga.service';
-import { PersistenceService } from '../../../_services/persistence.service';
-import { Identifiers } from '../../../../../node_modules/@angular/compiler';
 import { Location } from "@angular/common";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '../../../../../node_modules/@angular/router';
+import { ConfirmationService, DataTable } from '../../../../../node_modules/primeng/primeng';
+import { PersistenceService } from '../../../_services/persistence.service';
+import { SigaServices } from '../../../_services/siga.service';
+import { TranslateService } from '../../../commons/translate';
 
 
 

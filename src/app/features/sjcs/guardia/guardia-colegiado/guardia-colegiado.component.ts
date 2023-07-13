@@ -1,15 +1,14 @@
+import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from '../../../../commons/translate';
-import { ColegiadoItem } from '../../../../models/ColegiadoItem';
-import { procesos_guardia } from '../../../../permisos/procesos_guarida';
-import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { TranslateService } from '../../../../commons/translate';
+import { procesos_guardia } from '../../../../permisos/procesos_guarida';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { FiltrosGuardiaColegiadoComponent } from './filtros-guardia-colegiado/filtros-guardia-colegiado.component';
 import { TablaGuardiaColegiadoComponent } from './tabla-guardia-colegiado/tabla-guardia-colegiado.component';
-import { Location } from '@angular/common';
 @Component({
   selector: 'app-guardia-colegiado',
   templateUrl: './guardia-colegiado.component.html',

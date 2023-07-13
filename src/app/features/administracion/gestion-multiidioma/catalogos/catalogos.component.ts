@@ -1,25 +1,24 @@
 import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  HostListener
+    ChangeDetectorRef,
+    Component,
+    HostListener,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
-import { SigaServices } from "./../../../../_services/siga.service";
-import { TranslateService } from "../../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../../properties/val-properties";
-import { SigaWrapper } from "../../../../wrapper/wrapper.class";
+import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
+import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
+import { CommonsService } from '../../../../_services/commons.service';
+import { TranslateService } from "../../../../commons/translate/translation.service";
 import { MultiidiomaCatalogoDto } from "../../../../models/MultiidiomaCatalogoDto";
+import { MultiidiomaCatalogoItem } from "../../../../models/MultiidiomaCatalogoItem";
 import { MultiidiomaCatalogoSearchDto } from "../../../../models/MultiidiomaCatalogoSearchDto";
 import { MultiidiomaCatalogoUpdateDto } from "../../../../models/MultiidiomaCatalogoUpdateDto";
-import { MultiidiomaCatalogoItem } from "../../../../models/MultiidiomaCatalogoItem";
-import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
-import { DialogoComunicacionesItem } from "../../../../models/DialogoComunicacionItem";
-import { Router } from "@angular/router";
+import { USER_VALIDATIONS } from "../../../../properties/val-properties";
+import { SigaWrapper } from "../../../../wrapper/wrapper.class";
+import { SigaServices } from "./../../../../_services/siga.service";
 import { esCalendar } from "./../../../../utils/calendar";
-import { CommonsService } from '../../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }

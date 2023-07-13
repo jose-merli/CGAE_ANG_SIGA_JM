@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { OldSigaServices } from '../../../_services/oldSiga.service'
+import { Component } from '@angular/core';
+import { OldSigaServices } from '../../../_services/oldSiga.service';
 
 @Component({
   selector: 'app-catalogos-maestros-classique',

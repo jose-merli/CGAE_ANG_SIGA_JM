@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
-import { SigaServices } from "./../../../../_services/siga.service";
-import { SigaWrapper } from "../../../../wrapper/wrapper.class";
-import { TranslateService } from "../../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../../properties/val-properties";
+import { Location } from "@angular/common";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { PerfilItem } from "../../../../../app/models/PerfilItem";
 import { ComboItem } from "../../../../../app/models/ComboItem";
+import { PerfilItem } from "../../../../../app/models/PerfilItem";
+import { TranslateService } from "../../../../commons/translate/translation.service";
+import { USER_VALIDATIONS } from "../../../../properties/val-properties";
+import { SigaWrapper } from "../../../../wrapper/wrapper.class";
 import { PerfilesResponseDto } from "./../../../../../app/models/PerfilesResponseDto";
-import { Location } from "@angular/common";
+import { SigaServices } from "./../../../../_services/siga.service";
 
 @Component({
   selector: "app-editarPerfiles",

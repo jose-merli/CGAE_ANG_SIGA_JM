@@ -1,27 +1,25 @@
 import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  ElementRef
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
-import { SigaServices } from "./../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { PerfilItem } from "./../../../../app/models/PerfilItem";
-import { PerfilesResponseDto } from "./../../../../app/models/PerfilesResponseDto";
-import { PerfilesRequestDto } from "./../../../../app/models/PerfilesRequestDto";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
-import { ComboItem } from "./../../../../app/models/ComboItem";
 import { DataTable } from "primeng/datatable";
-import { Error } from "../../../models/Error";
-import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 import { MultiSelect } from 'primeng/multiselect';
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
+import { ComboItem } from "./../../../../app/models/ComboItem";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { PerfilItem } from "./../../../../app/models/PerfilItem";
+import { PerfilesRequestDto } from "./../../../../app/models/PerfilesRequestDto";
+import { PerfilesResponseDto } from "./../../../../app/models/PerfilesResponseDto";
+import { SigaServices } from "./../../../_services/siga.service";
 
 @Component({
   selector: "app-perfiles",

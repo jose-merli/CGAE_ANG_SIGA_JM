@@ -1,25 +1,25 @@
-import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { ConfirmationService, Message } from 'primeng/components/common/api';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BuscadorAsistenciaExpresComponent } from './buscador-asistencia-expres/buscador-asistencia-expres.component';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { ResultadoAsistenciaExpresComponent } from '../resultado-asistencia-expres/resultado-asistencia-expres.component';
-import { Cell, Row, RowGroup, TablaResultadoDesplegableAEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
-import { CommonsService } from '../../../../../_services/commons.service';
-import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
-import { ActuacionAsistenciaItem } from '../../../../../models/guardia/ActuacionAsistenciaItem';
 import { DatePipe } from '@angular/common';
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmationService, Message } from 'primeng/components/common/api';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { RowGroup, TablaResultadoDesplegableAEService } from '../../../../../commons/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
+import { ActuacionAsistenciaItem } from '../../../../../models/guardia/ActuacionAsistenciaItem';
+import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
+import { ResultadoAsistenciaExpresComponent } from '../resultado-asistencia-expres/resultado-asistencia-expres.component';
+import { BuscadorAsistenciaExpresComponent } from './buscador-asistencia-expres/buscador-asistencia-expres.component';
 
+import * as moment from 'moment';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TranslateService } from '../../../../../commons/translate';
-import * as moment from 'moment';
+import { ColegiadosSJCSItem } from '../../../../../models/ColegiadosSJCSItem';
+import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsistenciaItem';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { SigaStorageService } from '../../../../../siga-storage.service';
-import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsistenciaItem';
 import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
-import { BuscadorAsistenciasComponent } from './buscador-asistencias/buscador-asistencias.component';
 import { ResultadoAsistenciasComponent } from '../resultado-asistencias/resultado-asistencias.component';
-import { ColegiadosSJCSItem } from '../../../../../models/ColegiadosSJCSItem';
+import { BuscadorAsistenciasComponent } from './buscador-asistencias/buscador-asistencias.component';
 
 @Component({
   selector: 'app-asistencia-expres',

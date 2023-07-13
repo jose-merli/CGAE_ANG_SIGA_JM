@@ -1,16 +1,14 @@
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from "@angular/core";
 import { Response } from "@angular/http";
-import { KEY_CODE } from "../../../administracion/catalogos-maestros/catalogos-maestros.component";
-import { HostListener } from "@angular/core";
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { SigaServices } from "../../../../_services/siga.service";
 import { saveAs } from "file-saver/FileSaver";
+import { DatePipe } from "../../../../../../node_modules/@angular/common";
+import { DomSanitizer } from "../../../../../../node_modules/@angular/platform-browser";
+import { SigaServices } from "../../../../_services/siga.service";
+import { TranslateService } from '../../../../commons/translate/translation.service';
 import { CargaMasivaItem } from "../../../../models/CargaMasivaItem";
 import { CargaMasivaObject } from "../../../../models/CargaMasivaObject";
-import { DatePipe } from "../../../../../../node_modules/@angular/common";
 import { esCalendar } from "../../../../utils/calendar";
-import { DomSanitizer } from "../../../../../../node_modules/@angular/platform-browser";
-import { TranslateService } from '../../../../commons/translate/translation.service';
-
+import { KEY_CODE } from "../../../administracion/catalogos-maestros/catalogos-maestros.component";
 @Component({
   selector: "app-carga-etiquetas",
   templateUrl: "./carga-etiquetas.component.html",

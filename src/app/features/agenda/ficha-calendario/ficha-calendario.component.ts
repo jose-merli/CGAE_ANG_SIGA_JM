@@ -1,16 +1,16 @@
-import { SigaServices } from "../../../_services/siga.service";
-import { TreeNode } from "../../../utils/treenode";
+import { Location } from "@angular/common";
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import { ConfirmationService } from "primeng/api";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { DataTable } from "../../../../../node_modules/primeng/primeng";
-import { ConfirmationService } from "primeng/api";
-import { CalendarItem } from "../../../models/CalendarItem";
+import { SigaServices } from "../../../_services/siga.service";
 import { TranslateService } from "../../../commons/translate/translation.service";
+import { CalendarItem } from "../../../models/CalendarItem";
+import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
+import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
 import { PermisosCalendarioItem } from "../../../models/PermisosCalendarioItem";
 import { PermisosCalendarioObject } from "../../../models/PermisosCalendarioObject";
-import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
-import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
-import { Location } from "@angular/common";
+import { TreeNode } from "../../../utils/treenode";
 
 @Component({
   selector: "app-ficha-calendario",

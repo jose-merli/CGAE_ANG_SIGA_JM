@@ -1,22 +1,22 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { Location } from "@angular/common";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import { Router } from '@angular/router';
 import { ConfirmationService, Message } from "primeng/components/common/api";
-import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { DataTable } from "primeng/datatable";
-import { DatosBancariosItem } from "./../../../../../../app/models/DatosBancariosItem";
-import { DatosBancariosObject } from "./../../../../../../app/models/DatosBancariosObject";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { BancoBicItem } from "./../../../../../../app/models/BancoBicItem";
 import { BancoBicObject } from "./../../../../../../app/models/BancoBicObject";
+import { DatosBancariosAnexoObject } from "./../../../../../../app/models/DatosBancariosAnexoObject";
+import { DatosBancariosItem } from "./../../../../../../app/models/DatosBancariosItem";
+import { DatosBancariosObject } from "./../../../../../../app/models/DatosBancariosObject";
+import { DatosBancariosSearchAnexosItem } from "./../../../../../../app/models/DatosBancariosSearchAnexosItem";
 import { DatosMandatosItem } from "./../../../../../../app/models/DatosMandatosItem";
 import { DatosMandatosObject } from "./../../../../../../app/models/DatosMandatosObject";
-import { DatosBancariosSearchAnexosItem } from "./../../../../../../app/models/DatosBancariosSearchAnexosItem";
-import { DatosBancariosAnexoObject } from "./../../../../../../app/models/DatosBancariosAnexoObject";
 import { SigaServices } from "./../../../../../_services/siga.service";
-import { Router } from '@angular/router';
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
-import { CommonsService } from '../../../../../_services/commons.service';
 import { MultiSelect } from 'primeng/multiselect';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { RevisionAutLetradoItem } from "../../../../../models/RevisionAutLetradoItem";
 
 @Component({

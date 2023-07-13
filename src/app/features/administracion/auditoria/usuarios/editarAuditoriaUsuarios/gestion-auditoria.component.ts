@@ -1,18 +1,18 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
-import { SigaServices } from "./../../../../../_services/siga.service";
-import { SigaWrapper } from "./../../../../../wrapper/wrapper.class";
-import { esCalendar } from "./../../../../../utils/calendar";
-import { TranslateService } from "./../../../../../commons/translate/translation.service";
+import { Location } from "@angular/common";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
-import { USER_VALIDATIONS } from "./../../../../../properties/val-properties";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { HistoricoUsuarioItem } from "./../../../../../../app/models/HistoricoUsuarioItem";
-import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/HistoricoUsuarioUpdateDto";
-import { HistoricoUsuarioRequestDto } from "./../../../../../../app/models/HistoricoUsuarioRequestDto";
-import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
-import { Location } from "@angular/common";
 import { CommonsService } from '../../../../../_services/commons.service';
+import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
+import { HistoricoUsuarioItem } from "./../../../../../../app/models/HistoricoUsuarioItem";
+import { HistoricoUsuarioRequestDto } from "./../../../../../../app/models/HistoricoUsuarioRequestDto";
+import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/HistoricoUsuarioUpdateDto";
+import { SigaServices } from "./../../../../../_services/siga.service";
+import { TranslateService } from "./../../../../../commons/translate/translation.service";
+import { USER_VALIDATIONS } from "./../../../../../properties/val-properties";
+import { esCalendar } from "./../../../../../utils/calendar";
+import { SigaWrapper } from "./../../../../../wrapper/wrapper.class";
 @Component({
   selector: "app-gestion-auditoria",
   templateUrl: "./gestion-auditoria.component.html",

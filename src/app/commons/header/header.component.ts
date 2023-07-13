@@ -1,8 +1,8 @@
+import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../_services/siga.service";
 import { TranslateService } from "../translate/translation.service";
-import { Location } from "@angular/common";
 
 // prueba
 import { HeaderGestionEntidadService } from "../../_services/headerGestionEntidad.service";

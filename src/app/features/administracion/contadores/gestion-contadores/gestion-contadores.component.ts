@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
-import { SigaServices } from "./../../../../_services/siga.service";
-import { SigaWrapper } from "../../../../wrapper/wrapper.class";
-import { esCalendar } from "./../../../../utils/calendar";
-import { TranslateService } from "../../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../../properties/val-properties";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { ContadorItem } from "../../../../../app/models/ContadorItem";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
 import { CommonsService } from '../../../../_services/commons.service';
+import { TranslateService } from "../../../../commons/translate/translation.service";
+import { USER_VALIDATIONS } from "../../../../properties/val-properties";
+import { SigaWrapper } from "../../../../wrapper/wrapper.class";
+import { SigaServices } from "./../../../../_services/siga.service";
+import { esCalendar } from "./../../../../utils/calendar";
 
 @Component({
   selector: "app-gestion-contadores",

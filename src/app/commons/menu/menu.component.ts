@@ -1,9 +1,8 @@
-import { TranslateService } from "../translate/translation.service";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService, MenuItem } from "primeng/api";
-import { PanelMenuModule } from "primeng/panelmenu";
 import { SigaServices } from "../../_services/siga.service";
+import { TranslateService } from "../translate/translation.service";
 
 @Component({
   selector: "app-menu",

@@ -1,18 +1,16 @@
-import { Injectable, Injector } from '@angular/core';
 import {
-	HttpClient,
-	HttpHeaders,
-	HttpEvent,
-	HttpInterceptor,
-	HttpHandler,
-	HttpRequest,
-	HttpBackend
+    HttpBackend,
+    HttpClient,
+    HttpEvent,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest
 } from '@angular/common/http';
-import { Observable } from 'rxjs/Rx';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
-import { forkJoin } from 'rxjs/observable/forkJoin';
 import { OldSigaServices } from '../_services/oldSiga.service';
 
 @Injectable()

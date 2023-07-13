@@ -1,32 +1,31 @@
 import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  HostListener,
-  ElementRef,
-  Output,
-  EventEmitter
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    OnInit,
+    Output,
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
-import { SigaServices } from "./../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { USER_VALIDATIONS } from "../../../properties/val-properties";
-import { TranslateService } from "../../../commons/translate/translation.service";
+import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { CatalogoRequestDto } from "./../../../../app/models/CatalogoRequestDto";
-import { CatalogoHistoricoRequestDto } from "./../../../../app/models/CatalogoHistoricoRequestDto";
-import { CatalogoResponseDto } from "./../../../../app/models/CatalogoResponseDto";
-import { CatalogoUpdateRequestDto } from "./../../../../app/models/CatalogoUpdateRequestDto";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { USER_VALIDATIONS } from "../../../properties/val-properties";
+import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { CatalogoCreateRequestDto } from "./../../../../app/models/CatalogoCreateRequestDto";
 import { CatalogoDeleteRequestDto } from "./../../../../app/models/CatalogoDeleteRequestDto";
+import { CatalogoHistoricoRequestDto } from "./../../../../app/models/CatalogoHistoricoRequestDto";
 import { CatalogoMaestroItem } from "./../../../../app/models/CatalogoMaestroItem";
-import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { CatalogoRequestDto } from "./../../../../app/models/CatalogoRequestDto";
+import { CatalogoResponseDto } from "./../../../../app/models/CatalogoResponseDto";
+import { CatalogoUpdateRequestDto } from "./../../../../app/models/CatalogoUpdateRequestDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
-import { Router } from "@angular/router";
-import { isObject } from "util";
+import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { SigaServices } from "./../../../_services/siga.service";
 export enum KEY_CODE {
   ENTER = 13
 }

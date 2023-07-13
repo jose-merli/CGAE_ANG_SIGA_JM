@@ -1,17 +1,17 @@
 import {
-	Component,
-	EventEmitter,
-	Input,
-	OnInit,
-	Output,
-	ViewChild,
-	AfterViewInit,
-	ViewEncapsulation
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import * as moment from 'moment';
 import { Calendar } from 'primeng/primeng';
-import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../utils/calendar';
 import { SigaServices } from '../../_services/siga.service';
+import { catCalendar, esCalendar, euCalendar, glCalendar } from '../../utils/calendar';
 
 @Component({
 	selector: 'app-fecha',

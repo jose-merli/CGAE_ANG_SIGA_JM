@@ -1,12 +1,12 @@
-import { Component, OnInit, Input, EventEmitter, ViewChild, Output, HostListener } from '@angular/core';
-import { PersistenceService } from '../../../_services/persistence.service';
+import { Location } from "@angular/common";
+import { Component, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '../../../../../node_modules/@angular/router';
-import { TranslateService } from '../../../commons/translate';
-import { SigaServices } from '../../../_services/siga.service';
 import { CommonsService } from '../../../_services/commons.service';
+import { PersistenceService } from '../../../_services/persistence.service';
+import { SigaServices } from '../../../_services/siga.service';
+import { TranslateService } from '../../../commons/translate';
 import { KEY_CODE } from '../../../features/administracion/auditoria/usuarios/auditoria-usuarios.component';
 import { BusquedaGeneralSJCSItem } from '../../../models/sjcs/BusquedaGeneralSJCSItem';
-import { Location } from "@angular/common";
 
 @Component({
   selector: 'app-filtros-generalSJCS',

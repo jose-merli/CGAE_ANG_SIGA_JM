@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
-import { SigaServices } from "./../../../../_services/siga.service";
-import { SigaWrapper } from "../../../../wrapper/wrapper.class";
-import { TranslateService } from "../../../../commons/translate/translation.service";
-import { USER_VALIDATIONS } from "../../../../properties/val-properties";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { CatalogoRequestDto } from "../../../../../app/models/CatalogoRequestDto";
 import { CatalogoUpdateRequestDto } from "../../../../../app/models/CatalogoUpdateRequestDto";
+import { TranslateService } from "../../../../commons/translate/translation.service";
+import { USER_VALIDATIONS } from "../../../../properties/val-properties";
+import { SigaWrapper } from "../../../../wrapper/wrapper.class";
+import { SigaServices } from "./../../../../_services/siga.service";
 @Component({
   selector: "app-editarCatalogosMaestros",
   templateUrl: "./editarCatalogosMaestros.component.html",

@@ -1,20 +1,16 @@
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from "@angular/core";
 import { Response } from "@angular/http";
-import { KEY_CODE } from "../../../administracion/catalogos-maestros/catalogos-maestros.component";
-import { HostListener } from "@angular/core";
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { SigaServices } from "../../../../_services/siga.service";
-import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "@angular/platform-browser";
+import { saveAs } from "file-saver/FileSaver";
+import { DatePipe } from "../../../../../../node_modules/@angular/common";
+import { CommonsService } from '../../../../_services/commons.service';
+import { SigaServices } from "../../../../_services/siga.service";
+import { TranslateService } from "../../../../commons/translate";
 import { CargaMasivaItem } from "../../../../models/CargaMasivaItem";
 import { CargaMasivaObject } from "../../../../models/CargaMasivaObject";
-import { DatePipe } from "../../../../../../node_modules/@angular/common";
 import { ErrorItem } from "../../../../models/ErrorItem";
 import { esCalendar } from "../../../../utils/calendar";
-import { Pipe, PipeTransform } from "@angular/core";
-import { TranslateService } from "../../../../commons/translate";
-import { CommonsService } from '../../../../_services/commons.service';
-
-// @Pipe({ name: "replaceLineBreaks" })
+import { KEY_CODE } from "../../../administracion/catalogos-maestros/catalogos-maestros.component";
 // export class ReplaceLineBreaks implements PipeTransform {
 //   transform(value: string): string {
 //     return value.replace(/\n/g, "<br/>");

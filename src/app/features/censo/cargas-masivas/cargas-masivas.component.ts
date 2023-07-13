@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentChecked, AfterContentInit } from '@angular/core';
+import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TranslateService } from '../../../commons/translate/translation.service';
 

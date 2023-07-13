@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FechaComponent } from './fecha.component';
-import { CalendarModule } from 'primeng/calendar';
-import { ButtonModule, ConfirmDialogModule, DropdownModule, GrowlModule } from 'primeng/primeng';
-import { PipeTranslationModule } from '../translate/pipe-translation.module';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TableModule } from 'primeng/table';
+import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from "primeng/checkbox";
+import { ButtonModule, ConfirmDialogModule, DropdownModule, GrowlModule } from 'primeng/primeng';
+import { TableModule } from 'primeng/table';
+import { PipeTranslationModule } from '../translate/pipe-translation.module';
+import { FechaComponent } from './fecha.component';
 @NgModule({
   imports: [
     CommonModule,

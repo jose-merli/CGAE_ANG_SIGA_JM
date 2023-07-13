@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
 
@@ -10,10 +10,9 @@ import { SigaServices } from "./../../../../_services/siga.service";
 import { DatosBancariosItem } from "./../../../../../app/models/DatosBancariosItem";
 import { DatosBancariosObject } from "./../../../../../app/models/DatosBancariosObject";
 
-import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
-import { DialogoComunicacionesItem } from "../../../../models/DialogoComunicacionItem";
+import { cardService } from "./../../../../_services/cardSearch.service";
 
 @Component({
   selector: "app-datos-bancarios",

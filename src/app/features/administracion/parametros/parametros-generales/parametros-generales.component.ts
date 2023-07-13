@@ -1,24 +1,24 @@
 import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  HostListener
+    ChangeDetectorRef,
+    Component,
+    HostListener,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
 } from "@angular/core";
 
-import { SigaServices } from "./../../../../_services/siga.service";
+import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
+import { Message } from "primeng/components/common/api";
 import { TranslateService } from "../../../../commons/translate/translation.service";
+import { ParametroDeleteDto } from "../../../../models/ParametroDeleteDto";
+import { ParametroDto } from "../../../../models/ParametroDto";
+import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
+import { ParametroUpdateDto } from "../../../../models/ParametroUpdateDto";
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
 import { SigaWrapper } from "../../../../wrapper/wrapper.class";
-import { Message } from "primeng/components/common/api";
-import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
-import { ParametroDto } from "../../../../models/ParametroDto";
-import { ParametroDeleteDto } from "../../../../models/ParametroDeleteDto";
-import { ParametroUpdateDto } from "../../../../models/ParametroUpdateDto";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
-import { Router } from "@angular/router";
+import { SigaServices } from "./../../../../_services/siga.service";
 export enum KEY_CODE {
   ENTER = 13
 }

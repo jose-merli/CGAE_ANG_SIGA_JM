@@ -1,18 +1,16 @@
-import { Component, OnInit, ViewChild, HostListener } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 // import { MenubarModule } from 'primeng/menubar';
 // import { MenuItem } from 'primeng/api';
-import { AuthenticationService } from "./_services/authentication.service";
 import {
-  Router,
-  ActivatedRoute,
-  RouterStateSnapshot,
-  NavigationEnd
+    ActivatedRoute,
+    NavigationEnd,
+    Router
 } from "@angular/router";
 import { CookieService } from "ngx-cookie-service";
-import { SigaStorageService } from "./siga-storage.service";
+import { AuthenticationService } from "./_services/authentication.service";
 import { SigaServices } from "./_services/siga.service";
 import { ColegiadoItem } from "./models/ColegiadoItem";
-
+import { SigaStorageService } from "./siga-storage.service";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
