@@ -2622,6 +2622,12 @@ para poder filtrar el dato con o sin estos caracteres*/
     if(this.checkNuevosRegistros()){
 
       this.progressSpinner = true;
+      console.log("BORRAR ESTOS COMENTARIOs TRAS TERMINAR SIGARNV-3439");
+      console.log("nueva-incorporacion.component.ts - save() ==> idSolicitud = " + this.solicitudEditar.idSolicitud);
+      console.log("Contenido de this.documentos: ");
+      for(let i = 0; i<= this.documentos.length; i++){
+        console.log( this.documentos[i]);
+      }
       this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
         n => {
           this.progressSpinner = false;
