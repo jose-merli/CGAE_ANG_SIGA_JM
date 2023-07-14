@@ -86,16 +86,13 @@ export class TablaEjgComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
+
     this.currentRoute = this.router.url;
-
     this.selectedDatos = [];
-
-
     this.showModalCambioEstado = false;
     this.fechaEstado = new Date();
     this.valueComboEstado = "";
     this.observacionesIn = "";
-
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 
@@ -520,6 +517,8 @@ export class TablaEjgComponent implements OnInit {
         this.cdAnadirRemesa.hide();
         this.cdCambioEstado.hide();
         this.cancelaAnadirRemesa();
+        sessionStorage.setItem('vieneDesdeTablaEjg', 'true');
+
       },
       reject: () => {
         this.msgs = [{

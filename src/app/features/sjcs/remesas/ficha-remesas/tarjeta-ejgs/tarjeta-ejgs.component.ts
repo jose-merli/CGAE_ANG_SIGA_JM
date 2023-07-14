@@ -90,6 +90,12 @@ export class TarjetaEjgsComponent implements OnInit {
       this.getEJGRemesa(this.remesaTabla);    
     }
 
+    
+    if(sessionStorage.getItem('vieneDesdeTablaEjg')){
+      this.openFicha = true;
+      sessionStorage.removeItem('vieneDesdeTablaEjg');
+    }
+
     this.getCols();
     this.resaltadoEJGsAsociados = true;
   }
