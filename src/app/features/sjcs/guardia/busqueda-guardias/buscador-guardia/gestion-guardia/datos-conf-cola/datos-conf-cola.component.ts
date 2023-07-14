@@ -357,8 +357,18 @@ export class DatosConfColaComponent implements OnInit {
         }
       } else {
         let existManual = this.pesosExistentes.find(it => it.por_filas == ordManual);
-        if (!existManual || existManual == 0)
+        if (!existManual || existManual == 0) {
           this.pesosExistentes.push(e);
+
+          let configuracionCola: ConfiguracionCola = {
+            'manual': false,
+            'porGrupos': this.body.porGrupos,
+            'idConjuntoGuardia': 0,
+            "fromCombo": false,
+            "minimoLetradosCola": this.body.letradosGuardia
+          };
+          this.globalGuardiasService.emitConf(configuracionCola);
+        }
       }
     });
 

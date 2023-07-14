@@ -126,6 +126,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   enableUpDownButtonsManual: boolean = true;
   @Input() dataConfOrdColaHered: String;
   @Input() guardiaComunicar : GuardiaItem;
+  @Input() tablaEnFichaGuardias = false;
 
   constructor(
     private renderer: Renderer2,
@@ -238,6 +239,18 @@ export class TablaResultadoOrderComponent implements OnInit {
     if(this.guardiaNew != undefined && this.guardiaNew != null){
       this.nuevo();
     }
+
+    if (this.tablaEnFichaGuardias == true) {
+      if (sessionStorage.getItem("ordenacionManual") != null && sessionStorage.getItem("ordenacionManual") == "true") {
+        this.toSlice = 6;
+        sessionStorage.removeItem("ordenacionManual");
+        this.manual = true;
+      } else {
+          this.toSlice = 5;
+          this.manual = false;
+      }
+    }
+    
   }
   perPage(perPage){
     this.numperPage = perPage;
@@ -1588,16 +1601,14 @@ this.totalRegistros = this.rowGroups.length;
       'turno': 0,
       'guardia': 0,
       'colegiado': 0,
-      'grupo': 0,
       'idPersona': 0,
       'letrado': 0
     };
 
-    dataFilterFromColaGuardia.turno = this.rowGroups[pos].cells[10].value;
-    dataFilterFromColaGuardia.guardia = this.rowGroups[pos].cells[11].value;
+    dataFilterFromColaGuardia.turno = this.rowGroups[pos].cells[8].value;
+    dataFilterFromColaGuardia.guardia = this.rowGroups[pos].cells[9].value;
     dataFilterFromColaGuardia.colegiado = this.rowGroups[pos].cells[2].value;
-    dataFilterFromColaGuardia.grupo = this.rowGroups[pos].cells[14].value;
-    dataFilterFromColaGuardia.idPersona = this.rowGroups[pos].cells[15].value;
+    dataFilterFromColaGuardia.idPersona = this.rowGroups[pos].cells[13].value;
     dataFilterFromColaGuardia.letrado = this.rowGroups[pos].cells[3].value;
     this.persistenceService.setDatos(dataFilterFromColaGuardia);
     sessionStorage.setItem(
@@ -1612,8 +1623,7 @@ this.totalRegistros = this.rowGroups.length;
       idguardia: dataFilterFromColaGuardia.guardia, 
       idpersona: dataFilterFromColaGuardia.idPersona, 
       numerocolegiado: dataFilterFromColaGuardia.colegiado, 
-      letrado: dataFilterFromColaGuardia.letrado,
-      grupo: dataFilterFromColaGuardia.grupo
+      letrado: dataFilterFromColaGuardia.letrado
     } });
   }
 
@@ -1694,7 +1704,7 @@ this.totalRegistros = this.rowGroups.length;
 
   getConfColaGuardias() {
     let datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
-    if(datos != null){
+    if(datos != null && datos.idTurno != null && datos.idGuardia != null){
       this.sigaServices.post("busquedaGuardias_resumenConfCola", datos)
       .subscribe(data => {
         if (data.body)

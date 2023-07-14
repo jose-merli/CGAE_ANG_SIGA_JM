@@ -70,72 +70,20 @@
       </div>
       </div>
       <div class="table-body-wrap">
-        <div class="card-body-partida first-table" style="border-right-style: inset;">
-          <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" | translate}}</strong>
-      <!-- Tabla inscripciones-->
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
-        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
-        <ng-template pTemplate="colgroup" let-columns>
-          <colgroup>
-            <col *ngFor="let col of cols" [style.width]="col.width">
-          </colgroup>
-        </ng-template>
-        <ng-template pTemplate="header" let-columns>
-          <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-              {{ col.header | translate}}
-              <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
-                table.filter($event.target.value, col.field, 'contains')
-              " />
-            </th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-            <ng-container *ngFor="let col of columns; let  i = index">
-              <td [ngClass]="i == 0? 'col-text-right' : 'col-text-center'">
-              <div *ngIf="col.field !='nombreguardia' && col.field !='fechavalidacion' && col.field != 'fechabajaguardia'">
-                <span>{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="col.field =='fechavalidacion' || col.field =='fechabajaguardia'">
-                <span>{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="col.field =='nombreguardia'">
-                <span>{{dato.alfabeticoapellidos}}, {{dato[col.field]}} </span>
-              </div>
-            </td>
-            </ng-container>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage" let-columns>
-          <tr>
-            <td [attr.colspan]="columns.length">
-              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="paginatorleft">
-          <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{table.first + 1}} al {{table.first
-              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
-            </label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
-            </label>
-            <label>{{"general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
-            </p-dropdown>
-            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-                  label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
-              </p-checkbox>
-            </div>
-          </div>
-        </ng-template>
-      </p-table>
+
+      <!-- Tabla inscripciones -->
+      <div class="card-body-partida first-table" style="border-right-style: inset;">
+        <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" | translate}}</strong>
+        
+        <app-tabla-resultado-order [pantalla]="'colaGuardias'"
+          [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="this.ordenacionManual" [cabeceras]="cabeceras"
+          [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="6"
+          [minimoLetrado]="minimoLetrado"  [guardiaComunicar]="guardiaComunicar"
+          (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)"
+          (colaGuardiaModified)="updateColaGuardia($event)" (colaGuardiaOrdenada)="colaGuardiaOrdenada($event)"
+          (rest)="rest($event)" (dupli)="duplicar($event)"
+          [dataConfOrdColaHered]="dataConfColaGuardiaPadre">
+        </app-tabla-resultado-order>
       </div>
       <!-- Tabla compensaciones -->
       <div class="card-body-partida second-table">
@@ -163,14 +111,11 @@
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
               <ng-container *ngFor="let col of columns; let  i = index">
                 <td [ngClass]="i == 0 ? 'col-text-right' : 'col-text-center'">
-                  <div *ngIf="col.field !='nombrepersona' && col.field !='fechavalidacion'">
+                  <div *ngIf="col.field !='fecha'">
                     <span>{{dato[col.field]}}</span>
                   </div>
-                  <div *ngIf="col.field =='fechavalidacion'">
+                  <div *ngIf="col.field =='fecha'">
                     <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-                  </div>
-                  <div *ngIf="col.field =='nombrepersona'">
-                    <span>{{dato.alfabeticoapellidos}}, {{dato[col.field]}} </span>
                   </div>
                 </td>
               </ng-container>
@@ -219,15 +164,12 @@
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
               <ng-container *ngFor="let col of columns; let  i = index">
                 <td [ngClass]="i == 0? 'col-text-right' : 'col-text-center'">
-                <div *ngIf="col.field !='nombrepersona' && col.field !='fechavalidacion'">
-                  <span>{{dato[col.field]}}</span>
-                </div>
-                <div *ngIf="col.field =='fechavalidacion'">
-                  <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-                </div>
-                <div *ngIf="col.field =='nombrepersona'">
-                  <span>{{dato.alfabeticoapellidos}}, {{dato[col.field]}} </span>
-                </div>
+                  <div *ngIf="col.field !='fecha'">
+                    <span>{{dato[col.field]}}</span>
+                  </div>
+                  <div *ngIf="col.field =='fecha'">
+                    <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+                  </div>
               </td>
               </ng-container>
             </tr>
@@ -253,27 +195,8 @@
       </div>
       </div>
     </div>
-    <div *ngIf="openFicha" class="card-footer">
-      <div class="text-right main-button">
-
-
-        <button [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
-          pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
-
-        <button pButton [disabled]=" disableAll ||  selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
-          (click)="saltoCompensacion()" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
-
-      </div>
-    </div>
   </div>
 </div>
-
-<!-- <p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
-  <p-footer>
-    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
-    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
-  </p-footer>
-</p-confirmDialog> -->
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

@@ -36,6 +36,9 @@ import { TarjetaGuardias } from './ficha-turnos/tarjeta-guardias/tarjeta-guardia
 import { routingOficio } from '../oficio-routing.module';
 import { TarjetaInscripciones } from './ficha-turnos/tarjeta-inscripciones/tarjeta-inscripciones.component';
 import {DialogModule} from 'primeng/dialog';
+import { TablaResultadoOrderModule } from '../../../../commons/tabla-resultado-order/tabla-resultado-order.module';
+
+
 @NgModule({
   imports: [
     DialogModule,
@@ -58,8 +61,8 @@ import {DialogModule} from 'primeng/dialog';
     TooltipModule,
     TarjetaResumenFijaModule,
     ConfirmDialogModule,
-    FechaModule
-
+    FechaModule,
+    TablaResultadoOrderModule
   ],
   declarations: [
     TurnosComponent,

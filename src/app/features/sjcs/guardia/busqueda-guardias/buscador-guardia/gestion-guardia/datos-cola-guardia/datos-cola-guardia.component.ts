@@ -54,36 +54,7 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
   datosConfColaGuardias: any;
   selectedItem: number = 10;
   selectedItemSaltosCompensaciones: number = 3;
-  cabeceras = [
-    /*{
-      id: "ordenCola",
-      name: "dato.jgr.guardia.guardias.ordenCola"
-    },*/
-    {
-      id: "grupo",
-      name: "dato.jgr.guardia.guardias.grupo"
-    },
-    {
-      id: "orden",
-      name: "administracion.informes.literal.orden"
-    },
-    {
-      id: "ncolegiado",
-      name: "censo.busquedaClientesAvanzada.literal.nColegiado"
-    },
-    {
-      id: "apellidosnombre",
-      name: "administracion.parametrosGenerales.literal.nombre.apellidos"
-    },
-    {
-      id: "fechavalidez",
-      name: "dato.jgr.guardia.guardias.fechaValidez"
-    },
-    {
-      id: "fechabaja",
-      name: "dato.jgr.guardia.guardias.fechaBaja"
-    }
-  ];
+  cabeceras;
   configuracionCola: ConfiguracionCola = {
     'manual': true,
     'porGrupos': true,
@@ -142,6 +113,7 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
        
         //this.getColaGuardia();
       });
+      this.body.ordenacionManual = false;
       this.inicio();
   }
 
@@ -185,10 +157,10 @@ inicio(){
         
         if (this.configuracionCola.manual && this.configuracionCola.porGrupos){
           this.body.porGrupos = true;
-          this.getColaGuardia();
+          this.isOrdenacionManual();
         } else {
           this.body.porGrupos = false;
-          this.getColaGuardia();
+          this.isOrdenacionManual();
         }
         if (this.body.porGrupos) {
           this.body.ordenacionManual = true;
@@ -421,12 +393,62 @@ inicio(){
   }
 
   getColaGuardia() {
+
+    if(this.body.ordenacionManual == true) {
+      this.cabeceras = [
+        {
+          id: "grupo",
+          name: "dato.jgr.guardia.guardias.grupo"
+        },
+        {
+          id: "orden",
+          name: "dato.jgr.guardia.guardias.ordengrupo"
+        },
+        {
+          id: "ncolegiado",
+          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
+        },
+        {
+          id: "apellidosnombre",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
+        },
+        {
+          id: "fechavalidez",
+          name: "dato.jgr.guardia.guardias.fechaValidez"
+        },
+        {
+          id: "fechabaja",
+          name: "dato.jgr.guardia.guardias.fechaBaja"
+        }
+      ];
+    } else {
+      this.cabeceras = [
+        {
+          id: "orden",
+          name: "dato.jgr.guardia.guardias.ordenCola"
+        },
+        {
+          id: "ncolegiado",
+          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
+        },
+        {
+          id: "apellidosnombre",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
+        },
+        {
+          id: "fechavalidez",
+          name: "dato.jgr.guardia.guardias.fechaValidez"
+        },
+        {
+          id: "fechabaja",
+          name: "dato.jgr.guardia.guardias.fechaBaja"
+        }
+      ];
+    }
+
     if (this.body.letradosIns instanceof Date) // Se comprueba si es una fecha por si es necesario cambiar el formato.
       this.transformDate(this.body.letradosIns); // Si no es una fecha es que ya está formateada porque viene del back.
     this.progressSpinner = true;
-    //this.body.idTurno = 802; //borrar
-    //this.body.idGuardia = 1441; //borrar
-    //this.body.letradosIns = '09/12/10';
     this.sigaService.post(
       "busquedaGuardias_getColaGuardia", this.body).subscribe(
         data => {
@@ -489,7 +511,13 @@ inicio(){
       }
       let nG;
       nG = datoObj.numeroGrupo;
-      if (this.configuracionCola.porGrupos == false && this.configuracionCola.porGrupos == false){
+      if (this.body.ordenacionManual == true){
+        if (sessionStorage.getItem("ordenacionManual")) {
+          sessionStorage.removeItem("ordenacionManual");
+        }
+
+        sessionStorage.setItem("ordenacionManual", "true");
+
         objArr.cells = [
           //{ type: 'text', value: datoObj.ordenCola },
          
@@ -515,8 +543,7 @@ inicio(){
         objArr.cells = [
           //{ type: 'text', value: datoObj.ordenCola },
          
-          { type: 'input', value: nG },
-          { type: 'position', value: datoObj.orden },
+          { type: 'text', value: datoObj.ordenCola },
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
@@ -728,12 +755,14 @@ inicio(){
 
   isOrdenacionManual() {
     //this.progressSpinner = true;
+    this.body.ordenacionManual = false;
+
     this.sigaService
       .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idOrdenacionColas)
       .subscribe(
         n => {
           n.colaOrden.forEach(it => {
-            if (it.por_filas == "ORDENACIONMANUAL" && +it.numero != 0)
+            if (it.por_filas == "ORDENACIONMANUAL" && + it.numero != 0)
               this.body.ordenacionManual = true;
           });
 

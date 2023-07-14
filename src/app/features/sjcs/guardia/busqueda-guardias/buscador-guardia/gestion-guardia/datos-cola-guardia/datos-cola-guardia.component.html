@@ -105,21 +105,20 @@
       <div class="col-12">
         <div class="table-body-wrap">
 
-          <!-- Tabla inscripciones -->
-          <div class="card-body-partida first-table" style="border-right-style: inset;">
-            <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" |
-              translate}}</strong>
-
-            <app-tabla-resultado-order [permisoEscritura]="permisoEscritura" [pantalla]="'colaGuardias'"
-              [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="true"
-              [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0"
-              [toSlice]="6" [minimoLetrado]="minimoLetrado" [porGrupos]="porGrupos"
-              [guardiaComunicar]="guardiaComunicar" (anySelected)="notifyAnySelected($event)"
-              (selectedRow)="checkSelectedRow($event)" (colaGuardiaModified)="updateColaGuardia($event)"
-              (colaGuardiaOrdenada)="colaGuardiaOrdenada($event)" (rest)="rest($event)" (dupli)="duplicar($event)">
-              [dataConfOrdColaHered]="dataConfColaGuardiaPadre"
-            </app-tabla-resultado-order>
-          </div>
+            <!-- Tabla inscripciones -->
+            <div class="card-body-partida first-table" style="border-right-style: inset;">
+              <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" | translate}}</strong>
+              
+              <app-tabla-resultado-order [permisoEscritura]="permisoEscritura" [pantalla]="'colaGuardias'"
+                [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="true" [cabeceras]="cabeceras"
+                [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="6"
+                [minimoLetrado]="minimoLetrado" [porGrupos]="porGrupos" [guardiaComunicar]="guardiaComunicar"
+                (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)"
+                (colaGuardiaModified)="updateColaGuardia($event)" (colaGuardiaOrdenada)="colaGuardiaOrdenada($event)"
+                (rest)="rest($event)" (dupli)="duplicar($event)" [tablaEnFichaGuardias]="true"
+                [dataConfOrdColaHered]="dataConfColaGuardiaPadre">
+              </app-tabla-resultado-order>
+            </div>
 
           <!-- Tabla compensaciones -->
           <div class="card-body-partida second-table">

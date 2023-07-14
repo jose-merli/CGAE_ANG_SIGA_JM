@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, OnInit , SimpleChanges } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnInit , SimpleChanges, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
@@ -7,6 +7,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { GuardiaItem } from '../../../../../models/guardia/GuardiaItem';
+import { TarjetaColaGuardias } from './tarjeta-colaguardias/tarjeta-colaguardias.component';
 
 @Component({
 	selector: 'app-ficha-turnos',
@@ -52,6 +53,7 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	newTurno: boolean = true;
 	origenGuarColeg:boolean;
 	permisoTarjetaColaGuardias:boolean;
+	@ViewChild(TarjetaColaGuardias) tarjetaColaGuardiasTurno;
 
 	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private router : Router) { }
 
