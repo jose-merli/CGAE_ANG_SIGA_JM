@@ -78,7 +78,14 @@ export class GuardiaColegiadoComponent implements OnInit {
       }
       
       this.progressSpinner = false;
-      this.dataBuscador = JSON.parse(sessionStorage.getItem("itemGuardiaColegiado"));
+      //this.dataBuscador = JSON.parse(sessionStorage.getItem("itemGuardiaColegiado"));
+      if(sessionStorage.getItem("ProcedenciaGuardiasColegiado")==null){
+        this.dataBuscador = JSON.parse(sessionStorage.getItem("itemGuardiaColegiado"));
+        //this.filtros.filtros = this.dataBuscador;
+      }else{
+        this.dataBuscador = JSON.parse(sessionStorage.getItem("filtros"));
+      }
+      
   }
 
   isOpenReceive(event) {

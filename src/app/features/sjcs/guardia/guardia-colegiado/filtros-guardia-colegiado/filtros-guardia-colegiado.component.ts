@@ -54,6 +54,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   colegInfo;
   numColeg;
   nomColeg;
+  vieneDelMenu: boolean = false;
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
@@ -61,6 +62,11 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem("ProcedenciaGuardiasColegiado") == "true"){
+      this.persistenceService.clearFiltros();
+      this.vieneDelMenu = true;
+      sessionStorage.setItem("ProcedenciaGuardiasColegiado", "false");
+    }
     sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
     this.isColegiado = this.localStorageService.isLetrado;
@@ -72,7 +78,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     }
     this.progressSpinner = false;
     this.filtros.fechadesde = new Date( new Date().setFullYear(new Date().getFullYear()-1)); 
-    if (this.persistenceService.getFiltros() != undefined) {
+    if (this.persistenceService.getFiltros() != undefined && !this.vieneDelMenu) {
       this.filtros = this.persistenceService.getFiltros();
       if(this.filtros.fechadesde != null || this.filtros.fechadesde != undefined) {
         this.filtros.fechadesde = new Date(this.filtros.fechadesde);
@@ -84,16 +90,16 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
         this.getComboGuardia();
       }
       if (this.dataBuscador != null){
-        if (this.dataBuscador.guardia != ''){
+        if (this.dataBuscador.guardia != null && this.dataBuscador.guardia != ''){
           this.filtros.idGuardia = [this.dataBuscador.guardia.toString()];
         }
-        if(this.dataBuscador.turno != ''){
+        if(this.dataBuscador.turno != null && this.dataBuscador.turno != ''){
           this.filtros.idTurno = [this.dataBuscador.turno.toString()];
         }
-        if(this.dataBuscador.fechaDesde != ''){
+        if(this.dataBuscador.fechaDesde != null && this.dataBuscador.fechaDesde != ''){
           this.filtros.fechadesde = new Date(this.dataBuscador.fechaDesde); //MM/dd/yyyy
         }
-        if(this.dataBuscador.fechaHasta != ''){
+        if(this.dataBuscador.fechaHasta != null && this.dataBuscador.fechaHasta != ''){
           this.filtros.fechahasta = new Date(this.dataBuscador.fechaHasta);//MM/dd/yyyy
         }
       }
@@ -125,6 +131,9 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
       this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
     }
     this.filtros.fechadesde = new Date( new Date().setFullYear(new Date().getFullYear()-1));
+    if(this.filtros.fechahasta == null || this.filtros.fechahasta == undefined){
+      this.filtros.fechahasta = "";
+    }
   }
 
   if(this.isColegiado || this.isColegiado == undefined){
