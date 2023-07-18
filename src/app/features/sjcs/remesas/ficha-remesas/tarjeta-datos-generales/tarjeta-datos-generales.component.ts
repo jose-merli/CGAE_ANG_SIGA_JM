@@ -199,6 +199,27 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
         }
         
         this.remesaItem.estado = this.resultado[this.resultado.length-1].estado;
+        
+
+        let dateString: string = this.remesaTabla.fechaGeneracion;
+        let dateObject: Date = new Date(dateString);
+
+        let year: number = dateObject.getFullYear();
+        let month: number = dateObject.getMonth() + 1; 
+        let day: number = dateObject.getDate();
+        let hour: number = dateObject.getHours();
+        let minutes: number = dateObject.getMinutes();
+        let seconds: number = dateObject.getSeconds();
+
+        let formattedDate: string = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year} ${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;;
+        
+
+
+        this.resultado.forEach(res =>{
+          if(res.estado == 'Generada' && res.fechaModificacion == null){
+            res.fechaModificacion = formattedDate;
+          }
+        });
 
         //console.log("Contenido de la respuesta del back --> ", this.resultado);
         this.progressSpinner = false;
@@ -209,6 +230,8 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
         let error = err;
         //console.log(err);
       });
+
+      
   }
 
   formatDate(date) {

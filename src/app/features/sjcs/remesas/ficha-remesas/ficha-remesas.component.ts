@@ -41,8 +41,10 @@ export class FichaRemesasComponent implements OnInit {
   acciones: boolean = false;
   estado: boolean = false;
   remesaInformacionEconomica: boolean;
-  deshabilitarAniadirExpedientes: boolean = false;
-  deshabilitarEliminarRemesa: boolean = false;
+  deshabilitarAniadirExpedientes: boolean = true;
+  deshabilitarEliminarRemesa: boolean = true;
+  
+
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -74,11 +76,11 @@ export class FichaRemesasComponent implements OnInit {
       this.descripcion = this.remesaTabla.descripcion;
       if(this.remesaTabla.estado == "Iniciada" || this.remesaTabla.estado == "Validada" || this.remesaTabla.estado == "Error envío"){
         this.estado = true;
+        this.deshabilitarAniadirExpedientes = false;
       }
 
-      if (this.remesaTabla.estado == "Enviada") {
-        this.deshabilitarAniadirExpedientes = true;
-        this.deshabilitarEliminarRemesa = true;
+      if(this.remesaTabla.estado == "Iniciada" || this.remesaTabla.estado == "Validada"){
+        this.deshabilitarEliminarRemesa = false;
       }
 
     } else if (localStorage.getItem('ficha') == "nuevo") {
@@ -126,7 +128,7 @@ export class FichaRemesasComponent implements OnInit {
           }
 
           if (this.remesaTabla.estado == "Enviada") {
-            this.deshabilitarAniadirExpedientes = true;
+            this.deshabilitarAniadirExpedientes = false;
           }
         }
         localStorage.removeItem('remesaAniadirExpediente');
@@ -237,7 +239,7 @@ export class FichaRemesasComponent implements OnInit {
     // if(event != ""){
     //   this.remesaTabla.estado = event;
     // }
-
+    
     if (this.remesaTabla != null && this.remesaTabla != undefined) {
       if(event != ""){
         this.remesaTabla.estado = event;
