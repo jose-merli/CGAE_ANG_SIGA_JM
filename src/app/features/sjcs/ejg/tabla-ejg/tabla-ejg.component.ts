@@ -592,6 +592,12 @@ export class TablaEjgComponent implements OnInit {
     //Esto se debe cambiar al valor de los datos seleccionados adquiriendo las etiquetas que corresponden a los valores 7 y 17 del combo de estadosEJG.
     //Concretamente, se comprobaria si alguno de los ejgs seleccionados tienen un estado ejg distinto a ese y se bloquearia si asi fuera.
 
+
+    if(sessionStorage.getItem('vengoRemesasAejg')){
+      this.disableAddRemesa = false;
+      //sessionStorage.removeItem('vengoRemesasAejg');
+    }else{
+
     this.disableAddRemesa = false;
     let LRC;
     let LRCAD;
@@ -605,8 +611,10 @@ export class TablaEjgComponent implements OnInit {
 
     selectedDatos.forEach(element => {
       if (element.estadoEJG != LRC && element.estadoEJG != LRCAD) this.disableAddRemesa = true;
-    });
+    })}
 
+
+    
     /* if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="17"){
       this.disableAddRemesa = false;
     }
@@ -680,6 +688,10 @@ export class TablaEjgComponent implements OnInit {
           //console.log(err);
         }
       );
+  }
+
+  ngOnDestroy(){
+    sessionStorage.removeItem('vengoRemesasAejg');
   }
   
 }
