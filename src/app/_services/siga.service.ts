@@ -1220,6 +1220,7 @@ export class SigaServices {
 		if(!documento.idFichero && documento.fileData){
 			formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
 		}
+		console.log("siga.service.ts - postSendFileAndIdSolicitud() ==> documentoJSON = " + documentoJSON);
 
 	});
 
@@ -1229,6 +1230,8 @@ export class SigaServices {
     headers.append('Accept', 'application/json');
 
 	formData.append('idSolicitud', idSolicitud);
+
+	console.log("siga.service.ts - postSendFileAndIdSolicitud() ==> formData = " + formData);
 
 	return this.http
       .post(environment.newSigaUrl + this.endpoints[service], formData, {

@@ -2569,14 +2569,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     if(this.solicitudEditar.idSolicitud){
       params+="&idSolicitud="+this.solicitudEditar.idSolicitud;
     }
-    this.sigaServices
-      .getParam(
-        "solicitudesInc_getDocRequerida",
-        params
-      )
+
+    console.log("Recuperando documentos - params = " + params);
+
+    this.sigaServices .getParam( "solicitudesInc_getDocRequerida", params )
       .subscribe(
         result => {
           this.documentos = result.documentacionIncorporacionItem;
+          console.log("Valor de los documentos = " + this.documentos[0]);
           this.selectedDatos = [];
           this.showInfoDoc = false;
         },
@@ -2622,7 +2622,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     if(this.checkNuevosRegistros()){
 
       this.progressSpinner = true;
-      console.log("BORRAR ESTOS COMENTARIOs TRAS TERMINAR SIGARNV-3439");
+
       console.log("nueva-incorporacion.component.ts - save() ==> idSolicitud = " + this.solicitudEditar.idSolicitud);
       console.log("Contenido de this.documentos: ");
       for(let i = 0; i<= this.documentos.length; i++){
