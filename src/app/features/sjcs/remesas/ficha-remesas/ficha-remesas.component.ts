@@ -324,6 +324,8 @@ export class FichaRemesasComponent implements OnInit {
           if(response.file.size > 0 && response.status == 200){
             let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
             saveAs(response.file, filename);
+            this.tarjetaDatosGenerales.listadoEstadosRemesa(remesaAccion, true);
+            this.search();
           }else if(response.status == 206){
              this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.masDe1zip"));
           }else{
