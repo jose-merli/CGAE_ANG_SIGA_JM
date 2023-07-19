@@ -989,7 +989,7 @@ export class TarjetaColaGuardias implements OnInit {
  
     let datosModif = [];
     this.rowGroupModified = event;
-    this.rowGroupModified.forEach(row => {
+    this.rowGroupModified.forEach(rg => {
       let datCopy = {
         apellido1: "",
         apellido2: "",
@@ -1010,11 +1010,12 @@ export class TarjetaColaGuardias implements OnInit {
         order: '',
         ultimoCola : ""
       };
-      let ordenCola = row.cells[1];
-      let grupo = row.cells[0];
-      let numCol = row.cells[2];
-      let idGGC = row.cells[8];
-      let ultimoCola2 = row.cells[16];
+      let ordenCola = rg.cells[1];
+      let grupo = rg.cells[0];
+      let numCol = rg.cells[2];
+      let idGGC = rg.cells[6];
+      let ultimoCola2 = rg.cells[16];
+
       this.datos.forEach((dat, pos) => {
         
         if (dat.nColegiado == numCol.value && dat.idGrupoGuardiaColegiado == idGGC.value){
@@ -1078,23 +1079,23 @@ export class TarjetaColaGuardias implements OnInit {
       };
       datCopy.apellido1 = rg.cells[3].value.split(",")[0];
       datCopy.apellido2 = rg.cells[3].value.split(",")[1];
-      if (rg.cells[13] != undefined)
-        datCopy.fechaSuscripcion = rg.cells[13].value;
+      if (rg.cells[11] != undefined)
+        datCopy.fechaSuscripcion = rg.cells[11].value;
       datCopy.fechaValidacion = rg.cells[4].value;
       datCopy.fechabaja = rg.cells[5].value;
       if (rg.cells[14] != undefined)
         datCopy.idGrupoGuardia = rg.cells[14].value;
-      datCopy.idGrupoGuardiaColegiado = rg.cells[8].value;
-      datCopy.idGuardia = rg.cells[11].value;
-      if (rg.cells[15] != undefined)
-        datCopy.idPersona = rg.cells[15].value;
-      datCopy.idTurno = rg.cells[10].value;
+      datCopy.idGrupoGuardiaColegiado = rg.cells[6].value;
+      datCopy.idGuardia = rg.cells[9].value;
+      if (rg.cells[13] != undefined)
+        datCopy.idPersona = rg.cells[13].value;
+      datCopy.idTurno = rg.cells[8].value;
       datCopy.nColegiado = rg.cells[2].value;
       datCopy.nombre = rg.cells[3].value.split(",")[2];
       datCopy.nombreApe = rg.cells[3].value;
       datCopy.numeroGrupo = rg.cells[0].value;
       datCopy.orden = rg.cells[1].value;
-      datCopy.ordenCola = rg.cells[9].value;
+      datCopy.ordenCola = rg.cells[7].value;
 
       if (rg.cells[16] != undefined){
         datCopy.ultimoCola = rg.cells[16].value;
