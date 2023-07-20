@@ -133,6 +133,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.sigaServices.get("maestros_rol").subscribe(
       n => {
         this.catalogoArray = n.comboCatalogoItems;
+        this.catalogoArray = this.catalogoArray.filter(filtrado => filtrado.value != "SCS_TIPOFUNDAMENTOS");
+     
       },
       err => {
         //console.log(err);
