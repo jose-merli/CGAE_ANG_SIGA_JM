@@ -585,8 +585,16 @@ inicio(){
   colaGuardiaOrdenada(event){
     
     let datosModif = [];
+    let ultimo:boolean = false;
     this.rowGroupModified = event;
 
+    //comprobamos si se ha pulsado marcar ultimo
+    this.rowGroupModified.forEach(rg => {
+      let totalCeldas = rg.cells.length;
+      if(rg.cells[totalCeldas-1].value == "1"){
+        ultimo = true;
+      }
+    });
     this.rowGroupModified.forEach(rg => {
 
       let datCopy = {
@@ -629,8 +637,9 @@ inicio(){
         datCopy.numeroGrupo = rg.cells[0].value;
         datCopy.orden = rg.cells[1].value;
         datCopy.ordenCola = rg.cells[7].value;
+        datCopy.ultimoCola = rg.cells[15].value;
 
-        if(datCopy.nColegiado == this.ultimoLetrado){
+        if(!ultimo && datCopy.nColegiado == this.ultimoLetrado){
           datCopy.ultimoCola = "1";
         }
       }else{
@@ -652,9 +661,14 @@ inicio(){
         datCopy.nombreApe = rg.cells[2].value;
         datCopy.orden = rg.cells[9].value;
         datCopy.ordenCola = rg.cells[6].value;
+        datCopy.ultimoCola = rg.cells[13].value;
 
-        if(datCopy.nColegiado == this.ultimoLetrado){
-          datCopy.ultimoCola = "1";
+        if(!ultimo){
+          if(datCopy.nColegiado == this.ultimoLetrado){
+            datCopy.ultimoCola = "1";
+          }else{
+            datCopy.ultimoCola = undefined;
+          }
         }
       }
       

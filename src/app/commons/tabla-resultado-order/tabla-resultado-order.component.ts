@@ -89,6 +89,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   RGid = "inicial";
   down = false;
   positionSelected = 0;
+  disUltimo:boolean=true;
   grupos = [];
   x = 0;
   xArr = [];
@@ -292,6 +293,11 @@ export class TablaResultadoOrderComponent implements OnInit {
       this.anySelected.emit(false);
       this.anySelectedBol = false;
     }
+    if(this.selectedArray.length == 1){
+      this.disUltimo = false;
+    }else{
+      this.disUltimo = true;
+    }
     
   }
 
@@ -300,7 +306,12 @@ export class TablaResultadoOrderComponent implements OnInit {
       if (rG.cells[0].value != undefined && rG.cells[0].value.toString().startsWith('U')){
         rG.cells[0].value = rG.cells[0].value.substring(1);
       }
-    })
+    });
+    
+    if(ultimo){
+      let totalCeldas = this.rowGroups[this.positionSelected].cells.length;
+      this.rowGroups[this.positionSelected].cells[totalCeldas-1].value = "1";
+    }
     this.progressSpinner = true;
     //console.log('this.rowGroups: ', this.rowGroups)
     if (this.calendarios) {
