@@ -127,8 +127,9 @@ export class FichaRemesasComponent implements OnInit {
             this.estado = true;
           }
 
-          if (this.remesaTabla.estado == "Enviada") {
+          if (this.remesaTabla.estado == "Iniciada") {
             this.deshabilitarAniadirExpedientes = false;
+            this.deshabilitarEliminarRemesa = false;
           }
         }
         localStorage.removeItem('remesaAniadirExpediente');
