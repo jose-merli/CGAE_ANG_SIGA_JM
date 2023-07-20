@@ -150,6 +150,10 @@ export class NuevaIncorporacionComponent implements OnInit {
   asunto : string;
   codDocAnexo : string;
   errorDocumentacion : boolean = false;
+  //DocAdjunto
+  file: File = undefined;
+  fileList: File[] = []; //FileList = undefined;
+
   @ViewChild("table") table : Table;
   constructor(
     private translateService: TranslateService,
@@ -2564,7 +2568,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getDocRequerida(){
-
     let params : string = "?tipoColegiacion=" + this.tipoColegiacionSelected + "&tipoSolicitud="+this.tipoSolicitudSelected+"&modalidadDocumentacion="+this.modalidadDocumentacionSelected
     if(this.solicitudEditar.idSolicitud){
       params+="&idSolicitud="+this.solicitudEditar.idSolicitud;
@@ -2572,11 +2575,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     console.log("Recuperando documentos - params = " + params);
 
-    this.sigaServices .getParam( "solicitudesInc_getDocRequerida", params )
+    this.sigaServices.getParam( "solicitudesInc_getDocRequerida", params )
       .subscribe(
         result => {
           this.documentos = result.documentacionIncorporacionItem;
-          console.log("Valor de los documentos = " + this.documentos[0]);
+          console.log("nueva-incorporacion.component.ts - getDocRequerida() ==> Valor de los documentos = " + JSON.stringify(this.documentos));
           this.selectedDatos = [];
           this.showInfoDoc = false;
         },
@@ -2628,7 +2631,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       for(let i = 0; i<= this.documentos.length; i++){
         console.log( this.documentos[i]);
       }
-      this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
+      // this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
+      this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.fileList, this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
         n => {
           this.progressSpinner = false;
           let result = n;
@@ -2650,6 +2654,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.showFailNotTraduce('Falta documentación que adjuntar a los anexos');
       this.progressSpinner = false;
     }
+    this.file = undefined;
+    this.fileList = [];
   }
 
   downloadDoc(){
@@ -2917,6 +2923,8 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   getFile(dato : DocumentacionIncorporacionItem, pUploadFile: any, event: any) {
     let fileList: FileList = event.files;
+    this.file = fileList[0];
+    this.fileList.push(this.file);
     let nombreCompletoArchivo = fileList[0].name;
     dato.nombreDoc = fileList[0].name;
     dato.fileData = fileList[0];

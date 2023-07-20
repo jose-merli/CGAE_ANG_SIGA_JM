@@ -1203,45 +1203,71 @@ export class SigaServices {
 
 	}
 	
-	postSendFileAndIdSolicitud(service: string, documentos: DocumentacionIncorporacionItem[], idSolicitud: string): Observable<any>{
-	let formData: FormData = new FormData();
-	documentos.forEach((documento, i )=>{
+	postSendFileAndIdSolicitud(
+		service: string, 
+		documentos: File[],
+		documentosInfo: DocumentacionIncorporacionItem[],
+		idSolicitud: string
+	): Observable<any>{
+		let formData: FormData = new FormData();
 
-		let documentoJSON : DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
-		documentoJSON.idDocumentacion = documento.idDocumentacion;
-		documentoJSON.codDocEXEA = documento.codDocEXEA;
-		documentoJSON.documento = documento.documento;
-		documentoJSON.observaciones = documento.observaciones;
-		documentoJSON.obligatorio = documento.obligatorio;
-		documentoJSON.idModalidad = documento.idModalidad;
-		documentoJSON.tipoColegiacion = documento.tipoColegiacion;
-		documentoJSON.tipoSolicitud = documento.tipoSolicitud;
+		console.log("Subiendo ficheros");
+		documentos.forEach((documento, j )=>{
+			// let documentoJSON : DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
+			// documentoJSON.idDocumentacion = documento.idDocumentacion;
+			// documentoJSON.codDocEXEA = documento.codDocEXEA;
+			// documentoJSON.documento = documento.documento;
+			// documentoJSON.observaciones = documento.observaciones;
+			// documentoJSON.obligatorio = documento.obligatorio;
+			// documentoJSON.idModalidad = documento.idModalidad;
+			// documentoJSON.tipoColegiacion = documento.tipoColegiacion;
+			// documentoJSON.tipoSolicitud = documento.tipoSolicitud;
 
-		if(!documento.idFichero && documento.fileData){
-			formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
-		}
-		console.log("siga.service.ts - postSendFileAndIdSolicitud() ==> documentoJSON = " + documentoJSON);
+			// if(!documento.idFichero && documento.fileData){
+			// 	formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
+			// }
 
-	});
+			if (documento != undefined) {
+				formData.append('uploadFile'+j, documento, documento.name);
+			}
+		});
 
-    let headers = new HttpHeaders();
+		console.log("Añadiendo ficheros en JSON");
+		let listDocumentoJSON = [];
+		documentosInfo.forEach((documentoInfo, i) =>{
+			let documentoJSON : DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
+			documentoJSON.idDocumentacion = documentoInfo.idDocumentacion;
+			documentoJSON.codDocEXEA = documentoInfo.codDocEXEA;
+			documentoJSON.documento = documentoInfo.documento;
+			documentoJSON.observaciones = documentoInfo.observaciones;
+			documentoJSON.obligatorio = documentoInfo.obligatorio;
+			documentoJSON.idModalidad = documentoInfo.idModalidad;
+			documentoJSON.tipoColegiacion = documentoInfo.tipoColegiacion;
+			documentoJSON.tipoSolicitud = documentoInfo.tipoSolicitud;
+			console.log("documentoJSON = " + documentoJSON);
+			if(!documentoInfo.idFichero && documentoInfo.fileData){
+				// formData.append('documentoJSON', JSON.stringify(documentoJSON));
+				listDocumentoJSON.push(documentoJSON);
+			}
+		});
 
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
+		formData.append('documentosJSON', JSON.stringify(listDocumentoJSON));
 
-	formData.append('idSolicitud', idSolicitud);
+		let headers = new HttpHeaders();
 
-	console.log("siga.service.ts - postSendFileAndIdSolicitud() ==> formData = " + formData);
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
 
-	return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
+		formData.append('idSolicitud', idSolicitud);
 
-  }
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
 
 	postSendFileAndDesigna(service: string, documentos: any[], designa: any): Observable<any> {
 		let formData: FormData = new FormData();
