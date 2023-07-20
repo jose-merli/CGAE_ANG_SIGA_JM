@@ -609,31 +609,55 @@ inicio(){
         order: '',
         ultimoCola: ""
       };
-      datCopy.apellido1 = rg.cells[3].value.split(",")[0];
-      datCopy.apellido2 = rg.cells[3].value.split(",")[1];
-      if (rg.cells[11] != undefined)
-        datCopy.fechaSuscripcion = rg.cells[11].value;
-      datCopy.fechaValidacion = rg.cells[4].value;
-      datCopy.fechabaja = rg.cells[5].value;
-      if (rg.cells[14] != undefined)
-        datCopy.idGrupoGuardia = rg.cells[14].value;
-      datCopy.idGrupoGuardiaColegiado = rg.cells[6].value;
-      datCopy.idGuardia = rg.cells[9].value;
-      if (rg.cells[13] != undefined)
-        datCopy.idPersona = rg.cells[13].value;
-      datCopy.idTurno = rg.cells[8].value;
-      datCopy.nColegiado = rg.cells[2].value;
-      datCopy.nombre = rg.cells[3].value.split(",")[2];
-      datCopy.nombreApe = rg.cells[3].value;
-      datCopy.numeroGrupo = rg.cells[0].value;
-      datCopy.orden = rg.cells[1].value;
-      datCopy.ordenCola = rg.cells[7].value;
+      if (this.body.ordenacionManual == true){
+        datCopy.apellido1 = rg.cells[3].value.split(",")[0];
+        datCopy.apellido2 = rg.cells[3].value.split(",")[1];
+        if (rg.cells[11] != undefined)
+          datCopy.fechaSuscripcion = rg.cells[11].value;
+        datCopy.fechaValidacion = rg.cells[4].value;
+        datCopy.fechabaja = rg.cells[5].value;
+        if (rg.cells[14] != undefined)
+          datCopy.idGrupoGuardia = rg.cells[14].value;
+        datCopy.idGrupoGuardiaColegiado = rg.cells[6].value;
+        datCopy.idGuardia = rg.cells[9].value;
+        if (rg.cells[13] != undefined)
+          datCopy.idPersona = rg.cells[13].value;
+        datCopy.idTurno = rg.cells[8].value;
+        datCopy.nColegiado = rg.cells[2].value;
+        datCopy.nombre = rg.cells[3].value.split(",")[2];
+        datCopy.nombreApe = rg.cells[3].value;
+        datCopy.numeroGrupo = rg.cells[0].value;
+        datCopy.orden = rg.cells[1].value;
+        datCopy.ordenCola = rg.cells[7].value;
 
-      if (rg.cells[16] != undefined){
-        datCopy.ultimoCola = rg.cells[16].value;
+        if(datCopy.nColegiado == this.ultimoLetrado){
+          datCopy.ultimoCola = "1";
+        }
+      }else{
+        datCopy.apellido1 = rg.cells[2].value.split(",")[0];
+        datCopy.apellido2 = rg.cells[2].value.split(",")[1];
+        if (rg.cells[10] != undefined)
+          datCopy.fechaSuscripcion = rg.cells[10].value;
+        datCopy.fechaValidacion = rg.cells[3].value;
+        datCopy.fechabaja = rg.cells[4].value;
+        if (rg.cells[11] != undefined)
+          datCopy.idGrupoGuardia = rg.cells[11].value;
+        datCopy.idGrupoGuardiaColegiado = rg.cells[5].value;
+        datCopy.idGuardia = rg.cells[8].value;
+        if (rg.cells[12] != undefined)
+          datCopy.idPersona = rg.cells[12].value;
+        datCopy.idTurno = rg.cells[7].value;
+        datCopy.nColegiado = rg.cells[1].value;
+        datCopy.nombre = rg.cells[2].value.split(",")[2];
+        datCopy.nombreApe = rg.cells[2].value;
+        datCopy.orden = rg.cells[9].value;
+        datCopy.ordenCola = rg.cells[6].value;
+
+        if(datCopy.nColegiado == this.ultimoLetrado){
+          datCopy.ultimoCola = "1";
+        }
       }
       
-
       datosModif.push(datCopy);
     });
     
@@ -666,39 +690,63 @@ inicio(){
         order: '',
         ultimoCola : ""
       };
-      let ordenCola = rg.cells[1];
-      let grupo = rg.cells[0];
-      let numCol = rg.cells[2];
-      let idGGC = rg.cells[6];
-      let ultimoCola2 = rg.cells[16];
-
-      this.datos.forEach((dat, pos) => {
+      
+      if (this.body.ordenacionManual == true){
+        let ordenCola = rg.cells[1];
+        let grupo = rg.cells[0];
+        let numCol = rg.cells[2];
+        let idGGC = rg.cells[6];
         
-        if (dat.nColegiado == numCol.value && dat.idGrupoGuardiaColegiado == idGGC.value){
-            datCopy = Object.assign({},dat);
-            datCopy.orden = this.rowGroupModified[pos].cells[1].value;
-            if (ordenCola.value != null){
-            datCopy.ordenCola = ordenCola.value.toString();
-            }else{
-              datCopy.ordenCola = null;
-              datCopy.orden = null;
-              
-            }
-         
-        }
-      });
-      if (grupo != null){
-        datCopy.numeroGrupo = grupo.value;
-        }else{
-          datCopy.numeroGrupo = null;
-        }
-
-        if(ultimoCola2!= null && ultimoCola2 != undefined){
-          datCopy.ultimoCola = ultimoCola2.value;
-
-        }else{
-            datCopy.ultimoCola  = null;
+        this.datos.forEach((dat, pos) => {
+          
+          if (dat.nColegiado == numCol.value && dat.idGrupoGuardiaColegiado == idGGC.value){
+              datCopy = Object.assign({},dat);
+              datCopy.orden = this.rowGroupModified[pos].cells[1].value;
+              if (ordenCola.value != null){
+              datCopy.ordenCola = ordenCola.value.toString();
+              }else{
+                datCopy.ordenCola = null;
+                datCopy.orden = null;
+                
+              }
+          
           }
+        });
+        if (grupo != null){
+          datCopy.numeroGrupo = grupo.value;
+          }else{
+            datCopy.numeroGrupo = null;
+          }
+
+          if(datCopy.nColegiado == this.ultimoLetrado){
+            datCopy.ultimoCola = "1";
+          }else{
+              datCopy.ultimoCola  = null;
+            }
+      }else{
+        let ordenCola = rg.cells[0];
+        let numCol = rg.cells[1];
+        
+        this.datos.forEach((dat, pos) => {
+          
+          if (dat.nColegiado == numCol.value ){ //&& dat.idGrupoGuardiaColegiado == idGGC.value){
+              datCopy = Object.assign({},dat);
+              datCopy.orden = this.rowGroupModified[pos].cells[0].value;
+              if (ordenCola.value != null){
+              datCopy.ordenCola = ordenCola.value.toString();
+              }else{
+                datCopy.ordenCola = null;
+                datCopy.orden = null;
+              }
+          }
+        });
+        
+        if(datCopy.nColegiado == this.ultimoLetrado){
+            datCopy.ultimoCola = "1";
+          }else{
+              datCopy.ultimoCola  = null;
+            }
+        }
         
       datosModif.push(datCopy);
     })
