@@ -49,6 +49,7 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   search() {
     this.persistenceService.setFiltros(this.filtros);
     this.isOpen.emit(false)
+    this.persistenceService.clearFiltros();
   }
 
   checkPermisosNewFundamentoResolucion() {

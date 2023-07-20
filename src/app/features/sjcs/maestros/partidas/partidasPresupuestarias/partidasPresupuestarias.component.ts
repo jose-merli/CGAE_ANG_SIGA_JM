@@ -87,6 +87,7 @@ export class PartidasPresupuestarias implements OnInit {
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux()
       this.busqueda.emit(false)
+      this.persistenceService.clearFiltros();
     }
   }
 

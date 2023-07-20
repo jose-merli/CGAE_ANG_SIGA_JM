@@ -94,7 +94,7 @@ export class DestinatariosRetencionesComponent implements OnInit {
           this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
         }
         this.progressSpinner = false;
-
+        this.persistenceService.clearFiltros();
       },
       err => {
         this.progressSpinner = false;

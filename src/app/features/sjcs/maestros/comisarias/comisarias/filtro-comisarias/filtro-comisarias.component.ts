@@ -127,6 +127,7 @@ export class FiltroComisariasComponent implements OnInit {
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux()
       this.isOpen.emit(false)
+      this.persistenceService.clearFiltros();
     }
 
   }

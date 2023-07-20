@@ -81,6 +81,7 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
     this.filtroAux = this.persistenceService.getFiltrosAux()
 
     this.isOpen.emit(false)
+    this.persistenceService.clearFiltros();
 
 
   }

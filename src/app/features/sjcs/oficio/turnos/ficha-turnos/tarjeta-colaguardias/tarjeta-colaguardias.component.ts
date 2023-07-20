@@ -1467,16 +1467,12 @@ export class TarjetaColaGuardias implements OnInit {
   }
 
   getSaltosYCompensaciones() {
-    let filtros: SaltoCompItem = new SaltoCompItem();
-    if (sessionStorage.getItem("filtrosSaltosCompOficio")) {
-      filtros = JSON.parse(sessionStorage.getItem("filtrosSaltosCompOficio"));
-    }
-    if (sessionStorage.getItem("saltos-compesacionesItem")) {
-      filtros = JSON.parse(sessionStorage.getItem("saltos-compesacionesItem"));
-    }
-    filtros.idTurno = this.idTurno;
-    filtros.idGuardia = this.turnosItem.idcomboguardias;
-    this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
+    let filtrosModificados: SaltoCompItem;
+    filtrosModificados = new SaltoCompItem();
+    filtrosModificados.idTurno = this.body.idTurno;
+    filtrosModificados.idGuardia = this.body.idGuardia;
+
+    this.sigaServices.postPaginado("saltosCompensacionesGuardia_buscar", "?numPagina=1", filtrosModificados).subscribe(
       n => {
         let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
         this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
