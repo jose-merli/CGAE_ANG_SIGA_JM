@@ -76,7 +76,8 @@
   flex-wrap: wrap;
   align-content: center;
   width: 100%;
-  justify-content: center;
+  //justify-content: center;
+  justify-content: space-between;
   border: 1px solid #D5D5D5;
   ;
 
@@ -84,7 +85,8 @@
     flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
+    //justify-content: center;
+    justify-content: space-between;
   }
 
   .table-header-child:not(:first-child) {
@@ -291,7 +293,7 @@
   .cell-wrapper {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     width: 100%;
     text-align: left;
   }
@@ -303,6 +305,7 @@
 
   .cell-value {
     text-align: right;
+    justify-content: center;
   }
 
   .arrow {
@@ -388,7 +391,8 @@
   flex-wrap: wrap;
   align-content: center;
   width: 100%;
-  justify-content: center;
+  //justify-content: center;
+  justify-content: space-between;
   background-color: #e6ecf1;
   border: 1px solid #e6ecf1;
 
@@ -421,7 +425,7 @@
   width: 100%;
   border-left: 1px solid #D5D5D5;
   border-right: 1px solid #D5D5D5;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .collapse {
