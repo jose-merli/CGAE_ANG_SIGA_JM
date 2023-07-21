@@ -1616,11 +1616,20 @@ this.totalRegistros = this.rowGroups.length;
       'letrado': 0
     };
 
-    dataFilterFromColaGuardia.turno = this.rowGroups[pos].cells[8].value;
-    dataFilterFromColaGuardia.guardia = this.rowGroups[pos].cells[9].value;
-    dataFilterFromColaGuardia.colegiado = this.rowGroups[pos].cells[2].value;
-    dataFilterFromColaGuardia.idPersona = this.rowGroups[pos].cells[13].value;
-    dataFilterFromColaGuardia.letrado = this.rowGroups[pos].cells[3].value;
+    if (this.manual == true){
+      dataFilterFromColaGuardia.turno = this.rowGroups[pos].cells[8].value;
+      dataFilterFromColaGuardia.guardia = this.rowGroups[pos].cells[9].value;
+      dataFilterFromColaGuardia.colegiado = this.rowGroups[pos].cells[2].value;
+      dataFilterFromColaGuardia.idPersona = this.rowGroups[pos].cells[13].value;
+      dataFilterFromColaGuardia.letrado = this.rowGroups[pos].cells[3].value;
+    } else {
+      dataFilterFromColaGuardia.turno = this.rowGroups[pos].cells[7].value;
+      dataFilterFromColaGuardia.guardia = this.rowGroups[pos].cells[8].value;
+      dataFilterFromColaGuardia.colegiado = this.rowGroups[pos].cells[1].value;
+      dataFilterFromColaGuardia.idPersona = this.rowGroups[pos].cells[12].value;
+      dataFilterFromColaGuardia.letrado = this.rowGroups[pos].cells[2].value;
+    }
+    
     this.persistenceService.setDatos(dataFilterFromColaGuardia);
     sessionStorage.setItem(
       "itemSaltosCompColaGuardia",
@@ -1629,6 +1638,12 @@ this.totalRegistros = this.rowGroups.length;
     //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
     // this.router.navigate(["/guardiasSaltosCompensaciones"]); 
     sessionStorage.setItem("fromTurnoOficio", "true");
+
+    let guardiaItem = new GuardiaItem();
+    guardiaItem.idGuardia = dataFilterFromColaGuardia.guardia;
+    guardiaItem.idTurno = dataFilterFromColaGuardia.turno;
+    sessionStorage.setItem("fromTurnoOficioDatosGuardia", JSON.stringify(guardiaItem));
+
     this.router.navigate(["/guardiasSaltosCompensaciones"], { queryParams: { 
       idturno: dataFilterFromColaGuardia.turno, 
       idguardia: dataFilterFromColaGuardia.guardia, 

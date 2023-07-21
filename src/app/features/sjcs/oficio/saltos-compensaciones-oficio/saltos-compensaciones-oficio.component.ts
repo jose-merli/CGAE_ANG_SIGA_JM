@@ -452,7 +452,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
           this.isNewFromOtherPage = false;
           if(sessionStorage.getItem("fromTurnoOficio")){
             sessionStorage.removeItem("fromTurnoOficio");
-            this.backTo();
+            this.tabla.backTo();
           }else{
             this.search(false);
           }

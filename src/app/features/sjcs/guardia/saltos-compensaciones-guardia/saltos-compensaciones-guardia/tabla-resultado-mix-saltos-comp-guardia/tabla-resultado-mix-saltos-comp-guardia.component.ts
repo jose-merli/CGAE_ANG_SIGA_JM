@@ -9,6 +9,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 import { FileAlreadyExistException } from '@angular-devkit/core';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 
 interface Cabecera {
   id: string,
@@ -685,6 +686,13 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   }
 
   backTo() {
+    
+    if (sessionStorage.getItem("fromTurnoOficioDatosGuardia")) {
+      let guardiaItem = JSON.parse(sessionStorage.getItem("fromTurnoOficioDatosGuardia"));
+      this.persistenceService.setDatos(guardiaItem);
+      sessionStorage.removeItem("fromTurnoOficioDatosGuardia");
+    }
+
     this.location.back();
   }
 
