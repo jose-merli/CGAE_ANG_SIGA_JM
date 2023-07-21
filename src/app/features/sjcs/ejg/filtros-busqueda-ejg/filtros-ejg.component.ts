@@ -82,6 +82,7 @@ export class FiltrosEjgComponent implements OnInit {
   isDisabledFundamentoImpug: boolean = true;
   isDisabledGuardia: boolean = true;
   tipoLetrado;
+  filtroComboEstado;
 
   //Variables para Combo Rol
   selectedItemsRol = [];
@@ -122,6 +123,8 @@ export class FiltrosEjgComponent implements OnInit {
 
 
   ngOnInit() {
+
+   
     this.datoParaEjg = sessionStorage.getItem('datoParaEjg') === 'true';
     sessionStorage.removeItem('datoParaEjg');
     sessionStorage.removeItem("modoBusqueda");
@@ -133,7 +136,7 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.informacionEconomica = this.remesa.informacionEconomica;
     }
 
-
+    
 
     //console.log("Viene de la ficha de una remesa? -> ", this.remesaFicha);
     //console.log("Remesa -> ", this.remesa);
@@ -499,7 +502,15 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   getComboEstadoEJG() {
-    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
+
+    if(sessionStorage.getItem('vengoRemesasAejg')){
+      this.filtroComboEstado = "1";
+    }else{
+      this.filtroComboEstado = "2";
+    }
+
+    this.sigaServices.getParam("filtrosejg_comboEstadoEJG", "?filtroEstadoEjg=" + this.filtroComboEstado
+    ).subscribe(
       n => {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
@@ -1024,7 +1035,10 @@ export class FiltrosEjgComponent implements OnInit {
     this.progressSpinner = true;
     this.location.back();
   }
-
+  
+  ngOnDestroy(){
+    sessionStorage.removeItem('vengoRemesasAejg');
+  }
 
 
 }
