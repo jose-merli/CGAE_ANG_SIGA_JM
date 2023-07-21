@@ -310,7 +310,8 @@ export class TablaResultadoOrderComponent implements OnInit {
     
     if(ultimo){
       let totalCeldas = this.rowGroups[this.positionSelected].cells.length;
-      this.rowGroups[this.positionSelected].cells[totalCeldas-1].value = "1";
+      let registro = this.numPage * this.numperPage + this.positionSelected;
+      this.rowGroups[registro].cells[totalCeldas-1].value = "1";
     }
     this.progressSpinner = true;
     //console.log('this.rowGroups: ', this.rowGroups)

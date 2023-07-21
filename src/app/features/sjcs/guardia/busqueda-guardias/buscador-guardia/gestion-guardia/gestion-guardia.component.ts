@@ -599,7 +599,7 @@ export class GestionGuardiaComponent implements OnInit {
     }
   }
 
-  getConfColaGuardiasPadre(confOrdCola) {
+  /*getConfColaGuardiasPadre(confOrdCola) {
     this.datosColaGuardiaComponent.tablaOrder.getConfColaGuardias();
-  }
+  }*/
 }
