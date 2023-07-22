@@ -539,7 +539,7 @@ export class TarjetaColaGuardias implements OnInit {
           { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
           { type: 'text', value: datoObj.fechabaja },
-          { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
+          { type: 'invisible', value: datoObj.idGrupoGuardiaColegiado},
           { type: 'invisible', value: datoObj.ordenCola },
           { type: 'invisible', value: datoObj.idturno },
           { type: 'invisible', value: datoObj.idGuardia },
@@ -1244,7 +1244,7 @@ export class TarjetaColaGuardias implements OnInit {
         },
         {
           id: "orden",
-          name: "dato.jgr.guardia.guardias.ordengrupo"
+          name: "dato.jgr.guardia.guardias.ordenCola"
         },
         {
           id: "ncolegiado",
