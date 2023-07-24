@@ -13,7 +13,7 @@
             'menu-item-active': isRoute(opcion.routerLink)
           }" *ngFor="let opcion of items" (click)="
             viewChild(opcion.items, opcion.label) ||
-              navigateTo(opcion.routerLink)
+              navigateTo(opcion.routerLink) || comprobarProcedencia(opcion.label)
           ">
           {{ opcion.label | translate }}
           <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i>
@@ -27,7 +27,7 @@
         <div *ngFor="let opcion of selectedItem">
           <div (click)="
               viewChildOfChild(opcion.items, opcion.label) ||
-                navigateTo(opcion.routerLink)
+                navigateTo(opcion.routerLink) || comprobarProcedencia(opcion.label)
             ">
             <li class="itemChild" [ngClass]="{ 'menu-item-active': isRoute(opcion.routerLink) }">
               {{ opcion.label | translate }}
@@ -43,7 +43,7 @@
             </li>
           </div>
           <div *ngFor="let opcionChild of selectedItemOfChild">
-            <div (click)="navigateTo(opcionChild.routerLink)">
+            <div (click)="navigateTo(opcionChild.routerLink) || comprobarProcedencia(opcionChild.label)">
               <li class="itemChildOfChild" *ngIf="
                   selectedItemOfChild == opcion.items &&
                   showChildOfChild == true

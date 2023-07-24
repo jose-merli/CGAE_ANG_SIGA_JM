@@ -159,19 +159,22 @@ export class MenuComponent implements OnInit {
   }
 
   viewChildOfChild(items, label) {
-    if(label == 'menu.justiciaGratuita.oficio.guardiasColegiado'){
-      sessionStorage.setItem("ProcedenciaGuardiasColegiado", "true");
-    }else{
-      if(sessionStorage.getItem("ProcedenciaGuardiasColegiado")){
-        sessionStorage.removeItem("ProcedenciaGuardiasColegiado");
-      }
-    }
     //Linea comentada para que los puntos de menu se cierren si se abren
     // this.showChildOfChild = false;
     if (items) {
       this.showChildOfChild = !this.showChildOfChild;
       this.selectedItemOfChild = items;
       this.selectedLabelOfChild = label;
+    }
+  }
+
+  comprobarProcedencia(label){
+    if(label == 'menu.justiciaGratuita.oficio.guardiasColegiado'){
+      sessionStorage.setItem("ProcedenciaGuardiasColegiado", "true");
+    }else{
+      if(sessionStorage.getItem("ProcedenciaGuardiasColegiado")){
+        sessionStorage.removeItem("ProcedenciaGuardiasColegiado");
+      }
     }
   }
 
