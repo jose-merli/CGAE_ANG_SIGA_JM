@@ -14,15 +14,21 @@
               }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label *ngIf="nExpedientes == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: <span>{{ "general.message.no.registros" | translate }}</span></label>
-            <label *ngIf="nExpedientes > 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: <span>{{nExpedientes}}</span></label>
-            <label *ngIf="solicitanteP.uf_idPersona != undefined">{{ "censo.fichaCliente.literal.identificacion" | translate }}: <span>{{solicitanteP.pjg_nif}}</span></label>
-            <label *ngIf="solicitanteP.uf_idPersona != undefined">{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}:
-              <span>{{apellidosCabecera}}</span></label>
-            <label *ngIf="solicitanteP.uf_idPersona != undefined">{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
-              <span>{{solicitanteP.pjg_nombre}}</span></label>
-            <label>{{ "justiciaGratuita.ejg.datosGenerales.ExpedienteEcon" | translate }}:
-              <span>{{estadoEEJG}}</span></label>
+            <label *ngIf="nExpedientes == undefined" class="registros-ficha">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}:</label>
+            <label *ngIf="nExpedientes != undefined">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: 
+              <span>{{nExpedientes}}</span></label>
+            <label *ngIf="nExpedientes == undefined" class="registros-ficha">{{ "censo.fichaCliente.literal.identificacion" | translate }}:</label>
+            <label *ngIf="nExpedientes != undefined">{{ "censo.fichaCliente.literal.identificacion" | translate }}: 
+              <span *ngIf="solicitanteP.pjg_nif != undefined">{{solicitanteP.pjg_nif}}</span></label>
+            <label *ngIf="nExpedientes == undefined" class="registros-ficha">{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}:</label>
+            <label *ngIf="nExpedientes != undefined">{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}:
+              <span *ngIf="apellidosCabecera != undefined">{{apellidosCabecera}}</span></label>
+            <label *ngIf="nExpedientes == undefined" class="registros-ficha">{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:</label>
+            <label *ngIf="nExpedientes != undefined">{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
+              <span *ngIf="solicitanteP.pjg_nombre != undefined">{{solicitanteP.pjg_nombre}}</span></label>
+            <label *ngIf="nExpedientes == undefined" class="registros-ficha">{{ "justiciaGratuita.ejg.datosGenerales.ExpedienteEcon" | translate }}:</label>
+            <label *ngIf="nExpedientes !=undefined">{{ "justiciaGratuita.ejg.datosGenerales.ExpedienteEcon" | translate }}:
+              <span *ngIf="estadoEEJG != undefined">{{estadoEEJG}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('unidadFamiliar')"></i>
           </div>
         </div>

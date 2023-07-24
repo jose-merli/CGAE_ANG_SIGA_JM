@@ -28,7 +28,7 @@ export class UnidadFamiliarComponent implements OnInit {
   rowsPerPage: any = [];
   selectedDatos = [];
   buscadores = [];
-  nExpedientes = 0;
+  nExpedientes;
 
   nuevo: boolean;
   body: EJGItem = new EJGItem();
