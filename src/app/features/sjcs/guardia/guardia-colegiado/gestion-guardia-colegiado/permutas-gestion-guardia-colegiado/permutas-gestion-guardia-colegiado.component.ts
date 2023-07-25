@@ -226,8 +226,6 @@ comprobarValidados(){
    }
   
   })
-  console.log(this.yaValidada);
-  console.log(this.selectedDatos);
 }
 
   validar(){
