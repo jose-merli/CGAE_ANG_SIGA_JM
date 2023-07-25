@@ -801,7 +801,7 @@ export class FiltrosEjgComponent implements OnInit {
         }
 
         // Comprobar que Rol esta vacio.
-        if(this.body.estadosRoles.length == 0) {
+        if(this.body.estadosRoles != null && this.body.estadosRoles != undefined && this.body.estadosRoles.length == 0) {
           // Desactivar Rol
           this.selectRoles = true;
           this.body.estadosRoles = [];
