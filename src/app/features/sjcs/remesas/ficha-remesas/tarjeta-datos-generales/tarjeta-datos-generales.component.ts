@@ -194,13 +194,10 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
           this.estado.emit(this.resultado[this.resultado.length-1].estado);
         }
 
+        this.remesaItem.estado = this.resultado[this.resultado.length-1].estado;
+
         if(this.remesaTabla != null){
           this.remesaTabla.estado = this.resultado[this.resultado.length-1].estado;
-        }
-        
-        this.remesaItem.estado = this.resultado[this.resultado.length-1].estado;
-        
-
         let dateString: string = this.remesaTabla.fechaGeneracion;
         let dateObject: Date = new Date(dateString);
 
@@ -220,6 +217,8 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
             res.fechaModificacion = formattedDate;
           }
         });
+        }
+        
 
         //console.log("Contenido de la respuesta del back --> ", this.resultado);
         this.progressSpinner = false;
