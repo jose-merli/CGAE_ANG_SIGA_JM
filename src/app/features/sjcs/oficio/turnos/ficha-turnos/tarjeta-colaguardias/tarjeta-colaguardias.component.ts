@@ -300,7 +300,6 @@ export class TarjetaColaGuardias implements OnInit {
             this.getColaGuardias();
           }
           if (this.body.porGrupos) {
-            this.body.ordenacionManual = true;
             this.editable = true;
             this.botActivos = true;
           }
@@ -823,7 +822,7 @@ export class TarjetaColaGuardias implements OnInit {
           return false;
         return true;
       });
-      if (!this.body.porGrupos && this.body.ordenacionManual) {
+      if (!this.body.porGrupos && this.ordenacionManual) {
         let repes = []
         this.datos.forEach(it => {
           if (repes.length <= 1)
@@ -1011,7 +1010,7 @@ export class TarjetaColaGuardias implements OnInit {
         ultimoCola : ""
       };
       
-      if (this.body.ordenacionManual == true){
+      if (this.ordenacionManual == true){
         let ordenCola = rg.cells[1];
         let grupo = rg.cells[0];
         let numCol = rg.cells[2];
@@ -1109,7 +1108,7 @@ export class TarjetaColaGuardias implements OnInit {
         order: '',
         ultimoCola: ""
       };
-      if (this.body.ordenacionManual == true){
+      if (this.ordenacionManual == true){
         datCopy.apellido1 = rg.cells[3].value.split(",")[0];
         datCopy.apellido2 = rg.cells[3].value.split(",")[1];
         if (rg.cells[11] != undefined)
@@ -1367,7 +1366,7 @@ export class TarjetaColaGuardias implements OnInit {
 
   obtieneConfiguracionCola(guardia) {
     this.ordenacionManual = false;
-    
+
     this.sigaServices
         .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idOrdenacionColas)
         .subscribe(
