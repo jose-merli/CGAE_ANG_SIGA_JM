@@ -45,6 +45,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   // SIGARNV-2885 INICIO
   fechaSolicitanteInicio;
   // SIGARNV-2885 FIN
+  yaValidada: boolean = false;
   constructor(private translateService: TranslateService,
     private router: Router,
     private sigaServices: SigaServices,
@@ -206,11 +207,27 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
 disableValidar(){
   //this.selectedDatos.length>0 && (this.valueComboGuardia && this.valueComboTurno && this.motivos)
   if(this.valueComboTurno && this.valueComboGuardia && !this.esLetrado && !this.esColegiado && this.selectedDatos.length>0 && this.permisoEscritura){
+    if(this.yaValidada){
+      return true;
+    }else{
     return false;
+    }
   }
   else{
-    return true;
-  }
+    return true;   
+  };
+}
+
+comprobarValidados(){
+  this.yaValidada = false;
+  this.selectedDatos.forEach(row =>{
+   if(row.fechaconfirmacion !=undefined && row.fechaconfirmacion != ""){
+    this.yaValidada = true;
+   }
+  
+  })
+  console.log(this.yaValidada);
+  console.log(this.selectedDatos);
 }
 
   validar(){
@@ -309,7 +326,7 @@ disableValidar(){
     } 
     //console.log(permutaItem);
 
-     this.progressSpinner = true
+    this.progressSpinner = true
     this.sigaServices.post("guardiasColegiado_permutarGuardia", permutaItem).subscribe(
       n => {
         this.progressSpinner = false;
@@ -325,6 +342,7 @@ disableValidar(){
       }, () => {
         
       }
+     
     ); 
 
     console.log("El valor de valueComboGuardia: " + this.valueComboGuardia);
@@ -399,7 +417,7 @@ disableValidar(){
           this.progressSpinner = false;
         }
       )
-
+    
   }
 
   onChangeTurnos() {
