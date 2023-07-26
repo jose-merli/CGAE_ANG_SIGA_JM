@@ -101,6 +101,12 @@ export class FichaRemesasComponent implements OnInit {
 
     // Recuperamos informacion cuando volvemos atras desde la ficha EJG a Remesa
     if (localStorage.getItem('remesa') != null && localStorage.getItem('remesa') != undefined && localStorage.getItem('remesa') != 'undefined') {
+      this.remesa = {
+        'idRemesa': "",
+        'descripcion': "",
+        'numero': "",
+        'informacionEconomica': false,
+      };
       this.remesaTabla = JSON.parse(localStorage.getItem('remesa'));
       if (this.remesaTabla != null && this.remesaTabla != undefined) {
         this.remesa.idRemesa = this.remesaTabla.idRemesa;
