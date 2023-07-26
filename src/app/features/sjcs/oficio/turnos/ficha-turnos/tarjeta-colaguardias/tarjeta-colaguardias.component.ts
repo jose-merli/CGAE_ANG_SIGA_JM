@@ -294,13 +294,13 @@ export class TarjetaColaGuardias implements OnInit {
           
           if (this.configuracionCola.manual && this.configuracionCola.porGrupos){
             this.body.porGrupos = true;
-            this.getColaGuardias();
+            this.isOrdenacionManual();
           } else {
             this.body.porGrupos = false;
-            this.getColaGuardias();
+            this.isOrdenacionManual();
           }
           if (this.body.porGrupos) {
-            this.editable = true;
+            this.ordenacionManual = true;
             this.botActivos = true;
           }
           this.sigaServices.get("institucionActual").subscribe(n => {
@@ -312,6 +312,40 @@ export class TarjetaColaGuardias implements OnInit {
         });
   
   
+  }
+
+  isOrdenacionManual() {
+    //this.progressSpinner = true;
+    this.body.ordenacionManual = false;
+
+    this.sigaServices
+      .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idordenacioncolas)
+      .subscribe(
+        n => {
+          n.colaOrden.forEach(it => {
+            if (it.por_filas == "ORDENACIONMANUAL" && + it.numero != 0)
+              this.body.ordenacionManual = true;
+          });
+
+          if (!this.body.ordenacionManual) {
+            this.botActivos = false;
+            this.editable = false;
+          } else {
+            this.botActivos = true;
+            this.editable = true;
+          }
+          //getConfColaGuardias();
+          this.getColaGuardia();
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        });
+
   }
 
   actualizarTurnosItems() {
@@ -406,7 +440,7 @@ export class TarjetaColaGuardias implements OnInit {
   }
   fillFechaDesdeCalendar(event) {
     this.turnosItem.fechaActual = this.transformaFecha(event);
-    this.getColaGuardias();
+    this.getColaGuardia();
   }
   setItalic(dato) {
     if (dato.fechabajaguardia == null) return false;
@@ -415,7 +449,7 @@ export class TarjetaColaGuardias implements OnInit {
   searchHistorical() {
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
-    this.getColaGuardias();
+    this.getColaGuardia();
     this.selectAll = false
   }
   esFichaActiva(key) {
@@ -462,48 +496,6 @@ export class TarjetaColaGuardias implements OnInit {
         },
         err => {
           //console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
-  }
-
-  getColaGuardias() {
-
-    if (this.body.letradosIns instanceof Date) // Se comprueba si es una fecha por si es necesario cambiar el formato.
-      this.transformDate(this.body.letradosIns); // Si no es una fecha es que ya está formateada porque viene del back.
-    this.progressSpinner = true;
-
-    this.sigaServices.post(
-      "busquedaGuardias_getColaGuardia", this.body).subscribe(
-        data => {
-          this.datos = JSON.parse(data.body).inscripcionesItem;
-          this.datos = this.datos.map(it => {
-            it.nombreApe = it.apellido1 + " " + it.apellido2 + " " + it.nombre;
-            return it;
-          });
-          this.transformData();
-          this.getSaltosYCompensaciones();
-          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-          if (this.datos && this.datos.length > 0){
-
-
-            this.primerLetrado = this.datos[0].nColegiado
-            this.nombreApellidosPrimerLetrado = this.datos[0].nombreApe 
-            this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado
-            this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
-
-            this.nInscritos = this.datos.length.toString();
-
-          if (this.body.idPersonaUltimo && this.datos.length > 0)
-            this.body.idGrupoUltimo = this.datos[this.datos.length - 1].idGrupoGuardia;
-          }
-          this.progressSpinner = false;
-          
-        },
-        err => {
           this.progressSpinner = false;
         },
         () => {
@@ -752,7 +744,7 @@ export class TarjetaColaGuardias implements OnInit {
 
         this.nuevo = false;
         this.selectedDatos = [];
-        this.getColaGuardias();
+        this.getColaGuardia();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -1506,7 +1498,7 @@ export class TarjetaColaGuardias implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         
         this.progressSpinner = false;
-        this.getColaGuardias();
+        this.getColaGuardia();
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
