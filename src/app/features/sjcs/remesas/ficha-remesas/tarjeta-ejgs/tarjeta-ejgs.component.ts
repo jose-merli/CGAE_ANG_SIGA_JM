@@ -230,8 +230,8 @@ export class TarjetaEjgsComponent implements OnInit {
 
     this.cols = [
       { field: "turnoGuardiaEJG", header: "justiciaGratuita.remesas.ficha.TurnoGuardiaEJG", display: "table-cell" },
-      { field: "anioEJG", header: "justiciaGratuita.oficio.justificacionExpres.anioEJG", display: "table-cell" },
-      { field: "numeroEJG", header: "justiciaGratuita.oficio.justificacionExpres.numeroEJG", display: "table-cell" },
+      { field: "anioEJG", header: "", width:"0.001%" },
+      { field: "numeroEJG", header: "justiciaGratuita.ejg.datosGenerales.annioNum", display: "table-cell" },
       { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG", display: "table-cell" },
       { field: "solicitante", header: "justiciaGratuita.justiciables.rol.solicitante", display: "table-cell" },
       { field: "nuevaRemesa", header: "justiciaGratuita.remesas.ficha.EnNuevaRemesa", display: "table-cell" },

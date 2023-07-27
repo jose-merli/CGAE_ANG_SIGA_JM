@@ -51,7 +51,7 @@
           <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field"
             [ngStyle]="{'display': col.width}">
 
-            <span>
+            <span *ngIf="col.field != 'anioEJG'">
               {{ col.header | translate }}
             </span>
 
@@ -62,11 +62,11 @@
             </p-dropdown>
 
             <p-sortIcon
-              *ngIf="col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa' && col.field != 'incidencias'"
+              *ngIf="col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa' && col.field != 'incidencias' && col.field != 'anioEJG'"
               [field]="col.field"></p-sortIcon>
 
             <input
-              *ngIf="col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa' && col.field != 'incidencias'"
+              *ngIf="col.header != 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa' && col.field != 'incidencias' && col.field != 'anioEJG'"
               pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" pInputText type="text"
               (input)="tabla.filter($event.target.value, col.field, 'contains')" />
           </th>
@@ -77,12 +77,12 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
 
           <td class="text-center" *ngFor="let col of columns;"> 
-            <span *ngIf="col.field != 'numeroEJG' && col.field != 'incidencias'">
+            <span *ngIf="col.field != 'numeroEJG' && col.field != 'incidencias' && col.field != 'anioEJG'">
                 {{dato[col.field]}}
             </span>
             <a class="enlace" (click)="goToEjgSelectedRemesa(dato)">
               <span *ngIf="col.field == 'numeroEJG'">
-                {{dato[col.field]}}
+                E{{dato['anioEJG']}}/{{dato[col.field]}}
               </span>
             </a>
           </td>
