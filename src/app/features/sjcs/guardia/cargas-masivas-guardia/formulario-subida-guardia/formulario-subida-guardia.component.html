@@ -17,12 +17,12 @@
         <div *ngIf="tipo == 'C'" class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.Calendarios.FechaDesde" | translate }} (*)</label>
           <br>
-          <app-fecha [(value)]="fechaDesde" [disabledDelete]="true" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha> 
+          <app-fecha [(value)]="fechaDesde" [disabledDelete]="true" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="detectFechaDesdeInput($event)"></app-fecha> 
         </div>
         <div *ngIf="tipo == 'C'" class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "justiciaGratuita.Calendarios.FechaHasta" | translate }} (*)</label>
           <br>
-          <app-fecha [(value)]="fechaHasta" [disabledDelete]="true" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha> 
+          <app-fecha [(value)]="fechaHasta" [disabledDelete]="true" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="detectFechaHastaInput($event)"></app-fecha> 
         </div>
         <div *ngIf="tipo == 'C'" class="form-group-interlineado col-lg-3 col-md-3">
           <label> Observaciones </label>
@@ -42,7 +42,7 @@
       <!-- BOTON TARJETA -->
       <div class="text-right main-button">
         <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button (click)="uploadFile()" pButton type="button" icon="fa fa-upload" iconPos="left" label="{{ 'general.boton.cargarFichero' | translate}}"></button>
+        <button (click)="uploadFile()" pButton type="button" icon="fa fa-upload" iconPos="left" label="{{ 'general.boton.cargarFichero' | translate}}" [disabled]="fechaHasta==undefined || fechaDesde==undefined|| disableLoad" ></button>
       </div>
     </div>
   </div>

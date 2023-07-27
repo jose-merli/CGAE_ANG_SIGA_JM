@@ -29,6 +29,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
   fechaDesde;
   fechaHasta;
   observaciones;
+  disableLoad: boolean = true;
 
   @Output() datosEvent = new EventEmitter<any[]>();
   @Output() buscarEvent = new EventEmitter<boolean>();
@@ -85,6 +86,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
       // se almacena el archivo para habilitar boton guardar
       this.file = fileList[0];
       this.pUploadFile.chooseLabel = nombreCompletoArchivo;
+      this.disableLoad = false;
     }
   }
 
@@ -229,6 +231,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
         this.uploadFileDisable = true;
         this.pUploadFile.clear();
         this.pUploadFile.chooseLabel = "Seleccionar Archivo";
+        this.observaciones = (this.observaciones==undefined)? "": this.observaciones;
         this.sigaServices
         .postSendContentAndParameter(
           "cargasMasivasGuardia_uploadFileC",
@@ -240,6 +243,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
               //this.file = undefined;
               this.progressSpinner = false;
               this.uploadFileDisable = true;
+              this.disableLoad = true;
             },
             error => {
               this.showFail("Se ha producido un error al cargar el fichero, vuelva a intentarlo de nuevo pasados unos minutos");
@@ -266,6 +270,14 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
 
   detectFechaCargaInput(event) {
     this.fechaSolicitud = event;
+  }
+
+  detectFechaHastaInput(event) {
+    this.fechaHasta = event;
+  }
+
+  detectFechaDesdeInput(event) {
+    this.fechaDesde = event;
   }
 
   showMessage(severity, summary, msg) {
