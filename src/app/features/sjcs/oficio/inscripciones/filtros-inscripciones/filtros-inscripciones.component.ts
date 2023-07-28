@@ -43,12 +43,15 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
   partidasJudiciales: any[] = [];
   grupofacturacion: any[] = [];
   comboPJ;
-  comboEstados = [
-    { label: "Pendiente de Alta", value: "0" },
-    { label: "Alta", value: "1" },
-    { label: "Pendiente de Baja", value: "2" },
-    { label: "Baja", value: "3" },
-    { label: "Denegada", value: "4" }
+  comboEstadosAlta = [
+    { label: "Confirmada", value: "2" },
+    { label: "Denegada", value: "4" },
+    { label: "Pendiente", value: "6" }
+  ];
+  comboEstadosBaja = [
+    { label: "Confirmada", value: "3" },
+    { label: "Denegada", value: "5" },
+    { label: "Pendiente", value: "7" }
   ];
   usuarioBusquedaExpress = {
     numColegiado: '',
@@ -56,6 +59,8 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
   };
   usuarioLogado;
   isLetrado: boolean = false;
+  selectedTipo; 
+  selectedEstado; 
 
   textSelected: String = 'general.boton.seleccionar';
   @Input() permisos;
@@ -74,6 +79,8 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
   ngOnInit() {
     sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
+
+    this.selectedTipo = "0";
 
     this.isLetrado = this.localStorageService.isLetrado;
     if(this.isLetrado == undefined){
@@ -128,6 +135,17 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
 
     if (sessionStorage.getItem("filtrosInscripciones") != null) {
       this.filtros = JSON.parse(sessionStorage.getItem("filtrosInscripciones"));
+      if(this.filtros.estado){
+        // Tiene mas de un estado
+        if(Array.isArray(this.filtros.estado)){
+          // Si el primero es impar, el tipo debe ser BAJA
+          this.selectedTipo = (Number(this.filtros.estado[0]) % 2) ? "1" : "0";
+          this.selectedEstado = this.filtros.estado;
+        }
+        else{
+          this.selectedTipo = (this.filtros.estado == "0") ? "0" : "1";
+        }
+      }
       sessionStorage.removeItem("filtrosInscripciones");
 
       if (this.filtros.fechadesde != undefined && this.filtros.fechadesde != null) {
@@ -136,9 +154,6 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
       if (this.filtros.fechahasta != undefined && this.filtros.fechahasta != null) {
         this.filtros.fechahasta = new Date(this.filtros.fechahasta);
         this.disabledFechaHasta = false;
-      }
-      if (this.filtros.afechade != undefined && this.filtros.afechade != null) {
-        this.filtros.afechade = new Date(this.filtros.afechade);
       }
       // Filtros cuando insertamos nuevas Incripciones
       if (sessionStorage.getItem("filtroInsertInscripcion")) {
@@ -160,7 +175,7 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
           }
         }
 
-        this.isBuscar();
+        //this.isBuscar();
 
         sessionStorage.removeItem("colegiadoRelleno");
         sessionStorage.removeItem("datosColegiado");
@@ -199,7 +214,7 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
 
-      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
+      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + " " + busquedaColegiado.nombre;
 
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
 
@@ -283,7 +298,11 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
   checkFilters() {
-    if ((this.filtros.estado == null ||
+    if(!this.selectedTipo){
+      this.showMessage("error", "Incorrecto", "Tipo es un campo obligatorio");
+      return false;
+    }
+    else if ((this.filtros.estado == null ||
       this.filtros.estado == undefined ||
       this.filtros.estado.length == 0) &&
       (this.filtros.idturno == null ||
@@ -291,8 +310,6 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
         this.filtros.idturno.length == 0) &&
       (this.filtros.fechadesde == null ||
         this.filtros.fechadesde == undefined) &&
-      (this.filtros.afechade == null ||
-        this.filtros.afechade == undefined) &&
       (this.filtros.abreviatura == null ||
         this.filtros.abreviatura == undefined) &&
       ((<HTMLInputElement>document.querySelector("input[formControlName='nombreAp']")) != null) &&
@@ -326,7 +343,28 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
     });
   }
 
+  reviewEstado(){
+    // Si se cambia el tipo, revisamos que los estados anteriores
+    if(this.selectedTipo == "0" && this.selectedEstado && this.selectedEstado.length > 0){
+      //Si el primero es impar, son estados de Baja y hay que borrarlos
+      this.selectedEstado = (Number(this.selectedEstado[0]) % 2) ? undefined : this.selectedEstado;
+    }
+    else if (this.selectedTipo == "1" && this.selectedEstado && this.selectedEstado.length > 0){
+      //Si el primero es impar, son estados de Baja y hay que mantenerlos
+      this.selectedEstado = (Number(this.selectedEstado[0]) % 2) ? this.selectedEstado : undefined ;
+    }
+  }
+
   isBuscar() {
+    if(this.selectedEstado && this.selectedEstado.length > 0){
+      this.filtros.estado = this.selectedEstado;
+    }
+    else if (this.selectedTipo){
+      this.filtros.estado = (this.selectedTipo == "0") ? "0" : "1";
+    }
+    else{
+      this.filtros.estado = "";
+    }
     if (this.checkFilters()) {
       this.buscar = true;
       this.persistenceService.setFiltros(this.filtros);
@@ -414,16 +452,19 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
     this.filtros.idturno = undefined;
     this.filtros.fechadesde = undefined;
     this.filtros.fechahasta = undefined;
-    this.filtros.afechade = undefined;
     this.disabledestado = false;
     this.disabledFechaHasta = true;
+    this.selectedTipo = "0"; 
+    this.selectedEstado = undefined;  
     if (sessionStorage.getItem("isLetrado") == "false") {
       this.usuarioBusquedaExpress = {
         numColegiado: "",
         nombreAp: ""
       };
     }
-
+    sessionStorage.removeItem("filtros");
+    sessionStorage.removeItem("filtroAux");
+    sessionStorage.removeItem("filtrosInscripciones");
   }
 
   //búsqueda con enter
@@ -439,8 +480,10 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
   }
 
   changeColegiado(event) {
-    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
-    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    if(event){
+      this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+      this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    }    
   }
 
 }

@@ -421,11 +421,14 @@ export class GuardiasInscripcionesComponent implements OnInit {
       let estadoNombre: String;
 
       switch (res.estado) {
-        case "0": estadoNombre = "Pendiente de Alta"; break;
-        case "1": estadoNombre = "Alta"; break;
-        case "2": estadoNombre = "Pendiente de Baja"; break;
-        case "3": estadoNombre = "Baja"; break;
-        case "4": estadoNombre = "Denegada"; break;
+        case "0": estadoNombre = "Alta"; break;
+        case "1": estadoNombre = "Baja"; break;
+        case "2": estadoNombre = "Alta confirmada"; break;
+        case "3": estadoNombre = "Baja confirmada"; break;
+        case "4": estadoNombre = "Alta denegada"; break;
+        case "5": estadoNombre = "Baja denegada"; break;
+        case "6": estadoNombre = "Alta pendiente"; break;
+        case "7": estadoNombre = "Baja pendiente"; break;
         default: estadoNombre = null;
       }
 
@@ -528,7 +531,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
   llamadaBackValidar(objetoValidacion, estado) {
 
     this.progressSpinner = true;
-    if (estado == "0") {//validacion de estado Pendiente de Alta
+    if (estado == "6") {//validacion de estado Pendiente de Alta
 
       this.sigaServices.post(
         "guardiasInscripciones_validarInscripciones", objetoValidacion).subscribe(
@@ -550,7 +553,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
             this.commonsService.scrollTablaFoco('tablaFoco');
           });
 
-    } else if (estado == "2") {//validacion de estado Pendiente de Baja
+    } else if (estado == "7") {//validacion de estado Pendiente de Baja
 
       //comprobacion de si la inscripcion tiene trabajos en SJCS
       this.sigaServices.post(
@@ -782,7 +785,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       let objVal: ResultadoInscripcionesBotones
       this.jsonParaEnviar.datos.forEach(el => {
 
-        if (el.estado == "0") {//validacion de inscripciones en estado Pendiente de Alta.
+        if (el.estado == "6") {//validacion de inscripciones en estado Pendiente de Alta.
           estado = el.estado;
           el.fechavalidacionNUEVA = el.fechaActual;
           el.observacionesvalidacionNUEVA = el.observaciones;
@@ -801,7 +804,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           /*  this.objetoValidacion.push(objVal);
            this.llamadaBackValidar(this.objetoValidacion, el.estado);
            this.objetoValidacion = []; */
-        } else if (el.estado == "2") {//validacion de inscripcion en estado Pendiente de Baja.
+        } else if (el.estado == "7") {//validacion de inscripcion en estado Pendiente de Baja.
           estado = el.estado;
           el.fechabaja = el.fechaActual;
           el.observacionesvalbajaNUEVA = el.observaciones;
@@ -815,7 +818,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         }
 
       });
-      if (estado == "0" || estado == "2") {
+      if (estado == "6" || estado == "7") {
 
         this.llamadaBackValidar(this.objetoValidacion, estado);
         this.objetoValidacion = [];
@@ -887,7 +890,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           el.fechasolicitudNUEVA = el.fechaActual;
           el.observacionessolicitudNUEVA = el.observaciones;
 
-          if (el.estado == "2" || el.estado == "1") {
+          if (el.estado == "7" || el.estado == "2") {
             //cambiar fecha efectiva de alta
             if (el.fechaActual >= el.fechavalidacion) {
               el.fechavalidacion = el.fechaActual;

@@ -4,7 +4,7 @@
   <i class="fa fa-square"></i>
   <p>{{'menu.justiciaGratuita' | translate}}
     <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.TurnosOficio' | translate}}
-    <i class="fa fa-angle-right"></i>{{ 'formacion.fichaCurso.inscripciones.cabecera' | translate}}
+    <i class="fa fa-angle-right"></i>{{ 'menu.productosYServicios.solicitudes' | translate}}
   </p>
 </div>
 <div class="card">
@@ -12,32 +12,50 @@
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
     <div  class="module vista-avanzada">
       <div class="form-row">
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{'censo.fichaIntegrantes.literal.estado'|translate}}</label>
-          <p-multiSelect class="select-form" [(ngModel)]='filtros.estado' placeholder="Seleccionar" [options]="comboEstados"
-            [filter]="true" [disabled]="disabledestado" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
-            defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
+        <div class="col-lg-3 col-md-6" style="display: flex; gap: 5%;">
+          <div class="form-group" style="flex: 1 1 auto;">
+            <label>{{'censo.nuevaSolicitud.tipoSolicitud'|translate}} (*)</label>
+            <span style="display: flex; justify-content: center; padding-top: 0.3em;">
+              <span style="margin-right: 1.75em;">
+                <p-radioButton [(ngModel)]='selectedTipo' name="tipoSol" value="0" (click)="reviewEstado()"
+                      label="Alta"></p-radioButton>
+              </span>
+              <span>
+                <p-radioButton [(ngModel)]='selectedTipo' name="tipoSol" value="1" (click)="reviewEstado()"
+                      label="Baja"></p-radioButton>
+              </span>
+            </span>
+          </div>
+          <div class="form-group" style="flex: 1 1 auto;">
+            <label>{{'censo.fichaIntegrantes.literal.estado'|translate}}</label>
+            <p-multiSelect *ngIf="!selectedTipo" class="select-form" disabled=true placeholder="Seleccionar" styleClass="widthAll" 
+              defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
+            <p-multiSelect *ngIf="selectedTipo == '0'" class="select-form" [(ngModel)]='selectedEstado' placeholder="Seleccionar" [options]="comboEstadosAlta"
+              [filter]="true" [disabled]="!selectedTipo" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+              defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
+            <p-multiSelect *ngIf="selectedTipo == '1'" class="select-form" [(ngModel)]='selectedEstado' placeholder="Seleccionar" [options]="comboEstadosBaja"
+              [filter]="true" [disabled]="!selectedTipo" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+              defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
+          </div>  
+        </div>   
+        <div class="col-lg-3 col-md-6" style="display: flex; gap: 5%;">
+          <div class="form-group" style="flex: 1 1 auto;">
+            <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
+            </label>
+            <app-fecha [(value)]="filtros.fechadesde" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
+          </div>
+          <div class="form-group" style="flex: 1 1 auto;">
+            <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
+            </label>
+            <app-fecha [(value)]="filtros.fechahasta" [disabled]="disabledFechaHasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" 
+            (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
+          </div>
         </div>
-        <div class="form-group col-lg-3 col-md-3">
+        <div class="form-group col-lg-6 col-md-6">
           <label>{{'menu.justiciaGratuita.oficio.comboturno'|translate}}</label>
           <p-multiSelect class="select-form" [(ngModel)]='filtros.idturno' placeholder="Seleccionar" [options]="turnos"
             [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimit="10" styleClass="widthAll" 
             defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
-        </div>
-        <div class="form-group col-lg-2 col-md-2">
-          <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
-          </label>
-          <app-fecha [(value)]="filtros.fechadesde" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
-        </div>
-        <div class="form-group col-lg-2 col-md-2">
-          <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
-          </label>
-          <app-fecha [(value)]="filtros.fechahasta" [disabled]="disabledFechaHasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
-        </div>
-        <div class="form-group col-lg-2 col-md-2">
-          <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
-          </label>
-          <app-fecha [(value)]="filtros.afechade" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
         </div>
       </div>
     </div>

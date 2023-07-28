@@ -101,7 +101,7 @@ export class InscripcionesComponent implements OnInit {
       else this.filtros.filtroAux.idturno = idturnoAux;
     } 
     
-    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value != null){
+    if((<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']"))){
       let ncolegiadoAux = (<HTMLInputElement>document.querySelector("input[formControlName='numColegiado']")).value;
       if( ncolegiadoAux == "") this.filtros.filtroAux.ncolegiado = null;
       else this.filtros.filtroAux.ncolegiado = ncolegiadoAux;
@@ -117,20 +117,16 @@ export class InscripcionesComponent implements OnInit {
         this.progressSpinner = false;
         
         this.datos.forEach(element => {
-          if(element.estado == "0"){
-            element.estadonombre = "Pendiente de Alta";
-          }
-          if(element.estado == "1"){
-            element.estadonombre = "Alta";
-          }
-          if(element.estado == "2"){
-            element.estadonombre = "Pendiente de Baja";
-          }
-          if(element.estado == "3"){
-            element.estadonombre = "Baja";
-          }
-          if(element.estado == "4"){
-            element.estadonombre = "Denegada";
+          switch(element.estado){
+            case "0": element.estadonombre = "Alta"; break;
+            case "1": element.estadonombre = "Baja"; break;
+            case "2": element.estadonombre = "Alta confirmada"; break;
+            case "3": element.estadonombre = "Baja confirmada"; break;
+            case "4": element.estadonombre = "Alta denegada"; break;
+            case "5": element.estadonombre = "Baja denegada"; break;
+            case "6": element.estadonombre = "Alta pendiente"; break;
+            case "7": element.estadonombre = "Baja pendiente"; break;
+            default: element.estadonombre = ""; break;
           }
           element.ncolegiado = +element.ncolegiado;
         });

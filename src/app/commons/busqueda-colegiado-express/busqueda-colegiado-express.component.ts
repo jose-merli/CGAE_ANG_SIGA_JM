@@ -95,6 +95,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       this.colegiadoForm.get('numColegiado').setValue("");
       this.colegiadoForm.get('nombreAp').setValue("");
       sessionStorage.setItem("numColegiado","");
+      sessionStorage.setItem("nombreAp","");
       this.changeValue();
       if (sessionStorage.getItem("buscadorColegiados")) {
         sessionStorage.removeItem("buscadorColegiados");
@@ -170,6 +171,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
               this.apellidosNombre = "";
               this.numColegiado = ""
               form.numColegiado = "";
+              form.nombreAp = "";
               sessionStorage.setItem("numColegiado", "");
               sessionStorage.setItem("nombreAp", "");
               sessionStorage.setItem("buscadorColegiados","");
@@ -183,6 +185,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
             this.progressSpinner = false;
             this.apellidosNombre = "";
             form.numColegiado = "";
+            form.nombreAp = "";
             this.numColegiado = "";
             this.idPersona.emit("");
             this.changeValue();
@@ -193,6 +196,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       } else {
         this.progressSpinner = false;
         this.apellidosNombre = "";
+        form.nombreAp = "";
         this.idPersona.emit("");
 
         if (sessionStorage.getItem("tarjeta")) {

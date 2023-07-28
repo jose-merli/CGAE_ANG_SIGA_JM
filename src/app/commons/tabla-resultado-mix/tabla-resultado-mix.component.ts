@@ -144,6 +144,7 @@ export class TablaResultadoMixComponent implements OnInit {
     let values = [];
     let labels = [];
     let arrayOfSelected = [];
+    this.fechaActual = new Date();
       if(this.rowGroups != undefined){
          this.rowGroups.forEach((row, i) => {
           //selecteCombo = {label: ?, value: row.cells[7].value}
@@ -1189,13 +1190,13 @@ export class TablaResultadoMixComponent implements OnInit {
         estadoNombre: estadoInicial
       };
 
-      if (this.infoHabilitado.validarInscripciones == "S" && (this.infoHabilitado.estadoNombre == "Pendiente de Alta" || this.infoHabilitado.estadoNombre == "Pendiente de Baja") && !this.isLetrado && (!this.estadosDistintos)) {
+      if (this.infoHabilitado.validarInscripciones == "S" && (this.infoHabilitado.estadoNombre == "Alta pendiente" || this.infoHabilitado.estadoNombre == "Baja pendiente") && !this.isLetrado && (!this.estadosDistintos)) {
         this.habilitadoValidar = false;
       } else {
         this.habilitadoValidar = true;
       }
 
-      if ((this.infoHabilitado.estadoNombre == "Pendiente de Alta" || this.infoHabilitado.estadoNombre == "Pendiente de Baja") && !this.isLetrado && (!this.estadosDistintos)) {
+      if ((this.infoHabilitado.estadoNombre == "Alta pendiente" || this.infoHabilitado.estadoNombre == "Baja pendiente") && !this.isLetrado && (!this.estadosDistintos)) {
         this.habilitadoDenegar = false;
         this.habilitadoCambiarFecha = false;
       } else {
@@ -1203,17 +1204,17 @@ export class TablaResultadoMixComponent implements OnInit {
         this.habilitadoCambiarFecha = true;
       }
 
-      if (this.infoHabilitado.estadoNombre == "Baja" && !this.isLetrado && (!this.estadosDistintos)) {
+      if (this.infoHabilitado.estadoNombre == "Baja confirmada" && !this.isLetrado && (!this.estadosDistintos)) {
         this.habilitadoCambiarFecha = false;
       } else {
         this.habilitadoCambiarFecha = true;
       }
 
-      if ((this.infoHabilitado.estadoNombre == "Denegada") && !this.isLetrado) {
+      if ((this.infoHabilitado.estadoNombre == "Alta denegada" || this.infoHabilitado.estadoNombre == "Baja denegada") && !this.isLetrado) {
         this.habilitadoCambiarFecha = true;
       }
 
-      if (this.infoHabilitado.estadoNombre == "Alta" && (!this.estadosDistintos)) {
+      if (this.infoHabilitado.estadoNombre == "Alta confirmada" && (!this.estadosDistintos)) {
         this.habilitadoSolicitarBaja = false;
         this.habilitadoCambiarFecha = false;
       } else {

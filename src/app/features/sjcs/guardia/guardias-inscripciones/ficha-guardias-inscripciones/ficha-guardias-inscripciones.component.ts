@@ -267,7 +267,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		let body2 = new ResultadoInscripcionesBotones("");
 		body2 = this.datos;
 
-		if (body2.estado = "0") {
+		if (body2.estado = "6") {
 			body2.fechavalidacionNUEVA = this.datos.fechaActual;
 			body2.observacionesvalidacionNUEVA = this.datos.observaciones;
 			body2.fechasolicitudbajaNUEVA = null;
@@ -282,7 +282,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			if (this.datos.fechabaja == undefined) {
 				body2.fechabaja = null;
 			}
-		} else if (body2.estado = "2") {
+		} else if (body2.estado = "7") {
 			body2.fechasolicitudbajaNUEVA = this.datos.fechaActual;
 			body2.observacionesvalbajaNUEVA = this.datos.observaciones;
 		}
@@ -318,7 +318,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	llamadaBackValidar(objetoValidacion, estado) {
 
 		this.progressSpinner = true;
-		if (estado == "0") {//validacion de estado Pendiente de Alta
+		if (estado == "6") {//validacion de estado Pendiente de Alta
 
 			this.sigaServices.post(
 				"guardiasInscripciones_validarInscripciones", objetoValidacion).subscribe(
@@ -348,7 +348,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 						this.commonsService.scrollTablaFoco('tablaFoco');
 					});
 
-		} else if (estado == "2") {//validacion de estado Pendiente de Baja
+		} else if (estado == "7") {//validacion de estado Pendiente de Baja
 
 			//comprobacion de si la inscripcion tiene trabajos en SJCS
 			this.sigaServices.post(
@@ -828,7 +828,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		if (resultComparacion != -1) { //  la seleccionada fechasolicitudNUEVA > fechaEfectivaAlta
 			this.mensajeCambioFecha();
 		} else {
-			if (this.datos.estado == "2" || this.datos.estado == "1") {
+			if (this.datos.estado == "7" || this.datos.estado == "2") {
 				//cambiar fecha efectiva de alta
 				if (this.datos.fechaActual <= this.datos.fechavalidacion) {
 					body2.fechavalidacion = this.datos.fechaActual;
@@ -982,20 +982,20 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	HabilitarBotones() {
 
 
-		if ((this.datos.estado == "0" || this.datos.estado == "2") && !this.isLetrado) {
+		if ((this.datos.estado == "6" || this.datos.estado == "7") && !this.isLetrado) {
 			this.disabledValidar = false;
 		} else {
 			this.disabledValidar = true;
 		}
 
-		if ((this.datos.estado == "0" || this.datos.estado == "2") && !this.isLetrado) {
+		if ((this.datos.estado == "6" || this.datos.estado == "7") && !this.isLetrado) {
 			this.disabledDenegar = false;
 		} else {
 			this.disabledDenegar = true;
 		}
 
 
-		if (this.datos.estado == "1") {
+		if (this.datos.estado == "2") {
 			this.disabledSolicitarBaja = false;
 		} else {
 			this.disabledSolicitarBaja = true;
@@ -1016,7 +1016,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 		}
 
-		if ((this.datos.estado == "1" || this.datos.estado == "2" || this.datos.estado == "3") && !this.isLetrado) {
+		if ((this.datos.estado == "2" || this.datos.estado == "7" || this.datos.estado == "3") && !this.isLetrado) {
 			this.disabledCambiarFecha = false;
 		} else {
 			this.disabledCambiarFecha = true;
@@ -1214,14 +1214,14 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			this.disabledSolicitarAlta = true;
 		}
 
-		if (this.datos.estado == "1") {
+		if (this.datos.estado == "2") {
 			this.disabledSolicitarBaja = false;
 		}
 		else {
 			this.disabledSolicitarBaja = true;
 		}
 
-		if (this.datos.estado == "2" || this.datos.estado == "0") {
+		if (this.datos.estado == "6" || this.datos.estado == "7") {
 			this.disabledValidar = false;
 			this.disabledDenegar = false;
 		}
@@ -1230,7 +1230,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			this.disabledDenegar = true;
 		}
 
-		if (this.datos.estado == "1" || this.datos.estado == "2" || this.datos.estado == "3") {
+		if (this.datos.estado == "2" || this.datos.estado == "7" || this.datos.estado == "3") {
 			this.disabledCambiarFecha = false;
 		}
 		else {

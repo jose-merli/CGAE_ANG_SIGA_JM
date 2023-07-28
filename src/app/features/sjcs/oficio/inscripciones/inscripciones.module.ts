@@ -35,6 +35,7 @@ import {TreeTableModule} from 'primeng/treetable';
 import {TreeNode} from 'primeng/api';
 import { TarjetaColaFijaComponent } from './ficha-inscripciones/tarjeta-cola-fija/tarjeta-cola-fija.component';
 import { TarjetaGestionInscripcion } from './ficha-inscripciones/tarjeta-gestion-inscripciones/tarjeta-gestion-inscripcion.component';
+import { RadioButtonModule } from 'primeng/primeng';
 @NgModule({
   imports: [
     CommonModule,
@@ -59,6 +60,7 @@ import { TarjetaGestionInscripcion } from './ficha-inscripciones/tarjeta-gestion
     FechaModule,
     BusquedaColegiadoExpressModule,
     TreeTableModule,
+    RadioButtonModule,
   ],
   declarations: [
     InscripcionesComponent,

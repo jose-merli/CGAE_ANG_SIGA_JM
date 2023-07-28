@@ -320,12 +320,12 @@ export class FichaInscripcionesComponent implements OnInit {
 					this.progressSpinner = false;
 					// Fecha de Validación para inscripcion.
 					this.datos.fechavalidacion = new Date(this.datos.fechaActual).getTime();
-					if(this.datos.estado == "0"){
-						this.datos.estado = "1";
-						this.datos.estadonombre = "Alta";
+					if(this.datos.estado == "6"){
+						this.datos.estado = "2";
+						this.datos.estadonombre = "Alta confirmada";
 					}else{
-						this.datos.estado = "3";
-						this.datos.estadonombre = "Baja";
+						this.datos.estado = "1";
+						this.datos.estadonombre = "Baja confirmada";
 					}
 					this.persistenceService.setDatos(this.datos);
 					// Desactivar Botón de Validación.
@@ -360,8 +360,16 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.sigaServices.post("inscripciones_updateDenegar", body).subscribe(
 			data => {
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-				this.datos.estado = "4";
-				this.datos.estadonombre = "Denegada";
+				// OJO AQUI HAY QUE VER QUE TIPO DE ATTR VIENE
+				// MAS ASEGURAR QUE SOLO VENDRA CON UN 6 O 7 (PENDIENTE ALTA O PENDIENTE BAJA)
+				if(this.datos.estado == "6"){
+					this.datos.estado = "4";
+					this.datos.estadonombre = "Alta denegada";
+				}
+				else{
+					this.datos.estado = "5";
+					this.datos.estadonombre = "Baja denegada";
+				}				
 				this.progressSpinner = false;
 				this.persistenceService.setDatos(this.datos);
 				//El redireccionamiento es una solucion temporal hasta que se
@@ -452,8 +460,8 @@ export class FichaInscripcionesComponent implements OnInit {
 				this.sigaServices.post("inscripciones_updateSolicitarBaja", body).subscribe(
 					data => {
 						this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-						this.datos.estado = "2";
-						this.datos.estadonombre = "Pendiente de Baja";
+						this.datos.estado = "7";
+						this.datos.estadonombre = "Baja pendiente";
 						this.persistenceService.setDatos(this.datos);
 						this.progressSpinner = false;
 						//El redireccionamiento es una solucion temporal hasta que se
@@ -522,20 +530,20 @@ export class FichaInscripcionesComponent implements OnInit {
 	HabilitarBotones() {
 
 
-		if ((this.datos.estado == "0" || this.datos.estado == "2") && !this.isLetrado) {
+		if ((this.datos.estado == "6" || this.datos.estado == "7") && !this.isLetrado) {
 			this.disabledValidar = false;
 		} else {
 			this.disabledValidar = true;
 		}
 
-		if ((this.datos.estado == "0" || this.datos.estado == "2") && !this.isLetrado) {
+		if ((this.datos.estado == "6" || this.datos.estado == "7") && !this.isLetrado) {
 			this.disabledDenegar = false;
 		} else {
 			this.disabledDenegar = true;
 		}
 
 
-		if (this.datos.estado == "1") {
+		if (this.datos.estado == "2") {
 			this.disabledSolicitarBaja = false;
 		} else {
 			this.disabledSolicitarBaja = true;
@@ -556,7 +564,7 @@ export class FichaInscripcionesComponent implements OnInit {
 
 		}
 
-		if ((this.datos.estado == "1" || this.datos.estado == "2" || this.datos.estado == "3") && !this.isLetrado) {
+		if ((this.datos.estado == "7" || this.datos.estado == "2" || this.datos.estado == "3") && !this.isLetrado) {
 			this.disabledCambiarFecha = false;
 		} else {
 			this.disabledCambiarFecha = true;
@@ -757,14 +765,14 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.disabledSolicitarAlta = true;
 		}
 
-		if (this.datos.estado == "1") {
+		if (this.datos.estado == "2") {
 			this.disabledSolicitarBaja = false;
 		}
 		else {
 			this.disabledSolicitarBaja = true;
 		}
 
-		if (this.datos.estado == "1" || this.datos.estado == "2" || this.datos.estado == "3") {
+		if (this.datos.estado == "7" || this.datos.estado == "2" || this.datos.estado == "3") {
 			this.disabledCambiarFecha = false;
 		}
 		else {

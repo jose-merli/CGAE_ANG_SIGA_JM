@@ -167,7 +167,7 @@ export class TablaInscripcionesComponent implements OnInit {
         evento.data.editable = true;
         this.editMode = true;
 
-        if (evento.data.estado != 0 || evento.data.estado != 2) this.disabledDenegar = true;
+        if (evento.data.estado != 6 || evento.data.estado != 7) this.disabledDenegar = true;
 
         this.selectedDatos = [];
         this.selectedDatos.push(evento.data);
@@ -471,6 +471,7 @@ export class TablaInscripcionesComponent implements OnInit {
     this.body.inscripcionesItem.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
+      // ¡¡¡¡ OJO REVISAR QUE HACE ESTO
       if (element.estado == "2") vb++;
     });
     if(this.datos.fechaActual == null || this.datos.fechaActual== undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
@@ -626,6 +627,7 @@ export class TablaInscripcionesComponent implements OnInit {
       this.body.inscripcionesItem.forEach(element => {
         element.fechaActual = this.datos.fechaActual;
         element.observaciones = this.datos.observaciones;
+        // OJO REVISAR QUE HACE ESTO !!
         if (element.estado == "2") vb++;
       });
       if (vb > 0 && access == 2) this.checkTrabajosSJCS(this.body, access);
@@ -836,7 +838,7 @@ export class TablaInscripcionesComponent implements OnInit {
 
     if (selectedDatos != null && selectedDatos.length != 0 && this.estadosDistintos == false) {
       this.numSelected = selectedDatos.length;
-      let findDato = this.selectedDatos.find(item => item.estado != "1");
+      let findDato = this.selectedDatos.find(item => item.estado != "2");
       let currentDate = new Date();
       let currentDateString = this.formatDateSinHora(currentDate);
       let selectedDate = this.datos.fechaActual
@@ -872,7 +874,8 @@ export class TablaInscripcionesComponent implements OnInit {
       else {
         this.disabledDenegar = false;
       }*/
-      let findDato3 = this.selectedDatos.find(item => item.estado != "1" && item.estado != "3");
+      // Si no es Alta o Baja
+      let findDato3 = this.selectedDatos.find(item => item.estado != "2" && item.estado != "3");
       if (findDato3 != null) {
         this.disabledCambiarFecha = true;
       }
@@ -926,7 +929,7 @@ export class TablaInscripcionesComponent implements OnInit {
 
   esPendienteAltaOpendienteBaja(item) {
 
-    return item.estado == "0" || item.estado == "2";
+    return item.estado == "6" || item.estado == "7";
 
   }
 

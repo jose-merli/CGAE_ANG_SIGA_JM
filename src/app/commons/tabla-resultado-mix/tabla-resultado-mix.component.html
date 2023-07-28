@@ -135,7 +135,7 @@
       <div *ngIf="inscripciones" class="col-lg-7 col-md-7 col-sm-7 flex2 align">
         <div class="w-50 mr-5">
           <label class="d-flex align-self-left"> {{ 'dato.jgr.guardia.saltcomp.fecha' | translate }} </label>
-          <app-fecha [disabled]="isDisabled" [(ngModel)]='fechaActual' (valueChangeInput)="changeFecha($event)"
+          <app-fecha [disabled]="isDisabled" [(value)]='fechaActual' (valueChangeInput)="changeFecha($event)"
             (valueChangeSelected)="changeFecha($event)" name="fechaActual" ngDefaultControl></app-fecha>
         </div>
         <div class=" w-50">

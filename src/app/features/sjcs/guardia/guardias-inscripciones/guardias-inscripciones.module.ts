@@ -34,6 +34,7 @@ import { TarjetaGestionInscripcionGuardiaComponent } from './ficha-guardias-insc
 import { BrowserModule } from '@angular/platform-browser';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
 import { PageService, SortService, FilterService, GroupService } from '@syncfusion/ej2-angular-grids';
+import { RadioButtonModule } from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -64,7 +65,8 @@ import { PageService, SortService, FilterService, GroupService } from '@syncfusi
     PaginadorModule,
     TablaResultadoMixModule,
     BrowserModule,
-    GridModule
+    GridModule,
+    RadioButtonModule
   ],
   declarations: [
     GuardiasInscripcionesComponent,
