@@ -173,7 +173,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   
           this.rowGroups.forEach(rowG => {
             comboTurno.forEach(cT=> {
-            if (cT.value == rowG.cells[1].value){
+              if (cT.value == rowG.cells[1].value && this.pantalla != 'colaGuardias'){
               rowG.cells[1].value = cT.label;
             }
           

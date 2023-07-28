@@ -54,7 +54,7 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
   datosConfColaGuardias: any;
   selectedItem: number = 10;
   selectedItemSaltosCompensaciones: number = 3;
-  cabeceras;
+  cabeceras = [];
   configuracionCola: ConfiguracionCola = {
     'manual': true,
     'porGrupos': true,
