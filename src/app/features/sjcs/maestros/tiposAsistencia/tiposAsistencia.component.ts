@@ -757,6 +757,13 @@ export class TiposAsistenciaComponent implements OnInit {
         this.updateTiposAsistencia.push(dato);
       }
 
+    }else if(this.nuevo){
+      if (dato.visibleMovilBoolean == false) {
+        dato.visiblemovil = "0";
+      }
+      else {
+        dato.visiblemovil = "1";
+      }
     }
 
   }
@@ -766,8 +773,7 @@ export class TiposAsistenciaComponent implements OnInit {
     if (this.nuevo) {
       if (this.datos[0].tipoasistencia != undefined && this.datos[0].tipoasistencia.trim() &&
         this.datos[0].importe != undefined && this.datos[0].importe + "" != ""
-        && this.datos[0].importemaximo + "" != undefined && this.datos[0].importemaximo != ""
-        && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != "") {
+        && this.datos[0].importemaximo + "" != undefined && this.datos[0].importemaximo != "") { //&& this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != ""
         return false;
       } else {
         return true;
