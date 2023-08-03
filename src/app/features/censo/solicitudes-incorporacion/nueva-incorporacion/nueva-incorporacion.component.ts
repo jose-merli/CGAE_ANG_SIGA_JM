@@ -629,6 +629,9 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.bodyInicial.pais = paisSpain.label;
           this.bodyInicial.idPais = this.paisSelected;
           this.solicitudEditar.idPais = this.paisSelected;
+          if(this.solicitudEditar.idPais == "191"){
+            this.isPoblacionExtranjera = false;
+          }
         }else{
           this.paisSelected = this.solicitudEditar.idPais;
           let paisSpain = this.paises.find(x => x.value == this.solicitudEditar.idPais);
