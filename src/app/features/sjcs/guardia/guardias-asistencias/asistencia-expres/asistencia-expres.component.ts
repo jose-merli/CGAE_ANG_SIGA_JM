@@ -128,9 +128,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
   ngAfterViewInit(): void {
     if(sessionStorage.getItem("filtroAsistenciaExpresBusqueda") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "b"){
+      
       this.searchExpres = true;
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistenciaExpresBusqueda"));
-      let oldIdPersona: ColegiadosSJCSItem = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       this.filtrosAE.filtro.diaGuardia = oldFiltro.diaGuardia;
       this.filtrosAE.getTurnosByColegiadoFecha();
       this.filtrosAE.filtro.idTurno = oldFiltro.idTurno;
@@ -138,14 +138,20 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.filtrosAE.filtro.idGuardia = oldFiltro.idGuardia;
       this.filtrosAE.onChangeGuardia();
       this.filtrosAE.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
-      this.filtrosAE.filtro.idPersona = oldIdPersona.idPersona;
-      this.filtrosAE.filtro.idLetradoManual = oldIdPersona.nColegiado;
       this.filtrosAE.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
       this.filtrosAE.getComboRefuerzoSustitucion();
       this.filtrosAE.filtro.isSustituto = oldFiltro.isSustituto;
-      sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
       this.getComboComisarias(); // Posteriormente hace la busqueda de asistencias
-    }else if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
+
+      if(sessionStorage.getItem("buscadorColegiados")){
+        let oldIdPersona: ColegiadosSJCSItem = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+        this.filtrosAE.filtro.idPersona = oldIdPersona.idPersona;
+        this.filtrosAE.filtro.idLetradoManual = oldIdPersona.nColegiado;
+      }
+      
+      sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
+      
+      }else if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
       sessionStorage.removeItem("modoBusqueda");
       sessionStorage.removeItem("filtroAsistencia");
       sessionStorage.removeItem("volver");
@@ -257,6 +263,12 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
     }else{
       this.filtrosAE.filtroAux = this.filtrosAE.filtro;
+      if(this.comboComisarias == null || this.comboComisarias.length == 0 ){
+        this.getComboComisariasOnly();
+      }
+      if(this.comboJuzgados == null || this.comboJuzgados.length == 0){
+        this.getComboJuzgados();
+      }
       this.sigaServices.post("busquedaGuardias_buscarAsistenciasExpress", this.filtrosAE.filtro)
         .subscribe(
           n => {
@@ -267,6 +279,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
               if(asistenciasDTO.tarjetaAsistenciaItems2.length === 0){
                 //this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
               }
+              
               this.fromJsonToRowGroups(asistenciasDTO.tarjetaAsistenciaItems2);
             } else{
               this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
@@ -284,7 +297,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             }, 5);
           }
         );
-    }
+      }
   }
 
   fromJsonToRowGroups(asistencias : TarjetaAsistenciaItem[]){
