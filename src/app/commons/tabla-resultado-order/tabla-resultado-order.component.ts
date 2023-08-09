@@ -160,6 +160,7 @@ export class TablaResultadoOrderComponent implements OnInit {
     //console.log('rowGroups al inicio: ', this.rowGroups)
     this.selectedArray = [];
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
+    this.progressSpinner = true;
     if(this.rowGroups != undefined){
 
       
@@ -251,6 +252,8 @@ export class TablaResultadoOrderComponent implements OnInit {
           this.manual = false;
       }
     }
+
+    this.progressSpinner = false;
     
   }
   perPage(perPage){

@@ -70,7 +70,7 @@ export class DatosConfColaComponent implements OnInit {
     },
   ];
 
-  @Output() actualizaBotonConfCola = new EventEmitter<String>();
+  //@Output() actualizaBotonConfCola = new EventEmitter<String>();
 
   constructor(private persistenceService: PersistenceService,
     private translateService: TranslateService,
@@ -98,7 +98,7 @@ export class DatosConfColaComponent implements OnInit {
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
         let configuracionCola: ConfiguracionCola = {
-          'manual': true,
+          'manual': false,
           'porGrupos': this.body.porGrupos,
           'idConjuntoGuardia': 0,
           "fromCombo": false,
@@ -108,7 +108,8 @@ export class DatosConfColaComponent implements OnInit {
         this.body.rotarComponentes = data.rotarComponentes == "1" ? true : false;
         this.body.idGuardia = data.idGuardia;
         this.body.idTurno = data.idTurno;
-        this.getPerfilesSeleccionados();
+        //Evitar llamada innecesaria si ya hay un valor inicial
+        if (!this.pesosExistentes){ this.getPerfilesSeleccionados();}
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         if (this.modoEdicion) this.getResumen();
       });
@@ -265,6 +266,7 @@ export class DatosConfColaComponent implements OnInit {
       this.getPerfilesExistentes();
 
     } else {
+
       this.sigaServices
         .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idOrdenacionColas)
         .subscribe(
@@ -404,7 +406,7 @@ export class DatosConfColaComponent implements OnInit {
   cambiaMinimo(event){
     this.body.letradosGuardia = event;
     let configuracionCola: ConfiguracionCola = {
-      'manual': true,
+      'manual': false,
       'porGrupos': this.body.porGrupos,
       'idConjuntoGuardia': 0,
       "fromCombo": false,
@@ -415,7 +417,7 @@ export class DatosConfColaComponent implements OnInit {
   cambiaGrupo() {
     this.body.rotarComponentes = this.body.porGrupos;
     let configuracionCola: ConfiguracionCola = {
-      'manual': true,
+      'manual': false,
       'porGrupos': this.body.porGrupos,
       'idConjuntoGuardia': 0,
       "fromCombo": false,
@@ -562,7 +564,7 @@ export class DatosConfColaComponent implements OnInit {
     }
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
-    this.actualizaBotonConfCola.emit(this.ordenacion);
+    //this.actualizaBotonConfCola.emit(this.ordenacion);
   }
 
   getFichaPosibleByKey(key): any {

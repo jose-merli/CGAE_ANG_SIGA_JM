@@ -4,7 +4,7 @@
 </div>
 <div *ngIf="show" style="margin-bottom: -10px;">
   <app-tabla-resultado-order [permisosEscritura]="permisosEscritura"  [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo" [listaGuardias]="true" (saveGuardiasEnLista) = "saveGuardias($event);" [lista]="this.lista"
-  [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (rest)="resetTabla($event)"  (delete)="eliminarGuardias($event);">
+  [pantalla] = "'listaGuardias'" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (rest)="resetTabla($event)"  (delete)="eliminarGuardias($event);">
   </app-tabla-resultado-order>
 </div>
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmEliminar" width="425"

@@ -77,7 +77,7 @@
         
         <app-tabla-resultado-order [pantalla]="'colaGuardias'"
           [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="this.ordenacionManual" [cabeceras]="cabeceras"
-          [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="6"
+          [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="this.ordenacionManual ? 6 : 5"
           [minimoLetrado]="minimoLetrado"  [guardiaComunicar]="guardiaComunicar"
           (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)"
           (colaGuardiaModified)="updateColaGuardia($event)" (colaGuardiaOrdenada)="colaGuardiaOrdenada($event)"

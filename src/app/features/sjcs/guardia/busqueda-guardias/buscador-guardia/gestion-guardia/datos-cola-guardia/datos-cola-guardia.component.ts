@@ -56,7 +56,7 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
   selectedItemSaltosCompensaciones: number = 3;
   cabeceras = [];
   configuracionCola: ConfiguracionCola = {
-    'manual': true,
+    'manual': false,
     'porGrupos': true,
     'idConjuntoGuardia': 0,
     "fromCombo": false,
@@ -113,8 +113,9 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
        
         //this.getColaGuardia();
       });
-      this.body.ordenacionManual = false;
+      this.body.ordenacionManual = false;      
       this.inicio();
+      
   }
 
   ngAfterViewInit(): void {
@@ -136,45 +137,45 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
   this.suscription.unsubscribe();
  }
 inicio(){
+
   this.datos = [];
     this.historico = this.persistenceService.getHistorico();
     this.sigaService.datosRedy$.subscribe(
       data => {
-        if (data.body)
-          data = JSON.parse(data.body)
 
-        this.body.nombre = data.nombre;
+          if (data.body)
+            data = JSON.parse(data.body)
 
-        this.body.porGrupos = data.porGrupos;
-        // this.selectionMode = data.porGrupos ? "multiple" : "single"
-        this.body.idOrdenacionColas = data.idOrdenacionColas;
-        this.body.idGuardia = data.idGuardia;
-        this.body.idTurno = data.idTurno;
-        this.body.idPersonaUltimo = data.idPersonaUltimo;
-        this.body.idGrupoUltimo = data.idGrupoUltimo;
-        this.body.porGrupos = data.porGrupos == "1" ? true : false;
-        this.body.letradosIns = new Date();
-        
-        if (this.configuracionCola.manual && this.configuracionCola.porGrupos){
-          this.body.porGrupos = true;
-          this.isOrdenacionManual();
-        } else {
-          this.body.porGrupos = false;
-          this.isOrdenacionManual();
-        }
-        if (this.body.porGrupos) {
-          this.body.ordenacionManual = true;
-          this.editable = true;
-          this.botActivos = true;
-        }
-        this.sigaService.get("institucionActual").subscribe(n => {
-          if(this.body != undefined) this.body.idInstitucion = n.value;
-          this.guardiaComunicar = this.body;
-        });
+          this.body.nombre = data.nombre;
 
-        
+          this.body.porGrupos = data.porGrupos;
+          // this.selectionMode = data.porGrupos ? "multiple" : "single"
+          this.body.idOrdenacionColas = data.idOrdenacionColas;
+          this.body.idGuardia = data.idGuardia;
+          this.body.idTurno = data.idTurno;
+          this.body.idPersonaUltimo = data.idPersonaUltimo;
+          this.body.idGrupoUltimo = data.idGrupoUltimo;
+          this.body.porGrupos = data.porGrupos == "1" ? true : false;
+          this.body.letradosIns = new Date();
+          
+          if (this.configuracionCola.manual && this.configuracionCola.porGrupos){
+            this.body.porGrupos = true;
+            this.isOrdenacionManual();
+          } else {
+            this.body.porGrupos = false;
+            this.isOrdenacionManual();
+          }
+          if (this.body.porGrupos) {
+            //this.body.ordenacionManual = true; // Esto ya se evalua dentro de isOrdenacionManual()
+            this.editable = true;
+            this.botActivos = true;
+          }
+          this.sigaService.get("institucionActual").subscribe(n => {
+            if(this.body != undefined) this.body.idInstitucion = n.value;
+            this.guardiaComunicar = this.body;
+          });
+
       });
-
 
 }
   
@@ -393,59 +394,6 @@ inicio(){
   }
 
   getColaGuardia() {
-
-    if(this.body.ordenacionManual == true) {
-      this.cabeceras = [
-        {
-          id: "grupo",
-          name: "dato.jgr.guardia.guardias.grupo"
-        },
-        {
-          id: "orden",
-          name: "dato.jgr.guardia.guardias.ordenCola"
-        },
-        {
-          id: "ncolegiado",
-          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
-        },
-        {
-          id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
-        },
-        {
-          id: "fechavalidez",
-          name: "dato.jgr.guardia.guardias.fechaValidez"
-        },
-        {
-          id: "fechabaja",
-          name: "dato.jgr.guardia.guardias.fechaBaja"
-        }
-      ];
-    } else {
-      this.cabeceras = [
-        {
-          id: "orden",
-          name: "dato.jgr.guardia.guardias.ordenCola"
-        },
-        {
-          id: "ncolegiado",
-          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
-        },
-        {
-          id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
-        },
-        {
-          id: "fechavalidez",
-          name: "dato.jgr.guardia.guardias.fechaValidez"
-        },
-        {
-          id: "fechabaja",
-          name: "dato.jgr.guardia.guardias.fechaBaja"
-        }
-      ];
-    }
-
     if (this.body.letradosIns instanceof Date) // Se comprueba si es una fecha por si es necesario cambiar el formato.
       this.transformDate(this.body.letradosIns); // Si no es una fecha es que ya está formateada porque viene del back.
     this.progressSpinner = true;
@@ -517,6 +465,7 @@ inicio(){
         }
 
         sessionStorage.setItem("ordenacionManual", "true");
+        this.manual = true;
 
         objArr.cells = [
           //{ type: 'text', value: datoObj.ordenCola },
@@ -540,6 +489,7 @@ inicio(){
           
         ];
       } else {
+        this.manual = false;
         objArr.cells = [
           //{ type: 'text', value: datoObj.ordenCola },
          
@@ -573,13 +523,57 @@ inicio(){
     this.rowGroups = this.trmService.getTableData(this.processedData);
     this.rowGroupsAux = this.trmService.getTableData(this.processedData);
     this.totalRegistros = this.rowGroups.length;
-
-    if (this.configuracionCola.manual) {
-      this.manual = true;
-    } else{
-      this.manual = false;
+    if(this.body.ordenacionManual == true) {
+      this.cabeceras = [
+        {
+          id: "grupo",
+          name: "dato.jgr.guardia.guardias.grupo"
+        },
+        {
+          id: "orden",
+          name: "dato.jgr.guardia.guardias.ordenCola"
+        },
+        {
+          id: "ncolegiado",
+          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
+        },
+        {
+          id: "apellidosnombre",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
+        },
+        {
+          id: "fechavalidez",
+          name: "dato.jgr.guardia.guardias.fechaValidez"
+        },
+        {
+          id: "fechabaja",
+          name: "dato.jgr.guardia.guardias.fechaBaja"
+        }
+      ];
+    } else {
+      this.cabeceras = [
+        {
+          id: "orden",
+          name: "dato.jgr.guardia.guardias.ordenCola"
+        },
+        {
+          id: "ncolegiado",
+          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
+        },
+        {
+          id: "apellidosnombre",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
+        },
+        {
+          id: "fechavalidez",
+          name: "dato.jgr.guardia.guardias.fechaValidez"
+        },
+        {
+          id: "fechabaja",
+          name: "dato.jgr.guardia.guardias.fechaBaja"
+        }
+      ];
     }
-
   }
 
   colaGuardiaOrdenada(event){
@@ -809,17 +803,25 @@ inicio(){
   isOrdenacionManual() {
     //this.progressSpinner = true;
     this.body.ordenacionManual = false;
+    //if (this.openFicha) {
+    //  this.openFicha = false;
+    //}
 
     this.sigaService
       .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idOrdenacionColas)
       .subscribe(
         n => {
           n.colaOrden.forEach(it => {
-            if (it.por_filas == "ORDENACIONMANUAL" && + it.numero != 0)
+            if (it.por_filas == "ORDENACIONMANUAL" && + it.numero != 0){
               this.body.ordenacionManual = true;
+              this.manual = true;
+              sessionStorage.setItem("ordenacionManual", "true");
+            }
           });
 
           if (!this.body.ordenacionManual) {
+            sessionStorage.removeItem("ordenacionManual");
+            this.manual = false;
             this.botActivos = false;
             this.editable = false;
           } else {

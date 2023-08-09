@@ -1,123 +1,157 @@
 
 <div class="row w-100 mb100">
-      <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-        <div class="col-lg-3 col-md-3 w-100 messageBox" *ngIf="msgInfo">
-                {{textoInformativo}}
-        </div>
+    <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+    <div class="col-lg-3 col-md-3 w-100 messageBox" *ngIf="msgInfo">
+        {{textoInformativo}}
+    </div>
 
+    <div class="padding-interior"> 
+        <app-paginador (pageNumber)="getPageNumber($event)" (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]=totalRegistros ></app-paginador>
+    </div>
 
-        <div class="padding-interior"> 
-            <app-paginador (pageNumber)="getPageNumber($event)" (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]=totalRegistros ></app-paginador>
-          </div>
-
-
-<div class="col-lg-11 col-md-11 table" matSort #table>
-    <div class="table-header ">
-        <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
-            <div>
-                <div [mat-sort-header]=cabecera.id >{{cabecera.name | translate}}</div>
-                <input type="text" class="form-control" pInputTex  [(ngModel)]="searchText[j]" (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
+    <div *ngIf="!manual && pantalla=='colaGuardias'" class="col-lg-12 col-md-12 table" matSort #table>    
+        <div class="table-header ">
+            <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
+                <div>
+                    <div [mat-sort-header]=cabecera.id >{{cabecera.name | translate}}</div>
+                    <input type="text" class="form-control" pInputTex  [(ngModel)]="searchText[j]" (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
+                </div>
             </div>
-        </div>
-    </div> 
-    <div *ngFor='let row of rowGroups | slice:from:to; let i = index' class="table-row child">
-     
-              <div (click)="selectRow(i, row)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}">
-            
-            <div *ngFor="let cell of row['cells'] | slice:fromSlice:toSlice; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'borders-child-last': isLast(i)}" #cellSelected>
-                <div class="w100 breakWord cell-wrapper selectedRowClass">
-                    <span class="w100 cell-value" *ngIf="cell.type != 'inputNumber' && cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency' && cell.type != 'selectDependency2' && cell.type != 'invisible' && cell.type != 'link' && cell.type != 'link2' && cell.type != 'textNew' && cell.type != 'linkNew'">
-                        <input *ngIf="cell.value != null" type="text"  (change)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value">
-                        <input *ngIf="cell.value == null" type="text"  (input)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="">
-                    </span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'text' && cell.type != 'invisible'">{{cell?.value || ''}}</span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'textNew' && cell.type != 'invisible'">{{cell?.value || ''}}</span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'inputNumber'&& cell.type != 'invisible'"><input type="number" min="1" m  (change)="valueChange(i, z, $event)" [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'link' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'linkNew' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'link2' && cell.type != 'invisible'" class="enlace" (click)="openTab2(row)">{{cell.value}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeTurno(cell.value, row)"
-                                                                                    [options]="comboTurno" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
-                                                                                    [showClear]="true" [ngClass]="styleObligatorio(cell.required , cell.value)">
-                                                                                </p-dropdown></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'select' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" 
-                                                                                    [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
-                                                                                    [showClear]="true">
-                                                                                </p-dropdown></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency2' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeGuardia(row)"
-                                                                                    [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
-                                                                                    [showClear]="true" [ngClass]="styleObligatorio(cell.required , cell.value)">
-                                                                                </p-dropdown></span>
-                                                                                
-                    <!--<span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left"></button></span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'"> <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
-                    </p-checkbox></span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'"><app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)"	(valueChangeInput)="fillFechaIncorporacionDesde($event)">	
-                    </app-fecha></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'select'"><app-selector class="center" [i]="0" [textoVisible]="" [selector]="cell.value"></app-selector></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'link'"><a>{{cell.value}}</a></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'download'"><i class="pointer fa fa-download"></i></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'">
-                        <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[0]">
-                    <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[1]">
-                    <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[2]">
-                    <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[3]">
-                    <app-selector [textoVisible]="cell.value[4]" [i]="0" [selector]="cell.value"></app-selector>
-                    </span>
-                    <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'">
-                        <app-selector [i]="0" [selector]="cell.value"></app-selector>
-                        <input type="text" class="form-control mt-2" pInputText   [placeholder]="cell.value">
-                    </span>-->
+        </div> 
+        <div *ngFor='let row of rowGroups | slice:from:to; let i = index' class="table-row child">
+            <div (click)="selectRow(i, row)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}">
+                <div *ngFor="let cell of row['cells'] | slice:fromSlice:toSlice; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'borders-child-last': isLast(i)}" #cellSelected>
+                    <div class="w100 breakWord cell-wrapper selectedRowClass">
+                        <span class="w100 cell-value" *ngIf="cell.type != 'inputNumber' && cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency' && cell.type != 'selectDependency2' && cell.type != 'invisible' && cell.type != 'link' && cell.type != 'link2' && cell.type != 'textNew' && cell.type != 'linkNew'">
+                            <input *ngIf="cell.value != null" type="text"  (change)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value">
+                            <input *ngIf="cell.value == null" type="text"  (input)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="">
+                        </span>                        
+                        <span class="w100 cell-value" *ngIf="cell.type == 'text' && cell.type != 'invisible'">{{cell?.value || ''}}</span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'textNew' && cell.type != 'invisible'">{{cell?.value || ''}}</span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'inputNumber'&& cell.type != 'invisible'"><input type="number" min="1" m  (change)="valueChange(i, z, $event)" [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'link' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'linkNew' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'link2' && cell.type != 'invisible'" class="enlace" (click)="openTab2(row)">{{cell.value}}</span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeTurno(cell.value, row)"
+                                                                                        [options]="comboTurno" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                                                                                        [showClear]="true" [ngClass]="styleObligatorio(cell.required , cell.value)">
+                                                                                    </p-dropdown></span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'select' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" 
+                                                                                        [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                                                                                        [showClear]="true">
+                                                                                    </p-dropdown></span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency2' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeGuardia(row)"
+                                                                                        [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                                                                                        [showClear]="true" [ngClass]="styleObligatorio(cell.required , cell.value)">
+                                                                                    </p-dropdown></span>
+                                                                                    
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div *ngIf="pantalla != 'colaGuardias' || manual" class="col-lg-1 col-md-1 centerAlign row" style="border-right-style: inset;">
-    <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="isDisabledByEstado || disableButton('up') || isLetrado" class="pointer p-2" (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
-    <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="isDisabledByEstado || disableButton('down') || isLetrado" class="pointer p-2" (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
-</div>
-
-<div *ngIf="pantalla == 'colaGuardias' && manual == false" class="col-lg-1 col-md-1 centerAlign row" style="border-right-style: inset;">
+    <div *ngIf="(pantalla=='colaGuardias' && manual) || pantalla!='colaGuardias'" class="col-lg-11 col-md-11 table" matSort #table>    
+        <div class="table-header ">
+            <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
+                <div>
+                    <div [mat-sort-header]=cabecera.id >{{cabecera.name | translate}}</div>
+                    <input type="text" class="form-control" pInputTex  [(ngModel)]="searchText[j]" (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
+                </div>
+            </div>
+        </div> 
+        <div *ngFor='let row of rowGroups | slice:from:to; let i = index' class="table-row child">
+            <div (click)="selectRow(i, row)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}">
+                <div *ngFor="let cell of row['cells'] | slice:fromSlice:toSlice; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'borders-child-last': isLast(i)}" #cellSelected>
+                    <div class="w100 breakWord cell-wrapper selectedRowClass">
+                        <span class="w100 cell-value" *ngIf="cell.type != 'inputNumber' && cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency' && cell.type != 'selectDependency2' && cell.type != 'invisible' && cell.type != 'link' && cell.type != 'link2' && cell.type != 'textNew' && cell.type != 'linkNew'">
+                            <input *ngIf="cell.value != null" type="text"  (change)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value">
+                            <input *ngIf="cell.value == null" type="text"  (input)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="">
+                        </span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'text' && cell.type != 'invisible'">{{cell?.value || ''}}</span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'textNew' && cell.type != 'invisible'">{{cell?.value || ''}}</span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'inputNumber'&& cell.type != 'invisible'"><input type="number" min="1" m  (change)="valueChange(i, z, $event)" [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value"></span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'link' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'linkNew' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'link2' && cell.type != 'invisible'" class="enlace" (click)="openTab2(row)">{{cell.value}}</span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeTurno(cell.value, row)"
+                                                                                        [options]="comboTurno" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                                                                                        [showClear]="true" [ngClass]="styleObligatorio(cell.required , cell.value)">
+                                                                                    </p-dropdown></span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'select' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" 
+                                                                                        [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                                                                                        [showClear]="true">
+                                                                                    </p-dropdown></span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency2' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeGuardia(row)"
+                                                                                        [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+                                                                                        [showClear]="true" [ngClass]="styleObligatorio(cell.required , cell.value)">
+                                                                                    </p-dropdown></span>
+                                                                                    
+                        <!--<span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left"></button></span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'"> <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
+                        </p-checkbox></span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'"><app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)"	(valueChangeInput)="fillFechaIncorporacionDesde($event)">	
+                        </app-fecha></span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'select'"><app-selector class="center" [i]="0" [textoVisible]="" [selector]="cell.value"></app-selector></span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'link'"><a>{{cell.value}}</a></span>
+                        <span class="w100 cell-value" *ngIf="cell.type == 'download'"><i class="pointer fa fa-download"></i></span>
+                        <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'">
+                            <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[0]">
+                        <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[1]">
+                        <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[2]">
+                        <input type="text" class="form-control " pInputText   size="10" [placeholder]="cell.value[3]">
+                        <app-selector [textoVisible]="cell.value[4]" [i]="0" [selector]="cell.value"></app-selector>
+                        </span>
+                        <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'">
+                            <app-selector [i]="0" [selector]="cell.value"></app-selector>
+                            <input type="text" class="form-control mt-2" pInputText   [placeholder]="cell.value">
+                        </span>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="(pantalla=='colaGuardias' && manual) || pantalla!='colaGuardias'" class="col-lg-1 col-md-1" style="display: flex;flex-direction: column;justify-content: space-around;align-items: center;">
+        <div><button class="styledBut" [disabled]="isDisabledByEstado || disableButton('up') || isLetrado" class="pointer p-2" (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
+        <div><button class="styledBut" [disabled]="isDisabledByEstado || disableButton('down') || isLetrado" class="pointer p-2" (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
+    </div>
     
-</div>
 </div>
 
 <div class="card-footer pt-5">
-        <div class="text-right main-button butBottom">
-          <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled || isLetrado"
-            (click)="guardar(marcadoultimo)"></button>
-           <button *ngIf="!calendarios && !listaGuardias"  pButton type="button" icon="fa fa-reply" iconPos="left" label="Duplicar" [disabled]="!porGrupos ||(!anySelectedBol && !isLetrado)  || isLetrado"
-                  (click)="duplicar(); showMsg('success', 'Se ha duplicado correctamente', '')"></button>
-            <button [disabled]="(!anySelectedBol && !isLetrado)  || isLetrado" *ngIf="!calendarios && !listaGuardias && pantalla == 'colaGuardias'"  (click)="nuevoSaltoComp()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo salto / Comp."></button>
-            <button [disabled]="(!anySelectedBol && !isLetrado)  || isLetrado || disUltimo" *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="" iconPos="left" label="Marcar último"
-                  (click)="moveToLast(); showMsg('success', 'Se ha marcado el último correctamente', '')"></button>
-            <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar" [disabled]="isLetrado"
-                (click)="navigateComunicar(selectedArray)"></button>
-            <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-                  (click)="restablecer()" [disabled]="!permisosEscritura || isLetrado || isDisabledByEstado"></button>
-            <button *ngIf="listaGuardias" [disabled]="(!anySelectedBol  || !permisosEscritura)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Eliminar"
-                  (click)="eliminar()"></button>
-            <button *ngIf="listaGuardias" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"
-                  (click)="nuevaGuardia()" [disabled]="!permisosEscritura"></button>
-            <button *ngIf="listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-                  (click)="saveGuardias()" [disabled]="!permisosEscritura || isLetrado"></button>
-            
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabledByEstado ||isDisabled"
-                  (click)="saveCal()"></button>
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Descargar LOG" [disabled]="(isDisabled || rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0) || selectedArray.length > 1 || selectedArray.length == 0)"
-                  (click)="descargarLog()"></button>
-                  <!--<a [href]="'data:application/octet-stream;base64,' + data | safe" download="excel.xls">Download</a>-->
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Añadir letrado" [disabled]="(rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)) || !esFinalizado"
-                  (click)="anadirLetrado()"></button>
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="isDisabledByEstado"
-                  (click)="eliminar()"></button>
-              <!--  <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)|| estado != 'Pendiente' || rowwSelected.length > 1"
-                    (click)="eliminar()"></button>-->  
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Nuevo" [disabled]="isDisabledByEstado"
-                  (click)="nuevo()"></button>
-        </div>
+    <div class="text-right main-button butBottom">
+        <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled || isLetrado"
+        (click)="guardar(marcadoultimo)"></button>
+        <button *ngIf="!calendarios && !listaGuardias"  pButton type="button" icon="fa fa-reply" iconPos="left" label="Duplicar" [disabled]="!porGrupos ||(!anySelectedBol && !isLetrado)  || isLetrado"
+                (click)="duplicar(); showMsg('success', 'Se ha duplicado correctamente', '')"></button>
+        <button [disabled]="(!anySelectedBol && !isLetrado)  || isLetrado" *ngIf="!calendarios && !listaGuardias && pantalla == 'colaGuardias'"  (click)="nuevoSaltoComp()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo salto / Comp."></button>
+        <button [disabled]="(!anySelectedBol && !isLetrado)  || isLetrado || disUltimo" *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="" iconPos="left" label="Marcar último"
+                (click)="moveToLast(); showMsg('success', 'Se ha marcado el último correctamente', '')"></button>
+        <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar" [disabled]="isLetrado"
+            (click)="navigateComunicar(selectedArray)"></button>
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
+                (click)="restablecer()" [disabled]="!permisosEscritura || isLetrado || isDisabledByEstado"></button>
+        <button *ngIf="listaGuardias" [disabled]="(!anySelectedBol  || !permisosEscritura)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Eliminar"
+                (click)="eliminar()"></button>
+        <button *ngIf="listaGuardias" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"
+                (click)="nuevaGuardia()" [disabled]="!permisosEscritura"></button>
+        <button *ngIf="listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+                (click)="saveGuardias()" [disabled]="!permisosEscritura || isLetrado"></button>
+        
+        <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabledByEstado ||isDisabled"
+                (click)="saveCal()"></button>
+        <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Descargar LOG" [disabled]="(isDisabled || rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0) || selectedArray.length > 1 || selectedArray.length == 0)"
+                (click)="descargarLog()"></button>
+                <!--<a [href]="'data:application/octet-stream;base64,' + data | safe" download="excel.xls">Download</a>-->
+        <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Añadir letrado" [disabled]="(rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)) || !esFinalizado"
+                (click)="anadirLetrado()"></button>
+        <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="isDisabledByEstado"
+                (click)="eliminar()"></button>
+            <!--  <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)|| estado != 'Pendiente' || rowwSelected.length > 1"
+                (click)="eliminar()"></button>-->  
+        <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Nuevo" [disabled]="isDisabledByEstado"
+                (click)="nuevo()"></button>
+    </div>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

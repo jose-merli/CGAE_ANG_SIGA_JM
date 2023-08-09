@@ -103,6 +103,7 @@ export class TarjetaColaGuardias implements OnInit {
   selectionMode: string = "multiple";
   pesosSeleccionadosTarjeta2;
   turnosItem2;
+  visita;
   @Input() turnosItem: TurnosItems;
   @Input() modoEdicion;
   @Input() idTurno;
@@ -193,18 +194,6 @@ export class TarjetaColaGuardias implements OnInit {
                 if (this.guardias != undefined && this.guardias.length > 0) {
                   this.turnosItem.idcomboguardias = this.guardias[0].value;
 
-                  var datosColaGuardia = {
-                    idGuardia: this.turnosItem.idcomboguardias,
-                    idTurno: this.idTurno
-                  };
-              
-                  this.sigaServices.post("busquedaGuardias_getGuardia", datosColaGuardia).subscribe(
-                    n => {
-                      this.datos = JSON.parse(n.body);
-              
-                      this.sigaServices.notifysendDatosRedy(n);
-                    }
-                  );
                   this.cargarTabla(this.turnosItem.idcomboguardias);
                   this.getCols();
                   //this.inicio();
@@ -236,6 +225,7 @@ export class TarjetaColaGuardias implements OnInit {
   }
 
   ngOnInit() {
+    this.visita = 0;
     this.commonsService.checkAcceso(procesos_oficio.colaDeGuardia)
     .then(respuesta => {
       this.permisosTarjeta = respuesta;
@@ -272,43 +262,46 @@ export class TarjetaColaGuardias implements OnInit {
   }
 
   inicio(){
+    this.visita = 0;
 
     this.datos = [];
       this.historico = this.persistenceService.getHistorico();
       this.sigaServices.datosRedy$.subscribe(
         data => {
-          if (data.body)
-            data = JSON.parse(data.body)
-  
-          this.body.nombre = data.nombre;
-  
-          this.body.porGrupos = data.porGrupos;
-          
-          this.body.idOrdenacionColas = data.idOrdenacionColas;
-          this.body.idGuardia = data.idGuardia;
-          this.body.idTurno = data.idTurno;
-          this.body.idPersonaUltimo = data.idPersonaUltimo;
-          this.body.idGrupoUltimo = data.idGrupoUltimo;
-          this.body.porGrupos = data.porGrupos == "1" ? true : false;
-          this.body.letradosIns = new Date();
-          
-          if (this.configuracionCola.manual && this.configuracionCola.porGrupos){
-            this.body.porGrupos = true;
-            this.isOrdenacionManual();
-          } else {
-            this.body.porGrupos = false;
-            this.isOrdenacionManual();
+          if (this.visita == 0){          
+            if (data.body)
+              data = JSON.parse(data.body)
+    
+            this.body.nombre = data.nombre;
+    
+            this.body.porGrupos = data.porGrupos;
+            
+            this.body.idOrdenacionColas = data.idOrdenacionColas;
+            this.body.idGuardia = data.idGuardia;
+            this.body.idTurno = data.idTurno;
+            this.body.idPersonaUltimo = data.idPersonaUltimo;
+            this.body.idGrupoUltimo = data.idGrupoUltimo;
+            this.body.porGrupos = data.porGrupos == "1" ? true : false;
+            this.body.letradosIns = new Date();
+            
+            if (this.configuracionCola.manual && this.configuracionCola.porGrupos){
+              this.body.porGrupos = true;
+              this.isOrdenacionManual();
+            } else {
+              this.body.porGrupos = false;
+              this.isOrdenacionManual();
+            }
+            if (this.body.porGrupos) {
+              this.ordenacionManual = true;
+              this.botActivos = true;
+            }
+            this.sigaServices.get("institucionActual").subscribe(n => {
+              if(this.body != undefined) this.body.idInstitucion = n.value;
+              this.guardiaComunicar = this.body;
+            });
           }
-          if (this.body.porGrupos) {
-            this.ordenacionManual = true;
-            this.botActivos = true;
-          }
-          this.sigaServices.get("institucionActual").subscribe(n => {
-            if(this.body != undefined) this.body.idInstitucion = n.value;
-            this.guardiaComunicar = this.body;
-          });
-  
-          
+          //console.log(this.visita); // Cada vez que se abre/cierra la tarjeta se incrementa el num de llamadas TT
+          this.visita++;          
         });
   
   
@@ -319,7 +312,7 @@ export class TarjetaColaGuardias implements OnInit {
     this.body.ordenacionManual = false;
 
     this.sigaServices
-      .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idordenacioncolas)
+      .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idOrdenacionColas)
       .subscribe(
         n => {
           n.colaOrden.forEach(it => {
@@ -395,15 +388,17 @@ export class TarjetaColaGuardias implements OnInit {
       idTurno: this.idTurno
     };
 
+    
     this.sigaServices.post("busquedaGuardias_getGuardia", datosColaGuardia).subscribe(
       n => {
         this.datos = JSON.parse(n.body);
 
         this.sigaServices.notifysendDatosRedy(n);
 
-        this.obtieneConfiguracionCola(n.body);
+       // this.obtieneConfiguracionCola(n.body);
       }
     );
+    
 
     if (event.value != null) {
       this.turnosItem.idcomboguardias = event.value;
@@ -1430,8 +1425,10 @@ export class TarjetaColaGuardias implements OnInit {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    this.opened.emit(this.openFicha);
-    this.idOpened.emit(key);
+    if(this.openFicha){
+      this.opened.emit(this.openFicha);
+      this.idOpened.emit(key);
+    }    
   }
 
   saltoCompensacion(){

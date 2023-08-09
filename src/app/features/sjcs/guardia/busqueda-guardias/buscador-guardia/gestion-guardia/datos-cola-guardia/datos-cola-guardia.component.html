@@ -110,8 +110,8 @@
               <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" | translate}}</strong>
               
               <app-tabla-resultado-order [permisoEscritura]="permisoEscritura" [pantalla]="'colaGuardias'"
-                [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="true" [cabeceras]="cabeceras"
-                [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="6"
+                [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="manual" [cabeceras]="cabeceras"
+                [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="manual ? 6 : 5"
                 [minimoLetrado]="minimoLetrado" [porGrupos]="porGrupos" [guardiaComunicar]="guardiaComunicar"
                 (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)"
                 (colaGuardiaModified)="updateColaGuardia($event)" (colaGuardiaOrdenada)="colaGuardiaOrdenada($event)"
