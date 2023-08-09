@@ -253,7 +253,7 @@ export class FormularioBusquedaComponent implements OnInit {
       if((select.indexOf(eleValue) > -1)) {
       //  select.splice(select.indexOf(eleValue), 1);
         if(send == "")send+=elementCombo.label;
-        else send+="-"+elementCombo.label;
+        else send+="#"+elementCombo.label;
       }
       i++;
     }
