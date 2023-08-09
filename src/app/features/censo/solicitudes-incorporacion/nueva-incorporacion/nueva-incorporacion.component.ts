@@ -392,7 +392,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
       }
     );
@@ -414,7 +414,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
       }
     );
@@ -485,7 +485,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
               },
               err => {
-                console.log(err);
+                //console.log(err);
                 this.errorDocumentacion = true;
               }
             );
@@ -1410,10 +1410,6 @@ export class NuevaIncorporacionComponent implements OnInit {
                       this.solicitudEditar.idSolicitud = JSON.parse(result.body).id.split(",")[0];
                       this.solicitudEditar.idPersona = JSON.parse(result.body).id.split(",")[1];
 
-                      if (new Date(this.solicitudEditar.fechaEstado) <= new Date()) {
-                        this.veFicha = true;
-                        this.searchSolicitante();
-                      }
                       this.consulta = true;
                       this.pendienteAprobacion = false;
                       sessionStorage.setItem("pendienteAprobacion", "false");
@@ -1435,6 +1431,9 @@ export class NuevaIncorporacionComponent implements OnInit {
 
                       this.progressSpinner = false;
                       this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+
+                      this.veFicha = true;
+                      this.searchSolicitante(); 
                     },
                     error => {
                       //console.log(error);
@@ -1483,44 +1482,42 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   }
 
-  searchSolicitante() {
-    if (this.solicitudEditar.fechaEstado < this.fechaActual) {
-      this.progressSpinner = true;
+  searchSolicitante() {    
+    this.progressSpinner = true;
 
-      this.body = new DatosColegiadosItem();
-      this.body.idPersona = this.solicitudEditar.idPersona;
-      sessionStorage.setItem("consulta", "true");
+    this.body = new DatosColegiadosItem();
+    this.body.idPersona = this.solicitudEditar.idPersona;
+    sessionStorage.setItem("consulta", "true");
 
-      if (this.solicitudEditar.idEstado == "50") {
-        sessionStorage.setItem("solicitudAprobada", "true");
-      }
+    if (this.solicitudEditar.idEstado == "50") {
+      sessionStorage.setItem("solicitudAprobada", "true");
+    }
 
-      this.sigaServices
-        .postPaginado(
-          "busquedaColegiados_searchColegiadoFicha",
-          "?numPagina=1",
-          this.body
-        )
-        .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.solicitante = JSON.parse(data["body"]).colegiadoItem[0];
-            sessionStorage.setItem("personaBody", JSON.stringify(this.solicitante));
-            sessionStorage.setItem("destinatarioCom", "true");
-            sessionStorage.setItem("esColegiado", "true");
-            sessionStorage.setItem("esNuevoNoColegiado", "false");
-            this.router.navigate(["/fichaColegial"]);
+    this.sigaServices
+      .postPaginado(
+        "busquedaColegiados_searchColegiadoFicha",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.solicitante = JSON.parse(data["body"]).colegiadoItem[0];
+          sessionStorage.setItem("personaBody", JSON.stringify(this.solicitante));
+          sessionStorage.setItem("destinatarioCom", "true");
+          sessionStorage.setItem("esColegiado", "true");
+          sessionStorage.setItem("esNuevoNoColegiado", "false");
+          this.router.navigate(["/fichaColegial"]);
 
-          },
-          err => {
-            //console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-          }
-        );
-    } else this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
   }
 
   denegarSolicitud() {
@@ -2576,18 +2573,18 @@ para poder filtrar el dato con o sin estos caracteres*/
       params+="&idSolicitud="+this.solicitudEditar.idSolicitud;
     }
 
-    console.log("Recuperando documentos - params = " + params);
+    //console.log("Recuperando documentos - params = " + params);
 
     this.sigaServices.getParam( "solicitudesInc_getDocRequerida", params )
       .subscribe(
         result => {
           this.documentos = result.documentacionIncorporacionItem;
-          console.log("nueva-incorporacion.component.ts - getDocRequerida() ==> Valor de los documentos = " + JSON.stringify(this.documentos));
+          //console.log("nueva-incorporacion.component.ts - getDocRequerida() ==> Valor de los documentos = " + JSON.stringify(this.documentos));
           this.selectedDatos = [];
           this.showInfoDoc = false;
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
 
@@ -2629,11 +2626,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
       this.progressSpinner = true;
 
-      console.log("nueva-incorporacion.component.ts - save() ==> idSolicitud = " + this.solicitudEditar.idSolicitud);
-      console.log("Contenido de this.documentos: ");
-      for(let i = 0; i<= this.documentos.length; i++){
-        console.log( this.documentos[i]);
-      }
+      //console.log("nueva-incorporacion.component.ts - save() ==> idSolicitud = " + this.solicitudEditar.idSolicitud);
+      //console.log("Contenido de this.documentos: ");
+      //for(let i = 0; i<= this.documentos.length; i++){
+      //  console.log( this.documentos[i]);
+      //}
       // this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
       this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.fileList, this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
         n => {
@@ -2856,7 +2853,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {}
       );
@@ -2882,7 +2879,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {}
     );
@@ -2907,7 +2904,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {}
     );

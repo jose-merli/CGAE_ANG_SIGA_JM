@@ -906,8 +906,7 @@
     </div>
 
     <div class="mt-3 text-right main-button ">
-        <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
-            label="{{ 'general.boton.volver' | translate}}"></button>
+        
         <button *ngIf="!consulta || isActivoEXEA" id = "buttonGuardar" (click)="checkDatos()" pButton type="button " icon="fa fa-save" iconPos="left"
             label="Guardar" [disabled]="consulta || (isActivoEXEA && solicitudEditar.idEstado == '20')"></button>
         <button (click)="checkDatosAprobar()" [disabled]="isLetrado"
@@ -922,6 +921,10 @@
             pButton type="button " icon="fa fa-download" iconPos="left" label="Descargar Justificante" (click)="downloadJustificante()"></button>
         <button (click)="SolicitarCertificado()" *ngIf="consulta && !isActivoEXEA" disabled pButton type="button "
             icon="fas fa-certificate" iconPos="left" label="Solicitar certificado"></button>
+        <button *ngIf="solicitudEditar.idEstado == '50'" (click)="searchSolicitante()" pButton type="button " icon="fa fa-info-circle" iconPos="left"
+            label="Ir a ficha colegial"></button>
+        <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+            label="{{ 'general.boton.volver' | translate}}"></button>
     </div>
     <app-dialog></app-dialog>
 </div>
