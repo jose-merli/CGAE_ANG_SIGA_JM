@@ -35,7 +35,7 @@
         <label>
           {{"censo.resultadosSolicitudesModificacion.literal.fecha" | translate}}
         </label>
-        <app-fecha [(value)]="datos.fechaActual" [disabledDelete]="true" (valueChangeInput)="fillFechaCalendar($event)"
+        <app-fecha [disabled]="isLetrado" [(value)]="datos.fechaActual" [disabledDelete]="true" (valueChangeInput)="fillFechaCalendar($event)"
           (valueChangeSelected)="fillFechaCalendar($event)"></app-fecha>
       </div>
       <div class="form-group col-xl-3">

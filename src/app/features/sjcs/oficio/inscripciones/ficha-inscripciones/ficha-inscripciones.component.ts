@@ -446,13 +446,12 @@ export class FichaInscripcionesComponent implements OnInit {
 		let fechaDeHoy = new Date();
 		let fechaHoy = this.datepipe.transform(fechaDeHoy, 'dd/MM/yyyy');
 		let fechaActual2 = this.datepipe.transform(this.datos.fechaActual, 'dd/MM/yyyy')
-		if (fechaActual2 != fechaHoy) {
-			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
-		} else {
+		
 			let vb = 0;
 			let body = new InscripcionesObject();
 			body.inscripcionesItem[0] = this.datos;
 			body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
+			body.inscripcionesItem[0].fechasolicitudbaja = this.datos.fechaActual;
 			body.inscripcionesItem[0].observaciones = this.datos.observaciones;
 			if (this.datos.estado == "2") vb++;
 			if (vb > 0 && access == 2) this.checkTrabajosSJCS(body, access);
@@ -482,7 +481,6 @@ export class FichaInscripcionesComponent implements OnInit {
 						this.progressSpinner = false;
 					}
 				);
-			}
 		}
 	}
 

@@ -617,21 +617,23 @@ export class TablaInscripcionesComponent implements OnInit {
     let fechaActual2 = this.datepipe.transform(this.datos.fechaActual, 'dd/MM/yyyy')
     if(fechaActual2 == null || fechaActual2 == undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
       this.mensajeObservaciones();
-    }else if (fechaActual2 != fechaHoy) {
+    }/*else if (fechaActual2 != fechaHoy) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
       this.progressSpinner = false;
-    } else {
+    }*/ else {
       let vb = 0;
       this.body = new InscripcionesObject();
       this.body.inscripcionesItem = selectedDatos;
       this.body.inscripcionesItem.forEach(element => {
         element.fechaActual = this.datos.fechaActual;
+        element.fechasolicitudbaja = this.datos.fechaActual;
         element.observaciones = this.datos.observaciones;
         // OJO REVISAR QUE HACE ESTO !!
         if (element.estado == "2") vb++;
       });
       if (vb > 0 && access == 2) this.checkTrabajosSJCS(this.body, access);
       else {
+        console.log(this.body);
         this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
           data => {
             this.selectedDatos = [];
@@ -846,13 +848,13 @@ export class TablaInscripcionesComponent implements OnInit {
       if (findDato != null) {
         this.disabledSolicitarBaja = true;
       }
-      else {
-        if (currentDateString != selectedDateString) {
+      else {/*
+        if (currentDateString != selectedDateString && this.isLetrado) {
           this.disabledSolicitarBaja = true;
         } else {
           this.disabledSolicitarBaja = false;
-        }
-
+        }*/
+        this.disabledSolicitarBaja = false;
       }
       let findDato2 = this.selectedDatos.filter(this.esPendienteAltaOpendienteBaja);
       if (findDato2.length == 0) {

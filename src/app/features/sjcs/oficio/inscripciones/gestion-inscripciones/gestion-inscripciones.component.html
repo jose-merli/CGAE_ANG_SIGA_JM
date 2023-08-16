@@ -94,7 +94,7 @@
           <label>
             {{"censo.resultadosSolicitudesModificacion.literal.fecha" | translate}}
           </label>
-          <app-fecha [(value)]="datos.fechaActual" *ngIf="!historico" [disabledDelete]="true"
+          <app-fecha [(value)]="datos.fechaActual" *ngIf="!historico" [disabledDelete]="true" [disabled]="isLetrado"
             (valueChangeInput)="fillFechaCalendar($event)" (valueChangeSelected)="fillFechaCalendar($event)">
           </app-fecha>
         </div>
