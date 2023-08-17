@@ -915,8 +915,9 @@
         <button (click)="denegarSolicitud()" [disabled]="isLetrado"
             *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30') && !isActivoEXEA"
             pButton type="button " icon="fas fa-times" iconPos="left" label="Denegar"></button>
-        <button [disabled]="isLetrado || solicitudEditar.idEstado != '10'" *ngIf="isActivoEXEA" 
-            pButton type="button " icon="fas fa-check" iconPos="left" label="Iniciar EXEA" (click)="openDialog()"></button>
+        <button [disabled]="isLetrado || solicitudEditar.idEstado != '10' ||  disabledAprobar() " *ngIf="isActivoEXEA" 
+            pButton type="button " icon="fas fa-check" iconPos="left" label="Iniciar EXEA" (click)="openDialog()">
+        </button>
         <button *ngIf="isActivoEXEA"  [disabled]="!solicitudEditar.claveConsulta"
             pButton type="button " icon="fa fa-download" iconPos="left" label="Descargar Justificante" (click)="downloadJustificante()"></button>
         <button (click)="SolicitarCertificado()" *ngIf="consulta && !isActivoEXEA" disabled pButton type="button "

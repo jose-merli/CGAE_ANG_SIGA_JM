@@ -1349,6 +1349,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       || this.solicitudEditar.idTipoIdentificacion != this.tipoIdentificacionSelected
       || this.solicitudEditar.idTratamiento != this.tratamientoSelected
       || this.solicitudEditar.idPais != this.paisSelected
+      || this.solicitudEditar.poblacionExtranjera != this.poblacionExtranjeraSelected
       || JSON.stringify(this.solicitudEditar) != JSON.stringify(this.bodyInicial)) {
       return true;
     } else {
@@ -2501,13 +2502,22 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.solicitudEditar.correoElectronico != undefined &&
       this.solicitudEditar.correoElectronico != ""
     ) {
-      this.resaltadoDatosAprobar = false;
-      return true;
-    } else {
+      if (this.isPoblacionExtranjera &&
+        (this.poblacionExtranjeraSelected == undefined ||
+         this.poblacionExtranjeraSelected == null ||
+         this.poblacionExtranjeraSelected == "")
+       ) {
       this.resaltadoDatosAprobar = true;
       return false;
+    } else {
+      this.resaltadoDatosAprobar = false;
+      return true;
     }
+  } else {
+    this.resaltadoDatosAprobar = true;
+    return false;
   }
+}
 
   newDoc(){
 
