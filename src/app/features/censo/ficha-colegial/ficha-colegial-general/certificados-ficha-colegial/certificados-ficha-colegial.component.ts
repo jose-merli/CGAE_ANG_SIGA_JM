@@ -132,7 +132,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
     if (this.idPersona != undefined) {
-      if(this.datosCertificados == undefined){
+      if(this.datosCertificados == undefined || this.datosCertificados.length == 0){
         if(this.tarjetaCertificados == "3" || this.tarjetaCertificados == "2"){
           this.searchCertificados();
         }

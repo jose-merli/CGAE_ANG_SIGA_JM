@@ -443,7 +443,7 @@
         <div class="text-right main-button ">
           <button pButton type="button" iconPos="left" label="{{ 'formacion.boton.generar' | translate }}" [disabled]="!generarCertificado || !activacionEditar"
             (click)="generarSolicitudCertificado()"></button>
-          <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="checkCertificadoAutomatico || !activacionEditar || !editar"
+          <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="checkCertificadoAutomatico || !activacionEditar"
             (click)="actualizarCertificado()"></button>
         </div>
       </div>
