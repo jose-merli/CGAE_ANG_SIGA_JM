@@ -173,7 +173,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     private sigaServices: SigaServices,
     private datePipe: DatePipe,
     private translateService: TranslateService,
-    private sigaStorageService: SigaStorageService,
+    private localStorageService: SigaStorageService,
     private router: Router) { }
 
   ngOnInit() {
@@ -213,7 +213,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       this.establecerDatosInicialesEditAct();
     }
 
-    if (this.sigaStorageService.isLetrado) {
+    if (this.localStorageService.isLetrado) {
       this.fechaMaxima = new Date();
     }
 
