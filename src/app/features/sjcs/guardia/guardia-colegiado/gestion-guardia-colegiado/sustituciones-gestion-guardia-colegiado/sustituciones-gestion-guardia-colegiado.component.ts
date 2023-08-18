@@ -54,6 +54,9 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
       this.newLetrado = this.usuarioBusquedaExpress.idPersona;
       this.fechaSustitucion = new Date();
     }
+    if(this.body.comensustitucion){
+      this.comensustitucion = this.body.comensustitucion;
+    }
   }
 
   confirmSustituir(mover: boolean): Promise<void> {
@@ -63,6 +66,7 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
       : this.translateService.instant("justiciaGratuita.guardiasColegiado.sustitucion.mensajeConfirmacion");
 
     return new Promise((resolve1, reject1) => {
+      console.log("Entra en la promesa");
       this.confirmationService.confirm({
         message: mess,
         icon: icon,
@@ -77,33 +81,43 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
   
   
   async sustituir() {
+    console.log("Click en sustituir");
+    let letradoSus;
     if((this.newLetrado != undefined || this.newLetrado != null) && (this.fechaSustitucion != undefined || this.fechaSustitucion != null)) {
-      if (this.salto && this.compensacion) {
-        this.saltoOcompensacion = "S/C";
-      } else if (this.salto && !this.compensacion) {
-        this.saltoOcompensacion = "S";
-      } else if (!this.salto&& this.compensacion) {
-        this.saltoOcompensacion = "C";
-      } else {
-        this.saltoOcompensacion = "N";
-      }
-
-      let letradoSus = [
-        this.body.idTurno,
-        this.body.idGuardia,
-        this.body.fechadesde,
-        this.body.idPersona,
-        //datos para el sustituto
-        this.newLetrado,
-        this.fechaSustitucion.getTime(),
-        this.comensustitucion,
-        this.saltoOcompensacion,
-        this.body.idCalendarioGuardias,
-        this.body.fechahasta,
-        !this.sigaStorageService.isLetrado
-      ];
-
+      //try{
+        console.log("Entra en newLetrado y fechaSustitucion");
+        if (this.salto && this.compensacion) {
+          this.saltoOcompensacion = "S/C";
+        } else if (this.salto && !this.compensacion) {
+          this.saltoOcompensacion = "S";
+        } else if (!this.salto&& this.compensacion) {
+          this.saltoOcompensacion = "C";
+        } else {
+          this.saltoOcompensacion = "N";
+        }
+        console.log("Después de saltos y compensaciones");
+  
+        let letradoSus = [
+          this.body.idTurno,
+          this.body.idGuardia,
+          this.body.fechadesde,
+          this.body.idPersona,
+          //datos para el sustituto
+          this.newLetrado,
+          this.fechaSustitucion.getTime(),
+          this.comensustitucion,
+          this.saltoOcompensacion,
+          this.body.idCalendarioGuardias,
+          this.body.fechahasta,
+          !this.sigaStorageService.isLetrado
+        ];
+  
+      /*} catch(error){
+        console.log(error);
+      }*/
+      
       try {
+        console.log("Dentro del try");
         this.progressSpinner = true;
         let [facturaciones, asistencias] = await Promise.all([
           this.existeFacturacionGuardiaColegiado(letradoSus),
@@ -117,12 +131,13 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
         }
 
         if (asistencias && this.sigaStorageService.isLetrado) {
+          console.log("Salta error en asistencias");
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.guardiasColegiado.sustitucion.errorTieneAsistencias"));
           return;
         } else {
+          console.log("Saca modal");
           await this.confirmSustituir(asistencias);
         }
-        
         await this.peticionSustituir(letradoSus);
       } catch (error) {
         this.progressSpinner = false;
