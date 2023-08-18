@@ -251,6 +251,7 @@ comprobarValidados(){
 
   nuevaFila() {
     this.clickPermuta = true;
+    this.selectedDatos = [];
 
     let dummy = {
       fechaconfirmacion: "",
@@ -262,6 +263,7 @@ comprobarValidados(){
     };
     this.permutasAux = this.permutas;
     this.permutas = [dummy, ...this.permutas];
+    this.selectedDatos[0] = this.permutas[0];
   }
 
   checkPermutar(){
