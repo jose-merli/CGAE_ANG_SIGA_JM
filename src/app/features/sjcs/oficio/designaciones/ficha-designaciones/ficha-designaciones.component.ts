@@ -2018,6 +2018,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         data => {
           let datos = JSON.parse(data.body);
           if (datos.length != 0) {
+            datos[0].fechaDesignacion = this.formatDate(datos[0].fechaDesignacion);
             this.letrados = datos;
             this.primerLetrado = this.letrados[0];
             if (this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == '') {
@@ -2139,7 +2140,10 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
     this.getPermiteTurno();
     this.searchLetrados();
-    sessionStorage.removeItem('designaItemLink');
+    if(!this.nuevaDesigna){
+      sessionStorage.removeItem('designaItemLink');
+    }
+    
     if (sessionStorage.getItem("datosProcurador")) {
       let tarjProc = this.listaTarjetas.find(tarjProc => tarjProc.id === 'sjcsDesigProc');
       if (tarjProc != undefined) {
