@@ -2450,6 +2450,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   checkCamposObligatoriosAprobar(): boolean {
+    console.log(this.solicitudEditar);
+    console.log(this.solicitudEditar.correoElectronico);
     if (
       this.compruebaDNI() &&
       this.estadoSolicitudSelected != "" &&
