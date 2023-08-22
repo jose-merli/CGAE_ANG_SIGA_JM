@@ -422,6 +422,7 @@ export class FichaRemesasComponent implements OnInit {
         this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa, true);
         this.tarjetaEJGs.getEJGRemesa(this.remesa, true);
         this.progressSpinner = false;
+        this.deshabilitarAniadirExpedientes = false;
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
