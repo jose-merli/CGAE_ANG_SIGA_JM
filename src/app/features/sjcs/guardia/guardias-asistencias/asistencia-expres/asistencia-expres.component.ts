@@ -56,6 +56,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   textoComActivo: string = '[Com] / Juz';
   textoJuzActivo: string = 'Com / [Juz]';
   parametroNProc: any;
+  vieneDeUnaAE: boolean = false;
   @ViewChild(BuscadorAsistenciaExpresComponent) filtrosAE: BuscadorAsistenciaExpresComponent;
   @ViewChild(ResultadoAsistenciaExpresComponent) resultadoAE: ResultadoAsistenciaExpresComponent;
   @ViewChild(BuscadorAsistenciasComponent) filtro : BuscadorAsistenciasComponent;
@@ -87,6 +88,14 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         this.modeSearch = 'b';
       }
     });
+
+    if(sessionStorage.getItem("filtroAsistenciaExpres")){
+      this.modeSearch = 'b';
+      this.searchExpres = true;
+      this.vieneDeUnaAE=true;
+      sessionStorage.setItem("filtroAsistenciaExpresBusqueda", sessionStorage.getItem("filtroAsistenciaExpres"));
+      sessionStorage.removeItem("filtroAsistenciaExpres");
+    }
 
     this.commonServices.checkAcceso(procesos_guardia.asistencias_express).then(respuesta => {
       if(this.searchExpres){
@@ -149,6 +158,10 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         this.filtrosAE.filtro.idLetradoManual = oldIdPersona.nColegiado;
       }
       
+      if(this.vieneDeUnaAE){
+        this.buscarAE();
+      }
+
       sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
       
       }else if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){

@@ -255,6 +255,10 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     }
   }
 
+  guardarFiltroAE(){
+    sessionStorage.setItem("filtroAsistenciaExpres", JSON.stringify(this.filtro));
+  }
+
   nuevaActuacion(){
 
     if(this.tabla.selectedArray.length != 0){

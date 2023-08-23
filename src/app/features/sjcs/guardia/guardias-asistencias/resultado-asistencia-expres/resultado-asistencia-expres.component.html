@@ -3,7 +3,7 @@
 
 <app-tabla-resultado-desplegable [filtroAsistencia]="filtro" [seleccionarTodo]="seleccionarTodo" [ngClass]="{'customCursor': selectMultiple}"
     [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
-    (anySelected)="notifyAnySelected($event)" [pantalla]="pantalla">
+    (anySelected)="notifyAnySelected($event)" [pantalla]="pantalla" (guardarFiltroAE)="guardarFiltroAE()">
 </app-tabla-resultado-desplegable>
 
 

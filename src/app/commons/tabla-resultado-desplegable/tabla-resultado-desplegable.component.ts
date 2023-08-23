@@ -68,6 +68,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Output() numDesignasModificadas = new EventEmitter<any>();
   @Output() numActuacionesModificadas = new EventEmitter<any>();
   @Output() refreshData = new EventEmitter<boolean>();
+  @Output() guardarFiltroAE = new EventEmitter<boolean>();
   msgs: Message[] = [];
   cabecerasMultiselect = [];
   modalStateDisplay = true;
@@ -2259,6 +2260,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.busquedaDesignaciones(id);
     } else if (this.pantalla == "AE" && id) {
       sessionStorage.setItem("modoBusqueda", "b");
+      this.guardarFiltroAE.emit(true);
       sessionStorage.setItem("idAsistencia", id.slice(1));
       this.router.navigate(["/fichaAsistencia"]);
     }
