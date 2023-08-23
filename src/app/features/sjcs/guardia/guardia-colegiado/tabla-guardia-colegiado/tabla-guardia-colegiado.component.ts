@@ -6,6 +6,7 @@ import { GuardiaItem } from '../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { FiltrosGuardiaColegiadoComponent } from '../filtros-guardia-colegiado/filtros-guardia-colegiado.component';
+import { select } from '@syncfusion/ej2-base';
 
 @Component({
   selector: 'app-tabla-guardia-colegiado',
@@ -50,6 +51,11 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
     this.isColegiado = this.isColegiado;
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    this.datos.forEach((guardia)=>{
+      if(guardia.facturado==1){
+        guardia.estadoGuardia=guardia.estadoGuardia.split('*');
+      }
+    });
   }
   isSelectMultiple() {
     if (this.permisoEscritura) {
@@ -110,7 +116,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
 
   rowSelected(selectedDatos){
     let fechaAcutal = new Date();
-    if(selectedDatos.fechaValidacion == null){
+    if(selectedDatos.fechaValidacion == null && selectedDatos.validada!=1){
       this.validar = true;
       this.desvalidar = false;
     }else{
