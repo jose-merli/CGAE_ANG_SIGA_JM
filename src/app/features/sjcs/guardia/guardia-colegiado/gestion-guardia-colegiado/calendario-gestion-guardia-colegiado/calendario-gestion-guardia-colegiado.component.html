@@ -22,8 +22,8 @@
           <label  >{{'administracion.auditoriaUsuarios.fechaHasta' | translate}}: 
             <span>{{calendarioItem.fechaHasta | date: 'dd/MM/yyyy'}}</span>
           </label>
-          <label >{{'dato.jgr.guardia.guardias.generado' | translate}}: 
-            <span>{{calendarioItem.generado}}</span>
+          <label >{{'justiciaGratuita.Calendarios.Observaciones' | translate}}: 
+            <span *ngIf="calendarioItem.observaciones != null">{{calendarioItem.observaciones}}</span>
           </label>
           
           
