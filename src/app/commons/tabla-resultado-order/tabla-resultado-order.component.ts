@@ -1318,7 +1318,7 @@ this.totalRegistros = this.rowGroups.length;
     getComboTurno() {
       this.progressSpinner = true;
       if(this.lista != undefined ){
-        this.sigaServices.getParam("busquedaGuardia_turnoFiltrados", "?idListaGuardias=" + sessionStorage.getItem("idLista")).subscribe(
+        this.sigaServices.getParam("busquedaGuardia_turnoFiltrados", "?idListaGuardias=" + this.lista.idLista).subscribe(
           n => {
             this.progressSpinner = false;
             this.comboTurno = n.combooItems;
