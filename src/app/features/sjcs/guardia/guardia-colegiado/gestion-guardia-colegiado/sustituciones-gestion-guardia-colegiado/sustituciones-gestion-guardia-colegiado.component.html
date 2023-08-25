@@ -80,3 +80,10 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #sustitucionesmodal key="sustitucionesmodal">
+  <p-footer>
+    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="sustitucionesmodal.accept()"></button>
+    <button type="button"  pButton icon="fa-close"  label="No"  (click)="sustitucionesmodal.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

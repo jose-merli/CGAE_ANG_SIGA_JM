@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ConfirmationService } from 'primeng/primeng';
+import { ConfirmationService } from 'primeng/api';
 import { isRegExp } from 'util';
 import { TranslateService } from '../../../../../../commons/translate';
 import { GuardiaItem } from '../../../../../../models/sjcs/GuardiaItem';
@@ -68,6 +68,7 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
     return new Promise((resolve1, reject1) => {
       console.log("Entra en la promesa");
       this.confirmationService.confirm({
+        key: "sustitucionesmodal",
         message: mess,
         icon: icon,
         accept: resolve1,
