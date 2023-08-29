@@ -28,7 +28,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   buscadores = [];
   rowsPerPage: any = [];
   selectMultiple: boolean;
-  selectedDatos = [];
+  selectedDatos;
   selectAll;
   numSelected: number = 0;
   selectedItem: number = 10;
@@ -57,18 +57,19 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
       }
     });
   }
-  isSelectMultiple() {
-    if (this.permisoEscritura) {
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      } else {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
-  }
+
+  // isSelectMultiple() {
+  //   if (this.permisoEscritura) {
+  //     this.selectMultiple = !this.selectMultiple;
+  //     if (!this.selectMultiple) {
+  //       this.selectedDatos = [];
+  //       this.numSelected = 0;
+  //     } else {
+  //       this.selectedDatos = [];
+  //       this.numSelected = 0;
+  //     }
+  //   }
+  // }
 
 
   onChangeRowsPerPages(event) {
@@ -137,8 +138,6 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
 
   confirmValidar(selectedDatos) {
-  
-
       /* let mess = this.translateService.instant(
         "messages.deleteConfirmation"
       ); */
@@ -166,8 +165,6 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
 
   validarGuardia(selectedDatos){
-     
-
     if(selectedDatos.fechaValidacion == null || selectedDatos.fechaValidacion == undefined){
       let guardia = new GuardiaItem();
       guardia.idTurno=selectedDatos.idTurno;
@@ -208,8 +205,6 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
 
   confirmDesValidar(selectedDatos) {
-    
-
       /* let mess = this.translateService.instant(
         "messages.deleteConfirmation"
       ); */
@@ -267,8 +262,6 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
 
   confirmDelete(selectedDatos) {
-    
-
       let mess = this.translateService.instant(
         "messages.deleteConfirmation"
       );

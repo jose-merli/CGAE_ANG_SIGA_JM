@@ -75,10 +75,10 @@
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-          <div class="ml-3 selectAll">
+          <!-- <div class="ml-3 selectAll">
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
               name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
-          </div>
+          </div> -->
         </div>
       </ng-template>
     </p-table>
