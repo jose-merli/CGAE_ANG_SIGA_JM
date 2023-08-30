@@ -23,12 +23,12 @@
             <span style="display: flex; justify-content: center; padding-top: 0.3em;">
               <span style="margin-right: 1em;">
                 <p-radioButton [(ngModel)]='selectedTipo' name="tipoSol" value="0" (click)="reviewEstado()"
-                      label="Alta"></p-radioButton>
+                      label="{{'sjcs.oficio.solicitudes.tipo.alta'|translate}}"></p-radioButton>
               </span>
               <span></span>
               <span>
                 <p-radioButton [(ngModel)]='selectedTipo' name="tipoSol" value="1" (click)="reviewEstado()"
-                      label="Baja"></p-radioButton>
+                      label="{{'sjcs.oficio.solicitudes.tipo.baja'|translate}}"></p-radioButton>
               </span>
             </span>
           </div>

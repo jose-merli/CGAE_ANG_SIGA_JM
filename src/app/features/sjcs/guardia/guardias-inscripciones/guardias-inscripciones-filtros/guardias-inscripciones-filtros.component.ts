@@ -37,14 +37,14 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
     { label: "Denegada", value: 4 }
   ];
   comboEstadosAlta = [
-    { label: "Confirmada", value: "2" },
-    { label: "Denegada", value: "4" },
-    { label: "Pendiente", value: "6" }
+    { label: this.translateService.instant('sjcs.inscripciones.estados.confirmada'), value: "2" },
+    { label: this.translateService.instant('sjcs.inscripciones.estados.denegada'), value: "4" },
+    { label: this.translateService.instant('sjcs.inscripciones.estados.pendiente'), value: "6" }
   ];
   comboEstadosBaja = [
-    { label: "Confirmada", value: "3" },
-    { label: "Denegada", value: "5" },
-    { label: "Pendiente", value: "7" }
+    { label: this.translateService.instant('sjcs.inscripciones.estados.confirmada'), value: "3" },
+    { label: this.translateService.instant('sjcs.inscripciones.estados.denegada'), value: "5" },
+    { label: this.translateService.instant('sjcs.inscripciones.estados.pendiente'), value: "7" }
   ];
   usuarioBusquedaExpress = {
     numColegiado: '',
@@ -55,7 +55,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
   selectedTipo; 
   selectedEstado;
 
-  textSelected: String = 'general.boton.seleccionar';
+  textSelected: String = this.translateService.instant('general.boton.seleccionar');
   @Input() permisoEscritura;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
