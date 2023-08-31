@@ -71,7 +71,8 @@ export class RegtelFichaColegialComponent implements OnInit {
     this.getCols();
     if (
       sessionStorage.getItem('personaBody') != null &&
-      sessionStorage.getItem('personaBody') != undefined &&
+      sessionStorage.getItem('personaBody') != undefined && 
+      sessionStorage.getItem("personaBody") != 'undefined' &&
       JSON.parse(sessionStorage.getItem('esNuevoNoColegiado')) != true
     ) {
       this.generalBody = new FichaColegialGeneralesItem();

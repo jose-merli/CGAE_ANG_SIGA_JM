@@ -104,7 +104,8 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
       this.activacionTarjeta = true;
     }
 
-    if (sessionStorage.getItem("personaBody") && JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true) {
+    if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != 'undefined' 
+        && sessionStorage.getItem("personaBody") && JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true) {
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.getExpedientesSigaColegiado();
     }

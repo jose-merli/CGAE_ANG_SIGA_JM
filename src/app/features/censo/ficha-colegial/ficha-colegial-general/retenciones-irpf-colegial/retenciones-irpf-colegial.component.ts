@@ -122,7 +122,8 @@ export class RetencionesIrpfColegialComponent implements OnInit {
 
     if (
       sessionStorage.getItem("personaBody") != null &&
-      sessionStorage.getItem("personaBody") != undefined &&
+      sessionStorage.getItem("personaBody") != undefined && 
+      sessionStorage.getItem("personaBody") != 'undefined' &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
       this.generalBody = new FichaColegialGeneralesItem();

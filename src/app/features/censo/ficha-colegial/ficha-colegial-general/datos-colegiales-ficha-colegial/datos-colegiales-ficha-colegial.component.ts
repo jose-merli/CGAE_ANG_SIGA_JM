@@ -195,10 +195,13 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
       this.generalBody = new FichaColegialGeneralesItem();
-      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkGeneralBody = new FichaColegialGeneralesItem();
-      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+
+      if(sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != 'undefined'){
+        this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      }
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
@@ -297,10 +300,13 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
       ) {
         this.generalBody = new FichaColegialGeneralesItem();
-        this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         this.checkGeneralBody = new FichaColegialGeneralesItem();
-        this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-        this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        
+        if(sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != 'undefined'){
+          this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+          this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+          this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        }
         if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
         if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
         this.residente = this.colegialesBody.situacionResidente;

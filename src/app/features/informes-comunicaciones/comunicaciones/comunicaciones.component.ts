@@ -132,7 +132,7 @@ export class ComunicacionesComponent implements OnInit {
         sessionStorage.setItem("permisoAbogado", "true");
       }
       if (this.usuario[0].idPerfiles.indexOf("ADM") == -1 && this.usuario[0].idPerfiles.indexOf("ADG") == -1) {
-        if (sessionStorage.getItem("personaBody") != null) {
+        if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != 'undefined') {
           this.personaBody = JSON.parse(sessionStorage.getItem("personaBody"));
           // Obtenemos el desatinatario     
           let persona = this.personaBody.idPersona;
@@ -147,7 +147,7 @@ export class ComunicacionesComponent implements OnInit {
     });
 
     if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
-      if (sessionStorage.getItem("personaBody") != null) {
+      if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != 'undefined') {
         this.personaBody = JSON.parse(sessionStorage.getItem("personaBody"));
         // Obtenemos el desatinatario     
         let persona = this.personaBody.idPersona;

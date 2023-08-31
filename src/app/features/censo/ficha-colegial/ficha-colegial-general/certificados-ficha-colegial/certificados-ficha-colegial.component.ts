@@ -81,13 +81,16 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-    this.generalBody = new FichaColegialGeneralesItem();
-    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.checkGeneralBody = new FichaColegialGeneralesItem();
-    this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
-    if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.checkGeneralBody = new FichaColegialGeneralesItem();
+
+      if(sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != 'undefined'){
+        this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      }
+      if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
+      if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
     }
     
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
