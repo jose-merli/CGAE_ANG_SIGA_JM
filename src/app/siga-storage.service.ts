@@ -10,5 +10,4 @@ export class SigaStorageService {
   institucionActual: string;
   version: string = '1.0.100_3'
   constructor() { }
-
 }
