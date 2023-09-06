@@ -855,8 +855,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
         el.fechasolicitudbajaNUEVA = el.fechaActual;
         el.observacionessolicitudNUEVA = el.observaciones;
 
-        if (this.formatDate(el.fechaActual) != this.formatDate(this.fechaHoy)) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La fecha elegida no puede ser distinta a la fecha actual.");
+        if (this.formatDate(el.fechaActual) < this.formatDate(this.fechaHoy)) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La fecha elegida no puede ser anterior a la fecha actual.");
         } else {
 
 
