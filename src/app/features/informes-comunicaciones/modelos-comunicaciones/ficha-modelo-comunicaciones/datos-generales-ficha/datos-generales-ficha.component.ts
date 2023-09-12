@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
@@ -17,6 +17,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 })
 export class DatosGeneralesFichaComponent implements OnInit {
   openFicha: boolean = true;
+  @Input() permisoEscritura;
   activacionEditar: boolean = true;
   derechoAcceso: any;
   permisos: any;
@@ -76,7 +77,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
     this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
     if (this.bodyModelo) {
-      if (this.bodyModelo.fechaBaja != null && this.bodyModelo.fechaBaja != "") {
+      if ((this.bodyModelo.fechaBaja != null && this.bodyModelo.fechaBaja != "") || !this.permisoEscritura) {
         sessionStorage.setItem("soloLectura", "true");
       } else {
         sessionStorage.setItem("soloLectura", "false");
@@ -294,7 +295,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   habilitarBotones() {
-    if (this.institucionActual != "2000" && this.body.porDefecto == "SI") {
+    if ((this.institucionActual != "2000" && this.body.porDefecto == "SI") || this.permisoEscritura != true) {
       this.editar = false;
     } else {
       this.editar = true;

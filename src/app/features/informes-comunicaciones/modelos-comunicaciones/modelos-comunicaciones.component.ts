@@ -19,6 +19,7 @@ export enum KEY_CODE {
   }
 })
 export class ModelosComunicacionesComponent implements OnInit {
+  permisoEscrituraFichaModelo;
   body: ModelosComunicacionesItem = new ModelosComunicacionesItem();
   bodySearch: ModelosComunicacionesItem = new ModelosComunicacionesItem();
   colegios: any[];
@@ -56,6 +57,9 @@ export class ModelosComunicacionesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.commonsService.checkAcceso('30F').then( respuesta => {
+      this.permisoEscrituraFichaModelo = respuesta;
+    }).catch( error => console.log(error));
     sessionStorage.removeItem("esPorDefecto");
     this.bodySearch.visible = 1;
     // this.bodySearch.preseleccionar = "";
@@ -590,20 +594,24 @@ para poder filtrar el dato con o sin estos caracteres*/
     let id = dato[0].id;
     this.body = dato[0];
     if (!this.selectMultiple) {
-      if (dato[0].fechaBaja) {
+      sessionStorage.setItem("PermisoEscrituraFichaModelo", this.permisoEscrituraFichaModelo);
+
+      if (dato[0].fechaBaja || !this.permisoEscrituraFichaModelo) {
         sessionStorage.setItem("soloLectura", "true");
       }
 
       if (
         dato[0].porDefecto == "SI") {
         sessionStorage.setItem("esPorDefecto", "SI");
-      } else {
+      } else{
         sessionStorage.setItem("esPorDefecto", "NO");
       }
 
-      this.router.navigate(["/fichaModeloComunicaciones"]);
+      if(this.permisoEscrituraFichaModelo != undefined){
+        this.router.navigate(["/fichaModeloComunicaciones"]);
       sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
       sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));
+      }
     }
   }
 

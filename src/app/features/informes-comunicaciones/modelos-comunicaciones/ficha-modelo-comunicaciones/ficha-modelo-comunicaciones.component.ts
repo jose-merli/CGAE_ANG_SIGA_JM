@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
+import { CommonsService } from "../../../../_services/commons.service";
 
 @Component({
   selector: "app-ficha-modelo-comunicaciones",
@@ -11,14 +12,20 @@ export class FichaModeloComunicacionesComponent implements OnInit {
   idModelo: string;
   fichasPosibles: any[];
   filtrosModelos;
-
+  permisoEscritura;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
     this.idModelo = this.activatedRoute.snapshot.params["id"];
+
+    if (sessionStorage.getItem("PermisoEscrituraFichaModelo")) {
+      this.permisoEscritura = JSON.parse(sessionStorage.getItem("PermisoEscrituraFichaModelo"));
+      sessionStorage.removeItem("PermisoEscrituraFichaModelo");
+    }
 
     if (sessionStorage.getItem("filtrosModelos")) {
       this.filtrosModelos = JSON.parse(sessionStorage.getItem("filtrosModelos"));
