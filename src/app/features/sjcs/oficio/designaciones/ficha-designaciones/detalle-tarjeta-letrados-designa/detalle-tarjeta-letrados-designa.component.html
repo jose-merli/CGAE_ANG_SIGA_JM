@@ -24,8 +24,8 @@
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
           <div>
-            <div class="ayuda-btn" *ngIf="col.field == 'motivoRenuncia'" [pTooltip]="dato.observaciones" tooltipPosition="top" style="position: relative;">
-              <i class="fa fa-question" style="position: absolute; top: 1px; right: 0;"></i>
+            <div class="ayuda-btn" *ngIf="col.field == 'motivoRenuncia'" tooltipPosition="top" style="position: relative">
+              <i class="fa fa-question" style="position: absolute; top: 1px; right: 0;" [pTooltip]="'message.icono.interrogacion' | translate"></i>
             </div>
             <span>{{dato[col.field]}}   </span>
             
