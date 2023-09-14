@@ -73,6 +73,7 @@ export class GuardiaItem {
 	porDia;
     nDias;
     observacionesAnulacion:string;
+    idturno: string; //Variable auxiliar para el botón comunicar
     constructor() { }
 
 }

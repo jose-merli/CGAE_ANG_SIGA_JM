@@ -172,6 +172,7 @@ inicio(){
           }
           this.sigaService.get("institucionActual").subscribe(n => {
             if(this.body != undefined) this.body.idInstitucion = n.value;
+            this.body.idturno = this.body.idTurno;
             this.guardiaComunicar = this.body;
           });
 
