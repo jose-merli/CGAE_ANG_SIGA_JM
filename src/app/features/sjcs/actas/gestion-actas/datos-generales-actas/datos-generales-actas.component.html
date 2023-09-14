@@ -150,7 +150,9 @@
 
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="guardarActaDialogo()" pButton type="button" icon="far fa-save" iconPos="left"
+          <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar"
+          (click)="navigateComunicar()"></button>
+          <button (click)="guardarActaDialogo()" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{'general.boton.guardar' | translate}}"></button>
           <button (click)="restablecer()" pButton type="button" icon="fa fa-eraser" iconPos="left"
           label="{{'general.boton.restablecer' | translate}}"></button>

@@ -3,6 +3,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import {ConfirmationService} from 'primeng/api';
 import { ActasItem } from '../../../../../models/sjcs/ActasItem';
@@ -37,6 +38,9 @@ export class DatosGeneralesActasComponent implements OnInit {
   numeroEjgAsociadosActa: Number;
   fechaResolucion: Date;
   fechaReunion: Date;
+  currentRoute: String;
+  idClaseComunicacion: String;
+  keys: any[] = [];
 
 
 
@@ -96,12 +100,13 @@ export class DatosGeneralesActasComponent implements OnInit {
   resaltadoDatos: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private confirmationService: ConfirmationService,
-    private translateService: TranslateService, private commonsService: CommonsService) {
+    private translateService: TranslateService, private commonsService: CommonsService, private router: Router) {
      }
 
   ngOnInit() {
     //console.log("Este es el objeto que se supone tiene los datos de la tabla", this.datos);
     //console.log(this.datos)
+    this.currentRoute = this.router.url;
     if(this.datos.anioacta == null || this.datos.anioacta == undefined ){
       this.datosFiltro.anioacta = this.getAnio();
       this.getNumActa();
@@ -512,6 +517,57 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+  
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+
+    sessionStorage.setItem('actasItem', JSON.stringify(this.datos));
+
+    this.getDatosComunicar();
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                let keysValues = [];
+                this.keys.forEach(key => {
+                  if (this.datos[key.nombre.toString().toLowerCase()] != undefined) {
+                    keysValues.push(this.datos[key.nombre.toString().toLowerCase()].toString());
+                  }
+                });
+                datosSeleccionados.push(keysValues);
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
   }
 
  }
