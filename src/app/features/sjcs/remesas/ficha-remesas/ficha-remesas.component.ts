@@ -338,7 +338,7 @@ export class FichaRemesasComponent implements OnInit {
           }else{
             this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
           }
-
+          this.tarjetaEJGs.getEJGRemesa(this.remesaTabla);
           this.progressSpinner = false;
         },
         err => {
