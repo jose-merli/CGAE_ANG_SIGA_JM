@@ -460,6 +460,7 @@ export class TablaInscripcionesComponent implements OnInit {
           this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
           //Cuando es perfil no letrado, validamos directamente tras dar de baja
           if(sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false"){
+            selectedDatos[0].estadonombre = 'Baja pendiente';
             this.validar(selectedDatos, 1);
           }
         }
@@ -680,6 +681,7 @@ export class TablaInscripcionesComponent implements OnInit {
 
         //Cuando es perfil no letrado, validamos directamente tras dar de baja
         if(sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false"){
+          selectedDatos[0].estadonombre = 'Baja pendiente';
           this.validar(selectedDatos, 1);
         }
       }
