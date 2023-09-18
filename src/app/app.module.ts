@@ -851,7 +851,7 @@ import { FicherosTransferenciaClassiqueComponent } from './features/facturacionC
 import { GestionCuentasBancariasClassiqueComponent } from './features/facturacionClassique/gestion-cuentas-bancarias/gestion-cuentas-bancarias.component';
 import { SeriesFacturaClassiqueComponent } from './features/facturacionClassique/series-factura/series-factura.component';
 
-import { GenerarImpreso190ClassiqueComponent } from './features/sjcsClassique/facturacionSJCS/generar-impreso190-classique/generar-impreso190-classique.component';
+import { GenerarImpreso190ClassiqueComponent } from './features/sjcsClassique/facturacionSJCS/generar-impreso190-Classique/generar-impreso190-Classique.component';
 import { MantenimientoFacturacionComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcsClassique/facturacionSJCS/previsiones/previsiones.component';
 import { MantenimientoPagosComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
