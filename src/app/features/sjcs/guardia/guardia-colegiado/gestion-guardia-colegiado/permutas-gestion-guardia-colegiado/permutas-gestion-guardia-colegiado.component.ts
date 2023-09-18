@@ -207,7 +207,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
 
 disableValidar(){
   //this.selectedDatos.length>0 && (this.valueComboGuardia && this.valueComboTurno && this.motivos)
-  if(this.valueComboTurno && this.valueComboGuardia && !this.esLetrado && !this.esColegiado && this.selectedDatos.length>0 && this.permisoEscritura){
+  if(this.valueComboTurno && this.valueComboGuardia && !this.esLetrado && !this.esColegiado && this.permisoEscritura){
     if(this.yaValidada){
       return true;
     }else{

@@ -141,8 +141,7 @@
             [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || !clickPermuta)"
             (click)="checkPermutar()" type="button" iconPos="left"
             label="{{ 'general.boton.permutar' | translate }}"></button>
-            
-          <button pButton [disabled]="(((!selectMultiple || !selectAll) && selectedDatos.length == 0 || (clickPermuta && disableValidar())) || yaValidada)"
+          <button pButton [disabled]="(((selectedDatos.length == 0 && !clickPermuta) || (clickPermuta && disableValidar())) || yaValidada)"
             (click)="check()" type="button" icon="fa fa-save" iconPos="left"
             label="{{'general.boton.validar' | translate}}"></button>
 
