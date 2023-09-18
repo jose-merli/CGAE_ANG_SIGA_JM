@@ -855,7 +855,7 @@ import { GenerarImpreso190ClassiqueComponent } from './features/sjcsClassique/fa
 import { MantenimientoFacturacionComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcsClassique/facturacionSJCS/previsiones/previsiones.component';
 import { MantenimientoPagosComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
-import { MovimientosVariosComponentClassique } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-classique/movimientos-varios-classique.component';
+import { MovimientosVariosComponentClassique } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-Classique/movimientos-varios-Classique.component';
 import { TramosLECComponent } from './features/sjcsClassique/facturacionSJCS/tramos-lec/tramos-lec.component';
 import { RetencionesJudicialesComponent } from './features/sjcsClassique/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { ResumenPagosComponent } from './features/sjcsClassique/facturacionSJCS/resumen-pagos/resumen-pagos.component';
