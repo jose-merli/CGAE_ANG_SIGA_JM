@@ -4,6 +4,8 @@ import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { FacturasItem } from '../../../../models/FacturasItem';
 import { SigaServices } from '../../../../_services/siga.service';
+import { CommonsService } from '../../../../_services/commons.service';
+import { procesos_facturacionPyS } from '../../../../permisos/procesos_facturacionPyS';
 
 @Component({
   selector: 'app-gestion-facturas',
@@ -19,7 +21,8 @@ export class GestionFacturasComponent implements OnInit {
   body: FacturasItem;
   datos = [];
   enlacesTarjetaResumen = [];
-
+  permisoFacturaciones: boolean = false;
+  permisoEstadosYPagos: boolean = false;
   manuallyOpened: boolean;
   openTarjetaDatosGenerales: boolean = true;
   openTarjetaEstadosPagos: boolean = false;
@@ -32,11 +35,14 @@ export class GestionFacturasComponent implements OnInit {
     private location: Location,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
+
+    this.consultarPermisos();
 
     let tmpBody;
 
@@ -68,6 +74,24 @@ export class GestionFacturasComponent implements OnInit {
         this.progressSpinner = false;
       });
     }
+  }
+
+  consultarPermisos(){
+    this.commonsService
+    .checkAcceso(procesos_facturacionPyS.ficheroAdeudos)
+    .then((respuesta) => {
+      this.permisoEstadosYPagos = respuesta;
+
+    })
+    .catch((error) => console.error(error));
+
+    this.commonsService
+    .checkAcceso(procesos_facturacionPyS.facturaciones)
+    .then((respuesta) => {
+      this.permisoFacturaciones = respuesta;
+
+    })
+    .catch((error) => console.error(error));
   }
 
   getDatosFactura(idFactura: string, idAbono: string, tipo: string): Promise<any> {
