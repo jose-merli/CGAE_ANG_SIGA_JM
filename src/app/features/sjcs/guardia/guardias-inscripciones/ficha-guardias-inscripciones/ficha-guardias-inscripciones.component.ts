@@ -683,8 +683,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		body2.fechasolicitudbajaNUEVA = this.datos.fechaActual;
 		body2.observacionessolicitudNUEVA = this.datos.observaciones;
 
-		if (this.formatDate(this.datos.fechaActual) != this.formatDate(fechaHoy)) {
-			this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La fecha elegida no puede ser distinta a la fecha actual.");
+		if (this.formatDate(this.datos.fechaActual) < this.formatDate(fechaHoy)) {
+			this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La fecha elegida no puede ser anterior a la fecha actual.");
 		} else {
 
 
@@ -995,7 +995,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		}
 
 
-		if (this.datos.estado == "2") {
+		if (this.datos.estado == "2" && this.datos.tipoguardias != "Obligatorias") {
 			this.disabledSolicitarBaja = false;
 		} else {
 			this.disabledSolicitarBaja = true;
