@@ -17,7 +17,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 })
 export class DatosGeneralesFichaComponent implements OnInit {
   openFicha: boolean = true;
-  @Input() permisoEscritura;
+  permisoEscritura;
   activacionEditar: boolean = true;
   derechoAcceso: any;
   permisos: any;
@@ -64,7 +64,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
   ngOnInit() {
     this.resaltadoDatos=true;
-
+    
     this.preseleccionar = [
       { label: "No", value: "NO" },
       { label: "Sí", value: "SI" }
@@ -75,7 +75,9 @@ export class DatosGeneralesFichaComponent implements OnInit {
       { label: "Sí", value: 1 }
     ];
 
-    this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
+    this.commonsService.checkAcceso('30F').then( respuesta => {
+      this.permisoEscritura = respuesta;
+      this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
     if (this.bodyModelo) {
       if ((this.bodyModelo.fechaBaja != null && this.bodyModelo.fechaBaja != "") || !this.permisoEscritura) {
         sessionStorage.setItem("soloLectura", "true");
@@ -91,6 +93,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
     }
 
     this.getInstitucion();
+    }
+    ).catch( error => console.log(error));
 
     this.getClasesComunicaciones();
 
