@@ -594,7 +594,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     let id = dato[0].id;
     this.body = dato[0];
     if (!this.selectMultiple) {
-      sessionStorage.setItem("PermisoEscrituraFichaModelo", this.permisoEscrituraFichaModelo);
 
       if (dato[0].fechaBaja || !this.permisoEscrituraFichaModelo) {
         sessionStorage.setItem("soloLectura", "true");
@@ -607,11 +606,10 @@ para poder filtrar el dato con o sin estos caracteres*/
         sessionStorage.setItem("esPorDefecto", "NO");
       }
 
-      if(this.permisoEscrituraFichaModelo != undefined){
         this.router.navigate(["/fichaModeloComunicaciones"]);
       sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
       sessionStorage.setItem("filtrosModelos", JSON.stringify(this.bodySearch));
-      }
+      
     }
   }
 
