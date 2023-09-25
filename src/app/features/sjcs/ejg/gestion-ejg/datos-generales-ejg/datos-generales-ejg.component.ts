@@ -469,7 +469,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
               } else if (sessionStorage.getItem("justiciable")) {
                 // Asociar Justiciable al EJG Interesados.
                   this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
-                  let requestEjg = [datosItem.annio, datosItem.numero, datosItem.idTipoEjg, this.datosJusticiables.idpersona];
+                  let requestEjg = [datosItem.annio, datosItem.numEjg, datosItem.idTipoEjg, this.datosJusticiables.idpersona];
                   // Objeto Asocicación de Justiciables y EJG.
                   this.sigaServices.post("gestionJusticiables_asociarJusticiableEjg", requestEjg).subscribe(
                     m => {
