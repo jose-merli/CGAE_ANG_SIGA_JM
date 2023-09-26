@@ -145,11 +145,11 @@
 
     <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion"
+        <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura  || !modoEdicion"
           type="button" icon="fa fa-plus" iconPos="left"
           label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button>
 
-        <button (click)="checkPermisosCreateDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion"
+        <button (click)="checkPermisosCreateDes()" pButton [disabled]="!permisoEscritura || !modoEdicion"
           type="button" icon="fa fa-download" iconPos="left"
           label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
 
