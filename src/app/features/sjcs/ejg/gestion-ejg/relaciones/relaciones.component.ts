@@ -160,8 +160,8 @@ export class RelacionesComponent implements OnInit {
               break;
             case 'DESIGNACIÓN':
               //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
-              this.noAsociaDES = true;
-              this.noCreaDes = true;
+              //this.noAsociaDES = true;
+              //this.noCreaDes = true;
               break;
           }
           //relacion.idsjcs = "D"+relacion.anio+"/"+relacion.codigo;
