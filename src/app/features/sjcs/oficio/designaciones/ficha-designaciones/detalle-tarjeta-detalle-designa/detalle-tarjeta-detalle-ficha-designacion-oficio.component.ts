@@ -571,7 +571,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        if (!this.procedimientoOpciones != null) {
+        if (!this.procedimientoOpciones != null && !this.procedimientoOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
         }
@@ -608,7 +608,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        if (!this.moduloOpciones != null) {
+        if (!this.moduloOpciones != null && !this.moduloOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.moduloOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.moduloOpciones);
         }
@@ -639,7 +639,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   getComboProcedimientosConJuzgado(idJuzgado) {
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
+
+     // Verificamos si idProcedimiento es null o indefinido antes de hacer la solicitud POST
+     if (idJuzgado != null) {
+      this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
       n => {
         this.procedimientoOpciones = JSON.parse(n.body).combooItems;
         if (this.campos.nombreProcedimiento != "") {
@@ -655,50 +658,61 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         });
         this.procedimientoOpciones = uniqueArray;
         //this.progressSpinner = false;
-      },
-      err => {
+        },
+        err => {
         //console.log(err);
         this.progressSpinner = false;
-      }, () => {
-        if (!this.procedimientoOpciones != null) {
+        }, () => {
+        if (!this.procedimientoOpciones != null && !this.procedimientoOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
         }
         this.progressSpinner = false;
-      }
-    );
+        }
+      );
+    } else {
+    // No hacemos la solicitud POST y manejar el caso en que idJuzgado es null o undefined
+    this.progressSpinner = false;
+    }
   }
 
   getComboProcedimientosConModulo(idProcedimiento) {
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboProcedimientosConModulo", idProcedimiento).subscribe(
-      n => {
-        this.procedimientoOpciones = JSON.parse(n.body).combooItems;
-        if (this.campos.nombreProcedimiento != "") {
-          this.procedimientoOpciones.push({ label: this.campos.nombreProcedimiento, value: this.campos.idPretension });
-        }
-        let uniqueArrayValue = [];
-        let uniqueArray = [];
-        this.procedimientoOpciones.forEach((c) => {
-          if (!uniqueArrayValue.includes(c.value)) {
-            uniqueArrayValue.push(c.value);
-            uniqueArray.push(c);
+  
+    // Verificamos si idProcedimiento es null o indefinido antes de hacer la solicitud POST
+    if (idProcedimiento != null) {
+      this.sigaServices.post("combo_comboProcedimientosConModulo", idProcedimiento).subscribe(
+        n => {
+          this.procedimientoOpciones = JSON.parse(n.body).combooItems;
+          if (this.campos.nombreProcedimiento != "") {
+            this.procedimientoOpciones.push({ label: this.campos.nombreProcedimiento, value: this.campos.idPretension });
           }
-        });
-        this.procedimientoOpciones = uniqueArray;
-        //this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        if (!this.procedimientoOpciones != null) {
-          this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
-          this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
+          let uniqueArrayValue = [];
+          let uniqueArray = [];
+          this.procedimientoOpciones.forEach((c) => {
+            if (!uniqueArrayValue.includes(c.value)) {
+              uniqueArrayValue.push(c.value);
+              uniqueArray.push(c);
+            }
+          });
+          this.procedimientoOpciones = uniqueArray;
+          //this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          if (!this.procedimientoOpciones != null) {
+            this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
+            this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
+          }
+          this.progressSpinner = false;
         }
-        this.progressSpinner = false;
-      }
-    );
+      );
+    } else {
+      // No hacemos la solicitud POST y manejar el caso en que idProcedimiento es null o undefined
+      this.progressSpinner = false;
+    }
   }
 
   getComboModulosConJuzgado(idJuzgado, fecha) {
@@ -724,7 +738,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        if (!this.moduloOpciones != null) {
+        if (!this.moduloOpciones != null && !this.moduloOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.moduloOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.moduloOpciones);
         }
@@ -774,7 +788,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        if (!this.moduloOpciones != null) {
+        if (!this.moduloOpciones != null && !this.moduloOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.moduloOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.moduloOpciones);
         }
