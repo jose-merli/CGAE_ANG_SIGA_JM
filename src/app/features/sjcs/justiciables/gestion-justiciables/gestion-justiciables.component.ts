@@ -774,7 +774,7 @@ export class GestionJusticiablesComponent implements OnInit {
         this.callServiceSearch(justiciableBusqueda);
         sessionStorage.removeItem("ejgJusticiableView");
       } else {
-        if (this.persistenceService.getBody()) {
+        if (this.persistenceService.getBody() && sessionStorage.getItem("origin") != 'newRepresentante') {
           justiciableBusqueda = this.persistenceService.getBody();
         } else {
           justiciableBusqueda = this.justiciableBusquedaItem;
