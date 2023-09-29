@@ -181,6 +181,9 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
         sessionStorage.removeItem("datosColegiado");
       }
       
+    }else{
+      this.selectedEstado = [];
+      this.selectedEstado.push("6");
     }
 
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
@@ -223,10 +226,6 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
 
     if (this.isLetrado) {
       this.getDataLoggedUser();
-    }else{
-      setTimeout(() => {
-        this.isBuscar();
-      }, 5);
     }
   }
 
@@ -455,7 +454,8 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
     this.disabledestado = false;
     this.disabledFechaHasta = true;
     this.selectedTipo = "0"; 
-    this.selectedEstado = undefined;  
+    this.selectedEstado = [];
+    this.selectedEstado.push("6");
     if (sessionStorage.getItem("isLetrado") == "false") {
       this.usuarioBusquedaExpress = {
         numColegiado: "",
