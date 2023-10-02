@@ -58,6 +58,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   @Input() guardiaColegiado: GuardiaItem;
   //SIGARNV-2885 FIN
   @Output() refrescarFPermuta = new EventEmitter<any>();
+  @Output() refrescarFicha = new EventEmitter<any>();
 
   async ngOnInit() {
     //this.progressSpinner = true;
@@ -241,6 +242,11 @@ comprobarValidados(){
           this.getPermutas();
           this.validarTambien=false;
           this.refrescarFPermuta.emit(true);
+          this.progressSpinner = false
+          if(n.ok){
+            this.validarTambien = false;
+            this.refrescarFicha.emit(true);
+          }
       },
       err => {
         //console.log(err);
@@ -338,6 +344,10 @@ comprobarValidados(){
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.restPermutas();
         this.getPermutas();
+        if(this.validarTambien && n.ok){
+          this.validarTambien = false;
+          this.refrescarFicha.emit(true);
+        }
       },
       err => {
         //console.log(err);
