@@ -2,14 +2,12 @@ import {
 	Component,
 	OnInit,
 	Input,
+	SimpleChanges,
 	OnChanges,
 	Output,
 	EventEmitter,
 	OnDestroy,
-	ViewChild,
-	SimpleChange,
-	SimpleChanges,
-	
+	ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -59,7 +57,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	confirmationAssociate: boolean = false;
 	confirmationDisassociate: boolean = false;
 	confirmationCreateRepresentante: boolean = false;
-	cargaInicial:boolean =true;
+	cargaInicial:boolean =false;
 	showConfirmacion: boolean = false;
 	vieneDeJusticiable: boolean = false;
 	guardaOpcion: String;
@@ -86,24 +84,13 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	ngOnInit() {
 		this.progressSpinner = true;
 
-		// Comprueba si los datos ya están en sessionStorage
-		let savedBody = sessionStorage.getItem('body');
-
-		if(sessionStorage.getItem("origin") == "newRepresentante" && savedBody){
-				
-				this.generalBody = JSON.parse(savedBody);
-				this.body = JSON.parse(savedBody);
-				this.searchRepresentanteByIdPersona();
-		 		this.nifRepresentante = this.generalBody.nif;
-			    this.cargaInicial = true;
-		 }
-			else if (this.body != undefined &&
-				this.body.idrepresentantejg != undefined) {
-				this.generalBody.nif = this.body.idrepresentantejg.toString();
-				this.searchRepresentanteByIdPersona();
-				this.nifRepresentante = this.generalBody.nif;
-				this.cargaInicial = true;
-			}
+		if (this.body != undefined &&
+			this.body.idrepresentantejg != undefined) {
+			this.generalBody.nif = this.body.idrepresentantejg.toString();
+			this.searchRepresentanteByIdPersona();
+			this.nifRepresentante = this.generalBody.nif;
+			this.cargaInicial = true;
+		}
 
 		this.getTiposIdentificacion();
 		this.persistenceService.clearFiltrosAux();
@@ -128,11 +115,11 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			this.body != undefined &&
 			this.body.idpersona != undefined
 		)**/
-		if(this.body != undefined && this.body != null) 
-			//this.body.idrepresentantejg != null && this.body.idrepresentantejg != undefined
-			 //&& this.cargaInicial) 
-			 {
-				if(this.persistenceService.getBody()!=null){
+		if(this.body != undefined && this.body != null && 
+			this.body.idrepresentantejg != null && this.body.idrepresentantejg != undefined
+			 && this.cargaInicial) {
+			
+			if(this.persistenceService.getBody()!=null){
 				this.generalBody = this.persistenceService.getBody();
 
 				//Si tiene nif lo volvemos a buscar
