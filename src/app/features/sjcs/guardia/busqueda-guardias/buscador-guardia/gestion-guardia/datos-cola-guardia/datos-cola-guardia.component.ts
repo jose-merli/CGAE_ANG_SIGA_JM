@@ -419,10 +419,15 @@ inicio(){
           if (this.datos && this.datos.length > 0){
 
 
-            this.primerLetrado = this.datos[0].nColegiado
-            this.nombreApellidosPrimerLetrado = this.datos[0].nombreApe 
-            this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado
-            this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
+            this.primerLetrado = this.datos[0].nColegiado;
+            this.nombreApellidosPrimerLetrado = this.datos[0].nombreApe;
+            if(this.body.idPersonaUltimo != null && this.body.idPersonaUltimo != undefined){
+              this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado;
+              this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
+            }else{
+              this.ultimoLetrado = "";
+              this.apeyNombreUltimo = "";
+            }
 
             this.nInscritos = this.datos.length.toString();
 

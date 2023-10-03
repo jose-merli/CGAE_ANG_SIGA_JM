@@ -41,7 +41,14 @@ export class DatosTurnoGuardiasComponent implements OnInit {
     try{
       this.datos = JSON.parse(this.persistenceService.getDatos());
     }catch(Ex){
-      this.datos = this.persistenceService.getDatos();
+      if(this.datos !=null && this.datos != undefined){
+        this.datos.idTurno = this.datos.idturno;
+      }else if(this.body != null && this.body != undefined){
+        this.datos = this.body;
+        this.datos.idTurno = this.datos.idturno;
+      }else{
+        this.datos = this.persistenceService.getDatos();
+      }
     }
     
     this.sigaServices.post("gestionGuardias_resumenTurno", this.datos.idTurno).subscribe(
