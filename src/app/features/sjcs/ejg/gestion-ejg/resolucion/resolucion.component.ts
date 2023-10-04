@@ -129,6 +129,14 @@ export class ResolucionComponent implements OnInit {
         if (n.body != "") {
           this.resolucion = JSON.parse(n.body);
           this.bodyInicial = JSON.parse(n.body);
+          if(JSON.parse(n.body).requiereNotificarProc == "0"){
+            this.resolucion.requiereNotificarProc = false;
+            this.bodyInicial.requiereNotificarProc = false;
+          }
+          if(JSON.parse(n.body).turnadoRatificacion == "0"){
+            this.resolucion.turnadoRatificacion = false;
+            this.bodyInicial.turnadoRatificacion = false;
+          }
         } else { 
           this.resolucion = new ResolucionEJGItem(); 
           this.resolucion.requiereNotificarProc = false;

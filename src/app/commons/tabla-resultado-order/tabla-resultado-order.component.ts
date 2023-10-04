@@ -116,7 +116,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() s;
   @Output() linkGuardiaColegiado = new EventEmitter<any>();
   marcadoultimo = false;
-  numPage = 0;
+  numPage = 1;
   isLetrado : boolean = false;
   currentRoute: String;
   idClasesComunicacionArray: string[] = [];
@@ -1718,19 +1718,7 @@ this.totalRegistros = this.rowGroups.length;
       );
   }
 
-  /* getResumen() {
-    this.datosConfColaGuardias = JSON.parse(this.persistenceService.getDatos());
-    this.sigaServices.post("gestionGuardias_resumenTurno", this.datosConfColaGuardias.idTurno).subscribe(
-      data => {
-        this.body = JSON.parse(data.body).turnosItem[0];
-        this.progressSpinner = false;
-      },
 
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  } */
 
   getConfColaGuardias() {
     let datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
