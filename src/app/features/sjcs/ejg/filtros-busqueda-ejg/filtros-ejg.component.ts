@@ -102,6 +102,7 @@ export class FiltrosEjgComponent implements OnInit {
   @Input() permisoEscritura;
 
   remesaFicha: boolean = false;
+  volverDesdeEJG: boolean = false;
 
 
   @ViewChild('inputNumero') inputNumero: ElementRef;
@@ -144,6 +145,11 @@ export class FiltrosEjgComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
+
+    if(this.persistenceService.getVolverEJG() != undefined){
+      this.volverDesdeEJG = true;
+    }
+
     if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getVolverEJG() != undefined) {
         this.body = this.persistenceService.getFiltrosEJG();
         if (this.body.dictamen != undefined && this.body.dictamen != null && this.body.dictamen != "") this.bodyDictamen = Array.from(this.body.dictamen);
@@ -775,7 +781,7 @@ export class FiltrosEjgComponent implements OnInit {
         }
 
         if (sessionStorage.getItem("numColegiado") != undefined && sessionStorage.getItem("numColegiado") != null
-          && sessionStorage.getItem("numColegiado").trim() != "") {
+          && sessionStorage.getItem("numColegiado").trim() != ""  && this.volverDesdeEJG) {
           this.body.numColegiado = sessionStorage.getItem("numColegiado");
         }
 
