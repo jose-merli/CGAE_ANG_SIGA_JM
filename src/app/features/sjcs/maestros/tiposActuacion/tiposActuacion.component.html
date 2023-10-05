@@ -58,7 +58,7 @@
                             </span>
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importeReal' && col.field !='visiblemovil' 
-                            && col.field != 'importemaximoReal'&& col.field != 'pordefecto'">
+                            && col.field != 'importemaximoReal'&& col.field != 'pordefecto' && col.field != 'comisariajuzgado'">
                                 {{ dato[col.field] }}
                             </span>
 
@@ -74,6 +74,10 @@
                                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                             </div>
 
+                            <span *ngIf="!dato.editable && col.field == 'comisariajuzgado' && dato[col.field] != undefined">
+                                {{ dato[col.field].label }}
+                            </span>
+
                             <span *ngIf="dato.editable && !setItalic(dato) && col.field != 'importeReal'">
                             </span>
 
@@ -81,6 +85,12 @@
                                 <p-multiSelect #multiSelectPJ defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.seleccionadosReal" [options]="comboTiposActuacion"
                                     optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
                                     [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="openMultiSelect(dato);editarTipoAsistencia(dato) "></p-multiSelect>
+                            </div>
+
+                            <div *ngIf="dato.editable && col.field == 'comisariajuzgado'">
+                                <p-dropdown #selectCJ filterBy="label" [(ngModel)]="dato.comisariajuzgado" [options]="comboPorDefectoCJ"
+                                    optionLabel="label" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
+                                    (onChange)="editarTipoAsistencia(dato) "></p-dropdown>
                             </div>
 
                             <div *ngIf="dato.editable && col.field == 'descripciontipoactuacion'">

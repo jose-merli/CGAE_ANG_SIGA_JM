@@ -35,6 +35,7 @@ export class TiposActuacionComponent implements OnInit {
   historico: boolean = false;
   permitirGuardar: boolean = false;
   comboTiposActuacion;
+  comboPorDefectoCJ;
   comboAsistencias;
   comboActuacion;
   maximaLong: any = 3;
@@ -64,6 +65,7 @@ export class TiposActuacionComponent implements OnInit {
 
   ngOnInit() {
     this.getComboTiposAsistencia();
+    this.getComboPorDefectoCJ();
     this.getCols();
     this.commonsService.checkAcceso(procesos_maestros.tiposActuaciones)
       .then(respuesta => {
@@ -89,6 +91,14 @@ export class TiposActuacionComponent implements OnInit {
     this.selectedDatos = [];
     this.updateTiposActuacion = [];
     this.nuevo = false;
+  }
+
+  getComboPorDefectoCJ() {
+    this.comboPorDefectoCJ = [
+      { label: "", value: "0" },
+      { label: this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.comisaria"), value: "1" },
+      { label: this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Juzgado"), value: "2" }
+    ]
   }
 
   checkPermisosDelete() {
@@ -195,6 +205,9 @@ export class TiposActuacionComponent implements OnInit {
             element.overlayVisible = false;
             element.importeReal = +element.importe;
             element.importemaximoReal = +element.importemaximo;
+
+            element.comisariajuzgado = this.comboPorDefectoCJ.find(item => item.value == element.comisariajuzgado);
+
             this.beautifyData(element)
 
             let prueba = [];
@@ -365,10 +378,25 @@ export class TiposActuacionComponent implements OnInit {
       this.body.tiposActuacionItem.forEach(element => {
         element.importe = + (element.importe + "").replace(",", ".");
         element.importemaximo = + (element.importemaximo + "").replace(",", ".");
+
+        if (element.comisariajuzgado != null) {
+          element.comisariajuzgado = element.comisariajuzgado.value;
+        } else {
+          element.comisariajuzgado = "0";
+        }
+        
       });
     } else {
       this.body.importe = + (this.body.importe + "").replace(",", ".");
       this.body.importemaximo = + (this.body.importemaximo + "").replace(",", ".");
+
+      if (this.body.comisariajuzgado != null) {
+        this.body.comisariajuzgado = this.body.comisariajuzgado.value;
+      } else {
+        this.body.comisariajuzgado = "0";
+      }
+
+      this.body.comisariajuzgado = this.body.comisariajuzgado.value;
     }
     this.sigaServices.post(url, this.body).subscribe(
       data => {
@@ -447,6 +475,7 @@ export class TiposActuacionComponent implements OnInit {
       importemaximoReal: undefined,
       seleccionadosReal: undefined,
       idtipoasistencia: undefined,
+      comisariajuzgado: "0",
       editable: true
     };
 
@@ -761,7 +790,8 @@ export class TiposActuacionComponent implements OnInit {
       { field: "descripciontipoactuacion", header: "censo.usuario.nombre", width: "20%" },
       { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "10%" },
       { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo", width: "10%" },
-      { field: "descripciontipoasistencia", header: "menu.sjcs.tiposAsistencia", width: "60%" },
+      { field: "descripciontipoasistencia", header: "menu.sjcs.tiposAsistencia", width: "40%" },
+      { field: "comisariajuzgado", header: "justiciaGratuita.maestros.tipoActuacion.defecto", width: "20%" },
     ];
 
     this.rowsPerPage = [
