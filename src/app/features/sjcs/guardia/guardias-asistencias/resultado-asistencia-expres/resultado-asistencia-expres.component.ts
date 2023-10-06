@@ -389,6 +389,14 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
                 }
               }
             });
+          } else if (cell.type == 'buttomSelect') {
+
+            cell.value.forEach((val, index) => {
+
+              if ((val == undefined || val == '') && index == 4) {
+                error = true;
+              }
+            });
           }
         });
       });
