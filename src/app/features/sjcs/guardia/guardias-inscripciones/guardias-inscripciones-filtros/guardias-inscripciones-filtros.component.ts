@@ -130,9 +130,6 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
       }
       this.persistenceService.clearFiltros();
       sessionStorage.removeItem("FichaInscripciones");
-    }else{
-      this.selectedEstado = [];
-      this.selectedEstado.push("6");
     }
     
 
@@ -449,8 +446,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
     this.disabledFechaHasta = true;
     this.disabledguardia = true;
     this.selectedTipo = "0";
-    this.selectedEstado = [];
-    this.selectedEstado.push("6");
+    this.selectedEstado = undefined;
     if (sessionStorage.getItem("isLetrado") == "false") {
       this.usuarioBusquedaExpress = {
         numColegiado: "",

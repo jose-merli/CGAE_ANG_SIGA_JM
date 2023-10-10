@@ -181,9 +181,6 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
         sessionStorage.removeItem("datosColegiado");
       }
       
-    }else{
-      this.selectedEstado = [];
-      this.selectedEstado.push("6");
     }
 
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
@@ -454,8 +451,7 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
     this.disabledestado = false;
     this.disabledFechaHasta = true;
     this.selectedTipo = "0"; 
-    this.selectedEstado = [];
-    this.selectedEstado.push("6");
+    this.selectedEstado = undefined;
     if (sessionStorage.getItem("isLetrado") == "false") {
       this.usuarioBusquedaExpress = {
         numColegiado: "",
