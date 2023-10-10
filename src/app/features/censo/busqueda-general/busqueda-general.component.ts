@@ -545,20 +545,23 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   checkFilterFisic() {
     if (
-      (this.bodyFisica.nombre == null ||
-        this.bodyFisica.nombre == null ||
+      (
+        (this.bodyFisica.nombre == null ||
+        this.bodyFisica.nombre == undefined ||
         this.bodyFisica.nombre.trim().length < 3) &&
       (this.bodyFisica.primerApellido == null ||
-        this.bodyFisica.primerApellido == null ||
+        this.bodyFisica.primerApellido == undefined ||
         this.bodyFisica.primerApellido.trim().length < 3) &&
       (this.bodyFisica.segundoApellido == null ||
-        this.bodyFisica.segundoApellido == null ||
+        this.bodyFisica.segundoApellido == undefined ||
         this.bodyFisica.segundoApellido.trim().length < 3) &&
       (this.bodyFisica.numeroColegiado == null ||
-        this.bodyFisica.numeroColegiado == null ||
+        this.bodyFisica.numeroColegiado == undefined ||
         this.bodyFisica.numeroColegiado.trim().length < 3) &&
-      (this.bodyFisica.nif == null || this.bodyFisica.nif == null || this.bodyFisica.nif.trim().length < 3) &&
-      (this.colegios_seleccionados == undefined ||
+      (this.bodyFisica.nif == null || 
+        this.bodyFisica.nif == undefined || 
+        this.bodyFisica.nif.trim().length < 3)
+        ) || (this.colegios_seleccionados == undefined ||
         this.colegios_seleccionados == null ||
         this.colegios_seleccionados.length < 1)
     ) {
@@ -723,13 +726,14 @@ export class BusquedaGeneralComponent implements OnDestroy {
             this.searchFisica = JSON.parse(data['body']);
 
             if (this.searchFisica.busquedaFisicaItems.length == 0) {
-              if (this.searchFisica.error != null && this.searchFisica.error.message != null) {
-                this.showInfo(this.searchFisica.error.message);
-                this.existe = true;
-              }
               this.datos = [];
-              if(this.bodyFisica.nif == ''){
-                this.showWarning("No se han encontrado resultados en la busqueda. Pruebe a introducir el Número de identificación");
+              if (this.searchFisica.error != null && this.searchFisica.error.message != null) {
+                this.showWarning(this.translateService.instant(this.searchFisica.error.message));
+                this.existe = true;
+              }else{
+                if(this.bodyFisica.nif == ''){
+                  this.showWarning("No se han encontrado resultados en la busqueda. Pruebe a introducir el Número de identificación");
+                }
               }
             } else {
               this.datos = [];
