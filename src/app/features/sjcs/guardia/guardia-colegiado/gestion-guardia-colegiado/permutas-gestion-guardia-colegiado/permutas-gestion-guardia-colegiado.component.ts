@@ -199,7 +199,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
           summary: "Cancel",
           detail: this.translateService.instant("general.message.accion.cancelada")
         }];
-        this.restPermutas();
+        //this.restPermutas();
 
       }
     });
