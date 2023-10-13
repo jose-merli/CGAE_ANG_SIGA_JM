@@ -306,7 +306,7 @@ comprobarValidados(){
     if(this.esColegiado){
       this.checkValidar();
     }else if(!this.esColegiado && !this.esLetrado && this.permisoEscritura){//Si no es letrado, no es colegiado y tiene permiso de escritura
-      this.selectedDatos.forEach(dato => {
+      this.permutas.forEach(dato => {
         if(dato.nuevoRegistro){
           this.validarTambien=true; 
           this.checkPermutar();
