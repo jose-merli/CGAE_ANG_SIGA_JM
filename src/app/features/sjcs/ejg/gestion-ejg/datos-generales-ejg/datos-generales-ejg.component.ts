@@ -129,7 +129,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.body = new EJGItem();
       this.bodyInicial = new EJGItem();
       this.showTipoExp = false;
-      this.body.fechaApertura = moment(this.datosAsistencia.fechaAsistencia.substr(0, 10), 'DD/MM/YYYY').toDate();
+      this.body.fechaApertura = new Date(); //moment(this.datosAsistencia.fechaAsistencia.substr(0, 10), 'DD/MM/YYYY').toDate();
+      this.bodyInicial.fechaApertura = new Date();
       this.body.creadoDesde = "A";
       this.bodyInicial.creadoDesde = "A";
     } else {

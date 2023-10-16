@@ -307,30 +307,28 @@ export class GestionEjgComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearDatos();
-
     // Si viene de asistencias expres
     if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda")){
       sessionStorage.setItem("vieneDeAsistenciaExpres", "true");
+      this.location.back();
     }
-
-    // Volver a asistencia.
-    if (sessionStorage.getItem("idAsistencia")) {
-      //sessionStorage.setItem("vieneDeFichaDesigna", "true");
+    // Volver a designacion
+    if (sessionStorage.getItem("Designacion")) {
+      sessionStorage.removeItem("Designacion");
+      this.location.back();
+    }else if (sessionStorage.getItem("asistencia")) { // Volver a asistencia.
+      sessionStorage.removeItem("asistencia");
       this.router.navigate(['/fichaAsistencia']);
-    }
-    //Para evitar complicaciones según se acceda desde la pantalla de busqueda de EJGs de comision o 
-    //desde una ficha de acta directamente
-    if (sessionStorage.getItem("actasItemAux") && sessionStorage.getItem("actasItem") == null) {
+    }else if (sessionStorage.getItem("actasItemAux") && sessionStorage.getItem("actasItem") == null) { //Para evitar complicaciones según se acceda desde la pantalla de busqueda de EJGs de comision o desde una ficha de acta directamente
       sessionStorage.setItem("actasItem", sessionStorage.getItem("actasItemAux"));
       sessionStorage.removeItem("actasItemAux");
-    }
-    this.persistenceService.clearDatosEJG();
-    this.persistenceService.setVolverEJG();
-    this.router.navigate(["/ejg"]);
-
-    // Si viene de remesas de envío
-    if (localStorage.getItem('remesa')) {
+      this.location.back();
+    }else if (localStorage.getItem('remesa')) {// Si viene de remesas de envío
       this.router.navigate(['/fichaRemesasEnvio']);
+    }else{
+      this.persistenceService.clearDatosEJG();
+      this.persistenceService.setVolverEJG();
+      this.router.navigate(["/ejg"]);
     }
   }
 
