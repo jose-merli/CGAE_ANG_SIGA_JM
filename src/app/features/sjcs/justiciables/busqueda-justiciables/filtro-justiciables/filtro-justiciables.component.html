@@ -53,7 +53,7 @@
         <div class="row col-lg-3 col-md-3">
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ 'censo.ws.literal.codigopostal' | translate }}</label>
-            <input type="text" class="form-control" maxlength="5" [(ngModel)]="filtros.codigoPostal" [disabled]="!permisoEscritura" (input)='editarCodigoPostal($event,filtros.codigoPostal)'
+            <input type="text" class="form-control"  maxlength="5" [(ngModel)]="filtros.codigoPostal" [disabled]="!permisoEscritura" (input)='editarCodigoPostal($event,filtros.codigoPostal)'
               pInputText>
 
             <!-- <input type="text" name="codigoExt" value="" class="box" class="form-control" [(ngModel)]='filtros.codigoPostal' maxlength="10"

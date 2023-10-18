@@ -266,7 +266,11 @@ export class FiltroJusticiablesComponent implements OnInit {
       (this.filtros.idRol == null || this.filtros.idRol == "")) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
-    } else {
+    } else if(this.filtros != null && this.filtros.codigoPostal != null && this.filtros.codigoPostal.length != 5){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.cp"));
+      console.log("error cp")
+      return false;
+    }else {
       // quita espacios vacios antes de buscar
       if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
         this.filtros.nombre = this.filtros.nombre.trim();
