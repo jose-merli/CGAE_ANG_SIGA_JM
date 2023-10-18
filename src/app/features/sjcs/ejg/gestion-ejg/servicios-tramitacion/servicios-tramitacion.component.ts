@@ -369,6 +369,9 @@ export class ServiciosTramitacionComponent implements OnInit {
 
     //this.body.nuevoEJG=!this.modoEdicion;
 
+    if (this.esCadenaVacia(this.body.numColegiado) || this.esCadenaVacia(this.body.apellidosYNombre))
+      this.body.idPersona = undefined;
+
 
     this.sigaServices.post("gestionejg_guardarServiciosTramitacion", this.body).subscribe(
       n => {
