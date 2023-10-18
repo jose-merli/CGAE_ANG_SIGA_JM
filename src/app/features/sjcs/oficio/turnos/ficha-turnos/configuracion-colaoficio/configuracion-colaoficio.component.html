@@ -48,7 +48,7 @@
 
       <div *ngIf="openFicha" class="card-footer ">
         <div class="text-right main-button ">
-          <button (click)="rest()" pButton [disabled]="disableAll" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button (click)="rest()" pButton [disabled]="disabledSave()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button (click)="guardar()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         </div>
       </div>
