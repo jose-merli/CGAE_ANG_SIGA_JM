@@ -79,6 +79,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   activacionEditar: boolean = false;
   showFilters: boolean = false;
   idTurno: string;
+  letradoAux: string;
 
   @ViewChild(FiltrosSaltosCompensacionesOficioComponent) filtros: FiltrosSaltosCompensacionesOficioComponent;
   @ViewChild(TablaResultadoMixSaltosCompOficioComponent) tabla: TablaResultadoMixSaltosCompOficioComponent;
@@ -138,7 +139,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   search(event) {
 
     let filtros = JSON.parse(sessionStorage.getItem("filtrosAuxSaltosCompOficio"));
-
     if (this.isNewFromOtherPage) {
       filtros = {};
       filtros.idTurno = this.isNewFromOtherPageObject.idturno;
@@ -245,14 +245,16 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
       let italic = (element.fechaUso != null || element.fechaAnulacion != null);
       let obj = [];
-
+      let splitLetrado = element.letrado.split(" ");
+      this.letradoAux = splitLetrado[1]+" "+splitLetrado[2]+", "+splitLetrado[0]
       if (italic || this.historico || !this.activacionEditar) {
 
         if(element.fechaAnulacion != null){
+          
           obj = [
             { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
             { type: 'text', value: element.nColegiado, header: this.cabeceras[1].id, disabled: false },
-            { type: 'text', value: element.letrado, header: this.cabeceras[2].id, disabled: false },
+            { type: 'text', value: this.letradoAux, header: this.cabeceras[2].id, disabled: false },
             { type: 'text', value: this.comboTipos.find(el => el.value == element.saltoCompensacion).label, header: this.cabeceras[3].id, disabled: false },
             { type: 'text', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
             { type: 'text', value: "Anulada en fecha " + element.fechaAnulacion + " / " + element.motivo, header: this.cabeceras[5].id, disabled: false },
@@ -265,7 +267,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
           obj = [
             { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
             { type: 'text', value: element.nColegiado, header: this.cabeceras[1].id, disabled: false },
-            { type: 'text', value: element.letrado, header: this.cabeceras[2].id, disabled: false },
+            { type: 'text', value: this.letradoAux, header: this.cabeceras[2].id, disabled: false },
             { type: 'text', value: this.comboTipos.find(el => el.value == element.saltoCompensacion).label, header: this.cabeceras[3].id, disabled: false },
             { type: 'text', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
             { type: 'text', value: element.motivo, header: this.cabeceras[5].id, disabled: false },
@@ -281,7 +283,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         obj = [
           { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
           { type: 'text', value: element.nColegiado, header: this.cabeceras[1].id, disabled: false },
-          { type: 'text', value: element.letrado, header: this.cabeceras[2].id, disabled: false },
+          { type: 'text', value: this.letradoAux, header: this.cabeceras[2].id, disabled: false },
           { type: 'select', combo: this.comboTipos, value: element.saltoCompensacion, header: this.cabeceras[3].id, disabled: false },
           { type: 'datePicker', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
           { type: 'textarea', value: element.motivo, header: this.cabeceras[5].id, disabled: false },
