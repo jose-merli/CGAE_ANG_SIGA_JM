@@ -108,7 +108,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.inputs[1].value = this.campos.numProcedimiento;
             if(this.campos.datosDefensaJuridica == null || this.campos.datosDefensaJuridica == undefined){
               //Si venimos desde EJG el asunto es observaciones || Si venimos de designaciones el asunto es resumenAsunto
-              this.asuntoValue = this.campos.observaciones ? this.campos.observaciones : this.campos.resumenAsunto;
+              if(this.campos.resumenAsunto == null || this.campos.resumenAsunto == undefined){
+                this.asuntoValue = this.campos.observaciones ? this.campos.observaciones : this.campos.resumenAsunto;
+              } else{
+                this.asuntoValue = this.campos.resumenAsunto;
+              }
             } else {
               this.asuntoValue = this.campos.datosDefensaJuridica;
             }
