@@ -529,21 +529,15 @@ export class DocumentacionComponent implements OnInit {
       data => {
         let blob = null;
 
-        // Se comprueba si todos los documentos asociados no tiene ningún fichero 
-        let documentoAsociado = documentos.find(item => item.nombreFichero != null)
-        if (documentoAsociado != undefined) {
           if (documentos.length == 1) {
-            if (documentos[0].nombreFichero != null) {
-              let mime = this.getMimeType(documentos[0].nombreFichero.substring(documentos[0].nombreFichero.lastIndexOf("."), documentos[0].nombreFichero.length));
+              let mime = data.type;//this.getMimeType(documentos[0].nombreFichero.substring(documentos[0].nombreFichero.lastIndexOf("."), documentos[0].nombreFichero.length));
               blob = new Blob([data], { type: mime });
               saveAs(blob, documentos[0].nombreFichero);
-            }
+            
           } else {
             blob = new Blob([data], { type: "application/zip" });
             saveAs(blob, "documentos.zip");
           }
-        }
-        else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
 
         this.selectedDatos = [];
         this.progressSpinner = false;
