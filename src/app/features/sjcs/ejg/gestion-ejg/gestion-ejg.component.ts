@@ -210,7 +210,7 @@ export class GestionEjgComponent implements OnInit {
   }
 
   updateTarjResumen() {
-    if (!this.nuevo || (this.body != null && this.body != undefined)) {
+    if (!this.nuevo && this.body != null && this.body != undefined) {
       if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
         this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
       }
@@ -325,10 +325,12 @@ export class GestionEjgComponent implements OnInit {
       this.location.back();
     }else if (localStorage.getItem('remesa')) {// Si viene de remesas de envío
       this.router.navigate(['/fichaRemesasEnvio']);
-    }else{
+    }else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null){
       this.persistenceService.clearDatosEJG();
       this.persistenceService.setVolverEJG();
       this.router.navigate(["/ejg"]);
+    }else{
+      this.location.back();
     }
   }
 

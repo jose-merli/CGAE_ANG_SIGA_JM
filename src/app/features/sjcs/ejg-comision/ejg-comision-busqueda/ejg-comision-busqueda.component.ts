@@ -26,7 +26,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   nuevo: boolean = true;
   inst2000: boolean;
   permisoEscritura: boolean = false;
-  showdatosIdentificacion: boolean = false;
+  showdatosIdentificacion: boolean = true;
   showDatosGeneralesEJG: boolean = false;
   showDatosDefensa: boolean = false;
   showCAJG: boolean = true;
@@ -540,7 +540,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
   checkFilters() {
     if (this.body.annio != undefined)
-      this.body.annio = this.body.annio.trim();
+      this.body.annio = this.body.annio;
     if (this.body.numero != undefined)
       this.body.numero = this.body.numero.trim();
     if (this.body.asunto != undefined)
@@ -571,7 +571,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
       this.body.nombre = this.body.nombre.trim();
 
     if (
-      (this.body.annio == null || this.body.annio.trim() == "" || this.body.annio.trim().length < 3) &&
+      (this.body.annio == null || this.body.annio.length < 3) &&
       (this.body.numero == null || this.body.numero.trim() == "" || this.body.numero.trim().length < 3) &&
       (this.body.numAnnioProcedimiento == null || this.body.numAnnioProcedimiento.trim() == "" || this.body.numAnnioProcedimiento.trim().length < 3) &&
       (this.body.nig == null || this.body.nig.trim() == "" || this.body.nig.trim().length < 3) &&
