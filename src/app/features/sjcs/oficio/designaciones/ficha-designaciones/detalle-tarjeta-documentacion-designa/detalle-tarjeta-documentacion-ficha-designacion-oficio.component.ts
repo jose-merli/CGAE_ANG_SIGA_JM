@@ -555,8 +555,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
         let blob = null;
 
         if (docADescargar.length == 1) {
-
-          let mime = this.getMimeType(docADescargar[0].nombreFichero.substring(docADescargar[0].nombreFichero.lastIndexOf("."), docADescargar[0].nombreFichero.length));
+          let mime = data.type;//this.getMimeType(docADescargar[0].nombreFichero.substring(docADescargar[0].nombreFichero.lastIndexOf("."), docADescargar[0].nombreFichero.length));
           blob = new Blob([data], { type: mime });
           saveAs(blob, docADescargar[0].nombreFichero);
         } else {
@@ -630,10 +629,10 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
       }
 
-      if (!error && (doc.cells[3].value == undefined || doc.cells[3].value == null)) {
+      /*if (!error && (doc.cells[3].value == undefined || doc.cells[3].value == null)) {
         error = true;
         this.showMsg('error', 'Error', this.translateService.instant('general.boton.adjuntarFichero'));
-      }
+      }*/
 
     });
 
