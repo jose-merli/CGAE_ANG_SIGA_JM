@@ -152,6 +152,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
+      sessionStorage.setItem("origen", "Nuevo");
       this.crearEJG();
     }
   }
@@ -161,6 +162,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     if (sessionStorage.getItem("EJGItem")) {
       sessionStorage.removeItem("EJGItem");
     }
+    this.persistenceService.clearDatosEJG();
     sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     this.persistenceService.clearDatos();
     sessionStorage.setItem("Nuevo", "true");
