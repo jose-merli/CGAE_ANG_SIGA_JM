@@ -86,7 +86,7 @@ export class RemesasComponent implements OnInit {
     }
 
     if(localStorage.getItem('remesaBorrada') == "true"){
-      this.showMessage("success", this.translateService.instant("general.message.correct"), "La remesa se ha borrado correctmente");
+      this.showMessage("success", this.translateService.instant("general.message.correct"), "La remesa se ha borrado correctamente");
       localStorage.removeItem('remesaBorrada');
     }
   }
@@ -134,6 +134,7 @@ export class RemesasComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("filtrosremesas_buscarRemesa", this.remesasDatosEntradaItem).subscribe(
       n => {
+        let error = JSON.parse(n.body).error;
         //console.log("Dentro del servicio del padre que llama al buscarRemesas");
         this.datos = JSON.parse(n.body).remesasItems;
         
@@ -148,6 +149,9 @@ export class RemesasComponent implements OnInit {
         if (this.datos.length == 200) {
           //console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
+        }
+        if (error != null && error.description != null) {
+          this.showMessage2({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
         }
       },
       err => {
@@ -183,6 +187,14 @@ export class RemesasComponent implements OnInit {
       severity: severity,
       summary: summary,
       detail: msg
+    });
+  }
+  showMessage2(event) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
     });
   }
 

@@ -105,7 +105,7 @@ export class RemesasResultadosComponent implements OnInit {
       n => {
         //console.log("Dentro del servicio que llama al buscarRemesasResultado");
         this.datos = JSON.parse(n.body).remesasResultadosItems;
-
+        let error = JSON.parse(n.body).error;
         this.datos.forEach(element => {
           element.fechaResolucionRemesaResultado = this.formatDate(element.fechaResolucionRemesaResultado);
           element.fechaCargaRemesaResultado = this.formatDate(element.fechaCargaRemesaResultado);
@@ -120,6 +120,9 @@ export class RemesasResultadosComponent implements OnInit {
         if (this.datos.length == 200) {
           //console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
+        }
+        if (error != null && error.description != null) {
+          this.showMessage2({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
         }
         // this.resetSelect();
       },
@@ -153,6 +156,16 @@ export class RemesasResultadosComponent implements OnInit {
       detail: msg
     });
   }
+  
+  showMessage2(event) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
+    });
+  }
+
   formatNumRemesaCompleto(element){
     // {{dato["prefijoRemesa"]}}{{dato["numeroRemesa"]}}{{dato["sufijoRemesa"]}}
     let numeroFormateado = ''; 

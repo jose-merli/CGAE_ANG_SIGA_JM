@@ -132,12 +132,21 @@ export class RemesasResolucionesComponent implements OnInit {
     });
   }
 
+  showMessage2(event) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
+    });
+  }
   search(event){
     //console.log("QWEQWE");
     //console.log(this.buscar);
     this.progressSpinner = true;
     this.sigaServices.post("remesasResolucion_buscarRemesasResolucion", this.filtrosValues).subscribe(
       n => {
+        let error = JSON.parse(n.body).error;
         //console.log("Dentro del servicio que llama al buscarRemesasResultado");
         this.datos = JSON.parse(n.body).remesasResolucionItem;
 
@@ -154,6 +163,9 @@ export class RemesasResolucionesComponent implements OnInit {
         if (this.datos.length == 200) {
           //console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
+        }
+        if (error != null && error.description != null) {
+          this.showMessage2({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
         }
         // this.resetSelect();
       },
