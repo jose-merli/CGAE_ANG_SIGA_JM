@@ -456,21 +456,21 @@ export class ConfiguracionTurnosComponent implements OnInit {
     }
 
     if (this.turnosItem.letradoactuacionesCheck == true) {
-      this.turnosItem.letradoactuaciones = 'S';
+      this.turnosItem.letradoactuaciones = '1';
     } else {
-      this.turnosItem.letradoactuaciones = 'N';
+      this.turnosItem.letradoactuaciones = '0';
     }
 
     if (this.turnosItem.letradoasistenciasCheck == true) {
-      this.turnosItem.letradoasistencias = 'S';
+      this.turnosItem.letradoasistencias = '1';
     } else {
-      this.turnosItem.letradoasistencias = 'N';
+      this.turnosItem.letradoasistencias = '0';
     }
 
     if (this.turnosItem.activarretriccionacreditCheck == true) {
-      this.turnosItem.activarretriccionacredit = 'S';
+      this.turnosItem.activarretriccionacredit = '1';
     } else {
-      this.turnosItem.activarretriccionacredit = 'N';
+      this.turnosItem.activarretriccionacredit = '0';
     }
 
   }
@@ -489,13 +489,13 @@ export class ConfiguracionTurnosComponent implements OnInit {
       this.turnosItem.validarjustificacionesCheck = true;
       this.validJustificacion = "SI";
 
-      this.turnosItem.letradoactuaciones = 'N';
+      this.turnosItem.letradoactuaciones = '0';
       this.turnosItem.letradoactuacionesCheck = false;
 
-      this.turnosItem.letradoasistencias = 'N';
+      this.turnosItem.letradoasistencias = '0';
       this.turnosItem.letradoasistenciasCheck = false;
 
-      this.turnosItem.activarretriccionacredit = 'S';
+      this.turnosItem.activarretriccionacredit = '1';
       this.turnosItem.activarretriccionacreditCheck = true;
 
       this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
@@ -529,18 +529,18 @@ export class ConfiguracionTurnosComponent implements OnInit {
       this.validJustificacion = "NO";
     }
 
-    if (this.turnosItem.letradoactuaciones == 'S') {
+    if (this.turnosItem.letradoactuaciones == '1') {
       this.turnosItem.letradoactuacionesCheck = true;
     } else {
       this.turnosItem.letradoactuacionesCheck = false;
     }
 
-    if (this.turnosItem.letradoasistencias == 'S') {
+    if (this.turnosItem.letradoasistencias == '1') {
       this.turnosItem.letradoasistenciasCheck = true;
     } else {
       this.turnosItem.letradoasistenciasCheck = false;
     }
-    if (this.turnosItem.activarretriccionacredit == 'S') {
+    if (this.turnosItem.activarretriccionacredit == '1') {
       this.turnosItem.activarretriccionacreditCheck = true;
     } else {
       this.turnosItem.activarretriccionacreditCheck = false;
