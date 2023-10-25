@@ -219,9 +219,9 @@ export class AgendaComponent implements OnInit {
     let auxArray: any[] = [];
 
     this.events.forEach(element => {
-      if (element.idCalendario !== id) {
-        auxArray.push(element);
-      }
+      //if (element.idCalendario !== id && element.idins) {
+        //auxArray.push(element);
+      //}
     });
 
     this.events = auxArray;

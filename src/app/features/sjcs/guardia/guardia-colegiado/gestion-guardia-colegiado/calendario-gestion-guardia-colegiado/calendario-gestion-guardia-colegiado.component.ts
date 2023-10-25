@@ -89,7 +89,7 @@ comboListaGuardias =[];
       };
 
     this.sigaServices.post(
-      "guardiaCalendario_buscar", datosEntrada).subscribe(
+      "guardiaCalendario_buscarTarjeta", datosEntrada).subscribe(
         data => {
           if(data.body){
             let error = JSON.parse(data.body).error;

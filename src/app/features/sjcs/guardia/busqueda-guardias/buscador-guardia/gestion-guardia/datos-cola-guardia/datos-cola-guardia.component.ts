@@ -172,6 +172,7 @@ inicio(){
           }
           this.sigaService.get("institucionActual").subscribe(n => {
             if(this.body != undefined) this.body.idInstitucion = n.value;
+            this.body.idturno = this.body.idTurno;
             this.guardiaComunicar = this.body;
           });
 
@@ -418,10 +419,15 @@ inicio(){
           if (this.datos && this.datos.length > 0){
 
 
-            this.primerLetrado = this.datos[0].nColegiado
-            this.nombreApellidosPrimerLetrado = this.datos[0].nombreApe 
-            this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado
-            this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
+            this.primerLetrado = this.datos[0].nColegiado;
+            this.nombreApellidosPrimerLetrado = this.datos[0].nombreApe;
+            if(this.body.idPersonaUltimo != null && this.body.idPersonaUltimo != undefined){
+              this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado;
+              this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
+            }else{
+              this.ultimoLetrado = "";
+              this.apeyNombreUltimo = "";
+            }
 
             this.nInscritos = this.datos.length.toString();
 
@@ -475,7 +481,7 @@ inicio(){
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
-          { type: 'text', value: datoObj.fechabaja },
+          { type: 'text', value: datoObj.fechaBaja },
           { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
           { type: 'invisible', value: datoObj.ordenCola },
           { type: 'invisible', value: datoObj.idturno },
@@ -497,7 +503,7 @@ inicio(){
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
-          { type: 'text', value: datoObj.fechabaja }, 
+          { type: 'text', value: datoObj.fechaBaja }, 
           { type: 'invisible', value: datoObj.idGrupoGuardiaColegiado},
           { type: 'invisible', value: datoObj.ordenCola },
           { type: 'invisible', value: datoObj.idturno },

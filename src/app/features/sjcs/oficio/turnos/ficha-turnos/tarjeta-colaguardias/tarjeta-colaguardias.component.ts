@@ -297,6 +297,7 @@ export class TarjetaColaGuardias implements OnInit {
             }
             this.sigaServices.get("institucionActual").subscribe(n => {
               if(this.body != undefined) this.body.idInstitucion = n.value;
+              this.body.idturno = this.body.idTurno;
               this.guardiaComunicar = this.body;
             });
           }
@@ -392,7 +393,9 @@ export class TarjetaColaGuardias implements OnInit {
     this.sigaServices.post("busquedaGuardias_getGuardia", datosColaGuardia).subscribe(
       n => {
         this.datos = JSON.parse(n.body);
-
+        if(this.datos != null && this.datos!= undefined){
+          this.body.idpersona_ultimo = JSON.parse(n.body).idPersonaUltimo;
+        }
         this.sigaServices.notifysendDatosRedy(n);
 
        // this.obtieneConfiguracionCola(n.body);
@@ -475,11 +478,15 @@ export class TarjetaColaGuardias implements OnInit {
           if (this.datos && this.datos.length > 0){
 
 
-            this.primerLetrado = this.datos[0].nColegiado
-            this.nombreApellidosPrimerLetrado = this.datos[0].nombreApe 
-            this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado
-            this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
-
+            this.primerLetrado = this.datos[0].nColegiado;
+            this.nombreApellidosPrimerLetrado = this.datos[0].nombreApe; 
+            if(this.body.idpersona_ultimo != null && this.body.idpersona_ultimo != undefined && this.body.idpersona_ultimo != ""){
+              this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado;
+              this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
+            }else{
+              this.ultimoLetrado = "";
+              this.apeyNombreUltimo = "";
+            }
             this.nInscritos = this.datos.length.toString();
 
           if (this.body.idPersonaUltimo && this.datos.length > 0)
@@ -524,7 +531,7 @@ export class TarjetaColaGuardias implements OnInit {
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
-          { type: 'text', value: datoObj.fechabaja },
+          { type: 'text', value: datoObj.fechaBaja },
           { type: 'invisible', value: datoObj.idGrupoGuardiaColegiado},
           { type: 'invisible', value: datoObj.ordenCola },
           { type: 'invisible', value: datoObj.idturno },
@@ -549,7 +556,7 @@ export class TarjetaColaGuardias implements OnInit {
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
-          { type: 'text', value: datoObj.fechabaja },
+          { type: 'text', value: datoObj.fechaBaja },
           { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
           { type: 'invisible', value: datoObj.ordenCola },
           { type: 'invisible', value: datoObj.idturno },

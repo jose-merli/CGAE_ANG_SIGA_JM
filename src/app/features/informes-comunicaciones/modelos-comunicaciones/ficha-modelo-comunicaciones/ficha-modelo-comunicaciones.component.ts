@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
+import { CommonsService } from "../../../../_services/commons.service";
 
 @Component({
   selector: "app-ficha-modelo-comunicaciones",
@@ -11,10 +12,10 @@ export class FichaModeloComunicacionesComponent implements OnInit {
   idModelo: string;
   fichasPosibles: any[];
   filtrosModelos;
-
   constructor(
     private activatedRoute: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {

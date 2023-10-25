@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MovimientosVariosComponentClassique } from './movimientos-varios-classique.component';
+import { MovimientosVariosComponentClassique } from './movimientos-varios-Classique.component';
 
 describe('MovimientosVariosComponentClassique', () => {
   let component: MovimientosVariosComponentClassique;

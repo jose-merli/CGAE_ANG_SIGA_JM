@@ -37,6 +37,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   valorFormatoProc: any;
   parametroNIG: any;
   parametroNProc: any;
+  juzgadoComisaria: string = "0";
   // hitoNueve:boolean = false;
 
   constructor(private datepipe : DatePipe,
@@ -63,6 +64,13 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
       }else{
         this.datosGeneralesActuacion.numAsunto = this.asistencia.numDiligencia;
       }
+
+      this.setComisariaJuzgado();
+
+      if (this.juzgadoComisaria != "0") {
+        this.searchTipoActuacionPorDefecto();
+      }
+      
     }
   }
 
@@ -77,6 +85,30 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
 
       }
     
+  }
+
+  searchTipoActuacionPorDefecto() {
+    this.sigaServices
+      .getParam("gestionTiposActuacion_busquedaTipoActuacionPorDefecto", "?descripcionTipoAsistencia=" + this.asistencia.descripcionTipoAsistenciaColegio + "&juzgadocomisaria=" + this.juzgadoComisaria)
+      .subscribe(
+        res => {
+          if (res.valor != null) {
+            this.datosGeneralesActuacion.tipoActuacion = res.valor;
+          }
+        },
+        err => {
+
+        }
+      );
+
+  }
+
+  setComisariaJuzgado() {
+    if (this.asistencia.juzgado != null) {
+      this.juzgadoComisaria = "2";
+    } else if (this.asistencia.comisaria != null) {
+      this.juzgadoComisaria = "1";
+    }
   }
 
    //Si la actuacion esta anulada o validada, no se podrá editar de ninguna forma
@@ -321,12 +353,16 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   onChangeJuzgado(){
     if(this.datosGeneralesActuacion.juzgado){
       this.datosGeneralesActuacion.comisaria = '';
+      this.juzgadoComisaria = "2";
+      this.searchTipoActuacionPorDefecto();
     }
   }
 
   onChangeComisaria(){
     if(this.datosGeneralesActuacion.comisaria){
       this.datosGeneralesActuacion.juzgado = '';
+      this.juzgadoComisaria = "1";
+      this.searchTipoActuacionPorDefecto();
     }
   }
 

@@ -129,7 +129,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.body = new EJGItem();
       this.bodyInicial = new EJGItem();
       this.showTipoExp = false;
-      this.body.fechaApertura = moment(this.datosAsistencia.fechaAsistencia.substr(0, 10), 'DD/MM/YYYY').toDate();
+      this.body.fechaApertura = new Date(); //moment(this.datosAsistencia.fechaAsistencia.substr(0, 10), 'DD/MM/YYYY').toDate();
+      this.bodyInicial.fechaApertura = new Date();
       this.body.creadoDesde = "A";
       this.bodyInicial.creadoDesde = "A";
     } else {
@@ -469,7 +470,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
               } else if (sessionStorage.getItem("justiciable")) {
                 // Asociar Justiciable al EJG Interesados.
                   this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
-                  let requestEjg = [datosItem.annio, datosItem.numero, datosItem.idTipoEjg, this.datosJusticiables.idpersona];
+                  let requestEjg = [datosItem.annio, datosItem.numEjg, datosItem.idTipoEjg, this.datosJusticiables.idpersona];
                   // Objeto Asocicación de Justiciables y EJG.
                   this.sigaServices.post("gestionJusticiables_asociarJusticiableEjg", requestEjg).subscribe(
                     m => {

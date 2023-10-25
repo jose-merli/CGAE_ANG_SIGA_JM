@@ -56,7 +56,7 @@
       <!-- createJusticiableByUpdateRepresentante: Funcion para indicar que se ha creado un nuevo justiciable desde la tarjeta representante -->
       <!-- navigateToJusticiable: Funcion para indicar que ya no estamos en modo representante -->
       <div *ngIf="showDatosRepresentantes != undefined">
-        <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion"
+        <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa" [body]="body" [generalBody]="bodyRep" [modoEdicion]="modoEdicion"
           (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosRepresentante]="tarjetaDatosRepresentante"
           [checkedViewRepresentante]="checkedViewRepresentante" (newRepresentante)="newRepresentante($event)" (viewRepresentante)="viewRepresentante($event)"
           (createJusticiableByUpdateRepresentante)="createJusticiableByUpdateRepresentante($event)" [navigateToJusticiable]="navigateToJusticiable" 

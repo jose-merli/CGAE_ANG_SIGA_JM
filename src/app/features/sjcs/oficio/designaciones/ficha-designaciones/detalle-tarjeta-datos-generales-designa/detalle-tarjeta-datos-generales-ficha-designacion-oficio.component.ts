@@ -386,7 +386,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         if (this.datosEJG != undefined && this.datosEJG != null) {
           if (this.datosEJG.tipoEJGColegio != null) {
             this.selectores[1].value = this.datosEJG.tipoEJGColegio;
-            this.selectores[1].disable = true;
           }
           else this.selectores[1].value = "";
         }

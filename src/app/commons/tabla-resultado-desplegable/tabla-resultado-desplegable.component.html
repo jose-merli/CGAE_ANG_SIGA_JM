@@ -229,7 +229,7 @@
                                     style="width: 60%;" (value)="onChangeSelector($event, row, cell, rowGroup.id, row, rowGroup)">
                                 </app-selector>-->
                                 <p-dropdown autoWidth="false" class="center width70 showFull"
-                                    [(ngModel)]="cell.value[4]"
+                                    [(ngModel)]="cell.value[4]" [ngClass]="styleObligatorio(cell.value[4])"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [options]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]" showClear="true"
                                     filterBy="label,labelSinTilde" styleClass="widthAll"
@@ -410,7 +410,7 @@
                                     <!-- <app-selector [i]="cell.value[4]" [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
                                     style="width: 60%;" (value)="onChangeSelector($event, row, cell, rowGroup.id, row, rowGroup)">
                                 </app-selector>-->
-                                    <p-dropdown autoWidth="false" [(ngModel)]="cell.value[4]"
+                                    <p-dropdown autoWidth="false" [(ngModel)]="cell.value[4]" [ngClass]="styleObligatorio(cell.value[4])"
                                         placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                         class="center width70 showFull"
                                         [options]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"

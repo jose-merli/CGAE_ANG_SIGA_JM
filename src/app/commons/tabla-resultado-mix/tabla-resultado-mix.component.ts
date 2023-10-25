@@ -107,6 +107,7 @@ export class TablaResultadoMixComponent implements OnInit {
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
+  rowsSelecteds = [];
 
   @Input() firstColumn: number = 0;
   @Input() lastColumn: number = 10;
@@ -339,19 +340,22 @@ export class TablaResultadoMixComponent implements OnInit {
     if (this.selectedArray.includes(rowId)) {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
+      const e = this.rowsSelecteds.indexOf(rowCells);
+      this.rowsSelecteds.splice(e,1);
     } else {
       this.selectedArray.push(rowId);
+      this.rowsSelecteds.push(this.selectedRowValue);
     }
     if (this.selectedArray.length != 0) {
       this.anySelected.emit(true);
     } else {
       this.anySelected.emit(false);
     }
-
+    
     if(!this.incompatibilidades){
       this.habilitarBotones();
     }
-    
+
   }
   isSelected(id) {
     if (this.selectedArray.includes(id)) {
@@ -1146,15 +1150,13 @@ export class TablaResultadoMixComponent implements OnInit {
     this.habilitadoSolicitarBaja = false;
     this.habilitadoCambiarFecha = false;
     this.habilitadoDenegar = false;
-    var rowsSelecteds = [];
     let validarInscripciones = '';
     let estadoNombre = '';
     let hayInscripcionObligatoria = false;
-    rowsSelecteds.push(this.selectedRowValue);
 
-    if (rowsSelecteds.length > 0) {
-      rowsSelecteds.forEach(item => {
-        if (hayInscripcionObligatoria == false && item[32].value == "Obligatorias") {
+    if (this.rowsSelecteds.length > 0) {
+        this.rowsSelecteds.forEach(item => {
+        if (!hayInscripcionObligatoria && item[32].value == "Obligatorias") {
           this.habilitadoValidar = true;
           this.habilitadoSolicitarBaja = true;
           this.habilitadoCambiarFecha = true;

@@ -49,6 +49,34 @@ export class HomeComponent implements OnInit {
 		this.oldSigaLogin();
 		this.getDataLoggedUser();
 		this.getInstitucionActual();
+
+		this.removeUnusedSessionStorageKeys();
+	}
+	removeUnusedSessionStorageKeys() {
+		let keysPorDefecto = ['Authorization',
+							  'tipoLogin',
+							  'AuthOldSIGA',
+							  'authenticated',
+							  'isLetrado',
+							  'esColegiado',
+							  'osAutenticated',
+							  'esNuevoNoColegiado',
+							  'personaBody',
+							  'tinyApiKey'];
+
+		Object.keys(sessionStorage).forEach(function(key){
+			let encontrado = false;
+
+			keysPorDefecto.forEach(function(keyDefecto){
+				if (key == keyDefecto) {
+					encontrado = true;
+				}
+			});
+
+			if (encontrado == false) {
+				sessionStorage.removeItem(key);
+			}
+		});
 	}
 
 	oldSigaLogin() {

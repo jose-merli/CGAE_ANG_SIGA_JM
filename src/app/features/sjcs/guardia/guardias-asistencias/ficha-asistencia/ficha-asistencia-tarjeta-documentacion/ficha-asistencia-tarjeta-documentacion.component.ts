@@ -237,10 +237,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
       .subscribe(
         data => {
           let blob = null;
-
-          if (data.size == 0) { //Si size es 0 es que no trae nada
-            this.showMsg('error', 'Error al descargar el documento', 'No se ha encontrado el documento indicado');
-          } else if (documentos.length == 1) {
+          if (documentos.length == 1) {
 
             let nombreFichero = documentos[0].nombreFichero;
             if (!nombreFichero) {
@@ -262,6 +259,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
         err => {
           //console.log(err);
           this.progressSpinner = false;
+          this.showMsg('error', 'Error al descargar el documento', 'No se ha encontrado el documento indicado');
         },
         () => {
           this.progressSpinner = false;

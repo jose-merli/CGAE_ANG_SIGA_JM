@@ -100,8 +100,21 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
         this.actualizaResumen();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
+        this.sigaServices.post("getSeparar", this.body)
+      .subscribe(data => {
+        console.log(data);
+        data = JSON.parse(data.body);
+        this.body.separarGuardia = data;
+        this.resumen.separarGuardia = data;
+      },
+        err => {
+          //console.log(err);
+        });
 
       });
+
+      
+        
     if (this.persistenceService.getHistorico())
       this.historico = this.persistenceService.getHistorico();
   }

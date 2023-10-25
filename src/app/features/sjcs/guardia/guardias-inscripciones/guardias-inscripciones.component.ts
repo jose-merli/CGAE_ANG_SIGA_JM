@@ -294,17 +294,12 @@ export class GuardiasInscripcionesComponent implements OnInit {
           this.progressSpinner = false;
           //this.resetSelect();
 
-          if (this.totalRegistros == 200) {
-            this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
+          if (error != null && error.description != null) {
+            this.showMessage('info', this.translateService.instant("general.message.informacion"), error.description);
           }
 
           if (this.tabla != null && this.tabla != undefined) {
             this.tabla.historico = event;
-          }
-
-
-          if (error != null && error.description != null) {
-            this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("error.description"));
           }
         },
         err => {
@@ -390,17 +385,12 @@ export class GuardiasInscripcionesComponent implements OnInit {
           this.progressSpinner = false;
           //this.resetSelect();
 
-          if (this.totalRegistros == 200) {
-            this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
-          }
-
           if (this.tabla != null && this.tabla != undefined) {
             this.tabla.historico = event;
           }
 
-
           if (error != null && error.description != null) {
-            this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("error.description"));
+            this.showMessage('info', this.translateService.instant("general.message.informacion"), error.description);
           }
         },
         err => {
@@ -855,8 +845,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
         el.fechasolicitudbajaNUEVA = el.fechaActual;
         el.observacionessolicitudNUEVA = el.observaciones;
 
-        if (this.formatDate(el.fechaActual) != this.formatDate(this.fechaHoy)) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La fecha elegida no puede ser distinta a la fecha actual.");
+        if (this.formatDate(el.fechaActual) < this.formatDate(this.fechaHoy)) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La fecha elegida no puede ser anterior a la fecha actual.");
         } else {
 
 

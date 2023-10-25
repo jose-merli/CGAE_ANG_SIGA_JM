@@ -55,7 +55,7 @@
           'general.boton.clear'| translate }}"></button>
         <button (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{
           'general.boton.search' | translate}}"></button>
-        <button (click)="addModelo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{
+        <button (click)="addModelo()" pButton type="button" icon="fa fa-plus" [disabled]="permisoEscrituraFichaModelo != true" iconPos="left" label="{{
           'general.boton.new' | translate}}"></button>
       </div>
     </div>
@@ -99,13 +99,14 @@
                 <i class="fa fa-check"></i>
               </span>
               <!-- NOMBRE -->
-              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field =='nombre' && showHistorico&& dato.fechaBaja!=null"
+              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field =='nombre' && showHistorico&& dato.fechaBaja!=null && permisoEscrituraFichaModelo != undefined"
                 [ngStyle]="{ 'font-style': 'italic', 'font-weight': 'bold', 'text-decoration': 'line-through'}">
                 {{dato[col.field]}}</a>
-              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field =='nombre' && showHistorico && dato.fechaBaja==null">
+              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field =='nombre' && showHistorico && dato.fechaBaja==null && permisoEscrituraFichaModelo != undefined">
                 {{dato[col.field]}}</a>
-              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field =='nombre' && !showHistorico">{{dato[col.field]}}</a>
-
+              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field =='nombre' && !showHistorico && permisoEscrituraFichaModelo != undefined">{{dato[col.field]}}</a>
+              <span *ngIf="col.field =='nombre' && permisoEscrituraFichaModelo == undefined">
+                {{dato[col.field]}}</span>
             </td>
           </tr>
         </ng-template>

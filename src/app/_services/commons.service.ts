@@ -131,10 +131,12 @@ export class CommonsService {
         "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
       let i;
       let x;
-      for (i = 0; i < e.label.length; i++) {
-        if ((x = accents.indexOf(e.label[i])) != -1) {
-          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-          return e.labelSinTilde;
+      if(e != null && e.label !=null){
+        for (i = 0; i < e.label.length; i++) {
+          if ((x = accents.indexOf(e.label[i])) != -1) {
+            e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+            return e.labelSinTilde;
+          }
         }
       }
     });
@@ -153,10 +155,12 @@ export class CommonsService {
         "ÀÈÌÒÙàèìòù";
       let i;
       let x;
-      for (i = 0; i < e.label.length; i++) {
-        if ((x = accents.indexOf(e.label[i])) != -1) {
-          e.labelTildeContraria = e.label.replace(e.label[i], accentsOut[x]);
-          return e.labelTildeContraria;
+      if(e != null && e.label !=null){
+        for (i = 0; i < e.label.length; i++) {
+          if ((x = accents.indexOf(e.label[i])) != -1) {
+            e.labelTildeContraria = e.label.replace(e.label[i], accentsOut[x]);
+            return e.labelTildeContraria;
+          }
         }
       }
     });

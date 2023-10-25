@@ -27,6 +27,7 @@ export let endpoints_guardia: any = {
     busquedaGuardias_deleteGuardias: "guardia/busquedaGuardia/deleteGuardias",
     busquedaGuardias_activateGuardias: "guardia/busquedaGuardia/activateGuardias",
     busquedaGuardias_getGuardia: "guardia/busquedaGuardia/detalleGuardia",
+    getSeparar: "guardia/getSeparar",
     busquedaGuardias_updateGuardia: "guardia/busquedaGuardia/updateGuardia",
     busquedaGuardias_updateUltimo: "guardia/busquedaGuardia/ultimo",
     busquedaGuardias_createGuardia: "guardia/busquedaGuardia/createGuardia",
@@ -61,6 +62,7 @@ export let endpoints_guardia: any = {
 
     //Calendarios programados
     guardiaCalendario_buscar: "guardia/buscarCalendariosProgramados",
+    guardiaCalendario_buscarTarjeta: "guardia/buscarCalendariosProgramadosTarjeta",
     guardiaUltimoCalendario_buscar: "guardia/buscarLastCalendarioProgramado",
     guardiaCalendario_eliminar: "guardia/eliminarCalendariosProgramados",
     guardiaCalendario_guardar: "guardia/guardarCalendariosProgramados",

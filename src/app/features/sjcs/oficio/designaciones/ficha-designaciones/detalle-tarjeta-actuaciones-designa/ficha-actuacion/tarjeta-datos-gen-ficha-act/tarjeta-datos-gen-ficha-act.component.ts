@@ -1330,11 +1330,15 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
                 this.keys = JSON.parse(data["body"]).keysItem;
                 //    this.actuacionesSeleccionadas.forEach(element => {
                 let keysValues = [];
-                this.keys.forEach(key => {
+                this.keys.forEach(key => {                  
                   if (this.actuacionDesigna.actuacion[key.nombre] != undefined) {
                     keysValues.push(this.actuacionDesigna.actuacion[key.nombre]);
                   } else if (key.nombre == "num" && this.actuacionDesigna.actuacion["numero"] != undefined) {
                     keysValues.push(this.actuacionDesigna.actuacion["numero"]);
+                  }else if (key.nombre == "idturno" && this.actuacionDesigna.actuacion["idTurno"] != undefined) {
+                    keysValues.push(this.actuacionDesigna.actuacion["idTurno"]);
+                  }else if (key.nombre == "numeroasunto" && this.actuacionDesigna.actuacion["numeroAsunto"] != undefined) {
+                    keysValues.push(this.actuacionDesigna.actuacion["numeroAsunto"]);
                   }
                 });
                 datosSeleccionados.push(keysValues);

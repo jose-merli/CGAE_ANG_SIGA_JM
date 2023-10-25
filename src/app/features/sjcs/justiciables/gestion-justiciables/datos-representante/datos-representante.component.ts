@@ -28,8 +28,8 @@ import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 	styleUrls: ['./datos-representante.component.scss']
 })
 export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy {
-	generalBody: JusticiableItem = new JusticiableItem();
-
+	//generalBody: JusticiableItem = new JusticiableItem();
+	
 	tipoIdentificacion;
 	progressSpinner: boolean = false;
 	msgs = [];
@@ -38,6 +38,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	@Input() modoEdicion;
 	@Input() showTarjeta;
 	@Input() body: JusticiableItem;
+	@Input() generalBody: JusticiableItem;
 	@Input() checkedViewRepresentante;
 	@Input() navigateToJusticiable: boolean = false;
 	@Input() fromInteresado;
@@ -83,13 +84,27 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
 	ngOnInit() {
 		this.progressSpinner = true;
-
 		if (this.body != undefined &&
 			this.body.idrepresentantejg != undefined) {
 			this.generalBody.nif = this.body.idrepresentantejg.toString();
 			this.searchRepresentanteByIdPersona();
 			this.nifRepresentante = this.generalBody.nif;
 			this.cargaInicial = true;
+		}else{
+			if (this.generalBody != undefined && this.generalBody.nif != undefined) {
+				//this.generalBody = this.persistenceService.getBody();
+				this.searchRepresentanteByIdPersona();
+				this.nifRepresentante = this.generalBody.nif;
+				this.cargaInicial = true;
+			}else if(sessionStorage.getItem("bodyRepresentante")){
+				this.generalBody = JSON.parse(sessionStorage.getItem("bodyRepresentante"));
+				this.nifRepresentante = this.generalBody.nif;
+				this.searchRepresentanteByIdPersona();
+				this.cargaInicial = true;
+				sessionStorage.removeItem("bodyRepresentante");
+			}else{
+				this.generalBody = new JusticiableItem();
+			}
 		}
 
 		this.getTiposIdentificacion();
@@ -103,8 +118,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		&& sessionStorage.getItem("origin") != "newContrario" && sessionStorage.getItem("origin") != "newAsistido" 
 		&& sessionStorage.getItem("origin") != "newContrarioAsistencia" && sessionStorage.getItem("origin") != "UnidadFamiliar"
 		&& sessionStorage.getItem("origin") != "newContrarioEJG" && sessionStorage.getItem("origin") != "newSoj") {
-		  this.vieneDeJusticiable = true;
+			this.vieneDeJusticiable = true;
 		}
+        
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -114,7 +130,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			this.persistenceService.getBody() != undefined &&
 			this.body != undefined &&
 			this.body.idpersona != undefined
-		)**/
+		) */
 		if(this.body != undefined && this.body != null && 
 			this.body.idrepresentantejg != null && this.body.idrepresentantejg != undefined
 			 && this.cargaInicial) {
@@ -154,6 +170,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			this.showTarjeta = true;
 			this.searchRepresentanteGeneral = true;
 		
+		}else if(this.nifRepresentante!= undefined){
+			this.generalBody.nif = this.nifRepresentante;
+			this.searchRepresentanteByNif();
 		} else {
 			this.generalBody = new JusticiableItem();
 		}
@@ -171,7 +190,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			) */
 			if(this.body.idrepresentantejg != null) {
 				this.showTarjeta = true;
-				this.searchJusticiableNew();
+				//this.searchJusticiableNew();
 			} else if (this.idPersona != undefined && this.idPersona != null && this.idPersona == this.body.idpersona) {
 				this.showTarjeta = false;
 				this.generalBody = new JusticiableItem();
@@ -264,7 +283,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
 		this.sigaServices.post('gestionJusticiables_searchJusticiable', bodyBusqueda).subscribe(
 			(n) => {
-				this.body = JSON.parse(n.body).justiciable;
+				this.generalBody = JSON.parse(n.body).justiciable;
 				//this.nifRepresentante = this.generalBody.nif;
 				this.persistenceService.clearBody();
 				this.progressSpinner = false;
@@ -358,6 +377,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 					(n) => {
 						this.generalBody = JSON.parse(n.body).justiciable;
 						this.nifRepresentante = this.generalBody.nif;
+						//this.body.idrepresentantejg = Number(this.generalBody.idpersona);
 						this.progressSpinner = false;
 						this.compruebaDNI();
 					},
@@ -921,7 +941,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	}
 
 	guardar(){
-		if(this.guardaOpcion=="s"){
+		if(this.guardaOpcion == undefined || this.guardaOpcion=="s"){
 			if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null &&
 				this.generalBody.idpersona.trim() != '') {
 

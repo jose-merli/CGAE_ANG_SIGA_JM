@@ -25,7 +25,7 @@
             <div class="col-lg-4 col-md-4 pl5">
               <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
                   translate}}</strong></label>
-              <input type="text" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)"
+              <input type="number" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)"
                 maxLength="4" pInputText>
             </div>
             <div class="col-log-8 col-md-8 pr5">

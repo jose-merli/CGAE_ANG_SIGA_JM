@@ -431,8 +431,15 @@ export class TablaInscripcionesComponent implements OnInit {
             message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSJCS"),
             icon: "fa fa-trash-alt",
             accept: () => {
-              if (access == 0) this.validar(selectedDatos.inscripcionesItem, 1);
-              else if (access == 2) this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+              if (access == 0){ 
+                this.validar(selectedDatos.inscripcionesItem, 1);
+              }else if (access == 2){
+                this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+                //Cuando es perfil no letrado, validamos directamente tras dar de baja
+                if(sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false"){
+                  this.validar(selectedDatos, 1);
+                }
+              }
             },
             reject: () => {
               this.msgs = [
@@ -447,8 +454,16 @@ export class TablaInscripcionesComponent implements OnInit {
             }
           });
         }
-        if (access == 0) this.validar(selectedDatos.inscripcionesItem, 1);
-        else if (access == 2) this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+        if (access == 0){
+          this.validar(selectedDatos.inscripcionesItem, 1);
+        }else if (access == 2){ 
+          this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+          //Cuando es perfil no letrado, validamos directamente tras dar de baja
+          if(sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false"){
+            selectedDatos[0].estadonombre = 'Baja pendiente';
+            this.validar(selectedDatos, 1);
+          }
+        }
       });
     this.progressSpinner = false;
   }
@@ -471,15 +486,17 @@ export class TablaInscripcionesComponent implements OnInit {
     this.body.inscripcionesItem.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
-      // ¡¡¡¡ OJO REVISAR QUE HACE ESTO
-      if (element.estado == "2") vb++;
+      if (element.estado == "2") {
+        vb++;
+      }
     });
-    if(this.datos.fechaActual == null || this.datos.fechaActual== undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
+    if(this.datos.fechaActual == null || this.datos.fechaActual== undefined || this.datos.observaciones == null || this.datos.observaciones== "" || /*this.*/selectedDatos.length==0){
       this.mensajeObservaciones();
     }else{
-    if (vb > 0 && access == 0) this.checkTrabajosSJCS(this.body, access);
-    else {
-      if (vb > 0) {
+      if (vb > 0 && access == 0){
+        this.checkTrabajosSJCS(this.body, access);
+      }else {
+        if (vb > 0) {
         this.sigaServices.post("inscripciones_checkSaltos", this.body).subscribe(
           n => {
             let keyConfirmation = "deletePlantillaDoc";
@@ -628,12 +645,15 @@ export class TablaInscripcionesComponent implements OnInit {
         element.fechaActual = this.datos.fechaActual;
         element.fechasolicitudbaja = this.datos.fechaActual;
         element.observaciones = this.datos.observaciones;
+
         // OJO REVISAR QUE HACE ESTO !!
-        if (element.estado == "2") vb++;
+        if (element.estado == "2") {
+          vb++;
+        }
       });
-      if (vb > 0 && access == 2) this.checkTrabajosSJCS(this.body, access);
-      else {
-        console.log(this.body);
+      if (vb > 0 && access == 2){
+        this.checkTrabajosSJCS(this.body, access);
+      }else {
         this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
           data => {
             this.selectedDatos = [];
@@ -658,9 +678,15 @@ export class TablaInscripcionesComponent implements OnInit {
             this.nuevo = false;
           }
         );
+
+        //Cuando es perfil no letrado, validamos directamente tras dar de baja
+        if(sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false"){
+          selectedDatos[0].estadonombre = 'Baja pendiente';
+          this.validar(selectedDatos, 1);
+        }
       }
     }
-                this.progressSpinner = false;
+    this.progressSpinner = false;
   }
 
   

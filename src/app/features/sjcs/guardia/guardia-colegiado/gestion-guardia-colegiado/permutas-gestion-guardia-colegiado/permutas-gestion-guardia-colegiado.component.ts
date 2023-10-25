@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
@@ -57,6 +57,8 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   //SIGARNV-2885 INICIO
   @Input() guardiaColegiado: GuardiaItem;
   //SIGARNV-2885 FIN
+  @Output() refrescarFPermuta = new EventEmitter<any>();
+  @Output() refrescarFicha = new EventEmitter<any>();
 
   async ngOnInit() {
     //this.progressSpinner = true;
@@ -197,7 +199,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
           summary: "Cancel",
           detail: this.translateService.instant("general.message.accion.cancelada")
         }];
-        this.restPermutas();
+        //this.restPermutas();
 
       }
     });
@@ -206,7 +208,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
 
 disableValidar(){
   //this.selectedDatos.length>0 && (this.valueComboGuardia && this.valueComboTurno && this.motivos)
-  if(this.valueComboTurno && this.valueComboGuardia && !this.esLetrado && !this.esColegiado && this.selectedDatos.length>0 && this.permisoEscritura){
+  if(this.valueComboTurno && this.valueComboGuardia && !this.esLetrado && !this.esColegiado && this.permisoEscritura){
     if(this.yaValidada){
       return true;
     }else{
@@ -232,11 +234,19 @@ comprobarValidados(){
      this.progressSpinner = true
     this.sigaServices.post("guardiasColegiado_validarPermuta", this.selectedDatos).subscribe(
       n => {
+        sessionStorage.setItem("fechainicioConfirmador",this.selectedDatos[0].fechainicioConfirmador);
+        sessionStorage.setItem("fechafinConfirmador",this.selectedDatos[0].fechainicioConfirmador); // El flujo no tiene en cuenta la fecha Fin, reusamos la de Inicio
         this.progressSpinner = false;
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.restPermutas();
           this.getPermutas();
           this.validarTambien=false;
+          this.refrescarFPermuta.emit(true);
+          this.progressSpinner = false
+          if(n.ok){
+            this.validarTambien = false;
+            this.refrescarFicha.emit(true);
+          }
       },
       err => {
         //console.log(err);
@@ -246,7 +256,8 @@ comprobarValidados(){
       }, () => {
         
       }
-    ); 
+    );  
+    
   }
 
   nuevaFila() {
@@ -295,7 +306,7 @@ comprobarValidados(){
     if(this.esColegiado){
       this.checkValidar();
     }else if(!this.esColegiado && !this.esLetrado && this.permisoEscritura){//Si no es letrado, no es colegiado y tiene permiso de escritura
-      this.selectedDatos.forEach(dato => {
+      this.permutas.forEach(dato => {
         if(dato.nuevoRegistro){
           this.validarTambien=true; 
           this.checkPermutar();
@@ -333,6 +344,10 @@ comprobarValidados(){
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.restPermutas();
         this.getPermutas();
+        if(this.validarTambien && n.ok){
+          this.validarTambien = false;
+          this.refrescarFicha.emit(true);
+        }
       },
       err => {
         //console.log(err);

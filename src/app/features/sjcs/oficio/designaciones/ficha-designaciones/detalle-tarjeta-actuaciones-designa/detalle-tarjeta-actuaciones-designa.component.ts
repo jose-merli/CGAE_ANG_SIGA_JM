@@ -357,6 +357,10 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
                       keysValues.push(element["numero"]);
                     }else if(key.nombre == "identificador" && element["ano"]){
                       keysValues.push("D" + element["anio"] + "/" + element['numero'])
+                    }else if (key.nombre == "idturno" && element["idTurno"] != undefined) {
+                      keysValues.push(element["idTurno"]);
+                    }else if (key.nombre == "numeroasunto" && element["numeroAsunto"] != undefined) {
+                      keysValues.push(element["numeroAsunto"]);
                     }
                   });
                   datosSeleccionados.push(keysValues);

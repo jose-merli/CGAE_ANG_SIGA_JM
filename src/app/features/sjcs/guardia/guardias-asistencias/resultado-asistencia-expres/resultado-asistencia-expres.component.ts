@@ -307,8 +307,15 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
           this.tabla.iconClickChange(this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[0],
                                       this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[1]);
       }
+      
+      let asistencia = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]);
+      
+      cellLugar = JSON.parse(JSON.stringify(asistencia.rows[0].cells[4]));
+      cellNDiligencia = JSON.parse(JSON.stringify(asistencia.rows[0].cells[5]));
+
       rowToAdd.cells = [cellAsistido, cellDelitosObservaciones, cellEJG, cellFechaActuacion, cellLugar, cellNDiligencia];
-      this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.push(rowToAdd);
+      
+      asistencia.rows.push(rowToAdd);
       this.tabla.totalRegistros = this.rowGroups.length;
     }
 
@@ -346,6 +353,10 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
         if(this.tabla.rowIdsToUpdate.includes(rowGroup.id)){
           rowGroupsToUpdate.push(rowGroup);
         }
+
+        rowGroup.rows[1].cells[3] = rowGroup.rows[0].cells[3];
+        rowGroup.rows[1].cells[4] = rowGroup.rows[0].cells[4];
+        rowGroup.rows[1].cells[5] = rowGroup.rows[0].cells[5];
       });
 
       if (this.filtro.isSustituto != null) {
@@ -374,23 +385,33 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
 
     this.rowGroups.forEach(rowGroup => {
 
-      rowGroup.rows.forEach(row => {
+      rowGroup.rows.forEach((row, index) => {
 
-        row.cells.forEach(cell => {
-          
-          if (cell.type == '5InputSelector') {
+        if (index != 1) {
+          row.cells.forEach(cell => {
+            
+            if (cell.type == '5InputSelector') {
 
-            cell.value.forEach((val, index) => {
+              cell.value.forEach((val, index) => {
 
-              if ((val == undefined || val == '') && index != 2) {
-                error = true;
-                if(cell.value[0] == undefined || cell.value[0] == ""){
-                  error = false;
+                if ((val == undefined || val == '') && index != 2) {
+                  error = true;
+                  if(cell.value[0] == undefined || cell.value[0] == ""){
+                    error = false;
+                  }
                 }
-              }
-            });
-          }
-        });
+              });
+            } else if (cell.type == 'buttomSelect') {
+
+              cell.value.forEach((val, index) => {
+
+                if ((val == undefined || val == '') && index == 4) {
+                  error = true;
+                }
+              });
+            }
+          });
+        }
       });
     });
 

@@ -108,7 +108,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.inputs[1].value = this.campos.numProcedimiento;
             if(this.campos.datosDefensaJuridica == null || this.campos.datosDefensaJuridica == undefined){
               //Si venimos desde EJG el asunto es observaciones || Si venimos de designaciones el asunto es resumenAsunto
-              this.asuntoValue = this.campos.observaciones ? this.campos.observaciones : this.campos.resumenAsunto;
+              if(this.campos.resumenAsunto == null || this.campos.resumenAsunto == undefined){
+                this.asuntoValue = this.campos.observaciones ? this.campos.observaciones : this.campos.resumenAsunto;
+              } else{
+                this.asuntoValue = this.campos.resumenAsunto;
+              }
             } else {
               this.asuntoValue = this.campos.datosDefensaJuridica;
             }
@@ -132,32 +136,31 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.moduloValue = this.campos.idModulo;
             this.datePickers[0].value = this.formatDate(this.campos.fechaEstado);
             this.datePickers[1].value = this.formatDate(this.campos.fechaFin);
-            if (this.valorParametro == 1) {
+            if (this.valorParametro == 1) { // Todo relacionado con todo
               if (this.juzgadoValue != null && this.juzgadoValue != "" && this.juzgadoValue != undefined){
               this.getComboProcedimientosConJuzgado(this.juzgadoValue);
               if (this.procedimientoValue != null && this.procedimientoValue != "" && this.procedimientoValue != undefined) {
                 this.getcCmboModulosConProcedimientos(this.procedimientoValue, this.datosInicial.fechaEntradaInicio);
               }}
             }
-            if (this.valorParametro == 2) {
+            if (this.valorParametro == 2) { // Modulo relacionado con Procedimiento y con Juzgado
               this.getComboModulosConJuzgado(this.juzgadoValue, this.datosInicial.fechaEntradaInicio);
               if (this.moduloValue != null && this.moduloValue != "" && this.moduloValue != undefined) {
                 this.getComboProcedimientosConModulo(this.moduloValue);
               }
             }
-            if (this.valorParametro == 3) {
+            if (this.valorParametro == 3) { // Modulo con Juzgado
               this.getComboModulosConJuzgado(this.juzgadoValue, this.datosInicial.fechaEntradaInicio);
               this.getComboProcedimientos();
             }
-            if (this.valorParametro == 4) {
+            if (this.valorParametro == 4) { // Procedimiento con Juzgado
               this.getComboProcedimientosConJuzgado(this.juzgadoValue);
               this.getComboModulos();
             }
-            if (this.valorParametro == 5) {
+            if (this.valorParametro == 5) { // Todo independient
               this.getComboProcedimientos();
               this.getComboModulos();
             }
-
 
             // Añadir el Procedimiento y Modulo en caso que vengan con datos al buscar designaciones_busquedaProcedimiento.
             if (this.campos.nombreProcedimiento != "" && this.campos.nombreProcedimiento != null && this.campos.nombreProcedimiento != undefined) {
@@ -167,18 +170,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
               this.moduloOpciones.push({ label: this.campos.modulo, value: this.campos.idModulo });
             }
 
-
-
-
-
             // this.moduloOpciones.forEach(element => {
             //   if(element.valu)
             // });
-
-
             // this.procedimientoOpciones.value includes();
-           
-
+          
             this.checkAcceso();
             if (this.campos.estado == 'Activo') {
               if (this.esColegiado) {
@@ -252,6 +248,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
       }
     );
+
+    if (this.juzgadoValue == null || this.juzgadoValue == ''){
+      this.procedimientoValue = null;
+      this.campos.idPretension = null;
+      this.changeModulo();
+    }
   }
 
   formatDate(date) {
@@ -303,7 +305,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     if (this.valorParametro == 2) {
       this.getComboProcedimientosConModulo(this.moduloValue);
     }
-    if (this.procedimientoValue == null || this.procedimientoValue == ''){
+    if (((this.valorParametro == 1 || this.valorParametro == 2) && (this.procedimientoValue == null || this.procedimientoValue == '')) 
+      || (this.valorParametro == 3 && (this.juzgadoValue == null || this.juzgadoValue == ''))){
       this.moduloValue = null;
     }
   }
@@ -313,7 +316,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.getcCmboModulosConProcedimientos(this.procedimientoValue, this.datosInicial.fechaEntradaInicio);
     }
 
-    if (this.juzgadoValue == null || this.juzgadoValue == ''){
+    if ((this.valorParametro == 1 || this.valorParametro == 4) && (this.juzgadoValue == null || this.juzgadoValue == '')){
       this.procedimientoValue = null;
       this.changeModulo();
     }
@@ -339,11 +342,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       designaUpdate.numProcedimiento = this.inputs[1].value;
       designaUpdate.resumenAsunto = this.asuntoValue
       designaUpdate.idJuzgado = this.juzgadoValue;
-      // designaUpdate.idPretension = this.procedimientoValue;
-      designaUpdate.idPretension = this.datosInicial.idPretension;
-      designaUpdate.idProcedimiento = this.moduloValue;
-      //designaUpdate.idModulo = this.moduloValue;
-      designaUpdate.idModulo = this.procedimientoValue;
+      // designaUpdate.idPretension = this.procedimientoValue; //old
+      designaUpdate.idPretension = this.datosInicial.idPretension; 
+      //designaUpdate.idProcedimiento = this.datosInicial.idPretension; //old
+      designaUpdate.idProcedimiento = this.procedimientoValue;
+      designaUpdate.idModulo = this.moduloValue;
+      //designaUpdate.idModulo = this.procedimientoValue; //old
 
       if (this.delitosValue == undefined || this.delitosValue == null || this.delitosValue.length == 0) {
         designaUpdate.delitos = null;
@@ -571,7 +575,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        if (!this.procedimientoOpciones != null) {
+        if (!this.procedimientoOpciones != null && !this.procedimientoOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
         }
@@ -608,7 +612,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        if (!this.moduloOpciones != null) {
+        if (!this.moduloOpciones != null && !this.moduloOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.moduloOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.moduloOpciones);
         }
@@ -639,7 +643,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   getComboProcedimientosConJuzgado(idJuzgado) {
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
+
+     // Verificamos si idProcedimiento es null o indefinido antes de hacer la solicitud POST
+     if (idJuzgado != null) {
+      this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
       n => {
         this.procedimientoOpciones = JSON.parse(n.body).combooItems;
         if (this.campos.nombreProcedimiento != "") {
@@ -655,50 +662,61 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         });
         this.procedimientoOpciones = uniqueArray;
         //this.progressSpinner = false;
-      },
-      err => {
+        },
+        err => {
         //console.log(err);
         this.progressSpinner = false;
-      }, () => {
-        if (!this.procedimientoOpciones != null) {
+        }, () => {
+        if (!this.procedimientoOpciones != null && !this.procedimientoOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
         }
         this.progressSpinner = false;
-      }
-    );
+        }
+      );
+    } else {
+    // No hacemos la solicitud POST y manejar el caso en que idJuzgado es null o undefined
+    this.progressSpinner = false;
+    }
   }
 
   getComboProcedimientosConModulo(idProcedimiento) {
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboProcedimientosConModulo", idProcedimiento).subscribe(
-      n => {
-        this.procedimientoOpciones = JSON.parse(n.body).combooItems;
-        if (this.campos.nombreProcedimiento != "") {
-          this.procedimientoOpciones.push({ label: this.campos.nombreProcedimiento, value: this.campos.idPretension });
-        }
-        let uniqueArrayValue = [];
-        let uniqueArray = [];
-        this.procedimientoOpciones.forEach((c) => {
-          if (!uniqueArrayValue.includes(c.value)) {
-            uniqueArrayValue.push(c.value);
-            uniqueArray.push(c);
+  
+    // Verificamos si idProcedimiento es null o indefinido antes de hacer la solicitud POST
+    if (idProcedimiento != null) {
+      this.sigaServices.post("combo_comboProcedimientosConModulo", idProcedimiento).subscribe(
+        n => {
+          this.procedimientoOpciones = JSON.parse(n.body).combooItems;
+          if (this.campos.nombreProcedimiento != "") {
+            this.procedimientoOpciones.push({ label: this.campos.nombreProcedimiento, value: this.campos.idPretension });
           }
-        });
-        this.procedimientoOpciones = uniqueArray;
-        //this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        if (!this.procedimientoOpciones != null) {
-          this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
-          this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
+          let uniqueArrayValue = [];
+          let uniqueArray = [];
+          this.procedimientoOpciones.forEach((c) => {
+            if (!uniqueArrayValue.includes(c.value)) {
+              uniqueArrayValue.push(c.value);
+              uniqueArray.push(c);
+            }
+          });
+          this.procedimientoOpciones = uniqueArray;
+          //this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          if (!this.procedimientoOpciones != null) {
+            this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
+            this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
+          }
+          this.progressSpinner = false;
         }
-        this.progressSpinner = false;
-      }
-    );
+      );
+    } else {
+      // No hacemos la solicitud POST y manejar el caso en que idProcedimiento es null o undefined
+      this.progressSpinner = false;
+    }
   }
 
   getComboModulosConJuzgado(idJuzgado, fecha) {
@@ -724,7 +742,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        if (!this.moduloOpciones != null) {
+        if (!this.moduloOpciones != null && !this.moduloOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.moduloOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.moduloOpciones);
         }
@@ -774,7 +792,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        if (!this.moduloOpciones != null) {
+        if (!this.moduloOpciones != null && !this.moduloOpciones != undefined) {
           this.commonsService.arregloTildesCombo(this.moduloOpciones);
           this.commonsService.arregloTildesContrariaCombo(this.moduloOpciones);
         }
@@ -914,6 +932,13 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   updateDetalle(updateDetalle) {
     this.progressSpinner = true;
+
+    //Chequeamos las relaciones de los combos Juzgado-Procedimiento-Modulo y reseteamos sus valores a corde
+    this.changeProcedimiento();
+    this.changeModulo();
+    updateDetalle.idProcedimiento = this.procedimientoValue;
+    updateDetalle.idModulo = this.moduloValue;
+
     if (updateDetalle.idPretension == 0) {
       updateDetalle.idPretension = null;
     }

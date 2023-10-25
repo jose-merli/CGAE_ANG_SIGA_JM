@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { TurnosItem } from '../../../../../models/sjcs/TurnosItem';
 import { GuardiaItem } from '../../../../../models/sjcs/GuardiaItem';
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
+import { DatosGeneralesGestionGuardiaColegiadoComponent } from './datos-generales-gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado.component';
 @Component({
   selector: 'app-gestion-guardia-colegiado',
   templateUrl: './gestion-guardia-colegiado.component.html',
@@ -22,7 +23,8 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
   guardiaColegiado: GuardiaItem;
   //SIGARNV-2885 FIN
   permisoEscrituraFacturaciones;
-
+  @ViewChild(DatosGeneralesGestionGuardiaColegiadoComponent) datosGenerales: DatosGeneralesGestionGuardiaColegiadoComponent;
+  
   constructor(private location: Location,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -83,6 +85,10 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
   guardarDatos() {
     sessionStorage.setItem("infoGuardiaColeg", JSON.stringify(this.guardia));
     sessionStorage.setItem("originGuardiaColeg", "true");
+  }
+
+  refrescarFPermuta(){
+    this.datosGenerales.refrescarFchPermuta();
   }
 
   //SIGARNV-2885 INICIO

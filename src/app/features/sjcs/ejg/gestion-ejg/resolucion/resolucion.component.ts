@@ -129,12 +129,20 @@ export class ResolucionComponent implements OnInit {
         if (n.body != "") {
           this.resolucion = JSON.parse(n.body);
           this.bodyInicial = JSON.parse(n.body);
+          if(JSON.parse(n.body).requiereNotificarProc == "0"){
+            this.resolucion.requiereNotificarProc = false;
+            this.bodyInicial.requiereNotificarProc = false;
+          }
+          if(JSON.parse(n.body).turnadoRatificacion == "0"){
+            this.resolucion.turnadoRatificacion = false;
+            this.bodyInicial.turnadoRatificacion = false;
+          }
         } else { 
           this.resolucion = new ResolucionEJGItem(); 
-          this.resolucion.requiereNotificarProc = true;
-          this.resolucion.turnadoRatificacion = true;
-          this.bodyInicial.requiereNotificarProc = true;
-          this.bodyInicial.turnadoRatificacion = true;
+          this.resolucion.requiereNotificarProc = false;
+          this.resolucion.turnadoRatificacion = false;
+          this.bodyInicial.requiereNotificarProc = false;
+          this.bodyInicial.turnadoRatificacion = false;
         }
         if (this.resolucion.fechaPresentacionPonente != undefined)
           this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);

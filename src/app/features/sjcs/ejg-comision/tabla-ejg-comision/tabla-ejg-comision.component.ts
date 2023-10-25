@@ -334,7 +334,7 @@ export class TablaEjgComisionComponent implements OnInit {
       n => {
         this.ejgObject = JSON.parse(n.body).ejgItems;
         this.datosItem = this.ejgObject[0];
-        this.persistenceService.setDatos(this.datosItem);
+        this.persistenceService.setDatosEJG(this.datosItem);
         // this.persistenceService.setFiltros(this.filtro);
         sessionStorage.setItem('filtrosEJGCom', JSON.stringify(this.filtro));
         this.ngOnInit();

@@ -163,4 +163,14 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
     this.msgs = "";
   }
 
+  refrescarFchPermuta(){
+    //Refrescar la fecha de la permuta
+    let fechaInic : number = parseInt(sessionStorage.getItem("fechainicioConfirmador"));
+    let fechaFinC : number = parseInt(sessionStorage.getItem("fechafinConfirmador"));
+    sessionStorage.removeItem("fechainicioConfirmador");
+    sessionStorage.removeItem("fechafinConfirmador");
+    this.campoFechaIni = new Date(fechaInic);
+    this.campoFechaFin = new Date(fechaFinC);
+  }
+
 }

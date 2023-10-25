@@ -79,6 +79,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   activacionEditar: boolean = false;
   showFilters: boolean = false;
   idTurno: string;
+  // letradoAux: string;
 
   @ViewChild(FiltrosSaltosCompensacionesOficioComponent) filtros: FiltrosSaltosCompensacionesOficioComponent;
   @ViewChild(TablaResultadoMixSaltosCompOficioComponent) tabla: TablaResultadoMixSaltosCompOficioComponent;
@@ -138,7 +139,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   search(event) {
 
     let filtros = JSON.parse(sessionStorage.getItem("filtrosAuxSaltosCompOficio"));
-
     if (this.isNewFromOtherPage) {
       filtros = {};
       filtros.idTurno = this.isNewFromOtherPageObject.idturno;
@@ -159,7 +159,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
       n => {
-
         this.datos = JSON.parse(n.body).saltosCompItems;
         let error = JSON.parse(n.body).error;
         this.emptyResults = false;
@@ -245,10 +244,10 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
       let italic = (element.fechaUso != null || element.fechaAnulacion != null);
       let obj = [];
-
       if (italic || this.historico || !this.activacionEditar) {
 
         if(element.fechaAnulacion != null){
+          
           obj = [
             { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
             { type: 'text', value: element.nColegiado, header: this.cabeceras[1].id, disabled: false },

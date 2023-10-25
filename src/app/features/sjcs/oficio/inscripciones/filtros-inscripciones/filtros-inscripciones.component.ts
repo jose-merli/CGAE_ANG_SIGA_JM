@@ -223,10 +223,6 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
 
     if (this.isLetrado) {
       this.getDataLoggedUser();
-    }else{
-      setTimeout(() => {
-        this.isBuscar();
-      }, 5);
     }
   }
 
@@ -455,7 +451,7 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
     this.disabledestado = false;
     this.disabledFechaHasta = true;
     this.selectedTipo = "0"; 
-    this.selectedEstado = undefined;  
+    this.selectedEstado = undefined;
     if (sessionStorage.getItem("isLetrado") == "false") {
       this.usuarioBusquedaExpress = {
         numColegiado: "",

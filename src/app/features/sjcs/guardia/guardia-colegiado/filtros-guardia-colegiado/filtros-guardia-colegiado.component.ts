@@ -97,10 +97,20 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
           this.filtros.idTurno = [this.dataBuscador.turno.toString()];
         }
         if(this.dataBuscador.fechaDesde != null && this.dataBuscador.fechaDesde != ''){
-          this.filtros.fechadesde = new Date(this.dataBuscador.fechaDesde); //MM/dd/yyyy
+          let diaDesde = this.dataBuscador.fechaDesde.split('/')[0];
+          let mesDesde = this.dataBuscador.fechaDesde.split('/')[1];
+          let anyoDesde = this.dataBuscador.fechaDesde.split('/')[2];
+          let fechaDesde = mesDesde + '/' + diaDesde + '/' + anyoDesde;
+          this.filtros.fechadesde = new Date(fechaDesde); //MM/dd/yyyy
+          console.log(new Date(fechaDesde));
         }
         if(this.dataBuscador.fechaHasta != null && this.dataBuscador.fechaHasta != ''){
-          this.filtros.fechahasta = new Date(this.dataBuscador.fechaHasta);//MM/dd/yyyy
+          let diaHasta = this.dataBuscador.fechaHasta.split('/')[0];
+          let mesHasta = this.dataBuscador.fechaHasta.split('/')[1];
+          let anyoHasta = this.dataBuscador.fechaHasta.split('/')[2];
+          let fechaHasta = mesHasta + '/' + diaHasta + '/' + anyoHasta;
+          this.filtros.fechahasta = new Date(fechaHasta);//MM/dd/yyyy
+          console.log(new Date(fechaHasta));
         }
       }
       if(this.filtros.numColegiado != null){
