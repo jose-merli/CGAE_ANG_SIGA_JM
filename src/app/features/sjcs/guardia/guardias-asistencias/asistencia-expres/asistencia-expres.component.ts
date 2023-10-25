@@ -816,16 +816,22 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
 
   resetFiltros(){
-    if(!this.filtro.filtroAux.anio){
-      this.filtro.filtro = new FiltroAsistenciaItem();
-      if(!this.isLetrado){
-        this.filtro.usuarioBusquedaExpress.nombreAp = '';
-        this.filtro.usuarioBusquedaExpress.numColegiado = '';
-      }
-      this.filtro.filtro.anio = String(new Date().getFullYear());
-    }else{
-      this.filtro.filtro = Object.assign({},this.filtro.filtroAux);
+    let nombreAp = '';
+    let numcolegiado = '';
+    if(this.isLetrado){
+      nombreAp = this.filtro.usuarioBusquedaExpress.nombreAp;
+      numcolegiado = this.filtro.usuarioBusquedaExpress.numColegiado;
     }
+    this.filtro.filtro = new FiltroAsistenciaItem();
+    if(!this.isLetrado){
+      this.filtro.usuarioBusquedaExpress.nombreAp = '';
+      this.filtro.usuarioBusquedaExpress.numColegiado = '';
+    }else{
+      this.filtro.usuarioBusquedaExpress.nombreAp = nombreAp;
+      this.filtro.usuarioBusquedaExpress.numColegiado = numcolegiado;
+    }
+    this.filtro.filtro.anio = String(new Date().getFullYear());
+
   }
 
   nuevaAsistencia(){
