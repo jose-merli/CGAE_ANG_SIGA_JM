@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation, SimpleChanges, ViewChild, OnDestroy } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -23,7 +23,7 @@ import { ParametroDto } from '../../../../../models/ParametroDto';
   styleUrls: ['./datos-generales-ejg.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class DatosGeneralesEjgComponent implements OnInit {
+export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   //Resultados de la busqueda
   @Input() datos: EJGItem;
   @Input() modoEdicion;
@@ -756,6 +756,12 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.msgs = this.commonsServices.checkPermisos(false, undefined);
         }
       }).catch(error => console.error(error));
+  }
+
+  ngOnDestroy(){
+    if(sessionStorage.getItem("justiciable")){
+      sessionStorage.removeItem("justiciable");
+    }
   }
 
 }

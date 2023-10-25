@@ -98,12 +98,16 @@ export class GestionJusticiablesComponent implements OnInit {
     private location: Location) { }
 
   async ngOnInit() {
-
+    if(sessionStorage.getItem("justiciable")){
+      sessionStorage.removeItem("justiciable");
+    }
     this.progressSpinner = true;
 
     // Comprobar si esta en Creación.
     if (!sessionStorage.getItem("nuevoJusticiable")) {
-
+      if(sessionStorage.getItem("origen") == "Nuevo"){
+        this.fromNuevoJusticiable = true;
+      }
       if (sessionStorage.getItem("origin") == "Interesado") {
         //sessionStorage.removeItem('origin');
         this.fromInteresado = true;
