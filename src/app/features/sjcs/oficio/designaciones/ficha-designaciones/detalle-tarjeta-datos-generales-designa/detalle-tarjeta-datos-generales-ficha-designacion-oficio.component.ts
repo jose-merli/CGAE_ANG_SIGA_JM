@@ -459,6 +459,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.progressSpinner = true;
     this.msgs = [];
     if (detail == "save" && this.inputs[0].disable == false) {
+      sessionStorage.removeItem("justiciable");
       if (this.inputs[0].value == "" && this.inputs[0].disable == false && this.checkArt == true) {
         this.showMsgError(this.translateService.instant("justiciaGratuita.oficio.designa.busquedaManualObligatoria"));
         this.progressSpinner = false;
