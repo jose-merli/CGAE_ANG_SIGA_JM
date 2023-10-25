@@ -121,6 +121,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("justiciable", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("deJusticiableANuevaDesigna", 'true');
     sessionStorage.setItem("nuevaDesigna", "true");
     this.progressSpinner = false;
     this.router.navigate(["/fichaDesignaciones"]);

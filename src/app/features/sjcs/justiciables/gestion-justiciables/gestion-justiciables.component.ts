@@ -101,6 +101,9 @@ export class GestionJusticiablesComponent implements OnInit {
     if(sessionStorage.getItem("justiciable")){
       sessionStorage.removeItem("justiciable");
     }
+    if(sessionStorage.getItem("deJusticiableANuevaDesigna")){
+      sessionStorage.removeItem("deJusticiableANuevaDesigna");
+    }
     this.progressSpinner = true;
 
     // Comprobar si esta en Creación.
