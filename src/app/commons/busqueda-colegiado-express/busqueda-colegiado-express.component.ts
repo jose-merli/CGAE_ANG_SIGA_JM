@@ -122,8 +122,11 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
         this.searchTramitacionEJG(form);
       
      // else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    } else if(form.numColegiado == ''){
+      this.clearForm();
+    }else {
+      this.defaultsearch(form);
     }
-    else this.defaultsearch(form);
   }
 
   searchTramitacionEJG(form) {
