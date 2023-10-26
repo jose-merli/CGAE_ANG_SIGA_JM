@@ -216,7 +216,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       data.push(row);
     });
     data = data.slice();
-    if (!sort.active || sort.direction === 'asc') {
+    if (!sort.active || sort.direction === '') {
       this.rowGroups = data;
       return;
     }
@@ -227,7 +227,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       for (let i = 0; i < this.cabeceras.length; i++) {
         let nombreCabecera = this.cabeceras[i].id;
         if (nombreCabecera == sort.active) {
-      console.log("a.cells["+i+"].type:"+a.cells[i].type);
+          //console.log("a.cells["+i+"].type:"+a.cells[i].type);
 
           if (a.cells[i].type == 'datePickerFin' && b.cells[i].type == 'datePickerFin') {
             return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
@@ -252,7 +252,6 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
               } else {
               }
             } else {
-              
             }
           }
 

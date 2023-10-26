@@ -364,51 +364,81 @@ export class TablaResultadoMixComponent implements OnInit {
       return false;
     }
   }
-//Modificación sortdata para mostrar fechas mas antiguas o mas nuevas
- sortData(sort: Sort) {
-    let data: Row[] = [...this.rowGroups]; 
-
+  sortData(sort: Sort) {
+    if (!this.inscripciones){
+    //console.log("entro en el método Sort con valor:"+ sort.active+","+sort.direction);
+    let data: Row[] = [];
+    this.rowGroups = this.rowGroups.filter((row) => {
+      data.push(row);
+    });
+    data = data.slice();
     if (!sort.active || sort.direction === '') {
-      
-        return;
+      this.rowGroups = data;
+      return;
     }
 
-    data.sort((a, b) => {
-        const isAsc = sort.direction === 'asc';
-        for (let i = 0; i < this.cabeceras.length; i++) {
-            let nombreCabecera = this.cabeceras[i].id;
-            if (nombreCabecera == sort.active) {
-                if (a.cells[i].type == 'datePickerFin' && b.cells[i].type == 'datePickerFin') {
-                    return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
-                } else if (a.cells[i].type == 'date' && b.cells[i].type == 'date') {
-                    return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
-                } else if (a.cells[i].type == 'dateTime' && b.cells[i].type == 'dateTime') {
-                    return compareDateAndTime(a.cells[i].value.label, b.cells[i].value.label, isAsc);
-                }
+    this.rowGroups = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
 
-                let valorA = a.cells[i].value;
-                let valorB = b.cells[i].value;
-                if (valorA != null && valorB != null) {
-                    if (isNaN(valorA)) {
-                        const dayA = valorA.substr(0, 2);
-                        const monthA = valorA.substr(3, 2);
-                        const yearA = valorA.substr(6, 10);
-                        var dt = new Date(yearA, monthA, dayA);
-                        if (!isNaN(dt.getTime())) {
-                            return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
-                        }
-                    }
-                }
+      for (let i = 0; i < this.cabeceras.length; i++) {
+        let nombreCabecera = this.cabeceras[i].id;
+        if (nombreCabecera == sort.active){
+          //console.log("a.cells["+i+"].type:"+a.cells[i].type);
 
-                return compare(a.cells[i].value, b.cells[i].value, isAsc);
+          if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
+            return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
+          }else if (a.cells[i].type=='date' && b.cells[i].type=='date'){
+            return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
+          }
+          else if (a.cells[i].type=='dateTime' && b.cells[i].type=='dateTime'){
+            return compareDateAndTime(a.cells[i].value.label, b.cells[i].value.label, isAsc);
+          }
+
+          let valorA = a.cells[i].value;
+          let valorB = b.cells[i].value;
+          if (valorA!=null && valorB!=null){
+            if(isNaN(valorA)){ //Checked for numeric
+              const dayA = valorA.substr(0, 2) ;
+              const monthA = valorA.substr(3, 2);
+              const yearA = valorA.substr(6, 10);
+              //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+              var dt=new Date(yearA, monthA, dayA);
+              if(!isNaN(dt.getTime())){ //Checked for date
+                return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
+              }else{
+              }
+            } else{
             }
+          }
+
+          return compare(a.cells[i].value, b.cells[i].value, isAsc);
+          
         }
+      }
+ 
     });
 
-    if (this.inscripciones) {
-        this.rowGroupsAux = data;
+  }else{
+    let data :Row[] = [];
+    this.rowGroups = this.rowGroupsAux.filter((row) => {
+        data.push(row);
+    });
+    data = data.slice();
+    if (!sort.active || sort.direction === '') {
+      this.rowGroups = data;
+      return;
     }
-    this.rowGroups = data;
+    this.rowGroups = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      let resultado;
+        for (let i = 0; i < a.cells.length; i++) {
+        resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
+        }
+    return resultado ;
+  });
+  this.rowGroupsAux = this.rowGroups;
+  
+    } 
 }
 
 
