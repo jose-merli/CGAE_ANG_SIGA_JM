@@ -55,6 +55,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   datosAsistencia: TarjetaAsistenciaItem;
   datosJusticiables: JusticiableItem;
   maxLengthNum: Number = 5;
+  ejgCreadoNuevo: boolean = false;
 
   institucionActual;
 
@@ -523,6 +524,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                 );
 
               }
+              this.ejgCreadoNuevo = true;
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.body.numEjg = datosItem.numEjg;
               this.body.numero = datosItem.numero;
