@@ -35,7 +35,8 @@ export class TarjetaColaOficio implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
 
   selectedItem: number = 10;
-  selectedItemSaltosCompensaciones: number = 3;
+  selectedItemSaltos: number = 5;
+  selectedItemCompensaciones: number = 5;
   selectAll;
   selectedDatos: any[] = [];
   numSelected = 0;
@@ -718,6 +719,10 @@ export class TarjetaColaOficio implements OnInit {
 
     this.rowsPerPage = [
       {
+        label: 5,
+        value: 5
+      },
+      {
         label: 10,
         value: 10
       },
@@ -735,14 +740,22 @@ export class TarjetaColaOficio implements OnInit {
       }
     ];
   }
+  
 
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
+  onChangeRowsPerPages(event,id) {
+    if(id === "saltos"){
+      this.selectedItemSaltos = event.value;
+    }else if(id === "compensaciones"){
+      this.selectedItemCompensaciones = event.value;
+    }else{
+      this.selectedItem = event.value;
+    }
     this.changeDetectorRef.detectChanges();
     this.table.reset();
     this.tableComp.reset();
     this.tableSaltos.reset();
   }
+
 
 
   onChangeSelectAll() {
@@ -805,6 +818,7 @@ export class TarjetaColaOficio implements OnInit {
       this.numSelected = this.selectedDatos.length;
     }
   }
+
 
   clear() {
     this.msgs = [];
