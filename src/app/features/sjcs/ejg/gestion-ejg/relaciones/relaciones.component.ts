@@ -561,13 +561,12 @@ export class RelacionesComponent implements OnInit {
             datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
             datos.fechaEntradaInicio = desItem.fechaEntradaInicio;
             datos.nombreColegiado = desItem.nombreColegiado;
-            datos.nombreProcedimiento = desItem.nombreProcedimiento;
             datos.nombreTurno = desItem.nombreTurno;
             datos.idInstitucion = desItem.idInstitucion;
             datos.idTurno = desItem.idTurno;
             desItem = datos;
             desItem.anio = desItem.ano;
-            desItem.idProcedimiento = desItem.idProcedimiento;
+            desItem.idProcedimiento = desItem.idPretension;
             desItem.numProcedimiento = desItem.numProcedimiento;
             desItem.ano = 'D' + desItem.anio + '/' + desItem.codigo;
             if (this.art27) sessionStorage.setItem("Art27", "true");

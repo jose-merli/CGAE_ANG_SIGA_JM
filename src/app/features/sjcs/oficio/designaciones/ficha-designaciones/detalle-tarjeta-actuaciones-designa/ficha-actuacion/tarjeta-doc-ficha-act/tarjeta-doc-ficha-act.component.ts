@@ -395,7 +395,11 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       doc.file = null;
       doc.nuevo = false;
       doc.asociado = `${this.actuacionDesigna.actuacion.numeroAsunto} ${this.actuacionDesigna.actuacion.acreditacion} ${this.actuacionDesigna.actuacion.modulo}`;
-      doc.extension = el.nombreFichero.substring(el.nombreFichero.lastIndexOf("."), el.nombreFichero.length);
+
+      if (el.nombreFichero != null && el.nombreFichero != '') {
+        doc.extension = el.nombreFichero.substring(el.nombreFichero.lastIndexOf("."), el.nombreFichero.length);
+      }
+      
       doc.idPersona = el.idPersona;
       this.documentos2.push(doc);
     });
