@@ -12,12 +12,12 @@
       <div class="form-row">
 
         <!-- TURNO -->
-        <div class="form-group-interlineado col-lg-3 col-md-3">
+     <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "dato.jgr.guardia.guardias.turno" | translate }}</label>
             <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idTurno'
                   [options]="comboTurno" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
                   styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeTurnos($event)"></p-multiSelect>
-        </div>
+        </div> 
 
         <!-- GUARDIA -->
         <div class="form-group-interlineado col-lg-3 col-md-3">

@@ -61,11 +61,11 @@
               <span class="w100 cell-value" *ngIf="cell.type == 'select'">
                 <app-selector class="center" [i]="0" [textoVisible]="" [selector]="cell.value"></app-selector>
               </span>
-              <span class="w100 cell-value" *ngIf="cell.type == 'turnoSelect'">
+               <span class="w100 cell-value" *ngIf="cell.type == 'turnoSelect'">
                 <p-dropdown class="select-form" [filter]="true" [(ngModel)]="cell.value" [options]="cell.combo"
                   filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
                   [showClear]="true" (onChange)="onChangeTurno($event, row, cell)"></p-dropdown>
-              </span>
+              </span> 
               <span class="w100 cell-value" *ngIf="cell.type == 'guardiaSelect'">
                 <p-dropdown class="select-form" [filter]="true" [(ngModel)]="cell.value" [options]="cell.combo"
                   filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
