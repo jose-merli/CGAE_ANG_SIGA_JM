@@ -157,6 +157,10 @@ export class RemesasResultadosComponent implements OnInit {
     });
   }
   
+  clear() {
+    this.msgs = [];
+  }
+  
   showMessage2(event) {
     this.msgs = [];
     this.msgs.push({
