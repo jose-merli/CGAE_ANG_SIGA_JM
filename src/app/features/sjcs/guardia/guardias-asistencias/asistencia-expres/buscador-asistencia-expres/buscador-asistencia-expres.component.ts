@@ -36,6 +36,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   salto: boolean = false;
   refuerzoSustitucionNoSeleccionado: boolean = true;
   deshabilitarLetradoGuardia: boolean = false;
+  asistenciaExpresVieneDeBuscadorExpres: boolean = false;
 
   comboTurnos = [];
   comboGuardias = [];
@@ -62,6 +63,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     private translateService: TranslateService) {}
 
   ngOnInit(): void {
+    
+    // Comprueba que viene de la búsqueda de colegiados exprés para controlar el combo refuerzo/sustitucion al cambiar la guardia
+    if (sessionStorage.getItem('asistenciaExpresVieneDeBuscadorExpres') != null) {
+      this.asistenciaExpresVieneDeBuscadorExpres = true;
+    }
 
     if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda") && sessionStorage.getItem("vieneDeAsistenciaExpres")){
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistenciaExpresBusqueda"));
@@ -360,8 +366,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
                 }
 
                 if (this.filtro.idLetradoGuardia != undefined && this.filtro.idLetradoGuardia != null){
-                  //this.filtro.isSustituto = null;
-                  this.refuerzoSustitucionNoSeleccionado = false;
+                  if (!this.asistenciaExpresVieneDeBuscadorExpres) {
+                    this.filtro.isSustituto = null;
+                    this.onChangeRefuerzoSustitucion(null);
+                  }
+                  //this.refuerzoSustitucionNoSeleccionado = false;
                 }else{
                   this.refuerzoSustitucionNoSeleccionado = true;
                 }
@@ -371,6 +380,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
                 this.filtro.isSustituto = 'N';
                 this.refuerzoSustitucionNoSeleccionado = false;
               }
+
+              //this.asistenciaExpresVieneDeBuscadorExpres = false;
           },
           err => {
             //console.log(err);

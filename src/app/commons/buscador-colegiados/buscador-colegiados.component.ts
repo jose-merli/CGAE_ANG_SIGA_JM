@@ -73,7 +73,8 @@ export class BuscadorColegiadosComponent implements OnInit {
       this.nuevaInscripcionGuardia=true;
     }
     
-
+    // Comprueba que viene del buscador exprés para controlar el combo de refuerzo/sustitución en asistencias exprés
+    sessionStorage.setItem('asistenciaExpresVieneDeBuscadorExpres', 'true');
   }
 
   showMsg(severity, summary, detail) {
