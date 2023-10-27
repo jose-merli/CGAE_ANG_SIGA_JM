@@ -122,6 +122,9 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
         this.estadoNombre = this.getStatusValue(this.datosGenerales.estadoProgramacion)
       }
 
+      if (this.datosGenerales.listaGuarias == undefined) {
+        this.datosGenerales.listaGuarias = {value:""};
+      }
       //this.getComboListaGuardia();
       this.getComboConjuntouardia();
       if (this.datosGenerales.fechaDesde != undefined && this.datosGenerales.fechaDesde != null && this.datosGenerales.fechaHasta != undefined && this.datosGenerales.fechaHasta) {

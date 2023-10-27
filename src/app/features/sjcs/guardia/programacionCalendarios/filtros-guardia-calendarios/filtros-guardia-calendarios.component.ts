@@ -96,6 +96,13 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       this.filtros = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
       );
+      
+      if (this.filtros.idTurno.includes(',')){
+        this.filtros.idTurno = this.filtros.idTurno.split(',');
+      }else {
+        this.filtros.idTurno = [this.filtros.idTurno];
+      }
+
       if (this.filtros) {
         if (this.filtros.fechaCalendarioDesde == undefined || this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == '') {
           let AnioAnterior = new Date().getFullYear() - 1;
