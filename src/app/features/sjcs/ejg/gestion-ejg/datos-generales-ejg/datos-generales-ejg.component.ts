@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation, SimpleChanges, ViewChild, OnDestroy } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -23,7 +23,7 @@ import { ParametroDto } from '../../../../../models/ParametroDto';
   styleUrls: ['./datos-generales-ejg.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class DatosGeneralesEjgComponent implements OnInit {
+export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   //Resultados de la busqueda
   @Input() datos: EJGItem;
   @Input() modoEdicion;
@@ -55,6 +55,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   datosAsistencia: TarjetaAsistenciaItem;
   datosJusticiables: JusticiableItem;
   maxLengthNum: Number = 5;
+  ejgCreadoNuevo: boolean = false;
 
   institucionActual;
 
@@ -207,6 +208,20 @@ export class DatosGeneralesEjgComponent implements OnInit {
           });
         }
         this.commonsServices.arregloTildesCombo(this.comboTipoEJG);
+
+        this.sigaServices
+          .get("filtrosejg_getTipoEJGDefecto")
+          .subscribe(
+            data => {
+              if (data != null && data != undefined) {
+                let tipoEJGAux = data;
+                for (let i = 0; i < this.comboTipoEJG.length; i++) {
+                  if (this.comboTipoEJG[i].value == tipoEJGAux) {
+                    this.body.tipoEJG = this.comboTipoEJG[i].value;
+                  }
+                }
+              }
+            });
       },
       err => {
         //console.log(err);
@@ -219,11 +234,29 @@ export class DatosGeneralesEjgComponent implements OnInit {
       n => {
         this.comboTipoEJGColegio = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTipoEJGColegio);
-
         //Determina el valor en la cabecera del campo tipo ejg colegio
         if (this.body.tipoEJGColegio != null && this.body.tipoEJGColegio != undefined) {
           this.changeTipoEJGColegio();
         }
+        let parametro = {
+          valor: "TIPO_EJG_COLEGIO"
+        };
+
+        this.sigaServices
+          .post("busquedaPerJuridica_parametroColegio", parametro)
+          .subscribe(
+            data => {
+
+              if (data != null && data != undefined) {
+                let tipoEJGColegioAux = JSON.parse(data.body).parametro;
+                for (let i = 0; i < this.comboTipoEJGColegio.length; i++) {
+                  if (this.comboTipoEJGColegio[i].label === tipoEJGColegioAux) {
+                    this.body.tipoEJGColegio = this.comboTipoEJGColegio[i].value;
+                  }
+                }
+              }
+            });
+
       },
       err => {
         //console.log(err);
@@ -523,6 +556,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
                 );
 
               }
+              this.ejgCreadoNuevo = true;
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.body.numEjg = datosItem.numEjg;
               this.body.numero = datosItem.numero;
@@ -756,6 +790,12 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.msgs = this.commonsServices.checkPermisos(false, undefined);
         }
       }).catch(error => console.error(error));
+  }
+
+  ngOnDestroy(){
+    if(sessionStorage.getItem("justiciable")){
+      sessionStorage.removeItem("justiciable");
+    }
   }
 
 }

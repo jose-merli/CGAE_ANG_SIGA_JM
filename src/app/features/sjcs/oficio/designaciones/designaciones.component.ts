@@ -53,7 +53,13 @@ export class DesignacionesComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    if(sessionStorage.getItem("deJusticiableANuevaDesigna")){
+      if(sessionStorage.getItem("justiciable")){
+        sessionStorage.removeItem("justiciable");
+      }
+      sessionStorage.removeItem("deJusticiableANuevaDesigna");
+    }
+    
     if(sessionStorage.getItem("filtroAsistenciaExpresBusqueda") != null){
       sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
     }

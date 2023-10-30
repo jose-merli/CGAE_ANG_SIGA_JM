@@ -121,6 +121,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("justiciable", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("deJusticiableANuevaDesigna", 'true');
     sessionStorage.setItem("nuevaDesigna", "true");
     this.progressSpinner = false;
     this.router.navigate(["/fichaDesignaciones"]);
@@ -152,6 +153,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
+      sessionStorage.setItem("origen", "Nuevo");
       this.crearEJG();
     }
   }
@@ -161,6 +163,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     if (sessionStorage.getItem("EJGItem")) {
       sessionStorage.removeItem("EJGItem");
     }
+    this.persistenceService.clearDatosEJG();
     sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     this.persistenceService.clearDatos();
     sessionStorage.setItem("Nuevo", "true");

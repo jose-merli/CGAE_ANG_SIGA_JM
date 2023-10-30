@@ -176,12 +176,12 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
 
     let error = false;
 
-    if (this.defensaJuridicaItem.nig == null || (this.defensaJuridicaItem.nig != null && !error && !this.validarNig(this.defensaJuridicaItem.nig))) {
+    if ((this.defensaJuridicaItem.nig != null && !error && !this.validarNig(this.defensaJuridicaItem.nig))) {
       this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
       error = true;
     }
 
-    if (this.defensaJuridicaItem.numProcedimiento == null || (this.defensaJuridicaItem.numProcedimiento != null && !error && !this.validarNProcedimiento(this.defensaJuridicaItem.numProcedimiento))) {
+    if ((this.defensaJuridicaItem.numProcedimiento != null && !error && !this.validarNProcedimiento(this.defensaJuridicaItem.numProcedimiento))) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido"));
       error = true;
     }

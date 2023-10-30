@@ -218,6 +218,9 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnDestroy() {
     if (sessionStorage.getItem("vieneDeFichaDesigna")) sessionStorage.removeItem("vieneDeFichaDesigna");
+    if(sessionStorage.getItem("justiciable")){
+      sessionStorage.removeItem("justiciable");
+    }
   }
 
   clear() {

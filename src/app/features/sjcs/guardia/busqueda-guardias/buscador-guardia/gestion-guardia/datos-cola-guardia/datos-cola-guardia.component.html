@@ -126,7 +126,7 @@
               translate}}</strong>
             <p-table [value]="datosCompensaciones" [columns]="colsCompensaciones" [(selection)]="selectedDatos"
               [selectionMode]="none" [responsive]="true" #tableComp class="tabla-listado" [paginator]="true"
-              [rows]="selectedItemSaltosCompensaciones" (onRowSelect)="actualizaSeleccionados()"
+              [rows]="selectedItemCompensaciones" (onRowSelect)="actualizaSeleccionados()"
               (onRowUnselect)="actualizaSeleccionados()" [ngClass]="{ 'customCursor': selectMultiple}"
               paginatorPosition="bottom">
               <ng-template pTemplate="colgroup" let-columns>
@@ -172,6 +172,10 @@
                   <label class="pr-3 registros-totales">{{tableComp.first + 1}} al {{tableComp.first
                     + tableComp.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
                     {{tableComp.totalRecords}}</label>
+                    <label>{{"general.message.mostrar" | translate}}</label>
+                    <p-dropdown [(ngModel)]="selectedItemCompensaciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event,'compensaciones')">
+                    </p-dropdown>
+                    <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                 </div>
               </ng-template>
             </p-table>
@@ -180,7 +184,7 @@
             <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.tituloSaltos" | translate}}</strong>
             <div class="wrap-tabla-saltos">
               <p-table [value]="datosSaltos" [columns]="colsSaltos" [responsive]="true" #tableSaltos
-                class="tabla-listado" [paginator]="true" [rows]="selectedItemSaltosCompensaciones"
+                class="tabla-listado" [paginator]="true" [rows]="selectedItemSaltos"
                 [selectionMode]="none" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="bottom">
                 <ng-template pTemplate="colgroup" let-columns>
                   <colgroup>
@@ -225,6 +229,10 @@
                     <label class="pr-3 registros-totales">{{tableSaltos.first + 1}} al {{tableSaltos.first
                       + tableSaltos.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
                       {{tableSaltos.totalRecords}}</label>
+                      <label>{{"general.message.mostrar" | translate}}</label>
+                    <p-dropdown [(ngModel)]="selectedItemSaltos" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event,'saltos')">
+                    </p-dropdown>
+                    <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                   </div>
                 </ng-template>
               </p-table>

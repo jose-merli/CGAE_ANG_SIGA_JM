@@ -52,8 +52,8 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
   rowGroups: Row[];
   rowGroupsAux: Row[];
   datosConfColaGuardias: any;
-  selectedItem: number = 10;
-  selectedItemSaltosCompensaciones: number = 3;
+  selectedItemSaltos: number = 5;
+  selectedItemCompensaciones: number = 5;
   cabeceras = [];
   configuracionCola: ConfiguracionCola = {
     'manual': false,
@@ -115,7 +115,7 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
       });
       this.body.ordenacionManual = false;      
       this.inicio();
-      
+
   }
 
   ngAfterViewInit(): void {
@@ -177,7 +177,7 @@ inicio(){
           });
 
       });
-
+      
 }
   
     selectedAll(event) {
@@ -384,7 +384,6 @@ inicio(){
         data => {
           this.getColaGuardia();
           this.progressSpinner = false;
-          //console.log(data);
         }, err => {
           this.progressSpinner = false;
           //console.log(err);
@@ -956,6 +955,10 @@ if (rest){
 
     this.rowsPerPage = [
       {
+        label: 5,
+        value: 5
+      },
+      {
         label: 10,
         value: 10
       },
@@ -972,6 +975,17 @@ if (rest){
         value: 40
       }
     ];
+  }
+    onChangeRowsPerPages(event,id) {
+    if(id === "saltos"){
+      this.selectedItemSaltos = event.value;
+    }else{
+      this.selectedItemCompensaciones = event.value;
+    }
+    this.cdRef.detectChanges();
+    this.table.reset();
+    this.tableComp.reset();
+    this.tableSaltos.reset();
   }
 
   actualizaSeleccionados(selectedDatos) {
