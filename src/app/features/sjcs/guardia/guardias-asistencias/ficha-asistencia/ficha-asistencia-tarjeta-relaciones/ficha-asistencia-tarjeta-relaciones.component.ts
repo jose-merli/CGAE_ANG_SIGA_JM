@@ -281,6 +281,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             this.getRelaciones();
             this.refreshTarjetas.emit(result.id);
+            sessionStorage.removeItem("datosEJG");
           }
 
         },
