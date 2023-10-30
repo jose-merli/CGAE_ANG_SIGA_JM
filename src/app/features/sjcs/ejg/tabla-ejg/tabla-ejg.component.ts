@@ -560,7 +560,27 @@ export class TablaEjgComponent implements OnInit {
         if (JSON.parse(n.body).status == "OK") {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //this.busqueda.emit(true);
-          this.location.back();
+          if(this.remesa!= null && this.remesa != undefined){
+            this.location.back();
+          }else{
+
+            let remesasDatosEntradaItem =
+              {
+                'idRemesa': this.valueComboRemesa,
+                'descripcion': "",
+                'informacionEconomica': "false"
+                };
+            
+            this.sigaServices.post("filtrosremesas_buscarRemesa", remesasDatosEntradaItem).subscribe(
+              n => {
+                //console.log("Dentro del servicio buscarRemesas para obtener las incidencias");
+                this.datos = JSON.parse(n.body).remesasItems;
+                let remesaTabla = this.datos[0];
+                localStorage.setItem('remesaItem', JSON.stringify(remesaTabla));
+                localStorage.setItem('ficha', "registro");
+                this.router.navigate(["/fichaRemesasEnvio"]);
+              });
+          }
         } else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
       },
       err => {
