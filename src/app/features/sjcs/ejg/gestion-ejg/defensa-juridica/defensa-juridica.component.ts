@@ -134,8 +134,7 @@ export class DefensaJuridicaComponent implements OnInit {
       this.getComboCDetencion();
       this.getComboCalidad();
       this.getComboJuzgado();
-      // Cargar Parametro CONFIGURAR_COMBO_DESIGNA y combo procedimientos.
-      this.cargarProcedimiento();
+      
       // Función de rellenar el combo como Designaciones.
       //if (this.body.juzgado != null) this.getComboProcedimiento();
       this.getComboDelitos();
@@ -461,6 +460,8 @@ export class DefensaJuridicaComponent implements OnInit {
         this.persistenceService.setDatosEJG(datosItem);
         this.body = this.persistenceService.getDatosEJG();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        // Cargar Parametro CONFIGURAR_COMBO_DESIGNA y combo procedimientos.
+        this.cargarProcedimiento();
         this.progressSpinner = false;
       },
       err => {
