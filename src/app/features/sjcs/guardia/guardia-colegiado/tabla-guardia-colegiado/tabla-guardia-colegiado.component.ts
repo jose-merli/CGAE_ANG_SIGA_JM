@@ -52,10 +52,16 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     this.datos.forEach((guardia)=>{
+      if(guardia.validada == '1'){
+        guardia.validada = true;
+      }else{
+        guardia.validada = false;
+      }
       if(guardia.facturado==1){
         guardia.estadoGuardia=guardia.estadoGuardia.split('*');
       }
     });
+    console.log(this.datos);
   }
 
   // isSelectMultiple() {
@@ -87,6 +93,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
       { field: "letradosGuardia", header: "justiciaGratuita.justiciables.literal.colegiado" },
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.nColegiado" },
       { field: "ordenGrupo", header: "administracion.informes.literal.orden" },
+      { field: "validada", header: "dato.jgr.guardia.inscripciones.validada" },
       { field: "estadoGuardia", header: "dato.jgr.guardia.inscripciones.estado" },
 
     ];
@@ -232,7 +239,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
 
   desvalidarGuardia(selectedDatos){
-    if(selectedDatos.fechaValidacion != null || selectedDatos.fechaValidacion != undefined){
+    //if(selectedDatos.fechaValidacion != null || selectedDatos.fechaValidacion != undefined){
       let guardia = new GuardiaItem();
       guardia=selectedDatos;
       
@@ -255,9 +262,9 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
           this.progressSpinner = false;
           //console.log(err);
         });
-    }else{
+    /*}else{
       this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Guardia ya validada" });
-    }
+    }*/
     this.resetBoton();
   }
 
