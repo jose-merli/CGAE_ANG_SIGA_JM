@@ -103,6 +103,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
 
+      this.filtro.idLetradoManual = nColegiado;
+
     }
     this.titulo = 'Datos Comunes';
     this.resaltadoDatos = true;
