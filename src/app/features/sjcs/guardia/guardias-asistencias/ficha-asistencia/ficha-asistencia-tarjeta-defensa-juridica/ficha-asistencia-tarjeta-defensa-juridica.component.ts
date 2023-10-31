@@ -176,7 +176,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
 
     let error = false;
 
-    if ((this.defensaJuridicaItem.nig != null && !error && !this.validarNig(this.defensaJuridicaItem.nig))) {
+    if ((this.defensaJuridicaItem.nig != null && this.defensaJuridicaItem.nig != "" && !error && !this.validarNig(this.defensaJuridicaItem.nig))) {
       this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
       error = true;
     }
