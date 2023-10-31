@@ -158,9 +158,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         this.filtrosAE.filtro.idLetradoManual = oldIdPersona.nColegiado;
       }
       
-      if(this.vieneDeUnaAE){
-        this.buscarAE();
-      }
+      this.buscarAE();
 
       sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
       
