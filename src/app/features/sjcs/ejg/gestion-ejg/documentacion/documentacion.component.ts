@@ -709,8 +709,15 @@ export class DocumentacionComponent implements OnInit {
         }
       },
       err => {
+        
         this.progressSpinner = false;
-        this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+        let unError = JSON.parse(err.error);
+        if (unError.error.description == 'justiciaGratuita.oficio.designa.formatoDocumentacionNoValido') {
+          this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant('justiciaGratuita.oficio.designa.formatoDocumentacionNoValido'));
+        } else {
+          this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+        }
+        
       }
       // ,
       // () => {
