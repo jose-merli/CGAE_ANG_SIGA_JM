@@ -151,7 +151,12 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
           this.progressSpinner = false;
           let result = n;
           if (result.error) {
-            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            if(result.error.description == "justiciaGratuita.guardia.asistenciasexpress.errorguardar"){
+              this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), this.translateService.instant(result.error.description));
+            }
+            else{
+              this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            }
           } else {
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             this.getDocumentacion();
