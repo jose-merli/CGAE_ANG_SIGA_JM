@@ -417,6 +417,9 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
           this.body.creadoDesde = 'M'
         }
 
+        this.body.perceptivo = '1';
+        this.body.calidad = '0';
+
         this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
           n => {
             this.progressSpinner = false;
