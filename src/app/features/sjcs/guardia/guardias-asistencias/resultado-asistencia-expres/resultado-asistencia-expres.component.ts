@@ -303,6 +303,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       let index = this.rowGroups.findIndex(rowGroup => rowGroup.id == this.tabla.selectedArray[0]);
       if(this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.length > 1
           && this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows[1].position == 'collapse'){
+          this.tabla.nuevaActuacion = true;
           this.tabla.rowGroupArrowClick(this.tabla.rowGroupEl, this.tabla.selectedArray[0]);
           this.tabla.iconClickChange(this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[0],
                                       this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[1]);
