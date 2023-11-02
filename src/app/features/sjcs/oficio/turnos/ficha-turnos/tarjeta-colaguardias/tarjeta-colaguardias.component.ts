@@ -37,10 +37,9 @@ export class TarjetaColaGuardias implements OnInit {
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  
+  selectedItemCompensaciones: number = 5;
   porGrupos = false;
-  selectedItem: number = 10;
-  selectedItemSaltosCompensaciones: number = 3;
+  selectedItemSaltos: number = 5;
   selectAll;
   selectedDatos = [];
   numSelected = 0;
@@ -1272,6 +1271,10 @@ export class TarjetaColaGuardias implements OnInit {
 
     this.rowsPerPage = [
       {
+        label: 5,
+        value: 5
+      },
+      {
         label: 10,
         value: 10
       },
@@ -1289,12 +1292,16 @@ export class TarjetaColaGuardias implements OnInit {
       }
     ];
   }
-
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
+  onChangeRowsPerPages(event,id) {
+    if(id === "saltos"){
+      this.selectedItemSaltos = event.value;
+    }else{
+      this.selectedItemCompensaciones = event.value;
+    }
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
+
 
 
   onChangeSelectAll() {
@@ -1535,6 +1542,8 @@ export class TarjetaColaGuardias implements OnInit {
         this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
         this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
         let error = JSON.parse(n.body).error;
+
       });
   }
+
 }

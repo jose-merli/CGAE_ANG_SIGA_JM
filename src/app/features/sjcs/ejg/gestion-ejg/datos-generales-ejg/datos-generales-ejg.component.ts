@@ -55,6 +55,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   datosAsistencia: TarjetaAsistenciaItem;
   datosJusticiables: JusticiableItem;
   maxLengthNum: Number = 5;
+  ejgCreadoNuevo: boolean = false;
 
   institucionActual;
 
@@ -207,6 +208,20 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
           });
         }
         this.commonsServices.arregloTildesCombo(this.comboTipoEJG);
+
+        this.sigaServices
+          .get("filtrosejg_getTipoEJGDefecto")
+          .subscribe(
+            data => {
+              if (data != null && data != undefined) {
+                let tipoEJGAux = data;
+                for (let i = 0; i < this.comboTipoEJG.length; i++) {
+                  if (this.comboTipoEJG[i].value == tipoEJGAux) {
+                    this.body.tipoEJG = this.comboTipoEJG[i].value;
+                  }
+                }
+              }
+            });
       },
       err => {
         //console.log(err);
@@ -219,11 +234,29 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       n => {
         this.comboTipoEJGColegio = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTipoEJGColegio);
-
         //Determina el valor en la cabecera del campo tipo ejg colegio
         if (this.body.tipoEJGColegio != null && this.body.tipoEJGColegio != undefined) {
           this.changeTipoEJGColegio();
         }
+        let parametro = {
+          valor: "TIPO_EJG_COLEGIO"
+        };
+
+        this.sigaServices
+          .post("busquedaPerJuridica_parametroColegio", parametro)
+          .subscribe(
+            data => {
+
+              if (data != null && data != undefined) {
+                let tipoEJGColegioAux = JSON.parse(data.body).parametro;
+                for (let i = 0; i < this.comboTipoEJGColegio.length; i++) {
+                  if (this.comboTipoEJGColegio[i].label === tipoEJGColegioAux) {
+                    this.body.tipoEJGColegio = this.comboTipoEJGColegio[i].value;
+                  }
+                }
+              }
+            });
+
       },
       err => {
         //console.log(err);
@@ -526,6 +559,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                 );
 
               }
+              this.ejgCreadoNuevo = true;
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.body.numEjg = datosItem.numEjg;
               this.body.numero = datosItem.numero;

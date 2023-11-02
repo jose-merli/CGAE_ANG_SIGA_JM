@@ -94,8 +94,8 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }} (*) </label>
-              <p-dropdown *ngIf="nuevo" class="select-form" [(ngModel)]='body.tipoEJG' placeholder="Seleccionar"
-                [options]="comboTipoEJG" [filter]="true" filterBy="label,labelSinTilde"
+             <p-dropdown *ngIf="nuevo" class="select-form" [(ngModel)]='body.tipoEJG' placeholder="Seleccionar"
+                [options]="comboTipoEJG" [filter]="true" filterBy="label,labelSinTilde" [disabled]="ejgCreadoNuevo"
                 [ngClass]="styleObligatorio(body.tipoEJG)" [showClear]="true"></p-dropdown>
               <input type="text" *ngIf="!nuevo" [(ngModel)]="tipoEJGDesc" [disabled]="true" class="form-control"
                 (keypress)="numberOnly($event)" pInputText>
@@ -160,7 +160,7 @@
         <button (click)="checkPermisosComunicar()" pButton [disabled]="!permisoEscritura || !modoEdicion" type="button"
           icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
 
-        <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="ejgCreadoNuevo"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
 
         <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left"

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { TurnosItem } from '../../../../../models/sjcs/TurnosItem';
 import { GuardiaItem } from '../../../../../models/sjcs/GuardiaItem';
@@ -14,7 +14,7 @@ import { DatosGeneralesGestionGuardiaColegiadoComponent } from './datos-generale
   templateUrl: './gestion-guardia-colegiado.component.html',
   styleUrls: ['./gestion-guardia-colegiado.component.scss']
 })
-export class GestionGuardiaColegiadoComponent implements OnInit {
+export class GestionGuardiaColegiadoComponent implements OnInit, AfterViewInit {
 
   turnosItem;
   guardia: GuardiaItem;
@@ -36,7 +36,7 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
     if (sessionStorage.getItem("infoGuardiaColeg") != null || sessionStorage.getItem("infoGuardiaColeg") != undefined || sessionStorage.getItem("infoGuardiaColeg") != "false") {
       if (sessionStorage.getItem("infoGuardiaColeg") != null || sessionStorage.getItem("infoGuardiaColeg") != undefined) {
         this.guardia = JSON.parse(sessionStorage.getItem("infoGuardiaColeg"));
-        this.persistenceService.setDatos(this.guardia);
+        this.persistenceService.setDatosColeg(this.guardia);
 
         this.modificar = true;
       } else {
@@ -55,6 +55,10 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
     }
     ).catch(error => console.error(error));
 
+  }
+
+  ngAfterViewInit(){
+    this.persistenceService.clearDatosColeg();
   }
 
   backTo() {

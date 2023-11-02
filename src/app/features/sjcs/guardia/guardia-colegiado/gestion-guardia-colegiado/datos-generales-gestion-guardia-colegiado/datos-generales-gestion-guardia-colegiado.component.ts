@@ -30,8 +30,8 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
    // this.body.observacionesAnulacion = "";
     //this.progressSpinner = true;
   
-      if(this.persistenceService.getDatos()){
-        this.body = this.persistenceService.getDatos();
+    if (this.persistenceService.getDatos() || this.persistenceService.getDatosColeg()) {
+      this.body = this.persistenceService.getDatosColeg() ? this.persistenceService.getDatosColeg() : this.persistenceService.getDatos();
 
         this.body.fechadesde = this.body.fechadesde.toString().length > 10 ? new Date(this.body.fechadesde) : this.body.fechadesde;
         this.body.fechahasta = this.body.fechahasta.toString().length > 10 ? new Date(this.body.fechahasta) : this.body.fechahasta;

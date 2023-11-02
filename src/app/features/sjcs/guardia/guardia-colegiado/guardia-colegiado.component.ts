@@ -81,6 +81,7 @@ export class GuardiaColegiadoComponent implements OnInit {
       //this.dataBuscador = JSON.parse(sessionStorage.getItem("itemGuardiaColegiado"));
       if(sessionStorage.getItem("ProcedenciaGuardiasColegiado")==null){
         this.dataBuscador = JSON.parse(sessionStorage.getItem("itemGuardiaColegiado"));
+        sessionStorage.removeItem("itemGuardiaColegiado");
         //this.filtros.filtros = this.dataBuscador;
       }else{
         this.dataBuscador = JSON.parse(sessionStorage.getItem("filtros"));
