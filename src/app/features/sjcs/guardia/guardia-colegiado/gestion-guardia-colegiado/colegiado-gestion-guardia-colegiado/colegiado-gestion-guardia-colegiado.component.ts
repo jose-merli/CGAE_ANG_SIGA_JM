@@ -21,8 +21,8 @@ export class ColegiadoGestionGuardiaColegiadoComponent implements OnInit {
 
   ngOnInit() {
     //this.progressSpinner = true;
-    if(this.persistenceService.getDatos()){
-      this.colegiado = this.persistenceService.getDatos();
+    if (this.persistenceService.getDatos() || this.persistenceService.getDatosColeg()) {
+      this.colegiado = this.persistenceService.getDatosColeg() ? this.persistenceService.getDatosColeg() : this.persistenceService.getDatos();
       this.getColegiado();
     }
     this.progressSpinner = false

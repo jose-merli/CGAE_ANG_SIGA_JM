@@ -41,8 +41,8 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
     //this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
     sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
-    if(this.persistenceService.getDatos()){
-      this.body = this.persistenceService.getDatos();
+    if (this.persistenceService.getDatos() || this.persistenceService.getDatosColeg()) {
+      this.body = this.persistenceService.getDatosColeg() ? this.persistenceService.getDatosColeg() : this.persistenceService.getDatos();
     }
     if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));

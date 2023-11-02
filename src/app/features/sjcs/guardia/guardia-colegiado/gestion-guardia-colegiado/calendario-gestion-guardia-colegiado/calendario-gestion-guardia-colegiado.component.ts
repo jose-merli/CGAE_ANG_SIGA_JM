@@ -43,8 +43,8 @@ comboListaGuardias =[];
 
   ngOnInit() {
     //this.progressSpinner = true;
-    if (this.persistenceService.getDatos()) {
-      this.calendarioBody = this.persistenceService.getDatos();
+    if (this.persistenceService.getDatos() || this.persistenceService.getDatosColeg()) {
+      this.calendarioBody = this.persistenceService.getDatosColeg() ? this.persistenceService.getDatosColeg() : this.persistenceService.getDatos();
       this.getComboConjuntoGuardia();
       if(this.comboListaGuardias != null || this.comboListaGuardias != undefined){
         this.getCalendarioInfo();

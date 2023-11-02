@@ -27,8 +27,8 @@ export class GuardiaGestionGuardiaColegiadoComponent implements OnInit {
 
   ngOnInit() {
     //this.progressSpinner = true;
-    if(this.persistenceService.getDatos()){
-      this.guardiaItem = this.persistenceService.getDatos();
+    if (this.persistenceService.getDatos() || this.persistenceService.getDatosColeg()) {
+      this.guardiaItem = this.persistenceService.getDatosColeg() ? this.persistenceService.getDatosColeg() : this.persistenceService.getDatos();
       this.guardiaItem.letradosGuardia.replace(",", ", ");
       this.getGuardiaInfo();
 

@@ -23,8 +23,8 @@ export class TurnoGestionGuardiaColegiadoComponent implements OnInit {
 
   ngOnInit() {
     //this.progressSpinner = true;
-    if(this.persistenceService.getDatos()){
-      this.guardia = this.persistenceService.getDatos();
+    if (this.persistenceService.getDatos() || this.persistenceService.getDatosColeg()) {
+      this.guardia = this.persistenceService.getDatosColeg() ? this.persistenceService.getDatosColeg() : this.persistenceService.getDatos();
      this.getTurnoInfo();
     }
     this.progressSpinner = false
@@ -52,7 +52,11 @@ export class TurnoGestionGuardiaColegiadoComponent implements OnInit {
 
   navigateToFichaTurno(){
     sessionStorage.setItem("infoGuardiaColeg", JSON.stringify(this.guardia));
-    this.router.navigate(['/gestionTurnos'], { queryParams: { idturno: this.persistenceService.getDatos().idTurno } });
+    if (this.persistenceService.getDatosColeg()) {
+      this.router.navigate(['/gestionTurnos'], { queryParams: { idturno: this.persistenceService.getDatosColeg().idTurno } });
+    } else {
+      this.router.navigate(['/gestionTurnos'], { queryParams: { idturno: this.persistenceService.getDatos().idTurno } });
+    }
   }
 
   clear(){
