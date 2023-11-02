@@ -64,8 +64,8 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     //this.progressSpinner = true;
     this.esLetrado = JSON.parse(sessionStorage.getItem('isLetrado'));
     this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
-    if(this.persistenceService.getDatos()){
-      this.body = this.persistenceService.getDatos();
+    if (this.persistenceService.getDatos() || this.persistenceService.getDatosColeg()) {
+     this.body = this.persistenceService.getDatosColeg() ? this.persistenceService.getDatosColeg() : this.persistenceService.getDatos();
      this.getPermutas();
      this.getComboTurno();
      if(this.valueComboTurno != null || this.valueComboTurno != undefined){

@@ -333,7 +333,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
       this.progressSpinner = true;
       let guardia = new GuardiaItem()
       guardia = evento;
-      this.persistenceService.setDatos(guardia);
+      this.persistenceService.setDatosColeg(guardia);
       sessionStorage.setItem("infoGuardiaColeg",JSON.stringify(guardia));
       sessionStorage.setItem("originGuardiaColeg","true");
       this.router.navigate(['/gestionGuardiaColegiado']);
