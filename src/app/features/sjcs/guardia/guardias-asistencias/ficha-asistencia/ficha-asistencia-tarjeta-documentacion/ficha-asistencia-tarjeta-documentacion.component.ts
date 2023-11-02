@@ -151,7 +151,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
           this.progressSpinner = false;
           let result = n;
           if (result.error) {
-            if(result.error.description == "justiciaGratuita.guardia.asistenciasexpress.errorguardar"){
+            if(result.error.description == "justiciaGratuita.oficio.designa.formatoDocumentacionNoValido"){
               this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), this.translateService.instant(result.error.description));
             }
             else{
