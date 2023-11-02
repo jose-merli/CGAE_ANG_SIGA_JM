@@ -128,6 +128,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   idClaseComunicacion: String;
   keys: any[] = [];
   numCell: number;
+  nuevaActuacion: boolean;
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe,
@@ -477,7 +478,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       });
     }
 
-    this.selectedArray.length = 0;
+    if (!this.nuevaActuacion == true) {
+      this.selectedArray.length = 0;
+      this.nuevaActuacion = false;
+    } else {
+      this.nuevaActuacion = false;
+    }
+    
     this.anySelected.emit(false);
   }
   searchChange(j: any) {
