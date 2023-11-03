@@ -308,15 +308,8 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
           this.tabla.iconClickChange(this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[0],
                                       this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[1]);
       }
-      
-      let asistencia = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]);
-      
-      cellLugar = JSON.parse(JSON.stringify(asistencia.rows[0].cells[4]));
-      cellNDiligencia = JSON.parse(JSON.stringify(asistencia.rows[0].cells[5]));
-
       rowToAdd.cells = [cellAsistido, cellDelitosObservaciones, cellEJG, cellFechaActuacion, cellLugar, cellNDiligencia];
-      
-      asistencia.rows.push(rowToAdd);
+      this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.push(rowToAdd);
       this.tabla.totalRegistros = this.rowGroups.length;
     }
 
