@@ -903,6 +903,7 @@ this.totalRegistros = this.rowGroups.length;
   this.rowGroupsAux = this.rowGroups;
   this.totalRegistros = this.rowGroups.length;
   this.guardar(true);
+  this.marcadoultimo = false;
   }
   
   moveRow(movement){
