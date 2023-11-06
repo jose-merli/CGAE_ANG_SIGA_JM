@@ -67,7 +67,7 @@ export class FichaListaGuardiasComponent implements OnInit {
 
     if(sessionStorage.getItem("lista")){
       this.lista = JSON.parse(sessionStorage.getItem("lista"));
-      sessionStorage.removeItem("lista");
+      //sessionStorage.removeItem("lista");
     } else if(sessionStorage.getItem("nuevaLista")){
       this.lista = new ListaGuardiasItem();
       this.listaTarjetas[1].opened = false; //Al ser una lista nueva deshabilitamos la tarjeta Guardias hasta su creacion
