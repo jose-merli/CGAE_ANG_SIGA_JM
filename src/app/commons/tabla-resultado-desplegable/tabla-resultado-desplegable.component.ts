@@ -207,6 +207,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.selecteChild = [];
   }
 
+  ngOnChanges () {
+    if (this.selectedArray[0] == "") {
+      this.selectedArray = [];
+    }
+  }
+
   checkPermisoFicheros() {
 
     let controlAcceso = new ControlAccesoDto();
@@ -293,6 +299,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   selectRow(rowSelected, rowId, child) {
     let filaSeleccionada = this.rowGroups.filter(row => row.id == rowId);
+
+    if (this.selectedArray[0] == "") {
+      this.selectedArray = [];
+    }
 
     if (child == undefined) {
       this.disableDelete = true;
@@ -479,7 +489,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
 
     if (!this.nuevaActuacion == true) {
-      this.selectedArray.length = 0;
+      //this.selectedArray.length = 0;
       this.nuevaActuacion = false;
     } else {
       this.nuevaActuacion = false;

@@ -124,6 +124,16 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     ];
   }
 
+  ngOnChanges() {
+    if (this.tabla.selectedArray.length == 1) {
+      this.isDisabled = false;
+      this.disableCrearEJG = false;
+    } else {
+      this.isDisabled = true;
+      this.disableCrearEJG = true;
+    }
+  }
+
   selectedAll(event) {
     this.seleccionarTodo = event;
     this.isDisabled = !event;
@@ -139,8 +149,13 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
         this.disableCrearEJG = false;
       }
     } else {
-      this.isDisabled = true;
-      this.disableCrearEJG = true;
+      if (this.tabla.selectedArray.length == 1) {
+        this.isDisabled = false;
+        this.disableCrearEJG = false;
+      } else {
+        this.isDisabled = true;
+        this.disableCrearEJG = true;
+      }
     }
 
     if (this.tabla.selectedArray.length != 1) {
