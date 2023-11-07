@@ -342,6 +342,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       sessionStorage.setItem("Nuevo","true");
       // Necesario ya que si el servicio de persistencia tiene datos, se cargará un EJG anterior
       this.persistenceService.setDatos(null);
+      this.persistenceService.setDatosEJG(null);
       this.router.navigate(["/gestionEjg"]);
     }else{
       this.showMsg('error', 'Error. Debe seleccionar un registro para poder crear un EJG' ,'')

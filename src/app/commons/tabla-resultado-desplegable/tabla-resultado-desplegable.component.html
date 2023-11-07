@@ -36,7 +36,7 @@
             <div class="table-row parent">
 
                 <span *ngIf="rowGroup.rows.length > 1 && pantalla != 'JE'" class="mr-2 arrow"
-                    (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
+                    (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id); selectRow(rowSelected, rowGroup.id, i)">
                     <span (click)="iconClickChange(iconrightEl, icondownEl)" #iconrightEl><i
                             class="fas fa-chevron-right"></i></span>
                     <span class="collapse" (click)="iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i

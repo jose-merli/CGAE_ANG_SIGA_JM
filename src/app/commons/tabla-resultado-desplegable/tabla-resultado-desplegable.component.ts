@@ -298,11 +298,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   selectRow(rowSelected, rowId, child) {
+    if (this.pantalla == 'AE') {
+        this.selectedArray = [];
+     }
+
     let filaSeleccionada = this.rowGroups.filter(row => row.id == rowId);
 
-    if (this.selectedArray[0] == "") {
-      this.selectedArray = [];
-    }
+    if (this.pantalla == 'AE') {
+      if (this.selectedArray[0] == "") {
+        this.selectedArray = [];
+      }
+     }
 
     if (child == undefined) {
       this.disableDelete = true;
@@ -489,7 +495,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
 
     if (!this.nuevaActuacion == true) {
-      //this.selectedArray.length = 0;
+      this.selectedArray = [];
       this.nuevaActuacion = false;
     } else {
       this.nuevaActuacion = false;
