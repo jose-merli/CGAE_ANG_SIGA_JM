@@ -37,6 +37,7 @@ export let endpoints_generales: any = {
     gestionJusticiables_busquedaClaveAsuntosSOJ: "gestionJusticiables/busquedaClaveAsuntosSOJ",
 
     gestionJusticiables_getDetallesSoj: "soj/getDetallesSoj",
+    soj_asociarEJGaSOJ: "soj/asociarEJGaSOJ",
     detalleSoj_guardarDatosGenerales: "soj/guardarDatosGenerales",
     gestionSoj_asociarSOJ: "soj/asociarSOJ",
     gestionSoj_desasociarSOJ: "soj/desasociarSOJ",

@@ -73,6 +73,9 @@ export class AsuntosComponent implements OnInit, OnChanges {
     private datepipe: DatePipe, public oldSigaServices: OldSigaServices) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem("nuevoSOJ")){
+      sessionStorage.removeItem("nuevoSOJ");
+    }
     this.getCols();
     this.checkPermisosAsuntos();
 
@@ -257,7 +260,8 @@ export class AsuntosComponent implements OnInit, OnChanges {
   crearSOJ() {
     let justiciable = JSON.stringify(this.body);
     sessionStorage.setItem("justiciable", justiciable);
-    this.router.navigate(["/soj"]);
+    sessionStorage.setItem("nuevoSOJ", "true");
+    this.router.navigate(["/detalle-soj"]);
   }
 
   ngOnChanges(changes: SimpleChanges) {

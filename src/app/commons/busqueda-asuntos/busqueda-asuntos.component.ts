@@ -26,6 +26,7 @@ import { SigaServices } from "./../../_services/siga.service";
 import { esCalendar } from "./../../utils/calendar";
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
+import { request } from 'http';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -56,6 +57,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   textFilter: string = "Seleccionar";
   buscar: boolean = false;
   fromEJG: boolean = false;
+  fromSOJ: boolean = false;
   fromDES: boolean = false;
   fromASI: boolean = false;
   fromJust: boolean = false;
@@ -101,6 +103,13 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       sessionStorage.removeItem('EJG');
     }
 
+    //asociar desde SOJ
+    if (sessionStorage.getItem('SOJ')) {
+      this.datos = JSON.parse(sessionStorage.getItem('SOJ'));
+      this.fromSOJ = true;
+      sessionStorage.removeItem('SOJ');
+    }
+
     //Asociar desde designacion
     if (sessionStorage.getItem('Designacion')) {
       this.datosDesigna = JSON.parse(sessionStorage.getItem('Designacion'));
@@ -136,6 +145,10 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         this.confirmCopiarASI(this.datosAsociar);
       }
 
+      if (this.fromSOJ) {
+        this.confirmAsociarSOJ(this.datosAsociar);
+      }
+
       if (this.fromEJG) {
         this.confirmAsociarEJG(this.datosAsociar);
       } else if (this.fromDES) {
@@ -166,6 +179,33 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   backTo() {
     sessionStorage.removeItem("radioTajertaValue");
     this.location.back();
+  }
+
+  //confirmAsociarSOJ
+  confirmAsociarSOJ(data) {
+    let mess = this.translateService.instant(
+      "justiciaGratuita.soj.busquedaAsuntos.confirmacionAsociarSoj"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: "asoc",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.asociarEJGaSOJ(data);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancelar",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   confirmAsociarEJG(data) {
@@ -371,6 +411,34 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       }
     }
 
+  }
+
+  asociarEJGaSOJ(data){
+          let requestSoj = [
+            this.datos.idinstitucion, this.datos.anio, this.datos.numSoj,
+            this.datos.idTipoSoj, data.idTipoEjg, data.anio, data.numero
+
+          ];
+          /*let requestSoj = [
+            data.anio, data.numero, data.idTipoEjg, //Datos del EJG
+            this.datos.anio, this.datos.idTipoSoj, this.datos.numSoj, this.datos.numero
+          ];*/
+          this.sigaServices.post("soj_asociarEJGaSOJ", requestSoj).subscribe(
+            m => {
+
+              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              sessionStorage.removeItem("radioTajertaValue");
+
+                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                    this.location.back();
+                  
+            },
+            err => {
+              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+              // this.location.back();
+              this.progressSpinner = false;
+            }
+          );
   }
 
   confirmAsociarDES(data) {
