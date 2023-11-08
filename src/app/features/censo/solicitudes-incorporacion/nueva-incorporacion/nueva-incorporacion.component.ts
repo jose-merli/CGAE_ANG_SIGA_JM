@@ -2779,6 +2779,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.showFailNotTraduce(result.error.description);
         }else{
           this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+          this.fileList = [];
           this.getDocRequerida();
         }
       },
