@@ -98,9 +98,6 @@ export class GestionJusticiablesComponent implements OnInit {
     private location: Location) { }
 
   async ngOnInit() {
-    if(sessionStorage.getItem("justiciable")){
-      sessionStorage.removeItem("justiciable");
-    }
     if(sessionStorage.getItem("deJusticiableANuevaDesigna")){
       sessionStorage.removeItem("deJusticiableANuevaDesigna");
     }
@@ -796,11 +793,19 @@ export class GestionJusticiablesComponent implements OnInit {
       this.callServiceSearch(representanteBusqueda);
       this.modoRepresentante = true;
     }
-
+    this.progressSpinner = false;
   }
 
-  callServiceSearch(justiciableBusqueda) {
-
+  callServiceSearch(justiciableBusqueda1) {
+    let justiciableBusqueda: JusticiableBusquedaItem  = new JusticiableBusquedaItem();
+    if(justiciableBusqueda1[0]){
+      justiciableBusqueda.idinstitucion = justiciableBusqueda1[0].idInstitucion;
+      justiciableBusqueda.idpersona = justiciableBusqueda1[0].idpersonajg;
+    }else{
+      justiciableBusqueda.idinstitucion = justiciableBusqueda1.idinstitucion;
+    justiciableBusqueda.idpersona = justiciableBusqueda1.idpersona;
+    }
+    
     this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
       n => {
 

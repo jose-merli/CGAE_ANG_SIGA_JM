@@ -213,6 +213,13 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
           // Actualizamos la informacion en el body de la pantalla
           sessionStorage.setItem("numeroNuevoSOJ", data.id.split('*')[0]);
           this.body.numSoj = data.id.split('*')[1];
+          sessionStorage.removeItem("nuevoSOJ");
+          sessionStorage.setItem("sojItemLink", JSON.stringify(this.body));
+          if(this.nuevoSOJ){
+            this.nuevoSOJ = false;
+          }
+          if(data.id != null)
+          this.restablecerDatos.emit(this.body);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
@@ -223,10 +230,7 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
-      if(this.nuevoSOJ){
-        this.nuevoSOJ = false;
-        this.restablecerDatos.emit(this.body);
-      }
+      
     }
 
   }

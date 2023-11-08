@@ -78,7 +78,7 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
       sessionStorage.removeItem('idGuardia');
     }
     // Obtener Combo de Turnos y Posteriormente de Guardia.
-    if(!sessionStorage.getItem("nuevoSOJ")){
+    if(this.body.idTurno != "" && this.body.idTurno != null){
       this.getComboTurno();
     }
     
@@ -163,6 +163,8 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
         this.progressSpinner = false;
       },
       err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
       }
     );
@@ -183,6 +185,8 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
           this.progressSpinner = false;
         },
         err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          this.progressSpinner = false;
         }
       );
   }
