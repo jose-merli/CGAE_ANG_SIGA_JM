@@ -283,6 +283,10 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.sigaServices.post("busquedaGuardias_buscarAsistenciasExpress", this.filtrosAE.filtro)
         .subscribe(
           n => {
+            if (this.resultadoAE != null && this.resultadoAE.tabla != null) {
+              this.resultadoAE.tabla.selectedArray = [];
+            }
+            
             let asistenciasDTO = JSON.parse(n["body"]);
             if(asistenciasDTO.error){
               this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
