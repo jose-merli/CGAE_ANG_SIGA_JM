@@ -123,7 +123,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       sessionStorage.removeItem('Asistencia');
     }
 
-    if (sessionStorage.getItem("justiciable")) {
+    if (sessionStorage.getItem("justiciable") && !this.fromSOJ) {
       this.datosJusticiable = JSON.parse(sessionStorage.getItem('justiciable'));
       this.fromJust = true;
       sessionStorage.removeItem('justiciable');
@@ -415,7 +415,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
   asociarEJGaSOJ(data){
           let requestSoj = [
-            this.datos.idinstitucion, this.datos.anio, this.datos.numSoj,
+            this.datos.idinstitucion, this.datos.anio, this.datos.numero,
             this.datos.idTipoSoj, data.idTipoEjg, data.anio, data.numero
 
           ];
@@ -428,9 +428,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
-
-                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                    this.location.back();
+              sessionStorage.setItem("sojItemLink", JSON.stringify(this.datos));
+              this.location.back();
                   
             },
             err => {

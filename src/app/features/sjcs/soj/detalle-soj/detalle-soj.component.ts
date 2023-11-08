@@ -10,6 +10,7 @@ import { DatosBancariosAnexoObject } from '../../../../models/DatosBancariosAnex
 import { FichaSojItem } from '../../../../models/sjcs/FichaSojItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { procesos_soj } from '../../../../permisos/procesos_soj';
+import { removeInfiniteRows } from '@syncfusion/ej2-angular-grids';
 
 
 @Component({
@@ -112,6 +113,9 @@ export class DetalleSOJComponent implements OnInit {
             if (sessionStorage.getItem("sojItemLink")) {
             this.paramsSoj = JSON.parse(sessionStorage.getItem("sojItemLink"));
           }
+          if(sessionStorage.getItem("numeroNuevoSOJ")){
+            this.body.numSoj = sessionStorage.getItem("numeroNuevoSOJ");
+          }
           if (this.paramsSoj) {
             this.getDatosDetalleSoj(this.paramsSoj);
           } else{
@@ -135,7 +139,7 @@ export class DetalleSOJComponent implements OnInit {
       }).catch(error => console.error(error));
     this.testPermisos();
     this.progressSpinner = false;
-    if((sessionStorage.getItem("justiciable") || sessionStorage.getItem("justiciableSOJ")) && sessionStorage.getItem("nuevoSOJ")){
+    if((sessionStorage.getItem("justiciable") || sessionStorage.getItem("justiciableSOJ"))){
       this.body = new FichaSojItem();
       let justiciable
       if(sessionStorage.getItem("justiciable")){
@@ -271,6 +275,7 @@ export class DetalleSOJComponent implements OnInit {
     }));*/
     if(params.numero == null && sessionStorage.getItem("numeroNuevoSOJ")){
       params.numero = sessionStorage.getItem("numeroNuevoSOJ");
+      sessionStorage.removeItem("numeroNuevoSOJ");
     }
     this.sigaServices.post("gestionJusticiables_getDetallesSoj", params).subscribe(
       data => {
@@ -298,6 +303,12 @@ export class DetalleSOJComponent implements OnInit {
     //this.persistenceService.clearDatos();
     sessionStorage.setItem("justiciableSOJ", sessionStorage.getItem("justiciable"));
     sessionStorage.setItem("radioTajertaValue", 'ejg');
+    if (sessionStorage.getItem("datosEJG")) {
+      sessionStorage.removeItem("datosEJG");
+    }
+    if(sessionStorage.getItem("numeroNuevoSOJ")){
+      this.body.numSoj = sessionStorage.getItem("numeroNuevoSOJ");
+    }
     let sojItem = JSON.stringify(this.body);
     sessionStorage.setItem("SOJ", sojItem);
     this.router.navigate(["/busquedaAsuntos"]);
@@ -311,7 +322,9 @@ export class DetalleSOJComponent implements OnInit {
       sessionStorage.removeItem("datosEJG");
     }
     sessionStorage.setItem("justiciableSOJ", sessionStorage.getItem("justiciable"));
+    sessionStorage
     sessionStorage.setItem("Nuevo", "true");
+    this.body.numSoj = sessionStorage.getItem("numeroNuevoSOJ");
     let sojItem = JSON.stringify(this.body);
     sessionStorage.setItem("SOJ", sojItem);
     this.router.navigate(["/gestionEjg"]);
