@@ -11,7 +11,7 @@
 
     <div *ngIf="!manual && pantalla=='colaGuardias'" class="col-lg-12 col-md-12 table" matSort #table>    
         <div class="table-header ">
-            <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
+            <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader [ngStyle]="setMyStyles(cabecera.size)">
                 <div>
                     <div [mat-sort-header]=cabecera.id >{{cabecera.name | translate}}</div>
                     <input type="text" class="form-control" pInputTex  [(ngModel)]="searchText[j]" (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
@@ -20,8 +20,8 @@
         </div> 
         <div *ngFor='let row of rowGroups | slice:from:to; let i = index' class="table-row child">
             <div (click)="selectRow(i, row)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}">
-                <div *ngFor="let cell of row['cells'] | slice:fromSlice:toSlice; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'borders-child-last': isLast(i)}" #cellSelected>
-                    <div class="w100 breakWord cell-wrapper selectedRowClass">
+                <div *ngFor="let cell of row['cells'] | slice:fromSlice:toSlice; let z = index " [ngStyle]="setMyStyles(cell.size)" class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'borders-child-last': isLast(i)}" #cellSelected>
+                    <div class="w100 breakWord cell-wrapper selectedRowClass" >
                         <span class="w100 cell-value" *ngIf="cell.type != 'inputNumber' && cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency' && cell.type != 'selectDependency2' && cell.type != 'invisible' && cell.type != 'link' && cell.type != 'link2' && cell.type != 'textNew' && cell.type != 'linkNew'">
                             <input *ngIf="cell.value != null" type="text"  (change)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value">
                             <input *ngIf="cell.value == null" type="text"  (input)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="">
@@ -52,7 +52,7 @@
     </div>
     <div *ngIf="(pantalla=='colaGuardias' && manual) || pantalla!='colaGuardias'" class="col-lg-11 col-md-11 table" matSort #table>    
         <div class="table-header ">
-            <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
+            <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader [ngStyle]="setMyStyles(cabecera.size)">
                 <div>
                     <div [mat-sort-header]=cabecera.id >{{cabecera.name | translate}}</div>
                     <input type="text" class="form-control" pInputTex  [(ngModel)]="searchText[j]" (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
@@ -61,7 +61,7 @@
         </div> 
         <div *ngFor='let row of rowGroups | slice:from:to; let i = index' class="table-row child">
             <div (click)="selectRow(i, row)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}">
-                <div *ngFor="let cell of row['cells'] | slice:fromSlice:toSlice; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'borders-child-last': isLast(i)}" #cellSelected>
+                <div *ngFor="let cell of row['cells'] | slice:fromSlice:toSlice; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'borders-child-last': isLast(i)}" #cellSelected [ngStyle]="setMyStyles(cell.size)">
                     <div class="w100 breakWord cell-wrapper selectedRowClass">
                         <span class="w100 cell-value" *ngIf="cell.type != 'inputNumber' && cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency' && cell.type != 'selectDependency2' && cell.type != 'invisible' && cell.type != 'link' && cell.type != 'link2' && cell.type != 'textNew' && cell.type != 'linkNew'">
                             <input *ngIf="cell.value != null" type="text"  (change)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value">

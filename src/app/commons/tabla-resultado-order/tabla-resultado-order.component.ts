@@ -259,6 +259,14 @@ export class TablaResultadoOrderComponent implements OnInit {
   perPage(perPage){
     this.numperPage = perPage;
   }
+
+  setMyStyles(size) {
+    let styles = {
+      'max-width': size,
+    };
+    return styles;
+  }
+
   ordenValue(i){
   if(this.grupos[i-1] != undefined){
     if ((this.grupos[i] != undefined && this.grupos[i-1].value != this.grupos[i].value)){

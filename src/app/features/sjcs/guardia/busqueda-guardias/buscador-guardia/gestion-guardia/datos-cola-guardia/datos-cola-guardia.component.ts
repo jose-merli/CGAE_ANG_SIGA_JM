@@ -532,50 +532,62 @@ inicio(){
       this.cabeceras = [
         {
           id: "grupo",
-          name: "dato.jgr.guardia.guardias.grupo"
+          name: "dato.jgr.guardia.guardias.gru",
+          size: "7.5%"
         },
         {
           id: "orden",
-          name: "dato.jgr.guardia.guardias.ordenCola"
+          name: "dato.jgr.guardia.guardias.ord",
+          size: "7.5%"
         },
         {
           id: "ncolegiado",
-          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
+          name: "dato.jgr.guardia.guardias.ncol",
+          size: "15%"
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          size: "35%"
         },
         {
           id: "fechavalidez",
-          name: "dato.jgr.guardia.guardias.fechaValidez"
+          name: "dato.jgr.guardia.guardias.alta",
+          size: "17.5%"
         },
         {
           id: "fechabaja",
-          name: "dato.jgr.guardia.guardias.fechaBaja"
+          name: "dato.jgr.guardia.guardias.baja",
+          size: "17.5%"
         }
       ];
     } else {
       this.cabeceras = [
         {
           id: "orden",
-          name: "dato.jgr.guardia.guardias.ordenCola"
+          name: "dato.jgr.guardia.guardias.ord",
+          size: "10%"
+          
         },
         {
           id: "ncolegiado",
-          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
+          name: "dato.jgr.guardia.guardias.ncol",
+          size: "10%"
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          size: "40%"
         },
         {
           id: "fechavalidez",
-          name: "dato.jgr.guardia.guardias.fechaValidez"
+          name: "dato.jgr.guardia.guardias.alta",
+          size: "20%"
         },
         {
           id: "fechabaja",
-          name: "dato.jgr.guardia.guardias.fechaBaja"
+          name: "dato.jgr.guardia.guardias.baja",
+          size: "20%"
         }
       ];
     }
