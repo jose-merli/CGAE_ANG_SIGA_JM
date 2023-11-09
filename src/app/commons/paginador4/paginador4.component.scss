@@ -1,0 +1,47 @@
+::ng-deep {
+    
+    #paginador {
+
+        .ui-paginator {
+            text-align: right;
+            border: none !important;
+    
+            a {
+                background: none !important;
+                border: none !important;
+            }
+    
+            .ui-paginator-page.ui-state-active {
+                background: none;
+                border: none;
+                color: #8da3c1;
+            }
+        }
+
+    }
+
+}
+.toBottomLeft{
+    position: absolute !important;
+    bottom: 134px !important;
+    left: 25px !important;
+}
+.toBottomRight{
+    position: absolute;
+    bottom: 134px;
+    right: 25px;
+    z-index: 200000;
+}
+.w90{
+    width: 90%;
+}
+.verticalAlign{
+    display: flex;
+    align-items: center;
+}
+.p-5{
+    padding: 5%;
+}
+.p-13{
+    padding: 13px;
+}

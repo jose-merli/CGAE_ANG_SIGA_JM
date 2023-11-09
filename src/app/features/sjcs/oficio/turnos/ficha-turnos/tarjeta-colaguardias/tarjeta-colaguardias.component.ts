@@ -397,7 +397,7 @@ export class TarjetaColaGuardias implements OnInit {
         }
         this.sigaServices.notifysendDatosRedy(n);
 
-       // this.obtieneConfiguracionCola(n.body);
+       this.obtieneConfiguracionCola(n.body);
       }
     );
     
@@ -550,8 +550,8 @@ export class TarjetaColaGuardias implements OnInit {
 
         objArr.cells = [
          
-          { type: 'input', value: nG },
-          { type: 'position', value: datoObj.orden },
+          { type: 'text', value: nG },
+          { type: 'text', value: datoObj.orden },
           { type: 'text', value: datoObj.nColegiado },
           { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
           { type: 'text', value: datoObj.fechaValidacion },
@@ -1378,6 +1378,7 @@ export class TarjetaColaGuardias implements OnInit {
                     
                   setTimeout(() => {
                     this.ordenacionManual = true;
+                    this.getCols();
                   }, 200);
               }
             });
@@ -1392,6 +1393,7 @@ export class TarjetaColaGuardias implements OnInit {
               "minimoLetradosCola": JSON.parse(guardia).letradosGuardia
             };
             this.globalGuardiasService.emitConf(this.configuracionCola);
+            this.getCols();
           }
         );
   }
