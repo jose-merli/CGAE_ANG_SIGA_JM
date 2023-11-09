@@ -9,7 +9,7 @@ import { NgModule } from '@angular/core';
 import { TablaResultadoOrderComponent } from './tabla-resultado-order.component';
 import { SelectorModule } from '../selector/selector.module';
 import { FechaModule } from '../fecha/fecha.module';
-import { PaginadorModule } from '../paginador/paginador.module';
+import { Paginador4Module } from '../paginador4/paginador4.module';
 import { TableModule } from 'primeng/table';
 @NgModule({
     declarations: [TablaResultadoOrderComponent],
@@ -28,7 +28,7 @@ import { TableModule } from 'primeng/table';
         MatSortModule,
         FormsModule,
         FechaModule,
-        PaginadorModule,
+        Paginador4Module,
         CheckboxModule,
         ConfirmDialogModule,
         TableModule

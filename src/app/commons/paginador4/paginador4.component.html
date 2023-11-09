@@ -1,0 +1,31 @@
+
+<div class="p-13" id="paginador">
+    <p-paginator #pagTop styleclass="ui-paginator-top" [rows]="selectedPerPage" [totalRecords]="totalRegistros" [templateLeft]="paginatorleft1"  (onPageChange)="fn1($event)" > 
+
+        <ng-template #paginatorleft1>
+            <div class="mostrar d-flex text-right justify-content-end verticalAlign">
+                <div class="pl-1 pr-3"><label>Mostrar</label></div>
+                <div><p-dropdown [(ngModel)]="selectedPerPage" (onChange)="onChangeRowsPerPages($event)" [options]="opcionesDropdown">
+                </p-dropdown></div>
+                <div><label class="pl-1">Registros</label></div>
+            </div>
+        </ng-template>
+
+    </p-paginator>
+    <div>
+        <p-paginator class="toBottomRight" #pagBot styleclass="ui-paginator-top" [rows]="selectedPerPage" [totalRecords]="totalRegistros" [templateLeft]="paginatorleft2" (onPageChange)="fn2($event)" > 
+            <ng-template class="toBottomRight" #paginatorleft2>
+ 
+            </ng-template>
+        </p-paginator>
+        <div class="mostrar d-flex text-right justify-content-end toBottomLeft verticalAlign">
+            <div><label class="pr-3 registros-totales">Mostrando registros del {{from}} al {{to}} de un
+                total
+                de {{totalRegistros}}</label></div>
+            <div class="pl-1"><label>Mostrar</label></div>
+            <div><p-dropdown [(ngModel)]="selectedPerPage" (onChange)="onChangeRowsPerPages($event)" [options]="opcionesDropdown">
+            </p-dropdown></div>
+            <div><label class="pl-1 pr-3">Registros</label></div>
+        </div>
+    </div>  
+</div>
