@@ -113,6 +113,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() manual;
   @Input() pantalla;
   @Input() minimoLetrado;
+  @Input() porGrupos;
   @Input() s;
   @Output() linkGuardiaColegiado = new EventEmitter<any>();
   marcadoultimo = false;
@@ -351,7 +352,10 @@ export class TablaResultadoOrderComponent implements OnInit {
         // }
         errorMismoLetradoEnGrupo = this.checkLetrados();
         errorGrupoNoOrden = this.checkOrdeIfGrupo();
-        errorCantidadLetrados = this.checkCantidadLetrados();
+        if(this.porGrupos){
+          errorCantidadLetrados = this.checkCantidadLetrados();
+        }
+        
       }else{
         errorSecuenciaOrden = this.checkSequence(1);
       }

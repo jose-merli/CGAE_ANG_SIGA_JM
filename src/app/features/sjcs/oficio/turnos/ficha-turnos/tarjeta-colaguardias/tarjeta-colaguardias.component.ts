@@ -518,7 +518,6 @@ export class TarjetaColaGuardias implements OnInit {
       }
       let nG;
       nG = datoObj.numeroGrupo;
-      console.log("POR GRUPOS FICHA TURNOS = " + this.porGrupos)
       if (this.ordenacionManual == false){
 
         if (this.tablaOrder != null) {
