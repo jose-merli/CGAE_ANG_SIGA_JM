@@ -518,53 +518,76 @@ export class TarjetaColaGuardias implements OnInit {
       }
       let nG;
       nG = datoObj.numeroGrupo;
+      console.log("POR GRUPOS FICHA TURNOS = " + this.porGrupos)
       if (this.ordenacionManual == false){
 
         if (this.tablaOrder != null) {
           this.tablaOrder.toSlice = 5;
         }
-        
-        objArr.cells = [
+          objArr.cells = [
 
-          { type: 'text', value: datoObj.ordenCola, size: '10%' },
-          { type: 'text', value: datoObj.nColegiado, size: '10%' },
-          { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre, size: '40%'},
-          { type: 'text', value: datoObj.fechaValidacion, size: '20%' },
-          { type: 'text', value: datoObj.fechaBaja, size: '20%' },
-          { type: 'invisible', value: datoObj.idGrupoGuardiaColegiado},
-          { type: 'invisible', value: datoObj.ordenCola },
-          { type: 'invisible', value: datoObj.idturno },
-          { type: 'invisible', value: datoObj.idGuardia },
-          { type: 'invisible', value: datoObj.orden },
-          { type: 'invisible', value: datoObj.fechaSuscripcion },
-          { type: 'invisible', value: datoObj.idGrupoGuardia },
-          { type: 'invisible', value: datoObj.idPersona },
-          { type: 'invisible', value: datoObj.ultimoCola }
-          
-        ];
+            { type: 'text', value: datoObj.ordenCola, size: '10%' },
+            { type: 'text', value: datoObj.nColegiado, size: '10%' },
+            { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre, size: '40%'},
+            { type: 'text', value: datoObj.fechaValidacion, size: '20%' },
+            { type: 'text', value: datoObj.fechaBaja, size: '20%' },
+            { type: 'invisible', value: datoObj.idGrupoGuardiaColegiado},
+            { type: 'invisible', value: datoObj.ordenCola },
+            { type: 'invisible', value: datoObj.idturno },
+            { type: 'invisible', value: datoObj.idGuardia },
+            { type: 'invisible', value: datoObj.orden },
+            { type: 'invisible', value: datoObj.fechaSuscripcion },
+            { type: 'invisible', value: datoObj.idGrupoGuardia },
+            { type: 'invisible', value: datoObj.idPersona },
+            { type: 'invisible', value: datoObj.ultimoCola }
+            
+          ];
+        
       } else {
 
         if (this.tablaOrder != null) {
           this.tablaOrder.toSlice = 6;
         }
-
-        objArr.cells = [
-          { type: 'text', value: nG, size: '7.5%' },
-          { type: 'text', value: datoObj.orden, size: '7.5%' },
-          { type: 'text', value: datoObj.nColegiado, size: '15%' },
-          { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre, size: '35%'},
-          { type: 'text', value: datoObj.fechaValidacion, size: '17.5%' },
-          { type: 'text', value: datoObj.fechaBaja, size: '17.5%' },
-          { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
-          { type: 'invisible', value: datoObj.ordenCola },
-          { type: 'invisible', value: datoObj.idturno },
-          { type: 'invisible', value: datoObj.idGuardia },
-          { type: 'invisible', value: datoObj.orden },
-          { type: 'invisible', value: datoObj.fechaSuscripcion },
-          { type: 'invisible', value: datoObj.idGrupoGuardia },
-          { type: 'invisible', value: datoObj.idPersona },
-          { type: 'invisible', value: undefined }//datoObj.ultimoCola }
-        ];
+        if(this.porGrupos){
+    
+          objArr.cells = [
+            { type: 'input', value: nG, size: '7.5%' },
+            { type: 'position', value: datoObj.orden, size: '7.5%' },
+            { type: 'text', value: datoObj.nColegiado, size: '15%' },
+            { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre, size: '35%'},
+            { type: 'text', value: datoObj.fechaValidacion, size: '17.5%' },
+            { type: 'text', value: datoObj.fechaBaja, size: '17.5%' },
+            { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
+            { type: 'invisible', value: datoObj.ordenCola },
+            { type: 'invisible', value: datoObj.idturno },
+            { type: 'invisible', value: datoObj.idGuardia },
+            { type: 'invisible', value: datoObj.orden },
+            { type: 'invisible', value: datoObj.fechaSuscripcion },
+            { type: 'invisible', value: datoObj.idGrupoGuardia },
+            { type: 'invisible', value: datoObj.idPersona },
+            { type: 'invisible', value: undefined }//datoObj.ultimoCola }
+          ];
+        
+        }else{
+          objArr.cells = [
+            { type: 'text', value: nG, size: '7.5%' },
+            { type: 'text', value: datoObj.orden, size: '7.5%' },
+            { type: 'text', value: datoObj.nColegiado, size: '15%' },
+            { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre, size: '35%'},
+            { type: 'text', value: datoObj.fechaValidacion, size: '17.5%' },
+            { type: 'text', value: datoObj.fechaBaja, size: '17.5%' },
+            { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
+            { type: 'invisible', value: datoObj.ordenCola },
+            { type: 'invisible', value: datoObj.idturno },
+            { type: 'invisible', value: datoObj.idGuardia },
+            { type: 'invisible', value: datoObj.orden },
+            { type: 'invisible', value: datoObj.fechaSuscripcion },
+            { type: 'invisible', value: datoObj.idGrupoGuardia },
+            { type: 'invisible', value: datoObj.idPersona },
+            { type: 'invisible', value: undefined }//datoObj.ultimoCola }
+          ];
+        }
+        
       }
       if (datoObj.numeroGrupo == null){
         arrLast.push(objArr);
