@@ -2640,8 +2640,9 @@ para poder filtrar el dato con o sin estos caracteres*/
         for(let j=0; j < this.fileList.length; j++){
           
           if(this.documentos[i].nombreDoc == this.fileList[j].name){
-            this.fileListOrdenado[y] = this.fileList[j];
+            this.fileListOrdenado[y] = this.fileList[j]; 
             y++;
+            break;
           }
 
         }
