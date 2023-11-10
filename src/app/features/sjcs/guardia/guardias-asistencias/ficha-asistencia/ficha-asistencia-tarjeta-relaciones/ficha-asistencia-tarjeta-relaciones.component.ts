@@ -157,6 +157,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
             sessionStorage.setItem('backAsistencia',JSON.stringify(true));
             sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
             sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
+            sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
             sessionStorage.setItem("nuevaDesigna", "false");
             this.router.navigate(['/fichaDesignaciones']);
           });
@@ -175,6 +176,8 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
       this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
         n => {
           result = JSON.parse(n.body).ejgItems;
+          sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
+          sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
           sessionStorage.setItem("EJGItemDesigna", JSON.stringify(result[0]));
           let error = JSON.parse(n.body).error;
 
@@ -281,6 +284,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             this.getRelaciones();
             this.refreshTarjetas.emit(result.id);
+            sessionStorage.removeItem("datosEJG");
           }
 
         },

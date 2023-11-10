@@ -892,6 +892,7 @@ import { DesignacionesClassiqueComponent } from './features/sjcsClassique/oficio
 import { SaltosYCompensacionesClassiqueComponent } from './features/sjcsClassique/oficioClassique/saltos-compensaciones/saltos-compensaciones.component';
 import { SolicitudesTurnosGuardiasClassiqueComponent } from './features/sjcsClassique/oficioClassique/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassique/turnos/turnos.component';
+import { Paginador4Module } from './commons/paginador4/paginador4.module';
 
 
 @NgModule({
@@ -2055,6 +2056,7 @@ import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassiq
 
 		SelectorModule,
 		Paginador3Module,
+		Paginador4Module,
 		BrowserModule,
 		MatTooltipModule,
 
@@ -2129,6 +2131,7 @@ import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassiq
 		DestinatariosModule,
 		MaestrosModule,
 		Paginador3Module,
+		Paginador4Module,
 		BrowserAnimationsModule,
 		HttpClientModule,
 		FormsModule,

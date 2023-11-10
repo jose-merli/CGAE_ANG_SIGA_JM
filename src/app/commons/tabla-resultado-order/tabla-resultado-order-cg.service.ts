@@ -11,6 +11,7 @@ export class Cell {
   combo: any [];
   hiddenValue: any;
   required : boolean;
+  size? : string;
 }
 export class TablaResultadoOrderCGService {
 
@@ -28,7 +29,8 @@ public getTableData(result) {
       cellObject.value = cell['value'];
       cellObject.combo = cell['combo'];
       cellObject.hiddenValue = cell['hiddenValue'];
-      cellObject.required = cell['required']
+      cellObject.required = cell['required'];
+      cellObject.size = cell['size'];
       cells.push(cellObject);
     });
     rowObject.cells = cells;

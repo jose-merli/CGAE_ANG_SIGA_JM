@@ -9,6 +9,8 @@ export class TarjetaDefensaJuridicaItem{
     observaciones : string;
     comentariosDelitos : string;
     idProcedimiento : string;
+    idPretension : string;
+    juzgado : string;
 
    constructor(){}
 

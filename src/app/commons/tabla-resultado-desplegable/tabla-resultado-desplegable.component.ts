@@ -128,6 +128,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   idClaseComunicacion: String;
   keys: any[] = [];
   numCell: number;
+  nuevaActuacion: boolean;
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe,
@@ -204,6 +205,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.selected = false;
     this.selectedArray = [];
     this.selecteChild = [];
+  }
+
+  ngOnChanges () {
+    if (this.selectedArray[0] == "") {
+      this.selectedArray = [];
+    }
   }
 
   checkPermisoFicheros() {
@@ -291,7 +298,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   selectRow(rowSelected, rowId, child) {
+    if (this.pantalla == 'AE') {
+        this.selectedArray = [];
+     }
+
     let filaSeleccionada = this.rowGroups.filter(row => row.id == rowId);
+
+    if (this.pantalla == 'AE') {
+      if (this.selectedArray[0] == "") {
+        this.selectedArray = [];
+      }
+     }
 
     if (child == undefined) {
       this.disableDelete = true;
@@ -477,7 +494,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       });
     }
 
-    this.selectedArray.length = 0;
+    if (!this.nuevaActuacion == true) {
+      this.selectedArray = [];
+      this.nuevaActuacion = false;
+    } else {
+      this.nuevaActuacion = false;
+    }
+    
     this.anySelected.emit(false);
   }
   searchChange(j: any) {

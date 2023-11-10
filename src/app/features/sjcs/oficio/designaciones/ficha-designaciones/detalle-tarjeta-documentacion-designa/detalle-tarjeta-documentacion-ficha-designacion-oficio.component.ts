@@ -349,7 +349,9 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
-        this.cargaInicial();
+        setTimeout(() => {
+          this.cargaInicial();
+        }, 500);
       }
     );
   }
@@ -666,7 +668,9 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     if (changes.documentos && changes.documentos.currentValue) {
 
       if (this.comboTipoDoc != undefined && this.comboTipoDoc != null && this.comboTipoDoc.length > 0) {
-        this.cargaInicial();
+        setTimeout(() => {
+          this.cargaInicial();
+        }, 500);
       } else {
         this.getComboTiposDoc();
       }

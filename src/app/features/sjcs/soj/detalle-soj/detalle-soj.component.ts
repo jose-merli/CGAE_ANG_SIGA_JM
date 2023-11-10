@@ -10,6 +10,7 @@ import { DatosBancariosAnexoObject } from '../../../../models/DatosBancariosAnex
 import { FichaSojItem } from '../../../../models/sjcs/FichaSojItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { procesos_soj } from '../../../../permisos/procesos_soj';
+import { removeInfiniteRows } from '@syncfusion/ej2-angular-grids';
 
 
 @Component({
@@ -47,12 +48,13 @@ export class DetalleSOJComponent implements OnInit {
   paramsSoj;
 
   // Datos de la ficha
-  body: FichaSojItem;
+  body: FichaSojItem = new FichaSojItem();
   showTargetDatosGenerales;
   showTargetServiciosTramitacion;
   showTargetSolicitante;
   showTargetDocumentacion;
   permisoEscritura;
+  nuevoSOJ: boolean = false;
 
   camposResumen = [
     {
@@ -94,6 +96,10 @@ export class DetalleSOJComponent implements OnInit {
 
     this.progressSpinner = true;
 
+    if(sessionStorage.getItem("nuevoSOJ")){
+      this.nuevoSOJ = true;
+    }
+
     // Comprobar Permiso SOJ (IDPROCESO....)
     this.commonsService.checkAcceso(procesos_soj.detalleSOJ)
       .then(respuesta => {
@@ -103,15 +109,24 @@ export class DetalleSOJComponent implements OnInit {
         if (this.permisoEscritura != undefined) {
           this.checkAccesoTarjetasSOJ();
           // Obtener Datos SOJ
-          if (sessionStorage.getItem("sojItemLink")) {
+          if(!sessionStorage.getItem("nuevoSOJ")){
+            if (sessionStorage.getItem("sojItemLink")) {
             this.paramsSoj = JSON.parse(sessionStorage.getItem("sojItemLink"));
+          }
+          if(sessionStorage.getItem("numeroNuevoSOJ")){
+            this.body.numSoj = sessionStorage.getItem("numeroNuevoSOJ");
           }
           if (this.paramsSoj) {
             this.getDatosDetalleSoj(this.paramsSoj);
-          } else {
+          } else{
             this.progressSpinner = false;
             this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
+        }
+        else{
+
+          }
+          
         } else {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
@@ -123,6 +138,18 @@ export class DetalleSOJComponent implements OnInit {
         }
       }).catch(error => console.error(error));
     this.testPermisos();
+    this.progressSpinner = false;
+    if((sessionStorage.getItem("justiciable") || sessionStorage.getItem("justiciableSOJ"))){
+      this.body = new FichaSojItem();
+      let justiciable
+      if(sessionStorage.getItem("justiciable")){
+        justiciable = JSON.parse( sessionStorage.getItem("justiciable"));
+      }else if(sessionStorage.getItem("justiciableSOJ")){
+        justiciable = JSON.parse( sessionStorage.getItem("justiciableSOJ"));
+        sessionStorage.removeItem("justiciableSOJ");
+      }
+      this.body.idPersonaJG = justiciable.idpersona;
+    }
   }
 
   checkAccesoTarjetasSOJ() {
@@ -157,6 +184,7 @@ export class DetalleSOJComponent implements OnInit {
   }
 
   eventRestablecerFicha(event): void {
+    this.nuevoSOJ = false;
     if (event) {
       // Guardar Cambios del SOJ Datos Generales
       this.paramsSoj = event;
@@ -245,6 +273,10 @@ export class DetalleSOJComponent implements OnInit {
         throw "Error al recuperar los datos";
       }
     }));*/
+    if(params.numero == null && sessionStorage.getItem("numeroNuevoSOJ")){
+      params.numero = sessionStorage.getItem("numeroNuevoSOJ");
+      sessionStorage.removeItem("numeroNuevoSOJ");
+    }
     this.sigaServices.post("gestionJusticiables_getDetallesSoj", params).subscribe(
       data => {
         let responseBody = JSON.parse(data.body);
@@ -265,6 +297,37 @@ export class DetalleSOJComponent implements OnInit {
         this.progressSpinner = false;
       }
     )
+  }
+
+  asociarEJG() {
+    //this.persistenceService.clearDatos();
+    sessionStorage.setItem("justiciableSOJ", sessionStorage.getItem("justiciable"));
+    sessionStorage.setItem("radioTajertaValue", 'ejg');
+    if (sessionStorage.getItem("datosEJG")) {
+      sessionStorage.removeItem("datosEJG");
+    }
+    if(sessionStorage.getItem("numeroNuevoSOJ")){
+      this.body.numSoj = sessionStorage.getItem("numeroNuevoSOJ");
+    }
+    let sojItem = JSON.stringify(this.body);
+    sessionStorage.setItem("SOJ", sojItem);
+    this.router.navigate(["/busquedaAsuntos"]);
+  }
+
+  crearEJG() {
+    if (sessionStorage.getItem("EJGItem")) {
+      sessionStorage.removeItem("EJGItem");
+    }
+    if (sessionStorage.getItem("datosEJG")) {
+      sessionStorage.removeItem("datosEJG");
+    }
+    sessionStorage.setItem("justiciableSOJ", sessionStorage.getItem("justiciable"));
+    sessionStorage
+    sessionStorage.setItem("Nuevo", "true");
+    this.body.numSoj = sessionStorage.getItem("numeroNuevoSOJ");
+    let sojItem = JSON.stringify(this.body);
+    sessionStorage.setItem("SOJ", sojItem);
+    this.router.navigate(["/gestionEjg"]);
   }
 
   rellenarTarjetaResumen() {

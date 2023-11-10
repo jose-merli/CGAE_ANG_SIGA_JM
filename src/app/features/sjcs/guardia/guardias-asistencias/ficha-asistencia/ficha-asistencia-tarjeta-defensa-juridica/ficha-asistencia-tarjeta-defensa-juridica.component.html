@@ -9,6 +9,7 @@
           <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
           <p-dropdown class="select-form"
           placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
+          (onChange)="onChangeJuzgado()"
           [showClear]="true" [(ngModel)]="defensaJuridicaItem.idJuzgado"
           [ngModelOptions]="{standalone: true}" [options]="comboJuzgados">
           </p-dropdown>
@@ -20,7 +21,7 @@
         <div class="form-group col-lg-6 col-md-6">
           <label>{{'justiciaGratuita.maestros.Procedimientos' | translate}}</label>
           <p-dropdown class="select-form"
-          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable || procEditable"
           [showClear]="true" [(ngModel)]="defensaJuridicaItem.idProcedimiento"
           [ngModelOptions]="{standalone: true}" [options]="comboProcedimientos">
           </p-dropdown>

@@ -7,6 +7,8 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { FiltrosGuardiaColegiadoComponent } from '../filtros-guardia-colegiado/filtros-guardia-colegiado.component';
 import { select } from '@syncfusion/ej2-base';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tabla-guardia-colegiado',
@@ -52,24 +54,30 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     this.datos.forEach((guardia)=>{
+      if(guardia.validada == '1'){
+        guardia.validada = true;
+      }else{
+        guardia.validada = false;
+      }
       if(guardia.facturado==1){
         guardia.estadoGuardia=guardia.estadoGuardia.split('*');
       }
     });
+    console.log(this.datos);
   }
 
-  // isSelectMultiple() {
-  //   if (this.permisoEscritura) {
-  //     this.selectMultiple = !this.selectMultiple;
-  //     if (!this.selectMultiple) {
-  //       this.selectedDatos = [];
-  //       this.numSelected = 0;
-  //     } else {
-  //       this.selectedDatos = [];
-  //       this.numSelected = 0;
-  //     }
-  //   }
-  // }
+  isSelectMultiple() {
+    if (this.permisoEscritura) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
+    }
+  }
 
 
   onChangeRowsPerPages(event) {
@@ -87,6 +95,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
       { field: "letradosGuardia", header: "justiciaGratuita.justiciables.literal.colegiado" },
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.nColegiado" },
       { field: "ordenGrupo", header: "administracion.informes.literal.orden" },
+      { field: "validada", header: "dato.jgr.guardia.inscripciones.validada" },
       { field: "estadoGuardia", header: "dato.jgr.guardia.inscripciones.estado" },
 
     ];
@@ -116,19 +125,34 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
 
   rowSelected(selectedDatos){
-    let fechaAcutal = new Date();
-    if(selectedDatos.fechaValidacion == null && selectedDatos.validada!=1){
-      this.validar = true;
-      this.desvalidar = false;
-    }else{
-      this.validar = false;
-      this.desvalidar = true;
-    }
-    if(selectedDatos.fechadesde > fechaAcutal){
-      this.borrar = true;
-    }else{
+    this.borrar = true;
+    this.validar = true;
+    this.desvalidar = true;
+    let fechaActual = new Date();
+
+    if (selectedDatos.length > 0){
+      for (var guardia of selectedDatos) {
+      
+        if(guardia.fechaValidacion == null && guardia.validada!=1){
+          this.desvalidar = false;
+        }else{
+          this.validar = false;
+        }
+        
+        if(this.borrar && guardia.fechadesde < fechaActual){
+          this.borrar = false;
+        }
+  
+        if (!this.borrar && !this.validar && !this.desvalidar){
+          break;
+        }
+      }
+    } else {
       this.borrar = false;
+      this.validar = false;
+      this.desvalidar = false;
     }
+    
   }
 
   resetBoton(){
@@ -165,42 +189,43 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
 
   validarGuardia(selectedDatos){
-    if(selectedDatos.fechaValidacion == null || selectedDatos.fechaValidacion == undefined){
-      let guardia = new GuardiaItem();
-      guardia.idTurno=selectedDatos.idTurno;
-      guardia.idGuardia = selectedDatos.idGuardia;
-      guardia.idPersona = selectedDatos.idPersona;
-      guardia.fechadesde = selectedDatos.fechadesde;
-      if(this.fechaValidacion != null || this.fechaValidacion != undefined){
-        guardia.fechaValidacion = this.fechaValidacion
+    let callList:Observable<any>[] = []
+    selectedDatos.forEach(guardia => {
+      if(guardia.fechaValidacion == null || guardia.fechaValidacion == undefined){
+        let guardiaAux = new GuardiaItem();
+        guardiaAux.idTurno = guardia.idTurno;
+        guardiaAux.idGuardia = guardia.idGuardia;
+        guardiaAux.idPersona = guardia.idPersona;
+        guardiaAux.fechadesde = guardia.fechadesde;
+        if(this.fechaValidacion != null || this.fechaValidacion != undefined){
+          guardiaAux.fechaValidacion = this.fechaValidacion
+        }else{
+          guardiaAux.fechaValidacion = new Date();
+        }
+        this.progressSpinner = true;
+        callList = [...callList,  this.sigaServices.post("guardiasColegiado_validarSolicitudGuardia", guardiaAux) ]
       }else{
-        guardia.fechaValidacion = new Date();
+        this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Guardia ya validada" });
       }
-      
-      
-      this.progressSpinner = true;
-      this.sigaServices.post("guardiasColegiado_validarSolicitudGuardia", guardia).subscribe(
-        n => {
-          let status = JSON.parse(n.body).status;
-          
-  
-          if (status == 'OK') {
-            this.validar = false;
-            this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
-            this.search();
-          }else{
-            this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
-          }
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-          //console.log(err);
-        });
-    }else{
-      this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Guardia ya validada" });
-    }
-    
+    });
+    forkJoin(callList).subscribe(
+      n => {
+        let status = JSON.parse(n[0].body).status;
+
+        if (status == 'OK') {
+          this.validar = false;
+          this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
+        }else{
+          this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
+        }
+        this.search();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        //console.log(err);
+      }
+    )
     this.resetBoton();
   }
 
@@ -232,32 +257,32 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
   }
 
   desvalidarGuardia(selectedDatos){
-    if(selectedDatos.fechaValidacion != null || selectedDatos.fechaValidacion != undefined){
-      let guardia = new GuardiaItem();
-      guardia=selectedDatos;
+    let callList:Observable<any>[] = []
+    selectedDatos.forEach(guardia => {
+      let guardiaAux = new GuardiaItem();
+      guardiaAux=guardia;
       
       this.progressSpinner = true;
-      this.sigaServices.post("guardiasColegiado_desvalidarGuardiaColegiado", guardia).subscribe(
-        n => {
-          let status = JSON.parse(n.body).status;
-          
-  
-          if (status == 'OK') {
-            this.desvalidar = false;
-            this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
-            this.search();
-          }else{
-            this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
-          }
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-          //console.log(err);
-        });
-    }else{
-      this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Guardia ya validada" });
-    }
+      callList = [...callList,  this.sigaServices.post("guardiasColegiado_desvalidarGuardiaColegiado", guardiaAux) ]
+    })
+    forkJoin(callList).subscribe(
+      n => {
+        let status = JSON.parse(n[0].body).status;
+
+        if (status == 'OK') {
+          this.desvalidar = false;
+          this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
+        }else{
+          this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
+        }
+        this.search();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        //console.log(err);
+      }
+    )
     this.resetBoton();
   }
 
@@ -289,33 +314,37 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
 
   borrarGuardiaColegiado(selectedDatos){
     let fechaActual = new Date();
-   if(selectedDatos.fechadesde >= fechaActual){
-    let guardia = new GuardiaItem();
-    guardia=selectedDatos;
-    
-    this.progressSpinner = true;
-    this.sigaServices.post("guardiasColegiado_eliminarGuardiaColegiado", guardia).subscribe(
-      n => {
-        let status = JSON.parse(n.body).status;
+    let callList:Observable<any>[] = []
+    selectedDatos.forEach(guardia => {
+      if(guardia.fechadesde >= fechaActual){
+        let guardiaAux = new GuardiaItem();
+        guardiaAux=guardia;
         
+        this.progressSpinner = true;
+        callList = [...callList,  this.sigaServices.post("guardiasColegiado_eliminarGuardiaColegiado", guardiaAux) ]
+      }else{
+          this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "No se puede eliminar una guardia anterior a la fecha actual." });
+      }
+    })
+    forkJoin(callList).subscribe(
+      n => {
+        let status = JSON.parse(n[0].body).status;
 
         if (status == 'OK') {
           this.borrar = false;
           this.showMessage({ severity: "success", summary: this.translateService.instant("general.message.correct"), msg:this.translateService.instant("general.message.accion.realizada") });
-         this.search();
         }else{
           this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Error de base de datos" });
         }
+        this.search();
         this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
         //console.log(err);
-      });
-   }else{
-    this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "No se puede eliminar una guardia anterior a la fecha actual." });
-   }
-   this.resetBoton();
+      }
+    )
+    this.resetBoton();
     
   }
 

@@ -124,6 +124,16 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     ];
   }
 
+  ngOnChanges() {
+    if (this.tabla.selectedArray.length == 1) {
+      this.isDisabled = false;
+      this.disableCrearEJG = false;
+    } else {
+      this.isDisabled = true;
+      this.disableCrearEJG = true;
+    }
+  }
+
   selectedAll(event) {
     this.seleccionarTodo = event;
     this.isDisabled = !event;
@@ -139,8 +149,13 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
         this.disableCrearEJG = false;
       }
     } else {
-      this.isDisabled = true;
-      this.disableCrearEJG = true;
+      if (this.tabla.selectedArray.length == 1) {
+        this.isDisabled = false;
+        this.disableCrearEJG = false;
+      } else {
+        this.isDisabled = true;
+        this.disableCrearEJG = true;
+      }
     }
 
     if (this.tabla.selectedArray.length != 1) {
@@ -303,19 +318,13 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       let index = this.rowGroups.findIndex(rowGroup => rowGroup.id == this.tabla.selectedArray[0]);
       if(this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.length > 1
           && this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows[1].position == 'collapse'){
+          this.tabla.nuevaActuacion = true;
           this.tabla.rowGroupArrowClick(this.tabla.rowGroupEl, this.tabla.selectedArray[0]);
           this.tabla.iconClickChange(this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[0],
                                       this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[1]);
       }
-      
-      let asistencia = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]);
-      
-      cellLugar = JSON.parse(JSON.stringify(asistencia.rows[0].cells[4]));
-      cellNDiligencia = JSON.parse(JSON.stringify(asistencia.rows[0].cells[5]));
-
       rowToAdd.cells = [cellAsistido, cellDelitosObservaciones, cellEJG, cellFechaActuacion, cellLugar, cellNDiligencia];
-      
-      asistencia.rows.push(rowToAdd);
+      this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.push(rowToAdd);
       this.tabla.totalRegistros = this.rowGroups.length;
     }
 
@@ -333,6 +342,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       sessionStorage.setItem("Nuevo","true");
       // Necesario ya que si el servicio de persistencia tiene datos, se cargará un EJG anterior
       this.persistenceService.setDatos(null);
+      this.persistenceService.setDatosEJG(null);
       this.router.navigate(["/gestionEjg"]);
     }else{
       this.showMsg('error', 'Error. Debe seleccionar un registro para poder crear un EJG' ,'')

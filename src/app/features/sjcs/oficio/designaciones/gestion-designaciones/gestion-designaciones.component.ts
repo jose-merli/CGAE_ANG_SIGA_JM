@@ -114,7 +114,6 @@ export class GestionDesignacionesComponent implements OnInit {
         }
       });
     }
-    let designaProcedimiento = new DesignaItem();
     let data = sessionStorage.getItem("designaItem");
     let dataProcedimiento = JSON.parse(data);
     dataProcedimiento.idPretension = dato.idPretension;
@@ -132,7 +131,6 @@ export class GestionDesignacionesComponent implements OnInit {
           dato.idProcedimiento = dataProcedimiento.idPretension;
         }
 
-        let designaModulo = new DesignaItem();
         let dataModulo = JSON.parse(data);
         dataModulo.idProcedimiento = idProcedimiento;
         dataModulo.idTurno = dato.idTurno;

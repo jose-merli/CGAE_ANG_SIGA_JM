@@ -4,8 +4,8 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #tablaGuardCol
-      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="rowSelected(selectedDatos)"
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #tablaGuardCol
+      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="rowSelected(selectedDatos)" (onRowUnselect)="rowSelected(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both" id="tablaGuardCole">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -34,15 +34,19 @@
               <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
-            <div *ngIf="col.field == 'estadoGuardia' && dato.facturado != 1">
+            <div *ngIf="col.field == 'estadoGuardia' && dato.facturado != '1'">
               <span class="enlace" (click)="openTab(dato)">{{dato[col.field] | translate}}</span><!--{{ col.header | translate }}-->
             </div>
 
-            <div *ngIf="col.field == 'estadoGuardia' && dato.facturado == 1">
+            <div *ngIf="col.field == 'validada'">
+              <p-checkbox disabled="true" [(ngModel)]="dato.validada" [binary]="true"></p-checkbox>
+            </div>
+
+            <div *ngIf="col.field == 'estadoGuardia' && dato.facturado == '1'">
               <span class="enlace" (click)="openTab(dato)">{{dato[col.field][0] | translate}} - {{dato[col.field][1]}}</span><!--{{ col.header | translate }}-->
             </div>
 
-            <div *ngIf="col.field != 'fechadesde' && col.field != 'fechahasta' && col.field != 'estadoGuardia'">
+            <div *ngIf="col.field != 'fechadesde' && col.field != 'fechahasta' && col.field != 'estadoGuardia' && col.field != 'validada'">
               <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
             </div>
           

@@ -15,6 +15,7 @@ import { Observable } from 'rxjs/Observable';
 import { truncate } from 'fs';
 import { findIndex } from 'rxjs/operators';
 import { CommonsService } from '../../../_services/commons.service';
+import { ModelosComunicacionesItemConNombreConsultaDestinatarios } from '../../../models/ModelosComunicacionesItemConNombreConsultaDestinatarios';
 
 @Component({
 	selector: 'app-dialogo-comunicaciones',
@@ -30,7 +31,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	selectedItem: number = 10;
 	//Diálogo de comunicación
 	showComunicar: boolean = false;
-	modelosComunicacion: ModelosComunicacionesItem[] = [];
+	modelosComunicacion: ModelosComunicacionesItemConNombreConsultaDestinatarios[] = [];
 	bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
 	tiposEnvio: any[];
 	plantillasEnvio: any[];
@@ -159,7 +160,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 					'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.modeloComunicaciones'
 			},
 			{ field: 'plantillas', header: 'enviosMasivos.literal.plantillasEnvio' },
-			{ field: 'tipoEnvio', header: 'informesycomunicaciones.comunicaciones.busqueda.tipoEnvio' }
+			{ field: 'tipoEnvio', header: 'informesycomunicaciones.comunicaciones.busqueda.tipoEnvio' },
+			{ field: 'nombreConsultaDestinatarios', header: 'informesycomunicaciones.comunicaciones.busqueda.nombreconsultadestinatarios' }
 		];
 	}
 
@@ -202,7 +204,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 			idInstitucion: this.idInstitucion
 		};
 
-		this.sigaServices.post('dialogo_modelosComunicacion', modeloSearch).subscribe(
+		this.sigaServices.post('dialogo_modelosComunicacionConConsultaDestinatarios', modeloSearch).subscribe(
 			(data) => {
 				this.modelosComunicacion = JSON.parse(data['body']).modelosComunicacionItems;
 

@@ -115,10 +115,16 @@ export class GuardiaColegiadoComponent implements OnInit {
           let error = JSON.parse(n.body).error;
           this.datos = JSON.parse(n.body).guardiaItems;
           this.buscar = true;
-         /*  this.datos = this.datos.map(it => {
-            it.letradosIns = +it.letradosIns;
-            return it;
-          }) */
+         this.datos.forEach((guardia)=>{
+          if(guardia.validada == '1'){
+            guardia.validada = true;
+          }else{
+            guardia.validada = false;
+          }
+          if(guardia.facturado==1){
+            guardia.estadoGuardia=guardia.estadoGuardia.split('*');
+          }
+        });
           this.progressSpinner = false;
           this.resetSelect();
   

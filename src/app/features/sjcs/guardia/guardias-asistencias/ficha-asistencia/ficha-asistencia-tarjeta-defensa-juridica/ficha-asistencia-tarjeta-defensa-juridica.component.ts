@@ -30,6 +30,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
   datosBuscar: any;
   parametroNIG: any;
   parametroNProc: any;
+  procEditable: boolean;
   
 
   constructor(private sigaServices : SigaServices,
@@ -41,9 +42,8 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
     this.getNprocValidador();
     this.getComboComisarias();
     this.getComboJuzgados();
-    this.getComboProcedimientos();
-    this.getComboDelitos();
     this.getDefensaJuridicaData();
+    this.getComboDelitos();
   }
 
   getComboJuzgados(){
@@ -120,6 +120,36 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
 
   }
 
+  //Cada vez que se cambia el valor del desplegable de turnos
+  onChangeJuzgado() {
+    if(this.defensaJuridicaItem.idJuzgado){
+      this.defensaJuridicaItem.idComisaria = null;
+    }
+    this.comboProcedimientos = [];
+    this.defensaJuridicaItem.numProcedimiento = null;
+    this.getComboProcedimientoConJuzgado();
+  }
+  
+  getComboProcedimientoConJuzgado() {
+    this.defensaJuridicaItem.idPretension = this.defensaJuridicaItem.idProcedimiento;
+    this.defensaJuridicaItem.juzgado = this.defensaJuridicaItem.idJuzgado;
+    this.sigaServices.post("combo_comboProcedimientosConJuzgadoEjg", this.defensaJuridicaItem)//combo_comboProcedimientosConJuzgado
+      .subscribe(
+        n => {
+          this.comboProcedimientos = JSON.parse(n.body).combooItems;
+          this.commonServices.arregloTildesCombo(this.comboProcedimientos);
+
+          if (this.comboProcedimientos.length == 0) {
+            this.procEditable = true;
+          } else {
+            this.procEditable = false;
+          }
+        },
+        err => {
+        }
+      );
+  }
+
   getDefensaJuridicaData(){
 
     if(this.idAsistencia){
@@ -128,6 +158,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
         n => {
           this.defensaJuridicaItem = n.tarjetaDefensaJuridicaItems[0];
           this.defensaJuridicaItemAux = Object.assign({},this.defensaJuridicaItem);
+          this.getComboProcedimientoConJuzgado();
         },
         err => {
           //console.log(err);
@@ -176,7 +207,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
 
     let error = false;
 
-    if ((this.defensaJuridicaItem.nig != null && !error && !this.validarNig(this.defensaJuridicaItem.nig))) {
+    if ((this.defensaJuridicaItem.nig != null && this.defensaJuridicaItem.nig != "" && !error && !this.validarNig(this.defensaJuridicaItem.nig))) {
       this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
       error = true;
     }
@@ -306,11 +337,6 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
   onChangeComisaria(){
     if(this.defensaJuridicaItem.idComisaria){
       this.defensaJuridicaItem.idJuzgado = "";
-    }
-  }
-  onChangeJuzgado(){
-    if(this.defensaJuridicaItem.idJuzgado){
-      this.defensaJuridicaItem.idComisaria = "";
     }
   }
 
