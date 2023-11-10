@@ -621,6 +621,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           tarjetaAsistenciaItem.filtro.salto = 'S';
         }
 
+        tarjetaAsistenciaItem.idTurno = this.filtrosAE.filtro.idTurno;
+        tarjetaAsistenciaItem.idGuardia = this.filtrosAE.filtro.idGuardia;
+
         tarjetasAsistenciaItem.push(tarjetaAsistenciaItem);
       });
     }
