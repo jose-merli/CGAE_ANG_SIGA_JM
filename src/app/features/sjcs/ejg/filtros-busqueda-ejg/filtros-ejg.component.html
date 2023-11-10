@@ -407,17 +407,28 @@
 
           </div>
 
-          <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
-            <input type="text" class="form-control" maxLength="201" [(ngModel)]='body.apellidos' pInputText (ngModelChange)="onChangeRol()">
+          <div class="form-group-interlineado col-lg-2 col-md-2">
+            <label>{{ 'facturacionSJCS.retenciones.apellidos1' | translate}}</label>
+            <input type="text" class="form-control" maxLength="201" [(ngModel)]='body.apellido1' pInputText (ngModelChange)="onChangeRol()">
+
+          </div>
+
+          <div class="form-group-interlineado col-lg-2 col-md-2">
+            <label>{{ 'facturacionSJCS.retenciones.apellidos2' | translate}}</label>
+            <input type="text" class="form-control" maxLength="201" [(ngModel)]='body.apellido2' pInputText (ngModelChange)="onChangeRol()">
 
           </div>
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
             <input type="text" class="form-control" maxLength="100" pInputText [(ngModel)]="body.nombre" (ngModelChange)="onChangeRol()">
-
           </div>
+
+          <div class="form-group col-lg-1 col-md-1">
+            <label>{{ "administracion.parametrosGenerales.literal.busquedaExacta" | translate }}</label>
+            <p-checkbox inputId="binary" binary="true" [(ngModel)]='body.modoBusqueda'></p-checkbox>
+          </div>
+
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.rol" | translate}}</label>
             <p-multiSelect  class="select-form" [(ngModel)]='body.estadosRoles'
