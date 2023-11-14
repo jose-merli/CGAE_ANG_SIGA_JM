@@ -104,15 +104,15 @@ export class FiltroJusticiablesComponent implements OnInit {
 
   backTo() {
     // Quitar para no poder Asociar Justiciables en caso de entrar en Uno.
-    if (sessionStorage.getItem("itemEJG")) {
-      sessionStorage.removeItem("itemEJG");
-    }
-    if (sessionStorage.getItem("itemAsistencia")) {
-      sessionStorage.removeItem("itemAsistencia");
-    }
-    if (sessionStorage.getItem("itemDesignas")) {
-      sessionStorage.removeItem("itemDesignas");
-    }
+    // if (sessionStorage.getItem("itemEJG")) {
+    //   sessionStorage.removeItem("itemEJG");
+    // }
+    // if (sessionStorage.getItem("itemAsistencia")) {
+    //   sessionStorage.removeItem("itemAsistencia");
+    // }
+     if (sessionStorage.getItem("itemDesignas")) {
+       sessionStorage.removeItem("itemDesignas");
+     }
     if (sessionStorage.getItem("EJGItem") && this.nuevaUniFamiliar) {
       this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
       sessionStorage.removeItem("EJGItem");
@@ -202,15 +202,15 @@ export class FiltroJusticiablesComponent implements OnInit {
 
   search() {
     // Quitar para no poder Asociar Justiciables en caso de entrar en Uno.
-    if (sessionStorage.getItem("itemEJG")) {
-      sessionStorage.removeItem("itemEJG");
-    }
-    if (sessionStorage.getItem("itemAsistencia")) {
-      sessionStorage.removeItem("itemAsistencia");
-    }
-    if (sessionStorage.getItem("itemDesignas")) {
-      sessionStorage.removeItem("itemDesignas");
-    }
+    // if (sessionStorage.getItem("itemEJG")) {
+    //   sessionStorage.removeItem("itemEJG");
+    // }
+    // if (sessionStorage.getItem("itemAsistencia")) {
+    //   sessionStorage.removeItem("itemAsistencia");
+    // }
+     if (sessionStorage.getItem("itemDesignas")) {
+       sessionStorage.removeItem("itemDesignas");
+     }
     if (this.checkFilters()) {
       if (this.modoRepresentante) {
         this.persistenceService.setFiltrosAux(this.filtros);
