@@ -383,8 +383,6 @@
     </div>
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button *ngIf="!fromJusticiable" pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate}}" [disabled]="!permisoEscritura"></button>
         <button pButton (click)="checkPermisosRest()" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}" [disabled]="!permisoEscritura"></button>
         <button pButton (click)="checkPermisosSave()" [disabled]="disabledSave() || !permisoEscritura" type="button"
