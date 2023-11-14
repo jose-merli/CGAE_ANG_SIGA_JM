@@ -16,6 +16,7 @@ import { OldSigaServices } from '../../../../../_services/oldSiga.service';
 import { OtrasColegiacionesFichaColegialComponent } from '../../../../censo/ficha-colegial/ficha-colegial-general/otras-colegiaciones-ficha-colegial/otras-colegiaciones-ficha-colegial.component';
 import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
 import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
+import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
 
 @Component({
   selector: 'app-relaciones',
@@ -139,6 +140,7 @@ export class RelacionesComponent implements OnInit {
     this.sigaServices.post("gestionejg_getRelaciones", this.body).subscribe(
       n => {
         this.relaciones = JSON.parse(n.body).relacionesItem;
+        console.log(this.relaciones);
         this.nRelaciones = this.relaciones.length;
         //obtiene el tipo en caso de devolver solo 1.
         //deshabilitacion de botones en caso de obtener una relacion de cada tipo
@@ -605,6 +607,30 @@ export class RelacionesComponent implements OnInit {
       this.crearDesignacion();
     }
   }
+
+  tieneUnaSolaAsistencia(){
+    let  asistencias = this.relaciones.map((relacion) => relacion.sjcs == 'ASISTENCIA');
+
+    if(asistencias.length == 1){
+      return this.getUnicaAsistencia();
+    }
+  }
+
+  getUnicaAsistencia(){
+    let asistencia = this.relaciones.find((relacion) => relacion.sjcs == 'ASISTENCIA');
+    asistencia.idsjcs
+    let idAsistencia = asistencia.idsjcs.replace('A', '');
+    let asistenciaUnica: TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
+    this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero=" + idAsistencia).subscribe(
+      n => {
+        if(n != undefined){
+          asistenciaUnica = n.tarjetaAsistenciaItems[0];
+          sessionStorage.setItem('asistenciaUnica', JSON.stringify(asistenciaUnica));
+        }
+      });
+    return asistencia;
+  }
+
   crearDesignacion() {
     /* this.persistenceService.clearDatos();
     this.router.navigate(["/fichaDesignaciones"]); */
@@ -612,6 +638,7 @@ export class RelacionesComponent implements OnInit {
     //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
     this.body = this.persistenceService.getDatosEJG();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.tieneUnaSolaAsistencia();
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
     sessionStorage.setItem("nuevaDesigna", "true");
