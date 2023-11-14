@@ -323,7 +323,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       let fechaNoHora = moment(this.datosAsistencia.fechaAsistencia.substr(0, 10), 'DD/MM/YYYY').toDate();
       //this.fechaGenerales = fechaNoHora;
       this.searchRelacionesAs.emit(true);
-    } else if (sessionStorage.getItem("EJG")) { //Se comprueba si se procede de la pantalla de gestion de EJG
+    }else if (sessionStorage.getItem("EJG")) { //Se comprueba si se procede de la pantalla de gestion de EJG
       this.datosEJG = JSON.parse(sessionStorage.getItem("EJG"));
       sessionStorage.removeItem("EJG");
       sessionStorage.setItem("EJGcopy", JSON.stringify(this.datosEJG));
@@ -367,6 +367,18 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     } else if (sessionStorage.getItem("EJGcopy")) {
       this.datosEJG = JSON.parse(sessionStorage.getItem("EJGcopy"));
       sessionStorage.removeItem("EJGcopy");
+    }
+    if (sessionStorage.getItem("asistenciaUnica")) {
+      this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistenciaUnica"));
+      sessionStorage.removeItem("asistenciaUnica");
+      //Numero colegiado letrado
+      this.inputs[0].value = this.datosAsistencia.numeroColegiado;
+      //Apellidos letrado
+      this.inputs[1].value = this.datosAsistencia.nombreColegiado.split(" ")[0] + this.datosAsistencia.nombreColegiado.split(" ")[1];
+      //Nombre letrado
+      this.inputs[2].value = this.datosAsistencia.nombreColegiado.split(" ")[2];
+      //this.fechaGenerales = fechaNoHora;
+      this.searchRelacionesAs.emit(true);
     }
 
     this.getComboTurno();
