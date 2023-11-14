@@ -75,7 +75,7 @@
       <div class="card-body-partida first-table">
         <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" | translate}}</strong>
         
-        <app-tabla-resultado-order [pantalla]="'colaGuardias'"
+        <app-tabla-resultado-order [pantalla]="'colaGuardias'" [porGrupos]="porGrupos"
           [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="this.ordenacionManual" [cabeceras]="cabeceras"
           [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="this.ordenacionManual ? 6 : 5"
           [minimoLetrado]="minimoLetrado"  [guardiaComunicar]="guardiaComunicar"

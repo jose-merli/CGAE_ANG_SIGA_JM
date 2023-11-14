@@ -536,6 +536,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     this.progressSpinner = true;
     let rowGroupsToUpdate : RowGroup[] = event;
     let tarjetasAsistenciaItem : TarjetaAsistenciaItem[] = [];
+    let mensajeError = "";
 
     if(rowGroupsToUpdate && rowGroupsToUpdate.length != 0){
       rowGroupsToUpdate.forEach(rowGroup => {
@@ -568,10 +569,6 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             }
             tarjetaAsistenciaItem.observaciones = row.cells[1].value[1];
 
-            if (row.cells[3].value && tarjetaAsistenciaItem.filtro.diaGuardia == this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy')) {
-              tarjetaAsistenciaItem.fechaAsistencia = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
-            }
-
             if (row.cells[4].value[3] == 'C') {
               tarjetaAsistenciaItem.comisaria = row.cells[4].value[4];
               tarjetaAsistenciaItem.numDiligencia = row.cells[5].value;
@@ -585,7 +582,22 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             numAsuntoAsistencia = row.cells[5].value;
           }
 
+          //En caso de venir la fecha rellena a mano la transformo para que no falle el datepite
+          if(!(row.cells[3].value instanceof Date)){
+            let fechaPlana = row.cells[3].value.target.value;
+            if(fechaPlana.length < 11) {
+              row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
+            } else {
+              row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY HH:mm').toDate();
+            }
+          }
+
           if(row.cells[3].value){
+            if (tarjetaAsistenciaItem.filtro.diaGuardia == this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy')) {
+              tarjetaAsistenciaItem.fechaAsistencia = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
+            } else{
+              mensajeError = this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardarFechaGuardia");
+            }
             actuacionAsistenciaItem.fechaActuacion = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
           }
 
@@ -609,6 +621,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           tarjetaAsistenciaItem.filtro.salto = 'S';
         }
 
+        tarjetaAsistenciaItem.idTurno = this.filtrosAE.filtro.idTurno;
+        tarjetaAsistenciaItem.idGuardia = this.filtrosAE.filtro.idGuardia;
+
         tarjetasAsistenciaItem.push(tarjetaAsistenciaItem);
       });
     }
@@ -618,7 +633,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         n => {
           let result = JSON.parse(n["body"]);
           if(result.error){
-            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            if(mensajeError != ""){
+              this.showMsg('error', mensajeError, '');
+            } else{
+              this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            }
           }else{
             this.buscarAE();
             //this.refrescarFiltros();

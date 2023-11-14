@@ -77,9 +77,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   ngOnChanges(changes: SimpleChanges): void {
 
     if(changes.actuacion 
-        && changes.actuacion.currentValue
-        && changes.asistencia
-        && changes.asistencia.currentValue){
+        && changes.actuacion.currentValue){
         
         this.getDatosGenerales();
 

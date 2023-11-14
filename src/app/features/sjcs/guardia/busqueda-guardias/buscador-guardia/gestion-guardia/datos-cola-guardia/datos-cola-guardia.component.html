@@ -109,7 +109,7 @@
             <div class="card-body-partida first-table">
               <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" | translate}}</strong>
               
-              <app-tabla-resultado-order [permisoEscritura]="permisoEscritura" [pantalla]="'colaGuardias'"
+              <app-tabla-resultado-order [permisoEscritura]="permisoEscritura" [pantalla]="'colaGuardias'" [porGrupos]="porGrupos"
                 [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="manual" [cabeceras]="cabeceras"
                 [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="manual ? 6 : 5"
                 [minimoLetrado]="minimoLetrado" [porGrupos]="porGrupos" [guardiaComunicar]="guardiaComunicar"

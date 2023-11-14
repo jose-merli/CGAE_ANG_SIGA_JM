@@ -54,16 +54,16 @@
         <div class="form-row lg-12 md-12">
           <div class="form-group col-lg-6 col-md-6">
             <label>Año</label>
-            <input type="text" class="form-control" [(ngModel)]="body.anio" [disabled]="!permisoEscritura" pInputText>
+            <input type="text" class="form-control" [(ngModel)]="body.anio" disabled pInputText><!--[disabled]="!permisoEscritura"-->
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>Número</label>
-            <input type="text" class="form-control" [(ngModel)]="body.numSoj" [disabled]="!permisoEscritura" pInputText> 
+            <input type="text" class="form-control" [(ngModel)]="body.numSoj" [disabled]="nuevoSOJ" pInputText> <!--[disabled]="!permisoEscritura || nuevoSOJ"-->
           </div>
           <div class="form-group col-lg-6 col-md-6">
-            <label>Tipo SOJ</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idTipoSoj' placeholder="Seleccionar" [disabled]="!permisoEscritura" 
-              [options]="comboTipoSOJ" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <label>Tipo SOJ(*)</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idTipoSoj' placeholder="Seleccionar" [disabled]="!permisoEscritura || !nuevoSOJ" (onChange)="seleccionarTipoSOJ()"
+              [options]="comboTipoSOJ" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="{'camposObligatorios':camposObligatorios}"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>Fecha Apertura</label>

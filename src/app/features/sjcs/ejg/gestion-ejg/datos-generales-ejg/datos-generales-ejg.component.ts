@@ -503,6 +503,28 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                   }
                 );
 
+              }else if(sessionStorage.getItem("SOJ")){
+                //Si viene desde SOJ asociamos ejg y soj
+                
+                let soj = JSON.parse(sessionStorage.getItem("SOJ"));
+                let request = [null, soj.anio, soj.numero, soj.idTipoSoj, datosItem.tipoEJG, datosItem.annio, datosItem.numEjg];
+                
+          this.sigaServices.post("soj_asociarEJGaSOJ", request).subscribe(
+            m => {
+
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              sessionStorage.removeItem("radioTajertaValue");
+              sessionStorage.setItem("sojItemLink", JSON.stringify(soj));
+                    this.location.back();
+                  
+            },
+            err => {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+              // this.location.back();
+              this.progressSpinner = false;
+            }
+          );
+
               } else if (sessionStorage.getItem("justiciable")) {
                 // Asociar Justiciable al EJG Interesados.
                   this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
@@ -796,7 +818,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(){
-    if(sessionStorage.getItem("justiciable")){
+    if(sessionStorage.getItem("justiciable") && !sessionStorage.getItem("SOJ")){
       sessionStorage.removeItem("justiciable");
     }
   }

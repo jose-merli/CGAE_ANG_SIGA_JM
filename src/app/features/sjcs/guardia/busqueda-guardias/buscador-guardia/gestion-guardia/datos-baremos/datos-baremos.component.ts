@@ -146,8 +146,8 @@ export class DatosBaremosComponent implements OnInit {
   }
 
   getDatosBaremos() {
-    if (this.persistenceService.getDatos().idGuardia) {
-      let idGuardia = this.persistenceService.getDatos().idGuardia;
+    if (JSON.parse(this.persistenceService.getDatos()).idGuardia) {
+      let idGuardia = JSON.parse(this.persistenceService.getDatos()).idGuardia;
       //this.progressSpinner = true;
       this.sigaServices.getParam(
         "busquedaGuardias_baremosGuardias", "?idGuardia="+idGuardia).subscribe(

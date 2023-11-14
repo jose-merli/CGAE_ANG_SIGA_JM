@@ -113,6 +113,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() manual;
   @Input() pantalla;
   @Input() minimoLetrado;
+  @Input() porGrupos;
   @Input() s;
   @Output() linkGuardiaColegiado = new EventEmitter<any>();
   marcadoultimo = false;
@@ -259,6 +260,14 @@ export class TablaResultadoOrderComponent implements OnInit {
   perPage(perPage){
     this.numperPage = perPage;
   }
+
+  setMyStyles(size) {
+    let styles = {
+      'max-width': size,
+    };
+    return styles;
+  }
+
   ordenValue(i){
   if(this.grupos[i-1] != undefined){
     if ((this.grupos[i] != undefined && this.grupos[i-1].value != this.grupos[i].value)){
@@ -334,6 +343,7 @@ export class TablaResultadoOrderComponent implements OnInit {
       let errorSecuenciaGrupo = false;
       let errorMismoLetradoEnGrupo = false;
       let errorGrupoNoOrden = false;
+      let errorCantidadLetrados = false;
 
       if (this.pantalla == 'colaGuardias') {
         // if (!ultimo){
@@ -342,19 +352,28 @@ export class TablaResultadoOrderComponent implements OnInit {
         // }
         errorMismoLetradoEnGrupo = this.checkLetrados();
         errorGrupoNoOrden = this.checkOrdeIfGrupo();
+        if(this.porGrupos){
+          errorCantidadLetrados = this.checkCantidadLetrados();
+        }
+        
       }else{
         errorSecuenciaOrden = this.checkSequence(1);
       }
       
       this.totalRegistros = this.rowGroups.length;
       if (!errorVacio && !errorSecuenciaOrden && !errorSecuenciaGrupo){
+        
         if (!ultimo){
             this.updateColaGuardia();
         }else{
             this.updateColaGuardiaSameOrder();
         }
-
-        this.showMsg('success', 'Se ha guardado correctamente', '')
+        if(errorCantidadLetrados){
+          this.showMsg('warn', 'Se ha guardado correctamente pero al menos uno de los grupos no cumple con el número mínimo de letrados según la configuración', '')
+        }else{
+          this.showMsg('success', 'Se ha guardado correctamente', '');
+        }
+        
         this.progressSpinner = false;
       } else if (errorGrupoNoOrden){
         this.showMsg('error', 'Error. Todo letrado que pertenezcan a un grupo, tienen que tener valor en el campo orden.', '')
@@ -588,6 +607,27 @@ checkLetrados(){
     });
     return err2;
 }
+
+checkCantidadLetrados(){
+  let arrayGrupos =  this.rowGroups.map((row) => row.cells[0].value);
+  
+  let mapOcurrencias = this.countOccurrences(arrayGrupos);
+  let arrayOcurrencias = Array.from(mapOcurrencias.values());
+
+  return arrayOcurrencias.some((grupo) => grupo < this.minimoLetrado);
+ 
+}
+
+countOccurrences(arr) {
+  const occurrences = [];
+
+  arr.forEach((str) => {
+    occurrences[str] = (occurrences[str] || 0) + 1;
+  });
+
+  return occurrences;
+}
+
   checkSequence(j){
     let positions = "";
     const numbers = "123456789";
@@ -1005,9 +1045,18 @@ this.totalRegistros = this.rowGroups.length;
           
 
           if (movement == 'up'){
-            let newGroup = parseInt(groupSelected) - 1;
-
+            //Sacamos nuestro grupo actual
             let actual = this.rowGroups.filter(row => row.cells[y].value == groupSelected);
+            //Sacamos la última posición por arriba de nuestro array de grupo
+            let ultimaRowDelGrupoActual = actual[0];
+            //Sacamos su index
+            let indexGrupoActual = this.rowGroups.map((row,index) => {
+              if(row == ultimaRowDelGrupoActual)
+                return {row, index}
+            }).filter(row => row)[0];
+            //Sacamos el grupo por el que lo vamos a intercambiar
+            let newGroup = this.rowGroups[indexGrupoActual.index-1].cells[0].value 
+
             let aDesplazar = this.rowGroups.filter(row => row.cells[y].value == newGroup);
             
             this.rowGroups = this.swapElements(this.rowGroups,
@@ -1018,17 +1067,25 @@ this.totalRegistros = this.rowGroups.length;
             aDesplazar.forEach(row => row.cells[y].value = groupSelected);
 
             this.rowGroupsAux = this.rowGroups;
+
             //Movemos la selección de la fila
             this.selectRow(this.positionSelected, this.rowGroups[this.positionSelected]);
             if(this.positionSelected > 0){
-              this.selectRow(this.positionSelected - 1, this.rowGroups[this.positionSelected - 1])
+              this.selectRow(this.positionSelected - aDesplazar.length, this.rowGroups[this.positionSelected - aDesplazar.length])
             }
           } else if (movement == 'down'){
-            let newGroup = parseInt(groupSelected) + 1;
-
+            //Sacamos nuestro grupo actual
             let actual = this.rowGroups.filter(row => row.cells[y].value == groupSelected);
+            //Sacamos la última posición por abajo de nuestro array de grupo
+            let ultimaRowDelGrupoActual = actual[actual.length - 1];
+            //Sacamos su index
+            let indexGrupoActual = this.rowGroups.map((row,index) => {
+              if(row == ultimaRowDelGrupoActual)
+                return {row, index}
+            }).filter(row => row)[0];
+            //Sacamos el grupo por el que lo vamos a intercambiar
+            let newGroup = this.rowGroups[indexGrupoActual.index+1].cells[0].value
             let aDesplazar = this.rowGroups.filter(row => row.cells[y].value == newGroup);
-
             this.rowGroups = this.swapElements(this.rowGroups,
               this.rowGroups.indexOf(actual[0]), this.rowGroups.indexOf(actual[actual.length - 1]) + 1,
               this.rowGroups.indexOf(aDesplazar[0]), this.rowGroups.indexOf(aDesplazar[aDesplazar.length - 1]) + 1);
@@ -1040,7 +1097,7 @@ this.totalRegistros = this.rowGroups.length;
             //Movemos la selección de la fila
             this.selectRow(this.positionSelected, this.rowGroups[this.positionSelected]);
             if(this.positionSelected+1+this.from < this.to){
-              this.selectRow(this.positionSelected + 1, this.rowGroups[this.positionSelected + 1])
+              this.selectRow(this.positionSelected + aDesplazar.length, this.rowGroups[this.positionSelected + aDesplazar.length])
             }
           }
         }
@@ -1737,7 +1794,10 @@ this.totalRegistros = this.rowGroups.length;
         } else if (this.datosConfColaGuardias && (this.datosConfColaGuardias === "Ordenación manual" || this.datosConfColaGuardias.includes("Ordenación manual"))) {
           //this.manual = true;
           this.enableUpDownButtonsManual = true;
-        } else {
+        } else if (this.datosConfColaGuardias && this.datosConfColaGuardias === "Por grupos") {
+          //this.manual = true;
+          this.enableUpDownButtonsManual = true;
+        }else {
           //this.manual = false;
           this.enableUpDownButtonsManual = false;
         }

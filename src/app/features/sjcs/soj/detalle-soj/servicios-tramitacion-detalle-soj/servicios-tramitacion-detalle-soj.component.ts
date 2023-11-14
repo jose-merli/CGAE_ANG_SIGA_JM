@@ -46,6 +46,7 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
     this.progressSpinner = true;
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
+      this.progressSpinner = false;
     });
 
 
@@ -61,7 +62,9 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
     if (this.bodyInicial.fechaApertura != undefined) {
       this.bodyInicial.fechaApertura = new Date(this.bodyInicial.fechaApertura);
     }
-    
+    if(this.body == undefined)
+    this.body = new FichaSojItem();
+    if(this.body != undefined && this.bodyInicial != undefined)
     Object.assign(this.body, this.bodyInicial);
     //Se comprueba si vuelve de una busqueda de colegiado
     if (sessionStorage.getItem("idTurno")) {
@@ -75,7 +78,10 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
       sessionStorage.removeItem('idGuardia');
     }
     // Obtener Combo de Turnos y Posteriormente de Guardia.
-    this.getComboTurno();
+    if(this.body.idTurno != "" && this.body.idTurno != null){
+      this.getComboTurno();
+    }
+    
     //Para evitar que se realice una busqueda innecesaria y lance errores por consola cuando no haya ningun turno seleccionado.
     if (this.body.idTurno != undefined && this.body.idTurno != null) {
       this.getComboGuardia();
@@ -157,10 +163,12 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
         this.progressSpinner = false;
       },
       err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
       }
     );
-
+    
   }
 
   getComboGuardia() {
@@ -177,6 +185,8 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
           this.progressSpinner = false;
         },
         err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          this.progressSpinner = false;
         }
       );
   }

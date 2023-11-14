@@ -153,6 +153,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   //DocAdjunto
   file: File = undefined;
   fileList: File[] = []; //FileList = undefined;
+  fileListOrdenado: File[] = [];
 
   @ViewChild("table") table : Table;
   constructor(
@@ -2633,6 +2634,21 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  ordenarDocumentosSubidos(){
+    let y=0;
+      for(let i=0; i < this.documentos.length; i++){
+        for(let j=0; j < this.fileList.length; j++){
+          
+          if(this.documentos[i].nombreDoc == this.fileList[j].name){
+            this.fileListOrdenado[y] = this.fileList[j]; 
+            y++;
+            break;
+          }
+
+        }
+      }
+  }
+
   save(){
     if(this.checkNuevosRegistros()){
 
@@ -2644,7 +2660,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       //  console.log( this.documentos[i]);
       //}
       // this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
-      this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.fileList, this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
+      this.ordenarDocumentosSubidos();
+      this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.fileListOrdenado, this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
         n => {
           this.progressSpinner = false;
           let result = n;
@@ -2668,6 +2685,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
     this.file = undefined;
     this.fileList = [];
+    this.fileListOrdenado = [];
   }
 
   downloadDoc(){
@@ -2779,6 +2797,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.showFailNotTraduce(result.error.description);
         }else{
           this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+          this.fileList = [];
           this.getDocRequerida();
         }
       },

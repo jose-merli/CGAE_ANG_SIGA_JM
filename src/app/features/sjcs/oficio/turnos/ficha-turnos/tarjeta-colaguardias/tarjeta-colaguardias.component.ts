@@ -397,7 +397,7 @@ export class TarjetaColaGuardias implements OnInit {
         }
         this.sigaServices.notifysendDatosRedy(n);
 
-       // this.obtieneConfiguracionCola(n.body);
+       this.obtieneConfiguracionCola(n.body);
       }
     );
     
@@ -523,49 +523,70 @@ export class TarjetaColaGuardias implements OnInit {
         if (this.tablaOrder != null) {
           this.tablaOrder.toSlice = 5;
         }
-        
-        objArr.cells = [
+          objArr.cells = [
 
-          { type: 'text', value: datoObj.ordenCola },
-          { type: 'text', value: datoObj.nColegiado },
-          { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
-          { type: 'text', value: datoObj.fechaValidacion },
-          { type: 'text', value: datoObj.fechaBaja },
-          { type: 'invisible', value: datoObj.idGrupoGuardiaColegiado},
-          { type: 'invisible', value: datoObj.ordenCola },
-          { type: 'invisible', value: datoObj.idturno },
-          { type: 'invisible', value: datoObj.idGuardia },
-          { type: 'invisible', value: datoObj.orden },
-          { type: 'invisible', value: datoObj.fechaSuscripcion },
-          { type: 'invisible', value: datoObj.idGrupoGuardia },
-          { type: 'invisible', value: datoObj.idPersona },
-          { type: 'invisible', value: datoObj.ultimoCola }
-          
-        ];
+            { type: 'text', value: datoObj.ordenCola, size: '10%' },
+            { type: 'text', value: datoObj.nColegiado, size: '10%' },
+            { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre, size: '40%'},
+            { type: 'text', value: datoObj.fechaValidacion, size: '20%' },
+            { type: 'text', value: datoObj.fechaBaja, size: '20%' },
+            { type: 'invisible', value: datoObj.idGrupoGuardiaColegiado},
+            { type: 'invisible', value: datoObj.ordenCola },
+            { type: 'invisible', value: datoObj.idturno },
+            { type: 'invisible', value: datoObj.idGuardia },
+            { type: 'invisible', value: datoObj.orden },
+            { type: 'invisible', value: datoObj.fechaSuscripcion },
+            { type: 'invisible', value: datoObj.idGrupoGuardia },
+            { type: 'invisible', value: datoObj.idPersona },
+            { type: 'invisible', value: datoObj.ultimoCola }
+            
+          ];
+        
       } else {
 
         if (this.tablaOrder != null) {
           this.tablaOrder.toSlice = 6;
         }
-
-        objArr.cells = [
-         
-          { type: 'input', value: nG },
-          { type: 'position', value: datoObj.orden },
-          { type: 'text', value: datoObj.nColegiado },
-          { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre},
-          { type: 'text', value: datoObj.fechaValidacion },
-          { type: 'text', value: datoObj.fechaBaja },
-          { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
-          { type: 'invisible', value: datoObj.ordenCola },
-          { type: 'invisible', value: datoObj.idturno },
-          { type: 'invisible', value: datoObj.idGuardia },
-          { type: 'invisible', value: datoObj.orden },
-          { type: 'invisible', value: datoObj.fechaSuscripcion },
-          { type: 'invisible', value: datoObj.idGrupoGuardia },
-          { type: 'invisible', value: datoObj.idPersona },
-          { type: 'invisible', value: undefined }//datoObj.ultimoCola }
-        ];
+        if(this.porGrupos){
+    
+          objArr.cells = [
+            { type: 'input', value: nG, size: '7.5%' },
+            { type: 'position', value: datoObj.orden, size: '7.5%' },
+            { type: 'text', value: datoObj.nColegiado, size: '15%' },
+            { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre, size: '35%'},
+            { type: 'text', value: datoObj.fechaValidacion, size: '17.5%' },
+            { type: 'text', value: datoObj.fechaBaja, size: '17.5%' },
+            { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
+            { type: 'invisible', value: datoObj.ordenCola },
+            { type: 'invisible', value: datoObj.idturno },
+            { type: 'invisible', value: datoObj.idGuardia },
+            { type: 'invisible', value: datoObj.orden },
+            { type: 'invisible', value: datoObj.fechaSuscripcion },
+            { type: 'invisible', value: datoObj.idGrupoGuardia },
+            { type: 'invisible', value: datoObj.idPersona },
+            { type: 'invisible', value: undefined }//datoObj.ultimoCola }
+          ];
+        
+        }else{
+          objArr.cells = [
+            { type: 'text', value: nG, size: '7.5%' },
+            { type: 'text', value: datoObj.orden, size: '7.5%' },
+            { type: 'text', value: datoObj.nColegiado, size: '15%' },
+            { type: 'text', value: datoObj.apellido1 + ' ' + datoObj.apellido2 + ', ' + datoObj.nombre, size: '35%'},
+            { type: 'text', value: datoObj.fechaValidacion, size: '17.5%' },
+            { type: 'text', value: datoObj.fechaBaja, size: '17.5%' },
+            { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
+            { type: 'invisible', value: datoObj.ordenCola },
+            { type: 'invisible', value: datoObj.idturno },
+            { type: 'invisible', value: datoObj.idGuardia },
+            { type: 'invisible', value: datoObj.orden },
+            { type: 'invisible', value: datoObj.fechaSuscripcion },
+            { type: 'invisible', value: datoObj.idGrupoGuardia },
+            { type: 'invisible', value: datoObj.idPersona },
+            { type: 'invisible', value: undefined }//datoObj.ultimoCola }
+          ];
+        }
+        
       }
       if (datoObj.numeroGrupo == null){
         arrLast.push(objArr);
@@ -1201,23 +1222,28 @@ export class TarjetaColaGuardias implements OnInit {
       this.cabeceras = [
         {
           id: "orden",
-          name: "dato.jgr.guardia.guardias.ordenCola"
+          name: "dato.jgr.guardia.guardias.ord",
+          size: "10%"
         },
         {
           id: "ncolegiado",
-          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
+          name: "dato.jgr.guardia.guardias.ncol",
+          size: "10%"
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          size: "40%"
         },
         {
           id: "fechavalidez",
-          name: "dato.jgr.guardia.guardias.fechaValidez"
+          name: "dato.jgr.guardia.guardias.alta",
+          size: "20%"
         },
         {
           id: "fechabaja",
-          name: "dato.jgr.guardia.guardias.fechaBaja"
+          name: "dato.jgr.guardia.guardias.baja",
+          size: "20%"
         }
       ];
     } else {
@@ -1232,27 +1258,33 @@ export class TarjetaColaGuardias implements OnInit {
       this.cabeceras = [
         {
           id: "grupo",
-          name: "dato.jgr.guardia.guardias.grupo"
+          name: "dato.jgr.guardia.guardias.gru",
+          size: "7.5%"
         },
         {
           id: "orden",
-          name: "dato.jgr.guardia.guardias.ordenCola"
+          name: "dato.jgr.guardia.guardias.ord",
+          size: "7.5%"
         },
         {
           id: "ncolegiado",
-          name: "censo.busquedaClientesAvanzada.literal.nColegiado"
+          name: "dato.jgr.guardia.guardias.ncol",
+          size: "15%"
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos"
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          size: "35%"
         },
         {
           id: "fechavalidez",
-          name: "dato.jgr.guardia.guardias.fechaValidez"
+          name: "dato.jgr.guardia.guardias.alta",
+          size: "17.5%"
         },
         {
           id: "fechabaja",
-          name: "dato.jgr.guardia.guardias.fechaBaja"
+          name: "dato.jgr.guardia.guardias.baja",
+          size: "17.5%"
         }
       ];
     }
@@ -1378,6 +1410,7 @@ export class TarjetaColaGuardias implements OnInit {
                     
                   setTimeout(() => {
                     this.ordenacionManual = true;
+                    this.getCols();
                   }, 200);
               }
             });
@@ -1392,6 +1425,7 @@ export class TarjetaColaGuardias implements OnInit {
               "minimoLetradosCola": JSON.parse(guardia).letradosGuardia
             };
             this.globalGuardiasService.emitConf(this.configuracionCola);
+            this.getCols();
           }
         );
   }

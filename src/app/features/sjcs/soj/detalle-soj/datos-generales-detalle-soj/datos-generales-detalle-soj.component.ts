@@ -28,6 +28,8 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() restablecerDatos = new EventEmitter<any>();
+  camposObligatorios: boolean;
+  nuevoSOJ: boolean = false;
 
 
   constructor(
@@ -37,6 +39,15 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
+    
+    if(sessionStorage.getItem('nuevoSOJ')){
+      this.nuevoSOJ = true;
+      if(this.bodyInicial.anio == null){
+        this.bodyInicial.anio = new Date().getFullYear().toString();
+        this.bodyInicial.fechaApertura = new Date();
+      }
+    }
+
     this.body = new FichaSojItem();
     if (this.bodyInicial != undefined) {
       this.initBody();
@@ -51,8 +62,12 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   }
 
   initBody(): void {
+    this.body = new FichaSojItem();
     if (this.bodyInicial.fechaApertura != undefined) {
       this.bodyInicial.fechaApertura = new Date(this.bodyInicial.fechaApertura);
+    }
+    if(this.bodyInicial.idPersonaJG != undefined){
+      this.body.idPersonaJG = this.bodyInicial.idPersonaJG;
     }
     
     Object.assign(this.body, this.bodyInicial);
@@ -135,7 +150,7 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   }
 
   deshabilitarGuardado(): boolean {
-    if(this.body == undefined || this.bodyInicial == undefined){
+    if((this.body == undefined || this.bodyInicial == undefined) && this.nuevoSOJ){
       return true;
     }else{
       return this.compareFieldsBody('anio', 'numero', 'idTipoSoj',
@@ -145,6 +160,19 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   }
 
   compareFieldsBody(...fields: string[]) {
+    /**let res = true;
+
+    if(!sessionStorage.getItem("nuevoSOJ")){
+    for (const fieldName of fields) {
+      if (this.body[fieldName] !== this.bodyInicial[fieldName]) {
+        res = false;
+        break;
+      }
+    }}
+    else{
+      res = false;
+    }
+    return res; */
     let res = true;
     for (const fieldName of fields) {
       if (this.body[fieldName] !== this.bodyInicial[fieldName]) {
@@ -165,15 +193,33 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
     //Object.assign(this.body, this.bodyInicial);
   }
 
+  seleccionarTipoSOJ(){
+    if(this.body.idTipoSoj != null){
+      this.camposObligatorios = false;
+    }
+  }
+
   checkSave() {
+    if(this.body.idTipoSoj == null){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"),'El campo tipo SOJ es obligatorio');
+      this.camposObligatorios = true;
+    }else{
     // Insertar Cambios de Datos SOJ.
     this.sigaServices.post("detalleSoj_guardarDatosGenerales", this.body).subscribe(
       n => {
-
-        if (n.statusText == "OK") {
+        let data = JSON.parse(n.body);
+        if (n.status == 200) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           // Actualizamos la informacion en el body de la pantalla
-          this
+          sessionStorage.setItem("numeroNuevoSOJ", data.id.split('*')[0]);
+          this.body.numSoj = data.id.split('*')[1];
+          sessionStorage.removeItem("nuevoSOJ");
+          sessionStorage.setItem("sojItemLink", JSON.stringify(this.body));
+          if(this.nuevoSOJ){
+            this.nuevoSOJ = false;
+          }
+          if(data.id != null)
+          this.restablecerDatos.emit(this.body);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
@@ -184,8 +230,8 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
-
-
+      
+    }
 
   }
 
