@@ -2797,8 +2797,11 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.showFailNotTraduce(result.error.description);
         }else{
           this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
-          this.fileList = [];
-          this.getDocRequerida();
+          //this.getDocRequerida();
+          for (let doc of documentos) {
+            let rowNum = this.documentos.indexOf(doc);
+            this.documentos[rowNum].idFichero = null;
+          }
         }
       },
       err => {
