@@ -164,7 +164,9 @@ export class GestionGuardiaComponent implements OnInit {
       })
   }
 
-
+  actualizarColaGuardia() {
+    this.router.navigate(["/gestionGuardias"]);
+  }
 
   backTo() {
     if (sessionStorage.getItem("crearGuardiaFromFichaTurno")) {

@@ -1183,6 +1183,8 @@ this.totalRegistros = this.rowGroups.length;
         }
       })
 
+      posicion = this.from + this.positionSelected;
+
       let disable = false;
       
       if (this.pantalla == 'colaGuardias') {

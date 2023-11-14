@@ -70,7 +70,7 @@ export class DatosConfColaComponent implements OnInit {
     },
   ];
 
-  //@Output() actualizaBotonConfCola = new EventEmitter<String>();
+  @Output() actualizaColaGuardia = new EventEmitter();
 
   constructor(private persistenceService: PersistenceService,
     private translateService: TranslateService,
@@ -553,6 +553,8 @@ export class DatosConfColaComponent implements OnInit {
   }
   
   abreCierraFichaByKey(key) {
+    this.actualizaColaGuardia.emit();
+
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (key == "colaGuardias" && !this.modoEdicion) {
       fichaPosible.activa = !fichaPosible.activa;
