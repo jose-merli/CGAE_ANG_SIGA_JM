@@ -606,8 +606,6 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           if(row.cells[3].value){
             if (tarjetaAsistenciaItem.filtro.diaGuardia == this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy')) {
               tarjetaAsistenciaItem.fechaAsistencia = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
-            } else{
-              mensajeError = this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardarFechaGuardia");
             }
             actuacionAsistenciaItem.fechaActuacion = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
           }
