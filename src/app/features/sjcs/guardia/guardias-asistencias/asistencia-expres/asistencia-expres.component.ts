@@ -584,11 +584,22 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
           //En caso de venir la fecha rellena a mano la transformo para que no falle el datepite
           if(!(row.cells[3].value instanceof Date)){
-            let fechaPlana = row.cells[3].value.target.value;
+            let fechaPlana;
+            if(row.cells[3].value.target != undefined && row.cells[3].value.target.value != undefined) { //Si no marcamos refuerzo recuperamos de value.target.value
+              fechaPlana = row.cells[3].value.target.value;
+            } else {
+              fechaPlana = row.cells[3].value; //Si se marca refuerzo viene directamente relleno en value
+            }
+
             if(fechaPlana.length < 11) {
               row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
             } else {
               row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY HH:mm').toDate();
+            }
+
+            //Si marcamos refuerzo el moment(fechaPlana) da error de Invalid Date, le reasignamos su valor original
+            if(row.cells[3].value == 'Invalid Date'){
+              row.cells[3].value = fechaPlana;
             }
           }
 

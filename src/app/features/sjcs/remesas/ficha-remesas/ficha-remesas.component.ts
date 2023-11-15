@@ -592,7 +592,7 @@ export class FichaRemesasComponent implements OnInit {
     if(this.remesaFromTabla){
       localStorage.setItem('remesa', JSON.stringify(this.remesaTabla)); 
       localStorage.setItem('remesaAniadirExpediente', JSON.stringify(this.remesaTabla));
-    }else{
+    }else if(this.remesa != null && this.remesa != undefined){
       localStorage.setItem('remesa', JSON.stringify(this.remesa));
       localStorage.setItem('remesaAniadirExpediente', JSON.stringify(this.remesa));
     }

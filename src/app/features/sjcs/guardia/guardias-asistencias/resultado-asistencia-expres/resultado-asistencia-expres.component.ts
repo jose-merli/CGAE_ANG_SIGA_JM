@@ -11,6 +11,7 @@ import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-resultado-asistencia-expres',
@@ -348,8 +349,8 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       this.showMsg('error', 'Error. Debe seleccionar un registro para poder crear un EJG' ,'')
     }
   }
-  guardar(){
 
+  guardar(){
     let rowGroupsToUpdate : RowGroup[] = [];
     if(this.fechaJustificacion != "" && this.fechaJustificacion != null){
       if (this.compruebaCamposObligatorios()) {
@@ -372,6 +373,37 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       if (this.filtro.isSustituto != null) {
         if (this.filtro.idLetradoManual != null) {
           this.checkSustitutoCheckBox.emit();
+          //controlar fecha con el instance of date y setearla "bonita"
+          let fechaPlana;
+          rowGroupsToUpdate.forEach(rowGroupTU => {
+            if(!(rowGroupTU.rows[0].cells[3].value instanceof Date)){
+              if(rowGroupTU.rows[0].cells[3].value != undefined && rowGroupTU.rows[0].cells[3].value != undefined) {
+                fechaPlana = rowGroupTU.rows[0].cells[3].value.target.value;
+              } else{
+                fechaPlana = rowGroupTU.rows[0].cells[3].value;
+              }
+
+              if(fechaPlana.length < 11) {
+                rowGroupTU.rows[0].cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
+              } else {
+                rowGroupTU.rows[0].cells[3].value = moment(fechaPlana, 'DD/MM/YYYY HH:mm').toDate();
+              }
+            } 
+            
+            if(!(rowGroupTU.rows[1].cells[3].value instanceof Date)){
+              if(rowGroupTU.rows[1].cells[3].value != undefined && rowGroupTU.rows[1].cells[3].value != undefined) {
+                fechaPlana = rowGroupTU.rows[1].cells[3].value.target.value;
+              } else{
+                fechaPlana = rowGroupTU.rows[1].cells[3].value;
+              }
+
+              if(fechaPlana.length < 11) {
+                rowGroupTU.rows[1].cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
+              } else {
+                rowGroupTU.rows[1].cells[3].value = moment(fechaPlana, 'DD/MM/YYYY HH:mm').toDate();
+              }
+            }
+          });
           sessionStorage.setItem("asistenciasGuardar", JSON.stringify(rowGroupsToUpdate));
         } else {
           this.showMsg('error', 'Debe seleccionar un colegiado para realizar el refuerzo/sustitución' ,'')

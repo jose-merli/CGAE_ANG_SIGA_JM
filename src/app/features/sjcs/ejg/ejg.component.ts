@@ -70,7 +70,7 @@ export class EJGComponent implements OnInit {
 
     //Preparacion previa para recibir el valor de remesa si se accede a esta pantalla desde una ficha
     //de remesa.
-    if (localStorage.getItem('remesa') != null) {
+    if (localStorage.getItem('remesa') != null && localStorage.getItem('remesa') != undefined) {
       this.remesa = JSON.parse(localStorage.getItem('remesa'));
       localStorage.removeItem('remesa');
       //console.log("Remesa -> ", this.remesa);
