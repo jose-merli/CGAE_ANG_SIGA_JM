@@ -100,6 +100,25 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
       );
 
   }
+  
+  recalculaDiaDespues() {
+    let parts, partsAnio, fechaActuacion, fechaGuardia;
+
+    parts = this.datosGeneralesActuacion.fechaActuacion.split('/');
+    fechaActuacion = new Date (parts[2], parts[1] - 1, parts[0]);
+    
+
+    parts = this.asistencia.fechaAsistencia.split('/');
+    partsAnio = parts[2].split(' ');
+
+    fechaGuardia = new Date(partsAnio[0], parts[1] - 1, parts[0]); 
+
+    if (fechaActuacion > fechaGuardia) {
+      this.datosGeneralesActuacion.diaDespues = true;
+    } else {
+      this.datosGeneralesActuacion.diaDespues = false;
+    }
+  }
 
   setComisariaJuzgado() {
     if (this.asistencia.juzgado != null) {
