@@ -177,6 +177,7 @@ export class GestionEjgComponent implements OnInit {
         if (sessionStorage.getItem("Nuevo")) {
           this.nuevo = true;
           sessionStorage.removeItem("Nuevo");
+          this.persistenceService.clearDatosEJG();
           this.body = new EJGItem();
           this.modoEdicion = false;
           this.openTarjetaDatosGenerales = true;
@@ -323,8 +324,6 @@ export class GestionEjgComponent implements OnInit {
       sessionStorage.setItem("actasItem", sessionStorage.getItem("actasItemAux"));
       sessionStorage.removeItem("actasItemAux");
       this.location.back();
-    }else if (localStorage.getItem('remesa')) {// Si viene de remesas de envío
-      this.router.navigate(['/fichaRemesasEnvio']);
     }else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null){
       this.persistenceService.clearDatosEJG();
       this.persistenceService.setVolverEJG();

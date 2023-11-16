@@ -76,7 +76,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaDatosGenerales;
-  @Input() noAsocDes;
+  tieneAsocDes: Boolean = false;
 
   disabledNumEJG: boolean = true;
 
@@ -121,6 +121,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         this.showTipoExp = true;
 
       this.getPrestacionesRechazadasEJG();
+      this.getRelaciones();
     } else if (sessionStorage.getItem("asistencia")) { //Si hemos pulsado Crear EJG en la ficha de Asistencias en la tarjeta Relaciones o le hemos dado a Crear EJG en la pantalla de asistencias expres
 
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
@@ -637,6 +638,27 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     }
   }
 
+  getRelaciones() {
+    this.sigaServices.post("gestionejg_getRelaciones", this.body).subscribe(
+      n => {
+        let relaciones = JSON.parse(n.body).relacionesItem;
+        let nRelaciones = relaciones.length;
+        relaciones.forEach(relacion => {
+          switch (relacion.sjcs) {
+            case 'DESIGNACIÓN':
+              //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
+              this.tieneAsocDes = true;
+              break;
+          }
+          
+        })
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
   checkPermisosComunicar() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -757,7 +779,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       this.msgs = msg;
     } else {
       //Comprobamos si el EJG tiene una designacion asociada
-      if (!this.noAsocDes) {
+      if (this.tieneAsocDes) {
         this.addExp();
       }
       else this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.datosGenerales.noDesignaEjg') }];
