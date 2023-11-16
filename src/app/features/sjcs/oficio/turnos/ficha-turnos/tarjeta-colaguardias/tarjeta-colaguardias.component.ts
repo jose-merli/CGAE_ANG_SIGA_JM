@@ -814,6 +814,22 @@ export class TarjetaColaGuardias implements OnInit {
     return this.isDisabled;
   }
 
+  duplicar(duplicar) {
+    if (duplicar){
+    let datCopy;
+    this.datos.forEach(dat => {
+      if (dat.nColegiado == this.selectedRow.cells[2].value){
+        datCopy = Object.assign({},dat);
+        datCopy.numeroGrupo = Number(this.selectedRow.cells[0].value);
+        datCopy.orden = "0"; // duplicados se identifican por orden <= 0
+        datCopy.idGrupoGuardiaColegiado = null; // duplicados no tienen idGrupoGuardiaColegiado 
+      } 
+    });
+    this.datos.push(datCopy);
+    this.transformData();
+    }
+  }
+
   disabledSave() {
     if (!this.permisoEscritura || this.historico || !this.updateInscripciones || this.updateInscripciones.length == 0) {
       return true;
