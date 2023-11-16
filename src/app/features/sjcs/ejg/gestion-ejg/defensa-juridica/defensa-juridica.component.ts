@@ -57,6 +57,7 @@ export class DefensaJuridicaComponent implements OnInit {
 
   openDef: boolean = false;
   perEscritura: boolean = false;
+  juzgadoVacio: boolean = false;
 
   delitosValueInicial: any;
   delitosValue: any = [];
@@ -552,6 +553,7 @@ export class DefensaJuridicaComponent implements OnInit {
   getComboJuzgado() {
     if (this.bodyInicial.juzgado == null || this.bodyInicial.juzgado == undefined) {
       this.bodyInicial.juzgado = '0';
+      this.juzgadoVacio = true;
     }
     this.sigaServices.post("combo_comboJuzgadoDesignaciones", this.bodyInicial.juzgado).subscribe(
       n => {
@@ -562,8 +564,11 @@ export class DefensaJuridicaComponent implements OnInit {
         });
         //Valor de la cabecera para juzagado
         this.comboJuzgado.forEach(element => {
-          if (element.value == this.bodyInicial.juzgado) this.juzgadoCabecera = element.label;
+          if (element.value == this.bodyInicial.juzgado && !this.juzgadoVacio){
+            this.juzgadoCabecera = element.label;
+          } 
         });
+        this.juzgadoVacio = false;
       },
       err => {
       }
