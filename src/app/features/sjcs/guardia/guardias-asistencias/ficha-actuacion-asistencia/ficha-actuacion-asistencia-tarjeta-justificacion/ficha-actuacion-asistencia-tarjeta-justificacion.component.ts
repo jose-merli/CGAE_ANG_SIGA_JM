@@ -63,6 +63,9 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
             this.datosJustificacion.estado = '';
           } else {
             this.datosJustificacion.estado = 'VALIDADA';
+            this.validada = true;
+            this.desactivar = false;
+            this.editable = false;
           }
           if (this.datosJustificacion.anulada == '1') {
             this.datosJustificacion.estado = 'ANULADA';

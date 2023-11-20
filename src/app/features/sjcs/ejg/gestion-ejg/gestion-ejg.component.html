@@ -74,7 +74,7 @@
             (actualizarTarjetasIntercambios)="actualizarTarjetasIntercambios()">
         </app-documentacion>
 
-        <app-informe-calificacion *ngIf="permisoEscrituraInformeCalif != undefined&& modoEdicion"
+        <app-informe-calificacion *ngIf="permisoEscrituraInformeCalif != undefined && modoEdicion"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
             [tarjetaInformeCalificacion]="tarjetaInformeCalificacion" [modoEdicion]="modoEdicion"
             (modoEdicionSend)="modoEdicionSend($event)"

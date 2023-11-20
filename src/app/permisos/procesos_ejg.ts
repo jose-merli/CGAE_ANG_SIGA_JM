@@ -15,7 +15,7 @@ export const procesos_ejg: any = {
     informeCalif: "94K",
     resolucion: "91R",
     impugnacion: "91O",
-    regtel: "94V",
+    regtel: "94U",
     comunicaciones: "94Z",
     intercambiosPericles: "940",
 

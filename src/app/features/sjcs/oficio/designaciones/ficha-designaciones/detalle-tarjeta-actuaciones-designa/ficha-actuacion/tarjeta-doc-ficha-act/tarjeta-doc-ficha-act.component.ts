@@ -289,7 +289,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
         if (this.selectedDatos.length == 1) {
 
-          let mime = this.getMimeType(this.selectedDatos[0].extension);
+          let mime = data.type;
           blob = new Blob([data], { type: mime });
           saveAs(blob, this.selectedDatos[0].nombreFichero);
         } else {
