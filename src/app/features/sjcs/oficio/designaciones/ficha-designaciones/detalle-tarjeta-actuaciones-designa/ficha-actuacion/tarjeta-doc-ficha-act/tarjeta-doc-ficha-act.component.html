@@ -90,7 +90,7 @@
       [disabled]="selectedDatos.length == 0 || modoLectura || (!isColegiado && !permiteSubidDescargaFicheros) || modoLectura2"
       (click)="eliminarArchivos()"></button>
     <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.download' | translate}}"
-      [disabled]="selectedDatos.length == 0 || modoLectura || (!isColegiado && !permiteSubidDescargaFicheros) || modoLectura2"
+      [disabled]="selectedDatos.length == 0 || modoLectura || (!isColegiado && !permiteSubidDescargaFicheros)"
       (click)="descargarArchivos()"></button>
     <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
       (click)="nuevo()"
