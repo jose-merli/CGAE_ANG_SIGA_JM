@@ -61,7 +61,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
   @ViewChild("topScroll") outlet;
   @ViewChild(DatosRepresentanteComponent) datosRepresentante;
-  @ViewChild(AsuntosComponent) actualizaAsuntos;
+  //@ViewChild(AsuntosComponent) actualizaAsuntos;
 
   fromJusticiable;
   modoRepresentante: boolean = false;
@@ -721,7 +721,11 @@ export class GestionJusticiablesComponent implements OnInit {
       }
     );
   }
-  actualizaAsunto(){
+  
+  actualizaAsunto(event){
+    
+    this.body = event;
+    this.updateTarjResumen();
     //this.actualizaAsuntos.getCols();
   }
 
@@ -977,6 +981,11 @@ export class GestionJusticiablesComponent implements OnInit {
         sessionStorage.setItem('tarjeta', 'unidadFamiliar');
         sessionStorage.setItem("origin", "UnidadFamiliar");
       }
+
+      let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+      ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
+      sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
+      
       if(this.fromNuevoJusticiable){
         this.router.navigate(["/justiciables"]);
       }else{
@@ -1127,7 +1136,7 @@ export class GestionJusticiablesComponent implements OnInit {
         {
           // Apellidos de tarjeta resumen
           label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.apellidos"),
-          value: this.body.apellidos
+          value: this.body.apellido1 + ' ' + this.body.apellido2
         },
 
         {

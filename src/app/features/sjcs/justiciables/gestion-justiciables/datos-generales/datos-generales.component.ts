@@ -105,7 +105,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   @Output() searchJusticiableOverwritten = new EventEmitter<any>();
   @Output() opened = new EventEmitter<Boolean>();  // Evento para abrir la tarjeta
   @Output() idOpened = new EventEmitter<String>(); // Evento para pasar la Información.
-  @Output() actualizaAsunto = new EventEmitter();
+  @Output() actualizaAsunto = new EventEmitter<JusticiableItem>();
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
@@ -583,8 +583,13 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
         //this.router.navigate(["/gestionEjg"]);
         //Para prevenir que se vaya a una ficha en blanco despues de que se haya creado un justiciable
-        this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
-        sessionStorage.removeItem("EJGItem");
+        //this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
+        //ARR:  sessionStorage.removeItem("EJGItem");
+
+        let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+        this.persistenceService.setDatosEJG(ejg);
+        ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
+        sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
 
         this.router.navigate(["/gestionEjg"]);
       },
@@ -972,7 +977,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
         //Actualizamos la Tarjeta Asuntos
         this.persistenceService.setDatos(this.body);
-        this.actualizaAsunto.emit();
+        this.actualizaAsunto.emit(this.body);
         sessionStorage.removeItem("nuevoJusticiable");
         if(this.vieneDeJusticiable && this.nuevoJusticiable){
           sessionStorage.setItem("origin", "Nuevo");
