@@ -143,6 +143,9 @@ export class GestionEjgComponent implements OnInit {
       sessionStorage.removeItem("EJGItemDesigna");
 
     } else {
+      if (sessionStorage.getItem("Nuevo")) {
+        this.persistenceService.clearDatosEJG();
+      }
       this.body = this.persistenceService.getDatosEJG();
       if (this.body != null && this.body.annio == null && sessionStorage.getItem("EJGItem") != null) {
         this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
@@ -177,7 +180,6 @@ export class GestionEjgComponent implements OnInit {
         if (sessionStorage.getItem("Nuevo")) {
           this.nuevo = true;
           sessionStorage.removeItem("Nuevo");
-          this.persistenceService.clearDatosEJG();
           this.body = new EJGItem();
           this.modoEdicion = false;
           this.openTarjetaDatosGenerales = true;
