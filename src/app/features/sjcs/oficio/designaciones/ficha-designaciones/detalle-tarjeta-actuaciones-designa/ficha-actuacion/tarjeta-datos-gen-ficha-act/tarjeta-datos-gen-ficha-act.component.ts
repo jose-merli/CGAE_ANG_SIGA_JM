@@ -355,7 +355,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
         if (this.actuacionDesigna.isNew) {
           if (this.actuacionDesigna.designaItem.idProcedimiento != "" && this.actuacionDesigna.designaItem.idProcedimiento != null && this.actuacionDesigna.designaItem.idProcedimiento != undefined) {
-            this.comboModulos.push({ label: this.actuacionDesigna.designaItem.modulo, value: this.actuacionDesigna.designaItem.idProcedimiento });
+            this.comboModulos.push({ label: this.actuacionDesigna.designaItem.modulo, value: this.actuacionDesigna.designaItem.idModulo });
           }
         } else {
           if (this.actuacionDesigna.actuacion.idProcedimiento != "" && this.actuacionDesigna.actuacion.idProcedimiento != null && this.actuacionDesigna.actuacion.idProcedimiento != undefined) {
@@ -383,6 +383,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }, () => {
         this.progressSpinner = false;
         this.datos.selectores[3].opciones = this.comboModulos;
+        if (this.actuacionDesigna.designaItem.idProcedimiento != "" && this.actuacionDesigna.designaItem.idProcedimiento != null && this.actuacionDesigna.designaItem.idProcedimiento != undefined) {
+          this.datos.selectores[3].value = this.actuacionDesigna.designaItem.idModulo;
+          this.getComboAcreditacionesPorModulo(this.actuacionDesigna.designaItem.idModulo);
+        }
       }
     );
   }
