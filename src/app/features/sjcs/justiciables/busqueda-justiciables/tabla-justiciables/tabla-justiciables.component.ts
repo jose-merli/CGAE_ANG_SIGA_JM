@@ -109,7 +109,7 @@ export class TablaJusticiablesComponent implements OnInit {
 
   checkInteresado(justiciable) {
     let interesados: any = sessionStorage.getItem("interesados");
-    if (interesados != "") interesados = JSON.parse(interesados);
+    if (interesados != "" && interesados != "undefined") interesados = JSON.parse(interesados);
     let exist = false;
 
     let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
@@ -119,7 +119,7 @@ export class TablaJusticiablesComponent implements OnInit {
     }
     else filtros = this.persistenceService.getFiltros();
 
-    if (interesados == "" || filtros.idRol == "1") exist = false;
+    if (interesados == "" || filtros.idRol == "1" || interesados == "undefined") exist = false;
     else {
       //Comprobamos que el justiciable no esta ya en la designacion
       interesados.forEach(element => {
