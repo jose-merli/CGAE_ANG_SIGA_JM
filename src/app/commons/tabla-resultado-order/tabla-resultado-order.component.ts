@@ -324,7 +324,11 @@ export class TablaResultadoOrderComponent implements OnInit {
       let totalCeldas = this.rowGroups[this.positionSelected].cells.length;
       let registro = this.numPage * this.numperPage + this.positionSelected;
       this.rowGroups[registro].cells[totalCeldas-1].value = "1";
-    }
+    } 
+
+    let totalCeldas =  this.rowGroups[this.rowGroups.length-1].cells.length;
+    this.rowGroups[this.rowGroups.length-1].cells[totalCeldas-1].value = "1";
+
     this.progressSpinner = true;
     //console.log('this.rowGroups: ', this.rowGroups)
     if (this.calendarios) {

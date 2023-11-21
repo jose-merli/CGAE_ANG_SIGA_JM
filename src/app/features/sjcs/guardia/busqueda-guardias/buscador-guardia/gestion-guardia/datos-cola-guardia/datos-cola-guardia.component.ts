@@ -758,7 +758,7 @@ inicio(){
             datCopy.numeroGrupo = null;
           }
 
-          if(datCopy.nColegiado == this.ultimoLetrado){
+          if(datCopy.nColegiado == this.rowGroupModified[this.rowGroupModified.length-1].cells[2].value){
             datCopy.ultimoCola = "1";
           }else{
               datCopy.ultimoCola  = null;
