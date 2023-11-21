@@ -300,9 +300,14 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     let datosInteresado = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
-
+    let idPersona;
+    if(datosInteresado == null || datosInteresado.idPersona == null){
+      idPersona = justiciable.idPersona;
+    }else{
+      idPersona = datosInteresado.idpersona;
+    }
     // let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero];
-    let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero, this.creaNuevoJusticiable, datosInteresado.idpersona];
+    let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero, this.creaNuevoJusticiable, idPersona];
 
     this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
       data => {
