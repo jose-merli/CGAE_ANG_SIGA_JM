@@ -425,6 +425,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           this.selectores[0].value = datosGeneralesDesigna[0];
           this.checkArt = datosGeneralesDesigna[2];
         }
+        if(this.datosAsistencia){
+          if(this.datosAsistencia.idTurno){
+            this.selectores[0].value = this.datosAsistencia.idTurno;
+          }
+        }
         //Condicion pensada para que se aplique cuandose crea una designacion desde EJG
         /*if (this.datosEJG != undefined && this.datosEJG != null) {
           if (this.datosEJG.idTurno != null) {
