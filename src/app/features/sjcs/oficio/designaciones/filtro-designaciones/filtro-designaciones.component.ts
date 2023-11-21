@@ -115,7 +115,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.showDesignas = false;
       // sessionStorage.setItem("vieneDeJE", "true");
     }
-    if(sessionStorage.getItem("vuelveEJ") != null){
+    if(sessionStorage.getItem("vuelveJE") != null){
       this.showDesignas = false;
       this.showJustificacionExpress = true;
     }
@@ -472,7 +472,7 @@ export class FiltroDesignacionesComponent implements OnInit {
           this.esColegiado = false;
           this.isColegDesig.emit(false);
 
-          if (sessionStorage.getItem("vieneDeJE") != null || sessionStorage.getItem("vuelveEJ") != null) {
+          if (sessionStorage.getItem("vieneDeJE") != null || sessionStorage.getItem("vuelveJE") != null) {
             this.cargaInicialJE();
 
             await this.changeFilters('justificacion');
@@ -480,7 +480,7 @@ export class FiltroDesignacionesComponent implements OnInit {
             this.buscar();
 
             sessionStorage.removeItem("vieneDeJE");
-            sessionStorage.removeItem("vienedeJE");
+            sessionStorage.removeItem("vuelveJE");
           } else {
             this.cargaInicial();
           }

@@ -714,7 +714,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	backTo() {
 		if(sessionStorage.getItem("vienedeJE")){
-			sessionStorage.setItem("vuelveEJ","true");
+			sessionStorage.setItem("vuelveJE","true");
 			sessionStorage.removeItem("vienedeJE");
 		}
 		sessionStorage.setItem('back', 'true');
