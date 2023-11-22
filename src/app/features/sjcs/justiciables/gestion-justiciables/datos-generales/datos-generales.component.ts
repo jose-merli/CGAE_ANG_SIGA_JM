@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Location } from "@angular/common";
 import { ConfirmationService } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
@@ -133,7 +134,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private location: Location) { }
 
   ngOnInit() {
 
@@ -315,8 +317,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         sessionStorage.setItem('tarjeta', 'sjcsDesigInt');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-
-        this.router.navigate(["/fichaDesignaciones"]);
+        sessionStorage.setItem("creaInsertaJusticiableDesigna", "true");
+        this.location.back();
+        //this.router.navigate(["/fichaDesignaciones"]);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
