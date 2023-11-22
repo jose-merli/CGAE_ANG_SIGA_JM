@@ -310,6 +310,12 @@ export class GestionEjgComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearDatos();
+    //Si es un ejg recién asociado a una asistencia
+    if(sessionStorage.getItem('EJGRecienAsociado')){
+      sessionStorage.removeItem("EJGRecienAsociado");
+      sessionStorage.setItem("vengoDesdeEJGRecienAsociado", 'true');
+      this.location.back();
+    }
     // Si viene de asistencias expres
     if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda")){
       sessionStorage.setItem("vieneDeAsistenciaExpres", "true");
