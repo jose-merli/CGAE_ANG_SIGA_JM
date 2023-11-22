@@ -84,7 +84,10 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
     private activatedRoute: ActivatedRoute, private location: Location) { }
 
   ngOnInit() {
-
+    if(sessionStorage.getItem("creaInsertaJusticiableDesigna")){
+      sessionStorage.removeItem("creaInsertaJusticiableDesigna");
+      this.location.back();
+    }
     this.activatedRoute.queryParams.subscribe(params => {
 
       if (params.rp == "1") {
