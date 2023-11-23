@@ -219,7 +219,12 @@ export class RegtelEjgComponent implements OnInit {
               'general.message.no.registros'
             );
           }
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          if (err.error == "Error al crear la colección en Regtel para el EJG" 
+                  || err.error == "Error al actualizar el identificador para DocuShare del EJG"){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), err.error);
+          }else{
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
         },
       );
   }
