@@ -1034,7 +1034,28 @@ if (rest){
       n => {
         let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
         this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
+        this.datosSaltos.forEach(salto => {
+          if(salto.letrado == null && salto.letradosGrupo != null){
+            salto.letrado = '\n';
+            salto.colegiadoGrupo = '\n';
+            salto.letradosGrupo.forEach(letrado => {
+              salto.colegiadoGrupo += letrado.colegiado + '\n';
+              salto.letrado += letrado.letrado + '\n';
+            });
+          }
+        });
+        console.log(this.datosSaltos);
         this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
+        this.datosCompensaciones.forEach(comp => {
+          if(comp.letrado == null && comp.letradosGrupo != null){
+            comp.letrado = '\n';
+            comp.colegiadoGrupo = '\n';
+            comp.letradosGrupo.forEach(letrado => {
+              comp.colegiadoGrupo += letrado.colegiado + '\n';
+              comp.letrado += letrado.letrado + '\n';
+            });
+          }
+        });
         let error = JSON.parse(n.body).error;
       });
   }
