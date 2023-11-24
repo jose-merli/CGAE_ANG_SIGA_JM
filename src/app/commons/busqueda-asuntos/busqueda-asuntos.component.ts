@@ -756,6 +756,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                 sessionStorage.setItem("EJGRecienAsociado", "true");
                 this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado el EJG con la Asistencia correctamente');
                 sessionStorage.removeItem("radioTajertaValue");
+                ejgItem.numero = String(data.numeroAsoc);
                 this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
                   n => {
                     this.persistenceService.setDatosEJG(JSON.parse(n.body).ejgItems[0]);
