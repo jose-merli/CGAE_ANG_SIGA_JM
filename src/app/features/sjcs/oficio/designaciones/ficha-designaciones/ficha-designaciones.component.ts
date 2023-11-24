@@ -2018,7 +2018,16 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         data => {
           let datos = JSON.parse(data.body);
           if (datos.length != 0) {
-            datos[0].fechaDesignacion = this.formatDate(datos[0].fechaDesignacion);
+            datos.forEach(dato =>{
+              dato.fechaDesignacion = this.formatDate(dato.fechaDesignacion);
+              if(dato.fechaEfecRenuncia!=null){
+                dato.fechaEfecRenuncia = this.formatDate(dato.fechaEfecRenuncia);
+              } 
+              if(dato.fechaSolRenuncia!=null){
+                dato.fechaSolRenuncia = this.formatDate(dato.fechaSolRenuncia);
+              } 
+            });
+            
             this.letrados = datos;
             this.primerLetrado = this.letrados[0];
             if (this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == '') {
