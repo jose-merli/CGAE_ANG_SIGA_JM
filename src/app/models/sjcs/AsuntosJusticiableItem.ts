@@ -38,6 +38,7 @@ export class AsuntosJusticiableItem {
 	fechaAperturaHasta: Date;
 	nColegiado: String;
 	dilnigproc: String;
+	numeroAsoc: String;
 
   constructor() { }
 }

@@ -891,6 +891,10 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.body.telefonos = arrayTelefonos;
     }
 
+    if (!(this.body.fechanacimiento instanceof Date)) {
+      this.body.fechanacimiento = null;
+    }
+
     this.body.tipojusticiable = SigaConstants.SCS_JUSTICIABLE;
     this.body.validacionRepeticion = true;
     this.sigaServices.post(url, this.body).subscribe(

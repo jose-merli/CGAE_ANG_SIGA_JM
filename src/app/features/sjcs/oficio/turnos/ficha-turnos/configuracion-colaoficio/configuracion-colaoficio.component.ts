@@ -217,9 +217,12 @@ export class ConfiguracionColaOficioComponent implements OnInit {
           n => {
             // coger etiquetas de una persona juridica
             this.pesosExistentes = n.colaOrden;
-            this.pesosExistentes.forEach(element => {
+            this.pesosExistentes.forEach((element, index) => {
               if (element.por_filas == "ALFABETICOAPELLIDOS") {
                 element.por_filas = "Apellidos y nombre"
+              }
+              if(element.por_filas == "ORDENACIONMANUAL"){
+                this.pesosExistentes.splice(index, 1);
               }
               if (element.por_filas == "ANTIGUEDADCOLA") {
                 element.por_filas = "Antigüedad en la cola"
@@ -230,10 +233,10 @@ export class ConfiguracionColaOficioComponent implements OnInit {
               if (element.por_filas == "FECHANACIMIENTO") {
                 element.por_filas = "Edad Colegiado"
               }
-              if (element.orden == "asc") {
+              if (element.orden == "asc" && element.por_filas != "ORDENACIONMANUAL") {
                 element.orden = "ascendente"
               }
-              if (element.orden == "desc") {
+              if (element.orden == "desc" && element.por_filas != "ORDENACIONMANUAL") {
                 element.orden = "descendente"
               }
             });
