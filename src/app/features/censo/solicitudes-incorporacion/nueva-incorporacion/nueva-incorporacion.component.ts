@@ -112,6 +112,8 @@ export class NuevaIncorporacionComponent implements OnInit {
   editar: boolean = false;
   isSave: boolean = true;
 
+  fechaEstado:string;
+  fechaIncorporacion:string;
   mailClicable: boolean = false;
 
   emailValido: boolean = true;
@@ -1660,6 +1662,8 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.solicitudEditar.abonoJCS = "0";
     }
 
+    this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
+    this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
     this.sigaServices
       .post("solicitudIncorporacion_nuevaSolicitud", this.solicitudEditar)
       .subscribe(
@@ -1910,7 +1914,34 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  validarFormatoFecha(fecha: string): boolean {
+    const regexFecha = /^\d{2}\/\d{2}\/\d{4}$/;
+  
+    // Comprueba si la fecha coincide con el formato 'DD/MM/YYYY'
+    return regexFecha.test(fecha);
+  }
+
   isGuardar(): boolean {
+    if(this.fechaEstado != null || this.fechaEstado != undefined){
+      if(this.validarFormatoFecha(this.fechaEstado)){
+        this.solicitudEditar.fechaEstado = new Date(this.fechaEstado)
+      }
+      else{
+        this.solicitudEditar.fechaEstado = null;
+      }
+    }else{
+      this.solicitudEditar.fechaEstado = null;
+    }
+    if(this.fechaIncorporacion != null || this.fechaIncorporacion != undefined){
+      if(this.validarFormatoFecha(this.fechaIncorporacion)){
+        this.solicitudEditar.fechaIncorporacion = new Date(this.fechaIncorporacion)
+      }else{
+        this.solicitudEditar.fechaIncorporacion = null;
+      }
+    }
+    else{
+      this.solicitudEditar.fechaIncorporacion = null;
+    }
     this.solicitudEditar.idTratamiento = this.tratamientoSelected;
     this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected;
     this.solicitudEditar.idPais = this.paisSelected;
@@ -2237,6 +2268,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   fillFechaEstado(event) {
     this.solicitudEditar.fechaEstado = event;
   }
+  fillFechaEstadoManual(event) {
+    this.fechaEstado = event.target.value;
+  }
 
   fillFechaEstadoSolicitud(event) {
     this.solicitudEditar.fechaEstadoSolicitud = event;
@@ -2248,6 +2282,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   fillFechaIncorporacion(event) {
     this.solicitudEditar.fechaIncorporacion = event;
+  }
+  fillFechaIncorporacionManual(event) {
+    this.fechaIncorporacion = event.target.value;
   }
 
   fillFechaNacimiento(event) {
