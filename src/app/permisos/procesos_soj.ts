@@ -1,10 +1,10 @@
 export const procesos_soj: any = {
     // SOJ
-    detalleSOJ: '941',
+    detalleSOJ: 'SOJBU',
 
     // Tarjetas 
-    datosGenerales: '941',
-    datosTramitacion: '941',
-    datosSolicitante: '941',
-    datosDocumentacion: '941',
+    datosGenerales: 'SOJBU',
+    datosTramitacion: 'SOJBU',
+    datosSolicitante: 'SOJBU',
+    datosDocumentacion: 'SOJBU',
 }

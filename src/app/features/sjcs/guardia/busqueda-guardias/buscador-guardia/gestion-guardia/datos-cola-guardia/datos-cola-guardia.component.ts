@@ -505,7 +505,7 @@ inicio(){
             { type: 'invisible', value: datoObj.fechaSuscripcion },
             { type: 'invisible', value: datoObj.idGrupoGuardia },
             { type: 'invisible', value: datoObj.idPersona },
-            { type: 'invisible', value: undefined }//datoObj.ultimoCola }
+            { type: 'invisible', value: datoObj.ultimoCola }
           ];
         }
         
@@ -650,8 +650,8 @@ inicio(){
           datCopy.fechaSuscripcion = rg.cells[11].value;
         datCopy.fechaValidacion = rg.cells[4].value;
         datCopy.fechabaja = rg.cells[5].value;
-        if (rg.cells[14] != undefined)
-          datCopy.idGrupoGuardia = rg.cells[14].value;
+        if (rg.cells[12] != undefined)
+          datCopy.idGrupoGuardia = rg.cells[12].value;
         datCopy.idGrupoGuardiaColegiado = rg.cells[6].value;
         datCopy.idGuardia = rg.cells[9].value;
         if (rg.cells[13] != undefined)
@@ -663,7 +663,7 @@ inicio(){
         datCopy.numeroGrupo = rg.cells[0].value;
         datCopy.orden = rg.cells[1].value;
         datCopy.ordenCola = rg.cells[7].value;
-        datCopy.ultimoCola = rg.cells[15].value;
+        datCopy.ultimoCola = rg.cells[14].value;
 
         if(!ultimo && datCopy.nColegiado == this.ultimoLetrado){
           datCopy.ultimoCola = "1";
@@ -1044,7 +1044,6 @@ if (rest){
             });
           }
         });
-        console.log(this.datosSaltos);
         this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
         this.datosCompensaciones.forEach(comp => {
           if(comp.letrado == null && comp.letradosGrupo != null){
