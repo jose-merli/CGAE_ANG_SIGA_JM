@@ -564,6 +564,9 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                     this.progressSpinner = false;
                     sessionStorage.removeItem("radioTajertaValue");
 
+                    //recargamos la ficha del ejg
+                    this.guardadoSend.emit(true);
+
                     if (error != null && error.description != null) {
                       this.showMessage("error", "Error al asociar el EJG con la Asistencia", error.description);
                     } else {
