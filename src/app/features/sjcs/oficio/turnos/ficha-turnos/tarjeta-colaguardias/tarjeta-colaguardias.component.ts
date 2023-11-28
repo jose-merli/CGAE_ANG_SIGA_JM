@@ -1145,8 +1145,8 @@ export class TarjetaColaGuardias implements OnInit {
           datCopy.fechaSuscripcion = rg.cells[11].value;
         datCopy.fechaValidacion = rg.cells[4].value;
         datCopy.fechabaja = rg.cells[5].value;
-        if (rg.cells[14] != undefined)
-          datCopy.idGrupoGuardia = rg.cells[14].value;
+        if (rg.cells[12] != undefined)
+          datCopy.idGrupoGuardia = rg.cells[12].value;
         datCopy.idGrupoGuardiaColegiado = rg.cells[6].value;
         datCopy.idGuardia = rg.cells[9].value;
         if (rg.cells[13] != undefined)
@@ -1158,7 +1158,7 @@ export class TarjetaColaGuardias implements OnInit {
         datCopy.numeroGrupo = rg.cells[0].value;
         datCopy.orden = rg.cells[1].value;
         datCopy.ordenCola = rg.cells[7].value;
-        datCopy.ultimoCola = rg.cells[15].value;
+        datCopy.ultimoCola = rg.cells[14].value;
 
         if(!ultimo && datCopy.nColegiado == this.ultimoLetrado){
           datCopy.ultimoCola = "1";
