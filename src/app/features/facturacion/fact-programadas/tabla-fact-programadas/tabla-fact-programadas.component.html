@@ -63,7 +63,8 @@
 
                 <div *ngSwitchCase="'estado'">
                   <span [ngClass]="{ historico: historico }">
-                    <span class="badge badge-{{ calcBadgeEstado('fac', dato['idEstadoConfirmacion']) }}" [pTooltip]="getTooltipEstadoFact(dato['estadoConfirmacion'])" tooltipPosition="top" >Fac</span>
+                    <span class="badge badge-{{ calcBadgeEstado('gen', dato['idEstadoConfirmacion']) }}" [pTooltip]="getTooltipEstadoFact(dato['estadoGeneracion'])" tooltipPosition="top" >Gen</span>
+                    <span class="badge badge-{{ calcBadgeEstado('con', dato['idEstadoConfirmacion']) }}" [pTooltip]="getTooltipEstadoFact(dato['estadoConfirmacion'])" tooltipPosition="top" >Con</span>
                     <span class="badge badge-{{ calcBadgeEstado('pdf', dato['idEstadoPDF']) }}" [pTooltip]="getTooltipEstadoFact(dato['estadoPDF'])" tooltipPosition="top">PDF</span>
                     <span class="badge badge-{{ calcBadgeEstado('env', dato['idEstadoEnvio']) }}" [pTooltip]="getTooltipEstadoFact(dato['estadoEnvio'])" tooltipPosition="top">Env</span>
                     <span class="badge badge-{{ calcBadgeEstado('tra', dato['idEstadoTraspaso']) }}" *ngIf="controlEmisionFacturasSII" [pTooltip]="getTooltipEstadoFact(dato['estadoTraspaso'])" tooltipPosition="top">Tra</span>
