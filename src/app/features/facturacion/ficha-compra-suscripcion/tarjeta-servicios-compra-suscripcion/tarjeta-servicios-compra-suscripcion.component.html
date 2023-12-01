@@ -117,11 +117,9 @@
                     <span *ngIf="col.field == 'precioServicioValor'">{{rowData[col.field]}} €</span>
 
 
-
                     <span *ngIf="col.field == 'iva'">{{rowData[col.field]}}</span>
-                    
                     <span
-                      *ngIf="col.field == 'total'">{{rowData[col.field]}}
+                      *ngIf="col.field == 'total'">{{rowData[col.field] | number}}
                       €</span>
                     <span *ngIf="col.field == 'orden'">{{rowData[col.field]}}</span>
                   </td>
