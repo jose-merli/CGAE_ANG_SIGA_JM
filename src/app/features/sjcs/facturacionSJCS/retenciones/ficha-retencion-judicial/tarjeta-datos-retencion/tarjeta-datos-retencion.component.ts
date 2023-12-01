@@ -1,5 +1,4 @@
 import { Component, OnInit, Output, EventEmitter, AfterViewInit, Input } from '@angular/core';
-import { RetencionesRequestDto } from '../../../../../../models/sjcs/RetencionesRequestDTO';
 import { Enlace } from '../ficha-retencion-judicial.component'
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { RetencionesService } from '../../retenciones.service';
@@ -14,6 +13,7 @@ import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_fa
 import { Router } from '@angular/router';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { FcsRetencionesJudicialesItem } from '../../../../../../models/sjcs/FcsRetencionesJudicialesItem';
+import { RetencionesRequestDto } from '../../../../../../models/sjcs/RetencionesRequestDTO';
 
 @Component({
   selector: 'app-tarjeta-datos-retencion',
@@ -45,6 +45,7 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   @Output() retencionEvent = new EventEmitter<RetencionItem>();
 
   isLetrado: boolean = false;
+  nuevaRetencionSinLetrado: boolean;
   constructor(private sigaServices: SigaServices,
     private retencionesService: RetencionesService,
     private translateService: TranslateService,
@@ -78,6 +79,10 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
     }
     */
     this.isLetrado = this.sigaStorageService.isLetrado;
+    if(sessionStorage.getItem("nuevaRetencionSinLetrado")){
+      this.nuevaRetencionSinLetrado = true;
+      sessionStorage.removeItem("nuevaRetencionSinLetrado");
+    }
   }
 
   getDataInicial() {
@@ -244,19 +249,25 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   compruebaCamposObligatorios() {
-    if ((this.body.tipoRetencion && this.body.tipoRetencion.trim().length == 1) &&
+      if ((this.body.tipoRetencion && this.body.tipoRetencion.trim().length == 1) &&
       (this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0) &&
       (this.body.fechainicio && this.body.fechainicio != null) &&
       (this.body.idDestinatario && this.body.idDestinatario.toString().trim().length > 0) &&
       (this.colegiado && this.colegiado != null)) {
       return true;
-    }
-    this.showMessage.emit({
-      severity: "error",
-      summary: this.translateService.instant("general.message.incorrect"),
-      detail: this.translateService.instant("general.message.camposObligatorios")
-    });
-    return false;
+      } else if(this.nuevaRetencionSinLetrado && (this.body.tipoRetencion && this.body.tipoRetencion.trim().length == 1) &&
+      (this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0) &&
+      (this.body.fechainicio && this.body.fechainicio != null) &&
+      (this.body.idDestinatario && this.body.idDestinatario.toString().trim().length > 0)){
+        return true;
+      } 
+    
+      this.showMessage.emit({
+        severity: "error",
+        summary: this.translateService.instant("general.message.incorrect"),
+        detail: this.translateService.instant("general.message.camposObligatorios")
+      });
+      return false;
   }
 
   parseToObjectRest(event:RetencionItem){
@@ -278,8 +289,10 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   guardar() {
 
     if (this.permisoEscritura && this.compruebaCamposObligatorios()) {
-
-      this.body.idPersona = this.colegiado.idPersona;
+      if(this.colegiado?.idPersona){
+        this.body.idPersona = this.colegiado.idPersona;
+      }
+      
 
       this.progressSpinner = true;
       let objectoRest:FcsRetencionesJudicialesItem = this.parseToObjectRest(this.body);

@@ -36,12 +36,13 @@
               <span [ngClass]="{'italic': isHistorico(dato)}">{{ dato[col.field] != '-'  ? ((this.numberParse(dato[col.field]) | number:'1.2-2':'es-ES' ) + ' €') : dato[col.field] }} </span>
             </div>
 
-            <div *ngIf="col.field == 'ncolegiado'">
+            <div *ngIf="col.field == 'idRetencion'">
               <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
             </div>
-
-            <div *ngIf="col.field != 'fechainicio' && col.field != 'fechaFin' && col.field != 'ncolegiado' && col.field != 'importe' && col.field != 'restante'">
-              <span [ngClass]=" {'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
+            
+            <div *ngIf="col.field != 'fechainicio' && col.field != 'fechaFin' && col.field != 'idRetencion' && col.field != 'importe' && col.field != 'restante' && col.field != 'esDeTurno'">
+              <span *ngIf="dato.esDeTurno != true || (col.field != 'nombre' && col.field != 'ncolegiado')" [ngClass]=" {'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
+              <span *ngIf="dato.esDeTurno == true && col.field == 'nombre'">{{'facturacionsjcs.retenciones.aplicatodosletrados' | translate}}</span>
             </div>
 
           </td>

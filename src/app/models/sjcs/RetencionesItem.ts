@@ -12,4 +12,5 @@ export class RetencionesItem {
     importe: string;
     retencionAplicada: string;
     restante: string;
+    esDeTurno: boolean;
 }

@@ -18,12 +18,13 @@
             </label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>{{ 'facturacionSJCS.retenciones.apellidos2' | translate }}:
+            <label *ngIf="!retencionSinLetrado">{{ 'facturacionSJCS.retenciones.apellidos2' | translate }}:
               <span>{{ body.apellidos2 }}</span></label>
-            <label>{{ 'facturacionSJCS.retenciones.apellidos1' | translate }}:
+            <label *ngIf="!retencionSinLetrado">{{ 'facturacionSJCS.retenciones.apellidos1' | translate }}:
               <span>{{ body.apellidos1 }}</span></label>
-            <label>{{ 'facturacionSJCS.retenciones.nombre' | translate }}: <span>{{ body.nombre }}</span></label>
-            <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+            <label *ngIf="!retencionSinLetrado">{{ 'facturacionSJCS.retenciones.nombre' | translate }}: <span>{{ body.nombre }}</span></label>
+            <p-checkbox *ngIf="retencionSinLetrado" [ngModel]="true" [value]="true" disabled binary="true" label="{{'facturacionsjcs.retenciones.aplicatodosletrados' | translate}}"></p-checkbox>
+            <i *ngIf="!showTarjeta && !retencionDesdeTabla" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
           </div>
         </div>
 
@@ -40,7 +41,7 @@
 
     </div>
 
-    <div *ngIf="showTarjeta" class="card-body card-body-ficha">
+    <div *ngIf="showTarjeta && !retencionSinLetrado" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
           <div class="img-colegiado text-center my-0 mx-auto">
