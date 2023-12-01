@@ -1922,25 +1922,20 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   isGuardar(): boolean {
-    if(this.fechaEstado != null || this.fechaEstado != undefined){
+    if(this.fechaEstado != null && this.fechaEstado != undefined){
       if(this.validarFormatoFecha(this.fechaEstado)){
         this.solicitudEditar.fechaEstado = new Date(this.fechaEstado)
       }
       else{
         this.solicitudEditar.fechaEstado = null;
       }
-    }else{
-      this.solicitudEditar.fechaEstado = null;
     }
-    if(this.fechaIncorporacion != null || this.fechaIncorporacion != undefined){
+    if(this.fechaIncorporacion != null && this.fechaIncorporacion != undefined){
       if(this.validarFormatoFecha(this.fechaIncorporacion)){
         this.solicitudEditar.fechaIncorporacion = new Date(this.fechaIncorporacion)
       }else{
         this.solicitudEditar.fechaIncorporacion = null;
       }
-    }
-    else{
-      this.solicitudEditar.fechaIncorporacion = null;
     }
     this.solicitudEditar.idTratamiento = this.tratamientoSelected;
     this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected;
