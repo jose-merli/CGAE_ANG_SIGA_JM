@@ -263,7 +263,31 @@ comprobarValidados(){
   nuevaFila() {
     this.clickPermuta = true;
     this.selectedDatos = [];
-
+  
+    // Obtén la información del turno por el cual estás realizando la búsqueda
+    const tipoTurnoInfo = this.body.tipoTurno;
+  
+    // Encuentra el índice en el array comboTurnos donde el nombre coincide con el tipoTurnoInfo
+   // const indiceTurnoSeleccionado = this.comboTurnos.findIndex(turnoGuardia => turnoGuardia.label === tipoTurnoInfo);
+   this.comboTurnos.forEach((turnoGuardia)=>{
+    if(turnoGuardia.label.includes(tipoTurnoInfo)){
+      this.valueComboTurno = turnoGuardia.value;
+      this.onChangeTurnos();
+    }
+  });
+  
+    console.log("Tipo de Turno Info:", tipoTurnoInfo);
+    
+  
+    // if (indiceTurnoSeleccionado !== -1) {
+    //   // Establece el valor predefinido del turno/guardia utilizando el índice encontrado
+    //   this.valueComboTurno = this.comboTurnos[indiceTurnoSeleccionado];
+    //   console.log("Valor de Combo Turno después de establecer:", this.valueComboTurno);
+    //   this.onChangeTurnos(); // Actualiza el combo de guardias según el turno predefinido
+    // } else {
+    //   console.log("No se encontró el tipo de turno en el array comboTurnos.");
+    // }
+  
     let dummy = {
       fechaconfirmacion: "",
       fechasolicitud: "",
@@ -387,7 +411,15 @@ comprobarValidados(){
       n => {
         this.comboTurnos = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTurnos);
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
+        // Preseleccionar el turno si ya hay un valor
+      if (this.valueComboTurno) {
+        this.onChangeTurnos(); // Llamamos al método para cargar las opciones del Guardia Confirmador
+        
+      }
+
+      this.progressSpinner = false;
+
       },
       err => {
         //console.log(err);
@@ -424,6 +456,7 @@ comprobarValidados(){
       "guardiasColegiado_getComboGuardiaDestinoInscrito",guardiaItem).subscribe(
         data => {
           this.comboGuardias = JSON.parse(data.body).comboGuardiasFuturasItems; 
+
           this.commonServices.arregloTildesCombo(this.comboGuardias);
           this.progressSpinner = false;
         },
@@ -440,6 +473,7 @@ comprobarValidados(){
     this.comboGuardias = [];
 
     if (this.valueComboTurno) {
+      //preseleccionar el turno en el menu desplegable
       this.getComboGuardia(this.valueComboTurno);
     }
   }
