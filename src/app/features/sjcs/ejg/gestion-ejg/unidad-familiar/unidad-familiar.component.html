@@ -135,7 +135,7 @@
             [disabled]="!permisoEscritura || isRepresentante || selectedDatos.length!=1 || !solicitarEEJG"
             (click)="checkPermisosSolicitarEEJ()" type="button"
             label="{{'general.boton.solicitudEejg' | translate}}"></button>
-          <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura  || isRepresentante"
+          <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || isRepresentante"
             (click)="checkPermisosComunicar(selectedDatos)" pButton type="button" icon="fa fa-comment" iconPos="left"
             label="{{'general.boton.comunicar' | translate }}"></button>
           <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" iconPos="left"
@@ -151,7 +151,7 @@
             (click)="checkPermisosConfirmDelete()" type="button" iconPos="left"
             label="{{'general.boton.activar' | translate}}"></button>
           <!-- [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" -->
-          <button pButton (click)="checkPermisosAsociar()" type="button" icon="fa fa-plus" iconPos="left"
+          <button pButton  [disabled]="!permisoEscritura" (click)="checkPermisosAsociar()" type="button" icon="fa fa-plus" iconPos="left"
             label="{{'general.boton.anadir' | translate }}"></button>
         </div>
       </div>

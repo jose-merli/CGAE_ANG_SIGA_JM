@@ -125,7 +125,8 @@ export class UnidadFamiliarComponent implements OnInit {
       }
       sessionStorage.removeItem('tarjeta');
     }
-    this.commonsService.checkAcceso(procesos_ejg.unidadFamiliar)
+    // this.commonsService.checkAcceso(procesos_ejg.unidadFamiliar)
+    this.commonsService.checkAcceso(procesos_ejg.detalleUF)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
       }
