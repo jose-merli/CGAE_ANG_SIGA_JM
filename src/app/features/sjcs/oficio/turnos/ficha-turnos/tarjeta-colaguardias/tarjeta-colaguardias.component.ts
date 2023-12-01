@@ -251,13 +251,15 @@ export class TarjetaColaGuardias implements OnInit {
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true
     }
-
-    this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
-      this.configuracionCola = confValue;
-      this.manual = confValue.manual;
-      this.porGrupos= confValue.porGrupos;
-      this.minimoLetrado = confValue.minimoLetradosCola;
+    this.suscription = this.globalGuardiasService.getConf().subscribe((confValue) => {
+      setTimeout(() => {
+        this.configuracionCola = confValue;
+        this.manual = confValue.manual;
+        this.porGrupos = confValue.porGrupos;
+        this.minimoLetrado = confValue.minimoLetradosCola;
+      }, 500);
     });
+    
   }
 
   inicio(){
