@@ -107,11 +107,14 @@ export class TarjetaColegiadoComponent implements OnInit, AfterViewInit {
   }
 
   onHideTarjeta() {
-    if (this.retencionesService.modoEdicion) {
-      this.showTarjeta = !this.showTarjeta;
-    } else {
-      this.showTarjeta = true;
+    if(!this.retencionSinLetrado){
+      if (this.retencionesService.modoEdicion) {
+        this.showTarjeta = !this.showTarjeta;
+      } else {
+        this.showTarjeta = true;
+      }
     }
+    
   }
 
   trim(value: string) {
