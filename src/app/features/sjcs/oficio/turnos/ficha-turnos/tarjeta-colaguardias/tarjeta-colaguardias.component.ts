@@ -221,6 +221,7 @@ export class TarjetaColaGuardias implements OnInit {
         this.abreCierraFicha('colaGuardias')
       }
     }
+    
   }
 
   ngOnInit() {
@@ -259,7 +260,6 @@ export class TarjetaColaGuardias implements OnInit {
         this.minimoLetrado = confValue.minimoLetradosCola;
       }, 500);
     });
-    
   }
 
   inicio(){
@@ -328,6 +328,7 @@ export class TarjetaColaGuardias implements OnInit {
           } else {
             this.botActivos = true;
             this.editable = true;
+            this.manual = true;
           }
           //getConfColaGuardias();
           this.getColaGuardia();
@@ -417,7 +418,16 @@ export class TarjetaColaGuardias implements OnInit {
       this.ultimoLetrado = "";
       this.apeyNombreUltimo = "";
     }
+    this.suscription = this.globalGuardiasService.getConf().subscribe((confValue) => {
+      setTimeout(() => {
+        this.configuracionCola = confValue;
+        this.manual = confValue.manual;
+        this.porGrupos = confValue.porGrupos;
+        this.minimoLetrado = confValue.minimoLetradosCola;
+      }, 500);
+    });
 
+    this.tablaOrder.getConfColaGuardias();
   }
 
   transformaFecha(fecha) {
@@ -1446,6 +1456,14 @@ export class TarjetaColaGuardias implements OnInit {
             this.getCols();
           }
         );
+        this.suscription = this.globalGuardiasService.getConf().subscribe((confValue) => {
+          setTimeout(() => {
+            this.configuracionCola = confValue;
+            this.manual = confValue.manual;
+            this.porGrupos = confValue.porGrupos;
+            this.minimoLetrado = confValue.minimoLetradosCola;
+          }, 500);
+        });
   }
 
   actualizaSeleccionados(selectedDatos) {
