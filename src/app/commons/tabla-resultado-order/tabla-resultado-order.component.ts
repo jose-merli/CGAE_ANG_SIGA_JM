@@ -1761,7 +1761,13 @@ this.totalRegistros = this.rowGroups.length;
       );
   }
 
-
+comprobarOrdenacionManual(){
+  if(!this.manual){
+    return true;
+  }else{
+    return false;
+  }
+}
 
   getConfColaGuardias() {
     let datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));

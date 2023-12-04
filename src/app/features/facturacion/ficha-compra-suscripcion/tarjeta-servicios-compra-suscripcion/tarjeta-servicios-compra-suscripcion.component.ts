@@ -344,6 +344,13 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   //INICIO METODOS
 
   checkSave() {
+    console.log(this.ficha.fechaPendiente);
+    console.log(this.esColegiado);
+    console.log(this.ficha.facturas);
+    console.log(this.ficha.fechaAceptada);
+    console.log(this.ficha.fechaAnulada);
+    console.log(this.permisoActualizarServicioSuscripcion);
+
     let msg = this.commonsService.checkPermisos(this.permisoActualizarServicioSuscripcion, undefined);
 
     if (msg != null) {
@@ -380,21 +387,26 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     let totalIVA = 0;
     let impTotal = 0;
     this.totalUnidades = this.serviciosTarjeta.length;
-    this.serviciosTarjeta.forEach(
-      el => {
-        el.total = ((Number(el.precioServicioValor) * Number(el.periodicidadValor)) * (1 + Number(el.valorIva) / 100)).toFixed(2);
-        el.impIva = ((Number(el.precioServicioValor) * Number(el.periodicidadValor)) * (Number(el.valorIva) / 100)).toFixed(2);
-        el.impNeto = (Number(el.precioServicioValor) * Number(el.periodicidadValor)).toFixed(2);
-        impTotal += Number(el.total);
-        totalNeto += Number(el.impNeto);
-        totalIVA += Number(el.impIva);
-      }
-    );
+  
+    this.serviciosTarjeta.forEach(el => {
+      // Comprobación de undefined y asignación de valores por defecto
+      const precioServicio = el.precioServicioValor !== undefined ? Number(el.precioServicioValor) : 0;
+      const periodicidad = el.periodicidadValor !== undefined ? Number(el.periodicidadValor) : 0;
+  
+      el.total = ((precioServicio * periodicidad) * (1 + Number(el.valorIva) / 100)).toFixed(2);
+      el.impIva = ((precioServicio * periodicidad) * (Number(el.valorIva) / 100)).toFixed(2);
+      el.impNeto = (precioServicio * periodicidad).toFixed(2);
+      impTotal += Number(el.total);
+      totalNeto += Number(el.impNeto);
+      totalIVA += Number(el.impIva);
+    });
+  
     this.datosTarjeta.totalNeto = totalNeto.toFixed(2);
     this.datosTarjeta.totalIVA = totalIVA.toFixed(2);
     this.datosTarjeta.impTotal = impTotal.toFixed(2);
     this.ficha.impTotal = impTotal.toFixed(2);
   }
+  
 
   openTab(selectedRow: ListaServiciosSuscripcionItem) {
     this.progressSpinner = true;

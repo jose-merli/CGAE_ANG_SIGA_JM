@@ -76,7 +76,7 @@
                 
                 <!-- <div *ngIf="col.field == 'nombreTurno' && clickPermuta &&  permutas[rowIndex].nuevoRegistro"> -->
                 <div *ngIf="col.field == 'turnoGuardiaConf' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
-                  <p-dropdown [(ngModel)]='valueComboTurno' class="select-form" placeholder="Seleccionar"
+                  <p-dropdown [(ngModel)]='valueComboTurno' class="select-form"
                     [options]="comboTurnos" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeTurnos()"
                     [showClear]="true"></p-dropdown>
                 </div>
