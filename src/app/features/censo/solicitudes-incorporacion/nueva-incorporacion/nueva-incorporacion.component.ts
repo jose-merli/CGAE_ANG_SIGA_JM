@@ -31,7 +31,8 @@ import { ParametroItem } from "../../../../models/ParametroItem";
 import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
 import { SigaStorageService } from "../../../../siga-storage.service";
 import { saveAs } from "file-saver/FileSaver";
-import moment = require("moment");
+import * as moment from 'moment';
+
 
 export enum KEY_CODE {
   ENTER = 13
