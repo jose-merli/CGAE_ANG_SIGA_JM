@@ -663,7 +663,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   }
 
   checkPermisosComunicar() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonsServices.checkPermisos(this.modoEdicion, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
