@@ -1278,6 +1278,8 @@ this.totalRegistros = this.rowGroups.length;
     }
     toReg(event){
       this.to = Number(event);
+      this.selectedArray = [];
+      this.disUltimo = true;
     }
 
     eliminar(){

@@ -31,6 +31,8 @@ import { ParametroItem } from "../../../../models/ParametroItem";
 import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
 import { SigaStorageService } from "../../../../siga-storage.service";
 import { saveAs } from "file-saver/FileSaver";
+import * as moment from 'moment';
+
 
 export enum KEY_CODE {
   ENTER = 13
@@ -1661,9 +1663,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     } else {
       this.solicitudEditar.abonoJCS = "0";
     }
-
-    this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
-    this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
+    
+    this.solicitudEditar.fechaIncorporacion = moment(this.solicitudEditar.fechaIncorporacion,'DD/MM/YYYY').toDate();
+    this.solicitudEditar.fechaEstado = moment(this.solicitudEditar.fechaEstado,'DD/MM/YYYY').toDate();
+    
     this.sigaServices
       .post("solicitudIncorporacion_nuevaSolicitud", this.solicitudEditar)
       .subscribe(
@@ -1924,7 +1927,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   isGuardar(): boolean {
     if(this.fechaEstado != null && this.fechaEstado != undefined){
       if(this.validarFormatoFecha(this.fechaEstado)){
-        this.solicitudEditar.fechaEstado = new Date(this.fechaEstado)
+        this.solicitudEditar.fechaEstado = moment(this.fechaEstado,'DD/MM/YYYY').toDate();
       }
       else{
         this.solicitudEditar.fechaEstado = null;
@@ -1932,7 +1935,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
     if(this.fechaIncorporacion != null && this.fechaIncorporacion != undefined){
       if(this.validarFormatoFecha(this.fechaIncorporacion)){
-        this.solicitudEditar.fechaIncorporacion = new Date(this.fechaIncorporacion)
+        this.solicitudEditar.fechaIncorporacion = moment(this.fechaIncorporacion,'DD/MM/YYYY').toDate();
       }else{
         this.solicitudEditar.fechaIncorporacion = null;
       }
