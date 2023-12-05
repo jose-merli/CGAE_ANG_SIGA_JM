@@ -19,6 +19,7 @@ import { SigaStorageService } from '../../siga-storage.service';
 import { ListaGuardiasItem } from '../../models/guardia/ListaGuardiasItem';
 import { TurnosItems } from '../../models/sjcs/TurnosItems';
 import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';
+import { Paginador4Component } from '../paginador4/paginador4.component';
 
 @Component({
   selector: 'app-tabla-resultado-order',
@@ -100,6 +101,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() totalRegistros = 0;
   numperPage = 10;
   @ViewChild('table') table: ElementRef;
+  @ViewChild('paginador') paginador: Paginador4Component;
   @Output() delete = new EventEmitter<any>();
   comboTurno = [];
   @Input() comboGuardia = [];
@@ -1269,6 +1271,7 @@ this.totalRegistros = this.rowGroups.length;
     }
     duplicar(){
       this.dupli.emit(true);
+      this.paginador.updateRowsFromDuplicate();
     }
     selectedAll(evento){
       this.seleccionarTodo = evento;

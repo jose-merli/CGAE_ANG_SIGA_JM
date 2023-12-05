@@ -6,7 +6,7 @@
     </div>
 
     <div class="padding-interior"> 
-        <app-paginador4 (pageNumber)="getPageNumber($event)" (perPage)="perPage($event)" (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros" ></app-paginador4>
+        <app-paginador4 #paginador (pageNumber)="getPageNumber($event)" (perPage)="perPage($event)" (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros" ></app-paginador4>
     </div>
 
     <div *ngIf="!manual && pantalla=='colaGuardias'" class="col-lg-12 col-md-12 table" matSort #table>    
