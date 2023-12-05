@@ -122,10 +122,11 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
 
   //Cada vez que se cambia el valor del desplegable de turnos
   onChangeJuzgado() {
+    /*
     if(this.defensaJuridicaItem.idJuzgado){
       this.defensaJuridicaItem.idComisaria = null;
-    }
-    this.comboProcedimientos = [];
+    }*/
+    //this.comboProcedimientos = [];
     this.defensaJuridicaItem.numProcedimiento = null;
     this.getComboProcedimientoConJuzgado();
   }
