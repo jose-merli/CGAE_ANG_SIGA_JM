@@ -70,7 +70,7 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "idRetencion", header: "facturacionSJCS.retenciones.nColegiado", width: "12%" },
+      { field: "idRetencion", header: "facturacionSJCS.retenciones.idRetencion", width: "12%" },
       { field: "ncolegiado", header: "facturacionSJCS.retenciones.nColegiado", width: "12%" },
       { field: "nombre", header: "facturacionSJCS.retenciones.nombre", width: "14%" },
       { field: "tipoRetencion", header: "facturacionSJCS.retenciones.tipoRetencion", width: "12%" },
