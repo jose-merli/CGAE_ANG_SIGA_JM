@@ -435,6 +435,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   }
 
   nuevoSinLetrado() {
+    sessionStorage.setItem("retencionSinLetrado", "true");
     sessionStorage.setItem("desdeNuevoFiltroRetenciones", "true");
     sessionStorage.setItem("nuevaRetencionSinLetrado", "true");
     this.retencionesService.modoEdicion = false;
