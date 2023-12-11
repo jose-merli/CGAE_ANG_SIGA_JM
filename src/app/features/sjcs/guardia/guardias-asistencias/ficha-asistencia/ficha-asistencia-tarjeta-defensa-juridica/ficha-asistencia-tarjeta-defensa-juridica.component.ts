@@ -126,8 +126,8 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
     if(this.defensaJuridicaItem.idJuzgado){
       this.defensaJuridicaItem.idComisaria = null;
     }*/
-    //this.comboProcedimientos = [];
-    this.defensaJuridicaItem.numProcedimiento = null;
+    this.comboProcedimientos = [];
+    //this.defensaJuridicaItem.numProcedimiento = null;
     this.getComboProcedimientoConJuzgado();
   }
   
