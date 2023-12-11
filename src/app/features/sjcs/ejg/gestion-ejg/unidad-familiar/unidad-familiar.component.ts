@@ -561,8 +561,8 @@ export class UnidadFamiliarComponent implements OnInit {
     this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", datosToCall).subscribe(
       data => {
         this.progressSpinner = false;
-
-        if (data.size == 0) {
+        
+        if (data.size == 0 || data.size <= 22) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         } else {
           let blob = null;
