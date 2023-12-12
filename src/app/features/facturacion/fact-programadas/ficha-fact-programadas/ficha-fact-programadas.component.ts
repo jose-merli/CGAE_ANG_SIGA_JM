@@ -103,7 +103,7 @@ export class FichaFactProgramadasComponent implements OnInit {
       },
       {
         label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado"),
-        value: this.body.estadoConfirmacion
+        value: this.body.estadoGeneracion
       },
       {
         label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.importe"),

@@ -130,4 +130,13 @@ export class Paginador4Component implements OnInit {
       this.elementsInLastPage = this.selectedPerPage;
     }
   }
+
+  updateRowsFromDuplicate() {
+    this.totalRegistros = this.totalRegistros + 1;
+    this.calculatingElementsLastPage();
+    if (this.pagNumber + 1 == this.lastPage){
+      this.to = this.totalRegistros;
+      this.toReg.emit(this.to);
+     } 
+  }
 }

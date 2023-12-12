@@ -369,7 +369,7 @@
                         <app-fecha
                             [(value)]="solicitudEditar.fechaNacimiento" [disabled]="consulta || !noExistePersona || guardado" [utc]="false"
                             (valueChangeSelected)="fillFechaNacimiento($event)"
-                            (valueChangeInput)="fillFechaNacimiento($event)"></app-fecha>
+                            (valueChangeInput)="fillFechaNacimientoManual($event)"></app-fecha>
                     </div>
                 </div>
             </div>

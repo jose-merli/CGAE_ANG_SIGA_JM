@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
 import { Checkbox } from '../../../../../../../node_modules/primeng/primeng';
 import { Dialog } from 'primeng/primeng';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-datos-personales',
@@ -107,6 +108,17 @@ export class DatosPersonalesComponent implements OnInit {
   confirmationUpdate: boolean = false;
 
   menorEdadJusticiable: boolean = false;
+  nuevoRepresentante: boolean;
+  nuevoInteresado: boolean;
+  nuevoContrario: boolean;
+  nuevoAsistido: boolean;
+  nuevoContrarioAsistencia: boolean;
+  nuevaUniFamiliar: boolean;
+  nuevoContrarioEJG: boolean;
+  nuevoSoj: boolean;
+  modoRepre: any;
+  idPersonaAntiguoJusticiable: string;
+  creaNuevoJusticiable: boolean;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -118,6 +130,26 @@ export class DatosPersonalesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+
+    if (sessionStorage.getItem("origin") == "newRepresentante") {
+      this.nuevoRepresentante = true;
+    } else if (sessionStorage.getItem("origin") == "newInteresado" || sessionStorage.getItem("origin") == "Interesado") {
+      this.nuevoInteresado = true;
+    } else if (sessionStorage.getItem("origin") == "newContrario" || sessionStorage.getItem("origin") == "Contrario") {
+      this.nuevoContrario = true;
+    } else if (sessionStorage.getItem("origin") == "newAsistido") {
+      this.nuevoAsistido = true;
+    } else if (sessionStorage.getItem("origin") == "newContrarioAsistencia" || sessionStorage.getItem("origin") == "Asistencia") {
+      this.nuevoContrarioAsistencia = true;
+    } else if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
+      this.nuevaUniFamiliar = true;
+    } else if (sessionStorage.getItem("origin") == "newContrarioEJG" || sessionStorage.getItem("origin") == "ContrarioEJG") {
+      this.nuevoContrarioEJG = true;
+    } else if (sessionStorage.getItem("origin") == "newSoj") {
+      this.nuevoSoj = true;
+    }else {
+      this.vieneDeJusticiable = true;
+    }
     this.progressSpinner = true;
 
     if (this.body != undefined && this.body.idpersona != undefined) {
@@ -254,7 +286,7 @@ export class DatosPersonalesComponent implements OnInit {
     this.progressSpinner = true;
     let url = "";
     this.body.validacionRepeticion = false;
-
+    this.idPersonaAntiguoJusticiable = this.body.idpersona;
     if ((this.body.edad != undefined && JSON.parse(this.body.edad) < this.edadAdulta && this.body.idrepresentantejg != undefined) || this.body.edad == undefined
       || (this.body.edad != undefined && JSON.parse(this.body.edad) >= this.edadAdulta)) {
       this.menorEdadJusticiable = false;
@@ -394,7 +426,9 @@ export class DatosPersonalesComponent implements OnInit {
     this.sigaServices.post(url, this.body).subscribe(
       data => {
         this.progressSpinner = false;
-
+        console.log(JSON.parse(data.body));
+        let idPersona = JSON.parse(data.body).id;
+        sessionStorage.setItem("nuevoJusticiableAInsertarEJG", idPersona);
         //Si se manda un mensaje igual a C significa que el nif del justiciable introducido esta repetido 
         if (JSON.parse(data.body).error.message != "C") {
 
@@ -450,7 +484,7 @@ export class DatosPersonalesComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           }
-
+          this.preAsociarJusticiable();
         } else {
           this.callConfirmationSave(JSON.parse(data.body).id);
           // this.personaRepetida = true;
@@ -475,6 +509,121 @@ export class DatosPersonalesComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  preAsociarJusticiable() {
+    // Asociar solo si viene de EJG, Asistencia o Designa
+    if (sessionStorage.getItem("itemEJG") || sessionStorage.getItem("itemAsistencia") || sessionStorage.getItem("itemDesignas")) {
+      this.asociarJusticiable();
+      if (sessionStorage.getItem("itemEJG")) {
+        sessionStorage.removeItem("itemEJG");
+      }
+      if (sessionStorage.getItem("itemAsistencia")) {
+        sessionStorage.removeItem("itemAsistencia");
+      }
+      if (sessionStorage.getItem("itemDesignas")) {
+        sessionStorage.removeItem("itemDesignas");
+      }
+    }
+  }
+
+  insertUniFamiliar(justiciable) {
+    this.progressSpinner = true;
+
+    let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+    let data = []; 
+    let ejg2;
+    ejg2 = {uf_anio : ejg.annio, uf_idPersona : this.idPersonaAntiguoJusticiable, uf_idTipoejg : ejg.tipoEJG, uf_numero : ejg.numero};
+    data.push(ejg2);
+
+    // let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero]
+    let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, this.creaNuevoJusticiable, this.idPersonaAntiguoJusticiable];
+
+    this.sigaServices.post("gestionejg_insertFamiliarEJG", request).subscribe(
+      data => {
+        sessionStorage.removeItem('origin');
+        //Para que se abra la tarjeta de unidad familiar y se haga scroll a ella
+        sessionStorage.setItem('tarjeta', 'unidadFamiliar');
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+        //this.router.navigate(["/gestionEjg"]);
+        //Para prevenir que se vaya a una ficha en blanco despues de que se haya creado un justiciable
+        //this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
+        //ARR:  sessionStorage.removeItem("EJGItem");
+
+        let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+        this.persistenceService.setDatosEJG(ejg);
+        ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
+        sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
+
+        this.router.navigate(["/gestionEjg"]);
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error != null) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+  
+  asociarJusticiable() {
+    let icon = "fa fa-edit";
+    
+        if (this.nuevaUniFamiliar) {
+          if (this.checkUniFamiliar(this.body)) {
+            this.insertUniFamiliar(this.body);
+          } else {
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"));
+            }
+          }
+        
+        // Asociar para Nuevo Representante
+        }else if (this.modoRepre) {
+          this.persistenceService.clearBody();
+          this.persistenceService.setBody(this.body);
+          //sessionStorage.setItem("newRepresentante",JSON.stringify(evento));
+          //this.router.navigate(["/gestionJusticiables"]);
+          if (sessionStorage.getItem("fichaJust") != null) {
+            sessionStorage.setItem("origin", sessionStorage.getItem("fichaJust"));
+            sessionStorage.removeItem("fichaJust");
+          }
+        } else {
+          let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
+          if (filtros.idRol == "2") {
+            let fichasPosibles = this.persistenceService.getFichasPosibles();
+            fichasPosibles[6].activa = true;
+            fichasPosibles[7].activa = true;
+            this.persistenceService.setFichasPosibles(fichasPosibles);
+          }
+        }
+      /*},
+      reject: () => {
+        this.showMessage("info", "Cancelada", this.translateService.instant("general.message.accion.cancelada"));
+      }
+    });*/
+  }
+  checkUniFamiliar(justiciable) {
+    let datosFamiliares: any = sessionStorage.getItem("datosFamiliares");
+    if (datosFamiliares != "") datosFamiliares = JSON.parse(datosFamiliares);
+    let exist = false;
+
+    if (datosFamiliares == "" || datosFamiliares == null || datosFamiliares == undefined) 
+      exist = false;
+    else {
+      //Comprobamos que el justiciable no esta ya en la designacion
+      datosFamiliares.forEach(element => {
+        if (element.uf_idPersona == justiciable.idpersona && element.fechaBaja == null) exist = true;
+      });
+    }
+
+    return !exist;
   }
 
   callConfirmationSave(id) {
@@ -1556,6 +1705,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.progressSpinner = true;
         this.modoEdicion = false;
         let url = "gestionJusticiables_createJusticiable";
+        this.creaNuevoJusticiable = true;
         this.body.asuntos = undefined;
         this.body.datosAsuntos = [];
         this.body.numeroAsuntos = undefined;

@@ -739,7 +739,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         case 'ejg':
           let ejgItem: EJGItem = new EJGItem();
           ejgItem.annio = String(data.anio);
-          ejgItem.numero = String(data.numero);
+          ejgItem.numero = String(data.numeroAsoc);
           ejgItem.tipoEJG = String(data.idTipoEjg);
 
           this.sigaServices.postPaginado("busquedaGuardias_asociarEjg", "?anioNumero=" + anioNumeroASI + "&copiarDatos=" + copyData, ejgItem).subscribe(

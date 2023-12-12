@@ -68,12 +68,14 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
   };
   isLetrado: boolean = false;
   msgs;
+  retencionSinLetrado: boolean = false;
   colegiado: Colegiado;
   permisoEscrituraDatosRetencion: boolean;
   desactivarBotonesColegiado: boolean = false;
   @ViewChild(TarjetaColegiadoComponent) tarjetaColegiado: TarjetaColegiadoComponent;
   @ViewChild(TarjetaDatosRetencionComponent) tarjetaDatosRetJud: TarjetaDatosRetencionComponent;
   @ViewChild(TarjetaAplicacionEnPagosComponent) tarjetaAplEnPag: TarjetaAplicacionEnPagosComponent;
+  retencionDesdeTabla: boolean = false;
 
   constructor(private translateService: TranslateService,
     private location: Location,
@@ -84,7 +86,14 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
     private router: Router) { }
 
   ngOnInit() {
-
+    if(sessionStorage.getItem("retencionSinLetrado")){
+      this.retencionSinLetrado = true;
+      sessionStorage.removeItem("retencionSinLetrado");
+    }
+    if(sessionStorage.getItem("retencionDesdeTabla")){
+      this.retencionDesdeTabla = true;
+      sessionStorage.removeItem("retencionDesdeTabla");
+    }
     this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaRetenciones).then(respuesta => {
 
       const permisoEscritura = respuesta;
