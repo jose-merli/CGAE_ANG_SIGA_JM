@@ -107,9 +107,8 @@ export class DatosBaremosComponent implements OnInit {
   goToFichaBaremos(){
    
    let goBaremos:BaremosGuardiaItem = new BaremosGuardiaItem();
-   goBaremos.idTurno = this.persistenceService.getDatos().idTurno;
-   goBaremos.idGuardia =this.persistenceService.getDatos().idGuardia
-
+   goBaremos.idTurno = JSON.parse(this.persistenceService.getDatos()).idTurno;
+   goBaremos.idGuardia = JSON.parse(this.persistenceService.getDatos()).idGuardia
    sessionStorage.setItem("tarjetaBaremosFichaGuardia",JSON.stringify(goBaremos));
 
    this.router.navigate(["/baremosDeGuardia"]);

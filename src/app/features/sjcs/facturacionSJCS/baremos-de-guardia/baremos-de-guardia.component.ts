@@ -85,7 +85,7 @@ export class BaremosDeGuardiaComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          if (err != undefined && JSON.parse(err.error).error.description != "") {
+          if (err && err != undefined && JSON.parse(err.error).error.description != "") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
