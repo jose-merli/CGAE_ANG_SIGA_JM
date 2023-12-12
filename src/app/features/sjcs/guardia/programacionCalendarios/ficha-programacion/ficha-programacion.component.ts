@@ -36,7 +36,6 @@ export class FichaProgramacionComponent implements OnInit {
   permisoEscrituraIncomp: boolean = false;
   permisoEscrituraBaremos: boolean = false;
   permisoEscrituraCalen: boolean = false;
-  permisoEscrituraInscripciones: boolean = false;
   permisoEscrituraTurno: boolean = false;
   historico: boolean = false;
   progressSpinner: boolean = false;
@@ -398,64 +397,7 @@ export class FichaProgramacionComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
-    this.commonService.checkAcceso(procesos_guardia.cola_guardia)
-      .then(respuesta => {
-
-        this.permisoEscrituraColaGuardia = respuesta;
-
-        this.persistenceService.setPermisos(this.permisoEscrituraColaGuardia);
-
-        // if (this.permisoEscrituraResumen == undefined) {
-        //   sessionStorage.setItem("codError", "403");
-        //   sessionStorage.setItem(
-        //     "descError",
-        //     this.translateService.instant("generico.error.permiso.denegado")
-        //   );
-        //   this.router.navigate(["/errorAcceso"]);
-        // }
-
-      }
-      ).catch(error => console.error(error));
-
-    this.commonService.checkAcceso(procesos_guardia.inscripciones)
-      .then(respuesta => {
-
-        this.permisoEscrituraInscripciones = respuesta;
-
-        this.persistenceService.setPermisos(this.permisoEscrituraInscripciones);
-
-        // if (this.permisoEscrituraResumen == undefined) {
-        //   sessionStorage.setItem("codError", "403");
-        //   sessionStorage.setItem(
-        //     "descError",
-        //     this.translateService.instant("generico.error.permiso.denegado")
-        //   );
-        //   this.router.navigate(["/errorAcceso"]);
-        // }
-
-      }
-      ).catch(error => console.error(error));
-
-    this.commonService.checkAcceso(procesos_guardia.baremos)
-      .then(respuesta => {
-
-        this.permisoEscrituraBaremos = respuesta;
-
-        this.persistenceService.setPermisos(this.permisoEscrituraBaremos);
-
-        // if (this.permisoEscrituraResumen == undefined) {
-        //   sessionStorage.setItem("codError", "403");
-        //   sessionStorage.setItem(
-        //     "descError",
-        //     this.translateService.instant("generico.error.permiso.denegado")
-        //   );
-        //   this.router.navigate(["/errorAcceso"]);
-        // }
-
-      }
-      ).catch(error => console.error(error));
-
-
+    
     this.commonService.checkAcceso(procesos_guardia.incompatibilidades)
       .then(respuesta => {
 

@@ -204,7 +204,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
 
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "997";
+    controlAcceso.idProceso = procesos_guardia.programacionCalendarios;
     let derechoAcceso;
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {

@@ -226,7 +226,7 @@ export class TarjetaColaGuardias implements OnInit {
 
   ngOnInit() {
     this.visita = 0;
-    this.commonsService.checkAcceso(procesos_oficio.colaDeGuardia)
+    this.commonsService.checkAcceso(procesos_oficio.tarjetaColaGuardiaTurnos)
     .then(respuesta => {
       this.permisosTarjeta = respuesta;
       this.persistenceService.setPermisos(this.permisosTarjeta);

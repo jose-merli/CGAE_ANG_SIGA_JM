@@ -74,7 +74,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     //  this.recuperaFechaSolicitante();
      this.getCols();
     }
-    await this.commonServices.checkAcceso(procesos_guardia. guardias_colegiados_permutas)
+    await this.commonServices.checkAcceso(procesos_guardia.guardias_colegiados_permutas)
     .then(respuesta => {
       this.permisoEscritura = respuesta;
     }
