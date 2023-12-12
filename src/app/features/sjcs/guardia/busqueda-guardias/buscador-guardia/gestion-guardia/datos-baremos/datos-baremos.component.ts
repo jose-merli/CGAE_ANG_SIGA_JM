@@ -27,6 +27,7 @@ export class DatosBaremosComponent implements OnInit {
   seleccion: boolean = false;
   historico: boolean = false;
   message;
+  textoResumenBaremos;
   permisos: boolean = false;
   datos;
   nuevo: boolean = false;
@@ -56,9 +57,28 @@ export class DatosBaremosComponent implements OnInit {
         //this.getBaremos();
         if(this.persistenceService.getDatos() != null || this.persistenceService.getDatos() != undefined){
           this.datos = this.persistenceService.getDatos();
+          this.getResumenBaremos();
         }
 
       });
+  }
+
+  getResumenBaremos() {
+    if (JSON.parse(this.persistenceService.getDatos()).idGuardia) {
+      let idGuardia = JSON.parse(this.persistenceService.getDatos()).idGuardia;
+
+      this.sigaServices.getParam(
+        "busquedaGuardias_resumenBaremosGuardias", "?idGuardia="+idGuardia).subscribe(
+          data => {
+            this.textoResumenBaremos = data.valor;
+          },
+          err => {
+          },
+          ()=>{
+          }
+        );
+
+    }
   }
 
   setItalic(dato) {
