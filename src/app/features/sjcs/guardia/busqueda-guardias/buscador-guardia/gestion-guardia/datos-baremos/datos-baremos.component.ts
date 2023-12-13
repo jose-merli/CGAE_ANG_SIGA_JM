@@ -107,8 +107,15 @@ export class DatosBaremosComponent implements OnInit {
   goToFichaBaremos(){
    
    let goBaremos:BaremosGuardiaItem = new BaremosGuardiaItem();
-   goBaremos.idTurno = JSON.parse(this.persistenceService.getDatos()).idTurno;
-   goBaremos.idGuardia = JSON.parse(this.persistenceService.getDatos()).idGuardia
+
+   if (typeof this.persistenceService.getDatos() === 'string') {
+    goBaremos.idTurno = JSON.parse(this.persistenceService.getDatos()).idTurno;
+    goBaremos.idGuardia = JSON.parse(this.persistenceService.getDatos()).idGuardia;
+   } else {
+    goBaremos.idTurno = this.persistenceService.getDatos().idTurno;
+    goBaremos.idGuardia = this.persistenceService.getDatos().idGuardia;
+   }
+
    sessionStorage.setItem("tarjetaBaremosFichaGuardia",JSON.stringify(goBaremos));
 
    this.router.navigate(["/baremosDeGuardia"]);
