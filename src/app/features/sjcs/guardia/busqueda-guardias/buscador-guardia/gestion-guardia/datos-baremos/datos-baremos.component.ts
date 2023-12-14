@@ -117,6 +117,7 @@ export class DatosBaremosComponent implements OnInit {
    }
 
    sessionStorage.setItem("tarjetaBaremosFichaGuardia",JSON.stringify(goBaremos));
+   sessionStorage.setItem("idGuardiaFromFichaGuardia",goBaremos.idGuardia);
 
    this.router.navigate(["/baremosDeGuardia"]);
 
