@@ -590,7 +590,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         this.tarjetaConfigFac.agruparAsAc = true;
       }
     })
-
+    this.hitos= [];
     for (let h of data) {
       let hito = parseInt(h.idHito);
       let precioHito = parseFloat(h.precioHito);
