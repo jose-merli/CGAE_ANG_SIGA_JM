@@ -111,7 +111,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     //Reasignamos las fechas al traerse del back en formato string
     //No se realiza directamente ya que la conversion de new Date con strings se realiza desde MM/DD/YYYY y se nos devuelve DD/MM/YYY desde el back
     //Esto se realiza en ngOnChanges()
-    else if (this.rowGroups[0] != undefined) {
+    else if (this.rowGroups && this.rowGroups[0] != undefined) {
       this.fechaDesigna = this.rowGroups[0].cells[0].value;
 
       this.initDate = this.fechaDesigna;
