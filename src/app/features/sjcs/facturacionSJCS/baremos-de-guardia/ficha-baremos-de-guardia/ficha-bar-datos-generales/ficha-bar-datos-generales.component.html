@@ -14,7 +14,7 @@
 
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-start mb-1" (click)="onHideTarjeta()">
-                        <label class="mr-auto title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.datosGenerales' |
+                        <label class="mr-auto title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.incompatibilidades' |
                             translate }}
                         </label>
                     </div>
@@ -22,7 +22,7 @@
                       <!--   <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
                             <span>A</span>
                         </label> -->
-                        <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+                        <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right ml-auto" (click)="onHideTarjeta()"></i>
                     </div>
                 </div>
 
@@ -32,8 +32,8 @@
                 <div class="img-colegiado">
                     <i class="fa fa-user icon-ficha"></i>
                 </div>
-                <label class="title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.datosGenerales' | translate }} </label>
-                <i class="fa fa-angle-up ml-auto"></i>
+                <label class="title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.incompatibilidades' | translate }} </label>
+                <i class="fa fa-angle-up ml-auto" (click)="onHideTarjeta()"></i>
             </div>
 
         </div>

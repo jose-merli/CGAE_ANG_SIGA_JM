@@ -15,7 +15,7 @@ import { Enlace } from '../ficha-baremos-de-guardia.component';
 })
 export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
 
-  showTarjeta: boolean = true;
+  showTarjeta: boolean = false;
   cols: any[] = [];
   rowsPerPage: any[] = [];
   modoSeleccion = "single";
@@ -64,13 +64,13 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
     this.addEnlace.emit(enlace);
   }
 
-  /* onHideTarjeta() {
+   onHideTarjeta() {
     // if (this.retencionesService.modoEdicion) {
     this.showTarjeta = !this.showTarjeta;
     // } else {
     //   this.showTarjeta = true;
     // }
-  } */
+  } 
 
   getCols() {
 
