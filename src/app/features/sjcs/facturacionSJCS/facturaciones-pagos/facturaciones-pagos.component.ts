@@ -265,13 +265,13 @@ export class FacturacionesYPagosComponent implements OnInit, OnDestroy {
 					const resp: FacturacionDeleteDTO = JSON.parse(data.body);
 					const error = resp.error;
 
-					if (resp.status == 'KO' && error != null && error.description != null) {
-						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString())
-								+ ": " + error.message.toString());
-					} else {
-						this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
-						this.busqueda(this.filtroSeleccionado);
-					}
+					if (resp.status == 'OK') {
+                        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
+                        this.busqueda(this.filtroSeleccionado);
+                    } else {
+                        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString())
+                                + ": " + error.message.toString());                     
+                    }
 
 					this.progressSpinner = false;
 				},

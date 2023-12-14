@@ -116,6 +116,11 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   onChangeFacActuaciones(event) {
     this.facActuaciones = event
     this.disabledFacActuaciones = event
+    if (!this.disabledFacActuaciones) {
+      this.precio = null;
+      this.modalTipos = false;
+      this.filtrosAdi = new BaremosGuardiaItem();
+    }
   }
 
   onChangeFacAsuntosAntiguos(event) {

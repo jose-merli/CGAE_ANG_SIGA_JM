@@ -44,6 +44,7 @@ export let endpoints_guardia: any = {
     gestionGuardias_resumenTurno: "guardia/gestionGuardia/resumenTurno",
     gestionGuardias_guardarCola: "guardia/gestionGuardia/guardarCola",
     busquedaGuardias_baremosGuardias: "baremosGuardia/baremosFichaGuardia",
+    busquedaGuardias_resumenBaremosGuardias: "baremosGuardia/resumenBaremosFichaGuardia",
 
 
     // Saltos y compensaciones Guardia
