@@ -59,6 +59,8 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
         this.filtros.idFacturaciones = ['0'];
       }
       this.getComboTurno();
+      if(this.filtros.idTurnos != null)
+      this.getComboGuardia(this.filtros.idTurnos);
       this.getComboFacturacion();
       this.buscar();
 
@@ -138,7 +140,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
 
   }
 
-  getComboGuardia(idTurnos: string[]) {
+  getComboGuardia(idTurnos: String[]) {
 
     this.progressSpinner = true;
 
@@ -187,6 +189,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
 
   limpiar() {
     this.filtros = new BaremosGuardiaItem();
+    this.filtros.idFacturaciones = ['0'];
     this.mostrarTablaResultadosEvent.emit(false);
   }
 
