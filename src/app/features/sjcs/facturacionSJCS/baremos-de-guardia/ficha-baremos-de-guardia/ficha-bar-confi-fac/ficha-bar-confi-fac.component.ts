@@ -374,8 +374,9 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
     this.showModal = false;
   }
 
-  onChangeMinimo(value) {
-    if ((value != null || value != undefined) && this.contDis == 'asi' && this.disponibilidad == true) {
+  onChangeMinimo(event) {
+    this.maskTwoDecimals(event, this.filtrosDis.importeMinDis);
+    if ((event.target.value != null || event.target.value != undefined) && this.contDis == 'asi' && this.disponibilidad == true) {
       this.disProc2014.emit(true)
     }
   }
@@ -392,6 +393,16 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   onChangeMaxIrTiposAsAc(event) {
     // Funcionalidad activar o desactivar.
     this.maxIrTiposAsAc = event;
+  }
+
+  maskTwoDecimals(event, propBaremo) {
+    if (event.target.value.includes('.')) {
+      let numericValue = event.target.value.split('.');
+      if (numericValue[1].length > 2) {
+        event.target.value = numericValue[0] + '.' + numericValue[1].substring(0,2);
+        propBaremo = numericValue[0] + '.' + numericValue[1].substring(0,2);
+      }
+    }
   }
 
 }
