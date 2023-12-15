@@ -10,7 +10,7 @@
 </div>
 
 <div>
-    <app-gestion-designaciones *ngIf="muestraTablaDesignas" [datos]="datos" id="tablaFoco" (busqueda)="busquedaDesignaciones($event)"></app-gestion-designaciones>
+    <app-gestion-designaciones *ngIf="muestraTablaDesignas" [datos]="datos" id="tablaFoco" (busqueda)="busquedaDesignaciones($event)" [totalRegistrosBusquedaDesignaciones]="totalRegistrosBusquedaDesignaciones" ></app-gestion-designaciones>
 </div>
 
 <div>

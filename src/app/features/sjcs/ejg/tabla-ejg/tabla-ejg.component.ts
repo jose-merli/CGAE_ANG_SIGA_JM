@@ -56,6 +56,7 @@ export class TablaEjgComponent implements OnInit {
   @Input() datos;
 
   @Input() filtro;
+  @Input() totalRegistrosBusquedaEJG;
   @Input() remesa;
   @Input() comboEstadoEJG;
 
