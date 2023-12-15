@@ -454,10 +454,6 @@ export class TablaEjgComponent implements OnInit {
 
       this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", this.selectedDatos).subscribe(
         data => {
-          if (data.size == 0) {
-            this.progressSpinner = false;
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          } else {
             this.progressSpinner = false;
 
             let blob = null;
@@ -477,10 +473,14 @@ export class TablaEjgComponent implements OnInit {
             let mime = data.type;
             blob = new Blob([data], { type: mime });
             saveAs(blob, nombreFichero);
-          }
         },
         err => {
           this.progressSpinner = false;
+          if(err.status == 404){
+            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant("administracion.parametro.eejg.messageNoExistenArchivos"));
+          }else{
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
           //console.log(err);
         }
       );
