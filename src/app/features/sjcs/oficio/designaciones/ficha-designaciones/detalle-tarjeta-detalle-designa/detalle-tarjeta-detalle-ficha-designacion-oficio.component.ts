@@ -62,6 +62,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} delitos seleccionados";
   asuntoValue:string;
+  avisoMismoNProcedimiento:boolean;
 
   inputs = [
     { nombre: this.translateService.instant('justiciaGratuita.sjcs.designas.DatosIden.NIG'), value: "" },
@@ -254,6 +255,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.campos.idPretension = null;
       this.changeModulo();
     }
+    this.recuperarParametros("AVISO_MISMO_NPROCEDIMIENTO_JUZGADO");
   }
 
   formatDate(date) {
@@ -1082,34 +1084,39 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.sigaServices.post("designaciones_existeDesignaJuzgadoProcedimiento", designaItem).subscribe(
       n => {
         this.progressSpinner = false;
-        if (JSON.parse(n.body).existeDesignaJuzgadoProcedimiento > 1) {
-          let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado.¿Desea continuar?";
-          let icon = "fa fa-question-circle";
-          let keyConfirmation = "confirmGuardar";
-          this.confirmationService.confirm({
-            key: keyConfirmation,
-            message: mess,
-            icon: icon,
-            accept: () => {
-              this.progressSpinner = true;
-              this.updateDetalle(designaItem);
-            },
-            reject: () => {
-              this.progressSpinner = false;
-              this.msgs = [
-                {
-                  severity: "info",
-                  summary: "Cancel",
-                  detail: this.translateService.instant(
-                    "general.message.accion.cancelada"
-                  )
-                }
-              ];
-            }
-          });
-        } else {
+        if(this.avisoMismoNProcedimiento){
+          if (JSON.parse(n.body).existeDesignaJuzgadoProcedimiento > 1) {
+            let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado.¿Desea continuar?";
+            let icon = "fa fa-question-circle";
+            let keyConfirmation = "confirmGuardar";
+            this.confirmationService.confirm({
+              key: keyConfirmation,
+              message: mess,
+              icon: icon,
+              accept: () => {
+                this.progressSpinner = true;
+                this.updateDetalle(designaItem);
+              },
+              reject: () => {
+                this.progressSpinner = false;
+                this.msgs = [
+                  {
+                    severity: "info",
+                    summary: "Cancel",
+                    detail: this.translateService.instant(
+                      "general.message.accion.cancelada"
+                    )
+                  }
+                ];
+              }
+            });
+          } else {
+            this.updateDetalle(designaItem);
+          }
+        }else{
           this.updateDetalle(designaItem);
         }
+        
 
       },
       err => {
@@ -1126,6 +1133,15 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       }, () => {
         this.progressSpinner = false;
       });;
+  }
+
+
+  recuperarParametros(parametro){
+    this.sigaServices.post("designaciones_recuperarParamentoGen", parametro).subscribe(
+      n =>{
+        this.avisoMismoNProcedimiento = n.body === "true" ? true : false;
+      }
+    )
   }
 
   async ningunaActuacionesFacturada(element): Promise<boolean> {

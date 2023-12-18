@@ -169,5 +169,6 @@ export let endpoints_oficio: any = {
 
 
 
-    designaciones_existeDesignaJuzgadoProcedimiento:"oficio/designas/existeDesginaJuzgadoProcedimiento"
+    designaciones_existeDesignaJuzgadoProcedimiento:"oficio/designas/existeDesginaJuzgadoProcedimiento",
+    designaciones_recuperarParamentoGen:"oficio/designas/recuperarParamentoGen"
 }
