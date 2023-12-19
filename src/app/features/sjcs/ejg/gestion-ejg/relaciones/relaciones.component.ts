@@ -140,7 +140,6 @@ export class RelacionesComponent implements OnInit {
     this.sigaServices.post("gestionejg_getRelaciones", this.body).subscribe(
       n => {
         this.relaciones = JSON.parse(n.body).relacionesItem;
-        console.log(this.relaciones);
         this.nRelaciones = this.relaciones.length;
         //obtiene el tipo en caso de devolver solo 1.
         //deshabilitacion de botones en caso de obtener una relacion de cada tipo
