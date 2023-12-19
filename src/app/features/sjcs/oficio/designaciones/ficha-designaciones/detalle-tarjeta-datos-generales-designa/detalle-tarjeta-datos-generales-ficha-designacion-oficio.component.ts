@@ -554,7 +554,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                       this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
                       //this.router.navigate(["/fichaDesignaciones"]);
                       this.progressSpinner = false;
-                      this.location.back();
+                      //this.location.back();
+                      this.busquedaDesignaciones(newDesignaRfresh);
                     }
                   },
                   err => {
