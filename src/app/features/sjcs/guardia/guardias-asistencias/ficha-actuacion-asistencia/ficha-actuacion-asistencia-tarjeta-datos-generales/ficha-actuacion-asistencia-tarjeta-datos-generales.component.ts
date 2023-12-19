@@ -92,6 +92,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         res => {
           if (res.valor != null) {
             this.datosGeneralesActuacion.tipoActuacion = res.valor;
+            this.getComboCoste();
           }
         },
         err => {
@@ -359,7 +360,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   onChangeTipoActuacion(){
 
     if(this.datosGeneralesActuacion.tipoActuacion){
-
+      
       this.comboCoste = []
       this.getComboCoste();
 
