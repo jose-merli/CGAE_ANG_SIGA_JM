@@ -489,12 +489,14 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                       x => {
                         this.progressSpinner = false;
                         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                        this.location.back();
+                        //this.location.back();
+                        //recargamos la ficha del ejg
+                    this.guardadoSend.emit(true);
                       },
                       err => {
                         //Crear etiqueta en la BBDD
                         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
-                        this.location.back();
+                        //this.location.back();
                       }
                     );
                   },
