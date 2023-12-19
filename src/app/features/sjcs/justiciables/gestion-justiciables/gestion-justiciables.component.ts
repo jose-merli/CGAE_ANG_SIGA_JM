@@ -979,10 +979,13 @@ export class GestionJusticiablesComponent implements OnInit {
         if (this.fromUniFamiliar) {
           sessionStorage.setItem('tarjeta', 'unidadFamiliar');
           sessionStorage.setItem("origin", "UnidadFamiliar");
-        }      let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-        ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
-        sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
-     
+        } 
+        if(sessionStorage.getItem("EJGItem")){
+          let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+          ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
+          sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
+        }    
+        
         if(this.fromNuevoJusticiable){
           this.router.navigate(["/justiciables"]);
         }else{
