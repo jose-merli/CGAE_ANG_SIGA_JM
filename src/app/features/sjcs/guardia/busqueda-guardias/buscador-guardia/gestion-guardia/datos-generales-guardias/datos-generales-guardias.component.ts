@@ -118,9 +118,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           sessionStorage.setItem("DatosGeneralesGuardia",JSON.stringify(this.body));
         });
       }
-      if(sessionStorage.getItem("DatosGeneralesGuardia")){
-        this.body = JSON.parse(sessionStorage.getItem("DatosGeneralesGuardia"));
-      }
   }
 
   ngAfterViewInit() {

@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './datos-baremos.component.html',
   styleUrls: ['./datos-baremos.component.scss']
 })
-export class DatosBaremosComponent implements OnInit,OnDestroy {
+export class DatosBaremosComponent implements OnInit {
 
   rowsPerPage: any = [];
   cols = [];
@@ -45,12 +45,6 @@ export class DatosBaremosComponent implements OnInit,OnDestroy {
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private router: Router) { }
-
-  ngOnDestroy(): void {
-    if (this.goToBaremos === false) {
-      sessionStorage.removeItem("DatosGeneralesGuardia");
-    }
-  }
 
   ngOnInit() {
 
