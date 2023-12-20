@@ -221,7 +221,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.disableRestablecer = false;
           }
           let designaUpdate = new DesignaItem();
-          designaUpdate.ano = this.campos.anio;
+          if(this.campos.anio){
+            designaUpdate.ano = this.campos.anio;
+          }else{
+            designaUpdate.ano = this.campos.ano.split("D")[1].split("/")[0];
+          }
+          
           designaUpdate.idTurno = this.campos.idTurno;
           designaUpdate.numero = this.campos.numero;
           this.getComboDelitos(designaUpdate);
