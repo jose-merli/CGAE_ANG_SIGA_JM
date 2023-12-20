@@ -262,7 +262,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.campos.idPretension = null;
       this.changeModulo();
     }
-    this.recuperarParametros("AVISO_MISMO_NPROCEDIMIENTO_JUZGADO");
+    this.recuperarParametros();
   }
 
   formatDate(date) {
@@ -400,11 +400,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           let severity = "error";
           let summary = this.translateService.instant('justiciaGratuita.oficio.designa.numProcedimientoNoValido');;
           let detail = "";
-          this.msgs.push({
-            severity,
-            summary,
-            detail
-          });
+          // this.msgs.push({
+          //   severity,
+          //   summary,
+          //   detail
+          // });
         }
       }
 
@@ -1143,12 +1143,19 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   }
 
 
-  recuperarParametros(parametro){
-    this.sigaServices.post("designaciones_recuperarParamentoGen", parametro).subscribe(
-      n =>{
-        this.avisoMismoNProcedimiento = n.body === "true" ? true : false;
-      }
-    )
+  recuperarParametros(){
+    let parametro = {
+      valor: "AVISO_MISMO_NPROCEDIMIENTO_JUZGADO"
+    };
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let respuesta = JSON.parse(data.body).parametro
+          this.avisoMismoNProcedimiento = respuesta == 1 ? true : false;
+      });
+
+
   }
 
   async ningunaActuacionesFacturada(element): Promise<boolean> {
