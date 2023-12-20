@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { TreeNode } from '../../../../../../../utils/treenode';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './datos-baremos.component.html',
   styleUrls: ['./datos-baremos.component.scss']
 })
-export class DatosBaremosComponent implements OnInit {
+export class DatosBaremosComponent implements OnInit,OnDestroy {
 
   rowsPerPage: any = [];
   cols = [];
@@ -32,6 +32,7 @@ export class DatosBaremosComponent implements OnInit {
   datos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
+  goToBaremos:boolean = false;
   //Resultados de la busqueda
   @Input() openFicha: boolean = false;
   @Input() tarjetaBaremos;
@@ -44,6 +45,12 @@ export class DatosBaremosComponent implements OnInit {
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private router: Router) { }
+
+  ngOnDestroy(): void {
+    if (this.goToBaremos === false) {
+      sessionStorage.removeItem("DatosGeneralesGuardia");
+    }
+  }
 
   ngOnInit() {
 
@@ -105,7 +112,7 @@ export class DatosBaremosComponent implements OnInit {
     )
   } */
   goToFichaBaremos(){
-   
+    this.goToBaremos = true;
    let goBaremos:BaremosGuardiaItem = new BaremosGuardiaItem();
 
    if (typeof this.persistenceService.getDatos() === 'string') {
@@ -120,7 +127,7 @@ export class DatosBaremosComponent implements OnInit {
    sessionStorage.setItem("idGuardiaFromFichaGuardia",goBaremos.idGuardia);
 
    this.router.navigate(["/baremosDeGuardia"]);
-
+   
 
   }
 

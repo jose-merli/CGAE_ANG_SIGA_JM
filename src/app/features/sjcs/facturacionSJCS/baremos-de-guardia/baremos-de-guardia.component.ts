@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../_services/commons.service';
 import { TranslateService } from '../../../../commons/translate/translation.service';
@@ -12,11 +12,12 @@ import { Location } from '@angular/common';
   templateUrl: './baremos-de-guardia.component.html',
   styleUrls: ['./baremos-de-guardia.component.scss']
 })
-export class BaremosDeGuardiaComponent implements OnInit {
+export class BaremosDeGuardiaComponent implements OnInit,OnDestroy {
 
   permisoEscritura: boolean = false;
   mostrarTablaResultados: boolean = false;
   datos;
+  goBack:  boolean = false;
   @ViewChild(FiltroBusquedaBaremosComponent) filtros: FiltroBusquedaBaremosComponent;
   progressSpinner: boolean;
   msgs: any[];
@@ -27,6 +28,11 @@ export class BaremosDeGuardiaComponent implements OnInit {
     private sigaServices: SigaServices,
     private location: Location
   ) { }
+  ngOnDestroy(): void {
+    if (this.goBack === false) {
+      sessionStorage.removeItem("DatosGeneralesGuardia");
+    }
+  }
 
   ngOnInit() {
 
@@ -122,6 +128,7 @@ export class BaremosDeGuardiaComponent implements OnInit {
   }
 
   backTo() {
+    this.goBack = true;
 		this.location.back();
 	}
 }
