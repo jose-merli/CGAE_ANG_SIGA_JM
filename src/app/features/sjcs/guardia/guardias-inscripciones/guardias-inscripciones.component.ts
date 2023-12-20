@@ -18,6 +18,7 @@ import { SigaStorageService } from '../../../../siga-storage.service';
 import { MatDialog } from '@angular/material';
 import { ConfirmationService } from './../../../../../../node_modules/primeng/primeng';
 import { Location } from '@angular/common';
+import { GuardiaItem } from '../../../../models/guardia/GuardiaItem';
 interface GuardiaI {
   label: string;
   value: string;
@@ -137,7 +138,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
   @ViewChild(GuardiasInscripcionesFiltrosComponent) filtros;
   @ViewChild(TablaResultadoMixComponent) tabla;
   existeTrabajosSJCS: any;
-
+  body: GuardiaItem = new GuardiaItem();
 
 
   constructor(private persistenceService: PersistenceService,
@@ -189,7 +190,9 @@ export class GuardiasInscripcionesComponent implements OnInit {
       this.datos = {};
       this.buscar = false;
     }
-
+    if(sessionStorage.getItem("DatosGeneralesGuardia")){
+      this.body = JSON.parse(sessionStorage.getItem("DatosGeneralesGuardia"))
+    }
   }
 
   /*  ngOnDestroy(): void {
@@ -972,8 +975,17 @@ export class GuardiasInscripcionesComponent implements OnInit {
       });*/
   }
   backTo() {
-    this.location.back();
-  }
+
+		if(this.body.idGuardia){
+			let guardia = new GuardiaItem();
+			guardia.idGuardia = this.body.idGuardia;
+			guardia.idTurno = this.body.idTurno;
+			this.persistenceService.setDatos(guardia);
+			this.router.navigate(["/gestionGuardias"]);
+		}
+		sessionStorage.setItem("volver", 'true');
+		this.location.back();
+	}
   resetSelect() {
     if (this.tabla) {
       this.tabla.selectedDatos = [];
