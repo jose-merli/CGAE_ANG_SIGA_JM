@@ -26,10 +26,11 @@
             <label *ngIf="nExpedientes == undefined" class="registros-ficha">{{ "justiciaGratuita.ejg.datosGenerales.ExpedienteEcon" | translate }}:</label>
             <label *ngIf="nExpedientes !=undefined">{{ "justiciaGratuita.ejg.datosGenerales.ExpedienteEcon" | translate }}:
               <span *ngIf="estadoEEJG != undefined">{{estadoEEJG}}</span></label>
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('unidadFamiliar')"></i>
             <label *ngIf="nExpedientes == undefined" class="registros-ficha">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}:</label>
             <label *ngIf="nExpedientes != undefined">{{ "justiciaGratuita.ejg.datosGenerales.numero.Expedientes" | translate }}: 
               <span>{{nExpedientes}}</span></label>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('unidadFamiliar')"></i>
+            
           </div>
         </div>
       </div>
