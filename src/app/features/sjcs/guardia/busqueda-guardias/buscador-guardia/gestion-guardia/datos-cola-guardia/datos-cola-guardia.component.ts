@@ -11,6 +11,7 @@ import { TablaResultadoOrderComponent } from '../../../../../../../commons/tabla
 import { ConfiguracionCola, GlobalGuardiasService } from '../../../../guardiasGlobal.service';
 import { Subscription } from 'rxjs';
 import { SaltoCompItem } from '../../../../../../../models/guardia/SaltoCompItem';
+import { SSL_OP_NO_TLSv1_1 } from 'constants';
 
 
 @Component({
@@ -757,12 +758,12 @@ inicio(){
           }else{
             datCopy.numeroGrupo = null;
           }
-
+          /*
           if(datCopy.nColegiado == this.rowGroupModified[this.rowGroupModified.length-1].cells[2].value){
             datCopy.ultimoCola = "1";
           }else{
               datCopy.ultimoCola  = null;
-            }
+            }*/
       }else{
         let ordenCola = rg.cells[0];
         let numCol = rg.cells[1];
@@ -879,18 +880,21 @@ inicio(){
   }
   duplicar(duplicar) {
     if (duplicar){
+    let indexA;
     let datCopy;
-    this.datos.forEach(dat => {
+    this.datos.forEach((dat, index) => {
       if (dat.nColegiado == this.selectedRow.cells[2].value){
         datCopy = Object.assign({},dat);
         datCopy.numeroGrupo = Number(this.selectedRow.cells[0].value);
         datCopy.orden = "0"; // duplicados se identifican por orden <= 0
         datCopy.idGrupoGuardiaColegiado = null; // duplicados no tienen idGrupoGuardiaColegiado 
+        indexA = index;
       } 
     });
-    this.datos.push(datCopy);
+    this.datos.splice(indexA+1, 0, datCopy);
     this.transformData();
   }
+  console.log(this.datos);
   }
 
 
