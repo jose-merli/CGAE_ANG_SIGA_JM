@@ -167,6 +167,7 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
       this.agruparDis = false;
       this.filtrosDis = new BaremosGuardiaItem();
     } else {
+      this.disponibilidad = true;
       this.disableButtonsDis = true;
     }
     // Desabilitar todo en caso de que no haya días seleccionados.
@@ -181,6 +182,7 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
       this.modalTipos = false;
       this.filtrosAsAc = new BaremosGuardiaItem();
     } else {
+      this.asiac = true;
       this.disableButtonsAsc = true;
     }
 
@@ -231,6 +233,7 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
       this.modalTipos = false;
       this.filtrosAsAc = new BaremosGuardiaItem();
     } else {
+      this.asiac = true;
       this.disableButtonsAsc = true;
     }
 
@@ -243,6 +246,7 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
       this.agruparDis = false;
       this.filtrosDis = new BaremosGuardiaItem();
     } else {
+      this.disponibilidad = true;
       this.disableButtonsDis = true;
     }
 

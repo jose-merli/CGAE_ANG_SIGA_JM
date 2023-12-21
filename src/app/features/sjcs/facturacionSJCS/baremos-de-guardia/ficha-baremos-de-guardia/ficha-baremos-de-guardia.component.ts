@@ -390,7 +390,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
             },
             err => {
               this.progressSpinner = false;
-              if (err != undefined && JSON.parse(err.body).error.description != "") {
+              if (err != undefined && err.body && JSON.parse(err.body).error.description != "") {
                 this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.body).error.description));
               } else {
                 this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -590,6 +590,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         this.tarjetaConfigFac.agruparAsAc = true;
       }
     })
+    this.rellenarDias(diasDis, diasAsAc);
     this.hitos= [];
     for (let h of data) {
       let hito = parseInt(h.idHito);
@@ -886,7 +887,6 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
       }
     }
     this.getTurnoGuarConf(this.hitos);
-    this.rellenarDias(diasDis, diasAsAc);
   }
 
   configuracionHito(confBaremo, turno, guardia) {
