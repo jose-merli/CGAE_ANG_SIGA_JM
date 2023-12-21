@@ -828,16 +828,20 @@ export class TarjetaColaGuardias implements OnInit {
 
   duplicar(duplicar) {
     if (duplicar){
+      let indexA;
     let datCopy;
-    this.datos.forEach(dat => {
+    this.datos.forEach((dat, index) => {
       if (dat.nColegiado == this.selectedRow.cells[2].value){
         datCopy = Object.assign({},dat);
         datCopy.numeroGrupo = Number(this.selectedRow.cells[0].value);
         datCopy.orden = "0"; // duplicados se identifican por orden <= 0
         datCopy.idGrupoGuardiaColegiado = null; // duplicados no tienen idGrupoGuardiaColegiado 
+        indexA = index;
+        console.log(indexA);
       } 
     });
-    this.datos.push(datCopy);
+    
+    this.datos.splice(indexA+1, 0, datCopy);
     this.transformData();
     }
   }
@@ -1078,12 +1082,12 @@ export class TarjetaColaGuardias implements OnInit {
           }else{
             datCopy.numeroGrupo = null;
           }
-
+          /*
           if(datCopy.nColegiado == this.rowGroupModified[this.rowGroupModified.length-1].cells[2].value){
             datCopy.ultimoCola = "1";
           }else{
               datCopy.ultimoCola  = null;
-            }
+            }*/
       }else{
         let ordenCola = rg.cells[0];
         let numCol = rg.cells[1];
