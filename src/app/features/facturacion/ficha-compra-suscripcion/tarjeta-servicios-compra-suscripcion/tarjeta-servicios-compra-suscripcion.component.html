@@ -263,7 +263,7 @@
 
   <p-dialog responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModal"
     (onHide)="cerrarDialog()" header="{{ 'facturacion.servicios.serviciosManuales' | translate}}">
-    
+    <p class="text-center seleccionarRegistro">{{ "facturacion.cuotasSuscripciones.fichaServicio.nuevoServicio" | translate }}</p>
     <p-table #servicesTable [value]="comboServiciosManuales" [columns]="colsServs" class="tabla-listado" [paginator]="true"
       [rows]="10" [first]="first" [responsive]="true" paginatorPosition="both" selectionMode="multiple"
       (onRowSelect)="anadirServicio($event)">
