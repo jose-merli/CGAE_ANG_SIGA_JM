@@ -234,8 +234,8 @@ export class ExpedientesEconomicosComponent implements OnInit {
     if (this.permisoEscritura) {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datosFamiliares;
-          this.numSelected = this.datosFamiliares.length;
+          this.selectedDatos = this.expedientesEcon;
+          this.numSelected = this.expedientesEcon.length;
         } else {
           this.selectedDatos = [];
           this.numSelected = 0;
