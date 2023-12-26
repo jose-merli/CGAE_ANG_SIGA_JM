@@ -71,9 +71,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
   nifCif: StringObject = new StringObject();
   continue: boolean = false;
   existe: boolean = false;
-
+  colegioSeleccionadoDefault: any[] = [];
   nuevoProcurador: boolean = false;
-
+  institucionDefecto:any;
   resultado: string = '';
   remitente: boolean = false;
 
@@ -98,7 +98,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   fromCliente: boolean = false;
   fromAbogadoContrarioEJG: boolean = false;
   fromDesignaciones: boolean = false;
-
+  disableInput:boolean = false;
   migaPan: string = '';
   migaPan2: string = '';
   menuProcede: string = '';
@@ -363,6 +363,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
                       value: this.institucionActual
                     }
                   ];
+                  this.institucionDefecto = {
+                    label: colegio.label,
+                    value: this.institucionActual
+                  }
                   this.labelRemitente = colegio.label;
                 }
               }
@@ -390,6 +394,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
                       value: this.institucionActual
                     }
                   ];
+                  this.institucionDefecto = {
+                    label: colegio.label,
+                    value: this.institucionActual
+                  }
                 }
               }
 
@@ -486,6 +494,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   changeColsAndData() {
+    this.disableInput = false;
     if (this.persona == 'f') {
       this.cols = this.colsFisicas;
 
@@ -507,7 +516,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.bodyFisica.primerApellido = '';
       this.bodyFisica.segundoApellido = '';
       this.bodyFisica.numeroColegiado = '';
-
+      this.colegios_seleccionados = [this.institucionDefecto];
     } else if (this.persona == 'p') {
       this.cols = this.colsProcs;
 
@@ -516,7 +525,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.bodyProc.nombre = '';
       this.bodyProc.apellido1 = '';
       this.bodyProc.nColegiado = '';
-
+      
     } else {
       this.cols = this.colsJuridicas;
 
@@ -540,10 +549,20 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.bodyJuridica.nif = '';
       this.bodyJuridica.denominacion = '';
       this.bodyJuridica.abreviatura = '';
+      this.colegios_seleccionados = [this.institucionDefecto];
     }
   }
 
   checkFilterFisic() {
+    if((this.colegios_seleccionados == undefined ||
+      this.colegios_seleccionados == null ||
+      this.colegios_seleccionados.length < 1) && (this.bodyFisica.nif == null ||
+        this.bodyFisica.nif == undefined ||
+        this.bodyFisica.nif.trim().length < 3)){
+          this.showSearchIncorrect();
+          this.progressSpinner = false;
+          return false;
+        }
     if (
       (
         (this.bodyFisica.nombre == null ||
@@ -558,12 +577,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
       (this.bodyFisica.numeroColegiado == null ||
         this.bodyFisica.numeroColegiado == undefined ||
         this.bodyFisica.numeroColegiado.trim().length < 3) &&
-      (this.bodyFisica.nif == null || 
-        this.bodyFisica.nif == undefined || 
-        this.bodyFisica.nif.trim().length < 3)
-        ) || (this.colegios_seleccionados == undefined ||
-        this.colegios_seleccionados == null ||
-        this.colegios_seleccionados.length < 1)
+        (this.bodyFisica.nif == null ||
+          this.bodyFisica.nif == null ||
+          this.bodyFisica.nif.trim().length < 3)
+        )
     ) {
       this.showSearchIncorrect();
       this.progressSpinner = false;
@@ -628,6 +645,15 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   checkFilterJuridic() {
+    if((this.colegios_seleccionados == undefined ||
+      this.colegios_seleccionados == null ||
+      this.colegios_seleccionados.length < 1) && (this.bodyJuridica.nif == null ||
+        this.bodyJuridica.nif == null ||
+        this.bodyJuridica.nif.trim().length < 3)){
+          this.showSearchIncorrect();
+          this.progressSpinner = false;
+          return false;
+        }
     if (
       (this.selectedTipo == undefined ||
         this.selectedTipo == null ||
@@ -639,13 +665,11 @@ export class BusquedaGeneralComponent implements OnDestroy {
       (this.bodyJuridica.denominacion == null ||
         this.bodyJuridica.denominacion == null ||
         this.bodyJuridica.denominacion.trim().length < 3) &&
-      (this.bodyJuridica.nif == null ||
-        this.bodyJuridica.nif == null ||
-        this.bodyJuridica.nif.trim().length < 3) &&
-      (this.colegios_seleccionados == undefined ||
-        this.colegios_seleccionados == null ||
-        this.colegios_seleccionados.length < 1)
-    ) {
+        (this.bodyJuridica.nif == null ||
+          this.bodyJuridica.nif == null ||
+          this.bodyJuridica.nif.trim().length < 3)
+        )
+      {
       this.showSearchIncorrect();
       this.progressSpinner = false;
       return false;
@@ -926,6 +950,38 @@ export class BusquedaGeneralComponent implements OnDestroy {
   isBuscar() {
     this.buscar = true;
     this.search();
+  }
+
+  onInputChange(event){
+    if(event == ""){
+      this.disableInput = false;
+      this.colegios_seleccionados = this.colegioSeleccionadoDefault
+      
+    }else{
+      this.disableInput = true;
+      if(this.colegioSeleccionadoDefault.length == 0){
+        this.colegioSeleccionadoDefault = this.colegios_seleccionados
+      }
+      //Vacia física
+      this.bodyFisica.nombre = '';
+      this.bodyFisica.primerApellido = '';
+      this.bodyFisica.segundoApellido = '';
+      this.bodyFisica.numeroColegiado = '';
+      this.bodyFisica.idInstitucion = [];
+      //Vacia Juridica
+      this.bodyJuridica.denominacion = '';
+      this.bodyJuridica.abreviatura = '';
+      this.selectedTipo = "";
+      this.colegios_seleccionados = [];
+    }
+    
+  }
+
+  onPersonaChange(){
+    this.disableInput = false;
+    if(this.colegioSeleccionadoDefault.length > 0){
+      this.colegios_seleccionados = this.colegioSeleccionadoDefault
+    }
   }
 
   irFichaColegial(id) {
