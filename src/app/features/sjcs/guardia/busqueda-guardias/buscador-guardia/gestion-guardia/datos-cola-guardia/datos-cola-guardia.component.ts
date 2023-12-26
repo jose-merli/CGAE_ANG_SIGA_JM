@@ -509,7 +509,11 @@ inicio(){
             { type: 'invisible', value: datoObj.ultimoCola }
           ];
         }
-        
+        if (datoObj.numeroGrupo == null){
+          arrLast.push(objArr);
+        }else{
+          arr.push(objArr);
+        }
       } else {
         this.manual = false;
         objArr.cells = [
@@ -530,13 +534,12 @@ inicio(){
           { type: 'invisible', value: undefined }//datoObj.ultimoCola }
         ];
       }
-      if (datoObj.numeroGrupo == null){
-        arrLast.push(objArr);
-      }else{
-        arr.push(objArr);
-      }
+      
+      arr.push(objArr);
+      
     
     })
+    
     for (let i = 0; i < arrLast.length; i++){
       arr.push(arrLast[i]);
     }
