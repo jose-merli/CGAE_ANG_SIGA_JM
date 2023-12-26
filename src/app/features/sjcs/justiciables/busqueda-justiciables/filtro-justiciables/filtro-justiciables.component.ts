@@ -84,6 +84,8 @@ export class FiltroJusticiablesComponent implements OnInit {
       this.filtros = JSON.parse(sessionStorage.getItem("filtrosBusquedaJusticiable"));
     }
 
+    this.filtros.modoBusqueda = true;
+
     sessionStorage.removeItem("vieneDeFichaJusticiable");
     sessionStorage.removeItem("filtrosBusquedaJusticiable");
   }
@@ -256,7 +258,8 @@ export class FiltroJusticiablesComponent implements OnInit {
   checkFilters() {
     if (
       (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.length < 3) &&
-      (this.filtros.apellidos == null || this.filtros.apellidos.trim() == "" || this.filtros.apellidos.length < 3) &&
+      (this.filtros.apellido1 == null || this.filtros.apellido1.trim() == "" || this.filtros.apellido1.length < 3) &&
+      (this.filtros.apellido2 == null || this.filtros.apellido2.trim() == "" || this.filtros.apellido2.length < 3) &&
       (this.filtros.codigoPostal == null || this.filtros.codigoPostal.trim() == "" || this.filtros.codigoPostal.length < 3) &&
       (this.filtros.nif == null || this.filtros.nif.trim() == "" || this.filtros.nif.length < 3) &&
       (this.filtros.anioDesde == null || this.filtros.anioDesde == undefined) &&

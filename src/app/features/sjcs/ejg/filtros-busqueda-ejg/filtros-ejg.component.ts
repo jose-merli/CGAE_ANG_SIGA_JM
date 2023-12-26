@@ -191,7 +191,7 @@ export class FiltrosEjgComponent implements OnInit {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       sessionStorage.removeItem("buscadorColegiados");
 
-      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
+      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellido1 + " " + busquedaColegiado.apellido2;
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
       this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
       this.body.tipoLetrado = "E";
@@ -201,6 +201,7 @@ export class FiltrosEjgComponent implements OnInit {
     setTimeout(() => {
       this.inputNumero.nativeElement.focus();
     }, 300);
+    this.body.modoBusqueda = true;
     this.progressSpinner = false;
   }
 
@@ -735,8 +736,10 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.numRegRemesa3 = this.body.numRegRemesa3.trim();
     if (this.body.nif != undefined)
       this.body.nif = this.body.nif.trim();
-    if (this.body.apellidos != undefined)
-      this.body.apellidos = this.body.apellidos.trim();
+    if (this.body.apellido1 != undefined)
+      this.body.apellido1 = this.body.apellido1.trim();
+    if (this.body.apellido2 != undefined)
+      this.body.apellido2 = this.body.apellido2.trim();
     if (this.body.nombre != undefined)
       this.body.nombre = this.body.nombre.trim();
 
@@ -753,7 +756,8 @@ export class FiltrosEjgComponent implements OnInit {
       (this.body.numRegRemesa2 == null || this.body.numRegRemesa2.trim() == "" || this.body.numRegRemesa2.trim().length < 3) &&
       (this.body.numRegRemesa3 == null || this.body.numRegRemesa3.trim() == "" || this.body.numRegRemesa3.trim().length < 3) &&
       (this.body.nif == null || this.body.nif.trim() == "" || this.body.nif.trim().length < 3) &&
-      (this.body.apellidos == null || this.body.apellidos.trim() == "" || this.body.apellidos.trim().length < 3) &&
+      (this.body.apellido1 == null || this.body.apellido1.trim() == "" || this.body.apellido1.trim().length < 3) &&
+      (this.body.apellido2 == null || this.body.apellido2.trim() == "" || this.body.apellido2.trim().length < 3) &&
       (this.body.nombre == null || this.body.nombre.trim() == "" || this.body.nombre.trim().length < 3) &&
       (this.body.asunto == null || this.body.asunto.trim() == "" || this.body.asunto.trim().length < 3)) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
@@ -1014,15 +1018,19 @@ export class FiltrosEjgComponent implements OnInit {
     if (this.body.nombre == undefined) {
       this.body.nombre = "";
     }
-    if (this.body.apellidos == undefined) {
-      this.body.apellidos = "";
+    if (this.body.apellido1 == undefined) {
+      this.body.apellido1 = "";
+    }
+    if (this.body.apellido2 == undefined) {
+      this.body.apellido2 = "";
     }
     if (this.body.nif == undefined) {
       this.body.nif = "";
     }
 
     if (this.body.nombre.length != 0 ||
-      this.body.apellidos.length != 0 ||
+      this.body.apellido1.length != 0 ||
+      this.body.apellido2.length != 0 ||
       this.body.nif.length != 0) {
       this.selectRoles = false;
     } else {
@@ -1031,7 +1039,8 @@ export class FiltrosEjgComponent implements OnInit {
     }
 
     if (this.body.nombre.length == 0 ||
-      this.body.apellidos.length == 0 ||
+      this.body.apellido1.length != 0 ||
+      this.body.apellido2.length != 0 ||
       this.body.nif.length == 0) {
       this.getComboRol();
     }

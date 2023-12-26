@@ -4,6 +4,8 @@ export class JusticiableBusquedaItem {
   nif: string;
   nombre: string;
   apellidos: string;
+  apellido1: string;
+  apellido2: string;
   asuntos: string;
   fechaModificacion: Date;
   idRol: string;
@@ -15,6 +17,7 @@ export class JusticiableBusquedaItem {
   codigoPostal: string;
   numeroAsuntos: string;
   ultimoAsunto: string;
+  modoBusqueda: boolean;
   constructor() { }
 }
 

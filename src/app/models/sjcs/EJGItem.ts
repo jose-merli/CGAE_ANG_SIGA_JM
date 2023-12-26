@@ -60,6 +60,8 @@ export class EJGItem {
 
     nif: string;
     apellidos: string;
+    apellido1: string;
+    apellido2: string;
     nombre: string;
     nombreApeSolicitante: string;
     rol: string;
@@ -146,6 +148,8 @@ export class EJGItem {
     editableComision: number;
 
     idExpedienteExt: number;
+
+    modoBusqueda: boolean
 
     constructor() { }
 }
