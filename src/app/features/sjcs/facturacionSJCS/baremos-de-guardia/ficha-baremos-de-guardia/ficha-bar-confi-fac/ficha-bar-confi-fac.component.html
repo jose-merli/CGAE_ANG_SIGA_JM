@@ -22,7 +22,7 @@
                         <!--   <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
                             <span>A</span>
                         </label> -->
-                        <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+                        <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right ml-auto" (click)="onHideTarjeta()"></i>
                     </div>
                 </div>
 
@@ -145,17 +145,23 @@
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.minimo' | translate }}</label>
-                            <input type="number" [disabled]="!disableImputDis || !permisoEscritura"
-                                (input)="onChangeMinimo($event.target.value)" [(ngModel)]="filtrosDis.importeMinDis"
-                                class="form-control importesBaremos" />
+                            <div class="input-icon input-icon-right">
+                                <input type="number" [disabled]="!disableImputDis || !permisoEscritura"
+                                    (input)="onChangeMinimo($event)" [(ngModel)]="filtrosDis.importeMinDis"
+                                    class="form-control importesBaremos"/>
+                                <i>€</i>
+                            </div>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
 
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremos.dipsAsuntos' | translate }}</label>
-                            <input type="number" [disabled]="!disableImputDis || !permisoEscritura"
-                                [(ngModel)]="filtrosDis.dispAsuntosDis" class="form-control importesBaremos" />
+                            <div class="input-icon input-icon-right">
+                                <input type="number" [disabled]="!disableImputDis || !permisoEscritura"
+                                    [(ngModel)]="filtrosDis.dispAsuntosDis" (input)="maskTwoDecimals($event, filtrosDis.dispAsuntosDis)" class="form-control importesBaremos" />
+                                <i>€</i>
+                            </div>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremos.aPartir' | translate }}</label>
@@ -164,8 +170,11 @@
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
-                            <input type="number" [disabled]="!disableImputDis || !permisoEscritura"
-                                [(ngModel)]="filtrosDis.importeMaxDis" class="form-control importesBaremos" />
+                            <div class="input-icon input-icon-right">
+                                <input type="number" [disabled]="!disableImputDis || !permisoEscritura"
+                                    [(ngModel)]="filtrosDis.importeMaxDis" (input)="maskTwoDecimals($event, filtrosDis.importeMaxDis)" class="form-control importesBaremos" />
+                                <i>€</i>
+                            </div>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremos.aPartir' | translate }}</label>
@@ -258,8 +267,11 @@
                         </div>
                         <div class="form-group col-lg-6 col-md-6 divfacturacionesImporte">
                             <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }}</label>
-                            <input type="number" [disabled]="!disableImputAct || !permisoEscritura || disableImpAsc"
-                                [(ngModel)]="filtrosAsAc.importeAsAc" class="form-control importesBaremos" />
+                            <div class="input-icon input-icon-right">
+                                <input type="number" [disabled]="!disableImputAct || !permisoEscritura || disableImpAsc"
+                                    [(ngModel)]="filtrosAsAc.importeAsAc" (input)="maskTwoDecimals($event, filtrosAsAc.importeAsAc)" class="form-control importesBaremos" />
+                                <i>€</i>
+                            </div>
                         </div>
                         <div class="form-group col-lg-3 col-md-3 align-self-center m-md-0 pt-md-2 d-flex">
                             <i _ngcontent-c15="" class="fas fa-external-link-alt mr-2 mt-1"></i>
@@ -275,13 +287,19 @@
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.minimo' | translate }}</label>
-                            <input type="number" [disabled]="!disableImputAct || !permisoEscritura "
-                                [(ngModel)]="filtrosAsAc.importeMinAsAc" class="form-control importesBaremos" />
+                            <div class="input-icon input-icon-right">
+                                <input type="number" [disabled]="!disableImputAct || !permisoEscritura "
+                                    [(ngModel)]="filtrosAsAc.importeMinAsAc" (input)="maskTwoDecimals($event, filtrosAsAc.importeMinAsAc)" class="form-control importesBaremos"/>
+                                <i>€</i>
+                            </div>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
-                            <input type="number" [disabled]="!disableImputAct || !permisoEscritura "
-                                [(ngModel)]="filtrosAsAc.importeMaxAsAc" class="form-control importesBaremos" />
+                            <div class="input-icon input-icon-right">
+                                <input type="number" [disabled]="!disableImputAct || !permisoEscritura "
+                                    [(ngModel)]="filtrosAsAc.importeMaxAsAc" (input)="maskTwoDecimals($event, filtrosAsAc.importeMaxAsAc)" class="form-control importesBaremos" />
+                                <i>€</i>
+                            </div>
                         </div>
                     </div>
                 </div>

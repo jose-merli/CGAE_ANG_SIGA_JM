@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../_services/commons.service';
 import { TranslateService } from '../../../../commons/translate/translation.service';
@@ -7,20 +7,24 @@ import { FiltroBusquedaBaremosComponent } from './filtro-busqueda-baremos/filtro
 import { SigaServices } from '../../../../_services/siga.service';
 import { BaremosGuardiaItem } from '../../../../models/sjcs/BaremosGuardiaItem';
 import { Location } from '@angular/common';
+import { GuardiaItem } from '../../../../models/guardia/GuardiaItem';
+import { PersistenceService } from '../../../../_services/persistence.service';
 @Component({
   selector: 'app-baremos-de-guardia',
   templateUrl: './baremos-de-guardia.component.html',
   styleUrls: ['./baremos-de-guardia.component.scss']
 })
-export class BaremosDeGuardiaComponent implements OnInit {
+export class BaremosDeGuardiaComponent implements OnInit{
 
   permisoEscritura: boolean = false;
   mostrarTablaResultados: boolean = false;
   datos;
+  body: GuardiaItem = new GuardiaItem()
   @ViewChild(FiltroBusquedaBaremosComponent) filtros: FiltroBusquedaBaremosComponent;
   progressSpinner: boolean;
   msgs: any[];
   constructor(
+    private persistenceService: PersistenceService,
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private router: Router,
@@ -41,9 +45,10 @@ export class BaremosDeGuardiaComponent implements OnInit {
       }
 
     }).catch(error => console.error(error));
-
-
-
+    
+    if(sessionStorage.getItem("DatosGeneralesGuardia")){
+      this.body = JSON.parse(sessionStorage.getItem("DatosGeneralesGuardia"))
+    }
   }
 
   getBaremosGuardias(event, historico?:boolean) {
@@ -122,6 +127,15 @@ export class BaremosDeGuardiaComponent implements OnInit {
   }
 
   backTo() {
+
+		if(this.body.idGuardia){
+			let guardia = new GuardiaItem();
+			guardia.idGuardia = this.body.idGuardia;
+			guardia.idTurno = this.body.idTurno;
+			this.persistenceService.setDatos(guardia);
+			this.router.navigate(["/gestionGuardias"]);
+		}
+		sessionStorage.setItem("volver", 'true');
 		this.location.back();
 	}
 }

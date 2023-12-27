@@ -62,6 +62,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} delitos seleccionados";
   asuntoValue:string;
+  avisoMismoNProcedimiento:boolean;
 
   inputs = [
     { nombre: this.translateService.instant('justiciaGratuita.sjcs.designas.DatosIden.NIG'), value: "" },
@@ -83,6 +84,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   constructor(private sigaServices: SigaServices, private datepipe: DatePipe, private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService) { }
 
   ngOnInit() {
+    this.campos.idModulo = this.campos.idProcedimiento;
+    this.campos.idProcedimiento = this.campos.idPretension;
     this.getNigValidador();
     this.getNprocValidador();
     this.datosInicial = this.campos;
@@ -218,7 +221,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.disableRestablecer = false;
           }
           let designaUpdate = new DesignaItem();
-          designaUpdate.ano = this.campos.anio;
+          if(this.campos.anio){
+            designaUpdate.ano = this.campos.anio;
+          }else{
+            designaUpdate.ano = this.campos.ano.split("D")[1].split("/")[0];
+          }
+          
           designaUpdate.idTurno = this.campos.idTurno;
           designaUpdate.numero = this.campos.numero;
           this.getComboDelitos(designaUpdate);
@@ -254,6 +262,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.campos.idPretension = null;
       this.changeModulo();
     }
+    this.recuperarParametros();
   }
 
   formatDate(date) {
@@ -391,11 +400,11 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           let severity = "error";
           let summary = this.translateService.instant('justiciaGratuita.oficio.designa.numProcedimientoNoValido');;
           let detail = "";
-          this.msgs.push({
-            severity,
-            summary,
-            detail
-          });
+          // this.msgs.push({
+          //   severity,
+          //   summary,
+          //   detail
+          // });
         }
       }
 
@@ -1082,34 +1091,39 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.sigaServices.post("designaciones_existeDesignaJuzgadoProcedimiento", designaItem).subscribe(
       n => {
         this.progressSpinner = false;
-        if (JSON.parse(n.body).existeDesignaJuzgadoProcedimiento > 1) {
-          let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado.¿Desea continuar?";
-          let icon = "fa fa-question-circle";
-          let keyConfirmation = "confirmGuardar";
-          this.confirmationService.confirm({
-            key: keyConfirmation,
-            message: mess,
-            icon: icon,
-            accept: () => {
-              this.progressSpinner = true;
-              this.updateDetalle(designaItem);
-            },
-            reject: () => {
-              this.progressSpinner = false;
-              this.msgs = [
-                {
-                  severity: "info",
-                  summary: "Cancel",
-                  detail: this.translateService.instant(
-                    "general.message.accion.cancelada"
-                  )
-                }
-              ];
-            }
-          });
-        } else {
+        if(this.avisoMismoNProcedimiento){
+          if (JSON.parse(n.body).existeDesignaJuzgadoProcedimiento > 1) {
+            let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado.¿Desea continuar?";
+            let icon = "fa fa-question-circle";
+            let keyConfirmation = "confirmGuardar";
+            this.confirmationService.confirm({
+              key: keyConfirmation,
+              message: mess,
+              icon: icon,
+              accept: () => {
+                this.progressSpinner = true;
+                this.updateDetalle(designaItem);
+              },
+              reject: () => {
+                this.progressSpinner = false;
+                this.msgs = [
+                  {
+                    severity: "info",
+                    summary: "Cancel",
+                    detail: this.translateService.instant(
+                      "general.message.accion.cancelada"
+                    )
+                  }
+                ];
+              }
+            });
+          } else {
+            this.updateDetalle(designaItem);
+          }
+        }else{
           this.updateDetalle(designaItem);
         }
+        
 
       },
       err => {
@@ -1126,6 +1140,22 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       }, () => {
         this.progressSpinner = false;
       });;
+  }
+
+
+  recuperarParametros(){
+    let parametro = {
+      valor: "AVISO_MISMO_NPROCEDIMIENTO_JUZGADO"
+    };
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let respuesta = JSON.parse(data.body).parametro
+          this.avisoMismoNProcedimiento = respuesta == 1 ? true : false;
+      });
+
+
   }
 
   async ningunaActuacionesFacturada(element): Promise<boolean> {

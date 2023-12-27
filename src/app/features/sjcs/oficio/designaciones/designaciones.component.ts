@@ -1,5 +1,5 @@
 import { DatePipe, Location } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
@@ -45,6 +45,9 @@ export class DesignacionesComponent implements OnInit {
   msgs: Message[] = [];
   actuacionesDesignaItems: ActuacionDesignaItem[] = [];
   permisosFichaAct = false; 
+
+  totalRegistrosBusquedaDesignaciones: any;
+
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
     private datePipe: DatePipe, private translateService: TranslateService, private localStorageService: SigaStorageService) {
 
@@ -374,7 +377,28 @@ export class DesignacionesComponent implements OnInit {
         this.commonsService.scrollTablaFoco("tablaFoco");
       },() => {
         this.progressSpinner = false;
-        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        }, 5);
+      });
+
+      this.busquedaTotalRegistrosDesignaciones();
+     
+  }
+
+  busquedaTotalRegistrosDesignaciones() {
+    let data = sessionStorage.getItem("designaItem");
+    let designaItem = JSON.parse(data);
+    if(designaItem.numColegiado == ""){
+      designaItem.numColegiado = null;
+    }
+    this.sigaServicesNew.post("designaciones_busquedaTotalRegistros", designaItem).subscribe(
+      n => {
+        this.totalRegistrosBusquedaDesignaciones = JSON.parse(n.body).valor;
+      },
+      err => {
+        this.commonsService.scrollTablaFoco("tablaFoco");
+      },() => {
         setTimeout(() => {
           this.commonsService.scrollTablaFoco('tablaFoco');
         }, 5);

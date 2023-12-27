@@ -43,6 +43,7 @@ export class EJGComponent implements OnInit {
   @ViewChild(FiltrosEjgComponent) filtros;
   @ViewChild(FiltrosEjgComponent) usuarioBusquedaExpress;
   @ViewChild(TablaEjgComponent) tabla;
+  totalRegistrosBusquedaEJG: any;
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -158,6 +159,14 @@ export class EJGComponent implements OnInit {
           this.commonsService.scrollTop();
         }, 5);
       }
+    );
+
+    this.sigaServices.post("filtrosejg_busquedaTotalRegistrosEJG", filtros).subscribe(
+      n => {
+        this.totalRegistrosBusquedaEJG = JSON.parse(n.body).valor;
+      },
+      err => {},
+      () => {}
     );
   }
 

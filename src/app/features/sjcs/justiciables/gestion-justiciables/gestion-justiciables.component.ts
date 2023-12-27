@@ -945,55 +945,55 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   backTo() {
-    //Revisar. Actualmente se produce un bucle si se accede a la ficha para la creacion de un justiciable desde la pantalla de busqueda.
-    //Para solucionarlo se recomienda que se eliminen los else if.
-    this.persistenceService.clearFiltrosAux();
-    //Se elimina aqui para evitar que afecte el comportamiento de las tarjetas despues devolver de una pantalla de busqueda.
-    //sessionStorage.removeItem('origin');
-    sessionStorage.removeItem("Familiar");
-    //Si estamos en vista representante o en la creacion de nuevo representante, al volver buscamos el justiciable asociado a ese representante
-    if (this.navigateToJusticiable || this.checkedViewRepresentante || this.nuevoRepresentante) {
-      this.checkedViewRepresentante = false;
-      this.nuevoRepresentante = false;
-      this.modoEdicion = true;
-      this.commonsService.scrollTop();
-      this.navigateToJusticiable = false;
-      this.search();
-
-      //Seria recomendable estandarizar y poner todo router.navigate o location.back 
-      //ya que si no se producen bucles.
-    } /* else if(this.fromJusticiable){
+    if(sessionStorage.getItem("vieneDeFichaJusticiable") == "true" || sessionStorage.getItem("nuevoJusticiable") == "true"){
       this.router.navigate(["/justiciables"]);
-    } else if(this.fromContrario || this.fromInteresado) {
-      this.router.navigate(['/fichaDesignaciones']);
-    }  else if(this.fromAsistencia){
-      this.router.navigate(['/fichaAsistencia']);
-    }
-    } else if(this.fromUniFamiliar){ */
-    //Para que se abra la tarjeta de unidad familiar y se haga scroll a su posicion
-    //if(this.fromUniFamiliar)sessionStorage.setItem('tarjeta','unidadFamiliar');
-
-    //this.router.navigate(["/gestionEjg"]);
-    //}
-    else {
-      //Para que se abra la tarjeta de unidad familiar y se haga scroll a su posicion
-      if (this.fromUniFamiliar) {
-        sessionStorage.setItem('tarjeta', 'unidadFamiliar');
-        sessionStorage.setItem("origin", "UnidadFamiliar");
-      }
-
-      let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-      ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
-      sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
-      
-      if(this.fromNuevoJusticiable){
+    }else{
+      //Revisar. Actualmente se produce un bucle si se accede a la ficha para la creacion de un justiciable desde la pantalla de busqueda.
+      //Para solucionarlo se recomienda que se eliminen los else if.
+      this.persistenceService.clearFiltrosAux();
+      //Se elimina aqui para evitar que afecte el comportamiento de las tarjetas despues devolver de una pantalla de busqueda.
+      //sessionStorage.removeItem('origin');
+      sessionStorage.removeItem("Familiar");
+      //Si estamos en vista representante o en la creacion de nuevo representante, al volver buscamos el justiciable asociado a ese representante
+      if (this.navigateToJusticiable || this.checkedViewRepresentante || this.nuevoRepresentante) {
+        this.checkedViewRepresentante = false;
+        this.nuevoRepresentante = false;
+        this.modoEdicion = true;
+        this.commonsService.scrollTop();
+        this.navigateToJusticiable = false;
+        this.search();      //Seria recomendable estandarizar y poner todo router.navigate o location.back 
+        //ya que si no se producen bucles.
+      } /* else if(this.fromJusticiable){
         this.router.navigate(["/justiciables"]);
-      }else{
-        this.location.back();
+      } else if(this.fromContrario || this.fromInteresado) {
+        this.router.navigate(['/fichaDesignaciones']);
+      }  else if(this.fromAsistencia){
+        this.router.navigate(['/fichaAsistencia']);
       }
-      
+      } else if(this.fromUniFamiliar){ */
+      //Para que se abra la tarjeta de unidad familiar y se haga scroll a su posicion
+      //if(this.fromUniFamiliar)sessionStorage.setItem('tarjeta','unidadFamiliar');    //this.router.navigate(["/gestionEjg"]);
+      //}
+      else {
+        //Para que se abra la tarjeta de unidad familiar y se haga scroll a su posicion
+        if (this.fromUniFamiliar) {
+          sessionStorage.setItem('tarjeta', 'unidadFamiliar');
+          sessionStorage.setItem("origin", "UnidadFamiliar");
+        } 
+        if(sessionStorage.getItem("EJGItem")){
+          let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+          ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
+          sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
+        }    
+        
+        if(this.fromNuevoJusticiable){
+          this.router.navigate(["/justiciables"]);
+        }else{
+          this.location.back();
+        }
+     
+      }
     }
-
   }
 
   searchJusticiableOverwritten(justiciable) {

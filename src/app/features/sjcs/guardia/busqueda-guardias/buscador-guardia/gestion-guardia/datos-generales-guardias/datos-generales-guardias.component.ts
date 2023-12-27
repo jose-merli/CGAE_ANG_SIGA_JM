@@ -115,6 +115,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           this.progressSpinner = false;
           this.controlCargaInicial = true;
+          sessionStorage.setItem("DatosGeneralesGuardia",JSON.stringify(this.body));
         });
       }
   }

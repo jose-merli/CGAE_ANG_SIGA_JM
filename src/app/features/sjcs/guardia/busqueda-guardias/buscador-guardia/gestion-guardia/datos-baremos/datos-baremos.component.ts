@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { TreeNode } from '../../../../../../../utils/treenode';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
@@ -32,6 +32,7 @@ export class DatosBaremosComponent implements OnInit {
   datos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
+  goToBaremos:boolean = false;
   //Resultados de la busqueda
   @Input() openFicha: boolean = false;
   @Input() tarjetaBaremos;
@@ -105,14 +106,22 @@ export class DatosBaremosComponent implements OnInit {
     )
   } */
   goToFichaBaremos(){
-   
+    this.goToBaremos = true;
    let goBaremos:BaremosGuardiaItem = new BaremosGuardiaItem();
-   goBaremos.idTurno = JSON.parse(this.persistenceService.getDatos()).idTurno;
-   goBaremos.idGuardia = JSON.parse(this.persistenceService.getDatos()).idGuardia
+
+   if (typeof this.persistenceService.getDatos() === 'string') {
+    goBaremos.idTurno = JSON.parse(this.persistenceService.getDatos()).idTurno;
+    goBaremos.idGuardia = JSON.parse(this.persistenceService.getDatos()).idGuardia;
+   } else {
+    goBaremos.idTurno = this.persistenceService.getDatos().idTurno;
+    goBaremos.idGuardia = this.persistenceService.getDatos().idGuardia;
+   }
+
    sessionStorage.setItem("tarjetaBaremosFichaGuardia",JSON.stringify(goBaremos));
+   sessionStorage.setItem("idGuardiaFromFichaGuardia",goBaremos.idGuardia);
 
    this.router.navigate(["/baremosDeGuardia"]);
-
+   
 
   }
 

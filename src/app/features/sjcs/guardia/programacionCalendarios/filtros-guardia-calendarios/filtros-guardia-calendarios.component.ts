@@ -97,7 +97,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
         sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
       );
       
-      if (this.filtros.idTurno.includes(',')){
+      if (this.filtros.idTurno && this.filtros.idTurno.includes(',')){
         this.filtros.idTurno = this.filtros.idTurno.split(',');
       }else {
         this.filtros.idTurno = [this.filtros.idTurno];

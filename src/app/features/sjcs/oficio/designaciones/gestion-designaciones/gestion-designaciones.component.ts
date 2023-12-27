@@ -35,6 +35,7 @@ export class GestionDesignacionesComponent implements OnInit {
   comboTipoDesigna: any[];
   //Resultados de la busqueda
   @Input() datos;
+  @Input() totalRegistrosBusquedaDesignaciones;
   numSelected: number = 0;
   esColegio: boolean = false;
   disableDelete: boolean = false;
