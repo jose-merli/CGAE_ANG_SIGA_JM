@@ -50,7 +50,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   parametroNIG: any;
   moduloValue: any;
   moduloOpciones: any[] = [];parametroNProc: any;
-;
+  sinModificacion:boolean = true;
   disableEstado: boolean = false;
   institucionActual: String;
   isLetrado: boolean;
@@ -63,7 +63,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   textSelected: String = "{0} delitos seleccionados";
   asuntoValue:string;
   avisoMismoNProcedimiento:boolean;
-
+  delitosSeleccionadosDefault:string[] = [];;
   inputs = [
     { nombre: this.translateService.instant('justiciaGratuita.sjcs.designas.DatosIden.NIG'), value: "" },
     { nombre: this.translateService.instant('gratuita.busquedaDesignas.literal.numProcedimiento'), value: "" }
@@ -79,7 +79,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       value: ""
     }
   ];
-
+  camposAux;
 
   constructor(private sigaServices: SigaServices, private datepipe: DatePipe, private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService) { }
 
@@ -263,6 +263,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.changeModulo();
     }
     this.recuperarParametros();
+    this.setCamposAux()
   }
 
   formatDate(date) {
@@ -514,7 +515,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           { label: 'Finalizado', value: 'F' },
           { label: 'Anulada', value: 'A' }];
       }
-
+      this.sinModificacion = true;
     }
   }
 
@@ -528,6 +529,13 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     } else if (nombre = "Fecha cierre") {
       this.datePickers[1].value = event;
     }
+
+    if(this.formatDate(this.datePickers[0].value) != this.camposAux.fechaEstado ||
+      this.formatDate(this.datePickers[1].value) != this.camposAux.fechaFin){
+        this.sinModificacion = false;
+      }else{
+        this.sinModificacion = true;
+      }
   }
 
   getComboJuzgados() {
@@ -1352,6 +1360,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         } else {
           let opcioneSeleccionadas = resp.lista;
+          this.delitosSeleccionadosDefault = opcioneSeleccionadas;
           this.delitosValue = opcioneSeleccionadas;
         }
       },
@@ -1364,4 +1373,74 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     );
   }
 
+
+  comprobarModificacion(){
+    console.log(this.delitosValue)
+    console.log(this.camposAux)
+    if(this.inputs[0].value != this.camposAux.nig || 
+      this.inputs[1].value != this.camposAux.numProcedimiento ||
+      this.asuntoValue != this.camposAux.resumenAsunto ||
+      this.estadoValue != this.camposAux.sufijo ||
+      this.juzgadoValue != this.camposAux.idJuzgado ||
+      this.procedimientoValue != this.camposAux.idProcedimiento ||
+      this.moduloValue != this.camposAux.idModulo ||
+      this.comprobarDelitos()){
+      this.sinModificacion = false;
+    }else{
+      this.sinModificacion = true;
+    }
+  }
+  
+  comprobarDelitos(){
+    const sortedArray1 = this.delitosSeleccionadosDefault.slice().sort();
+    const sortedArray2 = this.delitosValue.slice().sort();
+    if(sortedArray1.length != sortedArray2.length){
+      return true;
+    }
+    for (let i = 0; i < sortedArray1.length; i++) {
+      if (sortedArray1[i] !== sortedArray2[i]) {
+        return true;
+      }
+    }
+  }
+
+  setCamposAux(){
+    this.camposAux = this.campos
+    if(this.camposAux.nig == null){
+      this.camposAux.nig = ""
+    }
+    if(this.campos.numProcedimiento == null){
+      this.campos.numProcedimiento = ""
+    }
+    if(this.camposAux.resumenAsunto == null || this.camposAux.resumenAsunto == " "){
+      this.camposAux.resumenAsunto = "";
+    }
+    if(this.camposAux.estado == null){
+      this.camposAux.estado = ""
+    }
+    if(this.camposAux.fechaEstado == null){
+      this.camposAux.fechaEstado = ""
+    }
+    if(this.camposAux.fechaFin == null){
+      this.camposAux.fechaFin = ""
+    }
+    if(this.camposAux.nombreJuzgado == null){
+      this.camposAux.nombreJuzgado = ""
+    }
+    if(this.camposAux.nombreProcedimiento == null){
+      this.camposAux.nombreProcedimiento = ""
+    }
+    if(this.camposAux.modulo == null){
+      this.camposAux.modulo = ""
+    }
+    if(this.inputs[0].value == null){
+      this.inputs[0].value = ""
+    }
+    if(this.inputs[1].value == null){
+      this.inputs[1].value = ""
+    }
+    if(this.asuntoValue == null){
+      this.asuntoValue = ""
+    }
+  }
 }
