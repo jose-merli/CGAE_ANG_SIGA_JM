@@ -9,21 +9,21 @@
       <div class="form-row">
         <div class="col-lg-6 col-md-6 pl5" *ngFor="let inputTitle of inputs">
           <label>{{ inputTitle.nombre }}</label>
-        <input type="text" [(ngModel)]="inputTitle.value" class="form-control" pInputText>
+        <input type="text" [(ngModel)]="inputTitle.value" class="form-control" pInputText (ngModelChange)="comprobarModificacion()">
         </div>
       </div>
     </div>
     
     <div class="form-group-interlineado col-lg-3 col-md-3">
       <label>{{ 'enviosMasivos.literal.asunto' | translate}}</label>
-      <input type="text" [(ngModel)]="asuntoValue" class="form-control" pInputText>
+      <input type="text" [(ngModel)]="asuntoValue" class="form-control" pInputText (ngModelChange)="comprobarModificacion()">
     </div>
 
     <div class="form-group-interlineado col-lg-3 col-md-3">
       <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate}}</label>
       <p-dropdown class="select-form" [(ngModel)]="estadoValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="disableEstado" [options]="estadosOpciones"
-        [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+        [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (ngModelChange)="comprobarModificacion()">
       </p-dropdown>
     </div>
  
@@ -34,7 +34,7 @@
           <label>{{ datePickerTitle.nombre }}</label>
           <app-fecha [utc]="true" [disabled]="i === 0" [(value)]='datePickerTitle.value'
             (valueChangeInput)="fillFechaHastaCalendar($event, datePickerTitle.nombre)"
-            (valueChangeSelected)="fillFechaHastaCalendar($event, datePickerTitle.nombre)"></app-fecha>
+            (valueChangeSelected)="fillFechaHastaCalendar($event, datePickerTitle.nombre)" (ngModelChange)="comprobarModificacion()"></app-fecha>
         </div>
       </div>
     </div>
@@ -43,7 +43,7 @@
       <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
       <p-dropdown class="select-form" [(ngModel)]="juzgadoValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="juzgadoOpciones" [filter]="true"
-        (onChange)="changeJuzgado()" filterBy="label,labelSinTilde,labelTildeContraria"  [showClear]="true">
+        (onChange)="changeJuzgado()" filterBy="label,labelSinTilde,labelTildeContraria"  [showClear]="true" (ngModelChange)="comprobarModificacion()">
       </p-dropdown>
     </div>
 
@@ -51,7 +51,7 @@
       <label>{{'justiciaGratuita.maestros.Procedimiento' | translate}}</label>
       <p-dropdown class="select-form" [(ngModel)]="procedimientoValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="procedimientoOpciones" [filter]="true"
-        (onChange)="changeProcedimiento()" filterBy="label,labelSinTilde,labelTildeContraria" [showClear]="true">
+        (onChange)="changeProcedimiento()" filterBy="label,labelSinTilde,labelTildeContraria" [showClear]="true" (ngModelChange)="comprobarModificacion()">
       </p-dropdown>
     </div>
 
@@ -59,7 +59,7 @@
       <label>{{'justiciaGratuita.oficio.designas.actuaciones.modulo' | translate}}</label>
       <p-dropdown class="select-form" [(ngModel)]="moduloValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="moduloOpciones" [filter]="true"
-        (onChange)="changeModulo()" filterBy="label,labelSinTilde,labelTildeContraria" [showClear]="true">
+        (onChange)="changeModulo()" filterBy="label,labelSinTilde,labelTildeContraria" [showClear]="true" (ngModelChange)="comprobarModificacion()">
       </p-dropdown>
     </div>
 
@@ -68,7 +68,7 @@
       <p-multiSelect #someDropdown defaultLabel="{{'general.boton.seleccionar' | translate}}" autoWidth="false"
         [(ngModel)]="delitosValue" [options]="delitosOpciones" maxSelectedLabels="10"
         [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde,labelTildeContraria"
-        (onPanelShow)="focusInputField(someDropdown)">
+        (onPanelShow)="focusInputField(someDropdown)" (ngModelChange)="comprobarModificacion()">
       </p-multiSelect>
     </div>
     <br>
@@ -87,9 +87,9 @@
       (click)="showMsg('success', 'Se ha anulado correctamente', 'Reactivar')"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
       (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')"
-      [disabled]="disableRestablecer"></button>
+      [disabled]="disableRestablecer || sinModificacion"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', 'Guardar')" [disabled]="disableGuardar"></button>
+      (click)="showMsg('success', 'Se ha guardado correctamente', 'Guardar')" [disabled]="disableGuardar || sinModificacion"></button>
   </div>
 </div>
 </div>
