@@ -531,10 +531,17 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   }
 
   fillFechaHastaCalendar(event, nombre) {
-    if (nombre == "Fecha estado") {
+    if (nombre == "Fecha Estado") {
       this.datePickers[0].value = event;
-    } else if (nombre = "Fecha cierre") {
+    } else if (nombre == "Fecha Cierre") {
       this.datePickers[1].value = event;
+    }
+    if(event == null && nombre == "Fecha estado"){
+      this.datePickers[0].value = null;
+    }
+
+    if(event == null && nombre == "Fecha cierre"){
+      this.datePickers[1].value = null;
     }
 
     if(this.formatDate(this.datePickers[0].value) != this.camposAux.fechaEstado ||
@@ -1436,12 +1443,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     }
     if(this.camposAux.resumenAsunto == null || this.camposAux.resumenAsunto == " "){
       this.camposAux.resumenAsunto = "";
-    }
-    if(this.camposAux.fechaEstado == null){
-      this.camposAux.fechaEstado = ""
-    }
-    if(this.camposAux.fechaFin == null){
-      this.camposAux.fechaFin = ""
     }
     if(this.camposAux.sufijo == null){
       this.camposAux.sufijo == "";
