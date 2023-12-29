@@ -330,6 +330,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.procedimientoValue = null;
       this.changeModulo();
     }
+    this.comprobarModificacion();
   }
 
   showMsg(severity, summary, detail) {
@@ -1044,6 +1045,16 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           updateDetalle.rol = [this.estadoAnterior];
 
           this.disableRestablecer = false;
+          this.camposAux.numProcedimiento = this.inputs[1].value;
+          this.camposAux.resumenAsunto = this.asuntoValue ;
+          this.camposAux.sufijo = this.estadoValue;
+          this.camposAux.idJuzgado = this.juzgadoValue; 
+          this.camposAux.idProcedimiento = this.procedimientoValue;
+          this.camposAux.idModulo = this.moduloValue;
+          this.delitosSeleccionadosDefault = this.delitosValue;
+          this.camposAux.fechaEstado = this.formatDate(this.datePickers[0].value);
+          this.camposAux.fechaFin = this.formatDate(this.datePickers[1].value); 
+          this.sinModificacion = true;
           this.refreshData.emit(updateDetalle);
         },
         err => {
@@ -1375,8 +1386,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
 
   comprobarModificacion(){
-    console.log(this.delitosValue)
-    console.log(this.camposAux)
+    if(this.moduloValue == null){
+      this.moduloValue = "";
+    }
+    if(this.procedimientoValue == null){
+      this.procedimientoValue = 0;
+    }
     if(this.inputs[0].value != this.camposAux.nig || 
       this.inputs[1].value != this.camposAux.numProcedimiento ||
       this.asuntoValue != this.camposAux.resumenAsunto ||
@@ -1415,23 +1430,14 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     if(this.camposAux.resumenAsunto == null || this.camposAux.resumenAsunto == " "){
       this.camposAux.resumenAsunto = "";
     }
-    if(this.camposAux.estado == null){
-      this.camposAux.estado = ""
-    }
     if(this.camposAux.fechaEstado == null){
       this.camposAux.fechaEstado = ""
     }
     if(this.camposAux.fechaFin == null){
       this.camposAux.fechaFin = ""
     }
-    if(this.camposAux.nombreJuzgado == null){
-      this.camposAux.nombreJuzgado = ""
-    }
-    if(this.camposAux.nombreProcedimiento == null){
-      this.camposAux.nombreProcedimiento = ""
-    }
-    if(this.camposAux.modulo == null){
-      this.camposAux.modulo = ""
+    if(this.camposAux.sufijo == null){
+      this.camposAux.sufijo == "";
     }
     if(this.inputs[0].value == null){
       this.inputs[0].value = ""
@@ -1441,6 +1447,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     }
     if(this.asuntoValue == null){
       this.asuntoValue = ""
+    }
+    if(this.estadoValue == null){
+      this.estadoValue = ""
+    }
+    if(this.juzgadoValue == null){
+      this.juzgadoValue = ""
     }
   }
 }
