@@ -1,5 +1,62 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="busqueda-container">
+<div class="busqueda-container" *ngIf="modificar">
+<div class="card">
+  <div class="card-header header-ficha">
+    <div  class="form-row">
+      <div class="col-lg-1 col-md-2" >
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10 ">
+        <div class="d-flex justify-content-end mb-1" >
+          <label class="mr-auto title-ficha pointer">{{'guardiacolegiado.ficha.tarjeta.diasDeGuardia' | translate}}</label>
+        </div>
+        <div class="d-flex justify-content-between default" >
+          <div *ngFor="let item of fechas">
+
+          </div>
+
+          <!--
+          <label >{{'dato.jgr.guardia.guardias.guardia' | translate}}: 
+            <span>{{turnosItem.nombre}}</span>
+          </label>
+          
+          <label >{{'menu.justiciaGratuita.maestros.Materia' | translate}}: 
+            <span *ngIf = "turnosItem.materia != null || turnosItem.materia != undefined ">{{turnosItem.materia}}</span>
+          </label>
+
+          <label >{{'justiciaGratuita.maestros.zonasYSubzonas.zona' | translate}}: 
+            <span *ngIf = "turnosItem.zona != null || turnosItem.zona != undefined ">{{turnosItem.zona}}</span>
+          </label>
+
+          <label >{{'agenda.fichaEvento.tarjetaGenerales.partidoJudicial' | translate}}: 
+            <span *ngIf = "turnosItem.nombrepartidosjudiciales != null || turnosItem.nombrepartidosjudiciales != undefined ">{{turnosItem.nombrepartidosjudiciales}}</span>
+          </label>
+
+          <label >Número de Inscritos: 
+            <span>{{turnosItem.nletrados}}</span>
+          </label>
+        -->
+          <i class="fa fa-angle-down ml-auto" ></i>
+        </div>
+      </div>
+    </div>
+   
+  </div>
+</div>
+<!--DEJO COMENTADO ESTE PROGRESSSPINNER PARA QUE NO SE LE HAGA BOLA DE MOMENTO-->
+<!--
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+-->
+</div>
+<!--HASTA AQUÍ ES LA TARJETA CERRADA-->
+
+
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" *ngIf="!modificar">
   <div class="card">
     <div class="card-header header-ficha">
       <div class=" header-ficha-open d-flex justify-content-start align-items-center">

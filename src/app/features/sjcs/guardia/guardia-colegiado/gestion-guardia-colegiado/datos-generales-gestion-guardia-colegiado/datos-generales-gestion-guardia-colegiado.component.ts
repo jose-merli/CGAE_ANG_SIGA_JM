@@ -19,6 +19,7 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
   campoFechaIni: Date;
   campoFechaFin: Date;
   fechasDisponibles = [];
+  fechas: String[] = [];
   @Input() modificar:boolean = false;
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -41,9 +42,36 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
     
     if(!this.modificar){
       this.getFechas()
+    }else{
+      this.getDias();
     }
     
     this.progressSpinner = false
+  }
+
+  getDias(){
+    this.fechasDisponibles = [];
+    //this.progressSpinner = true;
+    this.sigaServices.getParam("guardiasColegiado_fechasDiasGuardias", this.fillParams2()).subscribe(
+      n => {
+        this.clear();
+        this.progressSpinner = false;
+
+        if(n.error !== null
+          && n.error.code === 500){
+          this.showMsg("error", "Error", n.error.description.toString());
+        }else{
+
+          this.fechas = n.combooItems;
+          console.log(this.fechas);
+          //this.commonServices.arregloTildesCombo(this.fechasDisponibles);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        //console.log(err);
+      }
+    );
   }
 
   showMsg(severityParam: string, summaryParam: string, detailParam: string) {
@@ -57,6 +85,11 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
   
   fillParams() {
     let parametros = '?fechaIni=' + this.body.fechadesde + "&fechaFin=" + this.body.fechahasta + "&idTurno=" + this.body.idTurno + "&idGuardia=" + this.body.idGuardia;
+    return parametros;
+  }
+
+  fillParams2() {
+    let parametros = '?fechaIni=' + this.formatDate2(this.body.fechadesde) + "&fechaFin=" + this.formatDate2(this.body.fechahasta) + "&idTurno=" + this.body.idTurno + "&idGuardia=" + this.body.idGuardia;
     return parametros;
   }
 

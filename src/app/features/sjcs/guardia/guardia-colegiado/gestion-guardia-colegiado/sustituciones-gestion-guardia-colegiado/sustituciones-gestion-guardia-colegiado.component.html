@@ -6,7 +6,7 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Sustituciones</label>
+        <label class="title-ficha pointer">{{'guardiacolegiado.ficha.tarjeta.anulacionysustitucion' | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -58,9 +58,15 @@
               <textarea pInputTextarea [disabled]="modoLectura" [(ngModel)]="comensustitucion" class="form-control ui-inputtext" autoResize="autoResize"
                 maxLength="3900"></textarea>
             </div>
+            <div class="form-group-interlineado col-lg-6 col-md-6">
+              <label>Motivo de Anulacion</label>
+              <textarea pInputTextarea [(ngModel)]="body.observacionesAnulacion"
+                class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900"></textarea>
+            </div>
           </div>
-
         </div>
+
+        
 
 
       </div>
@@ -73,6 +79,8 @@
 
         <button *ngIf="!esLetrado" [disabled]="modoLectura || esLetrado || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
         label="{{ 'general.boton.sustituir' | translate}}"></button>
+        <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
