@@ -965,8 +965,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.progressSpinner = true;
 
     //Chequeamos las relaciones de los combos Juzgado-Procedimiento-Modulo y reseteamos sus valores a corde
-    this.changeProcedimiento();
-    this.changeModulo();
+    //this.changeProcedimiento();
+    //this.changeModulo();
     updateDetalle.idProcedimiento = this.procedimientoValue;
     updateDetalle.idModulo = this.moduloValue;
 
@@ -1087,7 +1087,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           });
         }, () => {
           this.progressSpinner = false;
-        });;
+        });
   }
 
   checkAcceso() {
@@ -1133,7 +1133,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
               message: mess,
               icon: icon,
               accept: () => {
-                this.progressSpinner = true;
                 this.updateDetalle(designaItem);
               },
               reject: () => {
