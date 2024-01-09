@@ -89,6 +89,8 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
   }
 
   fillParams2() {
+    console.log("FECHA DESDE: " + this.body.fechadesde);
+    console.log("FECHA HASTA: " + this.body.fechahasta);
     let parametros = '?fechaIni=' + this.formatDate2(this.body.fechadesde) + "&fechaFin=" + this.formatDate2(this.body.fechahasta) + "&idTurno=" + this.body.idTurno + "&idGuardia=" + this.body.idGuardia;
     return parametros;
   }
@@ -166,6 +168,7 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
         this.campoFechaFin =  new Date(parseFloat(des.split("/")[1]))
         this.campoFechaIni =  new Date(parseFloat(des.split("/")[0]))
         this.modificar = true;
+        this.getDias();
       },
       err => {
         //console.log(err);
