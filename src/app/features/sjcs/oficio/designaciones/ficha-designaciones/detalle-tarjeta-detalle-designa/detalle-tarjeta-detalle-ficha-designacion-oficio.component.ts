@@ -544,12 +544,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.datePickers[1].value = null;
     }
 
-    if(this.formatDate(this.datePickers[0].value) != this.camposAux.fechaEstado ||
-      this.formatDate(this.datePickers[1].value) != this.camposAux.fechaFin){
-        this.sinModificacion = false;
-      }else{
-        this.sinModificacion = true;
-      }
+    this.comprobarModificacion();
   }
 
   getComboJuzgados() {
@@ -1412,7 +1407,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.juzgadoValue != this.camposAux.idJuzgado ||
       this.procedimientoValue != this.camposAux.idProcedimiento ||
       this.moduloValue != this.camposAux.idModulo ||
-      this.comprobarDelitos()){
+      this.comprobarDelitos() || !this.comprobarFechas()){
       this.sinModificacion = false;
     }else{
       this.sinModificacion = true;
@@ -1462,4 +1457,13 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.juzgadoValue = ""
     }
   }
+
+  comprobarFechas(){
+    if(this.formatDate(this.datePickers[0].value) != this.camposAux.fechaEstado ||
+      this.formatDate(this.datePickers[1].value) != this.camposAux.fechaFin){
+        return false;
+      }else{
+        return true;
+      }
+    }
 }

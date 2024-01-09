@@ -40,7 +40,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   permisoEscritura: boolean;
   isLetrado: boolean;
   datosAsistencia: TarjetaAsistenciaItem;
-
+  sinModificacion:boolean = true;
   nif: any;
   nombreColegiado: any;
   apellido1Colegiado: any;
@@ -226,6 +226,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   cargaDatosNueva() {
     this.disableCheckArt = false;
     this.progressSpinner = true;
+    this.sinModificacion = false;
     if (sessionStorage.getItem("buscadorColegiados")) {
       if(sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody")!= undefined){
         this.idPersona = JSON.parse(sessionStorage.getItem("personaBody")).idPersona;
@@ -732,6 +733,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 });
                 //console.log(n);
                 sessionStorage.setItem("designaItemLink", JSON.stringify(newDesigna));
+                this.initDatos.idTipoDesignaColegio = this.selectores[1].value;
+                this.initDatos.fechaEntradaInicio = this.fechaGenerales;
+                this.cargaDatos(this.initDatos);
+                this.comprobarModificacion();
                 this.progressSpinner = false;
               },
               err => {
@@ -776,7 +781,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       if (!this.nuevaDesigna) {
         //EDICION
         this.cargaDatos(this.initDatos);
-
+        this.comprobarModificacion();
       } else {
         this.cargaDatosNueva();
 
@@ -816,6 +821,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   fillFechaHastaCalendar(event) {
     this.fechaGenerales = event;
+    if(event == null){
+      this.initDatos.fechaEntradaInicio = null;
+    }
+    if(this.formatDate(event) == this.initDatos.fechaEntradaInicio){
+      this.sinModificacion = true;
+    }else{
+      this.sinModificacion = false;
+    }
   }
 
 
@@ -1254,6 +1267,15 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.showMessage("info", this.translateService.instant("general.message.informacion"), "No hay cambios que guardar");
     return false;
   }
+
+  comprobarModificacion(){
+    if(this.selectores[1].value == this.initDatos.idTipoDesignaColegio){
+      this.sinModificacion = true;
+    }else{
+      this.sinModificacion = false;
+    }
+  }
+
 
 	 onChangeCheckSalto(event){
     this.salto = event
