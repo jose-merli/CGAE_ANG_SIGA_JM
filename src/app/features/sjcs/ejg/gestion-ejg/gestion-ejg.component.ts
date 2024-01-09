@@ -211,46 +211,63 @@ export class GestionEjgComponent implements OnInit {
     this.body.apellidosYNombre = event;
     this.updateTarjResumen();
   }
-
+  
   updateTarjResumen() {
-    if (!this.nuevo && this.body != null && this.body != undefined) {
-      if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
-        this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
-      }
-      
+      if (this.nuevo) {
+        if (this.body.numAnnioProcedimiento == null || this.body.numAnnioProcedimiento == undefined) {
+          this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+        }
+       
         this.datos = [
-          {
-            label: "Año/Numero EJG",
-            value: this.body.numAnnioProcedimiento
-          },
-          {
-            label: "Solicitante",
-            value: this.body.nombreApeSolicitante
-          },
-
-          {
-            label: "Estado EJG",
-            value: this.body.estadoEJG
-          },
-          {
-            label: "Designado",
-            value: this.body.apellidosYNombre
-          },
-          {
-            label: "Dictamen",
-            value: this.body.dictamenSing
-          },
-          {
-            label: "CAJG",
-            value: this.body.resolucion
-          },
-          {
-            label: "Impugnación",
-            value: this.body.impugnacionDesc
-          },
+          { label: "Año/Numero EJG",  value: this.body.numAnnioProcedimiento },
+          { label: "Solicitante",     value: this.body.nombreApeSolicitante },
+          { label: "Estado EJG",      value: this.body.estadoEJG },
+          { label: "Designado",       value: this.body.apellidosYNombre },
+          { label: "Dictamen",        value: this.body.dictamenSing },
+          { label: "CAJG",            value: this.body.resolucion },
+          { label: "Impugnación",     value: this.body.impugnacionDesc },
         ];
       }
-  }
+     
+      else if (this.body != null && this.body != undefined) {
+        if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
+          this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+        }
+       
+          this.datos = [
+            {
+              label: "Año/Numero EJG",
+              value: this.body.numAnnioProcedimiento
+            },
+            {
+              label: "Solicitante",
+              value: this.body.nombreApeSolicitante
+            },
+   
+            {
+              label: "Estado EJG",
+              value: this.body.estadoEJG
+            },
+            {
+              label: "Designado",
+              value: this.body.apellidosYNombre
+            },
+            {
+              label: "Dictamen",
+              value: this.body.dictamenSing
+            },
+            {
+              label: "CAJG",
+              value: this.body.resolucion
+            },
+            {
+              label: "Impugnación",
+              value: this.body.impugnacionDesc
+            },
+          ];
+        }
+    }
+   
 
   goTop() {
     document.children[document.children.length - 1]

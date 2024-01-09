@@ -415,10 +415,16 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
               this.newEstado.emit(null);
 
             this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
-
+            this.ejgCreadoNuevo = true;
             this.body.numEjg = n.body.substring(n.body.indexOf("id")+5,n.body.indexOf("error")-3);
             this.bodyInicial = this.body;
             this.nuevo = false;
+            //Determina el valor en la cabecera del campo tipo ejg 
+            if (this.body.tipoEJG != null && this.body.tipoEJG != undefined) {
+              this.comboTipoEJG.forEach(element => {
+                if (element.value == this.body.tipoEJG) this.tipoEJGDesc = element.label;
+              });
+            }
             this.persistenceService.setDatosEJG(this.bodyInicial);
 
             this.guardadoSend.emit(true);
