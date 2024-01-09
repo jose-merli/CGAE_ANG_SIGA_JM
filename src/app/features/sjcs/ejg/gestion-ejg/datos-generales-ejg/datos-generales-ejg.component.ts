@@ -111,16 +111,34 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     this.getComboTipoEJGColegio();
     this.getComboPrestaciones();
     this.getComboTipoExpediente();
-    
-
+      /*SERVICIOS TRAMITACION */
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
     if (this.persistenceService.getDatosEJG()) {
-      this.modoEdicion = true;
-      this.nuevo = false;
-      this.body = this.persistenceService.getDatosEJG();
+      
+      if (this.persistenceService.getDatosEJG()) {
+        this.nuevo = false;
+        this.modoEdicion = true;
+        this.body = this.persistenceService.getDatosEJG();
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        
+        this.usuarioBusquedaExpress = {
+          numColegiado: this.body.numColegiado,
+          nombreAp: this.body.apellidosYNombre
+        };
+      } else {
+        this.modoEdicion = false;
+        this.nuevo = true;
+        this.body = new EJGItem();
+      
+      }
+
 
       this.disabledNumEJG = true;
 
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
       if (this.body.fechalimitepresentacion != undefined)
         this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
@@ -172,27 +190,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
 
 
 
-      /*SERVICIOS TRAMITACION */
-      sessionStorage.removeItem("volver");
-    sessionStorage.removeItem("modoBusqueda");
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      this.institucionActual = n.value;
-    });
-    if (this.persistenceService.getDatosEJG()) {
-      this.nuevo = false;
-      this.modoEdicion = true;
-      this.body = this.persistenceService.getDatosEJG();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.usuarioBusquedaExpress = {
-        numColegiado: this.body.numColegiado,
-        nombreAp: this.body.apellidosYNombre
-      };
-    } else {
-      this.modoEdicion = false;
-      this.nuevo = true;
-      this.body = new EJGItem();
 
-    }
     this.getComboTurno();
 
     //Proveniente de la busqueda de colegiado sin art 27
@@ -292,7 +290,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       }
       ).catch(error => console.error(error));
 
-
   }
   getParamMaxLengthNum() {
 
@@ -375,7 +372,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         //Determina el valor en la cabecera del campo tipo ejg colegio
         if (this.body.tipoEJGColegio != null && this.body.tipoEJGColegio != undefined) {
           this.changeTipoEJGColegio();
-        }
+        }else{
         let parametro = {
           valor: "TIPO_EJG_COLEGIO"
         };
@@ -394,7 +391,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                 }
               }
             });
-
+          }
       },
       err => {
         //console.log(err);
@@ -539,7 +536,9 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
 
     if (this.modoEdicion) {
       this.body.prestacionesRechazadas = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
-
+      if(this.tipoEJGColDesc){
+        this.body.tipoEJGColegio = this.tipoEJGColDesc;
+      }
       //hacer update
       this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
         n => {
@@ -746,41 +745,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     if (this.esCadenaVacia(this.body.numColegiado) || this.esCadenaVacia(this.body.apellidosYNombre)){
       this.body.idPersona = undefined;
     }
-      
-
-
-    this.sigaServices.post("gestionejg_guardarServiciosTramitacion", this.body).subscribe(
-      n => {
-        
-        if (n.statusText == "OK") {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.bodyInicial = this.body;
-          this.initArt27 = this.art27;
-          //Actualizamos la informacion en el body de la pantalla
-          this.sigaServices.post("gestionejg_datosEJG", this.bodyInicial).subscribe(
-            n => {
-              let ejgObject = JSON.parse(n.body).ejgItems;
-              let datosItem = ejgObject[0];
-              
-              this.persistenceService.setDatosEJG(datosItem);
-              this.body = this.persistenceService.getDatosEJG();
-              this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-              this.progressSpinner = false;
-            },
-            err => {
-              this.progressSpinner = false;
-            }
-          );
-        }
-        else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-      },
-      err => {
-        this.progressSpinner = false;
-
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    );
+    
   }
 
   checkPermisosRest() {
@@ -1035,7 +1000,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   }
   
   getComboTurno() {
-    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno="+this.body.idTurno).subscribe(
+    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno=1").subscribe(
       n => {
         
         this.comboTurno = n.combooItems;
@@ -1102,5 +1067,35 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       }
     );
 
+  }
+  
+  onChangeTurnos() {
+    this.comboGuardia = [];
+    this.body.idGuardia = null;
+
+    if (this.body.idTurno != undefined) {
+      this.isDisabledGuardia = false;
+      this.getComboGuardia();
+    } else {
+      this.isDisabledGuardia = true;
+      this.body.guardia = "";
+    }
+  }
+
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.body.numColegiado = event.nColegiado;
+    this.body.apellidosYNombre = event.nombreAp;
+
+    if (this.esCadenaVacia(this.body.numColegiado) || this.esCadenaVacia(this.body.apellidosYNombre)){
+      this.body.idPersona = undefined;
+    }
+      
+  }
+  
+  idPersona(event) {
+    this.body.idPersona = event;
+    sessionStorage.setItem("EJGItem",JSON.stringify(this.body));
   }
 }

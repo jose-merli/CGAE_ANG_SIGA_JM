@@ -63,9 +63,10 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }} (*) </label>
+              
              <p-dropdown *ngIf="nuevo" class="select-form" [(ngModel)]='body.tipoEJG' placeholder="Seleccionar"
                 [options]="comboTipoEJG" [filter]="true" filterBy="label,labelSinTilde" [disabled]="ejgCreadoNuevo"
-                [ngClass]="styleObligatorio(body.tipoEJG)" [showClear]="true"></p-dropdown>
+                [ngClass]="styleObligatorio(body.tipoEJG)" [showClear]="true" (onChange)="onDropdownChange($event)"></p-dropdown>
               <input type="text" *ngIf="!nuevo" [(ngModel)]="tipoEJGDesc" [disabled]="true" class="form-control"
                 (keypress)="numberOnly($event)" pInputText>
             </div>
@@ -118,37 +119,13 @@
               <p-dropdown class="select-form" [(ngModel)]='body.idGuardia' [(disabled)]="isDisabledGuardia" placeholder="Seleccionar" [options]="comboGuardia"
                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" ></p-dropdown>
             </div>
-            <!-- <div class="form-group col-lg-3 col-md-3">
-              <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
-              <input type="text" (keypress)="numberOnly($event)" class="form-control" [(ngModel)]="body.idPersona" pInputText />
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
-              <input type="text" class="form-control" disabled [(ngModel)]="body.apellidosYNombre" pInputText />
-            </div> -->
     
             <div class="form-group col-lg-12 col-md-12">
               <app-busqueda-colegiado-express (idPersona)="idPersona($event)" [idTurno]="this.body.idTurno" [idGuardia]="this.body.idGuardia" [tarjeta]="'ServiciosTramit'" 
               [pantalla]="'gestionEjg'"  [numColegiado]="usuarioBusquedaExpress.numColegiado" [obligatorio]="false" [art27]="art27"
               [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)" [datosGeneralesEjg]="true"></app-busqueda-colegiado-express>
             </div>
-    
-            <div class="form-group col-lg-6 col-md-6 form-row">
-              <!-- Revisar más adelante -->
-              <div class="form-group col-lg-6 pt-1 col-md-6">
-                <label>Art 27-28</label>
-                <p-checkbox [(ngModel)]="art27" [disabled]="!permisoEscritura" binary="true" (onChange)="clearBusqueda()"></p-checkbox>
-              </div>
-              <!-- <div class="form-group col-lg-6 col-md-6 pt-4">
-                <div id="buttonExpressColegiados" class="text-right main-button">
-                  <button (click)="isLimpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left"></button>
-                  <button (click)="isBuscar()" pButton [disabled]="buscarDisabled" type="button" icon="fa fa-search" iconPos="left"></button>
-                </div>
-              </div> -->
-            </div>
-            
-            
-            
+                      
           </div>
         </div>
         <div class="bloque col-lg-4 col-md-4">

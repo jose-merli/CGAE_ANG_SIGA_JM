@@ -234,9 +234,13 @@ export class BuscadorColegiadosComponent implements OnInit {
       sessionStorage.setItem("vieneDeJE", "true");
       sessionStorage.removeItem("pantalla");
       this.router.navigate(['/designaciones']);
+    }else if(sessionStorage.getItem("pantalla") == "gestionEjg"){
+      sessionStorage.setItem('nuevoNColegiado',"true");
+      // sessionStorage.removeItem("pantalla");
+      this.router.navigate(['/gestionEjg']);
     }else{
       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
-      sessionStorage.getItem('nuevo');
+      
       this.location.back();
     }
   }

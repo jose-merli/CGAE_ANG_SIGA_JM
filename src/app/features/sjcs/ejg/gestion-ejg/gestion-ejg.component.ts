@@ -118,6 +118,7 @@ export class GestionEjgComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   async ngOnInit() {
+    sessionStorage.removeItem("isLetrado");
     //this.progressSpinner = true;
 
     //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del EJG que se quiere mostrar
@@ -171,7 +172,7 @@ export class GestionEjgComponent implements OnInit {
         this.persistenceService.setDatosEJG(this.body);
         this.updateTarjResumen();
       }
-
+      
       if (this.body != undefined && this.body != null) {
         this.modoEdicion = true;
         this.updateTarjResumen();
@@ -183,6 +184,36 @@ export class GestionEjgComponent implements OnInit {
           this.body = new EJGItem();
           this.modoEdicion = false;
           this.openTarjetaDatosGenerales = true;
+        }else if(sessionStorage.getItem("nuevoNColegiado")){
+          if(sessionStorage.getItem("EJGItem")){
+            
+            this.nuevo = true;
+            this.modoEdicion = false;
+            this.openTarjetaDatosGenerales = true;
+            this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
+                //Proveniente de la busqueda de colegiado sin art 27
+            if (sessionStorage.getItem("buscadorColegiados")) {
+
+              let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+              sessionStorage.removeItem('buscadorColegiados');
+
+              if (busquedaColegiado.nombreSolo != undefined) this.body.apellidosYNombre = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombreSolo;
+              else this.body.apellidosYNombre = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
+
+              if (busquedaColegiado.nColegiado != undefined){
+                this.body.numColegiado = busquedaColegiado.nColegiado;
+              }
+
+              //Asignacion de idPersona según el origen de la busqueda.
+              this.body.idPersona = busquedaColegiado.idPersona;
+              if (this.body.idPersona == undefined) this.body.idPersona = busquedaColegiado.idpersona;
+            }
+            this.persistenceService.setDatosEJG(this.body);
+            sessionStorage.removeItem("EJGItem");
+            sessionStorage.removeItem("nuevoNColegiado");
+          }
+          
         }
         //vuelve de asociar una unidad familiar
         else {
