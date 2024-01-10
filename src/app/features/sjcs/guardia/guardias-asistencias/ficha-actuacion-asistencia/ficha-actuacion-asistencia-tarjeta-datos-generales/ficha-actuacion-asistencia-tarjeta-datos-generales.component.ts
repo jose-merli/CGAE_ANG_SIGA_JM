@@ -20,6 +20,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   msgs : Message [] = [];
   datosGeneralesActuacion : DatosGeneralesActuacionAsistenciaItem = new DatosGeneralesActuacionAsistenciaItem();
   datosGeneralesActuacionAux : DatosGeneralesActuacionAsistenciaItem = new DatosGeneralesActuacionAsistenciaItem();
+  datosIniciales: DatosGeneralesActuacionAsistenciaItem = new DatosGeneralesActuacionAsistenciaItem();
   @Input() actuacion : ActuacionAsistenciaItem;
   @Input() asistencia : TarjetaAsistenciaItem;
   @Input() editable : boolean;
@@ -72,6 +73,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
       }
       
     }
+    this.datosIniciales = Object.assign({}, this.datosGeneralesActuacion);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -127,6 +129,33 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
       this.juzgadoComisaria = "2";
     } else if (this.asistencia.comisaria != null) {
       this.juzgadoComisaria = "1";
+    }
+  }
+
+  disableGuardar(){
+    if((this.datosIniciales.fechaActuacion == this.datosGeneralesActuacion.fechaActuacion || 
+      (this.datosIniciales.fechaActuacion == null && this.datosGeneralesActuacion.fechaActuacion == ""))
+      && (this.datosIniciales.tipoActuacion == this.datosGeneralesActuacion.tipoActuacion ||
+        (this.datosIniciales.tipoActuacion == null && this.datosGeneralesActuacion.tipoActuacion == ""))
+      && (this.datosIniciales.idCoste == this.datosGeneralesActuacion.idCoste ||
+        (this.datosIniciales.idCoste == null && this.datosGeneralesActuacion.idCoste == ""))
+      && (this.datosIniciales.numAsunto == this.datosGeneralesActuacion.numAsunto ||
+        (this.datosIniciales.numAsunto == null && this.datosGeneralesActuacion.numAsunto == ""))
+      && (this.datosIniciales.nig == this.datosGeneralesActuacion.nig ||
+        (this.datosIniciales.nig == null && this.datosGeneralesActuacion.nig == ""))
+      && (this.datosIniciales.comisaria == this.datosGeneralesActuacion.comisaria ||
+        (this.datosIniciales.comisaria == null && this.datosGeneralesActuacion.comisaria == ""))
+      && (this.datosIniciales.juzgado == this.datosGeneralesActuacion.juzgado ||
+        (this.datosIniciales.juzgado == null && this.datosGeneralesActuacion.juzgado == ""))
+      && (this.datosIniciales.prision == this.datosGeneralesActuacion.prision ||
+        (this.datosIniciales.prision == null && this.datosGeneralesActuacion.prision == ""))
+      && (this.datosIniciales.descripcion == this.datosGeneralesActuacion.descripcion ||
+        (this.datosIniciales.descripcion == null && this.datosGeneralesActuacion.descripcion == ""))
+      && (this.datosIniciales.observaciones == this.datosGeneralesActuacion.observaciones ||
+        (this.datosIniciales.observaciones == null && this.datosGeneralesActuacion.observaciones == ""))){
+      return true;
+    }else{
+      return false;
     }
   }
 

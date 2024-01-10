@@ -108,8 +108,8 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
-      (click)="restablecer()" [disabled]="!editable"></button>
+      (click)="restablecer()" [disabled]="disableGuardar() || !editable"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
-      (click)="save()" [disabled]="!editable"></button>
+      (click)="save()" [disabled]="disableGuardar() || !editable"></button>
   </div>
 </div>
