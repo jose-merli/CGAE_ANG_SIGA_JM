@@ -9,12 +9,12 @@
   <div>
       <app-tarjeta-cliente-compra-suscripcion #cliente [(ficha)]="ficha" [esColegiado]="esColegiado" [resaltadoDatos]="resaltadoDatos" id="cliente">
       </app-tarjeta-cliente-compra-suscripcion>
-      <app-tarjeta-productos-compra-suscripcion #productos *ngIf="ficha.productos != null" [(ficha)]="ficha" [resaltadoDatos]="resaltadoDatos" 
-      (actualizaFicha)="actualizarFicha()" [permisoAbogado]="permisoAbogado" [esColegiado]="esColegiado" id="productos"> 
-      </app-tarjeta-productos-compra-suscripcion>
       <app-tarjeta-solicitud-compra-suscripcion  [(ficha)]="ficha" (scrollToOblig)="scrollToOblig($event)" (actualizaFicha)="actualizarFicha($event)" 
       [tarjProductos]="tarjProductos" [esColegiado]="esColegiado" [tarjServicios]="tarjServicios" >
       </app-tarjeta-solicitud-compra-suscripcion>
+      <app-tarjeta-productos-compra-suscripcion #productos *ngIf="ficha.productos != null" [(ficha)]="ficha" [resaltadoDatos]="resaltadoDatos" 
+      (actualizaFicha)="actualizarFicha()" [permisoAbogado]="permisoAbogado" [esColegiado]="esColegiado" id="productos"> 
+      </app-tarjeta-productos-compra-suscripcion>
       <app-tarjeta-servicios-compra-suscripcion #servicios *ngIf="ficha.servicios != null" [(ficha)]="ficha" [resaltadoDatos]="resaltadoDatos" 
       (actualizaFicha)="actualizarFicha()" [esColegiado]="esColegiado" id="servicios"> 
       </app-tarjeta-servicios-compra-suscripcion>
