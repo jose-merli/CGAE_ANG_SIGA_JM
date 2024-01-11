@@ -136,6 +136,9 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
     this.getPermisoComprar();
     this.initComboEstadoCompra();
     this.getComboEstadosFactura();
+    if(this.filtrosCompraProductos.idCategoria != null) {
+      this.getComboTipo();
+    }
   }
 
   initComboEstadoCompra(){
