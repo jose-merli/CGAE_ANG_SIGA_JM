@@ -123,7 +123,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     
     if (this.persistenceService.getDatosEJG()) {
       this.bodyInicial = this.persistenceService.getDatosEJG();
-      if(sessionStorage.getItem("nuevoNColegiado") && (this.body.numEjg == null || this.body.numEjg == "")){
+      if(sessionStorage.getItem("nuevoNColegiado") && (this.bodyInicial.numEjg == null || this.bodyInicial.numEjg == "")){
         this.nuevo = true;
         this.modoEdicion = false;
         this.disabledNumEJG = true;
