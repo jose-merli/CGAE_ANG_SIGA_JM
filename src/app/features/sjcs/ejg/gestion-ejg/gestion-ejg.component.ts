@@ -60,7 +60,7 @@ export class GestionEjgComponent implements OnInit {
   permisoListasIntercambiosPericles;
 
   iconoTarjetaResumen = "clipboard";
-
+  fechaAperturaFormat;
   manuallyOpened: Boolean;
   tarjetaDatosGenerales: string;
   tarjetaServiciosTramitacion: string;
@@ -186,7 +186,7 @@ export class GestionEjgComponent implements OnInit {
           this.openTarjetaDatosGenerales = true;
         }else if(sessionStorage.getItem("nuevoNColegiado")){
           if(sessionStorage.getItem("EJGItem")){
-            
+            this.body = new EJGItem();
             this.nuevo = true;
             this.modoEdicion = false;
             this.openTarjetaDatosGenerales = true;
@@ -211,7 +211,6 @@ export class GestionEjgComponent implements OnInit {
             }
             this.persistenceService.setDatosEJG(this.body);
             sessionStorage.removeItem("EJGItem");
-            sessionStorage.removeItem("nuevoNColegiado");
           }
           
         }
@@ -248,11 +247,22 @@ export class GestionEjgComponent implements OnInit {
       if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
         this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
       }
+      if(this.body.fechaApertura != null && this.body.fechaApertura != undefined){
+        let date = new Date(this.body.fechaApertura);
+        let day = date.getDate().toString().padStart(2, '0');
+        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+        let year = date.getFullYear();
+        this.fechaAperturaFormat = `${day}/${month}/${year}`;
+      }
       
         this.datos = [
           {
-            label: "Año/Numero EJG",
+            label: "EJG",
             value: this.body.numAnnioProcedimiento
+          },
+          {
+            label: "F.apertura",
+            value: this.fechaAperturaFormat
           },
           {
             label: "Solicitante",
@@ -311,6 +321,11 @@ export class GestionEjgComponent implements OnInit {
   }
 
   guardadoSend(event) {
+    this.persistenceService.setDatosEJG(event);
+    if (sessionStorage.getItem("EJGItem")) {
+      sessionStorage.removeItem("EJGItem");
+    }
+    this.router.navigate(['/gestionEjg']);
     this.ngOnInit();
   }
 

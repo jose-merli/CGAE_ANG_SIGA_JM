@@ -104,6 +104,11 @@ export class BuscadorColegiadosComponent implements OnInit {
     if(sessionStorage.getItem('filtroAsistencia')){
       sessionStorage.setItem("modoBusqueda","a");
     }
+    if(sessionStorage.getItem("pantalla") == "gestionEjg"){
+      sessionStorage.setItem('nuevoNColegiado',"true");
+      sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
+      // sessionStorage.removeItem("pantalla");
+    }
     this.location.back();
   }
 
@@ -236,6 +241,7 @@ export class BuscadorColegiadosComponent implements OnInit {
       this.router.navigate(['/designaciones']);
     }else if(sessionStorage.getItem("pantalla") == "gestionEjg"){
       sessionStorage.setItem('nuevoNColegiado',"true");
+      sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
       // sessionStorage.removeItem("pantalla");
       this.router.navigate(['/gestionEjg']);
     }else{
