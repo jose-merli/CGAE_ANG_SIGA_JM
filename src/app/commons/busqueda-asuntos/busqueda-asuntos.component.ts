@@ -424,7 +424,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   asociarEJGaSOJ(data){
           let requestSoj = [
             this.datos.idinstitucion, this.datos.anio, this.datos.numero,
-            this.datos.idTipoSoj, data.idTipoEjg, data.anio, data.numero
+            this.datos.idTipoSoj, data.idTipoEjg, data.anio, data.numeroAsoc
 
           ];
           /*let requestSoj = [
@@ -524,7 +524,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           );
           break;
         case 'ejg':
-          let requestEjg = [data.anio, data.numero, this.datosAsociar.idTipoEjg, this.datosJusticiable.idpersona];
+          let requestEjg = [data.anio, data.numeroAsoc, this.datosAsociar.idTipoEjg, this.datosJusticiable.idpersona];
           // Objeto Asocicación de Justiciables y EJG.
           this.sigaServices.post("gestionJusticiables_asociarJusticiableEjg", requestEjg).subscribe(
             m => {
@@ -594,7 +594,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       switch (radioValue) {
 
         case 'ejg':
-          let request = [anoDesigna, data.anio, data.idTipoEjg, turno, asunto[1], data.numero];
+          let request = [anoDesigna, data.anio, data.idTipoEjg, turno, asunto[1], data.numeroAsoc];
 
           this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
             m => {
