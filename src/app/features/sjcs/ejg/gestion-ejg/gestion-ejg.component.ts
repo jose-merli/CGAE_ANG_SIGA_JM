@@ -15,6 +15,7 @@ import { DefensaJuridicaComponent } from './defensa-juridica/defensa-juridica.co
 import { ProcuradorPreDesignacionComponent } from './procurador-pre-designacion/procurador-pre-designacion.component';
 import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
 import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
+import { UnidadFamiliarComponent } from './unidad-familiar/unidad-familiar.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -99,6 +100,7 @@ export class GestionEjgComponent implements OnInit {
 
   comunicaciones;
 
+  @ViewChild(UnidadFamiliarComponent) unidadFamiliar; 
   @ViewChild(ServiciosTramitacionComponent) tramitacion;
   @ViewChild(EstadosComponent) tarjetaEstadosEJG: EstadosComponent;
   @ViewChild(ContrariosPreDesignacionComponent) contrariosPreDesigna;
@@ -281,6 +283,7 @@ export class GestionEjgComponent implements OnInit {
 
   guardadoSend(event) {
     this.ngOnInit();
+    this.unidadFamiliar.ngOnInit();
   }
 
   newEstado() {
