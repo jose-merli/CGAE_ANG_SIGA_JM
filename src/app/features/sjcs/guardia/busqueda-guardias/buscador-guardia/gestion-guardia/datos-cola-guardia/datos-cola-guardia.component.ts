@@ -134,6 +134,16 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
     }
 
   }
+
+  goToSaltosYComp(): void {
+    if(this.persistenceService.getDatos() && !this.modoVinculado){
+      this.filtroInscripciones.idGuardia = this.persistenceService.getDatos().idGuardia != undefined ? this.persistenceService.getDatos().idGuardia : JSON.parse(this.persistenceService.getDatos()).idGuardia;
+      this.filtroInscripciones.idTurno = this.persistenceService.getDatos().idTurno != undefined ? this.persistenceService.getDatos().idTurno : JSON.parse(this.persistenceService.getDatos()).idTurno;
+      sessionStorage.setItem("filtroFromFichaGuardia",JSON.stringify(this.filtroInscripciones));
+      this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: this.filtroInscripciones.idTurno } });
+    }
+  }
+
  ngOnDestroy(){
   this.suscription.unsubscribe();
  }
@@ -566,7 +576,7 @@ inicio(){
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "35%"
         },
         {
@@ -595,7 +605,7 @@ inicio(){
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "40%"
         },
         {

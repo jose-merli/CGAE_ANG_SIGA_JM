@@ -57,8 +57,8 @@ export class TarjetaColaGuardias implements OnInit {
     "fromCombo": false,
     "minimoLetradosCola": 0
   };
-  rowGroups: Row[];
-  rowGroupsAux: Row[];
+  rowGroups: Row[] = [];
+  rowGroupsAux: Row[] = [];
   processedData = [];
   totalRegistros = 0;
   manual: Boolean;
@@ -118,7 +118,7 @@ export class TarjetaColaGuardias implements OnInit {
   @ViewChild("tableComp") tableComp;
   @ViewChild("tableSaltos") tableSaltos;
   @ViewChild("multiSelect") multiSelect: MultiSelect;
-  @ViewChild(TablaResultadoOrderComponent) tablaOrder;
+  @ViewChild("tablaOrder") tablaOrder: TablaResultadoOrderComponent;
   fichasPosibles = [
     {
       key: "generales",
@@ -817,7 +817,7 @@ export class TarjetaColaGuardias implements OnInit {
   }
 
   disabledBotones() {
-    if (!this.botActivos || !this.tablaOrder || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tablaOrder.selectedDatos || this.tablaOrder.selectedDatos.length == 0))
+    if (!this.botActivos || !this.tablaOrder || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tablaOrder.selectedArray || this.tablaOrder.selectedArray.length == 0))
       return false;
     return true;
   }
@@ -843,7 +843,6 @@ export class TarjetaColaGuardias implements OnInit {
         console.log(indexA);
       } 
     });
-    
     this.datos.splice(indexA+1, 0, datCopy);
     this.transformData();
     }
@@ -1247,31 +1246,31 @@ export class TarjetaColaGuardias implements OnInit {
   getCols() {
     if (this.ordenacionManual == false) {
       this.cols = [
-        { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
-        { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
-        { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-        { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
-        { field: "fechabajaguardia", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
+        { field: "ordenCola", header: "administracion.informes.literal.orden", width: "15%" },
+        { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+        { field: "nombreApe", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+        { field: "fechaValidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
+        { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
       ];
 
       this.cabeceras = [
         {
-          id: "orden",
+          id: "ordenCola",
           name: "dato.jgr.guardia.guardias.ord",
           size: "10%"
         },
         {
-          id: "ncolegiado",
+          id: "nColegiado",
           name: "dato.jgr.guardia.guardias.ncol",
           size: "10%"
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "40%"
         },
         {
-          id: "fechavalidez",
+          id: "fechaValidacion",
           name: "dato.jgr.guardia.guardias.alta",
           size: "20%"
         },
@@ -1283,11 +1282,11 @@ export class TarjetaColaGuardias implements OnInit {
       ];
     } else {
       this.cols = [
-        { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
-        { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+        { field: "ordenCola", header: "administracion.informes.literal.orden", width: "15%" },
+        { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
         { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-        { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
-        { field: "fechabajaguardia", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
+        { field: "fechaValidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
+        { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
       ];
 
       this.cabeceras = [
@@ -1308,7 +1307,7 @@ export class TarjetaColaGuardias implements OnInit {
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "35%"
         },
         {
@@ -1367,6 +1366,8 @@ export class TarjetaColaGuardias implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+    this.tableComp.reset();
+    this.tableSaltos.reset();
   }
 
 
@@ -1584,7 +1585,7 @@ export class TarjetaColaGuardias implements OnInit {
         this.selectAll = false;
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        
+
         this.progressSpinner = false;
         this.getColaGuardia();
       },
