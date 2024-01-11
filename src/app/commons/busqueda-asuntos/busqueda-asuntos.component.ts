@@ -27,6 +27,8 @@ import { esCalendar } from "./../../utils/calendar";
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
 import { request } from 'http';
+import { Router } from '@angular/router';
+import { CommonsService } from '../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -80,6 +82,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     private location: Location,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
+    private router: Router,
+    private commonServices: CommonsService
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -96,6 +100,10 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   datos;
 
   ngOnInit() {
+    if(sessionStorage.getItem("vengoDesdeEJGRecienAsociado")){
+      sessionStorage.removeItem("vengoDesdeEJGRecienAsociado");
+      //this.location.back();
+    }
     //asociar desde EJG
     if (sessionStorage.getItem('EJG')) {
       this.datos = JSON.parse(sessionStorage.getItem('EJG'));
@@ -731,7 +739,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         case 'ejg':
           let ejgItem: EJGItem = new EJGItem();
           ejgItem.annio = String(data.anio);
-          ejgItem.numero = String(data.numero);
+          ejgItem.numero = String(data.numeroAsoc);
           ejgItem.tipoEJG = String(data.idTipoEjg);
 
           this.sigaServices.postPaginado("busquedaGuardias_asociarEjg", "?anioNumero=" + anioNumeroASI + "&copiarDatos=" + copyData, ejgItem).subscribe(
@@ -739,12 +747,34 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
               let error = JSON.parse(n.body).error;
               this.progressSpinner = false;
-              sessionStorage.removeItem("radioTajertaValue");
 
               if (error != null && error.description != null) {
                 this.showMesg("error", "Error al asociar el EJG con la Asistencia", error.description);
+                this.progressSpinner = false;
+                sessionStorage.removeItem("Asistencia");
               } else {
+                sessionStorage.setItem("EJGRecienAsociado", "true");
                 this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado el EJG con la Asistencia correctamente');
+                sessionStorage.removeItem("radioTajertaValue");
+                ejgItem.numero = String(data.numeroAsoc);
+                this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
+                  n => {
+                    this.persistenceService.setDatosEJG(JSON.parse(n.body).ejgItems[0]);
+                    //this.ngOnInit();
+                    //this.consultaUnidadFamiliar(selected);
+                    if (sessionStorage.getItem("EJGItem")) {
+                      sessionStorage.removeItem("EJGItem");
+                    }
+            
+                    this.router.navigate(['/gestionEjg']);
+                    this.progressSpinner = false;
+                    sessionStorage.removeItem("Asistencia");
+                    this.commonServices.scrollTop();
+                  },
+                  err => {
+                    this.commonServices.scrollTop();
+                  }
+                );
               }
             },
             err => {
@@ -753,7 +783,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             }, () => {
               this.progressSpinner = false;
               sessionStorage.removeItem("Asistencia");
-              this.location.back();
+              
             }
           );
 

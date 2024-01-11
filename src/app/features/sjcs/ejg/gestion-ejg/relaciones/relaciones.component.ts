@@ -140,7 +140,6 @@ export class RelacionesComponent implements OnInit {
     this.sigaServices.post("gestionejg_getRelaciones", this.body).subscribe(
       n => {
         this.relaciones = JSON.parse(n.body).relacionesItem;
-        console.log(this.relaciones);
         this.nRelaciones = this.relaciones.length;
         //obtiene el tipo en caso de devolver solo 1.
         //deshabilitacion de botones en caso de obtener una relacion de cada tipo
@@ -618,17 +617,15 @@ export class RelacionesComponent implements OnInit {
 
   getUnicaAsistencia(){
     let asistencia = this.relaciones.find((relacion) => relacion.sjcs == 'ASISTENCIA');
-    asistencia.idsjcs
     let idAsistencia = asistencia.idsjcs.replace('A', '');
-    let asistenciaUnica: TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
+    let asistenciaUnica: TarjetaAsistenciaItem;
     this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero=" + idAsistencia).subscribe(
       n => {
         if(n != undefined){
           asistenciaUnica = n.tarjetaAsistenciaItems[0];
-          sessionStorage.setItem('asistenciaUnica', JSON.stringify(asistenciaUnica));
         }
       });
-    return asistencia;
+    return asistenciaUnica;
   }
 
   crearDesignacion() {
@@ -638,13 +635,33 @@ export class RelacionesComponent implements OnInit {
     //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
     this.body = this.persistenceService.getDatosEJG();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    this.tieneUnaSolaAsistencia();
+
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
     sessionStorage.setItem("nuevaDesigna", "true");
     if (this.art27) sessionStorage.setItem("Art27", "true");
-    this.progressSpinner = false;
+
+    //Comprobamos si tiene una asistencia
+    let asistenciaUnica: TarjetaAsistenciaItem;
+    let asistencias = this.relaciones.map((relacion) => relacion.sjcs == 'ASISTENCIA');
+    if(asistencias.length == 1){
+      let asistencia = this.relaciones.find((relacion) => relacion.sjcs == 'ASISTENCIA');
+      let idAsistencia = asistencia.idsjcs.replace('A', '');
+    
+    this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero=" + idAsistencia).subscribe(
+      n => {
+        if(n != undefined){
+          asistenciaUnica = n.tarjetaAsistenciaItems[0];
+          sessionStorage.setItem('asistenciaUnica', JSON.stringify(asistenciaUnica));
+          this.progressSpinner = false;
+      this.router.navigate(["/fichaDesignaciones"]);
+        }
+      });
+    }else{
+      this.progressSpinner = false;
     this.router.navigate(["/fichaDesignaciones"]);
+    }
+    
   }
 
   checkPermisosAsociarDesignacion() {

@@ -12,4 +12,5 @@ export class RetencionItem {
     restante: string;
     descDestinatario: string;
     estado: string;
+    esDeTurno: string;
 }

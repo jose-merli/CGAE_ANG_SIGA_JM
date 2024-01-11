@@ -31,6 +31,8 @@ import { ParametroItem } from "../../../../models/ParametroItem";
 import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
 import { SigaStorageService } from "../../../../siga-storage.service";
 import { saveAs } from "file-saver/FileSaver";
+import * as moment from 'moment';
+
 
 export enum KEY_CODE {
   ENTER = 13
@@ -112,6 +114,9 @@ export class NuevaIncorporacionComponent implements OnInit {
   editar: boolean = false;
   isSave: boolean = true;
 
+  fechaNacimiento:string;
+  fechaEstado:string;
+  fechaIncorporacion:string;
   mailClicable: boolean = false;
 
   emailValido: boolean = true;
@@ -1659,7 +1664,11 @@ export class NuevaIncorporacionComponent implements OnInit {
     } else {
       this.solicitudEditar.abonoJCS = "0";
     }
-
+    
+    this.solicitudEditar.fechaIncorporacion = moment(this.solicitudEditar.fechaIncorporacion,'DD/MM/YYYY').toDate();
+    this.solicitudEditar.fechaEstado = moment(this.solicitudEditar.fechaEstado,'DD/MM/YYYY').toDate();
+    this.solicitudEditar.fechaNacimiento = moment(this.solicitudEditar.fechaNacimiento,'DD/MM/YYYY').toDate();
+    
     this.sigaServices
       .post("solicitudIncorporacion_nuevaSolicitud", this.solicitudEditar)
       .subscribe(
@@ -1908,6 +1917,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.solicitudEditar.residente = "0";
     }
+  }
+
+  validarFormatoFecha(fecha: string): boolean {
+    const regexFecha = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[0-2])[\/]\d{4}$/;
+  
+    // Comprueba si la fecha coincide con el formato 'DD/MM/YYYY'
+    return regexFecha.test(fecha);
   }
 
   isGuardar(): boolean {
@@ -2237,6 +2253,14 @@ para poder filtrar el dato con o sin estos caracteres*/
   fillFechaEstado(event) {
     this.solicitudEditar.fechaEstado = event;
   }
+  fillFechaEstadoManual(event) {
+    this.fechaEstado = event.target.value;
+    if(this.validarFormatoFecha(this.fechaEstado)){
+      this.solicitudEditar.fechaEstado = moment.utc(this.fechaEstado,'DD/MM/YYYY').toDate();
+    }else{
+      this.solicitudEditar.fechaEstado = null;
+    }
+  }
 
   fillFechaEstadoSolicitud(event) {
     this.solicitudEditar.fechaEstadoSolicitud = event;
@@ -2249,10 +2273,28 @@ para poder filtrar el dato con o sin estos caracteres*/
   fillFechaIncorporacion(event) {
     this.solicitudEditar.fechaIncorporacion = event;
   }
-
+  fillFechaIncorporacionManual(event) {
+    this.fechaIncorporacion = event.target.value;
+    if(this.validarFormatoFecha(this.fechaIncorporacion)){
+      this.solicitudEditar.fechaIncorporacion = moment.utc(this.fechaIncorporacion,'DD/MM/YYYY').toDate();
+    }else{
+      this.solicitudEditar.fechaIncorporacion = null;
+    }
+  }
+  
   fillFechaNacimiento(event) {
     this.solicitudEditar.fechaNacimiento = event;
   }
+  fillFechaNacimientoManual(event) {
+    this.fechaNacimiento = event.target.value;
+    if(this.validarFormatoFecha(this.fechaNacimiento)){
+      this.solicitudEditar.fechaNacimiento = moment.utc(this.fechaNacimiento,'DD/MM/YYYY').toDate();
+    }else{
+      this.solicitudEditar.fechaNacimiento = null;
+    }
+  }
+  
+
 
   transformaFecha(fecha) {
     let splitDate = fecha.split("/");

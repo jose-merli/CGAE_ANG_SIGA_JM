@@ -186,12 +186,21 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     let res = "light";
 
     switch (estado) {
-      case 'fac':
-        if (idEstado == "1" || idEstado == "17" || idEstado == "18" || idEstado == "19") {
+      case 'gen':
+        if (idEstado == "18" || idEstado == "19") {
           res = "warning";
-        } else if (idEstado == "2" || idEstado == "3") {
+        } else if (idEstado == "2" || idEstado == "1" || idEstado == "3" || idEstado == "4" || idEstado == "17" || idEstado == "21") {
           res = "success";
-        } else if (idEstado == "4" || idEstado == "20" || idEstado == "21") {
+        } else if (idEstado == "20") {
+          res = "danger";
+        }
+        break;
+      case 'con':
+        if (idEstado == "1" || idEstado == "17") {
+          res = "warning";
+        } else if (idEstado == "3") {
+          res = "success";
+        } else if (idEstado == "4" || idEstado == "21") {
           res = "danger";
         }
         break;

@@ -318,7 +318,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     } else {
       fieldRol = "interesado";
       headerRol = "justiciaGratuita.justiciables.literal.interesados";
-      widthRol = "20%";
+      widthRol = "25%";
 
     }
 
@@ -329,7 +329,8 @@ export class AsuntosComponent implements OnInit, OnChanges {
       { field: "nColegiado", header: "justiciaGratuita.justiciables.literal.numColegiado", width: "4%" },
       { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "14%" },
       { field: fieldRol, header: headerRol, width: widthRol },
-      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
+      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" },
+      { field: "numProcedimiento", header: "justiciaGratuita.justiciables.literal.numprocedimiento", width:"8%"}
 
     ];
 

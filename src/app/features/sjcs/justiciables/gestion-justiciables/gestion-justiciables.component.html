@@ -22,16 +22,16 @@
       <!-- newJusticiable: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable -->
       <!-- searchJusticiableOverwritten: Funcion para indicar que se ha sobrescrito un justiciable al añadir en modo nuevo un nif registrado y pulsar que se quiere sobreescribir -->
       <div *ngIf="showDatosGenerales != undefined">
-        <app-datos-generales *ngSwitchCase="'generales'" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [fromUniFamiliar]="fromUniFamiliar"
+        <app-datos-generales *ngSwitchCase="'generales'" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" 
+          [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [fromUniFamiliar]="fromUniFamiliar"
           [modoRepresentante]="modoRepresentante" [checkedViewRepresentante]="checkedViewRepresentante" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
-          (newJusticiable)="newJusticiable($event)" (actualizaAsunto)="actualizaAsunto()" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)" ></app-datos-generales>
+          (newJusticiable)="newJusticiable($event)" (actualizaAsunto)="actualizaAsunto($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)">
+        </app-datos-generales>
       </div>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
-      <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud
-      y no querer actualizar el justiciable propio-->
-
+      <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud y no querer actualizar el justiciable propio-->
       <div *ngIf="showDatosPersonales != undefined">
         <app-datos-personales *ngSwitchCase="'personales'" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [body]="body" [tarjetaDatosPersonales]="tarjetaDatosPersonales" [showTarjeta]="ficha.activa"  [fromUniFamiliar]="fromUniFamiliar" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
           (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-personales>

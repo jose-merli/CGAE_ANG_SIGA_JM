@@ -19,6 +19,7 @@ import { SigaStorageService } from '../../siga-storage.service';
 import { ListaGuardiasItem } from '../../models/guardia/ListaGuardiasItem';
 import { TurnosItems } from '../../models/sjcs/TurnosItems';
 import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';
+import { Paginador4Component } from '../paginador4/paginador4.component';
 
 @Component({
   selector: 'app-tabla-resultado-order',
@@ -100,6 +101,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() totalRegistros = 0;
   numperPage = 10;
   @ViewChild('table') table: ElementRef;
+  @ViewChild('paginador') paginador: Paginador4Component;
   @Output() delete = new EventEmitter<any>();
   comboTurno = [];
   @Input() comboGuardia = [];
@@ -190,7 +192,7 @@ export class TablaResultadoOrderComponent implements OnInit {
                 this.commonServices.arregloTildesCombo(comboGuardia);
                 this.rowGroups.forEach(rowG => {
                   comboGuardia.forEach(cG=> {
-                     if (cG.value == rowG.cells[2].value){
+                     if (cG.value == rowG.cells[2].value && this.pantalla!='colaGuardias'){
                       rowG.cells[2].value = cG.label;
                     }
                     });
@@ -320,11 +322,12 @@ export class TablaResultadoOrderComponent implements OnInit {
       }
     });
     
-    if(ultimo){
-      let totalCeldas = this.rowGroups[this.positionSelected].cells.length;
-      let registro = this.numPage * this.numperPage + this.positionSelected;
-      this.rowGroups[registro].cells[totalCeldas-1].value = "1";
+    if(!ultimo){
+      let totalCeldas =  this.rowGroups[this.rowGroups.length-1].cells.length;
+    this.rowGroups[this.rowGroups.length-1].cells[totalCeldas-1].value = "1";
     }
+    
+
     this.progressSpinner = true;
     //console.log('this.rowGroups: ', this.rowGroups)
     if (this.calendarios) {
@@ -896,32 +899,13 @@ this.totalRegistros = this.rowGroups.length;
     this.rowGroups.forEach(rG=>{
       if (rG.cells[0].value != undefined && rG.cells[0].value.toString().startsWith('U')){
         rG.cells[0].value = rG.cells[0].value.substring(1);
-      } else if (rG.cells[16] != undefined && rG.cells[16].value == 1) {
-        rG.cells[16].value = 0;
+      } else if (rG.cells[rG.cells.length-1] != undefined && rG.cells[rG.cells.length-1].value == 1) {
+        rG.cells[rG.cells.length-1].value = 0;
       }
     })
     let posicionEntabla = this.from + this.positionSelected;
-    if (this.rowGroups[posicionEntabla].cells[16] != undefined){
-      this.rowGroups[posicionEntabla].cells[16].value = 1;
-    }
+    this.rowGroups[posicionEntabla].cells[this.rowGroups[posicionEntabla].cells.length-1].value = 1;
     
-   
-    /*this.rowGroups.forEach((rG, i) => {
-      if (this.rowGroups[posicionEntabla].cells[12] != undefined){
-        if (i == posicionEntabla){
-          this.rowGroups[posicionEntabla].cells[12].value = 1;
-        }else{
-          this.rowGroups[i].cells[12].value = 0;
-        }
-      }else if (this.rowGroups[posicionEntabla].cells[16] != undefined){
-        if (i == posicionEntabla){
-          this.rowGroups[posicionEntabla].cells[16].value = 1;
-        }else{
-          this.rowGroups[i].cells[16].value = 0;
-        }
-      }
-
-    })*/
     this.rowGroupsAux = this.rowGroups;
 
     this.marcadoultimo = true;
@@ -1280,12 +1264,14 @@ this.totalRegistros = this.rowGroups.length;
     }
     restablecer(){
       this.disableGen.emit(false);
+      this.selectedArray = [];
       //console.log('this.rowGroupsAux: ', this.rowGroupsAux)
       this.rowGroups = this.rowGroupsAux;
       this.rest.emit(true);
     }
     duplicar(){
       this.dupli.emit(true);
+      this.paginador.updateRowsFromDuplicate();
     }
     selectedAll(evento){
       this.seleccionarTodo = evento;
@@ -1295,6 +1281,8 @@ this.totalRegistros = this.rowGroups.length;
     }
     toReg(event){
       this.to = Number(event);
+      this.selectedArray = [];
+      this.disUltimo = true;
     }
 
     eliminar(){
@@ -1778,7 +1766,13 @@ this.totalRegistros = this.rowGroups.length;
       );
   }
 
-
+comprobarOrdenacionManual(){
+  if(!this.manual){
+    return true;
+  }else{
+    return false;
+  }
+}
 
   getConfColaGuardias() {
     let datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));

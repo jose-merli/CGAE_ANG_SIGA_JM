@@ -234,8 +234,8 @@ export class ExpedientesEconomicosComponent implements OnInit {
     if (this.permisoEscritura) {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datosFamiliares;
-          this.numSelected = this.datosFamiliares.length;
+          this.selectedDatos = this.expedientesEcon;
+          this.numSelected = this.expedientesEcon.length;
         } else {
           this.selectedDatos = [];
           this.numSelected = 0;
@@ -292,9 +292,9 @@ export class ExpedientesEconomicosComponent implements OnInit {
         data => {
           this.progressSpinner=false;
 
-          if(data.size==0){
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          }else{
+          // if(data.size==0 || data.size <= 22){
+          //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          // }else{
             let blob = null;
 
             let now = new Date();
@@ -312,11 +312,16 @@ export class ExpedientesEconomicosComponent implements OnInit {
             let mime = data.type;
             blob = new Blob([data], { type: mime });
             saveAs(blob, nombreFichero);
-          }
+          // }
         },
         err => {
           this.progressSpinner = false;
-          //console.log(err);
+          if(err.status == 404){
+            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant("administracion.parametro.eejg.messageNoExistenArchivos"));
+          }else{
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+          // console.log(err);
         }
       );
     }

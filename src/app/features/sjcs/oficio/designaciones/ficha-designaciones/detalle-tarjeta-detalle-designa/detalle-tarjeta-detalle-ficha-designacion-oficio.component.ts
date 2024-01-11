@@ -50,7 +50,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   parametroNIG: any;
   moduloValue: any;
   moduloOpciones: any[] = [];parametroNProc: any;
-;
+  sinModificacion:boolean = true;
   disableEstado: boolean = false;
   institucionActual: String;
   isLetrado: boolean;
@@ -62,7 +62,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} delitos seleccionados";
   asuntoValue:string;
-
+  avisoMismoNProcedimiento:boolean;
+  delitosSeleccionadosDefault:string[] = [];;
   inputs = [
     { nombre: this.translateService.instant('justiciaGratuita.sjcs.designas.DatosIden.NIG'), value: "" },
     { nombre: this.translateService.instant('gratuita.busquedaDesignas.literal.numProcedimiento'), value: "" }
@@ -78,11 +79,13 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       value: ""
     }
   ];
-
+  camposAux;
 
   constructor(private sigaServices: SigaServices, private datepipe: DatePipe, private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService) { }
 
   ngOnInit() {
+    this.campos.idModulo = this.campos.idProcedimiento;
+    this.campos.idProcedimiento = this.campos.idPretension;
     this.getNigValidador();
     this.getNprocValidador();
     this.datosInicial = this.campos;
@@ -93,7 +96,36 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       { label: 'Anulada', value: 'A' }];
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     this.getComboJuzgados();
+    this.cargaDatosTarjeta();
 
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+
+
+    this.sigaServices.get('getLetrado').subscribe(
+      (data) => {
+        if (data.value == 'S') {
+          this.isLetrado = true;
+        } else {
+          this.isLetrado = false;
+        }
+      },
+      (err) => {
+        //console.log(err);
+      }
+    );
+
+    if (this.juzgadoValue == null || this.juzgadoValue == ''){
+      this.procedimientoValue = null;
+      this.campos.idPretension = null;
+      this.changeModulo();
+    }
+    this.recuperarParametros();
+    this.setCamposAux()
+  }
+
+  cargaDatosTarjeta() {
     let parametroCombo = {
       valor: "CONFIGURAR_COMBO_DESIGNA"
     };
@@ -218,7 +250,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.disableRestablecer = false;
           }
           let designaUpdate = new DesignaItem();
-          designaUpdate.ano = this.campos.anio;
+          if(this.campos.anio){
+            designaUpdate.ano = this.campos.anio;
+          }else{
+            designaUpdate.ano = this.campos.ano.split("D")[1].split("/")[0];
+          }
+          
           designaUpdate.idTurno = this.campos.idTurno;
           designaUpdate.numero = this.campos.numero;
           this.getComboDelitos(designaUpdate);
@@ -230,30 +267,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         () => {
         }
       );
-
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      this.institucionActual = n.value;
-    });
-
-
-    this.sigaServices.get('getLetrado').subscribe(
-      (data) => {
-        if (data.value == 'S') {
-          this.isLetrado = true;
-        } else {
-          this.isLetrado = false;
-        }
-      },
-      (err) => {
-        //console.log(err);
-      }
-    );
-
-    if (this.juzgadoValue == null || this.juzgadoValue == ''){
-      this.procedimientoValue = null;
-      this.campos.idPretension = null;
-      this.changeModulo();
-    }
   }
 
   formatDate(date) {
@@ -320,6 +333,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       this.procedimientoValue = null;
       this.changeModulo();
     }
+    this.comprobarModificacion();
   }
 
   showMsg(severity, summary, detail) {
@@ -335,6 +349,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     designaUpdate.validada = this.campos.validada;
     //Guardar
     if (detail == "Guardar") {
+      this.progressSpinner = true;
       designaUpdate.estado = "";
       let validaProcedimiento = true;
       let validaNig = true;
@@ -391,19 +406,20 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           let severity = "error";
           let summary = this.translateService.instant('justiciaGratuita.oficio.designa.numProcedimientoNoValido');;
           let detail = "";
-          this.msgs.push({
-            severity,
-            summary,
-            detail
-          });
+          // this.msgs.push({
+          //   severity,
+          //   summary,
+          //   detail
+          // });
         }
       }
 
       if (validaProcedimiento && validaNig) {
         designaUpdate.fechaAnulacion = new Date();
         this.checkDesignaJuzgadoProcedimiento(designaUpdate);
+      }else{
+        this.progressSpinner = false;
       }
-      this.progressSpinner = false;
     }
     //ANULAR
     if (detail == "Anular") {
@@ -473,6 +489,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           this.datePickers[1].value = this.datosInicial.fechaFin;
         }
         this.getComboJuzgados();
+        this.cargaDatosTarjeta();
         this.estadoValue = this.datosInicial.sufijo;
         this.disableEstado = true;
         this.juzgadoValue = this.datosInicial.idJuzgado;
@@ -505,7 +522,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           { label: 'Finalizado', value: 'F' },
           { label: 'Anulada', value: 'A' }];
       }
-
+      this.sinModificacion = true;
     }
   }
 
@@ -514,11 +531,25 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   }
 
   fillFechaHastaCalendar(event, nombre) {
-    if (nombre == "Fecha estado") {
+    if (nombre == "Fecha Estado") {
       this.datePickers[0].value = event;
-    } else if (nombre = "Fecha cierre") {
+    } else if (nombre == "Fecha Cierre") {
       this.datePickers[1].value = event;
     }
+    if(event == null && nombre == "Fecha estado"){
+      this.datePickers[0].value = null;
+    }
+
+    if(event == null && nombre == "Fecha cierre"){
+      this.datePickers[1].value = null;
+    }
+
+    if(this.formatDate(this.datePickers[0].value) != this.camposAux.fechaEstado ||
+      this.formatDate(this.datePickers[1].value) != this.camposAux.fechaFin){
+        this.sinModificacion = false;
+      }else{
+        this.sinModificacion = true;
+      }
   }
 
   getComboJuzgados() {
@@ -934,8 +965,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.progressSpinner = true;
 
     //Chequeamos las relaciones de los combos Juzgado-Procedimiento-Modulo y reseteamos sus valores a corde
-    this.changeProcedimiento();
-    this.changeModulo();
+    //this.changeProcedimiento();
+    //this.changeModulo();
     updateDetalle.idProcedimiento = this.procedimientoValue;
     updateDetalle.idModulo = this.moduloValue;
 
@@ -1027,6 +1058,16 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           updateDetalle.rol = [this.estadoAnterior];
 
           this.disableRestablecer = false;
+          this.camposAux.numProcedimiento = this.inputs[1].value;
+          this.camposAux.resumenAsunto = this.asuntoValue ;
+          this.camposAux.sufijo = this.estadoValue;
+          this.camposAux.idJuzgado = this.juzgadoValue; 
+          this.camposAux.idProcedimiento = this.procedimientoValue;
+          this.camposAux.idModulo = this.moduloValue;
+          this.delitosSeleccionadosDefault = this.delitosValue;
+          this.camposAux.fechaEstado = this.formatDate(this.datePickers[0].value);
+          this.camposAux.fechaFin = this.formatDate(this.datePickers[1].value); 
+          this.sinModificacion = true;
           this.refreshData.emit(updateDetalle);
         },
         err => {
@@ -1046,7 +1087,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           });
         }, () => {
           this.progressSpinner = false;
-        });;
+        });
   }
 
   checkAcceso() {
@@ -1082,34 +1123,39 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.sigaServices.post("designaciones_existeDesignaJuzgadoProcedimiento", designaItem).subscribe(
       n => {
         this.progressSpinner = false;
-        if (JSON.parse(n.body).existeDesignaJuzgadoProcedimiento > 1) {
-          let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado.¿Desea continuar?";
-          let icon = "fa fa-question-circle";
-          let keyConfirmation = "confirmGuardar";
-          this.confirmationService.confirm({
-            key: keyConfirmation,
-            message: mess,
-            icon: icon,
-            accept: () => {
-              this.progressSpinner = true;
-              this.updateDetalle(designaItem);
-            },
-            reject: () => {
-              this.progressSpinner = false;
-              this.msgs = [
-                {
-                  severity: "info",
-                  summary: "Cancel",
-                  detail: this.translateService.instant(
-                    "general.message.accion.cancelada"
-                  )
-                }
-              ];
-            }
-          });
-        } else {
+        if(this.avisoMismoNProcedimiento){
+          if (JSON.parse(n.body).existeDesignaJuzgadoProcedimiento > 1) {
+            let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado.¿Desea continuar?";
+            let icon = "fa fa-question-circle";
+            let keyConfirmation = "confirmGuardar";
+            this.confirmationService.confirm({
+              key: keyConfirmation,
+              message: mess,
+              icon: icon,
+              accept: () => {
+                this.updateDetalle(designaItem);
+              },
+              reject: () => {
+                this.progressSpinner = false;
+                this.msgs = [
+                  {
+                    severity: "info",
+                    summary: "Cancel",
+                    detail: this.translateService.instant(
+                      "general.message.accion.cancelada"
+                    )
+                  }
+                ];
+              }
+            });
+          } else {
+            this.progressSpinner = true;
+            this.updateDetalle(designaItem);
+          }
+        }else{
           this.updateDetalle(designaItem);
         }
+        
 
       },
       err => {
@@ -1126,6 +1172,22 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       }, () => {
         this.progressSpinner = false;
       });;
+  }
+
+
+  recuperarParametros(){
+    let parametro = {
+      valor: "AVISO_MISMO_NPROCEDIMIENTO_JUZGADO"
+    };
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let respuesta = JSON.parse(data.body).parametro
+          this.avisoMismoNProcedimiento = respuesta == 1 ? true : false;
+      });
+
+
   }
 
   async ningunaActuacionesFacturada(element): Promise<boolean> {
@@ -1322,6 +1384,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           this.showMsg('error', 'Error', this.translateService.instant(resp.error.descripcion));
         } else {
           let opcioneSeleccionadas = resp.lista;
+          this.delitosSeleccionadosDefault = opcioneSeleccionadas;
           this.delitosValue = opcioneSeleccionadas;
         }
       },
@@ -1334,4 +1397,69 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     );
   }
 
+
+  comprobarModificacion(){
+    if(this.moduloValue == null){
+      this.moduloValue = "";
+    }
+    if(this.procedimientoValue == null){
+      this.procedimientoValue = 0;
+    }
+    if(this.inputs[0].value != this.camposAux.nig || 
+      this.inputs[1].value != this.camposAux.numProcedimiento ||
+      this.asuntoValue != this.camposAux.resumenAsunto ||
+      this.estadoValue != this.camposAux.sufijo ||
+      this.juzgadoValue != this.camposAux.idJuzgado ||
+      this.procedimientoValue != this.camposAux.idProcedimiento ||
+      this.moduloValue != this.camposAux.idModulo ||
+      this.comprobarDelitos()){
+      this.sinModificacion = false;
+    }else{
+      this.sinModificacion = true;
+    }
+  }
+  
+  comprobarDelitos(){
+    const sortedArray1 = this.delitosSeleccionadosDefault.slice().sort();
+    const sortedArray2 = this.delitosValue.slice().sort();
+    if(sortedArray1.length != sortedArray2.length){
+      return true;
+    }
+    for (let i = 0; i < sortedArray1.length; i++) {
+      if (sortedArray1[i] !== sortedArray2[i]) {
+        return true;
+      }
+    }
+  }
+
+  setCamposAux(){
+    this.camposAux = this.campos
+    if(this.camposAux.nig == null){
+      this.camposAux.nig = ""
+    }
+    if(this.campos.numProcedimiento == null){
+      this.campos.numProcedimiento = ""
+    }
+    if(this.camposAux.resumenAsunto == null || this.camposAux.resumenAsunto == " "){
+      this.camposAux.resumenAsunto = "";
+    }
+    if(this.camposAux.sufijo == null){
+      this.camposAux.sufijo == "";
+    }
+    if(this.inputs[0].value == null){
+      this.inputs[0].value = ""
+    }
+    if(this.inputs[1].value == null){
+      this.inputs[1].value = ""
+    }
+    if(this.asuntoValue == null){
+      this.asuntoValue = ""
+    }
+    if(this.estadoValue == null){
+      this.estadoValue = ""
+    }
+    if(this.juzgadoValue == null){
+      this.juzgadoValue = ""
+    }
+  }
 }

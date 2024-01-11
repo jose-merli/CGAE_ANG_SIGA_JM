@@ -221,11 +221,12 @@ export class TarjetaColaGuardias implements OnInit {
         this.abreCierraFicha('colaGuardias')
       }
     }
+    
   }
 
   ngOnInit() {
     this.visita = 0;
-    this.commonsService.checkAcceso(procesos_oficio.colaDeGuardia)
+    this.commonsService.checkAcceso(procesos_oficio.tarjetaColaGuardiaTurnos)
     .then(respuesta => {
       this.permisosTarjeta = respuesta;
       this.persistenceService.setPermisos(this.permisosTarjeta);
@@ -251,12 +252,13 @@ export class TarjetaColaGuardias implements OnInit {
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true
     }
-
-    this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
-      this.configuracionCola = confValue;
-      this.manual = confValue.manual;
-      this.porGrupos= confValue.porGrupos;
-      this.minimoLetrado = confValue.minimoLetradosCola;
+    this.suscription = this.globalGuardiasService.getConf().subscribe((confValue) => {
+      setTimeout(() => {
+        this.configuracionCola = confValue;
+        this.manual = confValue.manual;
+        this.porGrupos = confValue.porGrupos;
+        this.minimoLetrado = confValue.minimoLetradosCola;
+      }, 500);
     });
   }
 
@@ -326,6 +328,7 @@ export class TarjetaColaGuardias implements OnInit {
           } else {
             this.botActivos = true;
             this.editable = true;
+            this.manual = true;
           }
           //getConfColaGuardias();
           this.getColaGuardia();
@@ -415,7 +418,16 @@ export class TarjetaColaGuardias implements OnInit {
       this.ultimoLetrado = "";
       this.apeyNombreUltimo = "";
     }
+    this.suscription = this.globalGuardiasService.getConf().subscribe((confValue) => {
+      setTimeout(() => {
+        this.configuracionCola = confValue;
+        this.manual = confValue.manual;
+        this.porGrupos = confValue.porGrupos;
+        this.minimoLetrado = confValue.minimoLetradosCola;
+      }, 500);
+    });
 
+    this.tablaOrder.getConfColaGuardias();
   }
 
   transformaFecha(fecha) {
@@ -541,6 +553,9 @@ export class TarjetaColaGuardias implements OnInit {
             { type: 'invisible', value: datoObj.ultimoCola }
             
           ];
+
+          arr.push(objArr);
+          
         
       } else {
 
@@ -586,13 +601,13 @@ export class TarjetaColaGuardias implements OnInit {
             { type: 'invisible', value: undefined }//datoObj.ultimoCola }
           ];
         }
-        
+        if (datoObj.numeroGrupo == null){
+          arrLast.push(objArr);
+        }else{
+          arr.push(objArr);
+        }
       }
-      if (datoObj.numeroGrupo == null){
-        arrLast.push(objArr);
-      }else{
-        arr.push(objArr);
-      }
+      
     
     })
     for (let i = 0; i < arrLast.length; i++){
@@ -812,6 +827,26 @@ export class TarjetaColaGuardias implements OnInit {
   }
   disabledUltimo() {
     return this.isDisabled;
+  }
+
+  duplicar(duplicar) {
+    if (duplicar){
+      let indexA;
+    let datCopy;
+    this.datos.forEach((dat, index) => {
+      if (dat.nColegiado == this.selectedRow.cells[2].value){
+        datCopy = Object.assign({},dat);
+        datCopy.numeroGrupo = Number(this.selectedRow.cells[0].value);
+        datCopy.orden = "0"; // duplicados se identifican por orden <= 0
+        datCopy.idGrupoGuardiaColegiado = null; // duplicados no tienen idGrupoGuardiaColegiado 
+        indexA = index;
+        console.log(indexA);
+      } 
+    });
+    
+    this.datos.splice(indexA+1, 0, datCopy);
+    this.transformData();
+    }
   }
 
   disabledSave() {
@@ -1050,12 +1085,12 @@ export class TarjetaColaGuardias implements OnInit {
           }else{
             datCopy.numeroGrupo = null;
           }
-
-          if(datCopy.nColegiado == this.ultimoLetrado){
+          /*
+          if(datCopy.nColegiado == this.rowGroupModified[this.rowGroupModified.length-1].cells[2].value){
             datCopy.ultimoCola = "1";
           }else{
               datCopy.ultimoCola  = null;
-            }
+            }*/
       }else{
         let ordenCola = rg.cells[0];
         let numCol = rg.cells[1];
@@ -1129,8 +1164,8 @@ export class TarjetaColaGuardias implements OnInit {
           datCopy.fechaSuscripcion = rg.cells[11].value;
         datCopy.fechaValidacion = rg.cells[4].value;
         datCopy.fechabaja = rg.cells[5].value;
-        if (rg.cells[14] != undefined)
-          datCopy.idGrupoGuardia = rg.cells[14].value;
+        if (rg.cells[12] != undefined)
+          datCopy.idGrupoGuardia = rg.cells[12].value;
         datCopy.idGrupoGuardiaColegiado = rg.cells[6].value;
         datCopy.idGuardia = rg.cells[9].value;
         if (rg.cells[13] != undefined)
@@ -1142,7 +1177,7 @@ export class TarjetaColaGuardias implements OnInit {
         datCopy.numeroGrupo = rg.cells[0].value;
         datCopy.orden = rg.cells[1].value;
         datCopy.ordenCola = rg.cells[7].value;
-        datCopy.ultimoCola = rg.cells[15].value;
+        datCopy.ultimoCola = rg.cells[14].value;
 
         if(!ultimo && datCopy.nColegiado == this.ultimoLetrado){
           datCopy.ultimoCola = "1";
@@ -1428,6 +1463,14 @@ export class TarjetaColaGuardias implements OnInit {
             this.getCols();
           }
         );
+        this.suscription = this.globalGuardiasService.getConf().subscribe((confValue) => {
+          setTimeout(() => {
+            this.configuracionCola = confValue;
+            this.manual = confValue.manual;
+            this.porGrupos = confValue.porGrupos;
+            this.minimoLetrado = confValue.minimoLetradosCola;
+          }, 500);
+        });
   }
 
   actualizaSeleccionados(selectedDatos) {
@@ -1574,7 +1617,27 @@ export class TarjetaColaGuardias implements OnInit {
       n => {
         let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
         this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
+        this.datosSaltos.forEach(salto => {
+          if(salto.letrado == null && salto.letradosGrupo != null){
+            salto.letrado = '\n';
+            salto.colegiadoGrupo = '\n';
+            salto.letradosGrupo.forEach(letrado => {
+              salto.colegiadoGrupo += letrado.colegiado + '\n';
+              salto.letrado += letrado.letrado + '\n';
+            });
+          }
+        });
         this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
+        this.datosCompensaciones.forEach(comp => {
+          if(comp.letrado == null && comp.letradosGrupo != null){
+            comp.letrado = '\n';
+            comp.colegiadoGrupo = '\n';
+            comp.letradosGrupo.forEach(letrado => {
+              comp.colegiadoGrupo += letrado.colegiado + '\n';
+              comp.letrado += letrado.letrado + '\n';
+            });
+          }
+        });
         let error = JSON.parse(n.body).error;
 
       });

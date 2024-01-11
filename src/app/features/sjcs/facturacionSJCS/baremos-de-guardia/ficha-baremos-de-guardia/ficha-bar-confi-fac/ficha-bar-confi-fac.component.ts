@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ViewChild } from '@angular/core';
 import { ConfirmationService, OverlayPanel } from 'primeng/primeng';
 import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
@@ -50,8 +50,10 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   disableDis: boolean = true;
   disableAsAc: boolean = true;
-  disableImputDis: boolean = false;
-  disableImputAct: boolean = false;
+  disableButtonsDis: boolean = true;
+  disableButtonsAsc: boolean = true;
+  disableImputDis: boolean = true;
+  disableImputAct: boolean = true;
   displayBoolean: boolean = false;
   disableImpAsc: boolean = false;
   url;
@@ -73,28 +75,25 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   op: OverlayPanel;
 
   constructor(private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     if (!sessionStorage.getItem('modoEdicionBaremo')) {
       // Desabilitar todo en caso de que no haya días seleccionados.
-      if (!this.checkDisL && !this.checkDisM && !this.checkDisX && !this.checkDisJ
-        && !this.checkDisV && !this.checkDisS && !this.checkDisD) {
-        this.disableImputDis = false;
-      } else {
-        this.disableImputDis = true;
-      }
-      // Desabilitar todo en caso de que no haya días seleccionados.
-      if (!this.checkAsAcL && !this.checkAsAcM && !this.checkAsAcX && !this.checkAsAcJ
-        && !this.checkAsAcV && !this.checkAsAcS && !this.checkAsAcD) {
-        this.disableImputAct = false;
-      } else {
-        this.disableImputAct = true;
-      }
+      if (this.checkDisL || this.checkDisM || this.checkDisX || this.checkDisJ
+        || this.checkDisV || this.checkDisS || this.checkDisD) {
+          this.disableButtonsDis = false;
+        }
+        if (this.checkAsAcL || this.checkAsAcM || this.checkAsAcX || this.checkAsAcJ
+          || this.checkAsAcV || this.checkAsAcS || this.checkAsAcD) {
+            this.disableButtonsAsc = false;
+        }
+    } else {
+      this.disableImputDis = false;
+      this.disableButtonsAsc = false;
+      this.disableImputAct = false;
     }
-
   }
 
   showMessage(severity, summary, msg) {
@@ -162,16 +161,29 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
     // Desabilitar todo en caso de que no haya días seleccionados.
     if (!this.checkDisL && !this.checkDisM && !this.checkDisX && !this.checkDisJ
       && !this.checkDisV && !this.checkDisS && !this.checkDisD) {
+        this.disableButtonsDis = false;
       this.disableImputDis = false;
+      this.contDis = null;
+      this.agruparDis = false;
+      this.filtrosDis = new BaremosGuardiaItem();
     } else {
-      this.disableImputDis = true;
+      this.disponibilidad = true;
+      this.disableButtonsDis = true;
     }
     // Desabilitar todo en caso de que no haya días seleccionados.
     if (!this.checkAsAcL && !this.checkAsAcM && !this.checkAsAcX && !this.checkAsAcJ
       && !this.checkAsAcV && !this.checkAsAcS && !this.checkAsAcD) {
+        this.disableButtonsAsc = false;
       this.disableImputAct = false;
+      this.contAsAc = null;
+      this.agruparAsAc = false;
+      this.precio = null;
+      this.maxIrTiposAsAc = false;
+      this.modalTipos = false;
+      this.filtrosAsAc = new BaremosGuardiaItem();
     } else {
-      this.disableImputAct = true;
+      this.asiac = true;
+      this.disableButtonsAsc = true;
     }
 
   }
@@ -212,23 +224,36 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
     // Desabilitar todo en caso de que no haya días seleccionados.
     if (!this.checkAsAcL && !this.checkAsAcM && !this.checkAsAcX && !this.checkAsAcJ
       && !this.checkAsAcV && !this.checkAsAcS && !this.checkAsAcD) {
+      this.disableButtonsAsc = false;
       this.disableImputAct = false;
+      this.contAsAc = null;
+      this.agruparAsAc = false;
+      this.precio = null;
+      this.maxIrTiposAsAc = false;
+      this.modalTipos = false;
+      this.filtrosAsAc = new BaremosGuardiaItem();
     } else {
-      this.disableImputAct = true;
+      this.asiac = true;
+      this.disableButtonsAsc = true;
     }
 
     // Desabilitar todo en caso de que no haya días seleccionados.
     if (!this.checkDisL && !this.checkDisM && !this.checkDisX && !this.checkDisJ
       && !this.checkDisV && !this.checkDisS && !this.checkDisD) {
+      this.disableButtonsDis = false;
       this.disableImputDis = false;
+      this.contDis = null;
+      this.agruparDis = false;
+      this.filtrosDis = new BaremosGuardiaItem();
     } else {
-      this.disableImputDis = true;
+      this.disponibilidad = true;
+      this.disableButtonsDis = true;
     }
+
   }
 
   changePrecio() {
-    if (this.disableAsAc) {
-      this.precio
+    if (this.disableAsAc && this.contAsAc != null) {
       this.disableImputAct = true
       if (this.precio == 'porTipos') {
         this.modalTipos = true;
@@ -242,27 +267,43 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   }
 
   changeContAsAc() {
-    if (this.disableAsAc) {
-      this.contAsAc
+    if (this.disableButtonsAsc) {
+      this.disableImputAct = true;
       this.disPrecio = true;
     }
 
   }
 
   changeContDis() {
-    if (this.disableDis) {
-      this.contDis
+    if (this.disableButtonsDis) {
+      this.contDis = null;
       this.disableImputDis = true;
-
     }
 
+  }
+
+  changeButtonContDis(event) {
+    if (this.disableDis) {
+      this.contDis = event;
+      this.disableImputDis = true;
+    }
+  }
+
+  changeButtonContAsc(event) {
+    if (this.disableAsAc) {
+      this.contAsAc = event;
+      this.disableImputAct = true;
+    }
   }
 
   onChangeDisponibilidad(event) {
     this.disableDis = event
     this.disponibilidad = event
     if (!this.disableDis) {
+      this.disableButtonsDis = false;
       this.disableImputDis = false;
+    } else {
+      this.disableButtonsDis = true;
     }
   }
 
@@ -271,7 +312,10 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
     this.disableAsAc = event;
     this.asiac = event
     if (!this.disableAsAc) {
+      this.disableButtonsAsc = false;
       this.disableImputAct = false;
+    } else {
+      this.disableButtonsAsc = true;
     }
   }
 
@@ -334,8 +378,9 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
     this.showModal = false;
   }
 
-  onChangeMinimo(value) {
-    if ((value != null || value != undefined) && this.contDis == 'asi' && this.disponibilidad == true) {
+  onChangeMinimo(event) {
+    this.maskTwoDecimals(event, this.filtrosDis.importeMinDis);
+    if ((event.target.value != null || event.target.value != undefined) && this.contDis == 'asi' && this.disponibilidad == true) {
       this.disProc2014.emit(true)
     }
   }
@@ -352,6 +397,16 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   onChangeMaxIrTiposAsAc(event) {
     // Funcionalidad activar o desactivar.
     this.maxIrTiposAsAc = event;
+  }
+
+  maskTwoDecimals(event, propBaremo) {
+    if (event.target.value.includes('.')) {
+      let numericValue = event.target.value.split('.');
+      if (numericValue[1].length > 2) {
+        event.target.value = numericValue[0] + '.' + numericValue[1].substring(0,2);
+        propBaremo = numericValue[0] + '.' + numericValue[1].substring(0,2);
+      }
+    }
   }
 
 }

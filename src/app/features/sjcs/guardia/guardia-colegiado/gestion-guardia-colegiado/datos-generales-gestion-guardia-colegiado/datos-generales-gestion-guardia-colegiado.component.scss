@@ -1,0 +1,11 @@
+.default {
+    display: flex;
+    flex-wrap: wrap; /* Esto permite que los elementos se pasen a la siguiente línea si no hay espacio */
+    align-items: center; /* Alinea los elementos verticalmente */
+    justify-content: space-between; /* Distribuye el espacio horizontalmente */
+  }
+  
+  .fecha-label {
+    margin: 5px; /* Ajusta el margen según sea necesario */
+    flex-basis: auto; /* Esto permite que la etiqueta crezca hasta el contenido */
+  }

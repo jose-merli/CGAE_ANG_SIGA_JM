@@ -17,6 +17,7 @@ export class FacFacturacionprogramadaItem {
     // Estados
     idEstadoConfirmacion: string;
     estadoConfirmacion: string;
+    estadoGeneracion: string;
     idEstadoPDF: string;
     estadoPDF: string;
     idEstadoEnvio: string;

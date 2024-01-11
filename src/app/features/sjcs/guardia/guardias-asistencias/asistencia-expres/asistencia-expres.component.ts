@@ -283,6 +283,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.sigaServices.post("busquedaGuardias_buscarAsistenciasExpress", this.filtrosAE.filtro)
         .subscribe(
           n => {
+            this.progressSpinner = true;
             if (this.resultadoAE != null && this.resultadoAE.tabla != null) {
               this.resultadoAE.tabla.selectedArray = [];
             }
@@ -657,7 +658,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           if(err.status == "409"){
             this.showMsg('error', 'El usuario es colegiado y no existe una guardia para la fecha seleccionada. No puede continuar', '');
           }else{
-            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), '');
+            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardarasistenciaexpres"));
           }
           //console.log(err);
           this.progressSpinner = false;

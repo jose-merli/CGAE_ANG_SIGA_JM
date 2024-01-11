@@ -29,15 +29,19 @@
 
         <td *ngFor="let col of columns | slice:0:10" class="text-center">
           <div *ngIf="col.field =='nombre'">
-            <span (click)="openFichaBaremos(rowData, historico)" class="enlace" [ngClass]="{'enlace': !setItalic(rowData), 'historico': setItalic(rowData)}">{{rowData[col.field]}}</span>
+            <span (click)="openFichaBaremos(rowData, historico)" class="enlace" style="white-space: pre-line;" [ngClass]="{'enlace': !setItalic(rowData), 'historico': setItalic(rowData)}">{{rowData[col.field]}}</span>
           </div>
 
           <div *ngIf="col.field =='simpleOImporteIndividual' || col.field == 'maximo' || col.field == 'disponibilidad'">
             <span [ngClass]="{'historico': setItalic(rowData)}">{{rowData[col.field] | currency: 'EUR'}}</span>
           </div>
 
-          <div *ngIf="col.field !='simpleOImporteIndividual' && col.field !='nombre' && col.field != 'maximo' && col.field != 'disponibilidad'">
+          <div *ngIf="col.field !='simpleOImporteIndividual' && col.field !='diasGuardia' && col.field !='nombre' && col.field != 'maximo' && col.field != 'disponibilidad'">
             <span [ngClass]="{'historico': setItalic(rowData)}">{{rowData[col.field] }}</span>
+          </div>
+
+          <div *ngIf="col.field =='diasGuardia'">
+            <span [ngClass]="{'historico': setItalic(rowData)}" style="white-space: pre-line;">{{rowData[col.field] }}</span>
           </div>
         </td>
       </tr>

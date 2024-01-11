@@ -143,6 +143,9 @@ export class GestionEjgComponent implements OnInit {
       sessionStorage.removeItem("EJGItemDesigna");
 
     } else {
+      if (sessionStorage.getItem("Nuevo")) {
+        this.persistenceService.clearDatosEJG();
+      }
       this.body = this.persistenceService.getDatosEJG();
       if (this.body != null && this.body.annio == null && sessionStorage.getItem("EJGItem") != null) {
         this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
@@ -307,6 +310,12 @@ export class GestionEjgComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearDatos();
+    //Si es un ejg recién asociado a una asistencia
+    if(sessionStorage.getItem('EJGRecienAsociado')){
+      sessionStorage.removeItem("EJGRecienAsociado");
+      sessionStorage.setItem("vengoDesdeEJGRecienAsociado", 'true');
+      this.location.back();
+    }
     // Si viene de asistencias expres
     if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda")){
       sessionStorage.setItem("vieneDeAsistenciaExpres", "true");
@@ -323,8 +332,6 @@ export class GestionEjgComponent implements OnInit {
       sessionStorage.setItem("actasItem", sessionStorage.getItem("actasItemAux"));
       sessionStorage.removeItem("actasItemAux");
       this.location.back();
-    }else if (localStorage.getItem('remesa')) {// Si viene de remesas de envío
-      this.router.navigate(['/fichaRemesasEnvio']);
     }else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null){
       this.persistenceService.clearDatosEJG();
       this.persistenceService.setVolverEJG();

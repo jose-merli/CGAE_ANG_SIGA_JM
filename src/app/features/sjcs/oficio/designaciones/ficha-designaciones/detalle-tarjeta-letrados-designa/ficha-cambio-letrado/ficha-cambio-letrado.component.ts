@@ -309,6 +309,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.sigaServices.post("designaciones_busquedaDesignacionActual", request).subscribe(
       data => {
         let datos = JSON.parse(data.body);
+        
         //Se cambia el valor del campo ano para que se procese de forma adecuada 
         //En la ficha en las distintas tarjetas para obtener sus valores
         //
@@ -333,7 +334,9 @@ export class FichaCambioLetradoComponent implements OnInit {
         sessionStorage.setItem('designaItemLink', JSON.stringify(this.designaItem));
         sessionStorage.setItem("nuevaDesigna", "false");
         this.recargarDatos(this.designaItem);
+
       });
+      this.progressSpinner = false;
   }
 
 
@@ -346,7 +349,15 @@ export class FichaCambioLetradoComponent implements OnInit {
 
     let designaProcedimiento = new DesignaItem();
     let data = sessionStorage.getItem("designaItem");
-    let dataProcedimiento = JSON.parse(data);
+    let dataProcedimiento;
+    if(data !=null)
+    {
+      dataProcedimiento = JSON.parse(data);
+    } else
+    {
+      dataProcedimiento = new DesignaItem();
+    }
+    
     dataProcedimiento.idPretension = dato.idPretension != undefined && dato.idPretension != null ? dato.idPretension : null;
     dataProcedimiento.idTurno = dato.idTurno;
     dataProcedimiento.ano = dato.factConvenio;
@@ -369,6 +380,12 @@ export class FichaCambioLetradoComponent implements OnInit {
 
         let designaModulo = new DesignaItem();
         let dataModulo = JSON.parse(data);
+        if(data !=null)
+        {
+          dataModulo = JSON.parse(data);
+        } else {
+          dataModulo = new DesignaItem();
+        }
         dataModulo.idProcedimiento = idProcedimiento;
         dataModulo.idTurno = dato.idTurno;
         dataModulo.ano = dato.factConvenio;

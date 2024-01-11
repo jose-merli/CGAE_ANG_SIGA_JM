@@ -37,6 +37,8 @@ export class TarjetaColegiadoComponent implements OnInit, AfterViewInit {
   @Output() colegiadoEvent = new EventEmitter<Colegiado>();
 
   @Input() desactivarBotones: boolean = false;
+  @Input() retencionSinLetrado: boolean;
+  @Input() retencionDesdeTabla: boolean;
 
   @ViewChild('nombre') nombre: ElementRef;
   @ViewChild('apellidos1') apellidos1: ElementRef;
@@ -105,11 +107,14 @@ export class TarjetaColegiadoComponent implements OnInit, AfterViewInit {
   }
 
   onHideTarjeta() {
-    if (this.retencionesService.modoEdicion) {
-      this.showTarjeta = !this.showTarjeta;
-    } else {
-      this.showTarjeta = true;
+    if(!this.retencionSinLetrado){
+      if (this.retencionesService.modoEdicion) {
+        this.showTarjeta = !this.showTarjeta;
+      } else {
+        this.showTarjeta = true;
+      }
     }
+    
   }
 
   trim(value: string) {

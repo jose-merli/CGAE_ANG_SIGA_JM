@@ -72,7 +72,7 @@
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}
             </label>
-            <p-dropdown class="select-form" disabled [(ngModel)]="body.idtipoidentificacion"
+            <p-dropdown class="select-form"  [(ngModel)]="body.idtipoidentificacion"
               [options]="comboTipoIdentificacion" [filter]="true" filterBy="label,labelSinTilde"
               placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"
               ></p-dropdown>

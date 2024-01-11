@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { MultiSelect, SelectItem } from 'primeng/primeng';
+import { ConfirmationService, MultiSelect, SelectItem } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { RetencionesRequestDto } from '../../../../../models/sjcs/RetencionesRequestDTO';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -29,6 +29,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   obligatorio: boolean = false;
   msgs = [];
   progressSpinner: boolean = false;
+  nuevaRetencionSinColegiado: boolean = false;
   comboTiposRetencion: SelectItem[] = [];
   comboDestinatarios: SelectItem[] = [];
   comboPagos: SelectItem[] = [];
@@ -50,6 +51,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
+    private confirmationService: ConfirmationService,
     private router: Router,
     private sigaStorageService: SigaStorageService,
     private retencionesService: RetencionesService,
@@ -331,6 +333,34 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
   }
 
+  confirmNew() {
+    if (this.permisoEscritura) {
+
+      /*let mess = this.translateService.instant(
+        "messages.deleteConfirmation"
+      );*/
+      let mess = this.translateService.instant("facturacionsjcs.retenciones.seleccionarcolegiado");
+      let icon = "fa fa-edit";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        key: 'nuevaRetencion',
+        accept: () => {
+          if(this.nuevaRetencionSinColegiado){
+            this.nuevoSinLetrado();
+          }else{
+            this.nuevo();
+          }
+          
+        },
+        reject: () => {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      });
+
+    }
+  }
+
   fillFechaDede(event, fecha) {
 
     this.filtros[fecha] = event;
@@ -402,6 +432,14 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   nuevo() {
     sessionStorage.setItem("desdeNuevoFiltroRetenciones", "true");
     this.router.navigate(["/buscadorColegiados"]);
+  }
+
+  nuevoSinLetrado() {
+    sessionStorage.setItem("retencionSinLetrado", "true");
+    sessionStorage.setItem("desdeNuevoFiltroRetenciones", "true");
+    sessionStorage.setItem("nuevaRetencionSinLetrado", "true");
+    this.retencionesService.modoEdicion = false;
+    this.router.navigate(["/fichaRetencionJudicial"]);
   }
 
   hayDatosGeneralesRellenos(): boolean {

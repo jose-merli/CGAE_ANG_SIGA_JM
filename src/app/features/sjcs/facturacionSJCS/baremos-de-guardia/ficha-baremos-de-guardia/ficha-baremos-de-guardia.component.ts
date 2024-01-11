@@ -390,7 +390,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
             },
             err => {
               this.progressSpinner = false;
-              if (err != undefined && JSON.parse(err.body).error.description != "") {
+              if (err != undefined && err.body && JSON.parse(err.body).error.description != "") {
                 this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.body).error.description));
               } else {
                 this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -590,7 +590,8 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         this.tarjetaConfigFac.agruparAsAc = true;
       }
     })
-
+    this.rellenarDias(diasDis, diasAsAc);
+    this.hitos= [];
     for (let h of data) {
       let hito = parseInt(h.idHito);
       let precioHito = parseFloat(h.precioHito);
@@ -604,6 +605,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.onChangeDisponibilidad(event)
           this.tarjetaConfigFac.contDis = 'asi'
           this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.changeButtonContDis('asi')
 
           this.tarjetaConfigFac.filtrosDis.dispAsuntosDis = precioHito
           this.hitos.push(hito.toString())
@@ -617,6 +619,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.onChangeDisponibilidad(event)
           this.tarjetaConfigFac.contDis = 'asi'
           this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.changeButtonContDis('asi')
           this.tarjetaConfigFac.filtrosDis.importeMaxDis = precioHito
           this.hitos.push(hito.toString())
           break;
@@ -629,6 +632,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.onChangeDisponibilidad(event)
           this.tarjetaConfigFac.contDis = 'asi'
           this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.changeButtonContDis('asi')
           this.tarjetaConfigFac.filtrosDis.aPartirDis = precioHito
           this.hitos.push(hito.toString())
           break;
@@ -641,6 +645,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.onChangeDisponibilidad(event)
           this.tarjetaConfigFac.contDis = 'asi'
           this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.changeButtonContDis('asi')
           this.tarjetaConfigFac.filtrosDis.importeMinDis = precioHito
           this.hitos.push(hito.toString())
           break;
@@ -660,6 +665,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.onChangeDisponibilidad(event)
           this.tarjetaConfigFac.contDis = 'act'
           this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.changeButtonContDis('act')
           this.tarjetaConfigFac.filtrosDis.dispAsuntosDis = precioHito
           this.hitos.push(hito.toString())
           break;
@@ -672,6 +678,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.onChangeDisponibilidad(event)
           this.tarjetaConfigFac.contDis = 'act'
           this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.changeButtonContDis('act')
           this.tarjetaConfigFac.filtrosDis.importeMaxDis = precioHito
           this.hitos.push(hito.toString())
           break;
@@ -684,6 +691,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.onChangeDisponibilidad(event)
           this.tarjetaConfigFac.contDis = 'act'
           this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.changeButtonContDis('act')
           this.tarjetaConfigFac.filtrosDis.aPartirDis = precioHito
           this.hitos.push(hito.toString())
           break;
@@ -696,6 +704,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.onChangeDisponibilidad(event)
           this.tarjetaConfigFac.contDis = 'act'
           this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.changeButtonContDis('act')
           this.tarjetaConfigFac.filtrosDis.importeMinDis = precioHito
           this.hitos.push(hito.toString())
           break;
@@ -878,7 +887,6 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
       }
     }
     this.getTurnoGuarConf(this.hitos);
-    this.rellenarDias(diasDis, diasAsAc);
   }
 
   configuracionHito(confBaremo, turno, guardia) {
@@ -886,6 +894,9 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     let institucionesActuaciones = ['2002', '2020', '2058', '2067', '2078', '2082'];//instituciones para las que se aplican hito 62
     //tarjeta configuracion de facturacion.
     //por disponibilidad.
+
+    this.checkDisponibilidad();
+
     if (this.tarjetaConfigFac.disponibilidad == true) {
       if (this.tarjetaConfigFac.contDis == 'asi') {
         //hito 1
@@ -1094,6 +1105,12 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     if (this.tarjetaConfigAdi.importeEJG != null || this.tarjetaConfigAdi.importeEJG != undefined) {
       //hito 13
       this.hito(confBaremo, '13', turno, guardia, this.tarjetaConfigAdi.importeEJG, 'panelAdi')
+    }
+  }
+
+  checkDisponibilidad() {
+    if (this.tarjetaConfigFac.contDis == 'asi') {
+      this.tarjetaConfigFac.disponibilidad = true;
     }
   }
 

@@ -70,6 +70,7 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   getCols() {
 
     this.cols = [
+      { field: "idRetencion", header: "facturacionSJCS.retenciones.idRetencion", width: "12%" },
       { field: "ncolegiado", header: "facturacionSJCS.retenciones.nColegiado", width: "12%" },
       { field: "nombre", header: "facturacionSJCS.retenciones.nombre", width: "14%" },
       { field: "tipoRetencion", header: "facturacionSJCS.retenciones.tipoRetencion", width: "12%" },
@@ -77,7 +78,7 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
       { field: "restante", header: "facturacionSJCS.retenciones.importeRestante", width: "12%" },
       { field: "fechainicio", header: "facturacionSJCS.retenciones.fechaIniNoti", width: "12%" },
       { field: "fechaFin", header: "facturacionSJCS.retenciones.fechaFinNoti", width: "12%" },
-      { field: "nombreDestinatario", header: "facturacionSJCS.retenciones.destinatario", width: "14%" }
+      { field: "nombreDestinatario", header: "facturacionSJCS.retenciones.destinatario", width: "14%" },
     ];
 
     this.rowsPerPage = [
@@ -193,6 +194,10 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   }
 
   openFicha(dato: RetencionesItem) {
+    if(dato.esDeTurno){
+      sessionStorage.setItem("retencionSinLetrado", "true");
+    }
+    sessionStorage.setItem("retencionDesdeTabla", 'true');
     this.retencionesService.modoEdicion = true;
     this.retencionesService.retencion = dato;
     this.retencionesService.permisoEscrituraDatosRetencion = this.permisoEscrituraDatosRetencion;

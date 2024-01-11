@@ -30,7 +30,6 @@ export class GestionGuardiaComponent implements OnInit {
   permisoEscrituraIncomp: boolean = false;
   permisoEscrituraBaremos: boolean = false;
   permisoEscrituraCalen: boolean = false;
-  permisoEscrituraInscripciones: boolean = false;
   permisoEscrituraTurno: boolean = false;
   historico: boolean = false;
   progressSpinner: boolean = false;
@@ -324,25 +323,6 @@ export class GestionGuardiaComponent implements OnInit {
         this.permisoEscrituraColaGuardia = respuesta;
 
         this.persistenceService.setPermisos(this.permisoEscrituraColaGuardia);
-
-        // if (this.permisoEscrituraResumen == undefined) {
-        //   sessionStorage.setItem("codError", "403");
-        //   sessionStorage.setItem(
-        //     "descError",
-        //     this.translateService.instant("generico.error.permiso.denegado")
-        //   );
-        //   this.router.navigate(["/errorAcceso"]);
-        // }
-
-      }
-      ).catch(error => console.error(error));
-
-    this.commonService.checkAcceso(procesos_guardia.inscripciones)
-      .then(respuesta => {
-
-        this.permisoEscrituraInscripciones = respuesta;
-
-        this.persistenceService.setPermisos(this.permisoEscrituraInscripciones);
 
         // if (this.permisoEscrituraResumen == undefined) {
         //   sessionStorage.setItem("codError", "403");

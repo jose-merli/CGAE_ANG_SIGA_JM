@@ -2656,6 +2656,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     sessionStorage.setItem("datosComunicar",JSON.stringify(datosSeleccionados));
     sessionStorage.setItem("queryImprimir",JSON.stringify(this.queryImprimir));
     this.router.navigate(["/dialogoComunicaciones"]);
+    sessionStorage.setItem("vienedeJE","true");
   }
 
   navigateComunicar() {

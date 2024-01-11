@@ -227,19 +227,20 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.disableCheckArt = false;
     this.progressSpinner = true;
     if (sessionStorage.getItem("buscadorColegiados")) {
+      if(sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody")!= undefined){
+        this.idPersona = JSON.parse(sessionStorage.getItem("personaBody")).idPersona;
+      }
       this.busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       sessionStorage.removeItem("buscadorColegiados");
       let apellidosExpress = this.busquedaColegiado.apellidos.split(" ");
       this.inputs[0].value = this.busquedaColegiado.nColegiado;
       this.inputs[1].value = this.busquedaColegiado.apellidos;
       this.inputs[2].value = this.busquedaColegiado.nombre;
-      if(sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody")!= undefined){
-        this.idPersona = JSON.parse(sessionStorage.getItem("personaBody")).idPersona;
-      }
       this.inputs[0].disable = true;
       this.inputs[1].disable = true;
       this.inputs[2].disable = true;
-
+      if(this.busquedaColegiado.idPersona)
+      this.idPersona = this.busquedaColegiado.idPersona;
     } else if (sessionStorage.getItem("colegiadoGeneralDesignaNuevo")) {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesignaNuevo"));
       this.inputs[1].value = colegiadoGeneral.apellidos1
@@ -425,6 +426,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           this.selectores[0].value = datosGeneralesDesigna[0];
           this.checkArt = datosGeneralesDesigna[2];
         }
+        if(this.datosAsistencia){
+          if(this.datosAsistencia.idTurno){
+            this.selectores[0].value = this.datosAsistencia.idTurno;
+          }
+        }
         //Condicion pensada para que se aplique cuandose crea una designacion desde EJG
         /*if (this.datosEJG != undefined && this.datosEJG != null) {
           if (this.datosEJG.idTurno != null) {
@@ -548,7 +554,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                       this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
                       //this.router.navigate(["/fichaDesignaciones"]);
                       this.progressSpinner = false;
-                      this.location.back();
+                      //this.location.back();
+                      this.busquedaDesignaciones(newDesignaRfresh);
                     }
                   },
                   err => {

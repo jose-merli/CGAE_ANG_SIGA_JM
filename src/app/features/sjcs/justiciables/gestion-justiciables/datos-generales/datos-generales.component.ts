@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Location } from "@angular/common";
 import { ConfirmationService } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
@@ -105,7 +106,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   @Output() searchJusticiableOverwritten = new EventEmitter<any>();
   @Output() opened = new EventEmitter<Boolean>();  // Evento para abrir la tarjeta
   @Output() idOpened = new EventEmitter<String>(); // Evento para pasar la Información.
-  @Output() actualizaAsunto = new EventEmitter();
+  @Output() actualizaAsunto = new EventEmitter<JusticiableItem>();
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
@@ -133,7 +134,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private location: Location) { }
 
   ngOnInit() {
 
@@ -300,9 +302,14 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     let datosInteresado = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
-
+    let idPersona;
+    if(datosInteresado == null || datosInteresado.idPersona == null){
+      idPersona = justiciable.idPersona;
+    }else{
+      idPersona = datosInteresado.idpersona;
+    }
     // let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero];
-    let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero, this.creaNuevoJusticiable, datosInteresado.idpersona];
+    let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero, this.creaNuevoJusticiable, idPersona];
 
     this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
       data => {
@@ -310,8 +317,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         sessionStorage.setItem('tarjeta', 'sjcsDesigInt');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-
-        this.router.navigate(["/fichaDesignaciones"]);
+        sessionStorage.setItem("creaInsertaJusticiableDesigna", "true");
+        this.location.back();
+        //this.router.navigate(["/fichaDesignaciones"]);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -583,8 +591,13 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
         //this.router.navigate(["/gestionEjg"]);
         //Para prevenir que se vaya a una ficha en blanco despues de que se haya creado un justiciable
-        this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
-        sessionStorage.removeItem("EJGItem");
+        //this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
+        //ARR:  sessionStorage.removeItem("EJGItem");
+
+        let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+        this.persistenceService.setDatosEJG(ejg);
+        ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
+        sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
 
         this.router.navigate(["/gestionEjg"]);
       },
@@ -878,6 +891,10 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.body.telefonos = arrayTelefonos;
     }
 
+    if (!(this.body.fechanacimiento instanceof Date)) {
+      this.body.fechanacimiento = null;
+    }
+
     this.body.tipojusticiable = SigaConstants.SCS_JUSTICIABLE;
     this.body.validacionRepeticion = true;
     this.sigaServices.post(url, this.body).subscribe(
@@ -972,7 +989,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
         //Actualizamos la Tarjeta Asuntos
         this.persistenceService.setDatos(this.body);
-        this.actualizaAsunto.emit();
+        this.actualizaAsunto.emit(this.body);
         sessionStorage.removeItem("nuevoJusticiable");
         if(this.vieneDeJusticiable && this.nuevoJusticiable){
           sessionStorage.setItem("origin", "Nuevo");

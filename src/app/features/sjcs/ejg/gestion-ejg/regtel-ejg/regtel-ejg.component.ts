@@ -115,7 +115,7 @@ export class RegtelEjgComponent implements OnInit {
         this.openFicha = !this.openFicha;
         //Si se cancela la creacion de una coleccion cuando se abra la tarjeta por primera vez,
         //se le pregunta cada vez que la abra de nuevo.
-        if (this.openFicha && this.item != undefined && this.item.identificadords == null) this.callConfirmationServiceRegtel();
+        if (this.openFicha && this.item != undefined && this.item.identificadords == null && this.permisoEscritura) this.callConfirmationServiceRegtel();
       }
     }
   }
@@ -142,7 +142,7 @@ export class RegtelEjgComponent implements OnInit {
     this.idOpened.emit(key);
     //Si se cancela la creacion de una coleccion cuando se abra la tarjeta por primera vez,
     //se le pregunta cada vez que la abra de nuevo.
-    if (this.openFicha && this.item != undefined && this.item.identificadords == null) this.callConfirmationServiceRegtel();
+    if (this.openFicha && this.item != undefined && this.item.identificadords == null && this.permisoEscritura) this.callConfirmationServiceRegtel();
   }
 
   getRegtel() {
@@ -178,7 +178,7 @@ export class RegtelEjgComponent implements OnInit {
         err => {
 
           this.messageRegtel = this.translateService.instant(
-            'general.message.no.registros'
+            'justiciaGratuita.ejg.regtel.messageNoConfigurada'
           );
           this.regtel = [];
           this.nRegtel = 0;
@@ -219,7 +219,12 @@ export class RegtelEjgComponent implements OnInit {
               'general.message.no.registros'
             );
           }
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          if (err.error == "Error al crear la colección en Regtel para el EJG" 
+                  || err.error == "Error al actualizar el identificador para DocuShare del EJG"){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), err.error);
+          }else{
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
         },
       );
   }

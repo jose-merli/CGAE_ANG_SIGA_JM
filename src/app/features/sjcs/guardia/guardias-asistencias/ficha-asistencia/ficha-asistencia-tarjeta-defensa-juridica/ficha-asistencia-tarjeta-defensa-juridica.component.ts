@@ -31,6 +31,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
   parametroNIG: any;
   parametroNProc: any;
   procEditable: boolean;
+  valorParametro: any;
   
 
   constructor(private sigaServices : SigaServices,
@@ -44,6 +45,83 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
     this.getComboJuzgados();
     this.getDefensaJuridicaData();
     this.getComboDelitos();
+
+    let parametroCombo = {
+      valor: "CONFIGURAR_COMBO_DESIGNA"
+    };
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametroCombo)
+      .subscribe( 
+        data => {
+          this.valorParametro = JSON.parse(data.body).parametro;
+
+          if (this.valorParametro == 1) { // Todo relacionado con todo
+            if (this.defensaJuridicaItem.idJuzgado != null && this.defensaJuridicaItem.idJuzgado != "" && this.defensaJuridicaItem.idJuzgado != undefined){
+            this.getComboProcedimientosConJuzgado(this.defensaJuridicaItem.idJuzgado);
+            }
+          }
+          if (this.valorParametro == 2) { 
+            this.getComboProcedimientos();
+          }
+          if (this.valorParametro == 3) { 
+            this.getComboProcedimientos();
+          }
+          if (this.valorParametro == 4) { // Procedimiento con Juzgado
+            this.getComboProcedimientosConJuzgado(this.defensaJuridicaItem.idJuzgado);
+          }
+          if (this.valorParametro == 5) { // Todo independient
+            this.getComboProcedimientos();
+          }
+
+        },
+        err => {
+          //console.log(err);
+        },
+        () => {
+        }
+      );
+  }
+
+  getComboProcedimientosConJuzgado(idJuzgado) {
+    this.progressSpinner = true;
+
+     // Verificamos si idProcedimiento es null o indefinido antes de hacer la solicitud POST
+     if (idJuzgado != null) {
+      this.sigaServices.post("combo_comboProcedimientosConJuzgado", idJuzgado).subscribe(
+      n => {
+        this.comboProcedimientos = JSON.parse(n.body).combooItems;
+        let uniqueArrayValue = [];
+        let uniqueArray = [];
+        this.comboProcedimientos.forEach((c) => {
+          if (!uniqueArrayValue.includes(c.value)) {
+            uniqueArrayValue.push(c.value);
+            uniqueArray.push(c);
+          }
+        });
+        this.comboProcedimientos = uniqueArray;
+        
+        if (this.comboProcedimientos.length == 0) {
+          this.procEditable = true;
+        } else {
+          this.procEditable = false;
+        }
+        
+        },
+        err => {
+        //console.log(err);
+        this.progressSpinner = false;
+        }, () => {
+        if (!this.comboProcedimientos != null && !this.comboProcedimientos != undefined) {
+          this.commonServices.arregloTildesCombo(this.comboProcedimientos);
+          this.commonServices.arregloTildesContrariaCombo(this.comboProcedimientos);
+        }
+        this.progressSpinner = false;
+        }
+      );
+    } else {
+    // No hacemos la solicitud POST y manejar el caso en que idJuzgado es null o undefined
+    this.progressSpinner = false;
+    }
   }
 
   getComboJuzgados(){
@@ -109,6 +187,12 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
     this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
       n => {
         this.comboProcedimientos = n.combooItems;
+
+        if (this.comboProcedimientos.length == 0) {
+          this.procEditable = true;
+        } else {
+          this.procEditable = false;
+        }
       },
       err => {
         //console.log(err);
@@ -122,12 +206,24 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
 
   //Cada vez que se cambia el valor del desplegable de turnos
   onChangeJuzgado() {
-    if(this.defensaJuridicaItem.idJuzgado){
-      this.defensaJuridicaItem.idComisaria = null;
-    }
     this.comboProcedimientos = [];
-    this.defensaJuridicaItem.numProcedimiento = null;
-    this.getComboProcedimientoConJuzgado();
+
+    if (this.valorParametro == 1) {
+      this.getComboProcedimientosConJuzgado(this.defensaJuridicaItem.idJuzgado);
+
+    }
+    if (this.valorParametro == 2) {
+      this.getComboProcedimientos();
+    }
+    if (this.valorParametro == 3) {
+      this.getComboProcedimientos();
+    }
+    if (this.valorParametro == 4) {
+      this.getComboProcedimientosConJuzgado(this.defensaJuridicaItem.idJuzgado);
+    }
+    if (this.valorParametro == 5) {
+      this.getComboProcedimientos();
+    }
   }
   
   getComboProcedimientoConJuzgado() {

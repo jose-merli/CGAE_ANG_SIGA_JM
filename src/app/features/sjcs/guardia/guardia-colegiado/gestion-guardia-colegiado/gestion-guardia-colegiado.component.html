@@ -10,8 +10,8 @@
   <div>
       <!--SIGARNV-2885 INICIO-->
       <!-- <app-turno-gestion-guardia-colegiado class="pb-50" (turnoColegiado) = "getTurnoColegiado($event)"> -->
-      <app-turno-gestion-guardia-colegiado class="pb-50" >
-      </app-turno-gestion-guardia-colegiado>
+      <!-- SACADO -  INC3888<app-turno-gestion-guardia-colegiado class="pb-50" >
+      </app-turno-gestion-guardia-colegiado>-->
       
       <app-guardia-gestion-guardia-colegiado class="pb-50" (guardiaColegiado) = "getGuardiaColegiado($event)">
       </app-guardia-gestion-guardia-colegiado>
@@ -26,7 +26,7 @@
       <app-datos-generales-gestion-guardia-colegiado class="pb-50" [modificar] = "modificar">
       </app-datos-generales-gestion-guardia-colegiado>
 
-      <app-sustituciones-gestion-guardia-colegiado class="pb-50" >
+      <app-sustituciones-gestion-guardia-colegiado class="pb-50" [modificar] = "modificar">
       </app-sustituciones-gestion-guardia-colegiado>
 
       <!-- <app-permutas-gestion-guardia-colegiado class="pb-50" [datosSolicitante] = "datosSolicitante"> -->

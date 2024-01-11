@@ -52,15 +52,15 @@
             <div class="form-row">
                 <div class="col-4">
                     <p-radioButton *ngIf="!isSociedad && !nuevoProcurador" name="person" [disabled]="esSociedad" value="f"
-                        label="Personas Fisicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
+                        label="Personas Fisicas" [(ngModel)]='persona' (click)="changeColsAndData();" (ngModelChange)="onPersonaChange()"></p-radioButton>
                     <p-radioButton *ngIf="isSociedad && !nuevoProcurador" name="person" disabled value="f" label="Personas Fisicas"
-                        [(ngModel)]='persona'></p-radioButton>
+                        [(ngModel)]='persona' (ngModelChange)="onPersonaChange()"></p-radioButton>
                     <p-radioButton *ngIf="!isFormador && !nuevoProcurador" name="person" value="j" label="Personas Juridicas"
-                        [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
+                        [(ngModel)]='persona' (click)="changeColsAndData();" (ngModelChange)="onPersonaChange()"></p-radioButton>
                     <p-radioButton *ngIf="isFormador && !nuevoProcurador && !origenSolicitudIncorporacion" disabled name="person" value="j" label="Personas Juridicas"
-                        [(ngModel)]='persona'></p-radioButton>
+                        [(ngModel)]='persona' (ngModelChange)="onPersonaChange()"></p-radioButton>
                     <p-radioButton *ngIf="isFormador && !nuevoProcurador && origenSolicitudIncorporacion" name="person" value="j" label="Personas Juridicas"
-                        [(ngModel)]='persona'></p-radioButton>
+                        [(ngModel)]='persona' (ngModelChange)="onPersonaChange()"></p-radioButton>
                     <!-- menu.facturacionSJCS.mantenimientoProcurador -->
                     <p-radioButton *ngIf="!isFormador" name="person" value="p" label="Procuradores"
                         [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
@@ -81,19 +81,19 @@
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"administracion.usuarios.literal.NIFCIF" | translate}}</label>
                         <input type="text" class="form-control" [attr.maxlength]="20" pInputText
-                            [(ngModel)]='bodyFisica.nif'>
+                            [(ngModel)]='bodyFisica.nif' (ngModelChange)="onInputChange($event)">
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.nombre'>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.nombre' [disabled]="disableInput">
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
-                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.primerApellido'>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.primerApellido' [disabled]="disableInput">
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
-                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.segundoApellido'>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.segundoApellido' [disabled]="disableInput">
                     </div>
                     <div class="form-group-interlineado col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
@@ -102,15 +102,15 @@
                         <p-multiSelect #someDropdown *ngIf="!colegioDisabled" [defaultLabel]="textFilter"
                             filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios_rol"
                             optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="10"
-                            styleClass="widthAll" [panelStyle]="{width:'100%'}" [disabled]="!addDestinatarioIndv"
-                            (onPanelShow)="focusInputField()"></p-multiSelect>
+                            styleClass="widthAll" [panelStyle]="{width:'100%'}" [disabled]="!addDestinatarioIndv || disableInput"
+                            (onPanelShow)="focusInputField()" optionDisabled="disableInput"></p-multiSelect>
                         <input [disabled]="true" *ngIf="colegioDisabled" type="text" class="form-control" pInputText
-                            [(ngModel)]='labelRemitente'>
+                            [(ngModel)]='labelRemitente' [disabled]="disableInput">
 
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
-                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.numeroColegiado'>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.numeroColegiado' [disabled]="disableInput">
                     </div>
                 </div>
             </div>
@@ -122,28 +122,28 @@
                         <!-- <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.tipo'> -->
                         <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion"
                             optionLabel="label" (ngModelChange)="getTipo($event)" [filter]="true"  [showClear]="true"
-                             placeholder="{{'general.boton.seleccionar' | translate}}"  filterBy="label,labelSinTilde">
+                             placeholder="{{'general.boton.seleccionar' | translate}}"  filterBy="label,labelSinTilde" [disabled]="disableInput">
                         </p-dropdown>
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
-                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.nif'>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.nif' (ngModelChange)="onInputChange($event)">
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}}</label>
-                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.denominacion'>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.denominacion' [disabled]="disableInput">
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}}</label>
-                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.abreviatura'>
+                        <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.abreviatura' [disabled]="disableInput">
                     </div>
                     <div class="form-group-interlineado col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
                         <p-multiSelect #someDropdown2 *ngIf="!colegioDisabled" filterBy="label" [options]="colegios_rol"
                             optionLabel="label" [defaultLabel]="textFilter" styleClass="widthAll"
                             [(ngModel)]='colegios_seleccionados' [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="10" [panelStyle]="{width:'100%'}" [disabled]="!addDestinatarioIndv"
-                            (onPanelShow)="focusInputField2()"></p-multiSelect>
+                            maxSelectedLabels="10" [panelStyle]="{width:'100%'}" [disabled]="!addDestinatarioIndv || disableInput"
+                            (onPanelShow)="focusInputField2()" optionDisabled="disableInput"></p-multiSelect>
                         <input [disabled]="true" *ngIf="colegioDisabled" type="text" class="form-control" pInputText
                             [(ngModel)]='labelRemitente'>
                     </div>

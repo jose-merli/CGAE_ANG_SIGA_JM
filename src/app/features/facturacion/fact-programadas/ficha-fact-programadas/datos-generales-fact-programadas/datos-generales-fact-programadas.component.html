@@ -27,7 +27,7 @@
             <label>{{ 'facturacion.factProgramadas.fechas.max' | translate }}:
               <span>{{ body.fechaCompraSuscripcionHasta | date: 'dd/MM/yyyy' }}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}:
-              <span>{{ body.estadoConfirmacion }}</span></label>
+              <span>{{ body.estadoGeneracion }}</span></label>
 
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
               *ngIf="!esFichaActiva()"></i>
@@ -118,14 +118,14 @@
               <div *ngIf="modoEdicion" class="row">
                 <div class="col-md-10">
                   <input type="text" class="form-control" maxLength="255"
-                  disabled="true" pInputText [value]="body.estadoConfirmacion || ''">
+                  disabled="true" pInputText [value]="body.estadoGeneracion || ''">
                 </div>
                 <div class="col-md-2 verticalAlign px-0">
                   <i *ngIf="modoEdicion" class="fa fa-info-circle" aria-hidden="true" (click)="getFasesFacturacionProgramada()"></i>
                 </div> 
               </div> 
               <input *ngIf="!modoEdicion" type="text" class="form-control" maxLength="255"
-                  disabled="true" pInputText [value]="body.estadoConfirmacion || ''">
+                  disabled="true" pInputText [value]="body.estadoGeneracion || ''">
             </div>
           </div>
         </div>

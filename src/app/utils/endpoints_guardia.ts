@@ -44,6 +44,7 @@ export let endpoints_guardia: any = {
     gestionGuardias_resumenTurno: "guardia/gestionGuardia/resumenTurno",
     gestionGuardias_guardarCola: "guardia/gestionGuardia/guardarCola",
     busquedaGuardias_baremosGuardias: "baremosGuardia/baremosFichaGuardia",
+    busquedaGuardias_resumenBaremosGuardias: "baremosGuardia/resumenBaremosFichaGuardia",
 
 
     // Saltos y compensaciones Guardia
@@ -158,6 +159,7 @@ export let endpoints_guardia: any = {
 
     //guardias colegiado
     guardiasColegiado_fechasDisponibles:"guardia/getComboDiasDisponiblesGC",
+    guardiasColegiado_fechasDiasGuardias:"guardia/getFechasByCabeceraGuardiaColegiado",
     guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
     guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
     guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",
