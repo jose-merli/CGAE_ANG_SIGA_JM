@@ -91,7 +91,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
       { field: "fechahasta", header: "censo.consultaDatos.literal.fechaFin" },
       { field: "tipoTurno", header: "dato.jgr.guardia.guardias.turno" },
       { field: "tipoGuardia", header: "menu.justiciaGratuita.GuardiaMenu" },
-      { field: "tipoDiasGuardia", header: "dato.jgr.guardia.guardias.tipoDia" },
+      { field: "tipoDiasGuardia", header: "dato.jgr.guardia.guardias.dias" },
       { field: "letradosGuardia", header: "justiciaGratuita.justiciables.literal.colegiado" },
       { field: "numColegiado", header: "facturacionSJCS.facturacionesYPagos.nColegiado" },
       { field: "ordenGrupo", header: "administracion.informes.literal.orden" },

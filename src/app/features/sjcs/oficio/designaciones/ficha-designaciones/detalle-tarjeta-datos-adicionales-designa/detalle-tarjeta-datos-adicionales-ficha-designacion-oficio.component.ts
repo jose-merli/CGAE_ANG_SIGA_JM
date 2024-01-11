@@ -45,13 +45,19 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       value: ""
     }
   ];
-
+  sinModificacion:boolean = true;
+  date0;
+  date1;
+  date2;
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router, private datepipe: DatePipe) { }
 
   ngOnInit() {
     this.minDateCierre = new Date("1990-01-01");
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     this.datosInicial = this.campos;
+    this.date0 = this.datosInicial.fechaOficioJuzgado ? new Date(this.datosInicial.fechaOficioJuzgado) : null;
+    this.date1 = this.datosInicial.fechaRecepcionColegio ? new Date(this.datosInicial.fechaRecepcionColegio) : null;
+    this.date2 = this.datosInicial.fechaJuicio ? new Date(this.datosInicial.fechaJuicio) : null;
     if (!this.nuevaDesigna) {
       // this.getDatosAdicionales(this.campos);
       this.getDatosAdicionales(this.campos);
@@ -65,6 +71,20 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
     } else if (nombre == "Fecha Juicio") {
       this.bloques[2].valueDatePicker = event;
     }
+
+    if(event == null && nombre == "Fecha Oficio Juzgado"){
+      this.bloques[0].valueDatePicker = null;
+    }
+    if(event == null && nombre == "Fecha Recepción Colegio"){
+      this.bloques[1].valueDatePicker = null;
+    }
+    if(event == null && nombre == "Fecha Juicio"){
+      this.bloques[2].valueDatePicker = null;
+    }
+
+    this.comprobarModificacion();
+    
+
   }
   showMsg(severity, summary, detail) {
     this.msgs = [];
@@ -72,13 +92,14 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       this.progressSpinner = true;
       // this.getDatosAdicionales(this.campos);
       this.bloques[0].value = this.datosInicial.delitos;
-      this.bloques[0].valueDatePicker = this.formatDate(this.datosInicial.fechaOficioJuzgado);
+      this.bloques[0].valueDatePicker = this.formatDate(this.date0);
       this.bloques[1].value = this.datosInicial.observaciones;
-      this.bloques[1].valueDatePicker = this.formatDate(this.datosInicial.fechaRecepcionColegio);
+      this.bloques[1].valueDatePicker = this.formatDate(this.date1);
       this.bloques[2].value = this.datosInicial.defensaJuridica;
-      this.bloques[2].valueDatePicker = this.formatDate(this.datosInicial.fechaJuicio);
+      this.bloques[2].valueDatePicker = this.formatDate(this.date2);
       this.hora = this.horaInicial;
       this.minuto = this.minutoInicial;
+      this.sinModificacion = true;
       this.progressSpinner = false;
     } else if (detail == "Guardar") {
       this.progressSpinner = true;
@@ -119,6 +140,15 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
             summary,
             detail
           });
+          this.datosInicial.delitos = this.bloques[0].value;
+          this.date0 = this.bloques[0].valueDatePicker;
+          this.datosInicial.observaciones = this.bloques[1].value;
+          this.date1 = this.bloques[1].valueDatePicker;
+          this.datosInicial.defensaJuridica = this.bloques[2].value;
+          this.date2 =this.bloques[2].valueDatePicker;
+          this.minutoInicial = this.minuto;
+          this.horaInicial = this.hora;
+          this.sinModificacion = true;
         },
         err => {
           this.progressSpinner = false;
@@ -191,6 +221,38 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
     );
   }
 
+  comprobarModificacion(){
+    if(this.bloques[0].value == ""){
+      this.bloques[0].value = null;
+    }
+    if(this.bloques[1].value == ""){
+      this.bloques[1].value = null;
+    }
+    if(this.bloques[2].value == ""){
+      this.bloques[2].value = null;
+    }
+    if(this.bloques[0].value != this.datosInicial.delitos ||
+      this.bloques[1].value != this.datosInicial.observaciones ||
+      this.bloques[2].value != this.datosInicial.defensaJuridica ||
+      !this.comprobarFechas() ||
+      this.minutoInicial != this.minuto ||
+      this.horaInicial != this.hora){
+      this.sinModificacion = false;
+    }else{
+      this.sinModificacion = true;
+    }
+  }
+
+  comprobarFechas(){
+    if(this.formatDate(this.bloques[0].valueDatePicker) != this.formatDate(this.date0) ||
+      this.formatDate(this.bloques[1].valueDatePicker) != this.formatDate(this.date1) ||
+      this.formatDate(this.bloques[2].valueDatePicker) != this.formatDate(this.date2)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+  
 
 
 }

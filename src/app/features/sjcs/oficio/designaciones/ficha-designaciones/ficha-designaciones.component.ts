@@ -2149,9 +2149,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
     this.getPermiteTurno();
     this.searchLetrados();
-    if(!this.nuevaDesigna){
-      sessionStorage.removeItem('designaItemLink');
-    }
+    
     
     if (sessionStorage.getItem("datosProcurador")) {
       let tarjProc = this.listaTarjetas.find(tarjProc => tarjProc.id === 'sjcsDesigProc');
@@ -2306,6 +2304,9 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
 
     this.getIdPartidaPresupuestaria(this.campos);
+    this.nuevaDesigna = false;
+    this.searchRelaciones();
+    this.searchInteresados();
     this.progressSpinner = false;
   }
 

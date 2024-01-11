@@ -28,7 +28,7 @@
         <p-dropdown *ngIf="selector.nombre != 'Turno'" autoWidth="false" filterBy="label,labelSinTilde" [filter]="true"
           class="inputWidth" placeholder="Seleccionar" [disabled]="selector.disable"
           [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones"
-          showClear="true" class="select-form">
+          showClear="true" class="select-form" (ngModelChange)="comprobarModificacion()">
         </p-dropdown>
       </div>
 
@@ -70,9 +70,9 @@
     <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar" [disabled]="!disableButtons"
       (click)="navigateComunicar()"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')" [disabled]="isLetrado"></button>
+      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')" [disabled]="isLetrado || sinModificacion"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', 'save')" [disabled]="!permisoEscritura"></button>
+      (click)="showMsg('success', 'Se ha guardado correctamente', 'save')" [disabled]="!permisoEscritura || sinModificacion"></button>
   </div>
 </div>
 </div>

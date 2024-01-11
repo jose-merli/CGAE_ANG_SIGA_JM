@@ -283,6 +283,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.sigaServices.post("busquedaGuardias_buscarAsistenciasExpress", this.filtrosAE.filtro)
         .subscribe(
           n => {
+            this.progressSpinner = true;
             if (this.resultadoAE != null && this.resultadoAE.tabla != null) {
               this.resultadoAE.tabla.selectedArray = [];
             }

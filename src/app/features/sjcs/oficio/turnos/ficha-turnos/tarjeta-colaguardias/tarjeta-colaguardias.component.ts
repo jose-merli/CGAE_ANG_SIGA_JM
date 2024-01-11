@@ -553,6 +553,9 @@ export class TarjetaColaGuardias implements OnInit {
             { type: 'invisible', value: datoObj.ultimoCola }
             
           ];
+
+          arr.push(objArr);
+          
         
       } else {
 
@@ -598,13 +601,13 @@ export class TarjetaColaGuardias implements OnInit {
             { type: 'invisible', value: undefined }//datoObj.ultimoCola }
           ];
         }
-        
+        if (datoObj.numeroGrupo == null){
+          arrLast.push(objArr);
+        }else{
+          arr.push(objArr);
+        }
       }
-      if (datoObj.numeroGrupo == null){
-        arrLast.push(objArr);
-      }else{
-        arr.push(objArr);
-      }
+      
     
     })
     for (let i = 0; i < arrLast.length; i++){
