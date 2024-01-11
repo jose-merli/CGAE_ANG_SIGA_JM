@@ -83,7 +83,6 @@ export class DocumentosComponent implements OnInit {
       { field: "nombreDocumento", header: "informesycomunicaciones.comunicaciones.documento.nombre" },
       { field: "pathDocumento", header: "informesycomunicaciones.comunicaciones.documento.nombre" }
     ];
-    console.log(this.body);
   }
 
   getDatos() {
