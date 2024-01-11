@@ -270,7 +270,7 @@
                       </div>
                       <div *ngIf="col.field == 'tipo'">
                         <input class="form-control" [(ngModel)]="dato.nombreTelefono" [disabled]="!permisoEscritura"
-                          maxlength="100" pInputText>
+                          maxlength="100" pInputText type="text" placeholder="Teléfono">
                       </div>
                     </div>
 
@@ -327,6 +327,7 @@
                         </div>
                       </div>
                       <div class="col-lg-2 ">
+                        <label>{{dato.nombreTelefono}}</label>
                         <p-checkbox (onChange)="onChangePreferente(dato)" [(ngModel)]="dato.preferenteSmsCheck"
                           binary="true" [disabled]="!permisoEscritura"></p-checkbox>
                       </div>
