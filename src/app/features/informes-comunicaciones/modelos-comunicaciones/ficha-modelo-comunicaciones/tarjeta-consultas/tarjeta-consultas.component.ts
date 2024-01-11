@@ -2,18 +2,17 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { DataTable } from "primeng/datatable";
 import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
 import { SigaServices } from "../../../../../_services/siga.service";
-import { ComunicacionesModelosComItem } from "../../../../../models/ComunicacionesModelosComunicacionesItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { Identifiers } from "@angular/compiler";
 
 @Component({
-  selector: "app-tarjeta-comunicaciones",
-  templateUrl: "./tarjeta-comunicaciones.component.html",
-  styleUrls: ["./tarjeta-comunicaciones.component.scss"]
+  selector: "app-tarjeta-consultas",
+  templateUrl: "./tarjeta-consultas.component.html",
+  styleUrls: ["./tarjeta-consultas.component.scss"]
 })
-export class TarjetaComunicacionesComponent implements OnInit {
+export class TarjetaConsultasComponent implements OnInit {
   openFicha: boolean = false;
   activacionEditar: boolean = true;
   derechoAcceso: any;

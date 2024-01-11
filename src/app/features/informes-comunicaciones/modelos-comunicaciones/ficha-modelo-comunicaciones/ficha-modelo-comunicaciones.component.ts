@@ -39,6 +39,10 @@ export class FichaModeloComunicacionesComponent implements OnInit {
       {
         key: "informes",
         activa: false
+      },
+      {
+        key: "consultas",
+        active: false
       }/*
       {
         key: "comunicacion",
