@@ -307,7 +307,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         ejgItem.numero = dato.codigo;
         ejgItem.idInstitucion = dato.idinstitucion;
         ejgItem.tipoEJG = dato.idtipo;
-
+        sessionStorage.setItem("Designacion", JSON.stringify(this.body));
         let result;
         // al no poder obtener todos los datos del EJG necesarios para obtener su informacion
         //se hace una llamada a al base de datos pasando las claves primarias y obteniendo los datos necesarios
