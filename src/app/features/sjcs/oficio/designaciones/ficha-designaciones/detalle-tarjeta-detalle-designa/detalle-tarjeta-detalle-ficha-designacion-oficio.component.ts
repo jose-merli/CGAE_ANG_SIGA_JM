@@ -84,7 +84,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   constructor(private sigaServices: SigaServices, private datepipe: DatePipe, private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService) { }
 
   ngOnInit() {
-    this.campos.idModulo = this.campos.idProcedimiento;
     this.campos.idProcedimiento = this.campos.idPretension;
     this.getNigValidador();
     this.getNprocValidador();
