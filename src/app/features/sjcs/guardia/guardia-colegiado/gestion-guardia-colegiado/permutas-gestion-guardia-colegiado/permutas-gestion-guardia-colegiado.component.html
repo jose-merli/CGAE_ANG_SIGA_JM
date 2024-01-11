@@ -2,19 +2,73 @@
 <div class="busqueda-container" id="relaciones">
   <div class="card">
     <div class="card-header header-ficha">
-      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+          <div class="img-colegiado">
+            <i class="fas fa-link icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 cabeza">
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha">Permutas</label>
+          </div>
+          <div class="d-flex justify-content-between sub">
+            <label>{{'formacion.busquedaInscripcion.fechaSolicitud' | translate}}:
+              <span>{{permu.fechasolicitud | date: 'dd/MM/yyyy'}}</span>
+            </label>
+            <label>{{'dato.jgr.guardia.guardias.turno.sol' | translate}}:
+              <span>{{guardiaColegiado.tipoTurno}}  {{guardiaColegiado.tipoGuardia}}</span>
+            </label>
+
+            <label>{{'dato.letrado.guardia.sol' | translate}}:
+              <span>{{permu.nombreColegiadoSolicitante}}  {{permu.fechainicioSolicitante | date: 'dd/MM/yyyy'}}
+              </span>
+            </label>
+          </div>
+          <div class="d-flex justify-content-between sub">
+            <label>{{'general.cabecera.confirmacion' | translate}}:
+              <span> {{permu.fechaconfirmacion | date: 'dd/MM/yyyy'}}</span>
+            </label>
+            <label>{{'dato.jgr.guardia.guardias.turno.conf' | translate}}:
+              <span>{{permu.nombreTurno}}  {{permu.nombreGuardia}}</span>
+            </label>
+            <label>{{'dato.letrado.guardia.conf' | translate}}:
+              <span>{{permu.nombreColegiadoConfirmador}}  {{permu.fechainicioConfirmador | date: 'dd/MM/yyyy'}}
+              </span>
+            </label>
+           
+          
+          </div>
+          <div class="d-flex justify-content-between sub">
+            <div class="contador-permutas">
+              <label>
+                <span>({{contPermutas}}) </span>
+              </label>
+            </div>
+           
+            <i (click)="abreCierraFicha()"
+            [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha()">
         <div class="img-colegiado">
           <i class="fas fa-link icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Permutas</label>
+        <label class="title-ficha">Permutas</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
+
     </div>
 
-    <div class="px-0 pt-0 pb-0 card-body card-body-ficha">
-      <p-table [value]="permutas" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"  (click)="comprobarValidados()"
-        [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-        [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
+    <div *ngIf="openFicha" class="px-0 pt-0 pb-0 card-body card-body-ficha">
+      <p-table [value]="permutas" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
+        (click)="comprobarValidados()" [responsive]="true" #table class="tabla-listado" [paginator]="true"
+        [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
+        paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of cols" [style.width]="col.width">
@@ -27,7 +81,8 @@
               {{ col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
               <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
-                *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value, col.field, 'contains')" />
+                *ngSwitchCase="col.field" pInputText type="text"
+                (input)="table.filter($event.target.value, col.field, 'contains')" />
             </th>
           </tr>
         </ng-template>
@@ -73,12 +128,11 @@
                     {{dato[col.field]}}
                   </span>
                 </div>
-                
+
                 <!-- <div *ngIf="col.field == 'nombreTurno' && clickPermuta &&  permutas[rowIndex].nuevoRegistro"> -->
                 <div *ngIf="col.field == 'turnoGuardiaConf' && clickPermuta &&  permutas[rowIndex].nuevoRegistro">
-                  <p-dropdown [(ngModel)]='valueComboTurno' class="select-form"
-                    [options]="comboTurnos" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeTurnos()"
-                    [showClear]="true"></p-dropdown>
+                  <p-dropdown [(ngModel)]='valueComboTurno' class="select-form" [options]="comboTurnos" [filter]="true"
+                    filterBy="label,labelSinTilde" (onChange)="onChangeTurnos()" [showClear]="true"></p-dropdown>
                 </div>
 
                 <!-- <div *ngIf="col.field == 'nombreGuardia' && clickPermuta &&  permutas[rowIndex].nuevoRegistro"> -->
@@ -142,7 +196,8 @@
             [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || !clickPermuta)"
             (click)="checkPermutar()" type="button" iconPos="left"
             label="{{ 'general.boton.permutar' | translate }}"></button>
-          <button pButton [disabled]="(((selectedDatos.length == 0 && !clickPermuta) || (clickPermuta && disableValidar())) || yaValidada || selectedDatos.length > 1)"
+          <button pButton
+            [disabled]="(((selectedDatos.length == 0 && !clickPermuta) || (clickPermuta && disableValidar())) || yaValidada || selectedDatos.length > 1)"
             (click)="check()" type="button" icon="fa fa-save" iconPos="left"
             label="{{'general.boton.validar' | translate}}"></button>
 

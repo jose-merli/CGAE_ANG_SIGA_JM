@@ -18,7 +18,7 @@ import { procesos_guardia } from '../../../../../../permisos/procesos_guarida';
   styleUrls: ['./permutas-gestion-guardia-colegiado.component.scss']
 })
 export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
-  cols: any;
+  cols:  any = [];
   buscadores = [];
   rowsPerPage: any = [];
   selectMultiple: boolean;
@@ -30,7 +30,8 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   permisoEscritura: boolean;
   progressSpinner;
   msgs;
-  permutas;
+  permutas= [];;
+  permu : PermutaItem = new PermutaItem();
   body: any;
   clickPermuta:boolean = false;
   comboTurnos;
@@ -46,6 +47,8 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   fechaSolicitanteInicio;
   // SIGARNV-2885 FIN
   yaValidada: boolean = false;
+  openFicha : boolean = false;
+  contPermutas : number = 0;
   constructor(private translateService: TranslateService,
     private router: Router,
     private sigaServices: SigaServices,
@@ -117,6 +120,10 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     ];
   }
 
+  abreCierraFicha() {
+    this.openFicha = !this.openFicha;
+  }
+
   getPermutas(){
     let permutaItem2 = new PermutaItem();
     permutaItem2.idturno = Number(this.body.idTurno);
@@ -137,6 +144,11 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
         n => {
           let error = JSON.parse(n.body).error;
           this.permutas = JSON.parse(n.body).permutaItems;
+          if(this.permutas != null && this.permutas.length > 0){
+            this.permu = this.permutas[0];
+            this.contPermutas = this.permutas.length
+          }
+
           this.progressSpinner = false;
           if (error != null && error.description != null) {
             this.showMessage( 'info',  this.translateService.instant("general.message.informacion"), error.description );

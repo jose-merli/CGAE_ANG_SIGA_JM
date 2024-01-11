@@ -18,6 +18,8 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
   body:GuardiaItem;
   campoFechaIni: Date;
   campoFechaFin: Date;
+  rangoIni: string;
+  rangoFin: string;
   fechasDisponibles = [];
   fechas: String[] = [];
   @Input() modificar:boolean = false;
@@ -51,6 +53,7 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
 
   getDias(){
     this.fechasDisponibles = [];
+    this.body.fechahasta
     //this.progressSpinner = true;
     this.sigaServices.getParam("guardiasColegiado_fechasDiasGuardias", this.fillParams2()).subscribe(
       n => {
@@ -89,10 +92,13 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
   }
 
   fillParams2() {
-    console.log("FECHA DESDE: " + this.body.fechadesde);
-    console.log("FECHA HASTA: " + this.body.fechahasta);
-    let parametros = '?fechaIni=' + this.formatDate2(this.body.fechadesde) + "&fechaFin=" + this.formatDate2(this.body.fechahasta) + "&idTurno=" + this.body.idTurno + "&idGuardia=" + this.body.idGuardia;
-    return parametros;
+    let parametros
+    if(this.rangoIni != null && this.rangoFin != undefined){
+       parametros = '?fechaIni=' +this.rangoIni + "&fechaFin=" +this.rangoFin + "&idTurno=" + this.body.idTurno + "&idGuardia=" + this.body.idGuardia;
+      }else{
+        parametros = '?fechaIni=' + this.formatDate2(this.body.fechadesde) + "&fechaFin=" + this.formatDate2(this.body.fechahasta) + "&idTurno=" + this.body.idTurno + "&idGuardia=" + this.body.idGuardia;
+    }
+   return parametros;
   }
 
   getFechas(){
@@ -121,6 +127,7 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
   }
 
   save(){
+    this.body.fechahasta
     if(!this.modificar){
       this.nuevaGuardia();
     }else{
@@ -148,13 +155,20 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
    
   }
 
+  
+  onChangeRango(event): void {
+    let listaFechas = event.value.split(", ");
+    this.rangoIni = listaFechas[0];
+    this.rangoFin = listaFechas[listaFechas.length - 1];
+}
+
   formatDate2(date) {
     const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);
   }
   
   nuevaGuardia() {
-
+    this.body.fechahasta
     let itemNuevo:GuardiaItem = this.body
     itemNuevo.fechadesde = new Date(itemNuevo.fechadesde)
     itemNuevo.fechahasta = new Date(itemNuevo.fechahasta)
@@ -168,7 +182,7 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
         this.campoFechaFin =  new Date(parseFloat(des.split("/")[1]))
         this.campoFechaIni =  new Date(parseFloat(des.split("/")[0]))
         this.modificar = true;
-        this.getDias();
+        this.getDias()
       },
       err => {
         //console.log(err);
