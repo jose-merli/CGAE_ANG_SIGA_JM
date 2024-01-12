@@ -19,6 +19,7 @@ export class Paginador4Component implements OnInit {
   @Output() fromReg = new EventEmitter();
   @Output() toReg = new EventEmitter();
   @Input() totalRegistros;
+  @Input() mitadTabla: boolean;
   from = 1;
   to = 10;
   selected = false;

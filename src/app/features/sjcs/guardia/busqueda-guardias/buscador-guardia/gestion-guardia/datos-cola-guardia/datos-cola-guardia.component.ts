@@ -50,8 +50,8 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
   nInscritos:String ="";
   botActivos: boolean = true;
   editable: boolean = true;
-  rowGroups: Row[];
-  rowGroupsAux: Row[];
+  rowGroups: Row[] = [];
+  rowGroupsAux: Row[] = [];
   datosConfColaGuardias: any;
   selectedItemSaltos: number = 5;
   selectedItemCompensaciones: number = 5;
@@ -134,6 +134,16 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
     }
 
   }
+
+  goToSaltosYComp(): void {
+    if(this.persistenceService.getDatos() && !this.modoVinculado){
+      this.filtroInscripciones.idGuardia = this.persistenceService.getDatos().idGuardia != undefined ? this.persistenceService.getDatos().idGuardia : JSON.parse(this.persistenceService.getDatos()).idGuardia;
+      this.filtroInscripciones.idTurno = this.persistenceService.getDatos().idTurno != undefined ? this.persistenceService.getDatos().idTurno : JSON.parse(this.persistenceService.getDatos()).idTurno;
+      sessionStorage.setItem("filtroFromFichaGuardia",JSON.stringify(this.filtroInscripciones));
+      this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: this.filtroInscripciones.idTurno } });
+    }
+  }
+
  ngOnDestroy(){
   this.suscription.unsubscribe();
  }
@@ -533,13 +543,10 @@ inicio(){
           { type: 'invisible', value: datoObj.idPersona },
           { type: 'invisible', value: undefined }//datoObj.ultimoCola }
         ];
+        arr.push(objArr);
       }
-      
-      arr.push(objArr);
-      
-    
     })
-    
+
     for (let i = 0; i < arrLast.length; i++){
       arr.push(arrLast[i]);
     }
@@ -566,7 +573,7 @@ inicio(){
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "35%"
         },
         {
@@ -595,7 +602,7 @@ inicio(){
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "40%"
         },
         {

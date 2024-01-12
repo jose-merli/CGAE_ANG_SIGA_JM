@@ -42,47 +42,46 @@
           </a>
         </label>
       </div>
-      <div class="form-row">
-        <div class="form-group col-lg-3 col-md-3">
-          <div class="form-group-interlineado col-lg-12 col-md-12">
-            <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
-          </label>
-          <app-fecha [(value)]="turnosItem.fechaActual" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
-    </div></div>
-          
-        <div class="form-group col-lg-3 col-md-3">
-          <div class="form-row">
-          <label>{{ "justiciaGratuita.oficio.turnos.seleccionarguardia" | translate }}
-          </label>
-          <p-dropdown class="select-form" id="texto_cola_guardia" (onChange)="cargarTabla($event)" [(ngModel)]='turnosItem.idcomboguardias' [filter]="true"
-            filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="guardias" placeholder="{{'general.boton.seleccionar' | translate}}"
-            [showClear]="true">
-          </p-dropdown>
-      </div>
-    </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}</label>
-          <input type="text" id="texto_cola_guardia" value="{{ultimoLetrado}}"  disabled>
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group-interlineado col-lg-12 col-md-12">
+              <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}</label>
+              <app-fecha [(value)]="turnosItem.fechaActual" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
+            </div>
+          </div>          
+          <div class="form-group col-lg-3 col-md-3">
+            <div class="form-row">
+              <label>{{ "justiciaGratuita.oficio.turnos.seleccionarguardia" | translate }}
+              </label>
+              <p-dropdown class="select-form" id="texto_cola_guardia" (onChange)="cargarTabla($event)" [(ngModel)]='turnosItem.idcomboguardias' [filter]="true"
+                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="guardias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [showClear]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}</label>
+            <input type="text" id="texto_cola_guardia" value="{{ultimoLetrado}}"  disabled>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}</label>
+            <input type="text" id="texto_cola_guardia" value="{{apeyNombreUltimo}}"  disabled>
+          </div>
         </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}</label>
-          <input type="text" id="texto_cola_guardia" value="{{apeyNombreUltimo}}"  disabled>
-      </div>
-      </div>
+
       <div class="table-body-wrap">
 
-      <!-- Tabla inscripciones -->
-      <div class="card-body-partida first-table">
+      <div class="card-body-partida first-table" style="border-right-style: inset;">
         <strong style="padding-left: 0.8rem;">{{"justiciaGratuita.oficio.turnos.colaInscripciones" | translate}}</strong>
-        
-        <app-tabla-resultado-order [pantalla]="'colaGuardias'" [porGrupos]="porGrupos"
+        <!-- Tabla inscripciones -->        
+        <app-tabla-resultado-order #tablaOrder [pantalla]="'colaGuardias'" [porGrupos]="porGrupos"
           [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo" [manual]="this.ordenacionManual" [cabeceras]="cabeceras"
           [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="this.ordenacionManual ? 6 : 5"
           [minimoLetrado]="minimoLetrado"  [guardiaComunicar]="guardiaComunicar"
           (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)"
           (colaGuardiaModified)="updateColaGuardia($event)" (colaGuardiaOrdenada)="colaGuardiaOrdenada($event)"
           (rest)="rest($event)" (dupli)="duplicar($event)"
-          [dataConfOrdColaHered]="dataConfColaGuardiaPadre">
+          [dataConfOrdColaHered]="dataConfColaGuardiaPadre" [mitadTabla]="true">
         </app-tabla-resultado-order>
       </div>
       <!-- Tabla compensaciones -->
@@ -203,6 +202,28 @@
         </div>
       </div>
       </div>
+    </div>
+    <div *ngIf="openFicha" class="card-footer">
+      <!--<div class="text-right main-button">
+        <button [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
+          pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
+        <button pButton [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
+          (click)="saltoCompensacion()" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
+        <button  (click)="comunicar()" pButton type="button" icon="fa fa-comment" iconPos="left"
+            label="{{'general.boton.comunicar' | translate }}"></button>
+      </div>-->
+      <div class="text-right main-button butBottom" style="height: 30px;">
+        <!--<button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="disableAll || disabledUltimo"
+        (click)="guardar()"></button>
+        <button [disabled]=" disableAll || duplicarDisabled"  pButton type="button" icon="fa fa-reply" iconPos="left" label="Duplicar" [disabled]="selectedDatos.length == 0 || selectedDatos.length > 1 || ordenacionManual"
+                (click)="duplicar(true); showMsg('success', 'Se ha duplicado correctamente', '')"></button>
+        <button [disabled]="selectedDatos.length == 0 || selectedDatos.length > 1" (click)="nuevoSaltoComp()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo salto / Comp."></button>
+        <button [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
+                  pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
+        <button [disabled]=" disableAll" (click)="comunicar()" pButton type="button" icon="fa fa-comment" iconPos="left"
+                label="{{'general.boton.comunicar' | translate }}"></button>
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
+                (click)="rest()" [disabled]="disableAll"></button>-->
     </div>
   </div>
 </div>

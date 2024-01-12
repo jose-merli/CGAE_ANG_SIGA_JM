@@ -6,7 +6,7 @@
     </div>
 
     <div class="padding-interior"> 
-        <app-paginador4 #paginador (pageNumber)="getPageNumber($event)" (perPage)="perPage($event)" (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros" ></app-paginador4>
+        <app-paginador4 #paginador (pageNumber)="getPageNumber($event)" (perPage)="perPage($event)" (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros" [mitadTabla]="mitadTabla"></app-paginador4>
     </div>
 
     <div *ngIf="!manual && pantalla=='colaGuardias'" class="col-lg-12 col-md-12 table" matSort #table>    
@@ -118,7 +118,7 @@
     
 </div>
 
-<div class="card-footer pt-5">
+<div [ngClass]="{'card-footer pt-5': !mitadTabla}">
     <div class="text-right main-button butBottom">
         <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled || isLetrado"
         (click)="guardar(marcadoultimo)"></button>

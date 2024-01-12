@@ -16,13 +16,6 @@
         (guardadoSend)="guardadoSend($event)" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (newEstado)="newEstado()" [nuevo] ="nuevo">
         </app-datos-generales-ejg>
 
-        <app-servicios-tramitacion *ngIf="permisoEscrituraServiciosTramitacion != undefined && modoEdicion"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaServiciosTramitacion]="tarjetaServiciosTramitacion" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaServiciosTramitacion]="openTarjetaServiciosTramitacion">
-        </app-servicios-tramitacion>
-
         <app-unidad-familiar *ngIf="permisoEscrituraUnidadFamiliar != undefined && modoEdicion"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
             [tarjetaUnidadFamiliar]="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion"

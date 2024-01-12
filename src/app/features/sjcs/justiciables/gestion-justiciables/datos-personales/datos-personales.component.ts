@@ -773,7 +773,21 @@ export class DatosPersonalesComponent implements OnInit {
 
     this.datos.push(rowCorreoElectronico);
     this.datos.push(rowFax);
+    
+    this.nuevoTelefono = true;
 
+    let dato = new JusticiableTelefonoItem();
+    dato.nuevo = true;
+    dato.preferenteSmsCheck = false;
+    dato.preferenteSms = "0";
+    dato.count = this.count;
+    dato.tlfValido = true;
+    dato.numeroTelefono = undefined;
+    dato.nombreTelefono = undefined;
+
+    this.datos.push(dato);
+
+    this.count += 1;
     // Rellenar Dirección Postal
     this.rellenarDireccionPostal();
 

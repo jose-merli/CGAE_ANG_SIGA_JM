@@ -57,8 +57,8 @@ export class TarjetaColaGuardias implements OnInit {
     "fromCombo": false,
     "minimoLetradosCola": 0
   };
-  rowGroups: Row[];
-  rowGroupsAux: Row[];
+  rowGroups: Row[] = [];
+  rowGroupsAux: Row[] = [];
   processedData = [];
   totalRegistros = 0;
   manual: Boolean;
@@ -118,7 +118,7 @@ export class TarjetaColaGuardias implements OnInit {
   @ViewChild("tableComp") tableComp;
   @ViewChild("tableSaltos") tableSaltos;
   @ViewChild("multiSelect") multiSelect: MultiSelect;
-  @ViewChild(TablaResultadoOrderComponent) tablaOrder;
+  @ViewChild("tablaOrder") tablaOrder: TablaResultadoOrderComponent;
   fichasPosibles = [
     {
       key: "generales",
@@ -398,7 +398,7 @@ export class TarjetaColaGuardias implements OnInit {
         if(this.datos != null && this.datos!= undefined){
           this.body.idpersona_ultimo = JSON.parse(n.body).idPersonaUltimo;
         }
-        this.sigaServices.notifysendDatosRedy(n);
+        this.sigaServices.notifysendDatosRedy(this.datos);
 
        this.obtieneConfiguracionCola(n.body);
       }
@@ -817,7 +817,7 @@ export class TarjetaColaGuardias implements OnInit {
   }
 
   disabledBotones() {
-    if (!this.botActivos || !this.tablaOrder || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tablaOrder.selectedDatos || this.tablaOrder.selectedDatos.length == 0))
+    if (!this.botActivos || !this.tablaOrder || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tablaOrder.selectedArray || this.tablaOrder.selectedArray.length == 0))
       return false;
     return true;
   }
@@ -843,7 +843,6 @@ export class TarjetaColaGuardias implements OnInit {
         console.log(indexA);
       } 
     });
-    
     this.datos.splice(indexA+1, 0, datCopy);
     this.transformData();
     }
@@ -1267,7 +1266,7 @@ export class TarjetaColaGuardias implements OnInit {
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "40%"
         },
         {
@@ -1308,7 +1307,7 @@ export class TarjetaColaGuardias implements OnInit {
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "35%"
         },
         {
@@ -1367,6 +1366,8 @@ export class TarjetaColaGuardias implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+    this.tableComp.reset();
+    this.tableSaltos.reset();
   }
 
 
@@ -1584,7 +1585,7 @@ export class TarjetaColaGuardias implements OnInit {
         this.selectAll = false;
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        
+
         this.progressSpinner = false;
         this.getColaGuardia();
       },

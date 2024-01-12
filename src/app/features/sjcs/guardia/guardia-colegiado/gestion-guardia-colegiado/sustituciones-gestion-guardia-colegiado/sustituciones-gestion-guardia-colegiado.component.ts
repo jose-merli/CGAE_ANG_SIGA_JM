@@ -36,6 +36,7 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
   saltoOcompensacion;
   esLetrado: boolean=true;
   esColegiado: boolean=true;
+  openFicha: boolean = false;
   constructor(private datepipe:DatePipe,private persistenceService: PersistenceService,
     private commonServices: CommonsService,
     private translateService: TranslateService,private sigaServices: SigaServices, private sigaStorageService: SigaStorageService, 
@@ -89,7 +90,9 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
       detail: detailParam
     });
   }
-
+  abreCierraFicha() {
+    this.openFicha = !this.openFicha;
+  }
   getFechas(){
     this.fechasDisponibles = [];
     //this.progressSpinner = true;

@@ -79,7 +79,7 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
             let data = JSON.parse(n.body).colegiadoItem;
             this.nombreCliente = data.nombre;
             this.nifCifCliente = data.nif;
-            this.filtrosSuscripciones.idpersona = this.localStorageService.idPersona;
+            //this.filtrosSuscripciones.idpersona = this.localStorageService.idPersona;
           },
           err => {
             this.progressSpinner = false;
