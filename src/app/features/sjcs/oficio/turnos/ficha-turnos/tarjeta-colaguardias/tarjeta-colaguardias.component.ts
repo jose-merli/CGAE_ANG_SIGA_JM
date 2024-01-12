@@ -398,7 +398,7 @@ export class TarjetaColaGuardias implements OnInit {
         if(this.datos != null && this.datos!= undefined){
           this.body.idpersona_ultimo = JSON.parse(n.body).idPersonaUltimo;
         }
-        this.sigaServices.notifysendDatosRedy(n);
+        this.sigaServices.notifysendDatosRedy(this.datos);
 
        this.obtieneConfiguracionCola(n.body);
       }
@@ -1246,21 +1246,21 @@ export class TarjetaColaGuardias implements OnInit {
   getCols() {
     if (this.ordenacionManual == false) {
       this.cols = [
-        { field: "ordenCola", header: "administracion.informes.literal.orden", width: "15%" },
-        { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
-        { field: "nombreApe", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-        { field: "fechaValidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
-        { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
+        { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
+        { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+        { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+        { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
+        { field: "fechabajaguardia", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
       ];
 
       this.cabeceras = [
         {
-          id: "ordenCola",
+          id: "orden",
           name: "dato.jgr.guardia.guardias.ord",
           size: "10%"
         },
         {
-          id: "nColegiado",
+          id: "ncolegiado",
           name: "dato.jgr.guardia.guardias.ncol",
           size: "10%"
         },
@@ -1270,7 +1270,7 @@ export class TarjetaColaGuardias implements OnInit {
           size: "40%"
         },
         {
-          id: "fechaValidacion",
+          id: "fechavalidez",
           name: "dato.jgr.guardia.guardias.alta",
           size: "20%"
         },
@@ -1282,11 +1282,11 @@ export class TarjetaColaGuardias implements OnInit {
       ];
     } else {
       this.cols = [
-        { field: "ordenCola", header: "administracion.informes.literal.orden", width: "15%" },
-        { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+        { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
+        { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
         { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-        { field: "fechaValidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
-        { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
+        { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
+        { field: "fechabajaguardia", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
       ];
 
       this.cabeceras = [
