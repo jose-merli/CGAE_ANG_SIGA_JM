@@ -366,7 +366,7 @@ export class GestionEjgComponent implements OnInit {
     if (sessionStorage.getItem("EJGItem")) {
       sessionStorage.removeItem("EJGItem");
     }
-    this.router.navigate(['/gestionEjg']);
+    // this.router.navigate(['/gestionEjg']);
     this.ngOnInit();
     this.unidadFamiliar.ngOnInit();
   }
@@ -948,5 +948,7 @@ export class GestionEjgComponent implements OnInit {
   actualizarEstados($event){
     this.tarjetaEstadosEJG.ngOnInit();
   }
+
+
 
 }
