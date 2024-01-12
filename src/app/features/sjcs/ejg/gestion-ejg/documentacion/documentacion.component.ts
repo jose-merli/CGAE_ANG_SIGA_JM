@@ -699,6 +699,7 @@ export class DocumentacionComponent implements OnInit {
           this.selectedDatos = [];
           //this.deseleccionarTodo = true;
           this.getDocumentos(this.item);
+          this.cerrarDialog();
           //this.showModal = false;
         } else {
           if (error != null && error.description != null && error.description != '') {
@@ -717,6 +718,7 @@ export class DocumentacionComponent implements OnInit {
         } else {
           this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
         }
+        this.cerrarDialog();
         
       }
       // ,
