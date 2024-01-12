@@ -37,7 +37,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	first: boolean = true;
 
 	//COMBOS
-	estadoFacturas: ComboItem;
+	estadoFacturas: ComboItem[];
 	estadoPagos: ComboItem;
 	conceptos: ComboItem;
 	grupoTurnos: ComboItem;
@@ -207,7 +207,25 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		this.progressSpinnerFiltro = true;
 		this.sigaService.get("combo_comboFactEstados").subscribe(
 			data => {
-				this.estadoFacturas = data.combooItems;
+				let resultList : ComboItem[] = [];
+				data.combooItems.forEach(estadoFac => {
+					if (estadoFac.value == 20 || estadoFac.value == 40 || estadoFac.value == 50){
+						let estadoSimulacion : ComboItem = {...estadoFac};
+						estadoSimulacion.value = estadoSimulacion.value + '-1';
+						estadoSimulacion.label = estadoSimulacion.label + ' ' + this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.simulacion').toUpperCase();
+						resultList.push(estadoSimulacion);
+						let estadoGeneración : ComboItem = {...estadoFac};
+						estadoGeneración.value = estadoGeneración.value + '-0';
+						estadoGeneración.label = estadoGeneración.label + ' ' + this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.generacion').toUpperCase();
+						resultList.push(estadoGeneración);
+					} else {
+						let estadoGeneración : ComboItem = {...estadoFac};
+						estadoGeneración.value = estadoGeneración.value + '-0';
+						resultList.push(estadoGeneración);
+					}
+				});
+				this.estadoFacturas = resultList;
+
 				this.commonsService.arregloTildesCombo(this.estadoFacturas);
 				this.progressSpinnerFiltro = false;
 			},
