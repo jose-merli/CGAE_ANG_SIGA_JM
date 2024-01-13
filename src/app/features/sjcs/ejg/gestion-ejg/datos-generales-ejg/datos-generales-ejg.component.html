@@ -13,25 +13,15 @@
             <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <!-- <label>{{ "gratuita.busquedaEJG.literal.fechaApertura" | translate }}: <span>{{body.fechaApertura | date:
+            <label>{{ "gratuita.busquedaEJG.literal.fechaApertura" | translate }}: <span>{{body.fechaApertura | date:
                 'dd/MM/yyyy'}}</span></label>
             <label>{{ "justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento" | translate }}:
-              <span>{{body.numAnnioProcedimiento}}</span></label> -->
+              <span>{{body.numAnnioProcedimiento}}</span></label>
             <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}: <span>{{tipoEJGDesc}}</span></label>
             <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate }}:
-            <span>{{tipoEJGColDesc}}</span></label>
-
-            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.turno" | translate }}:
-            <span>{{turnoEJG}}</span></label>
-
-            <label>{{ "dato.jgr.guardia.saltcomp.guardia" | translate }}:
-            <span>{{turnoGuardiaEJG}}</span></label>
-
-            <label>{{ "justiciaGratuita.justiciables.literal.colegiado" | translate }}:
-              <span>{{body.numColegiado}}</span></label>
-                  
-            <!-- <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}:
-              <span>{{body.estadoEJG}}</span></label> -->
+              <span>{{tipoEJGColDesc}}</span></label>
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}:
+              <span>{{body.estadoEJG}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
               *ngIf="!esFichaActiva('datosGenerales')"></i>
           </div>

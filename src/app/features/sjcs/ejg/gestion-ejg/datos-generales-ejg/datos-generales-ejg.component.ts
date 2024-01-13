@@ -35,7 +35,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() guardadoSend = new EventEmitter<any>();
   @Output() newEstado = new EventEmitter();
-  @Output() datosNueva = new EventEmitter();
   @Input() nuevo;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
@@ -48,8 +47,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   textSelected: String = '{0} opciones seleccionadas';
   tipoEJGDesc = "";
   tipoEJGColDesc = "";
-  turnoGuardiaEJG = "";
-  turnoEJG ="";
   comboTipoEJG = [];
   comboTipoEJGColegio = [];
   comboPrestaciones = [];
@@ -120,56 +117,40 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
-    
     if (this.persistenceService.getDatosEJG()) {
-      this.bodyInicial = this.persistenceService.getDatosEJG();
-      if(sessionStorage.getItem("nuevoNColegiado") && (this.body.numEjg == null || this.body.numEjg == "")){
-        this.nuevo = true;
-        this.modoEdicion = false;
-        this.disabledNumEJG = true;
-        this.modoEdicion = false;
-        this.showTipoExp = false;     
-        this.persistenceService.clearDatosEJG();
-        this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+      
+      if (this.persistenceService.getDatosEJG()) {
+        this.nuevo = false;
+        this.modoEdicion = true;
+        this.body = this.persistenceService.getDatosEJG();
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        
         this.usuarioBusquedaExpress = {
           numColegiado: this.body.numColegiado,
           nombreAp: this.body.apellidosYNombre
         };
-        sessionStorage.removeItem("nuevoNColegiado");
-      }else{
-          if (this.persistenceService.getDatosEJG()) {
-          this.nuevo = false;
-          this.modoEdicion = true;
-          this.bodyInicial = this.persistenceService.getDatosEJG();
-          this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-          this.usuarioBusquedaExpress = {
-            numColegiado: this.body.numColegiado,
-            nombreAp: this.body.apellidosYNombre
-          };
-        } else {
-          this.modoEdicion = false;
-          this.nuevo = true;
-          this.body = new EJGItem();
-        
-        }
+      } else {
+        this.modoEdicion = false;
+        this.nuevo = true;
+        this.body = new EJGItem();
+      
+      }
 
 
-        this.disabledNumEJG = true;
+      this.disabledNumEJG = true;
 
 
-        
-        if (this.body.tipoEJG != undefined)
-          this.showTipoExp = true;
-
-        // this.getPrestacionesRechazadasEJG();
-        this.getRelaciones();
-      } 
       if (this.body.fechalimitepresentacion != undefined)
-          this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
-        if (this.body.fechapresentacion != undefined)
-          this.body.fechapresentacion = new Date(this.body.fechapresentacion);
-        if (this.body.fechaApertura != undefined)
-          this.body.fechaApertura = new Date(this.body.fechaApertura);
+        this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
+      if (this.body.fechapresentacion != undefined)
+        this.body.fechapresentacion = new Date(this.body.fechapresentacion);
+      if (this.body.fechaApertura != undefined)
+        this.body.fechaApertura = new Date(this.body.fechaApertura);
+      if (this.body.tipoEJG != undefined)
+        this.showTipoExp = true;
+
+      this.getPrestacionesRechazadasEJG();
+      this.getRelaciones();
     } else if (sessionStorage.getItem("asistencia")) { //Si hemos pulsado Crear EJG en la ficha de Asistencias en la tarjeta Relaciones o le hemos dado a Crear EJG en la pantalla de asistencias expres
 
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
@@ -212,20 +193,44 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
 
     this.getComboTurno();
 
+    //Proveniente de la busqueda de colegiado sin art 27
+    if (sessionStorage.getItem("buscadorColegiados")) {
 
-
-    if(sessionStorage.getItem("buscadorColegiados")){
-      let persona = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
 
       sessionStorage.removeItem('buscadorColegiados');
 
-      this.usuarioBusquedaExpress.nombreAp = persona.apellidos + ", " + persona.nombre;
+      if (busquedaColegiado.nombreSolo != undefined) this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombreSolo;
+      else this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
 
-      this.usuarioBusquedaExpress.numColegiado = persona.nColegiado;
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
 
       this.body.apellidosYNombre = this.usuarioBusquedaExpress.nombreAp;
 
-      this.body.numColegiado = persona.nColegiado;
+      if (busquedaColegiado.nColegiado != undefined){
+        this.body.numColegiado = busquedaColegiado.nColegiado;
+
+        this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
+      }
+
+      //Asignacion de idPersona según el origen de la busqueda.
+      this.body.idPersona = busquedaColegiado.idPersona;
+      if (this.body.idPersona == undefined) this.body.idPersona = busquedaColegiado.idpersona;
+    }
+
+    //Cuando vuelve de la busqueda general SJCS
+    if(sessionStorage.getItem("colegiadoGeneralDesigna")){
+      let persona = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"))[0];
+
+      sessionStorage.removeItem('colegiadoGeneralDesigna');
+
+      this.usuarioBusquedaExpress.nombreAp = persona.apellidos + ", " + persona.nombre;
+
+      this.usuarioBusquedaExpress.numColegiado = persona.numeroColegiado;
+
+      this.body.apellidosYNombre = this.usuarioBusquedaExpress.nombreAp;
+
+      this.body.numColegiado = persona.numeroColegiado;
 
       this.body.idPersona = persona.idPersona;
 
@@ -250,6 +255,18 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       this.art27 = true;
     }
 
+    //Se comprueba si vuelve de una busqueda de colegiado
+    //para que se abra la tarjeta y se haga scroll
+    if (sessionStorage.getItem('tarjeta') == 'ServiciosTramit') {
+      this.abreCierraFicha('serviciosTramitacion');
+      let top = document.getElementById("serviciosTramitacion");
+      if (top) {
+        top.scrollIntoView();
+        top = null;
+      }
+      sessionStorage.removeItem('tarjeta');
+      sessionStorage.removeItem('pantalla');
+    }
 
     //Para evitar que se realice una busqueda innecesaria y lance errores por consola cuando no haya ningun turno seleccionado.
     if(this.body.idTurno!=undefined && this.body.idTurno!=null){
@@ -394,7 +411,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         this.comboTipoExpediente = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTipoExpediente);
         let tipoExp = this.comboTipoExpediente.find(
-          item => item.value == this.body.idTipoExpInsos
+          item => item.value == this.body.tipoEJG
         );
         if (tipoExp != undefined)
           this.tipoExpedienteDes = tipoExp.label;
@@ -410,11 +427,8 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       n => {
         this.comboPrestaciones = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboPrestaciones);
-        if (!this.persistenceService.getDatosEJG()) {
-          this.body.prestacion = n.combooItems.map(it => it.value.toString());
-          this.bodyInicial.prestacion = this.body.prestacion;
-        }
-        this.getPrestacionesRechazadasEJG()
+        this.body.prestacion = n.combooItems.map(it => it.value.toString());
+        this.bodyInicial.prestacion = this.body.prestacion;
       },
       err => {
         //console.log(err);
@@ -439,25 +453,22 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   }
 
   abreCierraFicha(key) {
-    if(this.body != null && this.body != undefined){
-      if(!this.nuevo){
-        this.resaltadoDatosGenerales = true;
-      }
-      if (
-        key == "datosGenerales" &&
-        !this.activacionTarjeta
-      ) {
-        this.fichaPosible.activa = !this.fichaPosible.activa;
-        this.openFicha = !this.openFicha;
-      }
-      if (this.activacionTarjeta) {
-        this.fichaPosible.activa = !this.fichaPosible.activa;
-        this.openFicha = !this.openFicha;
-      }
-      this.opened.emit(this.openFicha);
-      this.idOpened.emit(key);
+    if(!this.nuevo){
+      this.resaltadoDatosGenerales = true;
     }
-    
+    if (
+      key == "datosGenerales" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   showMessage(severity, summary, msg) {
@@ -522,12 +533,12 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
 
   save() {
     this.progressSpinner = true;
-    this.body.prestacionesRechazadas = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
+
     if (this.modoEdicion) {
-      
-      // if(this.tipoEJGColDesc){
-      //   this.body.tipoEJGColegio = this.tipoEJGColDesc;
-      // }
+      this.body.prestacionesRechazadas = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
+      if(this.tipoEJGColDesc){
+        this.body.tipoEJGColegio = this.tipoEJGColDesc;
+      }
       //hacer update
       this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
         n => {
@@ -538,7 +549,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
             //Se actualiza la tarjeta de estados en el caso que se actualice el estado inicial por cambiar la fecha de apertura
             if (this.body.fechaApertura != this.bodyInicial.fechaApertura)
               this.newEstado.emit(null);
-              
+
             this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
             this.ejgCreadoNuevo = true;
             this.body.numEjg = n.body.substring(n.body.indexOf("id")+5,n.body.indexOf("error")-3);
@@ -552,7 +563,8 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
             }
             this.persistenceService.setDatosEJG(this.bodyInicial);
 
-            this.guardadoSend.emit(this.body);
+            this.guardadoSend.emit(true);
+
             this.changeTipoEJGColegio();
           }
           else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -593,6 +605,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
               let datosItem = ejgObject[0];
               this.persistenceService.setDatosEJG(datosItem);
 
+
               //En el caso que se proceda de una designación, se asocia el EJG con la designación
               if (sessionStorage.getItem("Designacion")) {
 
@@ -620,7 +633,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                         //this.location.back();
                         //recargamos la ficha del ejg
-                    this.guardadoSend.emit(this.body);
+                    this.guardadoSend.emit(true);
                       },
                       err => {
                         //Crear etiqueta en la BBDD
@@ -696,7 +709,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                     sessionStorage.removeItem("radioTajertaValue");
 
                     //recargamos la ficha del ejg
-                    this.guardadoSend.emit(this.body);
+                    this.guardadoSend.emit(true);
 
                     if (error != null && error.description != null) {
                       this.showMessage("error", "Error al asociar el EJG con la Asistencia", error.description);
@@ -720,8 +733,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.body.numEjg = datosItem.numEjg;
               this.body.numero = datosItem.numero;
-              // this.datosNueva.emit(this.body);
-              this.guardadoSend.emit(this.body);
+              this.guardadoSend.emit(true);
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
@@ -754,7 +766,13 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   rest() {
     if (!this.nuevo) {
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-      
+
+      if (this.body.fechalimitepresentacion != undefined)
+        this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
+      if (this.body.fechapresentacion != undefined)
+        this.body.fechapresentacion = new Date(this.body.fechapresentacion);
+      if (this.body.fechaApertura != undefined)
+        this.body.fechaApertura = new Date(this.body.fechaApertura);
       if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
     } else {
@@ -768,15 +786,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       this.showTipoExp = false;
       this.getComboPrestaciones();
     }
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    if (this.body.fechalimitepresentacion != undefined)
-      this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
-    if (this.body.fechapresentacion != undefined)
-      this.body.fechapresentacion = new Date(this.body.fechapresentacion);
-    if (this.body.fechaApertura != undefined)
-      this.body.fechaApertura = new Date(this.body.fechaApertura);
-    this.getComboTurno();
-    this.getComboGuardia();
+    this.body = this.bodyInicial;
     this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
     this.usuarioBusquedaExpress.nombreAp = this.body.apellidosYNombre;
     this.art27 = this.initArt27;
@@ -1001,11 +1011,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         
         this.comboTurno = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTurno);
-        if (this.body.idTurno != null && this.body.idTurno != undefined) {
-          this.comboTurno.forEach(element => {
-            if (element.value == this.body.idTurno) this.turnoEJG = element.label;
-          });
-        }
         //if (!this.buscandoCol) this.progressSpinner = false;
       },
       err => {
@@ -1024,11 +1029,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
           if (sessionStorage.getItem("idGuardia")) {
             this.body.idGuardia = sessionStorage.getItem("idGuardia");
             sessionStorage.removeItem('idGuardia');
-          }
-          if (this.body.idGuardia != null && this.body.idGuardia != undefined) {
-            this.comboGuardia.forEach(element => {
-              if (element.value == this.body.idGuardia) this.turnoGuardiaEJG = element.label;
-            });
           }
           //if (!this.buscandoCol) this.progressSpinner = false;
         },
@@ -1093,6 +1093,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
     this.body.numColegiado = event.nColegiado;
     this.body.apellidosYNombre = event.nombreAp;
+
     if (this.esCadenaVacia(this.body.numColegiado) || this.esCadenaVacia(this.body.apellidosYNombre)){
       this.body.idPersona = undefined;
     }
@@ -1101,8 +1102,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   
   idPersona(event) {
     this.body.idPersona = event;
-    if(this.nuevo == true){
-      sessionStorage.setItem("EJGItem",JSON.stringify(this.body));
-    }
+    sessionStorage.setItem("EJGItem",JSON.stringify(this.body));
   }
 }
