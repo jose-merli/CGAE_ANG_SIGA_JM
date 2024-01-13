@@ -16,7 +16,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() nombreAp;
   @Input() tarjeta;
   @Input() pantalla;
-  @Input() disabled:boolean;
+  @Input() disabled;
   @Input() idTurno;
   @Input() idGuardia;
   @Input() art27;
