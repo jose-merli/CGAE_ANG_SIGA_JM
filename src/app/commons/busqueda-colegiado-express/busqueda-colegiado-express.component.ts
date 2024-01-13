@@ -23,7 +23,6 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() filtros;
   @Input() filtrosAE;
   @Input() obligatorio: boolean;
-  @Input() datosGeneralesEjg:boolean;
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
   nColegiado: string = "";

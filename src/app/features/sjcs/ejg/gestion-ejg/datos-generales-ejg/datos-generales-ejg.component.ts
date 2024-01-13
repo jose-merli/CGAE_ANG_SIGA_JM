@@ -16,7 +16,6 @@ import * as moment from 'moment';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { ParametroDto } from '../../../../../models/ParametroDto';
-import { ColegiadosSJCSItem } from '../../../../../models/ColegiadosSJCSItem';
 
 @Component({
   selector: 'app-datos-generales-ejg',
@@ -72,16 +71,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     key: "datosGenerales",
     activa: false
   }
-
-  usuarioBusquedaExpress = {
-    numColegiado: '',
-    nombreAp: ''
-  };
-  comboTurno = [];
-  comboGuardia = [];
-  isDisabledGuardia: boolean = true;
-  buscandoCol: boolean = false;
-  initArt27;
 
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
@@ -168,131 +157,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       }
       ).catch(error => console.error(error));
 
-
-
-
-
-      /*SERVICIOS TRAMITACION */
-      sessionStorage.removeItem("volver");
-    sessionStorage.removeItem("modoBusqueda");
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      this.institucionActual = n.value;
-    });
-    if (this.persistenceService.getDatosEJG()) {
-      this.nuevo = false;
-      this.modoEdicion = true;
-      this.body = this.persistenceService.getDatosEJG();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.usuarioBusquedaExpress = {
-        numColegiado: this.body.numColegiado,
-        nombreAp: this.body.apellidosYNombre
-      };
-    } else {
-      this.modoEdicion = false;
-      this.nuevo = true;
-      this.body = new EJGItem();
-
-    }
-    this.getComboTurno();
-
-    //Proveniente de la busqueda de colegiado sin art 27
-    if (sessionStorage.getItem("buscadorColegiados")) {
-
-      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-
-      sessionStorage.removeItem('buscadorColegiados');
-
-      if (busquedaColegiado.nombreSolo != undefined) this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombreSolo;
-      else this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
-
-      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
-
-      this.body.apellidosYNombre = this.usuarioBusquedaExpress.nombreAp;
-
-      if (busquedaColegiado.nColegiado != undefined){
-        this.body.numColegiado = busquedaColegiado.nColegiado;
-
-        this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
-      }
-
-      //Asignacion de idPersona según el origen de la busqueda.
-      this.body.idPersona = busquedaColegiado.idPersona;
-      if (this.body.idPersona == undefined) this.body.idPersona = busquedaColegiado.idpersona;
-    }
-
-    //Cuando vuelve de la busqueda general SJCS
-    if(sessionStorage.getItem("colegiadoGeneralDesigna")){
-      let persona = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"))[0];
-
-      sessionStorage.removeItem('colegiadoGeneralDesigna');
-
-      this.usuarioBusquedaExpress.nombreAp = persona.apellidos + ", " + persona.nombre;
-
-      this.usuarioBusquedaExpress.numColegiado = persona.numeroColegiado;
-
-      this.body.apellidosYNombre = this.usuarioBusquedaExpress.nombreAp;
-
-      this.body.numColegiado = persona.numeroColegiado;
-
-      this.body.idPersona = persona.idPersona;
-
-
-    }
-
-    //Se comprueba si vueleve de una busqueda de colegiado
-    if (sessionStorage.getItem("idTurno")) {
-      this.body.idTurno = sessionStorage.getItem("idTurno");
-      sessionStorage.removeItem('idTurno');
-    }
-
-    //Se comprueba si vueleve de una busqueda de colegiado
-    if (sessionStorage.getItem("idGuardia")) {
-      this.body.idGuardia = sessionStorage.getItem("idGuardia");
-      sessionStorage.removeItem('idGuardia');
-    }
-
-    //Se comprueba si vueleve de una busqueda de colegiado con art 27
-    if (sessionStorage.getItem('art27')) {
-      sessionStorage.removeItem('art27');
-      this.art27 = true;
-    }
-
-    //Se comprueba si vuelve de una busqueda de colegiado
-    //para que se abra la tarjeta y se haga scroll
-    if (sessionStorage.getItem('tarjeta') == 'ServiciosTramit') {
-      this.abreCierraFicha('serviciosTramitacion');
-      let top = document.getElementById("serviciosTramitacion");
-      if (top) {
-        top.scrollIntoView();
-        top = null;
-      }
-      sessionStorage.removeItem('tarjeta');
-      sessionStorage.removeItem('pantalla');
-    }
-
-    //Para evitar que se realice una busqueda innecesaria y lance errores por consola cuando no haya ningun turno seleccionado.
-    if(this.body.idTurno!=undefined && this.body.idTurno!=null){
-      this.getComboGuardia();
-    }
-
-    //Se desbloquea el desplegable de guardia si hay un turno seleccionado al inciar la tarjeta.
-    if (this.body.idTurno != undefined && this.body.idTurno != null){
-      this.isDisabledGuardia = false;
-    }
-
-    //Comprobamos si el colegiado fue seleccionado por art 27 o no. ES uno de los métodos más lentos del inicio
-    if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true){ 
-      this.checkArt27();
-    }
-
-    this.commonsServices.checkAcceso(procesos_ejg.serviciosTramitacion)
-      .then(respuesta => {
-        this.permisoEscritura = respuesta;
-        
-      }
-      ).catch(error => console.error(error));
-
-
   }
   getParamMaxLengthNum() {
 
@@ -316,7 +180,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       }
     }
   }
-  
 
   getPrestacionesRechazadasEJG() {
     this.sigaServices.post("gestionejg_searchPrestacionesRechazadasEJG", this.body).subscribe(
@@ -749,44 +612,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         this.progressSpinner = false;
       }
     }
-    if (this.esCadenaVacia(this.body.numColegiado) || this.esCadenaVacia(this.body.apellidosYNombre)){
-      this.body.idPersona = undefined;
-    }
-      
 
-
-    this.sigaServices.post("gestionejg_guardarServiciosTramitacion", this.body).subscribe(
-      n => {
-        
-        if (n.statusText == "OK") {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.bodyInicial = this.body;
-          this.initArt27 = this.art27;
-          //Actualizamos la informacion en el body de la pantalla
-          this.sigaServices.post("gestionejg_datosEJG", this.bodyInicial).subscribe(
-            n => {
-              let ejgObject = JSON.parse(n.body).ejgItems;
-              let datosItem = ejgObject[0];
-              
-              this.persistenceService.setDatosEJG(datosItem);
-              this.body = this.persistenceService.getDatosEJG();
-              this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-              this.progressSpinner = false;
-            },
-            err => {
-              this.progressSpinner = false;
-            }
-          );
-        }
-        else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-
-      },
-      err => {
-        this.progressSpinner = false;
-
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    );
   }
 
   checkPermisosRest() {
@@ -821,10 +647,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       this.showTipoExp = false;
       this.getComboPrestaciones();
     }
-    this.body = this.bodyInicial;
-    this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
-    this.usuarioBusquedaExpress.nombreAp = this.body.apellidosYNombre;
-    this.art27 = this.initArt27;
   }
 
   getRelaciones() {
@@ -1034,79 +856,4 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     }
   }
 
-  /* SERVICIO TRAMITACION */
-
-  esCadenaVacia(value: string): boolean {
-    return value == undefined || value.trim().length == 0;
-  }
-  
-  getComboTurno() {
-    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno="+this.body.idTurno).subscribe(
-      n => {
-        
-        this.comboTurno = n.combooItems;
-        this.commonsServices.arregloTildesCombo(this.comboTurno);
-        //if (!this.buscandoCol) this.progressSpinner = false;
-      },
-      err => {
-       // if (!this.buscandoCol) this.progressSpinner = false;
-      }
-    );
-  }
-
-  getComboGuardia() {
-    //this.progressSpinner = true;
-    this.sigaServices.getParam("combo_guardiaPorTurno","?idTurno=" + this.body.idTurno)
-      .subscribe(
-        col => {
-          this.comboGuardia = col.combooItems;
-          this.commonsServices.arregloTildesCombo(this.comboGuardia);
-          if (sessionStorage.getItem("idGuardia")) {
-            this.body.idGuardia = sessionStorage.getItem("idGuardia");
-            sessionStorage.removeItem('idGuardia');
-          }
-          //if (!this.buscandoCol) this.progressSpinner = false;
-        },
-        err => {
-          //if (!this.buscandoCol) this.progressSpinner = false;
-        }
-      );
-  }
-
-
-  checkArt27() {
-
-    let datos = new ColegiadosSJCSItem();
-
-   // this.progressSpinner = true;
-    //Estado "Ejerciente"
-    datos.idEstado = "20";
-    datos.idInstitucion = this.institucionActual;
-    datos.idGuardia = [];
-    datos.idTurno = [];
-    datos.idGuardia.push(this.body.idGuardia);
-    datos.idTurno.push(this.body.idTurno);
-
-    this.buscandoCol = true;
-
-    this.sigaServices.post("componenteGeneralJG_busquedaColegiadoEJG", datos).subscribe(
-      data => {
-
-        let colegiados = JSON.parse(data.body).colegiadosSJCSItem;
-
-        //Se comprueba si el colegiado esta en el turno y guardia seleccionados
-        if (colegiados.length > 0) {
-          let presente = false;
-          colegiados.forEach(element => {
-            if (this.body.apellidosYNombre == element.apellidos + ", " + element.nombre) presente = true;
-          });
-          if (!presente) this.art27 = true;
-        }
-        //this.progressSpinner = false;
-        this.buscandoCol = false;
-        this.initArt27 = this.art27;
-      }
-    );
-
-  }
 }
