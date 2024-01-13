@@ -170,7 +170,6 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
           this.body.fechapresentacion = new Date(this.body.fechapresentacion);
         if (this.body.fechaApertura != undefined)
           this.body.fechaApertura = new Date(this.body.fechaApertura);
-
     } else if (sessionStorage.getItem("asistencia")) { //Si hemos pulsado Crear EJG en la ficha de Asistencias en la tarjeta Relaciones o le hemos dado a Crear EJG en la pantalla de asistencias expres
 
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
@@ -541,7 +540,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
               this.newEstado.emit(null);
               
             this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
-            this.ejgCreadoNuevo = false;
+            this.ejgCreadoNuevo = true;
             this.body.numEjg = n.body.substring(n.body.indexOf("id")+5,n.body.indexOf("error")-3);
             this.bodyInicial = this.body;
             this.nuevo = false;
@@ -593,8 +592,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
               let ejgObject = JSON.parse(n.body).ejgItems;
               let datosItem = ejgObject[0];
               this.persistenceService.setDatosEJG(datosItem);
-              this.body.estadoEJG = datosItem.estadoEJG;
-              this.ejgCreadoNuevo = false;
+
               //En el caso que se proceda de una designación, se asocia el EJG con la designación
               if (sessionStorage.getItem("Designacion")) {
 
@@ -718,11 +716,12 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                 );
 
               }
+              this.ejgCreadoNuevo = true;
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.body.numEjg = datosItem.numEjg;
               this.body.numero = datosItem.numero;
               // this.datosNueva.emit(this.body);
-              this.guardadoSend.emit(datosItem);
+              this.guardadoSend.emit(this.body);
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
@@ -1106,5 +1105,4 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       sessionStorage.setItem("EJGItem",JSON.stringify(this.body));
     }
   }
-
 }
