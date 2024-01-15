@@ -35,7 +35,8 @@
             </div>
             <div *ngIf="col.field == 'desEstado'">
               <span>{{dato[col.field]}}</span>
-              <span *ngIf="dato['prevision'] == '1'">{{facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.simulacion | translate}}</span>
+              <span *ngIf="dato['prevision'] == '1'">{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.simulacion' | translate | uppercase }}</span>
+              <span *ngIf="dato['prevision'] == '0' && (dato['idEstado'] == 20 || dato['idEstado'] == 40 || dato['idEstado'] == 50)">{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.generacion' | translate | uppercase }}</span>
             </div>
             <div *ngIf="col.field == 'descGrupo'">
               <label>{{dato[col.field]}}</label>
