@@ -1,19 +1,21 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
-import { TranslateService } from "./../../../../../commons/translate/translation.service";
-import { SigaServices } from "./../../../../../_services/siga.service";
+import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { SigaServices } from "../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { InformesModelosComItem } from "../../../../../models/InformesModelosComunicacionesItem";
 import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
 import { Message, ConfirmationService } from "primeng/components/common/api";
+import { FichaPlantillasDocument } from "../../../../../models/FichaPlantillasDocumentoItem";
+import { SufijoItem } from "../../../../../models/SufijoItem";
 
 @Component({
-  selector: "app-tarjeta-informes",
-  templateUrl: "./tarjeta-informes.component.html",
-  styleUrls: ["./tarjeta-informes.component.scss"]
+  selector: "app-tarjeta-plantillas-documentos",
+  templateUrl: "./tarjeta-plantillas-documentos.component.html",
+  styleUrls: ["./tarjeta-plantillas-documentos.component.scss"]
 })
-export class TarjetaInformesComponent implements OnInit {
+export class TarjetaPlantillasDocumentosComponent implements OnInit {
   openFicha: boolean = false;
   activacionEditar: boolean = true;
   derechoAcceso: any;
@@ -21,8 +23,10 @@ export class TarjetaInformesComponent implements OnInit {
   permisosArray: any[];
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   clasesComunicaciones: any[];
-  datos: any[];
+  datos: FichaPlantillasDocument[];
   cols: any[];
+  formatoAccept : string;
+  formatos: any[];
   first: number = 0;
   selectedItem: number;
   institucionActual: number;
@@ -37,7 +41,11 @@ export class TarjetaInformesComponent implements OnInit {
   soloLectura: boolean = false;
   continuar: boolean;
   editar: boolean = true;
-
+  sufijos: SufijoItem[]; 
+  idiomas: any[];
+  selectedSufijos: any[]; 
+  textFilter: string = "Seleccionar";
+  textSelected: String = "{0} etiquetas seleccionadas";
   progressSpinner: boolean = false;
 
   @ViewChild("table") table: DataTable;
@@ -75,8 +83,11 @@ export class TarjetaInformesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    
+    this.getComboFormatos();
+    this.getComboSufijos();
+    this.busquedaIdioma();
     this.getDatos();
-
     this.sigaServices.deshabilitarEditar$.subscribe(() => {
       this.editar = false;
     });
@@ -84,14 +95,10 @@ export class TarjetaInformesComponent implements OnInit {
     this.selectedItem = 10;
     this.cols = [
       { field: "idioma", header: "censo.usuario.labelIdioma" },
-      // { field: 'fechaAsociacion', header: 'Fecha asociación' },
+       { field: 'nombreDocumento', header: 'informesycomunicaciones.consultas.ficha.plantilla' },
       { field: "nombreFicheroSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.ficheroSalida" },
       { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo" },
-      { field: "formatoSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.formatoSalida" },
-      { field: "destinatarios", header: "enviosMasivos.literal.destinatarios" },
-      { field: "condicion", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.condicion" },
-      { field: "multiDocumento", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.multiDocumento" },
-      { field: "datos", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos" }
+      { field: "formatoSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.formatoSalida" }
     ];
 
     this.rowsPerPage = [
@@ -223,19 +230,29 @@ export class TarjetaInformesComponent implements OnInit {
     }
   }
 
-  navigateTo(dato) {
-    let id = dato[0].id;
-    if (!this.soloLectura) {
-      if (!this.selectMultiple) {
-        this.router.navigate(["/fichaPlantillaDocumento"]);
-        sessionStorage.setItem("modelosInformesSearch", JSON.stringify(dato[0]));
-      } else {
-        this.numSelected = this.selectedDatos.length;
+  onChangeSufijo(dato) {
+    this.selectedSufijos.map(e => {
+      if (e.value == "1" && dato.itemValue.value == "1") {
+        e.abr = "A";
+      } else if (e.value == "2" && dato.itemValue.value == "2") {
+        e.abr = "B";
+      } else if (e.value == "3" && dato.itemValue.value == "3") {
+        e.abr = "C";
       }
-    } else {
-      this.router.navigate(["/fichaPlantillaDocumento"]);
-      sessionStorage.setItem("modelosInformesSearch", JSON.stringify(dato[0]));
-    }
+      return e.abr;
+    });
+  }
+
+  getComboSufijos() { 
+    this.sigaServices.get("plantillasDoc_combo_sufijos").subscribe(
+      n => {
+        
+        this.sufijos = JSON.parse(JSON.stringify( n.sufijos));
+      },
+      err => {
+        //console.log(err);
+      }
+    );
   }
 
   getDatos() {
@@ -243,12 +260,39 @@ export class TarjetaInformesComponent implements OnInit {
       this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.getInformes();
     }
+    
   }
 
   getInformes() {
     this.sigaServices.post("modelos_detalle_informes", this.modelo).subscribe(
       data => {
-        this.datos = JSON.parse(data.body).plantillasModeloDocumentos;
+
+       
+        this.datos = JSON.parse(data.body).plantillasModeloDocumentos as FichaPlantillasDocument[];
+
+        console.log("DATO")
+        console.log(this.datos)
+         this.changeDetectorRef.detectChanges();
+       
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
+
+  changeFormato() {
+    if (this.body.idFormatoSalida == "2") {
+      this.formatoAccept = ".doc,.docx,.fo";
+    } else if (this.body.idFormatoSalida == "1") {
+      this.formatoAccept = ".xls,.xlsx,.fo";
+    }
+  }
+
+  getComboFormatos() {
+    this.sigaServices.get("plantillasDoc_combo_formatos").subscribe(
+      n => {
+        this.formatos = n.combooItems;
       },
       err => {
         //console.log(err);
@@ -257,9 +301,11 @@ export class TarjetaInformesComponent implements OnInit {
   }
 
   addInforme() {
-    sessionStorage.setItem("crearNuevaPlantillaDocumento", "true");
-    sessionStorage.removeItem("modelosInformesSearch");
-    this.router.navigate(["/fichaPlantillaDocumento"]);
+    let datoNew = new FichaPlantillasDocument();
+
+    this.datos.push(datoNew);
+    //Modificarlo para añadir un nuevo item.
+
   }
 
   eliminar(dato) {
@@ -351,4 +397,25 @@ export class TarjetaInformesComponent implements OnInit {
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
   }
+
+  busquedaIdioma() {
+    this.sigaServices.get("etiquetas_lenguaje").subscribe(
+      n => {
+        this.idiomas = n.combooItems;
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
+
+
+  onSufijosChange(dato: any) {
+    console.log('Sufijos Data1:', dato);
+
+
+    // Puedes agregar aquí cualquier lógica adicional que necesites
+    // para manejar los cambios en los sufijos seleccionados.
+  }
+
 }

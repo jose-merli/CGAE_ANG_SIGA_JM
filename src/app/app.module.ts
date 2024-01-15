@@ -287,6 +287,7 @@ import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicac
 import { ProgramacionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/programacion-envio-masivo/programacion-envio-masivo.component';
 import { DatosGeneralesFichaComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/datos-generales-ficha/datos-generales-ficha.component';
 import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
+import { TarjetaPlantillasDocumentosComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-plantillas-documentos/tarjeta-plantillas-documentos.component';
 import { PerfilesFichaComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/perfiles-ficha/perfiles-ficha.component';
 import { TarjetaComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-comunicaciones/tarjeta-comunicaciones.component';
 import { TarjetaConsultasComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-consultas/tarjeta-consultas.component';
@@ -1213,6 +1214,7 @@ import { Paginador4Module } from './commons/paginador4/paginador4.module';
 		PlantillasEnvioComponent,
 		ModelosComunicacionesComponent,
 		FichaModeloComunicacionesComponent,
+		TarjetaPlantillasDocumentosComponent,
 		DatosGeneralesFichaComponent,
 		TarjetaInformesComponent,
 		PlantillaDocumentoComponent,
