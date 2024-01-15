@@ -433,7 +433,7 @@ export class DocumentacionComponent implements OnInit {
         idDocumentacion += "," +this.documentos[this.documentos.length - this.comboDocumentos.length + 1 + i].idDocumentacion;
       }
     }
-
+    
     this.sigaServices
       .postSendFileAndParameters("gestionejg_subirDocumentoEjg", this.ficheroTemporal, idDocumentacion)
       .subscribe(
@@ -661,7 +661,7 @@ export class DocumentacionComponent implements OnInit {
               "nombre": this.body.nombreFichero
             }]
           }
-          this.subirFichero();
+          this.cerrarDialog();
         } else {
           if (error != null && error.description != null && error.description != '') {
             this.showMsg('error', 'Error', this.translateService.instant(error.description));
