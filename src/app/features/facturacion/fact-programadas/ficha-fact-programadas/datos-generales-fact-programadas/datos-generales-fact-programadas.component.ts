@@ -165,7 +165,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
       return false;
     }
-
+/*
     let fechaGeneracion: boolean = !this.porConfirmarError && this.body.fechaPrevistaGeneracion < this.fechaActual;
     if (fechaGeneracion) {
       this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.fechaGeneracion.futura"));
@@ -177,7 +177,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.fechaConfirmacion.posterior"));
       return false;
     }
-
+*/
     let intervaloProductos: boolean = this.body.fechaInicioProductos != undefined || this.body.fechaFinProductos != undefined;
     if (intervaloProductos) {
       let intervalo: boolean = this.body.fechaInicioProductos < this.body.fechaFinProductos;
