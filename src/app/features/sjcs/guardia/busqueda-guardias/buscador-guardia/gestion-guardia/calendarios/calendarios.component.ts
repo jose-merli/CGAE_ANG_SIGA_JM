@@ -100,9 +100,9 @@ export class CalendariosComponent implements OnInit {
     //this.progressSpinner = true;
 
     let datos = this.persistenceService.getDatos();
-
+    
     if(datos.idGuardia == undefined || datos.idGuardia == null){
-      datos = JSON.parse(this.persistenceService.getDatos());
+      datos = this.persistenceService.getDatos();
     }
 
     let datosEntrada = 

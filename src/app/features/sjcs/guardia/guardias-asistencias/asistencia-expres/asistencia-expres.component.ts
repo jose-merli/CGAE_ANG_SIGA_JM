@@ -594,6 +594,8 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
             if(fechaPlana.length < 11) {
               row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
+            } else if (fechaPlana.length == 24) {
+              row.cells[3].value = new Date(fechaPlana);
             } else {
               row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY HH:mm').toDate();
             }
