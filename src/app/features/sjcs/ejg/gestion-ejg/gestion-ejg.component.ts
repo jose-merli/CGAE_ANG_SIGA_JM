@@ -621,16 +621,6 @@ export class GestionEjgComponent implements OnInit {
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
       }
 
-      if (this.permisoEscrituraServiciosTramitacion != undefined) {
-        pruebaTarjeta = {
-          label: "justiciaGratuita.ejg.datosGenerales.ServiciosTramit",
-          value: document.getElementById("serviciosTramitacion"),
-          nombre: "serviciosTramitacion",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
       if (this.permisoEscrituraUnidadFamiliar != undefined) {
         pruebaTarjeta = {
           label: "justiciaGratuita.justiciables.rol.unidadFamiliar",
