@@ -21,7 +21,7 @@
             <label>{{ 'facturacion.seriesFactura.envioFact.plantilla' | translate }}: 
               <span>{{body.tipoPlantillaMail }}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}: 
-              <span>{{body.estadoEnvio }}</span></label>
+              <span>{{body.estadoEnvio  | translate }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('envio')"
               *ngIf="!esFichaActiva()"></i>
@@ -56,7 +56,7 @@
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
-          <input type="text" [(ngModel)]="body.estadoEnvio" class="form-control" [disabled]="true" pInputText>
+          <input type="text" class="form-control" [disabled]="true" pInputText value="{{body.estadoEnvio | translate}}">
         </div>
       </div>
     </div>
