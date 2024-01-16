@@ -10,6 +10,7 @@
 
   <div>
     <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+    
     </app-tarjeta-resumen-fija>
 
     <app-serie-factura-fact-programadas [modoEdicion]="modoEdicion" [openTarjetaSerieFactura]="openTarjetaSerieFactura" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (serieFacturacionChanged)="serieFacturacionChanged($event)"></app-serie-factura-fact-programadas>

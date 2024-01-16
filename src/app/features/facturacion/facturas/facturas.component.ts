@@ -66,7 +66,7 @@ export class FacturasComponent implements OnInit {
 			}
 
 			//comprobamos el mensaje de info de resultados
-			if (error!=undefined && error!=null) {
+			if (error != null && error.message != null) {
 			this.showMessage("info",this.translateService.instant("general.message.informacion"), this.translateService.instant(error.message));
 			}
 

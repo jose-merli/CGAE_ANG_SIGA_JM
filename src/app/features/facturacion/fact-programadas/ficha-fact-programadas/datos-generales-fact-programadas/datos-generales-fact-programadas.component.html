@@ -117,8 +117,7 @@
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
               <div *ngIf="modoEdicion" class="row">
                 <div class="col-md-10">
-                  <input type="text" class="form-control" maxLength="255"
-                  disabled="true" pInputText [value]="body.estadoGeneracion || ''">
+                  <input type="text" class="form-control" maxLength="255" disabled="true" pInputText value="{{body.estadoGeneracion | translate}}">
                 </div>
                 <div class="col-md-2 verticalAlign px-0">
                   <i *ngIf="modoEdicion" class="fa fa-info-circle" aria-hidden="true" (click)="getFasesFacturacionProgramada()"></i>

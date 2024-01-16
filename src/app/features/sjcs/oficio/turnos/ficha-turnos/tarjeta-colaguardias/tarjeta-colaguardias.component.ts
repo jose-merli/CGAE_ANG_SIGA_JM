@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges, AfterViewChecked } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { DatePipe, Location, UpperCasePipe } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -28,7 +28,7 @@ import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
   templateUrl: "./tarjeta-colaguardias.component.html",
   styleUrls: ["./tarjeta-colaguardias.component.scss"]
 })
-export class TarjetaColaGuardias implements OnInit {
+export class TarjetaColaGuardias implements OnInit, AfterViewChecked {
 
 
   openFicha: boolean = false;
@@ -110,6 +110,7 @@ export class TarjetaColaGuardias implements OnInit {
   @Input() permisoEscritura: boolean = false;
   updateCombo: boolean = false;
   updateTurnosItem: boolean = false;
+  private gotConf: boolean = false;
   // @Input() pesosSeleccionadosTarjeta;
   //Resultados de la busqueda
   // @Input() modoEdicion: boolean = false;
@@ -141,8 +142,20 @@ export class TarjetaColaGuardias implements OnInit {
     private router: Router, private activatedRoute: ActivatedRoute, private cdRef: ChangeDetectorRef) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.getCols();
+    if (changes && changes.idTurno && !changes.idTurno.previousValue && changes.idTurno.currentValue) {
+      this.initTables();
+    }
+  }
 
+  ngAfterViewChecked(): void {
+    if (this.tablaOrder && !this.gotConf) {
+      this.tablaOrder.getConfColaGuardias();
+      this.gotConf = true;
+      this.cargarTabla(this.turnosItem.idcomboguardias);
+    }
+  }
+
+  private initTables(): void {
     this.sigaServices.updateCombo$.subscribe(
       fecha => {
         this.updateCombo = fecha;
@@ -192,10 +205,7 @@ export class TarjetaColaGuardias implements OnInit {
                 }
                 if (this.guardias != undefined && this.guardias.length > 0) {
                   this.turnosItem.idcomboguardias = this.guardias[0].value;
-
-                  this.cargarTabla(this.turnosItem.idcomboguardias);
                   this.getCols();
-                  //this.inicio();
                 }
               } else {
                 this.existenGuardias = false;
@@ -221,7 +231,7 @@ export class TarjetaColaGuardias implements OnInit {
         this.abreCierraFicha('colaGuardias')
       }
     }
-    
+
   }
 
   ngOnInit() {
@@ -427,9 +437,8 @@ export class TarjetaColaGuardias implements OnInit {
       }, 500);
     });
 
-    this.tablaOrder.getConfColaGuardias();
   }
-
+  
   transformaFecha(fecha) {
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);
@@ -449,6 +458,7 @@ export class TarjetaColaGuardias implements OnInit {
   }
   fillFechaDesdeCalendar(event) {
     this.turnosItem.fechaActual = this.transformaFecha(event);
+    this.body.letradosIns = event;
     this.getColaGuardia();
   }
   setItalic(dato) {
@@ -1246,21 +1256,21 @@ export class TarjetaColaGuardias implements OnInit {
   getCols() {
     if (this.ordenacionManual == false) {
       this.cols = [
-        { field: "ordenCola", header: "administracion.informes.literal.orden", width: "15%" },
-        { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
-        { field: "nombreApe", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-        { field: "fechaValidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
-        { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
+        { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
+        { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+        { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+        { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
+        { field: "fechabajaguardia", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
       ];
 
       this.cabeceras = [
         {
-          id: "ordenCola",
+          id: "orden",
           name: "dato.jgr.guardia.guardias.ord",
           size: "10%"
         },
         {
-          id: "nColegiado",
+          id: "ncolegiado",
           name: "dato.jgr.guardia.guardias.ncol",
           size: "10%"
         },
@@ -1270,7 +1280,7 @@ export class TarjetaColaGuardias implements OnInit {
           size: "40%"
         },
         {
-          id: "fechaValidacion",
+          id: "fechavalidez",
           name: "dato.jgr.guardia.guardias.alta",
           size: "20%"
         },
@@ -1282,11 +1292,11 @@ export class TarjetaColaGuardias implements OnInit {
       ];
     } else {
       this.cols = [
-        { field: "ordenCola", header: "administracion.informes.literal.orden", width: "15%" },
-        { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+        { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
+        { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
         { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-        { field: "fechaValidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
-        { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
+        { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
+        { field: "fechabajaguardia", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
       ];
 
       this.cabeceras = [
@@ -1521,6 +1531,9 @@ export class TarjetaColaGuardias implements OnInit {
       this.opened.emit(this.openFicha);
       this.idOpened.emit(key);
     }    
+    if (this.openFicha) {
+      console.log('Tabla order abierta?', this.tablaOrder);
+    }
   }
 
   saltoCompensacion(){

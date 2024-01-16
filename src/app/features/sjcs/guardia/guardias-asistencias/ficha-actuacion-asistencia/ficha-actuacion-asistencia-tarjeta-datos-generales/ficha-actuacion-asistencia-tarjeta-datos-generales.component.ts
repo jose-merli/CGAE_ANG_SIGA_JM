@@ -71,9 +71,8 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
       if (this.juzgadoComisaria != "0") {
         this.searchTipoActuacionPorDefecto();
       }
-      
+      this.datosIniciales = Object.assign({}, this.datosGeneralesActuacion);
     }
-    this.datosIniciales = Object.assign({}, this.datosGeneralesActuacion);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -333,6 +332,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         }else{
           this.datosGeneralesActuacion = n.datosGeneralesActuacionAsistenciaItems[0];
           this.datosGeneralesActuacionAux = Object.assign({},this.datosGeneralesActuacion);
+          this.datosIniciales = Object.assign({}, this.datosGeneralesActuacion);
           if(this.datosGeneralesActuacion &&
             this.datosGeneralesActuacion.tipoActuacion){
             this.onChangeTipoActuacion();
@@ -365,6 +365,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
           }else{
               this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
               this.datosGeneralesActuacionAux = Object.assign({}, this.datosGeneralesActuacion);
+              this.datosIniciales = Object.assign({}, this.datosGeneralesActuacion);
               this.datosGeneralesActuacion.idActuacion = result.id;
               this.refreshTarjetas.emit(result.id);
               this.refreshHistorico.emit(true);
@@ -416,6 +417,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
 
   restablecer (){
     this.datosGeneralesActuacion = Object.assign({},this.datosGeneralesActuacionAux);
+    this.datosIniciales = Object.assign({}, this.datosGeneralesActuacion);
   }
 
   fillFechaActuacion(event){
