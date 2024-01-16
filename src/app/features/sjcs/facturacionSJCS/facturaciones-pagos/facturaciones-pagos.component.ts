@@ -294,6 +294,39 @@ export class FacturacionesYPagosComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	archivar(selectItem: any[]) {
+		this.progressSpinner = true;
+
+		if (this.filtroSeleccionado == "facturacion") {
+			this.sigaServices.post("facturacionsjcs_archivarFacturacion", selectItem).subscribe(
+				data => {
+
+					const resp: FacturacionDeleteDTO = JSON.parse(data.body);
+					const error = resp.error;
+
+					if (resp.status == 'OK') {
+                        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.archivar.success"));
+                        this.busqueda(this.filtroSeleccionado);
+                    } else {
+                        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()) + ": " + error.message.toString());
+                    }
+
+					this.progressSpinner = false;
+				},
+				err => {
+					this.progressSpinner = false;
+					if (err.status == '403' || err.status == 403) {
+						sessionStorage.setItem("codError", "403");
+						sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+						this.router.navigate(["/errorAcceso"]);
+					} else {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorArchivar"));
+					}
+				}
+			);
+		}
+	}
+
 	showMessage(severity, summary, msg) {
 		this.msgs = [];
 		this.msgs.push({

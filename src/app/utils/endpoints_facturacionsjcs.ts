@@ -27,6 +27,7 @@ export let endpoints_facturacionsjcs: any = {
 
     facturacionsjcs_buscarfacturaciones: "facturacionsjcs/buscarfacturaciones",
     facturacionsjcs_eliminarFacturacion: "facturacionsjcs/eliminarFacturacion",
+    facturacionsjcs_archivarFacturacion: "facturacionsjcs/archivarFacturacion",
     facturacionsjcs_datosfacturacion: "facturacionsjcs/datosfacturacion",
     facturacionsjcs_historicofacturacion: "facturacionsjcs/historicofacturacion",
     facturacionsjcs_saveFacturacion: "facturacionsjcs/saveFacturacion",

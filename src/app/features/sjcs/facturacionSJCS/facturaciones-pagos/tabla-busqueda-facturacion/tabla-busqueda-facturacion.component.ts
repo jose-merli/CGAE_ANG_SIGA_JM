@@ -35,6 +35,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   @Input() permisos;
 
   @Output() delete = new EventEmitter<FacturacionItem>();
+  @Output() archivar = new EventEmitter<any[]>();
 
   @ViewChild("tabla") tabla;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
@@ -206,11 +207,18 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     }
   }
 
-  disabledEliminar() {
-    if (undefined != this.selectedDatos && this.selectedDatos.length != 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  confirmArchivar() {
+    let mess = this.translateService.instant("messages.archivarConfirmation");
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.archivar.emit(this.selectedDatos);
+      },
+      reject: () => {
+        this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+      }
+    });
+  }  
 }
