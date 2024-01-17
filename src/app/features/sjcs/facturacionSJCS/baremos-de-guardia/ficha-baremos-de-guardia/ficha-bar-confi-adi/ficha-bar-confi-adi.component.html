@@ -66,8 +66,11 @@
                         </div>
                         <div class="form-group col-lg-6 col-md-6 ">
                             <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }}</label>
-                            <input [disabled]=" !permisoEscritura || !disabledPrecioUnico || !disabledFacActuaciones"
-                                type="number" [(ngModel)]="filtrosAdi.importe" class="form-control importesBaremos" />
+                            <div class="input-icon input-icon-right">
+                                <input type="number" [disabled]=" !permisoEscritura || !disabledPrecioUnico || !disabledFacActuaciones"
+                                (input)="maskTwoDecimals($event, filtrosAdi.importe)" [(ngModel)]="filtrosAdi.importe" class="form-control importesBaremos"/>
+                                <i>€</i>
+                            </div>
                         </div>
                         <div class="form-group col-lg-3 col-md-3 align-self-center mt-md-3 d-flex">
                             <i _ngcontent-c15="" class="fas fa-external-link-alt mr-2 mt-1"></i>
@@ -82,12 +85,13 @@
                                 label="{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}" class="ml-0">
                             </p-checkbox>
                         </div>
-                        <div class="form-group col-lg-6 col-md-6">
+                        <div class="form-group col-lg-12 col-md-12">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
-                            <input type="number"
-                                [disabled]="!permisoEscritura || !disabledPrecioUnico || !disabledFacActuaciones"
-                                [(ngModel)]="filtrosAdi.importeMax" class="form-control importesBaremos"
-                                [disabled]="!disableImput || !permisoEscritura || !disabledPrecioUnico" />
+                            <div class="input-icon input-icon-right" style="max-width: 49%;">
+                                <input type="number" [disabled]="!permisoEscritura || !disabledPrecioUnico || !disabledFacActuaciones"
+                                    (input)="maskTwoDecimals($event, filtrosAdi.importeMax)" [(ngModel)]="filtrosAdi.importeMax" class="form-control importesBaremos"/>
+                                <i>€</i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -111,7 +115,7 @@
                                 pTooltip="{{'sjcs.facturacionsjcs.baremoshitostooltipfac2014' | translate}}"
                                 tooltipPosition="right"></i>
                         </div>
-                        <div class="form-group col-lg-12 col-md-12">
+                        <div class="form-group col-lg-12 col-md-12 mt-md-4">
                             <p-radioButton 
                                 [(ngModel)]="descontarCheck" value="descontarGuardAsis" name="descontarCheck"
                                 (onChange)="onChangeDescontar($event)" binary="true"
@@ -122,7 +126,7 @@
                                 pTooltip="{{'sjcs.facturacionsjcs.baremoshitostooltipenjuiciosrapidos' | translate}}"
                                 tooltipPosition="right"></i>
                         </div>
-                        <div class="form-group col-lg-12 col-md-12">
+                        <div class="form-group col-lg-12 col-md-12" style="margin-top: 2.4rem !important">
                             <p-radioButton 
                                 [(ngModel)]="descontarCheck" value="descontarGuardAct" name="descontarCheck"
                                 (onChange)="onChangeDescontar($event)" binary="true"

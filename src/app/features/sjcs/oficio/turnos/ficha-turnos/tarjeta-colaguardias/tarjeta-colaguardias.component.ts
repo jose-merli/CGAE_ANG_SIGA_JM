@@ -1531,9 +1531,6 @@ export class TarjetaColaGuardias implements OnInit, AfterViewChecked {
       this.opened.emit(this.openFicha);
       this.idOpened.emit(key);
     }    
-    if (this.openFicha) {
-      console.log('Tabla order abierta?', this.tablaOrder);
-    }
   }
 
   saltoCompensacion(){
