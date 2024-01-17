@@ -16,13 +16,14 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() nombreAp;
   @Input() tarjeta;
   @Input() pantalla;
-  @Input() disabled;
+  @Input() disabled:boolean;
   @Input() idTurno;
   @Input() idGuardia;
   @Input() art27;
   @Input() filtros;
   @Input() filtrosAE;
   @Input() obligatorio: boolean;
+  @Input() datosGeneralesEjg:boolean;
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
   nColegiado: string = "";

@@ -16,6 +16,7 @@ import * as moment from 'moment';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { ParametroDto } from '../../../../../models/ParametroDto';
+import { ColegiadosSJCSItem } from '../../../../../models/ColegiadosSJCSItem';
 
 @Component({
   selector: 'app-datos-generales-ejg',
@@ -34,6 +35,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() guardadoSend = new EventEmitter<any>();
   @Output() newEstado = new EventEmitter();
+  @Output() datosNueva = new EventEmitter();
   @Input() nuevo;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
@@ -46,6 +48,8 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   textSelected: String = '{0} opciones seleccionadas';
   tipoEJGDesc = "";
   tipoEJGColDesc = "";
+  turnoGuardiaEJG = "";
+  turnoEJG ="";
   comboTipoEJG = [];
   comboTipoEJGColegio = [];
   comboPrestaciones = [];
@@ -71,6 +75,16 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     key: "datosGenerales",
     activa: false
   }
+
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
+  comboTurno = [];
+  comboGuardia = [];
+  isDisabledGuardia: boolean = true;
+  buscandoCol: boolean = false;
+  initArt27;
 
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
@@ -100,28 +114,63 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
     this.getComboTipoEJGColegio();
     this.getComboPrestaciones();
     this.getComboTipoExpediente();
+      /*SERVICIOS TRAMITACION */
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
     
-
     if (this.persistenceService.getDatosEJG()) {
-      this.modoEdicion = true;
-      this.nuevo = false;
-      this.body = this.persistenceService.getDatosEJG();
+      this.bodyInicial = this.persistenceService.getDatosEJG();
+      if(sessionStorage.getItem("nuevoNColegiado") && (this.bodyInicial.numEjg == null || this.bodyInicial.numEjg == "")){
+        this.nuevo = true;
+        this.modoEdicion = false;
+        this.disabledNumEJG = true;
+        this.modoEdicion = false;
+        this.showTipoExp = false;     
+        this.persistenceService.clearDatosEJG();
+        this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+        this.usuarioBusquedaExpress = {
+          numColegiado: this.body.numColegiado,
+          nombreAp: this.body.apellidosYNombre
+        };
+        sessionStorage.removeItem("nuevoNColegiado");
+      }else{
+          if (this.persistenceService.getDatosEJG()) {
+          this.nuevo = false;
+          this.modoEdicion = true;
+          this.bodyInicial = this.persistenceService.getDatosEJG();
+          this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+          this.usuarioBusquedaExpress = {
+            numColegiado: this.body.numColegiado,
+            nombreAp: this.body.apellidosYNombre
+          };
+        } else {
+          this.modoEdicion = false;
+          this.nuevo = true;
+          this.body = new EJGItem();
+        
+        }
 
-      this.disabledNumEJG = true;
 
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.disabledNumEJG = true;
 
+
+        
+        if (this.body.tipoEJG != undefined)
+          this.showTipoExp = true;
+
+        // this.getPrestacionesRechazadasEJG();
+        this.getRelaciones();
+      } 
       if (this.body.fechalimitepresentacion != undefined)
-        this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
-      if (this.body.fechapresentacion != undefined)
-        this.body.fechapresentacion = new Date(this.body.fechapresentacion);
-      if (this.body.fechaApertura != undefined)
-        this.body.fechaApertura = new Date(this.body.fechaApertura);
-      if (this.body.tipoEJG != undefined)
-        this.showTipoExp = true;
+          this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
+        if (this.body.fechapresentacion != undefined)
+          this.body.fechapresentacion = new Date(this.body.fechapresentacion);
+        if (this.body.fechaApertura != undefined)
+          this.body.fechaApertura = new Date(this.body.fechaApertura);
 
-      this.getPrestacionesRechazadasEJG();
-      this.getRelaciones();
     } else if (sessionStorage.getItem("asistencia")) { //Si hemos pulsado Crear EJG en la ficha de Asistencias en la tarjeta Relaciones o le hemos dado a Crear EJG en la pantalla de asistencias expres
 
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
@@ -157,6 +206,74 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       }
       ).catch(error => console.error(error));
 
+
+
+
+
+
+    this.getComboTurno();
+
+
+
+    if(sessionStorage.getItem("buscadorColegiados")){
+      let persona = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      sessionStorage.removeItem('buscadorColegiados');
+
+      this.usuarioBusquedaExpress.nombreAp = persona.apellidos + ", " + persona.nombre;
+
+      this.usuarioBusquedaExpress.numColegiado = persona.nColegiado;
+
+      this.body.apellidosYNombre = this.usuarioBusquedaExpress.nombreAp;
+
+      this.body.numColegiado = persona.nColegiado;
+
+      this.body.idPersona = persona.idPersona;
+
+
+    }
+
+    //Se comprueba si vueleve de una busqueda de colegiado
+    if (sessionStorage.getItem("idTurno")) {
+      this.body.idTurno = sessionStorage.getItem("idTurno");
+      sessionStorage.removeItem('idTurno');
+    }
+
+    //Se comprueba si vueleve de una busqueda de colegiado
+    if (sessionStorage.getItem("idGuardia")) {
+      this.body.idGuardia = sessionStorage.getItem("idGuardia");
+      sessionStorage.removeItem('idGuardia');
+    }
+
+    //Se comprueba si vueleve de una busqueda de colegiado con art 27
+    if (sessionStorage.getItem('art27')) {
+      sessionStorage.removeItem('art27');
+      this.art27 = true;
+    }
+
+
+    //Para evitar que se realice una busqueda innecesaria y lance errores por consola cuando no haya ningun turno seleccionado.
+    if(this.body.idTurno!=undefined && this.body.idTurno!=null){
+      this.getComboGuardia();
+    }
+
+    //Se desbloquea el desplegable de guardia si hay un turno seleccionado al inciar la tarjeta.
+    if (this.body.idTurno != undefined && this.body.idTurno != null){
+      this.isDisabledGuardia = false;
+    }
+
+    //Comprobamos si el colegiado fue seleccionado por art 27 o no. ES uno de los métodos más lentos del inicio
+    if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true){ 
+      this.checkArt27();
+    }
+
+    this.commonsServices.checkAcceso(procesos_ejg.serviciosTramitacion)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+        
+      }
+      ).catch(error => console.error(error));
+
   }
   getParamMaxLengthNum() {
 
@@ -180,6 +297,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       }
     }
   }
+  
 
   getPrestacionesRechazadasEJG() {
     this.sigaServices.post("gestionejg_searchPrestacionesRechazadasEJG", this.body).subscribe(
@@ -238,7 +356,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         //Determina el valor en la cabecera del campo tipo ejg colegio
         if (this.body.tipoEJGColegio != null && this.body.tipoEJGColegio != undefined) {
           this.changeTipoEJGColegio();
-        }
+        }else{
         let parametro = {
           valor: "TIPO_EJG_COLEGIO"
         };
@@ -257,7 +375,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                 }
               }
             });
-
+          }
       },
       err => {
         //console.log(err);
@@ -277,7 +395,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         this.comboTipoExpediente = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboTipoExpediente);
         let tipoExp = this.comboTipoExpediente.find(
-          item => item.value == this.body.tipoEJG
+          item => item.value == this.body.idTipoExpInsos
         );
         if (tipoExp != undefined)
           this.tipoExpedienteDes = tipoExp.label;
@@ -293,8 +411,11 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       n => {
         this.comboPrestaciones = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboPrestaciones);
-        this.body.prestacion = n.combooItems.map(it => it.value.toString());
-        this.bodyInicial.prestacion = this.body.prestacion;
+        if (!this.persistenceService.getDatosEJG()) {
+          this.body.prestacion = n.combooItems.map(it => it.value.toString());
+          this.bodyInicial.prestacion = this.body.prestacion;
+        }
+        this.getPrestacionesRechazadasEJG()
       },
       err => {
         //console.log(err);
@@ -319,22 +440,25 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   }
 
   abreCierraFicha(key) {
-    if(!this.nuevo){
-      this.resaltadoDatosGenerales = true;
+    if(this.body != null && this.body != undefined){
+      if(!this.nuevo){
+        this.resaltadoDatosGenerales = true;
+      }
+      if (
+        key == "datosGenerales" &&
+        !this.activacionTarjeta
+      ) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+      if (this.activacionTarjeta) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+      this.opened.emit(this.openFicha);
+      this.idOpened.emit(key);
     }
-    if (
-      key == "datosGenerales" &&
-      !this.activacionTarjeta
-    ) {
-      this.fichaPosible.activa = !this.fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-    if (this.activacionTarjeta) {
-      this.fichaPosible.activa = !this.fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-    this.opened.emit(this.openFicha);
-    this.idOpened.emit(key);
+    
   }
 
   showMessage(severity, summary, msg) {
@@ -399,10 +523,12 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
 
   save() {
     this.progressSpinner = true;
-
+    this.body.prestacionesRechazadas = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
     if (this.modoEdicion) {
-      this.body.prestacionesRechazadas = this.comboPrestaciones.map(it => it.value.toString()).filter(x => this.body.prestacion.indexOf(x) === -1);
-
+      
+      // if(this.tipoEJGColDesc){
+      //   this.body.tipoEJGColegio = this.tipoEJGColDesc;
+      // }
       //hacer update
       this.sigaServices.post("gestionejg_actualizaDatosGenerales", this.body).subscribe(
         n => {
@@ -413,9 +539,9 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
             //Se actualiza la tarjeta de estados en el caso que se actualice el estado inicial por cambiar la fecha de apertura
             if (this.body.fechaApertura != this.bodyInicial.fechaApertura)
               this.newEstado.emit(null);
-
+              
             this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
-            this.ejgCreadoNuevo = true;
+            this.ejgCreadoNuevo = false;
             this.body.numEjg = n.body.substring(n.body.indexOf("id")+5,n.body.indexOf("error")-3);
             this.bodyInicial = this.body;
             this.nuevo = false;
@@ -427,8 +553,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
             }
             this.persistenceService.setDatosEJG(this.bodyInicial);
 
-            this.guardadoSend.emit(true);
-
+            this.guardadoSend.emit(this.body);
             this.changeTipoEJGColegio();
           }
           else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -468,8 +593,8 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
               let ejgObject = JSON.parse(n.body).ejgItems;
               let datosItem = ejgObject[0];
               this.persistenceService.setDatosEJG(datosItem);
-
-
+              this.body.estadoEJG = datosItem.estadoEJG;
+              this.ejgCreadoNuevo = false;
               //En el caso que se proceda de una designación, se asocia el EJG con la designación
               if (sessionStorage.getItem("Designacion")) {
 
@@ -497,7 +622,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                         //this.location.back();
                         //recargamos la ficha del ejg
-                    this.guardadoSend.emit(true);
+                    this.guardadoSend.emit(this.body);
                       },
                       err => {
                         //Crear etiqueta en la BBDD
@@ -573,7 +698,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                     sessionStorage.removeItem("radioTajertaValue");
 
                     //recargamos la ficha del ejg
-                    this.guardadoSend.emit(true);
+                    this.guardadoSend.emit(this.body);
 
                     if (error != null && error.description != null) {
                       this.showMessage("error", "Error al asociar el EJG con la Asistencia", error.description);
@@ -593,11 +718,11 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                 );
 
               }
-              this.ejgCreadoNuevo = true;
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.body.numEjg = datosItem.numEjg;
               this.body.numero = datosItem.numero;
-              this.guardadoSend.emit(true);
+              // this.datosNueva.emit(this.body);
+              this.guardadoSend.emit(datosItem);
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
@@ -612,7 +737,10 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         this.progressSpinner = false;
       }
     }
-
+    if (this.esCadenaVacia(this.body.numColegiado) || this.esCadenaVacia(this.body.apellidosYNombre)){
+      this.body.idPersona = undefined;
+    }
+    
   }
 
   checkPermisosRest() {
@@ -627,13 +755,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   rest() {
     if (!this.nuevo) {
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-
-      if (this.body.fechalimitepresentacion != undefined)
-        this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
-      if (this.body.fechapresentacion != undefined)
-        this.body.fechapresentacion = new Date(this.body.fechapresentacion);
-      if (this.body.fechaApertura != undefined)
-        this.body.fechaApertura = new Date(this.body.fechaApertura);
+      
       if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
     } else {
@@ -647,6 +769,18 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
       this.showTipoExp = false;
       this.getComboPrestaciones();
     }
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (this.body.fechalimitepresentacion != undefined)
+      this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
+    if (this.body.fechapresentacion != undefined)
+      this.body.fechapresentacion = new Date(this.body.fechapresentacion);
+    if (this.body.fechaApertura != undefined)
+      this.body.fechaApertura = new Date(this.body.fechaApertura);
+    this.getComboTurno();
+    this.getComboGuardia();
+    this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado;
+    this.usuarioBusquedaExpress.nombreAp = this.body.apellidosYNombre;
+    this.art27 = this.initArt27;
   }
 
   getRelaciones() {
@@ -853,6 +987,123 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   ngOnDestroy(){
     if(sessionStorage.getItem("justiciable") && !sessionStorage.getItem("SOJ")){
       sessionStorage.removeItem("justiciable");
+    }
+  }
+
+  /* SERVICIO TRAMITACION */
+
+  esCadenaVacia(value: string): boolean {
+    return value == undefined || value.trim().length == 0;
+  }
+  
+  getComboTurno() {
+    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno=1").subscribe(
+      n => {
+        
+        this.comboTurno = n.combooItems;
+        this.commonsServices.arregloTildesCombo(this.comboTurno);
+        if (this.body.idTurno != null && this.body.idTurno != undefined) {
+          this.comboTurno.forEach(element => {
+            if (element.value == this.body.idTurno) this.turnoEJG = element.label;
+          });
+        }
+        //if (!this.buscandoCol) this.progressSpinner = false;
+      },
+      err => {
+       // if (!this.buscandoCol) this.progressSpinner = false;
+      }
+    );
+  }
+
+  getComboGuardia() {
+    //this.progressSpinner = true;
+    this.sigaServices.getParam("combo_guardiaPorTurno","?idTurno=" + this.body.idTurno)
+      .subscribe(
+        col => {
+          this.comboGuardia = col.combooItems;
+          this.commonsServices.arregloTildesCombo(this.comboGuardia);
+          if (sessionStorage.getItem("idGuardia")) {
+            this.body.idGuardia = sessionStorage.getItem("idGuardia");
+            sessionStorage.removeItem('idGuardia');
+          }
+          if (this.body.idGuardia != null && this.body.idGuardia != undefined) {
+            this.comboGuardia.forEach(element => {
+              if (element.value == this.body.idGuardia) this.turnoGuardiaEJG = element.label;
+            });
+          }
+          //if (!this.buscandoCol) this.progressSpinner = false;
+        },
+        err => {
+          //if (!this.buscandoCol) this.progressSpinner = false;
+        }
+      );
+  }
+
+
+  checkArt27() {
+
+    let datos = new ColegiadosSJCSItem();
+
+   // this.progressSpinner = true;
+    //Estado "Ejerciente"
+    datos.idEstado = "20";
+    datos.idInstitucion = this.institucionActual;
+    datos.idGuardia = [];
+    datos.idTurno = [];
+    datos.idGuardia.push(this.body.idGuardia);
+    datos.idTurno.push(this.body.idTurno);
+
+    this.buscandoCol = true;
+
+    this.sigaServices.post("componenteGeneralJG_busquedaColegiadoEJG", datos).subscribe(
+      data => {
+
+        let colegiados = JSON.parse(data.body).colegiadosSJCSItem;
+
+        //Se comprueba si el colegiado esta en el turno y guardia seleccionados
+        if (colegiados.length > 0) {
+          let presente = false;
+          colegiados.forEach(element => {
+            if (this.body.apellidosYNombre == element.apellidos + ", " + element.nombre) presente = true;
+          });
+          if (!presente) this.art27 = true;
+        }
+        //this.progressSpinner = false;
+        this.buscandoCol = false;
+        this.initArt27 = this.art27;
+      }
+    );
+
+  }
+  
+  onChangeTurnos() {
+    this.comboGuardia = [];
+    this.body.idGuardia = null;
+
+    if (this.body.idTurno != undefined) {
+      this.isDisabledGuardia = false;
+      this.getComboGuardia();
+    } else {
+      this.isDisabledGuardia = true;
+      this.body.guardia = "";
+    }
+  }
+
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.body.numColegiado = event.nColegiado;
+    this.body.apellidosYNombre = event.nombreAp;
+    if (this.esCadenaVacia(this.body.numColegiado) || this.esCadenaVacia(this.body.apellidosYNombre)){
+      this.body.idPersona = undefined;
+    }
+      
+  }
+  
+  idPersona(event) {
+    this.body.idPersona = event;
+    if(this.nuevo == true){
+      sessionStorage.setItem("EJGItem",JSON.stringify(this.body));
     }
   }
 
