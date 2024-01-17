@@ -122,7 +122,7 @@ export class TarjetaFacturacionComponent implements OnInit {
     let abiertos: CertificacionesItem[] = []
     for (let fact of this.selectedDatos) {
       let estadoFact = fact.idEstado
-      if (this.certificacion.estado == "CERRADA" && estadoFact == this.ESTADO_FAC_CERRADO) {
+      if (this.certificacion.estado == "ENVÍO CON ERRORES" && estadoFact == this.ESTADO_FAC_CERRADO) {
         let obj: CertificacionesItem = new CertificacionesItem();
         obj.idFacturacion = fact.idFacturacion
         obj.nombre = fact.nombre
@@ -174,7 +174,7 @@ export class TarjetaFacturacionComponent implements OnInit {
       this.showMessage("warn",  this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.facturacion.error.estadoAbrir"));
    
     }else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      this.showMessage("warn", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.facturacion.error.estadoAbrir"));
     }
 
   }
@@ -225,7 +225,6 @@ export class TarjetaFacturacionComponent implements OnInit {
     // Verficiar si la factura esta vácia para tratar error.
     if (this.idFacturacion != undefined || this.idFacturacion != null) {
       this.isNuevo = false;
-      this.progressSpinner = true;
       this.saveFact.emit(this.idFacturacion)
       this.idFacturacion = null;
     }

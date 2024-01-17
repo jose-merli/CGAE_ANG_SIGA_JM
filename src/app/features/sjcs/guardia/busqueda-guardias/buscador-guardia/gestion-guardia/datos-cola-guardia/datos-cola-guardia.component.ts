@@ -50,8 +50,8 @@ export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
   nInscritos:String ="";
   botActivos: boolean = true;
   editable: boolean = true;
-  rowGroups: Row[];
-  rowGroupsAux: Row[];
+  rowGroups: Row[] = [];
+  rowGroupsAux: Row[] = [];
   datosConfColaGuardias: any;
   selectedItemSaltos: number = 5;
   selectedItemCompensaciones: number = 5;
@@ -543,13 +543,10 @@ inicio(){
           { type: 'invisible', value: datoObj.idPersona },
           { type: 'invisible', value: undefined }//datoObj.ultimoCola }
         ];
+        arr.push(objArr);
       }
-      
-      arr.push(objArr);
-      
-    
     })
-    
+
     for (let i = 0; i < arrLast.length; i++){
       arr.push(arrLast[i]);
     }
