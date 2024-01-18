@@ -10,7 +10,7 @@
     <app-filtro-busqueda-facturacion (busqueda)="busqueda($event)" [permisoEscrituraFac]="permisoEscrituraFac"
         [permisoEscrituraPag]="permisoEscrituraPag" (cambiaBuscar)="cambiaBuscar($event)"></app-filtro-busqueda-facturacion>
     <app-tabla-busqueda-facturacion *ngIf="buscar" [datos]="datos" [permisos]="permisoEscrituraFac"
-        [filtroSeleccionado]="filtroSeleccionado" (delete)="delete($event)" (archivar)="archivar($event)"></app-tabla-busqueda-facturacion>
+        [filtroSeleccionado]="filtroSeleccionado" (delete)="delete($event)" (archivar)="archivar($event, true)" (desarchivar)="archivar($event, false)" (viewAll)="viewAll($event)"></app-tabla-busqueda-facturacion>
 </div>
 
 <div *ngIf="progressSpinner || filtros.progressSpinnerFiltro" class="overlay-spinner">

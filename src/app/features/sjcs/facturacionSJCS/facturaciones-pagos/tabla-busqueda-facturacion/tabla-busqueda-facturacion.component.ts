@@ -25,6 +25,9 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   selectAll: boolean = false;
+  archivada: boolean = true;
+  btnMostrar: String = '';
+  btnArchivar: String = '';
 
   message;
   first = 0;
@@ -36,6 +39,8 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
 
   @Output() delete = new EventEmitter<FacturacionItem>();
   @Output() archivar = new EventEmitter<any[]>();
+  @Output() desarchivar = new EventEmitter<any[]>();
+  @Output() viewAll = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
@@ -55,6 +60,8 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
       this.first = paginacion.paginacion;
       this.selectedItem = paginacion.selectedItem;
     }
+
+    this.mostrarOcultar();
 
     this.getCols();
 
@@ -208,17 +215,33 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   }
 
   confirmArchivar() {
-    let mess = this.translateService.instant("messages.archivarConfirmation");
+    let mess = (!this.archivada ? this.translateService.instant("messages.archivarConfirmation") : this.translateService.instant("messages.desarchivarConfirmation"));
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        this.archivar.emit(this.selectedDatos);
+        if(!this.archivada){
+          this.archivar.emit(this.selectedDatos);
+        }else{
+          this.desarchivar.emit(this.selectedDatos);
+        }
       },
       reject: () => {
         this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
       }
     });
-  }  
+  }
+
+  mostrarOcultar() {
+    this.archivada = !this.archivada;
+    if(this.archivada){
+      this.btnMostrar = this.translateService.instant("general.message.ocultarHistorico");
+      this.btnArchivar = this.translateService.instant("form.busquedaCursos.literal.boton.desarchivar");
+    } else {
+      this.btnMostrar = this.translateService.instant("general.message.mostrarHistorico");
+      this.btnArchivar = this.translateService.instant("general.boton.archivar");
+    }
+    this.viewAll.emit(this.archivada);
+  }
 }
