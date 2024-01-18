@@ -208,6 +208,7 @@ export class SigaServices {
 		busquedaColegiados_tipoDireccion: 'busquedaColegiados/tipoDireccion',
 		busquedaColegiados_searchColegiado: '/busquedaColegiado/searchColegiado',
 		busquedaColegiados_searchColegiadoFicha: '/busquedaColegiado/searchColegiadoFicha',
+		busquedaColegiados_tipoPersona: '/busquedaColegiado/tipoPersona',
 		busquedaColegiados_generarExcel: 'busquedaColegiados/generarExcel',
 		busquedaColegiado_etiquetas: '/busquedaColegiado/etiquetas',
 		busquedaNoColegiados_estadoCivil: '/busquedaNoColegiados/estadoCivil',
@@ -376,6 +377,7 @@ export class SigaServices {
 		datosNotificaciones_getPlantillas: 'datosNotificaciones/getPlantillas',
 
 		fichaColegialSociedades_searchSocieties: 'fichaColegialSociedades/searchSocieties',
+		fichaColegialSociedades_searchSociedadesFact: 'fichaColegialSociedades/searchSociedadesFact',
 		fichaColegialOtrasColegiaciones_searchOtherCollegues: 'fichaColegialOtrasColegiaciones/searchOtherCollegues',
 		fichaDatosGenerales_partidoJudicialSearch: '/fichaDatosGenerales/partidoJudicialSearch',
 		fichaDatosGenerales_tipoidentificacion: '/fichaDatosGenerales/getTipoIdentificacion',

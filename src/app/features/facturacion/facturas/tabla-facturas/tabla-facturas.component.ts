@@ -105,34 +105,112 @@ export class TablaFacturasComponent implements OnInit {
       sessionStorage.setItem("consulta", "true");
       let filtros = { idPersona: selectedRow.idCliente };
 
-      this.sigaServices.postPaginado("busquedaColegiados_searchColegiadoFicha", "?numPagina=1", filtros).toPromise().then(
+      this.sigaServices.post("busquedaColegiados_tipoPersona",filtros).subscribe(
         n => {
-          let results: DatosColegiadosItem[] = JSON.parse(n.body).colegiadoItem;
-          
-          if (results != undefined && results.length != 0) {
-            let datosColegiado: DatosColegiadosItem = results[0];
-
-            sessionStorage.setItem("facturaItem", JSON.stringify(selectedRow));
-            sessionStorage.setItem("volver", "true");
-
-            sessionStorage.setItem("personaBody", JSON.stringify(datosColegiado));
-            sessionStorage.setItem("filtrosBusquedaColegiados", JSON.stringify(filtros));
-            sessionStorage.setItem("solicitudAprobada", "true");
-            sessionStorage.setItem("origin", "Cliente");
+          let results = JSON.parse(n.body).colegiadoItem;
+          if(results[0].tipo == "Es colegiado"){
+            this.esUnColegiado(filtros, selectedRow);
+          }else if(results[0].tipo == "No es colegiado"){
+            this.noEsColegiado(filtros, selectedRow);
+          }else{
+            this.esUnaSociedad(filtros,selectedRow);
           }
+          this.progressSpinner = false;
         },
         err => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          this.handleServerSideErrorMessage(err);
+          
+          this.progressSpinner = false;
         }
-      ).then(() => this.progressSpinner = false).then(() => {
-        if (sessionStorage.getItem("personaBody")) {
-          this.router.navigate(["/fichaColegial"]);
-        } 
-      });
+      );
     }
     
   }
-  
+
+  esUnaSociedad(filtros,selectedRow){
+    this.sigaServices.postPaginado("busquedaPerJuridica_datosGeneralesSearch", "?numPagina=1", filtros).toPromise().then(
+      n => {
+        let results = JSON.parse(n.body);
+        console.log(results)
+        sessionStorage.setItem("usuarioBody", JSON.stringify(results.personaJuridicaItems));
+        sessionStorage.setItem("facturaItem", JSON.stringify(selectedRow));
+        sessionStorage.setItem(
+          "privilegios",
+          JSON.stringify(true)
+        );
+          sessionStorage.setItem("esColegiado", "false");
+          sessionStorage.setItem("first", JSON.stringify(this.table.first));
+        },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    ).then(() => this.progressSpinner = false).then(() => {
+      if (sessionStorage.getItem("usuarioBody")) {
+        sessionStorage.setItem("vieneDeFactura","true")
+        this.router.navigate(["/fichaPersonaJuridica"]);
+      } 
+    });
+  }
+
+
+
+  noEsColegiado(filtros,selectedRow){
+    this.sigaServices.postPaginado("busquedaNoColegiados_searchNoColegiado", "?numPagina=1", filtros).toPromise().then(
+      n => {
+        let results = JSON.parse(n.body);
+        console.log(results.noColegiadoItem)
+        if (results != undefined && results.noColegiadoItem.length != 0) {
+           let datosColegiado = results.noColegiadoItem[0];
+
+           sessionStorage.setItem("facturaItem", JSON.stringify(selectedRow));
+           sessionStorage.setItem("volver", "true");
+            sessionStorage.setItem("esColegiado", "false");
+           sessionStorage.setItem("personaBody", JSON.stringify(datosColegiado));
+           sessionStorage.setItem("solicitudAprobada", "true");
+           sessionStorage.setItem("origin", "Cliente");
+         }else{
+
+        }
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    ).then(() => this.progressSpinner = false).then(() => {
+      if (sessionStorage.getItem("personaBody")) {
+        sessionStorage.setItem("vieneDeFactura","true")
+        this.router.navigate(["/fichaColegial"]);
+      } 
+    });
+  }
+
+  esUnColegiado(filtros,selectedRow){
+    this.sigaServices.postPaginado("busquedaColegiados_searchColegiadoFicha", "?numPagina=1", filtros).toPromise().then(
+      n => {
+        let results: DatosColegiadosItem[] = JSON.parse(n.body).colegiadoItem;
+        
+        if (results != undefined && results.length != 0) {
+          let datosColegiado: DatosColegiadosItem = results[0];
+
+          sessionStorage.setItem("facturaItem", JSON.stringify(selectedRow));
+          sessionStorage.setItem("volver", "true");
+          sessionStorage.setItem("esColegiado", "true");
+          sessionStorage.setItem("personaBody", JSON.stringify(datosColegiado));
+          sessionStorage.setItem("solicitudAprobada", "true");
+          sessionStorage.setItem("origin", "Cliente");
+        }else{
+
+        }
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    ).then(() => this.progressSpinner = false).then(() => {
+      if (sessionStorage.getItem("personaBody")) {
+        sessionStorage.setItem("vieneDeFactura","true")
+        this.router.navigate(["/fichaColegial"]);
+      } 
+    });
+  }
 
 getCols() {
   this.cols = [
