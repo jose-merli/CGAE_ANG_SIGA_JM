@@ -268,4 +268,28 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     this.router.navigate(["/abonosSJCS"]);
   }
 
+  cartasFacturacion(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    sessionStorage.removeItem("apartadoFacturacion");
+    sessionStorage.removeItem("apartadoPagos");
+    sessionStorage.setItem("apartadoFacturacion", "true");
+    this.router.navigate(["/cartaFacturacionPago"]);
+  }
+
+  cartasPago(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    sessionStorage.removeItem("apartadoFacturacion");
+    sessionStorage.removeItem("apartadoPagos");
+    sessionStorage.setItem("apartadoPagos", "true");
+    this.router.navigate(["/cartaFacturacionPago"]);
+  }
+
 }

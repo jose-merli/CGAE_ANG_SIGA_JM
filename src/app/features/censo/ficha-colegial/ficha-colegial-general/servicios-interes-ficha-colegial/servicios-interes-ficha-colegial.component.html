@@ -21,7 +21,21 @@
                   </span>
                 </a>
               </label>
-             <!-- <label>
+              <label>
+                <a (click)="cartasFacturacion()">
+                  <span style="color: blue; text-decoration: underline;cursor:pointer">
+                    {{ "facturacionSJCS.facturacionesYPagos.cartaFacturacion" | translate }}
+                  </span>
+                </a>
+              </label>
+              <label>
+                <a (click)="cartasPago()">
+                  <span style="color: blue; text-decoration: underline;cursor:pointer">
+                    {{ "facturacionSJCS.facturacionesYPagos.cartaPago" | translate }}
+                  </span>
+                </a>
+              </label>
+             <label>
                 <a (click)="preAsistencia()">
                   <span style="color: blue; text-decoration: underline;cursor:pointer">{{
                     "menu.sjcs.solicitudesAceptadasCentralita" | translate }}
@@ -35,7 +49,6 @@
                   </span>
                 </a>
               </label>
-
               <label>
                 <a (click)="monederos()">
                   <span style="color: blue; text-decoration: underline;cursor:pointer">{{
@@ -117,7 +130,7 @@
                     "justiciaGratuita.oficio.bajasTemporales" | translate }}
                   </span>
                 </a>
-              </label>-->
+              </label>
               <i class="float-right"></i>
             </div>
           </div>
