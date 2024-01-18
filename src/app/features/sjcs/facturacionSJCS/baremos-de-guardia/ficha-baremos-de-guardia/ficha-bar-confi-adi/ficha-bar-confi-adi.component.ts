@@ -197,5 +197,14 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
     this.maxIrTiposFG = event;
   }
 
+  maskTwoDecimals(event, propBaremo) {
+    if (event.target.value.includes('.')) {
+      let numericValue = event.target.value.split('.');
+      if (numericValue[1].length > 2) {
+        event.target.value = numericValue[0] + '.' + numericValue[1].substring(0,2);
+        propBaremo = numericValue[0] + '.' + numericValue[1].substring(0,2);
+      }
+    }
+  }
 
 }

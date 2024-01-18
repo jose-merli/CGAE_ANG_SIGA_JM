@@ -16,6 +16,7 @@ import { ProcuradorPreDesignacionComponent } from './procurador-pre-designacion/
 import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
 import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
 import { UnidadFamiliarComponent } from './unidad-familiar/unidad-familiar.component';
+import { RelacionesComponent } from './relaciones/relaciones.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -101,6 +102,7 @@ export class GestionEjgComponent implements OnInit {
   comunicaciones;
 
   @ViewChild(UnidadFamiliarComponent) unidadFamiliar; 
+  @ViewChild(RelacionesComponent) relaciones;
   @ViewChild(ServiciosTramitacionComponent) tramitacion;
   @ViewChild(EstadosComponent) tarjetaEstadosEJG: EstadosComponent;
   @ViewChild(ContrariosPreDesignacionComponent) contrariosPreDesigna;
@@ -369,6 +371,7 @@ export class GestionEjgComponent implements OnInit {
     // this.router.navigate(['/gestionEjg']);
     this.ngOnInit();
     this.unidadFamiliar.ngOnInit();
+    this.relaciones.ngOnInit();
   }
 
   newEstado() {
@@ -616,16 +619,6 @@ export class GestionEjgComponent implements OnInit {
           label: "general.message.datos.generales",
           value: document.getElementById("datosGenerales"),
           nombre: "datosGenerales",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      if (this.permisoEscrituraServiciosTramitacion != undefined) {
-        pruebaTarjeta = {
-          label: "justiciaGratuita.ejg.datosGenerales.ServiciosTramit",
-          value: document.getElementById("serviciosTramitacion"),
-          nombre: "serviciosTramitacion",
         };
 
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
