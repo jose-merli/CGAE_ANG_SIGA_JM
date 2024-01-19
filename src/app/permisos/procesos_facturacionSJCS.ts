@@ -20,6 +20,8 @@ export const procesos_facturacionSJCS: any = {
 
     // Permiso para cartas de facturación y pagos
     cartasFacturacionPago: "620",
+    cartasFacturacion: "620F",
+    cartasPago: "620P",
 
     //Permiso para movimientos varios
     busquedaMovimientosVarios: "608",

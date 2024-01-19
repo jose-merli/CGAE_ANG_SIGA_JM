@@ -20,6 +20,7 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
   buscar: boolean = false;
   progressSpinner: boolean = false;
   modoBusqueda: string;
+  busquedaEnlace: string;
   msgs = [];
 
   @ViewChild(FiltroCartasFacturacionPagoComponent) filtros: FiltroCartasFacturacionPagoComponent;
@@ -32,7 +33,13 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
     private translateService: TranslateService, private router: Router, private sigaServices: SigaServices) { }
 
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_facturacionSJCS.cartasFacturacionPago)
+
+    let permiso = procesos_facturacionSJCS.cartasFacturacion;
+    if(sessionStorage.getItem("apartadoPagos")){
+      permiso = procesos_facturacionSJCS.cartasPago;
+    }
+
+    this.commonsService.checkAcceso(permiso)
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
@@ -60,8 +67,7 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
             sessionStorage.removeItem("datosColegiado");
         }
         sessionStorage.removeItem("apartadoFacturacion");
-
-        this.searchFacturacionEnlace();
+        this.busquedaEnlace = "f";
       }
 
       if(sessionStorage.getItem("apartadoPagos")){
@@ -75,9 +81,16 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
           sessionStorage.removeItem("datosColegiado");
       }
       sessionStorage.removeItem("apartadoPagos");
-      
-      this.searchPagoEnlace();
+      this.busquedaEnlace = "p";
       }
+  }
+
+  ngAfterViewInit() {
+    if (this.busquedaEnlace == 'f') {
+      this.searchFacturacionEnlace();
+    } else if (this.busquedaEnlace == 'p') {
+      this.searchPagoEnlace();
+    }
   }
 
   search(event) {
@@ -101,6 +114,15 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
       this.datos = [];
       this.buscar = false;
       this.filtros.getComboPagos()
+    }
+
+    if (this.datosColegiado != null) {
+      this.filtros.filtros.apellidosNombre = this.datosColegiado.nombre;
+      this.filtros.filtros.ncolegiado = this.datosColegiado.numColegiado;
+      this.filtros.filtros.idPersona = this.datosColegiado.idPersona;
+      this.disabledLetradoFicha = true;
+    } else {
+      this.disabledLetradoFicha = false;
     }
   }
 

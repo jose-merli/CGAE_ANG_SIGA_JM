@@ -1,26 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, Input,  OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
-// import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { cardService } from "../../../../../_services/cardSearch.service";
-import { Location } from "@angular/common";
-import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
-import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
-import { AutoComplete, Dialog, Calendar, DataTable } from 'primeng/primeng';
-import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
-import { FichaColegialColegialesObject } from '../../../../../models/FichaColegialColegialesObject';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
-import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
-import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
-import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
-import * as moment from 'moment';
 import { DatosColegiadosObject } from '../../../../../models/DatosColegiadosObject';
 import { FichaColegialCertificadosObject } from '../../../../../models/FichaColegialCertificadosObject';
+import { CommonsService } from '../../../../../_services/commons.service';
+
 @Component({
   selector: 'app-servicios-interes-ficha-colegial',
   templateUrl: './servicios-interes-ficha-colegial.component.html',
@@ -63,11 +51,11 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
 
   isLetrado:boolean = false;
 
-
   constructor(private sigaServices: SigaServices,
     private authenticationService: AuthenticationService,
     private translateService: TranslateService,
-    private router: Router) { }
+    private router: Router,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -100,13 +88,11 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
       this.emptyLoadFichaColegial = false;
       this.desactivarVolver = false;
       this.activacionTarjeta = false;
-      // sessionStorage.removeItem("esNuevoNoColegiado");
     } else {
       this.activacionEditar = true;
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-
   }
 
   ngOnChanges() {
@@ -137,9 +123,6 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
 
   irTurnoOficio() {
     let idInstitucion = this.authenticationService.getInstitucionSession();
-    // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
-
-    // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
     let us = undefined;
     if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       sessionStorage.setItem("tipollamada", "busquedaNoColegiado");
@@ -268,4 +251,27 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     this.router.navigate(["/abonosSJCS"]);
   }
 
+  cartasFacturacion(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    sessionStorage.removeItem("apartadoFacturacion");
+    sessionStorage.removeItem("apartadoPagos");
+    sessionStorage.setItem("apartadoFacturacion", "true");
+    this.router.navigate(["/cartaFacturacionPago"]);
+  }
+
+  cartasPago(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    sessionStorage.removeItem("apartadoFacturacion");
+    sessionStorage.removeItem("apartadoPagos");
+    sessionStorage.setItem("apartadoPagos", "true");
+    this.router.navigate(["/cartaFacturacionPago"]);
+  }
 }
