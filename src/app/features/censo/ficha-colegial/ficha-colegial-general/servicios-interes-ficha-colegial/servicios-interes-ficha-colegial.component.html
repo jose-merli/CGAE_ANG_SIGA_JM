@@ -16,119 +16,86 @@
             <div class="d-flex justify-content-between">
               <label>
                 <a (click)="irTurnoOficio()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "gratuita.personaJG.literal.masInfo" | translate }}
-                  </span>
+                  <span class="enlace">{{ "gratuita.personaJG.literal.masInfo" | translate }}</span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoCartasFacturacion">
+              <label [checkPermission]="'620F'">
                 <a (click)="cartasFacturacion()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">
-                    {{ "facturacionSJCS.facturacionesYPagos.cartaFacturacion" | translate }}
-                  </span>
+                  <span class="enlace">{{ "facturacionSJCS.facturacionesYPagos.cartaFacturacion" | translate }}</span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoCartasPago">
+              <label [checkPermission]="'620P'">
                 <a (click)="cartasPago()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">
-                    {{ "facturacionSJCS.facturacionesYPagos.cartaPago" | translate }}
-                  </span>
+                  <span class="enlace">{{ "facturacionSJCS.facturacionesYPagos.cartaPago" | translate }}</span>
                 </a>
               </label>
-             <label [hidden]="!this.muestraEnlaces || !this.permisoSolicitudesCentralita">
+             <label [checkPermission]="'SOLCE'">
                 <a (click)="preAsistencia()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "menu.sjcs.solicitudesAceptadasCentralita" | translate }}
-                  </span>
+                  <span class="enlace">{{ "menu.sjcs.solicitudesAceptadasCentralita" | translate }}</span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoFacturas">
+              <label [checkPermission]="'220'">
                 <a (click)="facturas()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.facturacion.facturas" |
-                    translate }}
-                  </span>
+                  <span class="enlace">{{ "menu.facturacion.facturas" | translate }}</span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoMonederos">
+              <label [checkPermission]="'50'">
                 <a (click)="monederos()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "menu.facturacion.busquedaMonedero" | translate }}
-                  </span>
+                  <span class="enlace">{{ "menu.facturacion.busquedaMonedero" | translate }} </span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoCuotasSuscripciones">
+              <label [checkPermission]="'45'">
                 <a (click)="cuotasSuscripciones()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "menu.facturacion.cuotasSuscripciones" | translate }}
-                  </span>
+                  <span class="enlace">{{ "menu.facturacion.cuotasSuscripciones" | translate }} </span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoCompraProductos">
+              <label [checkPermission]="'307'">
                 <a (click)="comprasProductos()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "menu.facturacion.compraProductos" | translate }}
-                  </span>
+                  <span class="enlace">{{ "menu.facturacion.compraProductos" | translate }} </span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoGuardiasColegiado">
+              <label [checkPermission]="'GUCOL'">
                 <a (click)="guardiasColegiado()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "justiciaGratuita.guardia.guardiasColegiado" | translate }}
-                  </span>
+                  <span class="enlace">{{"justiciaGratuita.guardia.guardiasColegiado" | translate }}</span>
                 </a>
               </label>
               <i class="float-right"></i>
             </div>
 
             <div class="d-flex justify-content-between">
-              <label [hidden]="!this.muestraEnlaces || !this.permisoGuardiasAsistencias">
+              <label [checkPermission]="'GUCOL'">
                 <a (click)="asistencias()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "menu.justiciaGratuita.asistencia" | translate }}
-                  </span>
+                  <span class="enlace">{{"menu.justiciaGratuita.asistencia" | translate }}</span>
                 </a>
               </label>
-
-              <label [hidden]="!this.muestraEnlaces || !this.permisoAbonosSJCS">
+              <label [checkPermission]="'60A'">
                 <a (click)="abonosSJCS()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "menu.facturacionSJCS.abonosSJCS" | translate }}
-                  </span>
+                  <span class="enlace">{{"menu.facturacionSJCS.abonosSJCS" | translate }}</span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoInscripciones">
+              <label [checkPermission]="'INTBU'">
                 <a (click)="turnoInscrito()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "justiciaGratuita.oficio.designas.turnoInscrito" | translate }}
-                  </span>
+                  <span class="enlace">{{"justiciaGratuita.oficio.designas.turnoInscrito" | translate }}</span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoInscripcionesGuardias">
+              <label [checkPermission]="'INGBU'">
                 <a (click)="inscripcionesGuardia()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "justiciaGratuita.guardia.inscripcionesGuardia" | translate }}
-                  </span>
+                  <span class="enlace">{{"justiciaGratuita.guardia.inscripcionesGuardia" | translate }}</span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoDesignas">
+              <label [checkPermission]="'DESBU'">
                 <a (click)="designas()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "menu.justiciaGratuita.designas" | translate }}
-                  </span>
+                  <span class="enlace">{{"menu.justiciaGratuita.designas" | translate }}</span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoInscripciones">
+              <label [checkPermission]="'INTBU'">
                 <a (click)="turnoInscrito()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "justiciaGratuita.oficio.designas.proximasDesignaciones" | translate }}
-                  </span>
+                  <span class="enlace">{{"justiciaGratuita.oficio.designas.proximasDesignaciones" | translate }}</span>
                 </a>
               </label>
-              <label [hidden]="!this.muestraEnlaces || !this.permisoBajasTemporales">
+              <label [checkPermission]="'BATMP'">
                 <a (click)="bajasTemporales()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer">{{
-                    "justiciaGratuita.oficio.bajasTemporales" | translate }}
-                  </span>
+                  <span class="enlace">{{ "justiciaGratuita.oficio.bajasTemporales" | translate }}</span>
                 </a>
               </label>
               <i class="float-right"></i>

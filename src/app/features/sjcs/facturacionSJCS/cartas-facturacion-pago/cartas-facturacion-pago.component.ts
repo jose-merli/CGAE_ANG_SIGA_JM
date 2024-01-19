@@ -33,7 +33,13 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
     private translateService: TranslateService, private router: Router, private sigaServices: SigaServices) { }
 
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_facturacionSJCS.cartasFacturacionPago)
+
+    let permiso = procesos_facturacionSJCS.cartasFacturacion;
+    if(sessionStorage.getItem("apartadoPagos")){
+      permiso = procesos_facturacionSJCS.cartasPago;
+    }
+
+    this.commonsService.checkAcceso(permiso)
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
