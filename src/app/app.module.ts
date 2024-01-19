@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { HttpModule } from '@angular/http';
@@ -48,7 +41,7 @@ import { LoginDevelopComponent } from './commons/login-develop/login-develop.com
 import { LoginMultipleComponent } from './commons/login-multiple/login-multiple.component';
 import { LogoutComponent } from './commons/logout/logout.component';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
-
+import { CheckPermissionDirective } from './commons/directives/check-permission.directive';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
 import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
@@ -920,6 +913,7 @@ import { Paginador4Module } from './commons/paginador4/paginador4.module';
 		LogoutComponent,
 		HeaderComponent,
 		HomeComponent,
+		CheckPermissionDirective,
 		// Censo
 		AuditoriaComponent,
 		AccesoFichaPersonaComponent,
