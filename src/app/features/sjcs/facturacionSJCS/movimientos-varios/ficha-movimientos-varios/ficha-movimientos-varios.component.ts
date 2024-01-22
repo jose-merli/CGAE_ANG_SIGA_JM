@@ -172,6 +172,14 @@ export class FichaMovimientosVariosComponent implements OnInit {
     this.sigaServices.post("movimientosVarios_getListadoPagos", this.datos).subscribe(
       n => {
         this.datosListadoPagos = JSON.parse(n.body).facturacionItem;
+        let cantidad = this.datos.cantidad;
+        this.datosListadoPagos.map((pago) => {
+          if(pago.cantidad < 0)
+          cantidad = cantidad + pago.cantidad;
+          else
+          cantidad = cantidad - pago.cantidad;
+          pago.cantidadRestante = cantidad;
+        });
         this.progressSpinner = false;
       },
       err => {
