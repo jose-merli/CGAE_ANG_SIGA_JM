@@ -126,6 +126,7 @@ export class TarjetaFacturacionComponent implements OnInit {
         let obj: CertificacionesItem = new CertificacionesItem();
         obj.idFacturacion = fact.idFacturacion
         obj.nombre = fact.nombre
+        obj.idEstadoCertificacion = this.certificacion.idEstadoCertificacion;
         reabrir.push(obj);
       }
       if(this.certificacion.estado == "CERRADA" && estadoFact == this.ESTADO_FAC_ABIERTO){
