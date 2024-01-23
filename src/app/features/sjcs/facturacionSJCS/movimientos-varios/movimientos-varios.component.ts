@@ -27,6 +27,7 @@ export class MovimientosVariosComponent implements OnInit {
   msgs: any[] = [];
 	filtroSeleccionado: String;
   datos;
+  datosLista = [];
   buscar: boolean = false;
   isLetrado : boolean = false;
   totalRegistros = 0;
@@ -204,9 +205,10 @@ export class MovimientosVariosComponent implements OnInit {
     this.sigaServices.post("movimientosVarios_busquedaMovimientosVarios", datosFiltrosAux).subscribe(
       data => {
         this.datos = JSON.parse(data.body).facturacionItem;
+        this.rellenarDatosLista();
         this.buscar = true;
         let error = JSON.parse(data.body).error;
-        this.totalRegistros = this.datos.length;
+        this.totalRegistros = this.datosLista.length;
 
         if(this.totalRegistros == 200){
           this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
@@ -246,6 +248,46 @@ export class MovimientosVariosComponent implements OnInit {
       }
     );
     
+  }
+
+  rellenarDatosLista(): void {
+    let datosListaInit = [];
+    this.datos.forEach(dato => {
+      let datosMismoMovimiento = this.datos.filter(datoAux => datoAux.cantidad === dato.cantidad && datoAux.ncolegiado === dato.ncolegiado);
+      let cantidadAplicada = 0;
+      let datoArray;
+      if (datosMismoMovimiento.length > 1) {
+        datosMismoMovimiento.forEach(datoMovimiento => {
+          cantidadAplicada += datoMovimiento.cantidadAplicada;
+        });
+        datoArray = datosMismoMovimiento.filter(datoMovimiento => datoMovimiento.cantidadRestante = datoMovimiento.cantidad - cantidadAplicada)[0];
+        if (!datoArray) {
+          datoArray = datosMismoMovimiento.filter(datoMovimiento => datoMovimiento.cantidadRestante = datoMovimiento.cantidad + cantidadAplicada)[0];
+        }
+        if (!datosListaInit.some(datoLista => datoLista.cantidad === dato.cantidad && datoLista.ncolegiado === dato.ncolegiado)) {
+          datosListaInit.push(this.setMovimiento(datoArray, cantidadAplicada));
+        }
+      } else {
+        datosListaInit.push(dato);
+      }
+    });
+    this.datosLista = datosListaInit;
+  }
+
+  setMovimiento(movimiento: MovimientosVariosFacturacionItem, cantidadAplicada: number): MovimientosVariosFacturacionItem {
+    let newDato = new MovimientosVariosFacturacionItem();
+    newDato.ncolegiado = movimiento.ncolegiado;
+    newDato.letrado = movimiento.letrado;
+    newDato.descripcion = movimiento.descripcion;
+    newDato.cantidad = movimiento.cantidad;
+    newDato.cantidadRestante = movimiento.cantidadRestante;
+    newDato.cantidadAplicada = cantidadAplicada;
+    newDato.nombrePago = movimiento.nombrePago;
+    newDato.idAplicadoEnPago = movimiento.idAplicadoEnPago;
+    newDato.idPersona = movimiento.idPersona;
+    newDato.idMovimiento = movimiento.idMovimiento;
+    newDato.idInstitucion = movimiento.idInstitucion;
+    return newDato;
   }
 
   buscarDesdeEnlace(){
@@ -289,9 +331,10 @@ export class MovimientosVariosComponent implements OnInit {
     this.sigaServices.post("movimientosVarios_busquedaMovimientosVarios", datosFiltrosAux).subscribe(
       data => {
         this.datos = JSON.parse(data.body).facturacionItem;
+        this.rellenarDatosLista();
         this.buscar = true;
         let error = JSON.parse(data.body).error;
-        this.totalRegistros = this.datos.length;
+        this.totalRegistros = this.datosLista.length;
 
         if(this.totalRegistros == 200){
           this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
