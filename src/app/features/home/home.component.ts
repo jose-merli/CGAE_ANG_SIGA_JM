@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
 	generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
 	private http: HttpClient;
 	ngOnInit() {
+		this.removeUnusedSessionStorageKeys();
 		this.sigaServices.get('getLetrado').subscribe(
 			(data) => {
 			  if (data.value == 'S') {
@@ -48,9 +49,7 @@ export class HomeComponent implements OnInit {
 		//this.getMantenerSesion();
 		this.oldSigaLogin();
 		this.getDataLoggedUser();
-		this.getInstitucionActual();
-
-		this.removeUnusedSessionStorageKeys();
+		this.getInstitucionActual();		
 	}
 	removeUnusedSessionStorageKeys() {
 		let keysPorDefecto = ['Authorization',
@@ -61,8 +60,7 @@ export class HomeComponent implements OnInit {
 							  'esColegiado',
 							  'osAutenticated',
 							  'esNuevoNoColegiado',
-							  'personaBody',
-							  'tinyApiKey'];
+							  'personaBody'];
 
 		Object.keys(sessionStorage).forEach(function(key){
 			let encontrado = false;
