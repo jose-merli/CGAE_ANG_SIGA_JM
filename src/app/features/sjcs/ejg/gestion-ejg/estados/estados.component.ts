@@ -318,7 +318,7 @@ export class EstadosComponent implements OnInit {
   getComboEstado() {
     //this.progressSpinner = true;
 
-    this.sigaServices.getParam("filtrosejg_comboEstadoEJG", "?filtroEstadoEjg=1").subscribe(
+    this.sigaServices.getParam("filtrosejg_comboEstadoEJG", "?filtroEstadoEjg=2").subscribe(
       n => {
         this.comboEstadoEJG = n.combooItems;
         //this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
