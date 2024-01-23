@@ -24,7 +24,7 @@ export class ObservacionesFacturasComponent implements OnInit, OnChanges {
   @Input() bodyInicial: FacturasItem;
   body: FacturasItem = new FacturasItem();
   
-  apiKey: string = "";
+  apiKey: string = sessionStorage.getItem("tinyApiKey");
   editorConfig1: any = {
     selector: "#observacionesFactura",
     plugins:
@@ -70,7 +70,7 @@ export class ObservacionesFacturasComponent implements OnInit, OnChanges {
     else
       await this.getPermisoFacturas();
 
-    if (sessionStorage.getItem("tinyApiKey") != null) {
+    if (this.apiKey == null && sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
     }
 
