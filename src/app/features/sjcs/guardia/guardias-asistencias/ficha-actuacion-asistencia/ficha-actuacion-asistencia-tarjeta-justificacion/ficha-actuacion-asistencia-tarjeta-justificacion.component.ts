@@ -133,6 +133,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
 
   anular() {
     this.datosJustificacion.anulada = '1';
+    this.datosJustificacion.validada = '';
     this.updateEstadoActuacion();
   }
 
@@ -150,7 +151,8 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
       this.datosJustificacion.estado = '';
       this.datosJustificacion.fechaJustificacion = '';
     }else if(this.datosJustificacion.anulada == '1'){
-      this.datosJustificacion.fechaJustificacion = '';
+      this.datosJustificacion.fechaJustificacion = null;
+      this.datosJustificacion.estado = '';
     }
 
     this.sigaServices
