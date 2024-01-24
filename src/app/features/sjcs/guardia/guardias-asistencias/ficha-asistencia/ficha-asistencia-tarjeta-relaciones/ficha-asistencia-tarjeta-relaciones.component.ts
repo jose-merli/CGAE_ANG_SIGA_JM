@@ -114,6 +114,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
 
     let tipoAsunto = relacion.sjcs.charAt(0);
 
+
     if ('D' == tipoAsunto) { //Si empieza por D es una Designacion, redirigimos a la ficha
 
       let desItem: any = new DesignaItem();
@@ -242,6 +243,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
 
   crearEJG() {
     sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
+    sessionStorage.setItem("nombreInteresado", this.asistencia.asistido);
     sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);
@@ -249,6 +251,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
 
   crearDesignacion() {
     sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
+    sessionStorage.setItem("nombreInteresado", this.asistencia.asistido);
     sessionStorage.setItem("nuevaDesigna", "true");
     sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
     this.router.navigate(["/fichaDesignaciones"]);

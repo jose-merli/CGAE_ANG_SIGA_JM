@@ -228,6 +228,14 @@ export class GestionEjgComponent implements OnInit {
         }
       }
     }
+
+    if((this.body.ultimoEstado == true && this.persistenceService.getDatosEJG()) || (sessionStorage.getItem("justiciable") && this.modoEdicion)){
+      if(sessionStorage.getItem("nombreInteresado") && sessionStorage.getItem("nombreInteresado") !=  "null"){
+        this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
+        sessionStorage.removeItem("nombreInteresado");
+        this.updateTarjResumen()
+      }
+    }
     this.progressSpinner = false;
     //sessionStorage.removeItem("EJGItem");
     //this.updateTarjResumen();
