@@ -997,7 +997,10 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   }
   
   getComboTurno() {
-    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno=1").subscribe(
+    if( this.body.idTurno == null){
+      this.body.idTurno = "1";
+    }
+    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno=" + this.body.idTurno).subscribe(
       n => {
         
         this.comboTurno = n.combooItems;

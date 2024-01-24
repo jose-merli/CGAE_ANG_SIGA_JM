@@ -523,8 +523,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         } else {
           newDesigna.salto = "0";
         }
-        var today = new Date();
-        var year = today.getFullYear().valueOf();
+        var year = newDesigna.fechaAlta.getFullYear().valueOf();
         newDesigna.ano = year;
         this.checkDatosGenerales();
         if (this.resaltadoDatos == false) {
@@ -997,8 +996,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               newDesigna.salto = "0";
             }
             newDesigna.fechaAlta = new Date(this.fechaGenerales);
-            var today = new Date();
-            var year = today.getFullYear().valueOf();
+            var year = newDesigna.fechaAlta.getFullYear().valueOf();
             newDesigna.ano = year;
             if (this.resaltadoDatos == false) {
               this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
@@ -1075,8 +1073,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             let anioFecha = fechaCambiada[2];
             let fechaCambiadaActual = mes + "/" + dia + "/" + anioFecha;
             newDesigna.fechaAlta = new Date(fechaCambiadaActual);
-            var today = new Date();
-            var year = today.getFullYear().valueOf();
+            var year = newDesigna.fechaAlta.getFullYear().valueOf();
             newDesigna.ano = year;
             newDesigna.numero = Number(this.initDatos.numero);
             newDesigna.codigo = this.numero.value;

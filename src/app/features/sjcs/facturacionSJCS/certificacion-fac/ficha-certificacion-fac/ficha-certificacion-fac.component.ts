@@ -454,6 +454,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
   }
 
   saveFactCert(event) {
+    this.progressSpinner = true;
     let factCert: CertificacionesItem = new CertificacionesItem();
     factCert.idCertificacion = this.certificacion.idCertificacion;
     factCert.idFacturacion = event;

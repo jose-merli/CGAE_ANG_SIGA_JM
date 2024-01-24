@@ -680,7 +680,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 
       },
       err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("dato.jgr.facturacion.compradeproductos"));
         this.selectedRows = [];
         this.numSelectedRows = 0;
       }

@@ -134,12 +134,9 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"
-          (click)="restablecer()"></button>
-        <button pButton type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate }}" (click)="isBuscar()"></button>
-        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
-          [disabled]="disabledNuevo()" (click)="nuevo()"></button>
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}" (click)="restablecer()"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}" (click)="isBuscar()"></button>
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}" [disabled]="disabledNuevo()" (click)="nuevo()"></button>
       </div>
     </div>
   </div>

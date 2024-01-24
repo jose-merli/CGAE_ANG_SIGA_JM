@@ -28,6 +28,7 @@ export class FacturacionesYPagosComponent implements OnInit, OnDestroy {
 	msgs: any[] = [];
 	filtroSeleccionado: String;
 	rutaMenu: Subscription;
+	viewArchivada: boolean = false;
 
 	@ViewChild(FiltroBusquedaFacturacionComponent) filtros: FiltroBusquedaFacturacionComponent;
 	@ViewChild(TablaBusquedaFacturacionComponent) tabla: TablaBusquedaFacturacionComponent;
@@ -112,6 +113,9 @@ export class FacturacionesYPagosComponent implements OnInit, OnDestroy {
 		}
 
 		if (this.filtroSeleccionado == "facturacion") {
+
+			this.datosFiltros.archivada = this.viewArchivada;
+
 			this.sigaServices.post("facturacionsjcs_buscarfacturaciones", this.datosFiltros).subscribe(
 				data => {
 					this.datos = JSON.parse(data.body).facturacionItem;
@@ -289,9 +293,52 @@ export class FacturacionesYPagosComponent implements OnInit, OnDestroy {
 					}
 				}
 			);
-		} else if (this.filtroSeleccionado == "pagos") {
-
 		}
+	}
+
+	archivar(selectItem: any[], archivar: boolean) {
+		this.progressSpinner = true;
+
+		if (this.filtroSeleccionado == "facturacion") {
+
+
+			let endpoint = "facturacionsjcs_archivarFacturacion";
+			if(!archivar){
+				endpoint = "facturacionsjcs_desarchivarFacturacion";
+			}
+
+			this.sigaServices.post(endpoint, selectItem).subscribe(
+				data => {
+
+					const resp: FacturacionDeleteDTO = JSON.parse(data.body);
+					const error = resp.error;
+
+					if (resp.status == 'OK') {
+                        this.showMessage("success", this.translateService.instant("general.message.correct"), (archivar ? this.translateService.instant("messages.archivar.success") : this.translateService.instant("messages.desarchivar.success")));
+                        this.busqueda(this.filtroSeleccionado);
+                    } else {
+                        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()) + ": " + error.message.toString());
+                    }
+
+					this.progressSpinner = false;
+				},
+				err => {
+					this.progressSpinner = false;
+					if (err.status == '403' || err.status == 403) {
+						sessionStorage.setItem("codError", "403");
+						sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+						this.router.navigate(["/errorAcceso"]);
+					} else {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorArchivar"));
+					}
+				}
+			);
+		}
+	}
+
+	viewAll(viewArchivada: boolean){
+		this.viewArchivada = viewArchivada;
+		this.busqueda("facturacion");
 	}
 
 	showMessage(severity, summary, msg) {
