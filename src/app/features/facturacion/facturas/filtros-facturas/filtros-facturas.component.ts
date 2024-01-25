@@ -302,7 +302,7 @@ export class FiltrosFacturasComponent implements OnInit {
     this.body.estadosFiltroFac = [];
     this.body.estadosFiltroAb = [];
     if(this.estadosSelect.length>0){
-      for(let i=0; this.estadosSelect.length>i; i++){
+      for(let i = 0; i < this.estadosSelect.length; i++){
         if(this.estadosSelect[i].label2=="FACTURA"){
           this.body.estadosFiltroFac.push(this.estadosSelect[i].value);
         }else{
