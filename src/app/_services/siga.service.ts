@@ -207,6 +207,7 @@ export class SigaServices {
 		busquedaColegiados_provincias: 'busquedaColegiados/provincias',
 		busquedaColegiados_tipoDireccion: 'busquedaColegiados/tipoDireccion',
 		busquedaColegiados_searchColegiado: '/busquedaColegiado/searchColegiado',
+		busquedaColegiados_busquedaColegiadoExpress: '/busquedaColegiado/busquedaColegiadoExpress',
 		busquedaColegiados_searchColegiadoFicha: '/busquedaColegiado/searchColegiadoFicha',
 		busquedaColegiados_generarExcel: 'busquedaColegiados/generarExcel',
 		busquedaColegiado_etiquetas: '/busquedaColegiado/etiquetas',

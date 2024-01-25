@@ -24,7 +24,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
 
   estadosSuscripcionObject: ComboItem[] = [];
 
-  @Output() actualizarLista = new EventEmitter<Boolean>();
+  @Output() actualizarLista = new EventEmitter();
   @Input() listaSuscripciones: ListaSuscripcionesItem[];
   @Input() filtrosSuscripciones: FiltrosSuscripcionesItem;
   @ViewChild("suscripcionesTable") suscripcionesTable: DataTable;
@@ -263,7 +263,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
           }else {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             //Se actualiza la información de la ficha
-            this.actualizarLista.emit(true);
+            this.actualizarLista.emit();
           }
 
           

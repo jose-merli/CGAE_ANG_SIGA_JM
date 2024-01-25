@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,7 @@ import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { BuscadorColegiadosExpressComponent } from '../../../../commons/buscador-colegiados-express/buscador-colegiados-express.component';
 
 @Component({
   selector: 'app-tarjeta-filtro-cuotas-suscripciones',
@@ -22,7 +23,6 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
   msgs: Message[] = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false;
-  esColegiado: boolean;
 
   //Variables buscador
   filtrosSuscripciones: FiltrosSuscripcionesItem = new FiltrosSuscripcionesItem(); //Guarda los valores seleccionados/escritos en los campos
@@ -32,59 +32,41 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
   formasPagoObject: ComboObject = new ComboObject();
   estadosFacturaObject: ComboObject = new ComboObject();
   estadosSuscripcionObject: ComboItem[] = [];
+  comboColegios : ComboItem[] = [];
 
-  
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
   subscriptionTypeSelectValues: Subscription;
   subscriptionIvaTypeSelectValues: Subscription;
   subscriptionPayMethodTypeSelectValues: Subscription;
 
-  nombreCliente: string ;
-  apellidosCliente: string;
-  nifCifCliente: string;
-
   permisoSuscripcion: boolean = false;
+  showDatosGenerales: boolean = true;
+  showDatosClientes: boolean = true;
   
-  @Output() busqueda = new EventEmitter<boolean>();
+  @Output() busqueda = new EventEmitter();
+
+  @ViewChild(BuscadorColegiadosExpressComponent) buscadorColegiadoExpress;
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices,
     private router: Router, private commonsService: CommonsService, private localStorageService: SigaStorageService,
     private persistenceService: PersistenceService) { }
-
+  
   ngOnInit() {
-
-     //En la documentación funcional se pide que por defecto aparezca el campo 
-    //con la fecha de dos años antes
     let today = new Date();
+    this.progressSpinner = true;
     this.filtrosSuscripciones.fechaSolicitudDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
-    // Se rellena este campo por el correo enviado por Adrian Ayala Gomez
-    // el día 11/01/22
     this.filtrosSuscripciones.aFechaDe = new Date();
 
-    if(this.localStorageService.isLetrado){
-      this.esColegiado = true;
-    }
-    else{
-      this.esColegiado = false;
-    }
+    this.getComboCategoria();
+    this.getPermisoSuscribir();
+    this.initComboEstadoSuscripcion();
+    this.getComboEstadosFactura();
 
-    if (sessionStorage.getItem("filtroBusqSuscripcion") && !sessionStorage.getItem("abogado")) {
+    if (sessionStorage.getItem("filtroBusqSuscripcion") ) {
 
       this.filtrosSuscripciones = JSON.parse(sessionStorage.getItem("filtroBusqSuscripcion"));
-
-      if(this.filtrosSuscripciones.idpersona != null) {
-        this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.filtrosSuscripciones.idpersona).subscribe(
-          n => {
-            let data = JSON.parse(n.body).colegiadoItem;
-            this.nombreCliente = data.nombre;
-            this.nifCifCliente = data.nif;
-            //this.filtrosSuscripciones.idpersona = this.localStorageService.idPersona;
-          },
-          err => {
-            this.progressSpinner = false;
-        });
-      } 
+      sessionStorage.removeItem("filtroBusqSuscripcion");
 
       if(this.filtrosSuscripciones.fechaSolicitudHasta != undefined){
         this.filtrosSuscripciones.fechaSolicitudHasta = new Date(this.filtrosSuscripciones.fechaSolicitudHasta);
@@ -96,59 +78,29 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
         this.filtrosSuscripciones.aFechaDe = new Date(this.filtrosSuscripciones.aFechaDe);
       }
 
-      sessionStorage.removeItem("filtroBusqSuscripcion");
-      this.busqueda.emit(true);
-
-    } 
-
-    else if(sessionStorage.getItem("abogado")){
-      let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
-      //Si viene de una ficha de censo
-      if(data==undefined){
-        let data = JSON.parse(sessionStorage.getItem("abogado"));
-        this.filtrosSuscripciones.idpersona = data.idPersona;
-        if(data.nombre.includes(",")){
-          this.apellidosCliente = data.nombre.split(",")[1];
-        }
-        this.nifCifCliente = data.nif;
-        this.nombreCliente = data.soloNombre;
-
+      if(this.filtrosSuscripciones.idpersona != null) {
+        this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.filtrosSuscripciones.idpersona).subscribe(
+          n => {
+            let data = JSON.parse(n.body).colegiadoItem;
+            if(data != null && data.length == 1){
+              this.buscadorColegiadoExpress.setClienteSession(data[0]);
+            }
+          },() => {
+            this.buscar();
+          });
+      }else {
+        this.buscar();
       }
-      else{
-        if (isNaN(data.nif.charAt(0))) {
-          this.nombreCliente = data.denominacion;
-          this.apellidosCliente = "";
-        }
-         if (!isNaN(data.nif.charAt(0))) {
-          this.nombreCliente = data.nombre;
-          this.apellidosCliente = data.apellidos;
-        }
-    
-        this.filtrosSuscripciones.idpersona = data.idPersona;
-        this.nifCifCliente = data.nif;
-
-      }
-			sessionStorage.removeItem("abogado");
-
-      
-    }
-    else if(this.esColegiado){
-      this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
-				n => {
-					let data = JSON.parse(n.body).colegiadoItem;
-					this.nombreCliente = data.nombre;
-					this.nifCifCliente = data.nif;
-          this.filtrosSuscripciones.idpersona = this.localStorageService.idPersona;
-				},
-				err => {
-					this.progressSpinner = false;
-				});
     }
 
-    this.getComboCategoria();
-    this.getPermisoSuscribir();
-    this.initComboEstadoSuscripcion();
-    this.getComboEstadosFactura();
+  }
+
+  onHideDatosGenerales(){
+    this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  onHideDatosClientes (){
+    this.showDatosClientes = !this.showDatosClientes;
   }
 
   initComboEstadoSuscripcion(){
@@ -179,11 +131,6 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
     this.estadosSuscripcionObject.push(estadoAnulada);
   }
 
-  searchPersona(){
-			sessionStorage.setItem("origin", "newCliente");
-			this.router.navigate(['/busquedaGeneral']);
-  }
-
   //Metodo que se lanza al cambiar de valor el combo de categorias, se usa para cargar el combo tipos dependiendo el valor de categorias
   valueChangeCategoria() {
     if (this.filtrosSuscripciones.idCategoria != null) {
@@ -195,18 +142,12 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
   //Metodo para obtener los valores del combo estadosFactura
   getComboEstadosFactura() {
-    this.progressSpinner = true;
-
     this.subscriptionTypeSelectValues = this.sigaServices.get("PyS_comboEstadosFactura").subscribe(
       TipoSelectValues => {
-        this.progressSpinner = false;
-
         this.estadosFacturaObject = TipoSelectValues.combooItems;
+        this.progressSpinner = false;
       },
       err => {
-        this.progressSpinner = false;
-      },
-      () => {
         this.progressSpinner = false;
       }
     );
@@ -214,51 +155,24 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
   //Metodo para obtener los valores del combo categoria
   getComboCategoria() {
-    this.progressSpinner = true;
-
     this.subscriptionCategorySelectValues = this.sigaServices.get("tiposServicios_comboServicios").subscribe(
       CategorySelectValues => {
-        this.progressSpinner = false;
-
         this.categoriasObject = CategorySelectValues;
-      },
-      err => {
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+      });
   }
 
   //Metodo para obtener los valores del combo Tipo segun el combo Categoria
   getComboTipo() {
-    this.progressSpinner = true;
-
     this.subscriptionTypeSelectValues = this.sigaServices.getParam("serviciosBusqueda_comboTiposMultiple", "?idCategoria=" + this.filtrosSuscripciones.idCategoria.toString()).subscribe(
       TipoSelectValues => {
-        this.progressSpinner = false;
-
         this.tiposObject = TipoSelectValues;
         this.filtrosSuscripciones.idTipoServicio = [];
-      },
-      err => {
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+    });
   }
   
-
-
   // Control de fechas
   getFechaHastaCalendar(fechaInputDesde, fechainputHasta) {
-    if (
-      fechaInputDesde != undefined &&
-      fechainputHasta != undefined
-    ) {
+    if (fechaInputDesde != undefined && fechainputHasta != undefined) {
       let one_day = 1000 * 60 * 60 * 24;
 
       // convertir fechas en milisegundos
@@ -272,10 +186,7 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
   }
 
   getFechaDesdeCalendar(fechaInputesde, fechaInputHasta) {
-    if (
-      fechaInputesde != undefined &&
-      fechaInputHasta != undefined
-    ) {
+    if (fechaInputesde != undefined && fechaInputHasta != undefined) {
       let one_day = 1000 * 60 * 60 * 24;
 
       // convertir fechas en milisegundos
@@ -300,10 +211,6 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
     if (event != null) {
       this.filtrosSuscripciones.aFechaDe = event;
       this.filtrosSuscripciones.idEstadoSolicitud = null;
-      // Ignora el error provocado por la estructura de datos de InscripcionesItem
-      // @ts-ignore
-      // this.filtros.estado = ["1","2"];
-      // this.disabledestado = true;
     } else {
       this.filtrosSuscripciones.aFechaDe = null;
     }
@@ -311,18 +218,8 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
   limpiar() {
     this.filtrosSuscripciones = new FiltrosSuscripcionesItem();
-    //Se rellena este campo por el correo enviado por Adrian Ayala Gomez
-    // el día 11/01/22
     this.filtrosSuscripciones.aFechaDe = new Date();
-    if(!this.esColegiado){
-      this.limpiarCliente();
-    }
-  }
-
-  limpiarCliente(){
-    this.nombreCliente = null;
-    this.nifCifCliente = null;
-    this.filtrosSuscripciones.idpersona = null;
+    this.buscadorColegiadoExpress.limpiarCliente(true);
   }
 
   checkBuscar(){
@@ -335,7 +232,8 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
   }
 
   buscar() {
-    this.busqueda.emit(true);
+    this.filtrosSuscripciones.idpersona = this.buscadorColegiadoExpress.idPersona;
+    this.busqueda.emit();
   }
 
   checkFilters(){
@@ -355,7 +253,6 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
   checkNuevaSuscripcion(){
     let msg = this.commonsService.checkPermisos(this.permisoSuscripcion, undefined);
-
     if (msg != undefined) {
       this.msgs = msg;
     } 
@@ -386,18 +283,14 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
       error => {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        
       }
     );
   }
 
   getPermisoSuscribir(){
-    this.commonsService
-			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
-			.then((respuesta) => {
+    this.commonsService.checkAcceso(procesos_PyS.fichaCompraSuscripcion).then((respuesta) => {
 				this.permisoSuscripcion = respuesta;
-			})
-			.catch((error) => console.error(error));
+		}).catch((error) => console.error(error));
   }
 
   //Inicializa las propiedades necesarias para el dialogo de confirmacion
@@ -414,5 +307,4 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
 }

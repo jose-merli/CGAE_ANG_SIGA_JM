@@ -6,108 +6,102 @@
 <!-- Campos Buscador -->
 <div class="card-body">
 
-  
-  <div class="form-row">
-    <!-- Activo a fecha de -->
-    <div class="form-group col-lg-3 col-md-3">
-      <label>{{ "facturacion.suscripciones.aFechaDe" | translate}}
-      </label>
-      <app-fecha [(value)]="filtrosSuscripciones.aFechaDe" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
-    </div>
-    <!-- Buscador de Persona -->
-    <div class="col-lg-3 col-md-3">
-      <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}
-      </label>
-      <input [(ngModel)]="nifCifCliente" type="text" disabled class="form-control" 
-        pInputText/>
-    </div>
-    <div class="col-lg-4 col-md-4">
-      <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-      </label>
-      <input [(ngModel)]="nombreCliente" type="text" disabled class="form-control" 
-        pInputText />
-    </div>
-    <div class="main-button btnBuscadorPersonas col-lg-2 col-md-2">
-      <button type="submit" [disabled]="esColegiado" pButton icon="fa fa-search"
-        (click)="searchPersona()" iconPos="left"></button>
-      <button pButton type="button" [disabled]="esColegiado" icon="fa fa-eraser" iconPos="left"
-        (click)="limpiarCliente()">
-      </button>
+  <!-- Datos generales -->
+  <p class="title-module" (click)="onHideDatosGenerales()">{{ "administracion.catalogos.titulo.datos.generales" | translate }}
+    <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+    <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+  </p>
+
+  <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+
+    <div class="form-row">
+      <!-- Activo a fecha de -->
+      <div class="form-group col-lg-3 col-md-3">
+        <label>{{ "facturacion.suscripciones.aFechaDe" | translate}}
+        </label>
+        <app-fecha [(value)]="filtrosSuscripciones.aFechaDe" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
+      </div>
+      <!-- Fecha de solicitud -->
+      <div class="col-lg-3 col-md-3">
+        <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
+        </label>
+        <app-fecha [(value)]="filtrosSuscripciones.fechaSolicitudDesde"
+          [maxDate]="getFechaHastaCalendar(filtrosSuscripciones.fechaSolicitudDesde, filtrosSuscripciones.fechaSolicitudHasta)"
+          (valueChangeSelected)="fillFechaSolicitudDesde($event)" (valueChangeInput)="fillFechaSolicitudDesde($event)">
+        </app-fecha>
+      </div>
+      <div class="ol-lg-3 col-md-3">
+        <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
+        </label>
+        <app-fecha [(value)]="filtrosSuscripciones.fechaSolicitudHasta"
+          [minDate]="getFechaDesdeCalendar(filtrosSuscripciones.fechaSolicitudDesde, filtrosSuscripciones.fechaSolicitudHasta)"
+          (valueChangeSelected)="fillFechaSolicitudHasta($event)" (valueChangeInput)="fillFechaSolicitudHasta($event)">
+        </app-fecha>
+      </div>
+
+      <!-- Numero de solicitud -->
+      <div class="col-lg-3 col-md-3">
+        <label>{{ "facturacion.productos.nSolicitud" | translate }}</label>
+        <input type="text" class="form-control" [(ngModel)]='filtrosSuscripciones.nSolicitud' pInputText>
+      </div>
+
+      <!-- Estado Solicitud -->
+      <div class="col-lg-3 col-md-3">
+        <label>{{ "censo.solicitudincorporacion.estadoSolicitud" | translate}}</label>
+        <p-multiSelect  styleClass="widthAll"
+          [(ngModel)]='filtrosSuscripciones.idEstadoSolicitud' defaultLabel="{{'general.boton.seleccionar' | translate}}"
+          [options]="estadosSuscripcionObject" [disabled]="filtrosSuscripciones.aFechaDe != null">
+        </p-multiSelect>
+      </div>
+
+      <!-- Categoria -->
+      <div class="col-lg-3 col-md-3">
+        <label>{{ "facturacion.productos.categoria" | translate}}</label>
+        <p-multiSelect (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" 
+          [(ngModel)]='filtrosSuscripciones.idCategoria'
+          defaultLabel="{{'general.boton.seleccionar' | translate}}"
+          [options]="categoriasObject.combooItems">
+        </p-multiSelect>
+      </div>
+
+      <!-- Tipo -->
+      <div class="col-lg-3 col-md-3">
+        <label>{{ "facturacion.productos.tipo" | translate}}</label>
+        <p-multiSelect [disabled]="filtrosSuscripciones.idCategoria == null" [filter]="true" styleClass="widthAll"
+          [(ngModel)]='filtrosSuscripciones.idTipoServicio'
+          defaultLabel="{{'general.boton.seleccionar' | translate}}"
+          [options]="tiposObject.combooItems">
+        </p-multiSelect>
+      </div>
+
+      <!-- Servicio -->
+      <div class="col-lg-3 col-md-3">
+        <label>{{ "facturacion.servicios.servicio" | translate}}</label>
+        <input type="text" class="form-control" [(ngModel)]='filtrosSuscripciones.descServ' pInputText>
+      </div>
+
+      <!-- Estado Factura -->
+      <div class="col-lg-3 col-md-3">
+        <label>{{ "facturacion.productos.estadoFactura" | translate}}</label>
+        <p-multiSelect  styleClass="widthAll" 
+          [(ngModel)]='filtrosSuscripciones.idEstadoFactura'
+          defaultLabel="{{'general.boton.seleccionar' | translate}}"
+          [options]="estadosFacturaObject">
+        </p-multiSelect>
+      </div>
     </div>
   </div>
 
-  <div class="form-row">
-    <!-- Fecha de solicitud -->
-    <div class="col-lg-3 col-md-3">
-      <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
-      </label>
-      <app-fecha [(value)]="filtrosSuscripciones.fechaSolicitudDesde"
-        [maxDate]="getFechaHastaCalendar(filtrosSuscripciones.fechaSolicitudDesde, filtrosSuscripciones.fechaSolicitudHasta)"
-        (valueChangeSelected)="fillFechaSolicitudDesde($event)" (valueChangeInput)="fillFechaSolicitudDesde($event)">
-      </app-fecha>
-    </div>
-    <div class="ol-lg-3 col-md-3">
-      <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
-      </label>
-      <app-fecha [(value)]="filtrosSuscripciones.fechaSolicitudHasta"
-        [minDate]="getFechaDesdeCalendar(filtrosSuscripciones.fechaSolicitudDesde, filtrosSuscripciones.fechaSolicitudHasta)"
-        (valueChangeSelected)="fillFechaSolicitudHasta($event)" (valueChangeInput)="fillFechaSolicitudHasta($event)">
-      </app-fecha>
-    </div>
+  <!-- Datos cliente -->
+  <p class="title-module" (click)="onHideDatosClientes()">{{ "facturacion.productos.Cliente" | translate }}
+    <i *ngIf="showDatosClientes" class="fa fa-angle-up float-right"></i>
+    <i *ngIf="!showDatosClientes" class="fa fa-angle-down float-right"></i>
+  </p>
 
-    <!-- Numero de solicitud -->
-    <div class="col-lg-3 col-md-3">
-      <label>{{ "facturacion.productos.nSolicitud" | translate }}</label>
-      <input type="text" class="form-control" [(ngModel)]='filtrosSuscripciones.nSolicitud' pInputText>
-    </div>
-
-    <!-- Estado Solicitud -->
-    <div class="col-lg-3 col-md-3">
-      <label>{{ "censo.solicitudincorporacion.estadoSolicitud" | translate}}</label>
-      <p-multiSelect  styleClass="widthAll"
-        [(ngModel)]='filtrosSuscripciones.idEstadoSolicitud' defaultLabel="{{'general.boton.seleccionar' | translate}}"
-        [options]="estadosSuscripcionObject" [disabled]="filtrosSuscripciones.aFechaDe != null">
-      </p-multiSelect>
-    </div>
+  <div *ngIf="showDatosClientes" class="module vista-avanzada">
+    <app-buscador-colegiados-express id="buscadorColegiadoExpress"></app-buscador-colegiados-express>
   </div>
 
-  <div class="form-row">
-    <!-- Categoria -->
-    <div class="col-lg-3 col-md-3">
-      <label>{{ "facturacion.productos.categoria" | translate}}</label>
-      <p-multiSelect (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" 
-        [(ngModel)]='filtrosSuscripciones.idCategoria'
-        defaultLabel="{{'general.boton.seleccionar' | translate}}"
-        [options]="categoriasObject.combooItems">
-      </p-multiSelect>
-    </div>
-
-    <!-- Tipo -->
-    <div class="col-lg-3 col-md-3">
-      <label>{{ "facturacion.productos.tipo" | translate}}</label>
-      <p-multiSelect [disabled]="filtrosSuscripciones.idCategoria == null" [filter]="true" styleClass="widthAll"
-        [(ngModel)]='filtrosSuscripciones.idTipoServicio'
-        defaultLabel="{{'general.boton.seleccionar' | translate}}"
-        [options]="tiposObject.combooItems">
-      </p-multiSelect>
-    </div>
-
-    <!-- Servicio -->
-    <div class="col-lg-3 col-md-3">
-      <label>{{ "facturacion.servicios.servicio" | translate}}</label>
-      <input type="text" class="form-control" [(ngModel)]='filtrosSuscripciones.descServ' pInputText>
-    </div>
-
-    <!-- Estado Factura -->
-    <div class="col-lg-3 col-md-3">
-      <label>{{ "facturacion.productos.estadoFactura" | translate}}</label>
-      <p-multiSelect  styleClass="widthAll" 
-        [(ngModel)]='filtrosSuscripciones.idEstadoFactura'
-        defaultLabel="{{'general.boton.seleccionar' | translate}}"
-        [options]="estadosFacturaObject">
-      </p-multiSelect>
-    </div>
-  </div>
 </div>
 
 <!-- Botones -->

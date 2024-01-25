@@ -11,10 +11,7 @@ import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
-import { TarjetaHisFichaActComponent } from '../../../sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
-import { FichaCompraSuscripcionComponent } from '../../ficha-compra-suscripcion/ficha-compra-suscripcion.component';
 import { saveAs } from "file-saver/FileSaver";
-import { Colegiado } from '../../../sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-colegiado/tarjeta-colegiado.component';
 import { ListaProductosItems } from '../../../../models/ListaProductosItems';
 
 @Component({

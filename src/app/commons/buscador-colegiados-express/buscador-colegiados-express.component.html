@@ -1,0 +1,24 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="form-row" [formGroup]="clientForm">
+	<div class="col-lg-2 col-md-2">
+		<label>{{ "facturacionSJCS.facturacionesYPagos.colegio" | translate }}</label>
+		<p-dropdown formControlName='colegioCliente' class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeColegio($event)"></p-dropdown>
+	</div>
+	<div class="col-lg-2 col-md-2">
+		<label>{{ "facturacionSJCS.filtros.abonosSJCS.numColegiado" | translate }}</label>
+		<input formControlName="numeroColegiadoCliente" type="text" class="form-control" pInputText [readonly]="disableNumeroColegiado" (blur)="onBlurNumeroColegiado()"/>
+	</div>
+	<div class="col-lg-2 col-md-2">
+		<label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}</label>
+		<input formControlName="nifCifCliente" type="text" class="form-control" pInputText (blur)="onBlurNifCif()"/>
+	</div>
+	<div class="col-lg-5 col-md-5">
+		<label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}</label>
+		<input formControlName="nombreApellidosCliente" type="text" class="form-control" pInputText [readonly]="disableNombreApellidos"/>
+	</div>
+	<div class="main-button btnBuscadorPersonas col-lg-1 col-md-1">
+		<button type="submit" pButton icon="fa fa-search" (click)="searchPersona()" iconPos="left"></button>
+		<button type="button" pButton icon="fa fa-eraser" (click)="limpiarCliente(true)" iconPos="left"></button>
+	</div>
+</div>

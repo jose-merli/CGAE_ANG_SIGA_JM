@@ -11,8 +11,7 @@
   <div class="card">
     <div class="card-body">
       <!-- Datos generales -->
-      <p class="title-module" (click)="onHideDatosGenerales()">{{ "administracion.catalogos.titulo.datos.generales" |
-        translate }}
+      <p class="title-module" (click)="onHideDatosGenerales()">{{ "administracion.catalogos.titulo.datos.generales" | translate }}
         <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
         <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
@@ -117,34 +116,7 @@
       </p>
 
       <div *ngIf="showCliente" class="module vista-avanzada">
-        <div class="form-row">
-          
-          <div class="form-group-interlineado col-lg-6 col-md-6">
-            <div class="row">
-              <div class="form-group-interlineado col-lg-6 col-md-6">
-                <label>{{ "facturacionSJCS.facturacionesYPagos.colegio" | translate }}</label>
-                <p-dropdown class="select-form" [(ngModel)]='body.idInstitucion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
-              </div>
-              <div class="form-group-interlineado col-lg-3 col-md-3">
-                <label>{{ "facturacionSJCS.filtros.abonosSJCS.numColegiado" | translate }}</label>
-                <input [disabled]="isLetrado" type="text" class="form-control" [(ngModel)]="body.numeroColegiado" pInputText />
-              </div>
-              <div class="form-group-interlineado col-lg-3 col-md-3">
-                <label>{{ "facturacionSJCS.filtros.abonosSJCS.numIdentificacion" | translate }}</label>
-                <input [disabled]="isLetrado" ltype="text" class="form-control" [(ngModel)]="body.numeroIdentificacion" pInputText />
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ "facturacionSJCS.facturacionesYPagos.apellidos" | translate }}</label>
-            <input [disabled]="isLetrado" type="text" class="form-control" [(ngModel)]="body.apellidos" pInputText />
-          </div>
-          <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre" | translate }}</label>
-            <input [disabled]="isLetrado" type="text" class="form-control" [(ngModel)]="body.nombre" pInputText />
-          </div>
-        </div>
+        <app-buscador-colegiados-express id="buscadorColegiadoExpress"></app-buscador-colegiados-express>
       </div>
 
       <!-- Comunicaciones de cobros y recobros -->
