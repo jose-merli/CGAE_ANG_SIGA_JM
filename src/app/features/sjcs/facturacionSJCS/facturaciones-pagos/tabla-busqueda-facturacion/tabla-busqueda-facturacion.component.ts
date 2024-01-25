@@ -28,10 +28,12 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   archivada: boolean = true;
   btnMostrar: String = '';
   btnArchivar: String = '';
-
+  distintos: boolean = false;
   message;
   first = 0;
   initDatos;
+  botonArchivar: boolean = true;
+  botonDesarchivar: boolean = false;
 
   @Input() datos;
   @Input() filtroSeleccionado;
@@ -62,7 +64,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     }
 
     this.mostrarOcultar();
-
+    this.btnArchivar = this.translateService.instant("general.boton.archivar");
     this.getCols();
 
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
@@ -70,6 +72,35 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
 
   selectDesSelectFila() {
     this.numSelected = this.selectedDatos.length;
+    let counts = {};
+    this.selectedDatos.forEach(name => {
+      if (counts[name.archivada]) {
+        counts[name.archivada] += 1;
+      } else {
+        counts[name.archivada] = 1;
+      }
+    });
+    //2.
+    const result = Object.keys(counts).map(name => {
+      return {
+        name: name,
+        matches: counts[name]
+      };
+    });
+    if(result.length > 1){
+      this.distintos = true;
+    }else{
+      this.distintos = false;
+      if(counts['false']){
+        this.botonArchivar = true;
+        this.botonDesarchivar = false;
+        this.btnArchivar = this.translateService.instant("general.boton.archivar");
+      }else if(this.archivada){
+        this.botonArchivar = false;
+        this.botonDesarchivar = true;
+        this.btnArchivar = this.translateService.instant("form.busquedaCursos.literal.boton.desarchivar");
+      }
+    }
   }
 
   openFicha(datos) {
@@ -215,7 +246,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   }
 
   confirmArchivar() {
-    let mess = (!this.archivada ? this.translateService.instant("messages.archivarConfirmation") : this.translateService.instant("messages.desarchivarConfirmation"));
+    let mess = (!this.selectedDatos[0].archivada ? this.translateService.instant("messages.archivarConfirmation") : this.translateService.instant("messages.desarchivarConfirmation"));
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       message: mess,
@@ -224,7 +255,12 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
         if(!this.archivada){
           this.archivar.emit(this.selectedDatos);
         }else{
-          this.desarchivar.emit(this.selectedDatos);
+          if(this.botonDesarchivar){
+            this.desarchivar.emit(this.selectedDatos);
+          }else{
+            this.archivar.emit(this.selectedDatos);
+          }
+          
         }
       },
       reject: () => {

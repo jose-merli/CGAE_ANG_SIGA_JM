@@ -1,4 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
@@ -15,12 +16,14 @@
   <div *ngIf="showDatosGenerales" class="module vista-avanzada">
 
     <div class="form-row">
+
       <!-- Activo a fecha de -->
       <div class="form-group col-lg-3 col-md-3">
         <label>{{ "facturacion.suscripciones.aFechaDe" | translate}}
         </label>
         <app-fecha [(value)]="filtrosSuscripciones.aFechaDe" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
       </div>
+
       <!-- Fecha de solicitud -->
       <div class="col-lg-3 col-md-3">
         <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
@@ -30,6 +33,7 @@
           (valueChangeSelected)="fillFechaSolicitudDesde($event)" (valueChangeInput)="fillFechaSolicitudDesde($event)">
         </app-fecha>
       </div>
+
       <div class="ol-lg-3 col-md-3">
         <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
         </label>
@@ -83,12 +87,28 @@
       <!-- Estado Factura -->
       <div class="col-lg-3 col-md-3">
         <label>{{ "facturacion.productos.estadoFactura" | translate}}</label>
-        <p-multiSelect  styleClass="widthAll" 
+        <p-multiSelect styleClass="widthAll" 
           [(ngModel)]='filtrosSuscripciones.idEstadoFactura'
           defaultLabel="{{'general.boton.seleccionar' | translate}}"
           [options]="estadosFacturaObject">
         </p-multiSelect>
       </div>
+
+      <!-- Numero de solicitud -->
+      <div class="col-lg-3 col-md-3">
+        <label>{{ "facturacion.productos.nSolicitud" | translate }}</label>
+        <input type="text" class="form-control" [(ngModel)]='filtrosSuscripciones.nSolicitud' pInputText>
+      </div>
+
+      <!-- Estado Solicitud -->
+      <div class="col-lg-3 col-md-3">
+        <label>{{ "censo.solicitudincorporacion.estadoSolicitud" | translate}}</label>
+        <p-multiSelect styleClass="widthAll"
+          [(ngModel)]='filtrosSuscripciones.idEstadoSolicitud' defaultLabel="{{'general.boton.seleccionar' | translate}}"
+          [options]="estadosSuscripcionObject" >
+        </p-multiSelect>
+      </div>
+
     </div>
   </div>
 
@@ -107,15 +127,8 @@
 <!-- Botones -->
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"
-      (click)="limpiar()">
-    </button>
-
-    <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"
-      (click)="checkBuscar()">
-    </button>
-    
+    <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}" (click)="limpiar()"></button>
+    <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}" (click)="checkBuscar()"></button>
     <button (click)="checkNuevaSuscripcion()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'facturacion.servicios.suscribir' | translate}}"></button>
   </div>
 </div>
-

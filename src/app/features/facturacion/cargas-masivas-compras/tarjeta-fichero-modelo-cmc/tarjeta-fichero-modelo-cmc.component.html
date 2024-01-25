@@ -1,9 +1,11 @@
 <div class="card">
   <div class="card-body">
-    <p class="title-module" (click)="abreCierraTipo()">{{ 'oficio.cargasMasivas.ficheroModelo' | translate }}
-      <i (click)="abreCierraTipo()" *ngIf="!showTipo" class="fa fa-angle-up float-right"></i>
-      <i (click)="abreCierraTipo()" *ngIf="showTipo" class="fa fa-angle-down float-right"></i>
-    </p>
+    <div (click)="abreCierraTipo()">
+      <p class="title-module" >{{ 'oficio.cargasMasivas.ficheroModelo' | translate }}
+        <i  *ngIf="!showTipo" class="fa fa-angle-up float-right"></i>
+        <i  *ngIf="showTipo" class="fa fa-angle-down float-right"></i>
+      </p>
+    </div>
   </div>
   <div *ngIf="showTipo" class="module vista-simple">
     <div class="row">

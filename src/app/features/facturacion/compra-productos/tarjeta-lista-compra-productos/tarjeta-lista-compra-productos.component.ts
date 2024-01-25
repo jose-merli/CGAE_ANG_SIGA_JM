@@ -157,7 +157,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
   }
 
   controlAnular(){
-    if(this.esColegiado){
+    if(this.selectedRows){
       let numEstadoErroneo:number = 0;
       this.selectedRows.forEach(e => {
        numEstadoErroneo = e.solicitarBaja != "0" ? numEstadoErroneo + 1 : numEstadoErroneo;

@@ -31,7 +31,7 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   openTarjeta;
   iconoTarjetaResumen = "clipboard";
   cantidadIntegrantes; 
-
+  vieneDeFactura:any;
   constructor(
     public sigaServices: OldSigaServices,
     private cardService: cardService,
@@ -46,6 +46,13 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     sessionStorage.setItem("migaPan", this.migaPan);
     this.cantidadIntegrantes = JSON.parse(sessionStorage.getItem("usuarioBody"))[0].numeroIntegrantes; 
 
+    if(sessionStorage.getItem("vieneDeFactura")){
+      sessionStorage.removeItem("vieneDeFactura")
+      this.vieneDeFactura = true;
+    }else{
+      this.vieneDeFactura = false;
+    }
+    
     this.fichasPosibles = [
       {
         key: "interes",
@@ -84,8 +91,9 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   backTo() {
     sessionStorage.removeItem("usuarioBody");
     this.cardService.searchNewAnnounce.next(null);
-
-    if (sessionStorage.getItem("filtrosBusquedaColegiados") != undefined) {
+    if(this.vieneDeFactura){
+      this.router.navigate(["/facturas"]);
+    }else if (sessionStorage.getItem("filtrosBusquedaColegiados") != undefined) {
       this.router.navigate(["fichaColegial"]);
     } else if (
       sessionStorage.getItem("filtrosBusquedaNoColegiados") != undefined

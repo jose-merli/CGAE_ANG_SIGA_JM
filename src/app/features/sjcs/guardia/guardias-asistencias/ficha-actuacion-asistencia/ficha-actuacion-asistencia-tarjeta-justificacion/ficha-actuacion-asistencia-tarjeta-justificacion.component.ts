@@ -126,12 +126,14 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
       this.showMsg('error', 'No se puede desvalidar una actuación ya facturada', '');
     } else {
       this.datosJustificacion.validada = '0';
+      this.datosJustificacion.fechaJustificacion = null;
       this.updateEstadoActuacion();
     }
   }
 
   anular() {
     this.datosJustificacion.anulada = '1';
+    this.datosJustificacion.validada = '';
     this.updateEstadoActuacion();
   }
 
@@ -145,6 +147,14 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
     if (this.datosJustificacion != null && this.datosJustificacion.fechaJustificacion == null || this.datosJustificacion.fechaJustificacion == undefined || this.datosJustificacion.fechaJustificacion == ""){
       this.datosJustificacion.fechaJustificacion = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
     }
+    if(this.datosJustificacion.validada == '0'){
+      this.datosJustificacion.estado = '';
+      this.datosJustificacion.fechaJustificacion = '';
+    }else if(this.datosJustificacion.anulada == '1'){
+      this.datosJustificacion.fechaJustificacion = null;
+      this.datosJustificacion.estado = '';
+    }
+
     this.sigaServices
       .postPaginado("actuaciones_updateEstadoActuacion", "?anioNumero=" + this.idAsistencia + "&idActuacion=" + this.actuacion.idActuacion, this.datosJustificacion)
       .subscribe(

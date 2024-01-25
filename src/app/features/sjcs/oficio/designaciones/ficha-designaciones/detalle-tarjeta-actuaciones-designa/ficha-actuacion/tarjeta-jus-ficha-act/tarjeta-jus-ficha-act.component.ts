@@ -157,6 +157,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       idTurno: this.actuacionDesigna.actuacion.idTurno,
       anio: this.actuacionDesigna.actuacion.anio
     };
+    
 
     this.sigaServices.post("actuaciones_designacion_desvalidar", actuacionesRequest).subscribe(
       data => {
@@ -179,6 +180,9 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       err => {
         this.progressSpinner = false;
         //console.log(err);
+      },()=>{
+        this.fechaJusti = '';
+        this.updateDatosJustificacion();
       }
     );
 
@@ -214,12 +218,13 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       this.estado = 'Validada';
     } else {
       this.estado = '';
+      this.actuacionDesigna.actuacion.fechaJustificacion = '';
     }
     this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
       this.fechaJusti = new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-'));
     } else {
-      this.fechaJusti = null;
+      this.fechaJusti = '';
     }
 
     this.fechaActuacion = new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-'));
