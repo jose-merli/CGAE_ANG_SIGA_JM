@@ -6,6 +6,7 @@ import { TranslateService } from "../translate";
 import { SigaServices } from "./../../_services/siga.service";
 import { CommonsService } from "../../_services/commons.service";
 import { ComboItem } from "../../models/ComboItem";
+import { SigaStorageService } from "../../siga-storage.service";
 
 @Component({
   selector: "app-buscador-colegiados-express",
@@ -30,8 +31,9 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 
 	disableNumeroColegiado: boolean = false;
 	disableNombreApellidos: boolean = true;
+	isLetrado: boolean = false;
 
-	constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService) {}
+	constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private sigaStorageService: SigaStorageService) {}
 
 	ngOnInit() {
 	
@@ -39,8 +41,27 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 			this.idColegioCliente = n.value;
 			this.getColegios(n.value);
 		});
-		
-		if (sessionStorage.getItem('abogado')) {
+
+		if(this.sigaStorageService.isLetrado){
+			this.isLetrado = true;
+			this.sigaServices.get("usuario_logeado").subscribe(
+				n => {
+					const usuario = n.usuarioLogeadoItem;
+					this.searchClient(usuario[0].dni, false);
+					console.log(usuario);
+					/*
+					this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.sigaStorageService.idPersona).subscribe(
+						n => {
+							let data = JSON.parse(n.body).colegiadoItem;
+							if(data != null && data.length == 1){
+							this.setClienteSession(data[0]);
+							}
+						}
+					);
+					*/
+				}
+			);
+		} else if (sessionStorage.getItem('abogado')) {
 			let data = JSON.parse(sessionStorage.getItem('abogado'))[0];
 			if (data != undefined) {
 				this.clientForm.get("numeroColegiadoCliente").setValue(data.numeroColegiado);
@@ -58,13 +79,15 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 	}
 	
 	limpiarCliente(isCleanColegio: boolean) {
-		if(isCleanColegio){
-			this.clientForm.get("colegioCliente").setValue(this.idColegioCliente);
+		if(!this.isLetrado){
+			if(isCleanColegio){
+				this.clientForm.get("colegioCliente").setValue(this.idColegioCliente);
+			}
+			this.clientForm.get("numeroColegiadoCliente").setValue('');
+			this.clientForm.get("nifCifCliente").setValue('');
+			this.clientForm.get("nombreApellidosCliente").setValue('');
+			this.idPersona = '';
 		}
-		this.clientForm.get("numeroColegiadoCliente").setValue('');
-		this.clientForm.get("nifCifCliente").setValue('');
-		this.clientForm.get("nombreApellidosCliente").setValue('');
-		this.idPersona = '';
 	}
 
 	onChangeColegio(colegio: ComboItem) {
