@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
@@ -9,6 +9,7 @@ import { CommonsService } from '../../../../../../../../_services/commons.servic
 import { PersistenceService } from '../../../../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
 import { UsuarioLogado } from '../ficha-actuacion.component';
+import { Dialog, DialogModule } from 'primeng/primeng';
 
 @Component({
   selector: 'app-tarjeta-jus-ficha-act',
@@ -41,6 +42,9 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   fechaJusti: any;
   observaciones: string = '';
 
+  showConfirmacionValidar: boolean = false;
+  showConfirmacionUpdate: boolean = false;
+
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private commonsService: CommonsService,
@@ -49,7 +53,6 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesJustificacion)
       .then(respuesta => {
         let permisoEscritura = respuesta;
@@ -94,6 +97,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
 
   validar() {
 
+    this.showConfirmacionValidar = false;
     this.progressSpinner = true;
 
     let fechaTarjetaPlegada = null;
@@ -328,7 +332,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   }
 
   updateDatosJustificacion() {
-
+    this.showConfirmacionUpdate = false;
     this.progressSpinner = true;
 
     let fechaJustiRequest = '';
@@ -400,6 +404,31 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
 
   ngOnDestroy(): void {
     sessionStorage.removeItem("datosIniActuDesignaJust");
+  }
+
+  reject(){
+    this.showConfirmacionValidar = false;
+    this.showConfirmacionUpdate = false;
+  }
+
+  comfirmarValidar(){
+    if(this.isFechaJustificacionMenor()){
+      this.showConfirmacionValidar = true;
+    }else{
+      this.validar();
+    }
+  }
+
+  comfirmarUpdate(){
+    if(this.isFechaJustificacionMenor()){
+      this.showConfirmacionUpdate = true;
+    }else{
+      this.updateDatosJustificacion();
+    }
+  }
+
+  isFechaJustificacionMenor(): boolean {
+    return this.fechaJusti != "" && this.fechaActuacion != null && this.fechaJusti < this.fechaActuacion;
   }
 
 }
