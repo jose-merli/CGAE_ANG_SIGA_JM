@@ -60,7 +60,6 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 						this.clientForm.get("nombreApellidosCliente").setValue(data.nombre);
 					}
 					this.clientForm.get("nifCifCliente").setValue(data.nif);
-					this.clientForm.get("nombreApellidosCliente").setValue(data.apellidos + " " + data.nombre);
 					this.idPersona = data.idPersona;
 				}
 				sessionStorage.removeItem("abogado");
