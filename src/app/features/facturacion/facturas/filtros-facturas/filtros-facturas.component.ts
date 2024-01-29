@@ -9,6 +9,7 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { KEY_CODE } from '../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { BuscadorColegiadosExpressComponent } from '../../../../commons/buscador-colegiados-express/buscador-colegiados-express.component';
+import {InputSwitchModule} from 'primeng/inputswitch';
 
 @Component({
   selector: 'app-filtros-facturas',
@@ -48,6 +49,16 @@ export class FiltrosFacturasComponent implements OnInit {
   @Input() idPersona;
   @Output() buscarFacturas = new EventEmitter<boolean>();
 
+  checked1: boolean = true;
+  checked2: boolean = false;
+  @ViewChild('estados') estadosMultiSelect: MultiSelect;
+
+  nodes: any[];
+
+  selectedNode: any;
+
+  comboEstadosFacturasRespaldo : any[] = [];
+
   constructor(
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
@@ -83,6 +94,8 @@ export class FiltrosFacturasComponent implements OnInit {
       sessionStorage.removeItem("idFichero");
 			sessionStorage.removeItem("tipoFichero");
     }
+
+
     setTimeout(() => {
       this.inputNum.nativeElement.focus();  
     }, 300);
@@ -108,6 +121,76 @@ export class FiltrosFacturasComponent implements OnInit {
     }
   }
 
+  handleChangeFac2()   {
+    this.estadosSelect = [];
+
+    if (this.checked1) {
+      this.estadosSelect = this.comboEstadosFacturasRespaldo
+        .filter(item => item.label2 === 'FACTURA')
+        //.map(item => item.value);
+    }
+    if (this.checked2) {
+      this.estadosSelect = this.estadosSelect.concat(
+        this.comboEstadosFacturasRespaldo
+          .filter(item => item.label2 === 'ABONO')
+      );
+    }
+  
+  }
+
+
+handleChangeFac(e) {
+
+  if (this.checked1) {
+
+    let estadosFacturas = this.comboEstadosFacturasRespaldo.filter(e => e.label2=="FACTURA");
+
+    estadosFacturas.forEach((element: any) => {
+      this.estadosSelect.push(element);
+    });
+  }else{
+    this.estadosSelect = this.estadosSelect.filter(e => e.label2=="ABONO");
+  }
+
+  this.estadosMultiSelect.updateLabel();
+}
+
+handleChangeFacRect(e) {
+
+  if (this.checked2) {
+
+    let estadosFacturas = this.comboEstadosFacturasRespaldo.filter(e => e.label2=="ABONO");
+
+    estadosFacturas.forEach((element: any) => {
+      this.estadosSelect.push(element);
+    });
+  }else{
+    this.estadosSelect = this.estadosSelect.filter(e => e.label2=="FACTURA");
+  }
+
+  this.estadosMultiSelect.updateLabel();
+}
+
+/*
+    if (this.checked1) {
+      if (this.checked2) {        
+        this.estadosSelect=this.comboEstadosFacturasRespaldo;
+      }else{
+        this.estadosSelect=this.comboEstadosFacturasRespaldo.filter(e => e.label2=="FACTURA");
+      }
+
+    }else{
+      if (this.checked2) {        
+        this.estadosSelect=this.comboEstadosFacturasRespaldo.filter(e => e.label2=="ABONO");
+      }else{
+        this.estadosSelect=this.comboEstadosFacturasRespaldo;
+      }
+    }
+*/
+
+
+
+
   // Get combos
   getCombos() {
     this.getComboSeriesFacturacion();
@@ -122,15 +205,36 @@ export class FiltrosFacturasComponent implements OnInit {
     this.sigaServices.get("facturacionPyS_comboEstadosFacturas").subscribe(
       n => {
         this.comboEstadosFacturas = n.combooItems;
+        //console.log(this.comboEstadosFacturas);
+
+        //this.commonServices.arregloTildesCombo(this.comboEstadosFacturas);
+        this.progressSpinner=false;
+        this.comboEstadosFacturasRespaldo= this.comboEstadosFacturas;
+        this.estadosSelect=this.comboEstadosFacturasRespaldo.filter(e => e.label2=="FACTURA");
+
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
+
+
   }
 
   comboEstadosFacturasChange(event){
-    this.estadosSelect = event.value
+    //this.estadosSelect = event.value
+    let copiaestados = this.estadosSelect
+    if (copiaestados.filter (e => e.label2=="FACTURA").length==0) {
+      this.checked1=false;
+    }else{
+      this.checked1=true;
+    }
+    if (copiaestados.filter (e => e.label2=="ABONO").length==0) {
+      this.checked2=false;
+    }else{
+      this.checked2=true;
+    }
+
   }
 
   getComboFormaCobroAbono() {
