@@ -7,6 +7,7 @@ import { SigaServices } from "./../../_services/siga.service";
 import { CommonsService } from "../../_services/commons.service";
 import { ComboItem } from "../../models/ComboItem";
 import { SigaStorageService } from "../../siga-storage.service";
+import { ColegiadoItem } from "../../models/ColegiadoItem";
 
 @Component({
   selector: "app-buscador-colegiados-express",
@@ -40,42 +41,38 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 		this.sigaServices.get("institucionActual").subscribe(n => {
 			this.idColegioCliente = n.value;
 			this.getColegios(n.value);
-		});
 
-		if(this.sigaStorageService.isLetrado){
-			this.isLetrado = true;
-			this.sigaServices.get("usuario_logeado").subscribe(
-				n => {
+			if(this.sigaStorageService.isLetrado){
+				this.isLetrado = true;
+				this.sigaServices.get("usuario_logeado").subscribe(async n => {
 					const usuario = n.usuarioLogeadoItem;
 					this.searchClient(usuario[0].dni, false);
-					console.log(usuario);
-					/*
-					this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.sigaStorageService.idPersona).subscribe(
-						n => {
-							let data = JSON.parse(n.body).colegiadoItem;
-							if(data != null && data.length == 1){
-							this.setClienteSession(data[0]);
-							}
-						}
-					);
-					*/
+				});
+			} else if (sessionStorage.getItem('abogado')) {
+				let data = JSON.parse(sessionStorage.getItem('abogado'));
+				if (data != undefined) {
+					if(Array.isArray(data)){
+						data = data[0];
+						this.clientForm.get("numeroColegiadoCliente").setValue(data.numeroColegiado);
+						this.clientForm.get("nombreApellidosCliente").setValue(data.apellidos + " " + data.nombre);
+					} else{
+						this.clientForm.get("numeroColegiadoCliente").setValue(data.numColegiado);
+						this.clientForm.get("nombreApellidosCliente").setValue(data.nombre);
+					}
+					this.clientForm.get("nifCifCliente").setValue(data.nif);
+					this.clientForm.get("nombreApellidosCliente").setValue(data.apellidos + " " + data.nombre);
+					this.idPersona = data.idPersona;
 				}
-			);
-		} else if (sessionStorage.getItem('abogado')) {
-			let data = JSON.parse(sessionStorage.getItem('abogado'))[0];
-			if (data != undefined) {
-				this.clientForm.get("numeroColegiadoCliente").setValue(data.numeroColegiado);
-				this.clientForm.get("nifCifCliente").setValue(data.nif);
-				this.clientForm.get("nombreApellidosCliente").setValue(data.apellidos + " " + data.nombre);
-				this.idPersona = data.idPersona;
+				sessionStorage.removeItem("abogado");
 			}
-			sessionStorage.removeItem("abogado");
-		}
+		});
 	}
 
 	searchPersona(){
-		sessionStorage.setItem("origin", "newCliente");
-		this.router.navigate(['/busquedaGeneral']);
+		if(!this.isLetrado){
+			sessionStorage.setItem("origin", "newCliente");
+			this.router.navigate(['/busquedaGeneral']);
+		}
 	}
 	
 	limpiarCliente(isCleanColegio: boolean) {
@@ -91,20 +88,28 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 	}
 
 	onChangeColegio(colegio: ComboItem) {
-		if(colegio.value != null){
-			this.disableNumeroColegiado = false;
+		if(this.isLetrado){
+			this.clientForm.get("colegioCliente").setValue(this.idColegioCliente);
 		}else{
-			this.disableNumeroColegiado = true;
-			this.clientForm.get("numeroColegiadoCliente").setValue('');
+			if(colegio.value != null){
+				this.disableNumeroColegiado = false;
+			}else{
+				this.disableNumeroColegiado = true;
+				this.clientForm.get("numeroColegiadoCliente").setValue('');
+			}
 		}
 	}
 
 	onBlurNumeroColegiado(){
-		this.searchClient(this.clientForm.get('numeroColegiadoCliente').value, true);
+		if(!this.isLetrado){
+			this.searchClient(this.clientForm.get('numeroColegiadoCliente').value, true);
+		}
 	}
 	
 	onBlurNifCif(){
-		this.searchClient(this.clientForm.get('nifCifCliente').value, false);
+		if(!this.isLetrado){
+			this.searchClient(this.clientForm.get('nifCifCliente').value, false);
+		}
 	}
 
 	setClienteSession(cliente: any){
