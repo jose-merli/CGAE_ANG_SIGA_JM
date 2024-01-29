@@ -65,6 +65,9 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { GrowlModule } from "primeng/growl";
 import { MultiSelectModule } from "primeng/multiselect";
+import {InputSwitchModule} from 'primeng/inputswitch';
+
+
 
 
 import { PickListModule } from "primeng/picklist";
@@ -2089,6 +2092,7 @@ import { Paginador4Module } from './commons/paginador4/paginador4.module';
 		ChipsModule,
 
 		MultiSelectModule,
+		InputSwitchModule,
 		TableModule,
 		TreeModule,
 		PickListModule,
@@ -2160,6 +2164,7 @@ import { Paginador4Module } from './commons/paginador4/paginador4.module';
 		ListboxModule,
 		ChipsModule,
 		MultiSelectModule,
+		InputSwitchModule,
 		TableModule,
 		TreeModule,
 		PickListModule,
