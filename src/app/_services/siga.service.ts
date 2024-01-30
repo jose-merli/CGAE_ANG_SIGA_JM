@@ -43,6 +43,7 @@ import { BehaviorSubject } from 'rxjs';
 import { endpoints_expedientes } from '../utils/endpoints_expedientes';
 import { DocumentacionIncorporacionItem } from '../models/DocumentacionIncorporacionItem';
 import { saveAs } from 'file-saver/FileSaver';
+import { FichaPlantillasDocument } from '../models/FichaPlantillasDocumentoItem';
 
 @Injectable()
 export class SigaServices {
@@ -678,6 +679,7 @@ export class SigaServices {
 		plantillasDoc_consultas_historico: 'plantillasDoc/consultas/historico',
 		plantillasDoc_plantillas: 'plantillasDoc/plantillas',
 		plantillasDoc_guardar: 'plantillasDoc/guardar',
+		plantillasDoc_guardar_plantillas: 'plantillasDoc/guardarPlantillas',
 		plantillasDoc_guardar_datosSalida: 'plantillasDoc/guardar/datosSalida',
 		plantillasDoc_borrar: 'plantillasDoc/borrar',
 		plantillasDoc_insertarPlantilla: 'plantillasDoc/insertarPlantilla',
@@ -1335,6 +1337,34 @@ export class SigaServices {
 			.map((response) => {
 				return response;
 			});
+	}
+
+	postSendFilesFichaPlantillas(service: string, files: any, fichaPlantillaDocument: FichaPlantillasDocument[]): Observable<any> {
+		let formData: FormData = new FormData();
+
+		// Agregar archivos
+		if (files != undefined) {
+			files.forEach((file) => {
+				formData.append('uploadFile', file, file.name);
+			});
+		}
+	
+		// Agregar datos adicionales
+		if (fichaPlantillaDocument !== undefined) {
+			formData.append('fichaPlantillaDocument', JSON.stringify(fichaPlantillaDocument));
+		}
+	
+		// No necesitas establecer el Content-Type para FormData
+		// Angular lo hará automáticamente con el tipo correcto y el boundary
+		let headers = new HttpHeaders();
+		//headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+	
+		return this.http.post(environment.newSigaUrl + this.endpoints[service], formData, {
+			headers: headers
+		}).map((response) => {
+			return response;
+		});
 	}
 
 	postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {

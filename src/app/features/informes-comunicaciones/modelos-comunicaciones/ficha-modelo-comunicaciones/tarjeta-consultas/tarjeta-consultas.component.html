@@ -55,6 +55,10 @@
           <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
               <td *ngFor="let col of columns" pEditableColumn>
+                <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+                [filter]="true" (onChange)="onChangePlantillas($event, consultasComboPlantillas)" *ngIf="col.field=='plantillas'"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboPlantillas" class="select-form " ></p-dropdown>
+           
                 <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [showClear]="true" (onChange)="onChangeConsultas($event, consultasComboDestinatarios)"
                   *ngIf="col.field=='idConsulta' && dato.idObjetivo == 1 && !dato.fechaBaja" [(ngModel)]="dato[col.field]" [options]="consultasComboDestinatarios"
                   class="select-form "></p-dropdown>
@@ -147,6 +151,10 @@
           <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
               <td *ngFor="let col of columns">
+                <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+                [filter]="true" (onChange)="onChangePlantillas($event, consultasComboPlantillas)" *ngIf="col.field=='plantillas'"
+                [(ngModel)]="dato[col.field]" [options]="consultasComboPlantillas" class="select-form " disabled="true"></p-dropdown>
+           
                 <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
                   [filter]="true" (onChange)="onChangeConsultas($event, consultasComboDestinatarios)" *ngIf="col.field=='idConsulta' && dato.idObjetivo == 1 && !dato.fechaBaja"
                   [(ngModel)]="dato[col.field]" [options]="consultasComboDestinatarios" class="select-form " disabled="true"></p-dropdown>
