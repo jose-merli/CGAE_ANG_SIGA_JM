@@ -316,7 +316,18 @@ handleChangeFacRect(e) {
       }
     }
 
-    this.body.idCliente = this.buscadorColegiadoExpress.idPersona;
+    if (this.buscadorColegiadoExpress != undefined) {
+      this.body.idCliente = this.buscadorColegiadoExpress.idPersona;
+      if (this.body.idCliente == "") {
+        this.body.idCliente = null;
+      }
+      
+      this.body.numeroColegiado = this.buscadorColegiadoExpress.clientForm.get('numeroColegiadoCliente').value;
+      if (this.body.numeroColegiado == "") {
+        this.body.numeroColegiado = null;
+      }
+    }
+
     this.persistenceService.setFiltros(this.body);
     this.buscarFacturas.emit();
   }

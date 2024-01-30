@@ -897,7 +897,7 @@ mensajeCargaMasiva(registrosProcesados,totalRegistros){
   disabledAnular(){
     let deshabilitar = true;
     this.selectedDatos.forEach(element => {
-      if(element.tipo == 'FACTURA' && ["2", "4", "5"].includes(element.idEstado)) {
+      if(element.tipo == 'FACTURA' && ["1", "2", "4", "5"].includes(element.idEstado)) {
         deshabilitar = false;
       }
     });
