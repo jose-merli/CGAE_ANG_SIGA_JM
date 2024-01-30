@@ -117,7 +117,8 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       numeroAsunto: this.actuacionDesigna.actuacion.numeroAsunto,
       idTurno: this.actuacionDesigna.actuacion.idTurno,
       anio: this.actuacionDesigna.actuacion.anio,
-      fechaJustificacion: fechaJustiRequest
+      fechaJustificacion: fechaJustiRequest,
+      observacionesJusti: this.observaciones
     };
 
     this.sigaServices.post("actuaciones_designacion_validar", actuacionesRequest).subscribe(
@@ -221,8 +222,12 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       this.isValidada = this.validadaActuacion;
       this.estado = 'Validada';
     } else {
-      this.estado = '';
-      this.actuacionDesigna.actuacion.fechaJustificacion = '';
+      if(this.actuacionDesigna.actuacion.fechaJustificacion != null
+         && this.actuacionDesigna.actuacion.fechaJustificacion != undefined
+         && this.actuacionDesigna.actuacion.fechaJustificacion != ''){
+        this.estado = 'Pendiente de validar';
+      }
+      //this.actuacionDesigna.actuacion.fechaJustificacion = '';
     }
     this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
