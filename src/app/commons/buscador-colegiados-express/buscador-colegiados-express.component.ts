@@ -182,4 +182,8 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 			this.limpiarCliente(false);
 		}
 	}
+
+	clear() {
+		this.msgs = [];
+	}
 }
