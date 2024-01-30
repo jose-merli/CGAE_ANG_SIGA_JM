@@ -23,7 +23,6 @@ import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 export class DatosPersonalesComponent implements OnInit {
 
   bodyInicial;
-  datosInicial;
   progressSpinner: boolean = false;
   direccionPostal: String = "";
   nombreVia: String = "";
@@ -54,8 +53,6 @@ export class DatosPersonalesComponent implements OnInit {
   codigoPostalValido;
   poblacionExtranjera: boolean = true;
   justiciableBusquedaItem: JusticiableBusquedaItem;
-  cols;
-  datos: JusticiableTelefonoItem[] = [];
   checkOtraProvincia;
 
   edicionEmail: boolean = false;
@@ -72,15 +69,7 @@ export class DatosPersonalesComponent implements OnInit {
   vieneDeJusticiable: boolean = false;
   guardaOpcion: String;
   count: number = 1;
-  selectedDatos = [];
   rowsPerPage: any = [];
-
-  selectedItem: number = 10;
-  selectAll: boolean = false;
-  numSelected = 0;
-  selectMultiple: boolean = false;
-
-  selectionMode = "";
 
   @ViewChild("provincia") checkbox: Checkbox;
   @ViewChild("cdPersonalesUpdate") cdPersonalesUpdate: Dialog;
@@ -189,8 +178,6 @@ export class DatosPersonalesComponent implements OnInit {
     });
 
     this.getCombos();
-    this.getColsDatosContacto();
-    this.getDatosContacto();
     
     if (sessionStorage.getItem("origin") != "newRepresentante" && sessionStorage.getItem("origin") != "newInteresado"
     && sessionStorage.getItem("origin") != "newContrario" && sessionStorage.getItem("origin") != "newAsistido" 
@@ -273,7 +260,7 @@ export class DatosPersonalesComponent implements OnInit {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (this.disabledSave()) {
+      if (!this.getDisabledSave()) {
         this.msgs = this.commonsService.checkPermisoAccion();
       } else {
         this.save();
@@ -405,6 +392,7 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.edad = this.body.edad;
     }
 
+    /*
     if (this.datos != undefined && this.datos.length > 0) {
       let arrayTelefonos = JSON.parse(JSON.stringify(this.datos));
       arrayTelefonos.splice(0, 2);
@@ -421,6 +409,7 @@ export class DatosPersonalesComponent implements OnInit {
 
       this.body.telefonos = arrayTelefonos;
     }
+    */
 
     this.body.tipojusticiable = SigaConstants.SCS_JUSTICIABLE;
     this.sigaServices.post(url, this.body).subscribe(
@@ -431,13 +420,6 @@ export class DatosPersonalesComponent implements OnInit {
         sessionStorage.setItem("nuevoJusticiableAInsertarEJG", idPersona);
         //Si se manda un mensaje igual a C significa que el nif del justiciable introducido esta repetido 
         if (JSON.parse(data.body).error.message != "C") {
-
-          //Si la persona es sobreescrita
-          // if (this.personaRepetida) {
-          //   this.modoEdicion = true;
-          //   this.personaRepetida = false;
-          //   this.searchJusticiableOverwritten.emit(this.body);
-          // }
 
           if (!this.modoEdicion) {
             this.modoEdicion = true;
@@ -464,10 +446,7 @@ export class DatosPersonalesComponent implements OnInit {
 
           if (this.nuevoTelefono) {
             this.nuevoTelefono = false;
-
           }
-
-          this.selectedDatos = [];
 
           if (this.modoRepresentante && !this.checkedViewRepresentante) {
             this.persistenceService.setBody(this.body);
@@ -476,7 +455,6 @@ export class DatosPersonalesComponent implements OnInit {
             this.sigaServices.notifyGuardarDatosGeneralesRepresentante(this.body);
           } else {
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-            this.datosInicial = JSON.parse(JSON.stringify(this.datos));
             this.sigaServices.notifyGuardarDatosGeneralesJusticiable(this.body);
           }
 
@@ -603,11 +581,6 @@ export class DatosPersonalesComponent implements OnInit {
             this.persistenceService.setFichasPosibles(fichasPosibles);
           }
         }
-      /*},
-      reject: () => {
-        this.showMessage("info", "Cancelada", this.translateService.instant("general.message.accion.cancelada"));
-      }
-    });*/
   }
   checkUniFamiliar(justiciable) {
     let datosFamiliares: any = sessionStorage.getItem("datosFamiliares");
@@ -635,15 +608,6 @@ export class DatosPersonalesComponent implements OnInit {
       message: this.translateService.instant("gratuita.personaJG.mensaje.existeJusticiable.pregunta.crearNuevo"),
       icon: "fa fa-search ",
       accept: () => {
-        // this.progressSpinner = true;
-        // this.modoEdicion = true;
-        // let url = "gestionJusticiables_updateJusticiable";
-        // this.body.idpersona = id;
-        // this.body.validacionRepeticion = false;
-        // this.callSaveService(url);
-        // this.confirmationSave = false;
-
-
         this.confirmationSave = false;
         this.progressSpinner = true;
         let url = "gestionJusticiables_createJusticiable";
@@ -651,9 +615,6 @@ export class DatosPersonalesComponent implements OnInit {
         this.body.validacionRepeticion = true;
         this.callSaveService(url);
         this.cdGeneralesSave.hide();
-
-      },
-      reject: () => {
 
       }
     });
@@ -663,18 +624,6 @@ export class DatosPersonalesComponent implements OnInit {
     this.progressSpinner = false;
     this.confirmationUpdate = true;
     this.showConfirmacion = true;
-    /*this.confirmationService.confirm({
-      key: "cdPersonalesUpdate",
-      message: this.translateService.instant("gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos"),
-      icon: "fa fa-search ",
-      accept: () => {
-        this.progressSpinner = true;
-        this.confirmationUpdate = false;
-        let url = "gestionJusticiables_updateJusticiable";
-        this.validateCampos(url);
-      },
-      reject: () => { }
-    });*/
   }
 
   reject() {
@@ -720,38 +669,8 @@ export class DatosPersonalesComponent implements OnInit {
     });
   }
 
-  getColsDatosContacto() {
-
-    this.cols = [
-      { field: 'tipo', header: "censo.busquedaClientesAvanzada.literal.tipoCliente" },
-      { field: 'numeroTelefono', header: "administracion.parametrosGenerales.literal.valor" }
-    ]
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
-  }
-
-
   getDatosContacto() {
-    this.datos = [];
     this.count = 1;
-
 
     let rowCorreoElectronico = new JusticiableTelefonoItem();
     rowCorreoElectronico.tipo = "Correo-Electrónico";
@@ -770,9 +689,6 @@ export class DatosPersonalesComponent implements OnInit {
     rowFax.count = this.count;
 
     this.count += 1;
-
-    this.datos.push(rowCorreoElectronico);
-    this.datos.push(rowFax);
     
     this.nuevoTelefono = true;
 
@@ -785,7 +701,6 @@ export class DatosPersonalesComponent implements OnInit {
     dato.numeroTelefono = undefined;
     dato.nombreTelefono = undefined;
 
-    this.datos.push(dato);
 
     this.count += 1;
     // Rellenar Dirección Postal
@@ -803,14 +718,12 @@ export class DatosPersonalesComponent implements OnInit {
         } else {
           element.preferenteSmsCheck = true;
         }
-
-        this.datos.push(element);
         this.count++;
       });
     }
 
-    this.progressSpinner = false;
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+    //his.progressSpinner = false;
+    //this.datosInicial = JSON.parse(JSON.stringify(this.datos));
 
   }
 
@@ -1269,7 +1182,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   rest() {
 
     this.nuevoTelefono = false;
-    this.selectedDatos = [];
     this.body.idpaisdir1 = "191";
 
     if (this.modoEdicion) {
@@ -1280,7 +1192,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
       this.parseFechas();
 
-      if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+      //if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
       this.faxValido = true;
       this.emailValido = true;
 
@@ -1311,7 +1223,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (!this.permisoEscritura || this.selectAll || this.selectMultiple) {
+      if (!this.permisoEscritura) {
         this.msgs = this.commonsService.checkPermisoAccion();
       } else {
         this.newData();
@@ -1332,11 +1244,10 @@ para poder filtrar el dato con o sin estos caracteres*/
     dato.numeroTelefono = undefined;
     dato.nombreTelefono = undefined;
 
-    this.datos.push(dato);
-
     this.count += 1;
   }
 
+  /*
   onChangePreferente(dato) {
 
     let checkedFind = this.datos.find(x => x.preferenteSmsCheck == true && x.count != dato.count);
@@ -1377,6 +1288,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       });
     }
   }
+  */
 
   calculateAge() {
     let hoy = new Date();
@@ -1428,46 +1340,20 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
 
-  disabledSave() {
-    if (
-      //this.body.idtipoidentificacion != undefined && this.body.idtipoidentificacion != "" &&
-      //this.body.nif != undefined && this.body.nif.trim() != "" &&
-      this.body.nombre != undefined && this.body.nombre.trim() != "" &&
-      this.body.apellido1 != undefined && this.body.apellido1.trim() != "" &&
-      this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" &&
-      this.faxValido && this.emailValido && this.cpValido) {
+  getDisabledSave() {
 
-      if (this.datos.length > 2) {
-        let valido = true;
+    let valido = false;
 
-        let arrayTelefonos = JSON.parse(JSON.stringify(this.datos));
-        arrayTelefonos.splice(0, 2);
+    if (this.body.idtipovia != undefined && this.body.idtipovia != "" &&
+    this.body.direccion != undefined && this.body.direccion != "" && 
+    this.body.codigopostal != undefined && this.body.codigopostal != "" &&
+    this.body.idprovincia != undefined && this.body.idprovincia != "" &&
+    this.body.idpoblacion != undefined && this.body.idpoblacion != "" ) {
 
-        arrayTelefonos.forEach(element => {
-
-          if (valido) {
-            if (element.tlfValido && element.numeroTelefono != undefined && element.numeroTelefono.trim() != "") {
-              valido = true;
-            } else {
-              valido = false;
-            }
-          } else {
-            return true;
-          }
-        });
-
-        if (valido) {
-          return false;
-        } else {
-          return true;
-        }
-      }
-
-      return false;
-
-    } else {
-      return true;
+        valido = true;
     }
+
+    return valido;
   }
 
   onHideTarjeta() {
@@ -1514,12 +1400,12 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   restData() {
 
-    if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    //if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     this.faxValido = true;
     this.emailValido = true;
-    this.selectedDatos = [];
   }
 
+  /*
   checkPermisosDeleteData(selectedDatos) {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
 
@@ -1574,6 +1460,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
 
   }
+  */
 
   editarCompleto(event, dato) {
     let NUMBER_REGEX = /^\d{1,5}$/;
@@ -1596,84 +1483,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.tabla.reset();
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll) {
-      /* this.selectionMode = "multiple";
-      let arrays = JSON.parse(JSON.stringify(this.datos));
-      arrays.shift();
-      arrays.shift();
-      this.selectedDatos = JSON.parse(JSON.stringify(arrays));
-      this.selectMultiple = true; */
-      this.selectMultiple = true;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-      this.selectionMode = "multiple";
-
-    } else {
-      this.selectionMode = "single";
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectMultiple = false;
-    }
-
-  }
-
  /* ORIGINAL    */
- isSelectMultiple() {
-    if (this.permisoEscritura) {
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "single";
-        this.selectAll = false;
-        this.selectMultiple = false;
-      } else {
-        this.selectAll = false;
-        this.selectMultiple = true;
-        this.selectedDatos = [];
-        this.selectionMode = "multiple";
-        this.numSelected = 0;
-      }
-    }
-  }
 
-  /* ANALOGO A TABLA ACREDITACIONES 
-  isSelectMultiple() {
-
-    if (this.permisoEscritura) {
-    this.selectAll = false;
-    this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "single";
-
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "multiple";
-      }
-    } else {
-      this.selectionMode = undefined;
-    }
-  }*/
-
-  selectFila(event) {
-    this.numSelected = event.length;
-  }
-
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-  }
-
+  /*
   disabledDelete() {
     if (!this.selectMultiple && !this.selectAll) {
       return true;
@@ -1686,10 +1498,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       } else {
         return false;
       }
-
     }
-
   }
+  */
 
   rellenarDireccionPostal() {
 
@@ -1744,6 +1555,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
     this.showConfirmacion = false;
   }
+
   cancelar(){
     this.showConfirmacion = false;
   }
