@@ -51,11 +51,11 @@ export class CuotasSuscripcionesComponent implements OnInit {
       this.subscriptionSuscripcionesBusqueda.unsubscribe();
   }
 
-  busquedaSuscripciones(event) {
+  busquedaSuscripciones() {
     this.progressSpinner = true;
     this.filtrosSuscripciones = this.filtrosBusqueda.filtrosSuscripciones;
 
-    sessionStorage.setItem("filtroBusqSuscripcion",JSON.stringify(this.filtrosBusqueda.filtrosSuscripciones));
+    sessionStorage.setItem("filtroBusqSuscripcion", JSON.stringify(this.filtrosBusqueda.filtrosSuscripciones));
 
     this.subscriptionSuscripcionesBusqueda = this.sigaServices.post("PyS_getListaSuscripciones", this.filtrosSuscripciones).subscribe(
       listaSuscripcionesDTO => {

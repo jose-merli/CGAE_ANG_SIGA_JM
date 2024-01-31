@@ -17,7 +17,7 @@
       <div class="form-group col-lg-3 col-md-3 w-100 mb-3">
         <label>{{'justiciaGratuita.oficio.designas.actuaciones.fechaJustificacion' | translate}}</label>
         <app-fecha [(value)]="datosJustificacion.fechaJustificacion" (valueChangeSelected)="fillFechaJustificacion($event)"
-        (valueChangeInput)="fillFechaJustificacion($event)" [disabled]="isLetrado"></app-fecha>
+        (valueChangeInput)="fillFechaJustificacion($event)" [disabled]="isLetrado || !editable"></app-fecha>
       </div>
       <div class="form-group col-lg-6 col-md-6 w-100 mb-6">
         <label>{{'censo.nuevaSolicitud.observaciones' | translate}}</label>
@@ -33,16 +33,42 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <button *ngIf="!reactivable" pButton type="button" icon="" iconPos="left" label="{{'general.boton.anular' | translate}}"
-      (click)="anular()" [disabled]="!editable"></button>
+      (click)="anular()"></button>
     <button *ngIf="reactivable" pButton type="button" icon="" iconPos="left" label="{{'general.boton.reactivar' | translate}}"
       (click)="reactivar();"></button>
-    <button pButton type="button" icon="" iconPos="left" label="Desvalidar" [disabled]="desactivar"
+    <button *ngIf="validada" pButton type="button" icon="" iconPos="left" label="Desvalidar" [disabled]="desactivar"
       (click)="desvalidar()"></button>
-    <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.validar' | translate}}"
-    (click)="validar()" [disabled] = "(validada && isLetrado) || !editable || isLetrado" ></button>
+    <button *ngIf="!validada" pButton type="button" icon="" iconPos="left" label="{{'general.boton.validar' | translate}}"
+    (click)="comfirmarValidar()" [disabled] = "(validada && isLetrado) || !editable || isLetrado" ></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
       (click)="restablecer()" [disabled]="!editable"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
-      (click)="save()" [disabled]="!editable"></button>
+      (click)="comfirmarUpdate()" [disabled]="!editable"></button>
   </div>
 </div>
+
+<p-dialog [(visible)]="showConfirmacionValidar" responsive="true" [draggable]="false"  resizable="false" width="550">
+  <p-header>
+    <label>{{'general.gestionJusticiables.confirmacion' | translate}}</label>
+  </p-header>
+  <label>{{ 'sjcs.designaciones.justificacion.fecha.dialog' | translate}}</label>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="validar()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.confirmar' | translate}}"></button>
+      <button (click)="reject()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="showConfirmacionUpdate" responsive="true" [draggable]="false"  resizable="false" width="550">
+  <p-header>
+    <label>{{'general.gestionJusticiables.confirmacion' | translate}}</label>
+  </p-header>
+  <label>{{ 'sjcs.designaciones.justificacion.fecha.dialog' | translate}}</label>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="save()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.confirmar' | translate}}"></button>
+      <button (click)="reject()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>

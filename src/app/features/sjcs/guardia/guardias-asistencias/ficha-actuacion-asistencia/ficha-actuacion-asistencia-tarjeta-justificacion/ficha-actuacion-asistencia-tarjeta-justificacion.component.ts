@@ -27,6 +27,8 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
   reactivable: boolean = false;
   validada: boolean = false;
   desactivar: boolean = false;
+  showConfirmacionValidar: boolean = false;
+  showConfirmacionUpdate: boolean = false;
 
   constructor(private datepipe: DatePipe,
     private sigaServices: SigaServices,
@@ -60,15 +62,15 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
         } else {
           this.datosJustificacion = n.tarjetaJustificacionItems[0];
           if (this.datosJustificacion.validada == '0') {
-            this.datosJustificacion.estado = '';
+            this.datosJustificacion.estado = 'Pendiente de validar';
           } else {
-            this.datosJustificacion.estado = 'VALIDADA';
+            this.datosJustificacion.estado = 'Validada';
             this.validada = true;
             this.desactivar = false;
             this.editable = false;
           }
           if (this.datosJustificacion.anulada == '1') {
-            this.datosJustificacion.estado = 'ANULADA';
+            this.datosJustificacion.estado = 'Anulada';
           }
           this.datosJustificacionAux = Object.assign({}, this.datosJustificacion);
           if (this.isLetrado && !this.datosJustificacion.fechaJustificacion) { //Si es letrado, deshabilitamos el campo de fecha y lo seteamos a la fecha actual
@@ -87,8 +89,21 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
     this.checkEstados();
   }
 
-  save() {
+  comfirmarUpdate(){
+    if(this.isFechaJustificacionMenor()){
+      this.showConfirmacionUpdate = true;
+    }else{
+      this.save();
+    }
+  }
 
+  reject(){
+    this.showConfirmacionValidar = false;
+    this.showConfirmacionUpdate = false;
+  }
+
+  save() {
+    this.showConfirmacionUpdate = false;
     this.progressSpinner = true;
     this.sigaServices
       .postPaginado("actuaciones_saveTarjetaJustificacion", "?anioNumero=" + this.idAsistencia + "&idActuacion=" + this.actuacion.idActuacion, this.datosJustificacion)
@@ -116,22 +131,39 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
     this.checkEstados();
   }
 
+  comfirmarValidar(){
+    if(this.isFechaJustificacionMenor()){
+      this.showConfirmacionValidar = true;
+    }else{
+      this.validar();
+    }
+  }
+
   validar() {
+    this.showConfirmacionValidar = false;
     this.datosJustificacion.validada = '1';
     this.updateEstadoActuacion();
   }
 
+  isFechaJustificacionMenor(): boolean {
+    return this.datosJustificacion.fechaJustificacion != "" && this.actuacion.fechaActuacion != null && this.datosJustificacion.fechaJustificacion < this.actuacion.fechaActuacion;
+  }
+
   desvalidar() {
+    this.showConfirmacionValidar = false;
     if (this.actuacion.facturada) {
       this.showMsg('error', 'No se puede desvalidar una actuación ya facturada', '');
     } else {
       this.datosJustificacion.validada = '0';
+      this.datosJustificacion.fechaJustificacion = '';
       this.updateEstadoActuacion();
     }
   }
 
   anular() {
+    this.showConfirmacionValidar = false;
     this.datosJustificacion.anulada = '1';
+    this.datosJustificacion.validada = '0';
     this.updateEstadoActuacion();
   }
 
@@ -145,6 +177,14 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
     if (this.datosJustificacion != null && this.datosJustificacion.fechaJustificacion == null || this.datosJustificacion.fechaJustificacion == undefined || this.datosJustificacion.fechaJustificacion == ""){
       this.datosJustificacion.fechaJustificacion = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
     }
+    if(this.datosJustificacion.validada == '0'){
+      this.datosJustificacion.estado = '';
+      this.datosJustificacion.fechaJustificacion = '';
+    }else if(this.datosJustificacion.anulada == '1'){
+      this.datosJustificacion.fechaJustificacion = null;
+      this.datosJustificacion.estado = '';
+    }
+
     this.sigaServices
       .postPaginado("actuaciones_updateEstadoActuacion", "?anioNumero=" + this.idAsistencia + "&idActuacion=" + this.actuacion.idActuacion, this.datosJustificacion)
       .subscribe(
@@ -155,15 +195,15 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
           } else {
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             if (this.datosJustificacion.validada == '0' || this.datosJustificacion.validada == '') {
-              this.datosJustificacion.estado = '';
+              this.datosJustificacion.estado = 'Pendiente de validar';
             } else if (this.datosJustificacion.validada == '1') {
-              this.datosJustificacion.estado = 'VALIDADA';
+              this.datosJustificacion.estado = 'Validada';
             }
             if (this.datosJustificacion.anulada == '1') {
-              this.datosJustificacion.estado = 'ANULADA';
+              this.datosJustificacion.estado = 'Anulada';
             }
-            this.datosJustificacion.validada = '';
-            this.datosJustificacion.anulada = '';
+            //this.datosJustificacion.validada = '';
+            //this.datosJustificacion.anulada = '';
             this.refreshTarjetas.emit(result.id);
             this.refreshHistorico.emit(true);
           }

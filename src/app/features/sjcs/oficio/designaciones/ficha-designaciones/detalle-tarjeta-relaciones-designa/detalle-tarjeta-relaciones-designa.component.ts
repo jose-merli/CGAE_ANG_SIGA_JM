@@ -20,6 +20,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   msgs: Message[] = [];
 
   @Input() relaciones;
+  @Input() nombreInteresado;
 
   @Output() searchRelaciones = new EventEmitter<boolean>();
   @Output() relacion = new EventEmitter<any>();
@@ -278,7 +279,9 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   crearEJG() {
 
     sessionStorage.setItem("EJGItemDesigna", "nuevo");
-
+    if(this.nombreInteresado){
+      sessionStorage.setItem("nombreInteresado", this.nombreInteresado);
+    }
     sessionStorage.setItem("Designacion", JSON.stringify(this.body));
 
     this.router.navigate(["/gestionEjg"]);

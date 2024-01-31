@@ -18,7 +18,7 @@
       </div>
       <div class="form-group col-lg-3 col-md-3 w-100 mb-3">
         <label>Fecha Justificación</label>
-        <app-fecha [utc]="false" [(value)]='fechaJusti' [minDate]="fechaActuacion"
+        <app-fecha [utc]="false" [(value)]='fechaJusti'
           (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
           [disabled]="isAnulada || isValidada || isColegiado || modoLectura || disableAll || modoLectura2">
         </app-fecha>
@@ -44,10 +44,38 @@
     <button *ngIf="actuacionDesigna.actuacion.validada" pButton type="button" icon="" iconPos="left" label="Desvalidar"
       (click)="desvalidar()" [disabled]="isAnulada || modoLectura || disableAll || modoLectura2"></button>
     <button *ngIf="!actuacionDesigna.actuacion.validada" pButton type="button" icon="" iconPos="left" label="Validar"
-      (click)="validar()" [disabled]="isAnulada || isValidada || isColegiado || modoLectura || disableAll || modoLectura2"></button>
+      (click)="comfirmarValidar()" [disabled]="isAnulada || isValidada || isColegiado || modoLectura || disableAll || modoLectura2"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"
       [disabled]="isAnulada || isValidada || modoLectura || disableAll || modoLectura2"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      [disabled]="isAnulada || isValidada || modoLectura || disableAll || modoLectura2" (click)="updateDatosJustificacion()"></button>
+      [disabled]="isAnulada || isValidada || modoLectura || disableAll || modoLectura2" (click)="comfirmarUpdate()"></button>
   </div>
 </div>
+
+
+<p-dialog [(visible)]="showConfirmacionValidar" responsive="true" [draggable]="false"  resizable="false" width="550">
+  <p-header>
+    <label>{{'general.gestionJusticiables.confirmacion' | translate}}</label>
+  </p-header>
+  <label>{{ 'sjcs.designaciones.justificacion.fecha.dialog' | translate}}</label>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="validar()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.confirmar' | translate}}"></button>
+      <button (click)="reject()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="showConfirmacionUpdate" responsive="true" [draggable]="false"  resizable="false" width="550">
+  <p-header>
+    <label>{{'general.gestionJusticiables.confirmacion' | translate}}</label>
+  </p-header>
+  <label>{{ 'sjcs.designaciones.justificacion.fecha.dialog' | translate}}</label>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="updateDatosJustificacion()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.confirmar' | translate}}"></button>
+      <button (click)="reject()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+

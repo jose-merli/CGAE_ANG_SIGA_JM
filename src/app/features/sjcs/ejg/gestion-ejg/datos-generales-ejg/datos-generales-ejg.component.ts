@@ -328,12 +328,17 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         }
         this.commonsServices.arregloTildesCombo(this.comboTipoEJG);
 
+        let parametro = {
+          valor: "TIPO_EJG_COLEGIO"
+        };
+
         this.sigaServices
-          .get("filtrosejg_getTipoEJGDefecto")
+          .post("busquedaPerJuridica_parametroColegio", parametro)
           .subscribe(
             data => {
+
               if (data != null && data != undefined) {
-                let tipoEJGAux = data;
+                let tipoEJGAux = JSON.parse(data.body).parametro;
                 for (let i = 0; i < this.comboTipoEJG.length; i++) {
                   if (this.comboTipoEJG[i].value == tipoEJGAux) {
                     this.body.tipoEJG = this.comboTipoEJG[i].value;
@@ -341,6 +346,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                 }
               }
             });
+            
       },
       err => {
         //console.log(err);
@@ -662,7 +668,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
               } else if (sessionStorage.getItem("justiciable")) {
                 // Asociar Justiciable al EJG Interesados.
                   this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
-                  let requestEjg = [datosItem.annio, datosItem.numEjg, datosItem.idTipoEjg, this.datosJusticiables.idpersona];
+                  let requestEjg = [datosItem.annio, datosItem.numero, datosItem.tipoEJG, this.datosJusticiables.idpersona];
                   // Objeto Asocicación de Justiciables y EJG.
                   this.sigaServices.post("gestionJusticiables_asociarJusticiableEjg", requestEjg).subscribe(
                     m => {

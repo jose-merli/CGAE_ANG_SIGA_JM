@@ -145,8 +145,6 @@ export class GestionEjgComponent implements OnInit {
         this.updateTarjResumen();
       }
 
-      sessionStorage.removeItem("EJGItemDesigna");
-
     } else {
       if (sessionStorage.getItem("Nuevo")) {
         this.persistenceService.clearDatosEJG();
@@ -184,7 +182,6 @@ export class GestionEjgComponent implements OnInit {
         //hemos pulsado nuevo 
         if (sessionStorage.getItem("Nuevo")) {
           this.nuevo = true;
-          sessionStorage.removeItem("Nuevo");
           this.body = new EJGItem();
           this.modoEdicion = false;
           this.openTarjetaDatosGenerales = true;
@@ -228,12 +225,34 @@ export class GestionEjgComponent implements OnInit {
         }
       }
     }
+
+    if((this.body.ultimoEstado == true && this.persistenceService.getDatosEJG()) || (sessionStorage.getItem("justiciable") && this.modoEdicion)){
+      if(sessionStorage.getItem("nombreInteresado") && sessionStorage.getItem("nombreInteresado") !=  "null"){
+        this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
+        sessionStorage.removeItem("nombreInteresado");
+        this.updateTarjResumen()
+      }
+    }
     this.progressSpinner = false;
     //sessionStorage.removeItem("EJGItem");
     //this.updateTarjResumen();
     this.datosEntradaTarjGenerica = this.body;
-    this.obtenerPermisos();
-    
+    if (sessionStorage.getItem("Nuevo") || sessionStorage.getItem("EJGItemDesigna") == "nuevo"){
+      this.nuevo = true;
+      this.updateTarjResumen();
+      this.permisoEscrituraDatosGenerales = true;
+      this.permisoEscrituraResumen = true;
+      this.enviarEnlacesTarjeta();
+    }else{
+      this.obtenerPermisos();
+    }
+
+    if (sessionStorage.getItem("EJGItemDesigna") != null && sessionStorage.getItem("EJGItemDesigna") != undefined){
+      sessionStorage.removeItem("EJGItemDesigna");
+    }
+    if (sessionStorage.getItem("Nuevo") != null && sessionStorage.getItem("Nuevo") != undefined){
+      sessionStorage.removeItem("Nuevo");
+    }
 
 
     //this.commonsService.scrollTop();
@@ -248,8 +267,10 @@ export class GestionEjgComponent implements OnInit {
   
   updateTarjResumen() {
     if (!this.nuevo && this.body != null && this.body != undefined) {
-      if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
-        this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+      if(this.body.annio != null && this.body.annio!= undefined && this.body.numEjg != null && this.body.numEjg != undefined){
+        if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
+          this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+        }
       }
       if(this.body.fechaApertura != null && this.body.fechaApertura != undefined){
         let date = new Date(this.body.fechaApertura);
@@ -258,7 +279,7 @@ export class GestionEjgComponent implements OnInit {
         let year = date.getFullYear();
         this.fechaAperturaFormat = `${day}/${month}/${year}`;
       }
-      
+
         this.datos = [
           {
             label: "EJG",
@@ -297,9 +318,29 @@ export class GestionEjgComponent implements OnInit {
       }
      
       else if (this.body != null && this.body != undefined) {
-        if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
-          this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+        if(this.body.annio != null && this.body.annio!= undefined && this.body.numEjg != null && this.body.numEjg != undefined){
+          if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
+            this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+          }
         }
+
+        this.nuevo = true;
+
+        if((this.body.nombreApeSolicitante == null || this.body.nombreApeSolicitante == undefined) && sessionStorage.getItem("nombreInteresado") !=null){
+            this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
+            sessionStorage.removeItem("nombreInteresado");
+          }
+    
+          if((this.body.nombreApeSolicitante == null || this.body.nombreApeSolicitante == undefined) && sessionStorage.getItem("asistencia") !=null){
+            let asistencia = JSON.parse(sessionStorage.getItem("asistencia"));
+            this.body.nombreApeSolicitante = asistencia.asistido;
+          }
+    
+          if((this.body.apellidosYNombre == null || this.body.apellidosYNombre == undefined) && sessionStorage.getItem("designaItemLink") !=null){
+            let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+            sessionStorage.removeItem("designaItemLink")
+            this.body.apellidosYNombre = designa.nombreColegiado;
+          }
        
           this.datos = [
             {

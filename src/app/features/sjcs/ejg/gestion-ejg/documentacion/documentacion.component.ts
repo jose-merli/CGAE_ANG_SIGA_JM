@@ -47,7 +47,8 @@ export class DocumentacionComponent implements OnInit {
   ejecutado = false;
   indice = 0;
   //SIGARNV-3078@FIN
-
+  @ViewChild('fileInput') fileInput;
+  idDocumentacion: number;
   colsModal = [
     { field: 'fecha', header: "dato.jgr.guardia.saltcomp.fecha" },
     { field: 'nombreFichero', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
@@ -231,8 +232,8 @@ export class DocumentacionComponent implements OnInit {
       { field: "flimite_presentacion", header: "justiciaGratuita.ejg.datosGenerales.FechaLimPresentacion" },
       { field: "presentador_persona", header: "justiciaGratuita.ejg.documentacion.Presentador" },
       { field: "labelDocumento", header: "justiciaGratuita.ejg.documentacion.Documento" },
-      { field: "regEntrada", header: "justiciaGratuita.ejg.documentacion.RegistroEntrada" },
-      { field: "regSalida", header: "justiciaGratuita.ejg.documentacion.RegistroSalida" },
+      { field: "nombreFichero", header: "facturacion.cmc.fichero" },
+      { field: "regEntradaSalida", header: "justiciaGratuita.ejg.documentacion.RegistroEntradaSalida" },
       { field: "f_presentacion", header: "censo.consultaDatosGenerales.literal.fechaPresentacion" },
       { field: "propietarioDes", header: "justiciaGratuita.ejg.documentacion.Propietario" },
     ];
@@ -396,26 +397,8 @@ export class DocumentacionComponent implements OnInit {
     }
   }
 
-  seleccionarFichero(event: any) {
 
-    let fileList: FileList = event.files;
-    this.ficheroTemporal = fileList[0];
 
-    this.body.nombreFichero = this.ficheroTemporal.name;
-    if (this.bodyInicial.f_presentacion != null && this.bodyInicial.f_presentacion != undefined) {
-      this.ficheros = [{
-        "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
-        "nombreFichero": this.body.nombreFichero,
-        "idFichero": this.body.idFichero
-      }]
-    } else {
-      this.ficheros = [{
-        "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
-        "nombreFichero": this.body.nombreFichero,
-        "idFichero": this.body.idFichero
-      }]
-    }
-  }
 
   subirFichero() {
 
@@ -679,6 +662,46 @@ export class DocumentacionComponent implements OnInit {
       }
     );
   }
+
+  openFileSelector(documentacion){
+    this.body = documentacion;
+    this.bodyInicial = this.body
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event){
+    this.ficheroTemporal = event.target.files[0];;
+
+    this.body.nombreFichero = this.ficheroTemporal.name;
+    if (this.bodyInicial.f_presentacion != null && this.bodyInicial.f_presentacion != undefined) {
+      this.ficheros = [{
+        "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
+        "nombreFichero": this.body.nombreFichero,
+        "idFichero": this.body.idFichero
+      }]
+    } else {
+      this.ficheros = [{
+        "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
+        "nombreFichero": this.body.nombreFichero,
+        "idFichero": this.body.idFichero
+      }]
+    }
+    let aux: DocumentacionEjgItem = this.body;
+
+    let idDocumentacion : string = this.body.idDocumentacion.toString();
+    //Si se ha seleccionado la opcion "Todos" en el desplegable "Documento"
+    if(this.body.idDocumento == -1){
+      //Se resta 2 teniendo en cuenta el elemento "Todos" y el elemento ya introducido anteriormente
+      for(var i = 0; i < this.comboDocumentos.length-2; i++){
+        //Vamos a obtener un string con los indices de todos los nuevos documentos creados
+        idDocumentacion += "," +this.documentos[this.documentos.length - this.comboDocumentos.length + 1 + i].idDocumentacion;
+      }
+    }
+
+    this.subirFichero()
+
+  }
+
   newDoc() {
     //this.showModal = true;
     this.progressSpinner = true;

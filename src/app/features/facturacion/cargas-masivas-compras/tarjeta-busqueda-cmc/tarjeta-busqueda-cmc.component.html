@@ -2,10 +2,12 @@
 
 <div class="card">
   <div class="card-body">
-    <p class="title-module" (click)="abreCierraTipo()">{{ 'facturacion.cargasmasivascompras.titulotarjetabusqueda' | translate }}
-      <i (click)="abreCierraTipo()" *ngIf="!showTipo" class="fa fa-angle-up float-right"></i>
-      <i (click)="abreCierraTipo()" *ngIf="showTipo" class="fa fa-angle-down float-right"></i>
-    </p>
+    <div (click)="abreCierraTipo()">
+      <p class="title-module" >{{ 'facturacion.cargasmasivascompras.titulotarjetabusqueda' | translate }}
+        <i *ngIf="!showTipo" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="showTipo" class="fa fa-angle-down float-right"></i>
+      </p>
+    </div>
     <div *ngIf="showTipo" class="module vista-simple">
       <div class="row">
         <div class="col-lg-3 col-md-3">

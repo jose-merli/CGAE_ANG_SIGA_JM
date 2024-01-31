@@ -1,35 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { APP_BASE_HREF, DatePipe } from '@angular/common';
 import { ValidationModule } from './commons/validation/validation.module';
-import { MenubarModule } from 'primeng/menubar';
-import { PanelMenuModule } from 'primeng/panelmenu';
-import { MenuItem } from 'primeng/api';
 import es from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
-import { DialogModule } from "primeng/dialog";
-import { StepsModule } from 'primeng/steps';
-import * as $ from 'jquery'
+import { CookieService } from 'ngx-cookie-service';
 
 import { AuthGuard } from './_guards/auth.guards';
 import { OldSigaServices } from './_services/oldSiga.service';
 import { SigaServices } from './_services/siga.service';
 import { cardService } from './_services/cardSearch.service';
-import { CookieService } from 'ngx-cookie-service';
-
-import { ConfirmationService } from "primeng/api";
-import { AutoCompleteModule } from "primeng/autocomplete";
-import { ButtonModule } from "primeng/button";
-
-import { CalendarModule } from "primeng/calendar";
-import { CheckboxModule } from "primeng/checkbox";
-import { ChipsModule } from "primeng/chips";
+import { routing } from './app.routing';
 
 // Componentes comunes
-import { routing } from './app.routing';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './commons/header/header.component';
@@ -41,13 +26,22 @@ import { LoginDevelopComponent } from './commons/login-develop/login-develop.com
 import { LoginMultipleComponent } from './commons/login-multiple/login-multiple.component';
 import { LogoutComponent } from './commons/logout/logout.component';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
-import { CheckPermissionDirective } from './commons/directives/check-permission.directive';
+
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
 import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 
 //PRIMENG
-
+import { DialogModule } from "primeng/dialog";
+import { StepsModule } from 'primeng/steps';
+import { MenubarModule } from 'primeng/menubar';
+import { PanelMenuModule } from 'primeng/panelmenu';
+import { ConfirmationService } from "primeng/api";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { ButtonModule } from "primeng/button";
+import { CalendarModule } from "primeng/calendar";
+import { CheckboxModule } from "primeng/checkbox";
+import { ChipsModule } from "primeng/chips";
 import { DropdownModule } from "primeng/dropdown";
 import { DataTableModule } from "primeng/datatable";
 import { ListboxModule } from "primeng/listbox";
@@ -59,47 +53,18 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { GrowlModule } from "primeng/growl";
 import { MultiSelectModule } from "primeng/multiselect";
 import { InputSwitchModule } from 'primeng/inputswitch';
-
-
 import { PickListModule } from "primeng/picklist";
-import {OrderListModule} from 'primeng/orderlist';
+import { OrderListModule } from 'primeng/orderlist';
 import { ProgressSpinnerModule } from "primeng/progressspinner";
-
-
-
-
 import { TooltipModule } from "primeng/tooltip";
 import { FileUploadModule } from "primeng/fileupload";
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule, ScrollPanel, ScrollPanelModule, SliderModule} from 'primeng/primeng';
 import { EditorModule } from '@tinymce/tinymce-angular';
 
 // Modulo de censo
 import { SearchColegiadosComponent } from './features/censo/search-colegiados/search-colegiados.component';
 import { SearchNoColegiadosComponent } from './features/censo/search-no-colegiados/search-no-colegiados.component';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Modulo de administracion
 import { CatalogosMaestros } from './features/administracion/catalogos-maestros/catalogos-maestros.component';
@@ -118,9 +83,6 @@ import { SeleccionarIdioma } from './features/administracion/seleccionar-idioma/
 import { EditarUsuarioComponent } from './features/administracion/usuarios/editarUsuario/editarUsuario.component';
 import { Usuarios } from './features/administracion/usuarios/usuarios.component';
 
-
-
-
 import { AuditoriaComponent } from './features/censo/auditoria/auditoria.component';
 import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
 import { BusquedaColegiadosComponentI } from './features/censo/busqueda-colegiados-censoI/busqueda-colegiados.component';
@@ -131,9 +93,6 @@ import { BusquedaNoColegiadosComponent } from './features/censo/busqueda-no-cole
 import { BusquedaPersonasJuridicas } from './features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component';
 import { BusquedaSancionesComponent } from './features/censo/busqueda-sanciones/busqueda-sanciones.component';
 import { DetalleSancionComponent } from './features/censo/busqueda-sanciones/detalle-sancion/detalle-sancion.component';
-
-
-
 
 import { CargasPeriodicasComponent } from './features/censo/cargas-periodicas/cargas-periodicas.component';
 import { CensoDocumentacionComponent } from './features/censo/censo-documentacion/censo-documentacion.component';
@@ -151,47 +110,17 @@ import { EdicionCurricularesComponent } from './features/censo/ficha-colegial/ed
 import { MantenimientoDuplicadosComponent } from './features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component';
 import { MediadoresComponent } from './features/censo/mediadores/mediadores.component';
 import { ConfigurarPerfilComponent } from './features/censo/configurar-perfil/configurar-perfil.component';
-
 import { TipoCurricularComponent } from './features/censo/gestion-subtiposCV/tipo-curricular.component';
 import { SubtipoCurricularComponent } from './features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component';
 import { DatosPersonaJuridicaComponent } from './features/censo/datosPersonaJuridica/datosPersonaJuridica.component';
 import { CommonModule } from '@angular/common';
-
-
 import { AccesoFichaPersonaComponent } from './features/censo/datosPersonaJuridica/accesoFichaPersona/accesoFichaPersona.component';
-
 import { DatosBancariosComponent } from './features/censo/datosPersonaJuridica/datos-bancarios/datos-bancarios.component';
 import { ConsultarDatosBancariosComponent } from './features/censo/datosPersonaJuridica/datos-bancarios/consultar-datos-bancarios/consultar-datos-bancarios.component';
-// import { DatosCuentaBancariaComponent } from "./features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component";
-// import { DatosMandatosComponent } from "./features/censo/datos-mandatos/datos-mandatos.component";
-// import { ListadoFicherosAnexosComponent } from "./features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component";
 import { DatosIntegrantesComponent } from './features/censo/datosPersonaJuridica/datos-integrantes/datos-integrantes.component';
 import { DetalleIntegranteComponent } from './features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component';
 import { DatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component';
 import { ConsultarDatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { MutualidadAbogaciaPlanUniversal } from './features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component';
 import { FacturacionSociedadesCensoComponent } from './features/censo/facturacionSociedadesCenso/facturacion-sociedades-censo.component';
 import { ComunicacionSociedadesComponent } from './features/censo/comunicacionSociedades/comunicacion-sociedades.component';
@@ -204,8 +133,6 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 //Modulo de Certificados
 import { ComunicacionInterprofesionalComponent } from './features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component';
-
-
 import { SolicitarCompraComponent } from './features/certificados/solicitar-compra/solicitar-compra.component';
 import { SolicitudCertificadosComponent } from './features/certificados/solicitud-certificados/solicitud-certificados.component';
 import { GestionSolicitudesComponent } from './features/certificados/gestion-solicitudes/gestion-solicitudes.component';
@@ -226,10 +153,7 @@ import { NuevaConsultaComponent } from './features/consultas/nueva-consulta/nuev
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
 
-
-
 //Modulo de Expedientes
-
 import { AbonosComponent } from './features/facturacion/abonos/abonos.component';
 import { CobrosRecobrosComponent } from './features/facturacion/cobros-recobros/cobros-recobros.component';
 import { ContabilidadComponent } from './features/facturacion/contabilidad/contabilidad.component';
@@ -246,14 +170,10 @@ import { MantenimientoFacturaComponent } from './features/facturacion/mantenimie
 import { FacturasComponent } from './features/facturacion/facturas/facturas.component';
 import { FicherosAdeudosComponent } from './features/facturacion/ficheros-adeudos/ficheros-adeudos.component';
 import { FicherosTransferenciaComponent } from './features/facturacion/ficheros-transferencia/ficheros-transferencia.component';
-
-
 import { FacturasEmitidasComponent } from './features/facturacion/informes/facturas-emitidas/facturas-emitidas.component';
-
 import { FiltrosExportacionesContabilidadComponent } from './features/facturacion/contabilidad/filtros-exportaciones-contabilidad/filtros-exportaciones-contabilidad.component';
 
 //Modulo de Facturacion
-
 import { BusquedaInscripcionesComponent } from './features/formacion/busqueda-inscripciones/busqueda-inscripciones.component';
 import { FichaCursoComponent } from './features/formacion/ficha-curso/ficha-curso.component';
 import { FichaInscripcionComponent } from './features/formacion/ficha-inscripcion/ficha-inscripcion.component';
@@ -267,7 +187,6 @@ import { ProgramacionComponent } from './features/informes-comunicaciones/comuni
 import { ConsultasComponent } from './features/informes-comunicaciones/consultas/consultas.component';
 import { ConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/consulta/consulta.component';
 import { DatosGeneralesConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/datos-generales-consulta/datos-generales-consulta.component';
-
 import { ModelosComunicacionesConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/modelos-comunicaciones-consulta/modelos-comunicaciones-consulta.component';
 import { PlantillasEnviosConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/plantillas-envios-consultas/plantillas-envios-consultas.component';
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
@@ -290,18 +209,15 @@ import { ConsultasPlantillasComponent } from './features/informes-comunicaciones
 import { DatosGeneralesPlantillaComponent } from './features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/datos-generales-plantilla/datos-generales-plantilla.component';
 import { DetallePlantillaEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/detalle-plantilla-envio.component';
 import { RemitentePlantillaComponent } from './features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/remitente-plantilla/remitente-plantilla.component';
+
 //INFORMES Y COMUNICACIONES
 import { PlantillasEnvioComponent } from './features/informes-comunicaciones/plantillas-envio/plantillas-envio.component';
-
-
 
 //Modulo de Productos y Servicios
 import { CategoriasProductoComponent } from './features/productosYServicios/categoriasProducto/categoriasProducto.component';
 import { CategoriasServiciosComponent } from './features/productosYServicios/categoriasServicios/categoriasServicios.component';
-
 import { MantenimientoProductosComponent } from './features/productosYServicios/mantenimientoProductos/mantenimientoProductos.component';
 import { MantenimientoServiciosComponent } from './features/productosYServicios/mantenimientoServicios/mantenimientoServicios.component';
-
 import { GestionarSolicitudesComponent } from './features/productosYServicios/gestionarSolicitudes/gestionarSolicitudes.component';
 import { SolicitudCompraSubscripcionComponent } from './features/productosYServicios/solicitudCompraSubscripcion/solicitudCompraSubscripcion.component';
 import { SolicitudAnulacionComponent } from './features/productosYServicios/solicitudAnulacion/solicitudAnulacion.component';
@@ -313,7 +229,6 @@ import { TiposExpedientesComponent } from './features/expedientes/tipos-expedien
 import { GestionarExpedientesComponent } from './features/expedientes/gestionar-expedientes/gestionar-expedientes.component';
 import { AlertasComponent } from './features/expedientes/alertas/alertas.component';
 import { NuevoExpedienteComponent } from './features/expedientes/nuevo-expediente/nuevo-expediente.component';
-
 import { CertificacionComponent } from './features/sjcs/certificacion/certificacion.component';
 import { ComunicaCargaComponent } from './features/sjcs/comunicaciones/comunica-carga/comunica-carga.component';
 import { ComunicaDesignacionesComponent } from './features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component';
@@ -326,18 +241,17 @@ import { ComunicaResolucionesComponent } from './features/sjcs/comunicaciones/co
 
 //Modulo de Justicia Gratuita
 import { DevolucionComponent } from './features/sjcs/devolucion/devolucion.component';
-
 import { JustificacionComponent } from './features/sjcs/justificacion/justificacion.component';
 import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
 import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias/areas-materias.component';
-import { RetencionesIRPFComponent } from './features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component';
 import { CalendarioLaboralComponent } from './features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component';
 import { MantenimientoProcuradoresComponent } from './features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
 import { MantenimientoPrisionesComponent } from './features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
 import { MantenimientoComisariasComponent } from './features/sjcs/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component';
 import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component';
 import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-pj.component';
-import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
+//import { RetencionesIRPFComponent } from './features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component';
+//import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 
@@ -346,14 +260,10 @@ import { SOJComponent } from './features/sjcs/soj/soj.component';
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from './new-features/censo/busqueda-colegiados/busqueda-colegiados.component';
 
-
 import { JwtInterceptor } from './_interceptor/jwt.interceptor';
 import { AuthenticationService } from './_services/authentication.service';
-
 import { CommonsService } from './_services/commons.service';
-// prueba
 import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.service';
-
 import { PersistenceService } from './_services/persistence.service';
 
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-adicionales-designa/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
@@ -363,7 +273,7 @@ import { DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/d
 
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
-import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
+//import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
 import { GuardiasBajasTemporalesComponent } from './features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component';
 import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
 import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component';
@@ -390,9 +300,7 @@ import { DatosGenerales } from './features/censo/datosPersonaJuridica/datos-gene
 import { DatosRegistralesComponent } from './features/censo/datosPersonaJuridica/datos-registrales/datos-registrales.component';
 import { DatosRetencionesComponent } from './features/censo/datosPersonaJuridica/datos-retenciones/datos-retenciones.component';
 import { ServiciosInteresComponent } from './features/censo/datosPersonaJuridica/servicios-interes/servicios-interes.component';
-
 import { GestionActasComponent } from './features/sjcs/actas/gestion-actas/gestion-actas.component';
-
 
 //COOKIES
 import { PoliticaCookiesComponent } from './features/politica-cookies/politica-cookies.component';
@@ -406,13 +314,10 @@ import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaE
 import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
 
-import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule, ScrollPanel, ScrollPanelModule, SliderModule} from 'primeng/primeng';
-
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
 import { CargasMasivasComponent } from './features/censo/cargas-masivas/cargas-masivas.component';
 import { DatosNotificacionesComponent } from './features/agenda/datos-notificaciones/datos-notificaciones.component';
 import { FichaEventosComponent } from './features/agenda/ficha-eventos/ficha-eventos.component';
-
 
 //Calendario
 import { ScheduleModule } from 'primeng/schedule';
@@ -424,13 +329,12 @@ import { ExpedientesComponent } from './features/censo/expedientesCenso/expedien
 import { RegtelComponent } from './features/censo/regtel/regtel.component';
 import { TurnoOficioComponent } from './features/censo/turnoOficioCenso/turnoOficio.component';
 
-registerLocaleData(es);
-
 //INFORMES Y COMUNICACIONES
 import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
 import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
 
-import { TranslateService } from './commons/translate/translation.service';
+//import { TranslateService } from './commons/translate/translation.service';
+//import { TurnosComponent } from './features/sjcs/oficio/turnos/busqueda-turnos.component';
 import { FechaModule } from './commons/fecha/fecha.module';
 import { PrecioModule } from './commons/precio/precio.module';
 import { DialogoModule } from './commons/dialog/dialogo.module';
@@ -438,7 +342,6 @@ import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/b
 import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
-import { TurnosComponent } from './features/sjcs/oficio/turnos/busqueda-turnos.component';
 import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
 
 import { OficioModule } from './features/sjcs/oficio/oficio.module';
@@ -463,7 +366,6 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
 
-
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -473,6 +375,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+
+import { BuscadorColegiadosExpressComponent } from './commons/buscador-colegiados-express/buscador-colegiados-express.component';
 import { FacturacionesYPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/facturaciones-pagos.component';
 import { FiltroBusquedaFacturacionComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/filtro-busqueda-facturacion/filtro-busqueda-facturacion.component';
 import { TablaBusquedaFacturacionComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/tabla-busqueda-facturacion/tabla-busqueda-facturacion.component';
@@ -489,8 +393,8 @@ import { CartasPagoComponent } from './features/sjcs/facturacionSJCS/facturacion
 import { CompensacionFacturaComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/compensacion-factura/compensacion-factura.component';
 import { ConceptosPagosComponent } from './features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/conceptos-pagos/conceptos-pagos.component';
 import { SiNoPipe } from './commons/sino-pipe/si-no.pipe';
-import { PaginadorComponent } from './commons/paginador/paginador.component';
-import { SelectorComponent } from './commons/selector/selector.component';
+//import { PaginadorComponent } from './commons/paginador/paginador.component';
+//import { SelectorComponent } from './commons/selector/selector.component';
 import { TablaResultadoComponent } from './commons/tabla-resultado/tabla-resultado.component';
 import { BuscadorColegiadosComponent } from './commons/buscador-colegiados/buscador-colegiados.component';
 import { FiltroBuscadorColegiadosComponent } from './commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component';
@@ -503,9 +407,9 @@ import { ListaArchivosComponent } from './features/sjcs/oficio/cargas-masivas-of
 import { DatePickerRangeComponent } from './commons/date-picker-range/date-picker-range.component';
 import { HoraComponent } from './commons/hora/hora.component';
 import { InputDivididoComponent } from './commons/input-dividido/input-dividido.component';
-import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
+//import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
 import { Paginador3Module } from './commons/paginador3/paginador3.module'
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 //OFICIO
 import { TablaResultadoDesplegableComponent } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
@@ -560,7 +464,6 @@ import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-e
 import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/contrarios-pre-designacion/contrarios-pre-designacion.component';
 import { DefensaJuridicaComponent } from './features/sjcs/ejg/gestion-ejg/defensa-juridica/defensa-juridica.component';
 
-
 import { SigaStorageService } from './siga-storage.service';
 import { FichaCambioLetradoComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { LetradoEntranteComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/ficha-cambio-letrado/letrado-entrante/letrado-entrante.component';
@@ -573,7 +476,6 @@ import { ProductosComponent } from './features/facturacion/productos/productos.c
 import { FiltrosProductosComponent } from './features/facturacion/productos/filtros-productos/filtros-productos.component';
 import { GestionProductosComponent } from './features/facturacion/productos/gestion-productos/gestion-productos.component';
 import { FichaProductosComponent } from './features/facturacion/productos/ficha-productos/ficha-productos.component';
-import { DigitDecimaNumberDirective } from './commons/directives/digit-decima-number.directive';
 import { DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent } from './features/facturacion/productos/ficha-productos/detalle-tarjeta-datos-generales-ficha-productos-facturacion/detalle-tarjeta-datos-generales-ficha-productos-facturacion.component';
 import { DetalleTarjetaFormasPagosFichaProductoFacturacionComponent } from './features/facturacion/productos/ficha-productos/detalle-tarjeta-formas-pagos-ficha-producto-facturacion/detalle-tarjeta-formas-pagos-ficha-producto-facturacion.component';
 import { ServiciosComponent } from './features/facturacion/servicios/servicios.component';
@@ -585,8 +487,8 @@ import { DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent } from '
 import { DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion.component';
 import { TarjetaSolicitudCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-solicitud-compra-suscripcion/tarjeta-solicitud-compra-suscripcion.component';
 import { FichaCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component';
- import { FiltrosSeriesFacturaComponent } from './features/facturacion/series-factura/filtros-series-factura/filtros-series-factura.component';
- import { TablaSeriesFacturaComponent } from './features/facturacion/series-factura/tabla-series-factura/tabla-series-factura.component';
+import { FiltrosSeriesFacturaComponent } from './features/facturacion/series-factura/filtros-series-factura/filtros-series-factura.component';
+import { TablaSeriesFacturaComponent } from './features/facturacion/series-factura/tabla-series-factura/tabla-series-factura.component';
 import { GestionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component';
 import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
 import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
@@ -677,8 +579,6 @@ import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS
 import { FiltrosAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/filtros-abonos-sjcs/filtros-abonos-sjcs.component';
 import { TablaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-sjcs.component';
 import { FichaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/ficha-abonos-sjcs.component';
-
-enableRipple(true);
 
 import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 import { RetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/retenciones.component';
@@ -778,12 +678,9 @@ import { FichaActuacionAsistenciaTarjetaHistoricoComponent } from './features/sj
 import { FichaActuacionAsistenciaTarjetaDocumentacionComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-documentacion/ficha-actuacion-asistencia-tarjeta-documentacion.component';
 import { BuscadorAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencias/buscador-asistencias.component';
 import { ResultadoAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencias/resultado-asistencias.component';
-
 import { GuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/guardia-colegiado.component';
 import { GestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/gestion-guardia-colegiado.component';
-
 import { TablaGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/tabla-guardia-colegiado/tabla-guardia-colegiado.component';
-
 import { CalendarioGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/calendario-gestion-guardia-colegiado/calendario-gestion-guardia-colegiado.component';
 import { ColegiadoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado.component';
 import { DatosGeneralesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado.component';
@@ -849,11 +746,10 @@ import { GenerarImpreso190ClassiqueComponent } from './features/sjcsClassique/fa
 import { MantenimientoFacturacionComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcsClassique/facturacionSJCS/previsiones/previsiones.component';
 import { MantenimientoPagosComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
-import { MovimientosVariosComponentClassique } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-Classique/movimientos-varios-Classique.component';
 import { TramosLECComponent } from './features/sjcsClassique/facturacionSJCS/tramos-lec/tramos-lec.component';
 import { RetencionesJudicialesComponent } from './features/sjcsClassique/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { ResumenPagosComponent } from './features/sjcsClassique/facturacionSJCS/resumen-pagos/resumen-pagos.component';
-
+import { MovimientosVariosComponentClassique } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-Classique/movimientos-varios-Classique.component';
 
 import { EJGClassiqueComponent } from './features/sjcsClassique/ejgClassique/ejgClassique.component';
 import { GestionActasClassiqueComponent } from './features/sjcsClassique/gestion-actas/gestion-actas.component';
@@ -888,1395 +784,729 @@ import { SolicitudesTurnosGuardiasClassiqueComponent } from './features/sjcsClas
 import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassique/turnos/turnos.component';
 import { Paginador4Module } from './commons/paginador4/paginador4.module';
 
+//Directive
+import { DigitDecimaNumberDirective } from './commons/directives/digit-decima-number.directive';
+import { CheckPermissionDirective } from './commons/directives/check-permission.directive';
+
+registerLocaleData(es);
+enableRipple(true);
 
 @NgModule({
 	declarations: [
-		GestionActasComponent,
-		TarjetaDatosGeneralesCertificacionComponent,
-		TablaResultadoDesplegableComponent,
-		TablaJustificacionExpresComponent,
-		GestionDesignacionesComponent,
-		FiltroDesignacionesComponent,
-		DesignacionesComponent,
-		AppComponent,
-		ImagePipe,
-		DatePickerRangeComponent,
-		HoraComponent,
-		InputDivididoComponent,
-		TablaSimpleComponent,
-
-		MyIframeComponent,
-		MenuComponent,
-		LoginComponent,
-		LoginDevelopComponent,
-		LoginMultipleComponent,
-		LogoutComponent,
-		HeaderComponent,
-		HomeComponent,
-		CheckPermissionDirective,
-		// Censo
-		AuditoriaComponent,
-		AccesoFichaPersonaComponent,
-		MutualidadAbogaciaPlanUniversal,
-		SearchColegiadosComponent,
-		BusquedaGeneralComponent,
-		SearchNoColegiadosComponent,
-		BusquedaNoColegiadosComponent,
-		CertificadosAcaComponent,
-		ComisionesCargosComponent,
-		SolicitudesGenericasComponent,
-		SolicitudesEspecificasComponent,
-		SolicitudesIncorporacionComponent,
-		MutualidadAbogaciaSeguroAccidentes,
-		AlterMutuaComponent,
-		AlterMutuaRetaComponent,
-		AlterMutuaOfertasComponent,
-		NuevaIncorporacionComponent,
-		ModificacionDatosComponent,
-		DocumentacionSolicitudesComponent,
-		MantenimientoGruposFijosComponent,
-		MantenimientoMandatosComponent,
-		BusquedaSancionesComponent,
-		BusquedaColegiadosComponent,
-		BusquedaColegiadosComponentI,
-		EdicionCurricularesComponent,
-		BusquedaLetradosComponent,
-		MantenimientoDuplicadosComponent,
-		MediadoresComponent,
-		CargasPeriodicasComponent,
-		ConfigurarPerfilComponent,
-		CensoDocumentacionComponent,
-		TipoCurricularComponent,
-		SubtipoCurricularComponent,
-		BusquedaColegiadosComponentNew,
-		BusquedaPersonasJuridicas,
-		DatosGenerales,
-		DatosRegistralesComponent,
-		DatosPersonaJuridicaComponent,
-		DatosRetencionesComponent,
-		DetalleIntegranteComponent,
-		ServiciosInteresComponent,
-		FacturacionSociedadesCensoComponent,
-		ComunicacionSociedadesComponent,
-
-		//Certificados
-		ComunicacionInterprofesionalComponent,
-		SolicitarCompraComponent,
-		SolicitudCertificadosComponent,
-		GestionSolicitudesComponent,
-		MantenimientoCertificadosComponent,
-
-		//Facturacion
-		MantenimientoSufijosComponent,
-		MonederoComponent,
-		TarjetaListaMonederosComponent,
-        TarjetaFiltroMonederosComponent,
-		FacturaPlantillasComponent,
-		GestionCuentasBancariasComponent,
-		SeriesFacturaComponent,
-		PrevisionesFacturaComponent,
-		ProgramarFacturaComponent,
-		GenerarFacturaComponent,
-		MantenimientoFacturaComponent,
-		EliminarFacturaComponent,
-		FacturasComponent,
-		FicherosAdeudosComponent,
-		FicherosDevolucionesComponent,
-		DevolucionManualComponent,
 		AbonosComponent,
-		FicherosTransferenciaComponent,
-		ContabilidadComponent,
-		CobrosRecobrosComponent,
-		FacturasEmitidasComponent,
-
-		//Productos y Servicios
-		CategoriasProductoComponent,
-		CategoriasServiciosComponent,
-		MantenimientoProductosComponent,
-		MantenimientoServiciosComponent,
-		GestionarSolicitudesComponent,
-		SolicitudCompraSubscripcionComponent,
-		SolicitudAnulacionComponent,
-		CargaComprasComponent,
-		FichaCompraSuscripcionComponent,
-		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
-		TarjetaSolicitudCompraSuscripcionComponent,
-		CompraProductosComponent,
-		TarjetaFiltroCompraProductosComponent,
-		TarjetaListaCompraProductosComponent,
-		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
-		TarjetaProductosCompraSuscripcionComponent,
-		ConstructorConsultasComponent,
-		TarjetaFacturaCompraSuscripcionComponent,
-		TarjetaDescuentosAnticiposCompraSuscripcionComponent,
-		CuotasSuscripcionesComponent,
-		TarjetaFiltroCuotasSuscripcionesComponent,
-		TarjetaListaCuotasSuscripcionesComponent,
-		TarjetaServiciosCompraSuscripcionComponent,
-		CargasMasivasComprasComponent,
-		TarjetaFicheroModeloCmcComponent,
-		TarjetaSubidaFicheroCmcComponent,
-		TarjetaBusquedaCmcComponent,
-		TarjetaListadoCmcComponent,
-
-		//Expedientes
-		TiposExpedientesComponent,
-		GestionarExpedientesComponent,
-		AlertasComponent,
-		NuevoExpedienteComponent,
-
-		//Justicia Gratuita
-		ZonasYSubzonasComponent,
-		AreasYMateriasComponent,
-		CalendarioLaboralComponent,
-		MantenimientoProcuradoresComponent,
-		MantenimientoPrisionesComponent,
-		MantenimientoComisariasComponent,
-		MantenimientoJuzgadosComponent,
-		MaestroPJComponent,
-		SolicitudesTurnosGuardiasComponent,
-		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
-		DetalleTarjetaContrariosFichaDesignacionOficioComponent,
-		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
-		DetalleTarjetaLetradosDesignaComponent,
-		FichaDesignacionesComponent,
-		FichaCambioLetradoComponent,
-		LetradoSalienteComponent,
-		LetradoEntranteComponent,
-		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
-		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
-		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
-		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
-		DetalleTarjetaActuacionesFichaDesignacionOficioComponent,
-		GuardiasSolicitudesTurnosComponent,
-		GuardiasBajasTemporalesComponent,
-		GuardiasSaltosCompensacionesComponent,
-		DefinirListasGuardiasComponent,
-		GuardiasAsistenciasComponent,
-		GuardiasSolicitudesCentralitaComponent,
-		AsistenciaExpresComponent,
-		BuscadorAsistenciaExpresComponent,
-		ResultadoAsistenciaExpresComponent,
-		VolanteExpresComponent,
-		SOJComponent,
-		DetalleSOJComponent,
-		DatosGeneralesDetalleSojComponent,
-		ServiciosTramitacionDetalleSojComponent,
-		SolicitanteDetalleSojComponent,
-		DocumentacionDetalleSojComponent,
-		//Guardia Colegiado
-		GuardiaColegiadoComponent,
-		GestionGuardiaColegiadoComponent,
-		FiltrosGuardiaColegiadoComponent,
-		TablaGuardiaColegiadoComponent,
-		CalendarioGestionGuardiaColegiadoComponent,
-		ColegiadoGestionGuardiaColegiadoComponent,
-		DatosGeneralesGestionGuardiaColegiadoComponent,
-		GuardiaGestionGuardiaColegiadoComponent,
-		PermutasGestionGuardiaColegiadoComponent,
-		SustitucionesGestionGuardiaColegiadoComponent,
-		TurnoGestionGuardiaColegiadoComponent,
-
-		//EJG
-		// EJGComponent,
-		FiltrosEjgComponent,
-		TablaEjgComponent,
-		EJGComponent,
-		GestionEjgComponent,
-		DatosGeneralesEjgComponent,
-		ServiciosTramitacionComponent,
-		UnidadFamiliarComponent,
-		ExpedientesEconomicosComponent,
-		RelacionesComponent,
-		EstadosComponent,
-		DocumentacionComponent,
-		InformeCalificacionComponent,
-		ResolucionComponent,
-		ImpugnacionComponent,
-		EjgComisionComponent,
-		/* RegtelComponent, */
-		ComunicacionesComponent,
-		AddExpedienteComponent,
-		ComunicacionesEJGComponent,
-		RegtelEjgComponent,
-		BusquedaRetencionesAplicadasComponent,
-		EnvioReintegrosXuntaComponent,
-		JustificacionLetradoComponent,
-		InformeFacturacionComponent,
-		InformeFacturacionMultipleComponent,
-		InformeFacturacionPersonalizadoComponent,
-		FichaFacturacionComponent,
-		FichaPagoComponent,
-		CartaPagosColegiadosComponent,
-		CartaFacturaColegiadoComponent,
-		CertificadosPagosComponent,
-		CertificadosIrpfComponent,
-		ComunicaPreparacionComponent,
-		ComunicaRemesaEnvioComponent,
-		ComunicaRemesaResultadoComponent,
-		ComunicaEnvioActualizacionComponent,
-		ComunicaInfoEconomicaComponent,
-		ComunicaCargaComponent,
-		ComunicaResolucionesComponent,
-		ComunicaDesignacionesComponent,
-		CargasMasivasOficioComponent,
-		CargasMasivasGuardiaComponent,
-		DetalleTarjetaProcuradorFichaDesignacionOficioComponent,
-
-		//Consultas
-		RecuperarConsultasComponent,
-		ConsultasListasDinamicasComponent,
-		NuevaConsultaComponent,
-		NuevaConsultaExpertaComponent,
-
-		//Comunicaciones
-		InformesGenericosComponent,
-		DefinirTipoPlantillaComponent,
-		ListaCorreosComponent,
-		BandejaSalidaComponent,
-		BandejaEntradaComponent,
-
-		// Administracion
-		CatalogosMaestros,
-		CatalogosMaestrosComponent,
-		GruposUsuarios,
-		Etiquetas,
-		AuditoriaUsuarios,
-		GestionContadoresComponent,
-		Catalogos,
-		SeleccionarIdioma,
-		Usuarios,
-		GestionEntidad,
-		ParametrosGenerales,
-		EditarUsuarioComponent,
-		EditarCatalogosMaestrosComponent,
-		ContadoresComponent,
-		GestionContadoresComponent,
-		GestionAuditoriaComponent,
-		PerfilesComponent,
-		EditarPerfilesComponent,
-		PermisosComponent,
-		PoliticaCookiesComponent,
-		DatosIntegrantesComponent,
-		DatosBancariosComponent,
-		ConsultarDatosBancariosComponent,
-		// DatosCuentaBancariaComponent,
-		// DatosMandatosComponent,
-		// ListadoFicherosAnexosComponent,
-		DatosDireccionesComponent,
-		ConsultarDatosDireccionesComponent,
-		ErrorAccesoComponent,
-		TrimPipePipe,
-		CargaEtiquetasComponent,
-		DatosCvComponent,
-		CargaEtiquetasComponent2,
-		DatosCVComponent2,
-		FormacionComponent,
-		BusquedaCursosComponent,
-
-		// Administracion
-		CatalogosMaestros,
-		CatalogosMaestrosComponent,
-		GruposUsuarios,
-		Etiquetas,
-		AuditoriaUsuarios,
-		GestionContadoresComponent,
-		Catalogos,
-		SeleccionarIdioma,
-		Usuarios,
-		GestionEntidad,
-		ParametrosGenerales,
-		EditarUsuarioComponent,
-		EditarCatalogosMaestrosComponent,
-		ContadoresComponent,
-		GestionContadoresComponent,
-		GestionAuditoriaComponent,
-		PerfilesComponent,
-		EditarPerfilesComponent,
-		PermisosComponent,
-		PoliticaCookiesComponent,
-		DatosIntegrantesComponent,
-		DatosBancariosComponent,
-		ConsultarDatosBancariosComponent,
-		// DatosCuentaBancariaComponent,
-		// DatosMandatosComponent,
-		// ListadoFicherosAnexosComponent,
-		DatosDireccionesComponent,
-		ConsultarDatosDireccionesComponent,
-		ErrorAccesoComponent,
-		PlantillasEnvioComponent,
-		ModelosComunicacionesComponent,
-		FichaModeloComunicacionesComponent,
-		DatosGeneralesFichaComponent,
-		TarjetaInformesComponent,
-		PlantillaDocumentoComponent,
-		DetallePlantillaEnvioComponent,
-		TarjetaComunicacionesComponent,
-		ConsultasComponent,
-		FichaConsultaComponent,
-		DatosGeneralesConsultaComponent,
-		ModelosComunicacionesConsultaComponent,
-		PlantillasEnviosConsultasComponent,
-		ConsultaComponent,
-		ComunicacionesCensoComponent,
-		FichaRegistroComunicacionComponent,
-		ConfiguracionComponent,
-		ProgramacionComponent,
-		DocumentosComponent,
-		DestinatariosComponent,
-		DestinatarioListEnvioMasivoComponent,
-		EnviosMasivosComponent,
-		FichaRegistroEnvioMasivoComponent,
-		ConfiguracionEnvioMasivoComponent,
-		DescripcionEnvioMasivoComponent,
-		DocumentosEnvioMasivoComponent,
-		DestinatariosEnvioMasivoComponent,
-		ProgramacionEnvioMasivoComponent,
-		RemitentePlantillaComponent,
-		DatosGeneralesPlantillaComponent,
-		ConsultasPlantillasComponent,
-		PerfilesFichaComponent,
-		DialogoComunicacionesComponent,
-
-		AgendaComponent,
-		FichaCalendarioComponent,
-		CargasMasivasComponent,
-		DatosNotificacionesComponent,
-		FichaEventosComponent,
-		FichaCursoComponent,
-		DetalleSancionComponent,
-		BusquedaInscripcionesComponent,
-		FichaInscripcionComponent,
-		SolicitudesModificacionComponent,
-		NuevaSolicitudesModificacionComponent,
-		ComunicacionesComponent,
-		ExpedientesComponent,
-		RegtelComponent,
-		TurnoOficioComponent,
-		BusquedaCensoGeneralComponent,
-		DestinatarioIndvEnvioMasivoComponent,
-		DevolucionComponent,
-		JustificacionComponent,
-		CertificacionComponent,
-		BuscadorProcuradoresComponent,
-		FiltroBuscadorProcuradorComponent,
-		TablaBuscadorProcuradorComponent,
-		FichaColegialGeneralComponent,
-		DatosGeneralesFichaColegialComponent,
-		DatosColegialesFichaColegialComponent,
-		CertificadosFichaColegialComponent,
-		SancionesFichaColegialComponent,
-		SociedadesFichaColegialComponent,
-		DatosCurricularesFichaColegialComponent,
-		DireccionesFichaColegialComponent,
-		DatosBancariosFichaColegialComponent,
-		RegtelFichaColegialComponent,
-		AlterMutuaFichaColegialComponent,
-		MutualidadAbogaciaFichaColegialComponent,
-		DatosColegialesFichaColegialComponent,
-		OtrasColegiacionesFichaColegialComponent,
-		ServiciosInteresFichaColegialComponent,
-		//TarjetaResumenFijaComponent
-		BuscadorColegiadosComponent,
-		TablaBuscadorColegiadosComponent,
-		FiltroBuscadorColegiadosComponent,
-		TablaResultadoComponent,
-		MigasDePanComponent,
-		FormularioBusquedaComponent,
-		FormularioSubidaComponent,
-		ListaArchivosComponent,
-		FormularioBusquedaGuardiaComponent,
-		FormularioSubidaGuardiaComponent,
-		ListaArchivosGuardiaComponent,
-		FichaActuacionComponent,
-		TarjetaDatosGenFichaActComponent,
-		TarjetaJusFichaActComponent,
-		TarjetaRelFichaActComponent,
-		TarjetaDatosFactFichaActComponent,
-		TarjetaDocFichaActComponent,
-		TarjetaHisFichaActComponent,
-		DetalleTarjetaRelacionesDesignaComponent,
-		DetalleTarjetaComunicacionesDesignaComponent,
-		EjgComisionBusquedaComponent,
-		TablaEjgComisionComponent,
-		RemesasComponent,
-		FiltroRemesasComponent,
-		TablaRemesasComponent,
-		ActasComponent,
-		FiltroActasComponent,
-		TablaActasComponent,
-		FichaRemesasComponent,
-		TarjetaDatosGeneralesComponent,
-		TarjetaEjgsComponent,
-		RemesasResultadosComponent,
-		FiltroRemesasResultadosComponent,
-		TablaRemesasResultadosComponent,
-		FichaRemesasResultadosComponent,
-		TarjetaDatosGeneralesRemesasResultadosComponent,
-		TarjetaRemesasEnvioComponent,
-		RemesasResolucionesComponent,
-		TablaRemesasResolucionesComponent,
-		FiltroRemesasResolucionesComponent,
-		FichaRemesasResolucionesComponent,
-		TarjetaDatosGeneralesRemesasResolucionesComponent,
-		CargaMasivaProcuradoresComponent,
-		CargaDesignaProcuradorComponent,
-		TarjetaDatosCurricularesComponent,
-		TarjetaListadoComponent,
-		FiltroCargaDesignaProcuradorComponent,
-		TablaCargaDesignaProcuradorComponent,
-		FichaCargaDesignaProcuradorComponent,
-		TarjetaDatosCargaDesignaProcuradorComponent,
-		DatosGeneralesActasComponent,
-		TarjetaListadoEjgsComponent,
-		ComunicacionesEntrantesComponent,
-
-		PartidosJudicialesComponent,
-		BuscadorSolicitudesCentralitaComponent,
-		ResultadoSolicitudesCentralitaComponent,
-		FichaPreasistenciasComponent,
-		AsistenciasFichaPreasistenciasComponent,
-		FichaAsistenciaComponent,
-		FichaAsistenciaTarjetaDatosGeneralesComponent,
-		FichaAsistenciaTarjetaAsistidoComponent,
-		FichaAsistenciaTarjetaContrariosComponent,
-		FichaAsistenciaTarjetaDefensaJuridicaComponent,
-		FichaAsistenciaTarjetaObservacionesComponent,
-		FichaAsistenciaTarjetaRelacionesComponent,
-		FichaAsistenciaTarjetaDocumentacionComponent,
-		FichaAsistenciaTarjetaCaracteristicasComponent,
-		FichaAsistenciaTarjetaActuacionesComponent,
-		FichaActuacionAsistenciaComponent,
-		FichaActuacionAsistenciaTarjetaDatosGeneralesComponent,
-		FichaActuacionAsistenciaTarjetaJustificacionComponent,
-		FichaActuacionAsistenciaTarjetaHistoricoComponent,
-		FichaActuacionAsistenciaTarjetaDocumentacionComponent,
-		BuscadorAsistenciasComponent,
-		ResultadoAsistenciasComponent,
-		BuscadorListaGuardiasComponent,
-		ResultadoListaGuardiasComponent,
-		FichaListaGuardiasComponent,
-		FichaListaGuardiasTarjetaDatosGeneralesComponent,
-		FichaListaGuardiasTarjetaGuardiasComponent,
-	
-		TablaResultadoDesplegableComponent,
-		TablaJustificacionExpresComponent,
-		GestionDesignacionesComponent,
-		FiltroDesignacionesComponent,
-		DesignacionesComponent,
-		AppComponent,
-		ImagePipe,
-		DatePickerRangeComponent,
-		HoraComponent,
-		InputDivididoComponent,
-		TablaSimpleComponent,
-
-		MyIframeComponent,
-		MenuComponent,
-		LoginComponent,
-		LoginDevelopComponent,
-		LoginMultipleComponent,
-		LogoutComponent,
-		HeaderComponent,
-		HomeComponent,
-		BuscadorListaGuardiasComponent,
-		BuscadorAsistenciaExpresComponent,
-		ResultadoAsistenciaExpresComponent,
-		BuscadorAsistenciasComponent,
-		ResultadoAsistenciasComponent,
-		AsistenciaExpresComponent,
-		AsistenciasFichaPreasistenciasComponent,
-		FichaPreasistenciasComponent,
-		FiltrosGuardiaColegiadoComponent,
-		FormularioBusquedaGuardiaComponent,
-		CargasMasivasGuardiaComponent,
-		PartidosJudicialesComponent,
-		FormularioSubidaGuardiaComponent,
-		ListaArchivosGuardiaComponent,
-		FichaListaGuardiasComponent,
-		FichaListaGuardiasTarjetaDatosGeneralesComponent,
-		FichaListaGuardiasTarjetaGuardiasComponent,
-		ResultadoListaGuardiasComponent,
-		CalendarioGestionGuardiaColegiadoComponent,
-		ColegiadoGestionGuardiaColegiadoComponent,
-		DatosGeneralesGestionGuardiaColegiadoComponent,
-		GuardiaGestionGuardiaColegiadoComponent,
-		PermutasGestionGuardiaColegiadoComponent,
-		SustitucionesGestionGuardiaColegiadoComponent,
-		TurnoGestionGuardiaColegiadoComponent,
-		FichaActuacionAsistenciaTarjetaHistoricoComponent,
-		FichaActuacionAsistenciaComponent,
-		FichaActuacionAsistenciaTarjetaDatosGeneralesComponent,
-		FichaActuacionAsistenciaTarjetaDocumentacionComponent,
-		FichaActuacionAsistenciaTarjetaJustificacionComponent,
-		FichaAsistenciaTarjetaDatosGeneralesComponent,
-		FichaAsistenciaComponent,
-		FichaAsistenciaTarjetaActuacionesComponent,
-		FichaAsistenciaTarjetaAsistidoComponent,
-		FichaAsistenciaTarjetaCaracteristicasComponent,
-		FichaAsistenciaTarjetaContrariosComponent,
-		FichaAsistenciaTarjetaDefensaJuridicaComponent,
-		FichaAsistenciaTarjetaDocumentacionComponent,
-		FichaAsistenciaTarjetaObservacionesComponent,
-		FichaAsistenciaTarjetaRelacionesComponent,
-		BuscadorSolicitudesCentralitaComponent,
-		GuardiasSolicitudesCentralitaComponent,
-		ResultadoSolicitudesCentralitaComponent,
-		// Censo
-		AuditoriaComponent,
-		AccesoFichaPersonaComponent,
-		MutualidadAbogaciaPlanUniversal,
-		SearchColegiadosComponent,
-		BusquedaGeneralComponent,
-		SearchNoColegiadosComponent,
-		BusquedaNoColegiadosComponent,
-		CertificadosAcaComponent,
-		ComisionesCargosComponent,
-		SolicitudesGenericasComponent,
-		SolicitudesEspecificasComponent,
-		SolicitudesIncorporacionComponent,
-		MutualidadAbogaciaSeguroAccidentes,
-		AlterMutuaComponent,
-		AlterMutuaRetaComponent,
-		AlterMutuaOfertasComponent,
-		NuevaIncorporacionComponent,
-		ModificacionDatosComponent,
-		DocumentacionSolicitudesComponent,
-		MantenimientoGruposFijosComponent,
-		MantenimientoMandatosComponent,
-		BusquedaSancionesComponent,
-		BusquedaColegiadosComponent,
-		BusquedaColegiadosComponentI,
-		EdicionCurricularesComponent,
-		BusquedaLetradosComponent,
-		MantenimientoDuplicadosComponent,
-		MediadoresComponent,
-		CargasPeriodicasComponent,
-		ConfigurarPerfilComponent,
-		CensoDocumentacionComponent,
-		TipoCurricularComponent,
-		SubtipoCurricularComponent,
-		BusquedaColegiadosComponentNew,
-		BusquedaPersonasJuridicas,
-		DatosGenerales,
-		DatosRegistralesComponent,
-		DatosPersonaJuridicaComponent,
-		DatosRetencionesComponent,
-		DetalleIntegranteComponent,
-		ServiciosInteresComponent,
-		FacturacionSociedadesCensoComponent,
-		ComunicacionSociedadesComponent,
-		TablaGuardiaColegiadoComponent,
-		GuardiaColegiadoComponent,
-		GestionGuardiaColegiadoComponent,
-
-		//Certificados
-		ComunicacionInterprofesionalComponent,
-		SolicitarCompraComponent,
-		SolicitudCertificadosComponent,
-		GestionSolicitudesComponent,
-		MantenimientoCertificadosComponent,
-
-		//Facturacion
-		MantenimientoSufijosComponent,
-		FacturaPlantillasComponent,
-		PrevisionesFacturaComponent,
-		ProgramarFacturaComponent,
-		GenerarFacturaComponent,
-		MantenimientoFacturaComponent,
-		EliminarFacturaComponent,
-		AbonosComponent,
-		CobrosRecobrosComponent,
-		FacturasEmitidasComponent,
-
-		//Classique
-
-		GestionCuentasBancariasClassiqueComponent,
-		SeriesFacturaClassiqueComponent,
-		FacturasClassiqueComponent,
-		FicherosAdeudosClassiqueComponent,
-		FicherosDevolucionesClassiqueComponent,
-		DevolucionManualClassiqueComponent,
-		FicherosTransferenciaClassiqueComponent,
-		ContabilidadClassiqueComponent,
-
-		GenerarImpreso190ClassiqueComponent,
-		MantenimientoFacturacionComponent,
-		PrevisionesComponent,
-		MantenimientoPagosComponent,
-		MovimientosVariosComponentClassique,
-		TramosLECComponent,
-		RetencionesJudicialesComponent,
-		ResumenPagosComponent,
-		
-		EJGClassiqueComponent,
-		GestionActasClassiqueComponent,
-		DefinirListasGuardiasClassiqueComponent,
-		GuardiasAsistenciasClassiqueComponent,
-		GuardiasBajasTemporalesClassiqueComponent,
-		GuardiasCentralitaClassiqueComponent,
-		GuardiasIncompatibilidadesClassiqueComponent,
-		GuardiasSaltosCompensacionesClassiqueComponent,
-		ProgramacionCalendariosClassiqueComponent,
-		GuardiasSolicitudesTurnosClassiqueComponent,
-		VolanteExpresClassiqueComponent,
-		AreasYMateriasClassiqueComponent,
-		CalendarioLaboralClassiqueComponent,
-		DestinatariosRetencionesClassiqueComponent,
-		DocumentacionEJGClassiqueComponent,
-		MaestroPJClassiqueComponent,
-		MaestrosModulosClassiqueComponent,
-		MantenimientoComisariasClassiqueComponent,
-		MantenimientoJuzgadosClassiqueComponent,
-		MantenimientoPrisionesClassiqueComponent,
-		MantenimientoProcuradoresClassiqueComponent,
-		PartidasClassiqueComponent,
-		PartidosJudicialesClassiqueComponent,
-		RetencionesIRPFClassiqueComponent,
-		TiposAsistenciaClassiqueComponent,
-		ZonasYSubzonasClassiqueComponent,
-		BajasTemporalesClassiqueComponent,
-		DesignacionesClassiqueComponent,
-		SaltosYCompensacionesClassiqueComponent,
-		SolicitudesTurnosGuardiasClassiqueComponent,
-		TurnosClassiqueComponent,
-
-		//Productos y Servicios
-		CategoriasProductoComponent,
-		CategoriasServiciosComponent,
-		MantenimientoProductosComponent,
-		MantenimientoServiciosComponent,
-		GestionarSolicitudesComponent,
-		SolicitudCompraSubscripcionComponent,
-		SolicitudAnulacionComponent,
-		CargaComprasComponent,
-
-		//Expedientes
-		TiposExpedientesComponent,
-		GestionarExpedientesComponent,
-		AlertasComponent,
-		NuevoExpedienteComponent,
-
-		//Justicia Gratuita
-		ZonasYSubzonasComponent,
-		AreasYMateriasComponent,
-		CalendarioLaboralComponent,
-		MantenimientoProcuradoresComponent,
-		MantenimientoPrisionesComponent,
-		MantenimientoComisariasComponent,
-		MantenimientoJuzgadosComponent,
-		MaestroPJComponent,
-		SolicitudesTurnosGuardiasComponent,
-		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
-		DetalleTarjetaContrariosFichaDesignacionOficioComponent,
-		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
-		DetalleTarjetaLetradosDesignaComponent,
-		FichaDesignacionesComponent,
-		FichaCambioLetradoComponent,
-		LetradoSalienteComponent,
-		LetradoEntranteComponent,
-		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
-		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
-		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
-		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
-		DetalleTarjetaActuacionesFichaDesignacionOficioComponent,
-		GuardiasSolicitudesTurnosComponent,
-		GuardiasIncompatibilidadesComponent,
-		GuardiasBajasTemporalesComponent,
-		GuardiasSaltosCompensacionesComponent,
-		DefinirListasGuardiasComponent,
-		GuardiasAsistenciasComponent,
-		VolanteExpresComponent,
-		//EJG
-		// EJGComponent,
-		FiltrosEjgComponent,
-		TablaEjgComponent,
-		EJGComponent,
-		GestionEjgComponent,
-		DatosGeneralesEjgComponent,
-		ServiciosTramitacionComponent,
-		UnidadFamiliarComponent,
-		ExpedientesEconomicosComponent,
-		RelacionesComponent,
-		EstadosComponent,
-		DocumentacionComponent,
-		InformeCalificacionComponent,
-		ResolucionComponent,
-		ImpugnacionComponent,
-		ComunicacionesComponent,
-		AddExpedienteComponent,
-		ComunicacionesEJGComponent,
-		RegtelEjgComponent,
-		DefensaJuridicaComponent,
-		ProcuradorPreDesignacionComponent,
- 		ContrariosPreDesignacionComponent,
-		GestionActasComponent,
-		ListaIntercambiosAltaEjgComponent,
-		ListaIntercambiosDocumentacionEjgComponent,
-
-
-
-
-
-
 		AbonosSCJSComponent,
-		FiltrosAbonosSCJSComponent,
-		TablaAbonosSCJSComponent,
-		FichaAbonosSCJSComponent,
-
-
+		AccesoFichaPersonaComponent,
+		ActasComponent,
+		AddExpedienteComponent,
+		AgendaComponent,
+		AlertasComponent,
+		AlterMutuaComponent,
+		AlterMutuaFichaColegialComponent,
+		AlterMutuaOfertasComponent,
+		AlterMutuaRetaComponent,
+		AppComponent,
+		AreasYMateriasClassiqueComponent,
+		AreasYMateriasComponent,
+		AsistenciaExpresComponent,
+		AsistenciasFichaPreasistenciasComponent,
+		AuditoriaComponent,
+		AuditoriaUsuarios,
+		BajasTemporalesClassiqueComponent,
+		BandejaEntradaComponent,
+		BandejaSalidaComponent,
+		BaremosComponent,
+		BaremosDeGuardiaComponent,
+		BuscadorAsistenciaExpresComponent,
+		BuscadorAsistenciasComponent,
+		BuscadorColegiadosComponent,
+		BuscadorColegiadosExpressComponent,
+		BuscadorListaGuardiasComponent,
+		BuscadorProcuradoresComponent,
+		BuscadorSolicitudesCentralitaComponent,
+		BusquedaCensoGeneralComponent,
+		BusquedaColegiadosComponent,
+		BusquedaColegiadosComponentI,
+		BusquedaColegiadosComponentNew,
+		BusquedaCursosComponent,
+		BusquedaGeneralComponent,
+		BusquedaInscripcionesComponent,
+		BusquedaLetradosComponent,
+		BusquedaNoColegiadosComponent,
+		BusquedaPersonasJuridicas,
 		BusquedaRetencionesAplicadasComponent,
-		GenerarImpreso190Component,
-
-		EnvioReintegrosXuntaComponent,
-		JustificacionLetradoComponent,
-		InformeFacturacionComponent,
-		InformeFacturacionMultipleComponent,
-		InformeFacturacionPersonalizadoComponent,
-		FichaFacturacionComponent,
-		FichaPagoComponent,
-		CartaPagosColegiadosComponent,
+		BusquedaSancionesComponent,
+		CalendarioGestionGuardiaColegiadoComponent,
+		CalendarioLaboralClassiqueComponent,
+		CalendarioLaboralComponent,
+		CargaComprasComponent,
+		CargaDesignaProcuradorComponent,
+		CargaEtiquetasComponent,
+		CargaEtiquetasComponent2,
+		CargaMasivaProcuradoresComponent,
+		CargasMasivasComponent,
+		CargasMasivasComprasComponent,
+		CargasMasivasGuardiaComponent,
+		CargasMasivasOficioComponent,
+		CargasPeriodicasComponent,
 		CartaFacturaColegiadoComponent,
-		CertificadosPagosComponent,
+		CartaPagosColegiadosComponent,
+		CartasFacturacionComponent,
+		CartasPagoComponent,
+		Catalogos,
+		CatalogosMaestros,
+		CatalogosMaestrosComponent,
+		CategoriasProductoComponent,
+		CategoriasServiciosComponent,
+		CensoDocumentacionComponent,
+		CertificacionComponent,
+		CertificacionFacComponent,
+		CertificadosAcaComponent,
+		CertificadosFichaColegialComponent,
 		CertificadosIrpfComponent,
+		CertificadosPagosComponent,
+		CheckPermissionDirective,
+		ClienteFacturasComponent,
+		CobrosRecobrosComponent,
+		ColegiadoAbonosSJCSComponent,
+		ColegiadoGestionGuardiaColegiadoComponent,
+		ComisionCuentaBancariaComponent,
+		ComisionesCargosComponent,
+		CompensacionFacturaComponent,
+		CompraProductosComponent,
+		ComunicaCargaComponent,
+		ComunicacionesCensoComponent,
+		ComunicacionesComponent,
+		ComunicacionesEJGComponent,
+		ComunicacionesEntrantesComponent,
+		ComunicacionesFacturasComponent,
+		ComunicacionInterprofesionalComponent,
+		ComunicacionSociedadesComponent,
+		ComunicaDesignacionesComponent,
+		ComunicaEnvioActualizacionComponent,
+		ComunicaInfoEconomicaComponent,
 		ComunicaPreparacionComponent,
 		ComunicaRemesaEnvioComponent,
 		ComunicaRemesaResultadoComponent,
-		ComunicaEnvioActualizacionComponent,
-		ComunicaInfoEconomicaComponent,
-		ComunicaCargaComponent,
 		ComunicaResolucionesComponent,
-		ComunicaDesignacionesComponent,
-		CargasMasivasOficioComponent,
-
-		DetalleTarjetaProcuradorFichaDesignacionOficioComponent,
-
-		//Consultas
-		RecuperarConsultasComponent,
-		ConsultasListasDinamicasComponent,
-		NuevaConsultaComponent,
-		NuevaConsultaExpertaComponent,
-
-		//Comunicaciones
-		InformesGenericosComponent,
-		DefinirTipoPlantillaComponent,
-		ListaCorreosComponent,
-		BandejaSalidaComponent,
-		BandejaEntradaComponent,
-
-		// Administracion
-		CatalogosMaestros,
-		CatalogosMaestrosComponent,
-		GruposUsuarios,
-		Etiquetas,
-		AuditoriaUsuarios,
-		GestionContadoresComponent,
-		Catalogos,
-		SeleccionarIdioma,
-		Usuarios,
-		GestionEntidad,
-		ParametrosGenerales,
-		EditarUsuarioComponent,
-		EditarCatalogosMaestrosComponent,
-		ContadoresComponent,
-		GestionContadoresComponent,
-		GestionAuditoriaComponent,
-		PerfilesComponent,
-		EditarPerfilesComponent,
-		PermisosComponent,
-		PoliticaCookiesComponent,
-		DatosIntegrantesComponent,
-		DatosBancariosComponent,
-		ConsultarDatosBancariosComponent,
-		// DatosCuentaBancariaComponent,
-		// DatosMandatosComponent,
-		// ListadoFicherosAnexosComponent,
-		DatosDireccionesComponent,
-		ConsultarDatosDireccionesComponent,
-		ErrorAccesoComponent,
-		TrimPipePipe,
-		CargaEtiquetasComponent,
-		DatosCvComponent,
-		CargaEtiquetasComponent2,
-		DatosCVComponent2,
-		FormacionComponent,
-		BusquedaCursosComponent,
-
-		// Administracion
-		CatalogosMaestros,
-		CatalogosMaestrosComponent,
-		GruposUsuarios,
-		Etiquetas,
-		AuditoriaUsuarios,
-		GestionContadoresComponent,
-		Catalogos,
-		SeleccionarIdioma,
-		Usuarios,
-		GestionEntidad,
-		ParametrosGenerales,
-		EditarUsuarioComponent,
-		EditarCatalogosMaestrosComponent,
-		ContadoresComponent,
-		GestionContadoresComponent,
-		GestionAuditoriaComponent,
-		PerfilesComponent,
-		EditarPerfilesComponent,
-		PermisosComponent,
-		PoliticaCookiesComponent,
-		DatosIntegrantesComponent,
-		DatosBancariosComponent,
-		ConsultarDatosBancariosComponent,
-		// DatosCuentaBancariaComponent,
-		// DatosMandatosComponent,
-		// ListadoFicherosAnexosComponent,
-		DatosDireccionesComponent,
-		ConsultarDatosDireccionesComponent,
-		ErrorAccesoComponent,
-		PlantillasEnvioComponent,
-		ModelosComunicacionesComponent,
-		FichaModeloComunicacionesComponent,
-		DatosGeneralesFichaComponent,
-		TarjetaInformesComponent,
-		PlantillaDocumentoComponent,
-		DetallePlantillaEnvioComponent,
-		TarjetaComunicacionesComponent,
-		ConsultasComponent,
-		FichaConsultaComponent,
-		DatosGeneralesConsultaComponent,
-		ModelosComunicacionesConsultaComponent,
-		PlantillasEnviosConsultasComponent,
-		ConsultaComponent,
-		ComunicacionesCensoComponent,
-		FichaRegistroComunicacionComponent,
-		ConfiguracionComponent,
-		ProgramacionComponent,
-		DocumentosComponent,
-		DestinatariosComponent,
-		DestinatarioListEnvioMasivoComponent,
-		EnviosMasivosComponent,
-		FichaRegistroEnvioMasivoComponent,
-		ConfiguracionEnvioMasivoComponent,
-		DescripcionEnvioMasivoComponent,
-		DocumentosEnvioMasivoComponent,
-		DestinatariosEnvioMasivoComponent,
-		ProgramacionEnvioMasivoComponent,
-		RemitentePlantillaComponent,
-		DatosGeneralesPlantillaComponent,
-		ConsultasPlantillasComponent,
-		PerfilesFichaComponent,
-		DialogoComunicacionesComponent,
-
-		AgendaComponent,
-		FichaCalendarioComponent,
-		CargasMasivasComponent,
-		DatosNotificacionesComponent,
-		FichaEventosComponent,
-		FichaCursoComponent,
-		DetalleSancionComponent,
-		BusquedaInscripcionesComponent,
-		FichaInscripcionComponent,
-		SolicitudesModificacionComponent,
-		NuevaSolicitudesModificacionComponent,
-		ComunicacionesComponent,
-		ExpedientesComponent,
-		RegtelComponent,
-		TurnoOficioComponent,
-		BusquedaCensoGeneralComponent,
-		DestinatarioIndvEnvioMasivoComponent,
-		DevolucionComponent,
-		JustificacionComponent,
-		CertificacionComponent,
-		BuscadorProcuradoresComponent,
-		FiltroBuscadorProcuradorComponent,
-		TablaBuscadorProcuradorComponent,
-		FichaColegialGeneralComponent,
-		DatosGeneralesFichaColegialComponent,
-		DatosColegialesFichaColegialComponent,
-		CertificadosFichaColegialComponent,
-		SancionesFichaColegialComponent,
-		SociedadesFichaColegialComponent,
-		DatosCurricularesFichaColegialComponent,
-		DireccionesFichaColegialComponent,
-		DatosBancariosFichaColegialComponent,
-		RegtelFichaColegialComponent,
-		AlterMutuaFichaColegialComponent,
-		MutualidadAbogaciaFichaColegialComponent,
-		DatosColegialesFichaColegialComponent,
-		OtrasColegiacionesFichaColegialComponent,
-		ServiciosInteresFichaColegialComponent,
-		//TarjetaResumenFijaComponent
-		BuscadorColegiadosComponent,
-		TablaBuscadorColegiadosComponent,
-		FiltroBuscadorColegiadosComponent,
-		TablaResultadoComponent,
-		MigasDePanComponent,
-		FormularioBusquedaComponent,
-		FormularioSubidaComponent,
-		ListaArchivosComponent,
-
-
-
-		FichaActuacionComponent,
-		TarjetaDatosGenFichaActComponent,
-		TarjetaJusFichaActComponent,
-		TarjetaRelFichaActComponent,
-		TarjetaDatosFactFichaActComponent,
-		TarjetaDocFichaActComponent,
-		TarjetaHisFichaActComponent,
-		DetalleTarjetaRelacionesDesignaComponent,
-		DetalleTarjetaComunicacionesDesignaComponent,
-		TiposProductosComponent,
-		TiposServiciosComponent,
-		ProductosComponent,
-		FiltrosProductosComponent,
-		GestionProductosComponent,
-		FichaProductosComponent,
-		//Otros
-		DigitDecimaNumberDirective,
-		DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent,
-		DetalleTarjetaFormasPagosFichaProductoFacturacionComponent,
-		ServiciosComponent,
-		FiltrosServiciosComponent,
-		GestionServiciosComponent,
-		FichaCompraSuscripcionComponent,
-		TarjetaClienteCompraSuscripcionComponent,
-		FichaServiciosComponent,
-		DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent,
-		FichaCompraSuscripcionComponent,
-		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
-		TarjetaSolicitudCompraSuscripcionComponent,
-		FichaCuentaBancariaComponent,
-		FiltrosSeriesFacturaComponent,
-		TablaSeriesFacturaComponent,
-		GestionSeriesFacturaComponent,
-		CompraProductosComponent,
-		TarjetaFiltroCompraProductosComponent,
-		TarjetaListaCompraProductosComponent,
-		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
-		TarjetaProductosCompraSuscripcionComponent,
-		TarjetaFacturaCompraSuscripcionComponent,
-		DatosGeneralesSeriesFacturaComponent,
-		ObservacionesSeriesFacturaComponent,
-		DestinatariosIndividualesSeriesFacturaComponent,
-		DestinatariosEtiquetasSeriesFacturaComponent,
-		DestinatariosListaSeriesFacturaComponent,
-		PagoAutomaticoSeriesFacturaComponent,
-		ExportacionSeriesFacturaComponent,
-		TraspasoSeriesFacturaComponent,
-		ContadorSeriesFacturaComponent,
-		ContadorRectSeriesFacturaComponent,
-		GeneracionSeriesFacturaComponent,
-		EnvioSeriesFacturaComponent,
-		ConstructorConsultasComponent,
-		TarjetaFacturaCompraSuscripcionComponent,
-		TarjetaDescuentosAnticiposCompraSuscripcionComponent,
-		FiltrosBusquedaAdeudosComponent,
-		TablaAdeudosComponent,
-		GestionAdeudosComponent,
-		DatosGeneralesCuentaBancariaComponent,
-		ComisionCuentaBancariaComponent,
-		ConfiguracionCuentaBancariaComponent,
-		UsoFicherosCuentaBancariaComponent,
-		UsosSufijosCuentaBancariaComponent,
-		DatosGeneracionAdeudosComponent,
-		CuentaEntidadAdeudosComponent,
-		FacturasAdeudosComponent,
-		FacturacionAdeudosComponent,
-		FactProgramadasComponent,
-		FiltrosFactProgramadasComponent,
-		TablaFactProgramadasComponent,
-		FichaFactProgramadasComponent,
-		CuotasSuscripcionesComponent,
-		TarjetaFiltroCuotasSuscripcionesComponent,
-		TarjetaListaCuotasSuscripcionesComponent,
-		TarjetaServiciosCompraSuscripcionComponent,
-		DatosGeneralesFactProgramadasComponent,
-		GenAdeudosFactProgramadasComponent,
-		GenFacturaFactProgramadasComponent,
-		EnvioFactProgramadasComponent,
-		TraspasoFactProgramadasComponent,
-		SerieFacturaFactProgramadasComponent,
-		InfoFacturaFactProgramadasComponent,
-		FiltrosBusquedaTransferenciasComponent,
-		TablaFicherosTransferenciasComponent,
-		GestionFicherosTransferenciasComponent,
-		DatosGeneracionFichTransferenciasComponent,
-		FichaMonederoComponent,
-		DatosGeneralesMonederoComponent,
-		MovimientosMonederoComponent,
-		ServiciosAsociadosMonederoComponent,
-		TablaFicherosDevolucionesComponent,
-		FiltrosFicherosDevolucionesComponent,
-		FichaFicherosDevolucionesComponent,
-		FiltrosFacturasComponent,
-		TablaFacturasComponent,
-		GestionFacturasComponent,
-		DatosCargaDevolucionesComponent,
-		ObservacionesFacturasComponent,
-		DatosGeneralesFacturasComponent,
-		EstadosPagosFacturasComponent,
-		ObservacionesRectificativaFacturasComponent,
-		LineasFacturasComponent,
-		ComunicacionesFacturasComponent,
-		ClienteFacturasComponent,
-		DeudorFacturasComponent,
-		FacturacionFacturasComponent,
-		FacturacionesYPagosComponent,
-		FichaEnvioCamComponent,
-		FiltroBusquedaFacturacionComponent,
-		TablaBusquedaFacturacionComponent,
-		GestionFacturacionComponent,
-		DatosFacturacionComponent,
 		ConceptosFacturacionComponent,
-		BaremosComponent,
-		PagosComponent,
-		CartasFacturacionComponent,
-		GestionPagosComponent,
-		DatosPagosComponent,
-		ConfiguracionFicherosComponent,
-		CartasPagoComponent,
-		CompensacionFacturaComponent,
 		ConceptosPagosComponent,
-		SiNoPipe,
-		RetencionesComponent,
-		FiltroBusquedaRetencionesComponent,
-		TablaBusquedaRetencionesComponent,
-		TablaBusquedaRetencionesAplicadasComponent,
-		TablaAplicacionRetencionesComponent,
-		FichaRetencionJudicialComponent,
-		TarjetaColegiadoComponent,
-		TarjetaDatosRetencionComponent,
-		TarjetaAplicacionEnPagosComponent,
-		BaremosDeGuardiaComponent,
-		FiltroBusquedaBaremosComponent,
-		FichaBaremosDeGuardiaComponent,
-		FichaBarDatosGeneralesComponent,
-		FichaBarConfiFacComponent,
-		FichaBarConfiAdiComponent,
-		//certificacion de facturacion
-		CertificacionFacComponent,
-		FichaCertificacionFacComponent,
-		TablaCertificacionFacComponent,
-		FiltroCertificacionFacComponent,
-		TarjetaFacturacionComponent,
-		TarjetaMovimientosVariosAsociadosComponent,
-		TarjetaMovimientosVariosAplicadosComponent,
-		//Impreso 190
-		FiltroGenerarImpreso190Component,
-		TablaGenerarImpreso190Component,
-		RetencionesIrpfColegialComponent,
-		TiposAsistenciaComponent,
-		TiposActuacionComponent,
-		FiltrosExportacionesContabilidadComponent,
-		TablaExportacionesContabilidadComponent,
-		EjgComisionBusquedaComponent,
-		TablaEjgComisionComponent,
-		RemesasComponent,
-		FiltroRemesasComponent,
-		TablaRemesasComponent,
-		ActasComponent,
-		FiltroActasComponent,
-		TablaActasComponent,
-		FichaRemesasComponent,
-		TarjetaDatosGeneralesComponent,
-		TarjetaEjgsComponent,
-		RemesasResultadosComponent,
-		FiltroRemesasResultadosComponent,
-		TablaRemesasResultadosComponent,
-		FichaRemesasResultadosComponent,
-		TarjetaDatosGeneralesRemesasResultadosComponent,
-		TarjetaRemesasEnvioComponent,
-		RemesasResolucionesComponent,
-		TablaRemesasResolucionesComponent,
-		FiltroRemesasResolucionesComponent,
-		FichaRemesasResolucionesComponent,
-		TarjetaDatosGeneralesRemesasResolucionesComponent,
-		CargaMasivaProcuradoresComponent,
-		CargaDesignaProcuradorComponent,
-		TarjetaDatosCurricularesComponent,
-		TarjetaListadoComponent,
-		FiltroCargaDesignaProcuradorComponent,
-		TablaCargaDesignaProcuradorComponent,
-		FichaCargaDesignaProcuradorComponent,
-		TarjetaDatosCargaDesignaProcuradorComponent,
+		ConfiguracionComponent,
+		ConfiguracionCuentaBancariaComponent,
+		ConfiguracionEnvioMasivoComponent,
+		ConfiguracionFicherosComponent,
+		ConfigurarPerfilComponent,
+		ConstructorConsultasComponent,
+		ConsultaComponent,
+		ConsultarDatosBancariosComponent,
+		ConsultarDatosDireccionesComponent,
+		ConsultasComponent,
+		ConsultasListasDinamicasComponent,
+		ConsultasPlantillasComponent,
+		ContabilidadClassiqueComponent,
+		ContabilidadComponent,
+		ContadoresComponent,
+		ContadorRectSeriesFacturaComponent,
+		ContadorSeriesFacturaComponent,
+		ContrariosPreDesignacionComponent,
+		CuentaEntidadAdeudosComponent,
+		CuotasSuscripcionesComponent,
+		DatePickerRangeComponent,
+		DatosBancariosComponent,
+		DatosBancariosFichaColegialComponent,
+		DatosCargaDevolucionesComponent,
+		DatosColegialesFichaColegialComponent,
+		DatosCurricularesFichaColegialComponent,
+		DatosCvComponent,
+		DatosCVComponent2,
+		DatosDireccionesComponent,
+		DatosFacturacionComponent,
+		DatosGeneracionAdeudosComponent,
+		DatosGeneracionFichTransferenciasComponent,
+		DatosGenerales,
+		DatosGeneralesAbonosSJCSComponent,
 		DatosGeneralesActasComponent,
-		TarjetaListadoEjgsComponent,
-		ComunicacionesEntrantesComponent,
-		PartidosJudicialesComponent,
-		BuscadorSolicitudesCentralitaComponent,
-		ResultadoSolicitudesCentralitaComponent,
-		FichaPreasistenciasComponent,
-		AsistenciasFichaPreasistenciasComponent,
-		FichaAsistenciaComponent,
-		FichaAsistenciaTarjetaDatosGeneralesComponent,
-		FichaAsistenciaTarjetaAsistidoComponent,
-		FichaAsistenciaTarjetaContrariosComponent,
-		FichaAsistenciaTarjetaDefensaJuridicaComponent,
-		FichaAsistenciaTarjetaObservacionesComponent,
-		FichaAsistenciaTarjetaRelacionesComponent,
-		FichaAsistenciaTarjetaDocumentacionComponent,
-		FichaAsistenciaTarjetaCaracteristicasComponent,
-		FichaAsistenciaTarjetaActuacionesComponent,
+		DatosGeneralesConsultaComponent,
+		DatosGeneralesCuentaBancariaComponent,
+		DatosGeneralesDetalleSojComponent,
+		DatosGeneralesEjgComponent,
+		DatosGeneralesFactProgramadasComponent,
+		DatosGeneralesFacturasComponent,
+		DatosGeneralesFichaColegialComponent,
+		DatosGeneralesFichaComponent,
+		DatosGeneralesGestionGuardiaColegiadoComponent,
+		DatosGeneralesMonederoComponent,
+		DatosGeneralesPlantillaComponent,
+		DatosGeneralesSeriesFacturaComponent,
+		DatosIntegrantesComponent,
+		DatosNotificacionesComponent,
+		DatosPagosComponent,
+		DatosPersonaJuridicaComponent,
+		DatosRegistralesComponent,
+		DatosRetencionesComponent,
+		DefensaJuridicaComponent,
+		DefinirListasGuardiasClassiqueComponent,
+		DefinirListasGuardiasComponent,
+		DefinirTipoPlantillaComponent,
+		DescripcionEnvioMasivoComponent,
+		DesignacionesClassiqueComponent,
+		DesignacionesComponent,
+		DestinatarioIndvEnvioMasivoComponent,
+		DestinatarioListEnvioMasivoComponent,
+		DestinatariosComponent,
+		DestinatariosEnvioMasivoComponent,
+		DestinatariosEtiquetasSeriesFacturaComponent,
+		DestinatariosIndividualesSeriesFacturaComponent,
+		DestinatariosListaSeriesFacturaComponent,
+		DestinatariosRetencionesClassiqueComponent,
+		DetalleIntegranteComponent,
+		DetallePlantillaEnvioComponent,
+		DetalleSancionComponent,
+		DetalleSOJComponent,
+		DetalleTarjetaActuacionesFichaDesignacionOficioComponent,
+		DetalleTarjetaComunicacionesDesignaComponent,
+		DetalleTarjetaContrariosFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent,
+		DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent,
+		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
+		DetalleTarjetaDocumentacionFichaDesignacionOficioComponent,
+		DetalleTarjetaFormasPagosFichaProductoFacturacionComponent,
+		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
+		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
+		DetalleTarjetaLetradosDesignaComponent,
+		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
+		DetalleTarjetaProcuradorFichaDesignacionOficioComponent,
+		DetalleTarjetaRelacionesDesignaComponent,
+		DeudorFacturasComponent,
+		DevolucionComponent,
+		DevolucionManualClassiqueComponent,
+		DevolucionManualComponent,
+		DialogoComunicacionesComponent,
+		DigitDecimaNumberDirective,
+		DireccionesFichaColegialComponent,
+		DocumentacionComponent,
+		DocumentacionDetalleSojComponent,
+		DocumentacionEJGClassiqueComponent,
+		DocumentacionSolicitudesComponent,
+		DocumentosComponent,
+		DocumentosEnvioMasivoComponent,
+		EdicionCurricularesComponent,
+		EditarCatalogosMaestrosComponent,
+		EditarPerfilesComponent,
+		EditarUsuarioComponent,
+		EJGClassiqueComponent,
+		EjgComisionBusquedaComponent,
+		EjgComisionComponent,
+		EJGComponent,
+		EliminarFacturaComponent,
+		EnvioFactProgramadasComponent,
+		EnvioReintegrosXuntaComponent,
+		EnvioSeriesFacturaComponent,
+		EnviosMasivosComponent,
+		ErrorAccesoComponent,
+		EstadosComponent,
+		EstadosPagosAbonosSJCSComponent,
+		EstadosPagosFacturasComponent,
+		Etiquetas,
+		ExpedientesComponent,
+		ExpedientesEconomicosComponent,
+		ExpedientesFichaColegialComponent,
+		ExportacionSeriesFacturaComponent,
+		FactProgramadasComponent,
+		FacturacionAdeudosComponent,
+		FacturacionesYPagosComponent,
+		FacturacionFacturasComponent,
+		FacturacionSociedadesCensoComponent,
+		FacturaPlantillasComponent,
+		FacturasAdeudosComponent,
+		FacturasClassiqueComponent,
+		FacturasComponent,
+		FacturasEmitidasComponent,
+		FichaAbonosSCJSComponent,
 		FichaActuacionAsistenciaComponent,
 		FichaActuacionAsistenciaTarjetaDatosGeneralesComponent,
-		FichaActuacionAsistenciaTarjetaJustificacionComponent,
-		FichaActuacionAsistenciaTarjetaHistoricoComponent,
 		FichaActuacionAsistenciaTarjetaDocumentacionComponent,
-		BuscadorAsistenciasComponent,
-		ResultadoAsistenciasComponent,
-		BuscadorListaGuardiasComponent,
-		ResultadoListaGuardiasComponent,
-		FichaListaGuardiasComponent,
-		FichaListaGuardiasTarjetaDatosGeneralesComponent,
-		FichaListaGuardiasTarjetaGuardiasComponent,
-		DatosGeneralesAbonosSJCSComponent,
-		SociedadAbonosSJCSComponent,
-		PagoAbonosSJCSComponent,
-		ColegiadoAbonosSJCSComponent,
-		LineasAbonosComponent,
-		ObservacionesAbonosSJCSComponent,
-		EstadosPagosAbonosSJCSComponent,
-		
-		GestionExpedientesExeaComponent,
-		NuevoExpedienteExeaComponent,
-		ExpedientesFichaColegialComponent,
+		FichaActuacionAsistenciaTarjetaHistoricoComponent,
+		FichaActuacionAsistenciaTarjetaJustificacionComponent,
+		FichaActuacionComponent,
+		FichaAsistenciaComponent,
+		FichaAsistenciaTarjetaActuacionesComponent,
+		FichaAsistenciaTarjetaAsistidoComponent,
+		FichaAsistenciaTarjetaCaracteristicasComponent,
+		FichaAsistenciaTarjetaContrariosComponent,
+		FichaAsistenciaTarjetaDatosGeneralesComponent,
+		FichaAsistenciaTarjetaDefensaJuridicaComponent,
+		FichaAsistenciaTarjetaDocumentacionComponent,
+		FichaAsistenciaTarjetaObservacionesComponent,
+		FichaAsistenciaTarjetaRelacionesComponent,
+		FichaBarConfiAdiComponent,
+		FichaBarConfiFacComponent,
+		FichaBarDatosGeneralesComponent,
+		FichaBaremosDeGuardiaComponent,
+		FichaCalendarioComponent,
+		FichaCambioLetradoComponent,
+		FichaCargaDesignaProcuradorComponent,
+		FichaCertificacionFacComponent,
+		FichaColegialGeneralComponent,
+		FichaCompraSuscripcionComponent,
+		FichaConsultaComponent,
+		FichaCuentaBancariaComponent,
+		FichaCursoComponent,
+		FichaDesignacionesComponent,
+		FichaEnvioCamComponent,
+		FichaEventosComponent,
 		FichaExpedienteExeaComponent,
 		FichaExpExeaDatosGeneralesComponent,
 		FichaExpExeaDocumentacionComponent,
 		FichaExpExeaHistoricoComponent,
+		FichaFactProgramadasComponent,
+		FichaFacturacionComponent,
+		FichaFicherosDevolucionesComponent,
+		FichaInscripcionComponent,
+		FichaListaGuardiasComponent,
+		FichaListaGuardiasTarjetaDatosGeneralesComponent,
+		FichaListaGuardiasTarjetaGuardiasComponent,
+		FichaModeloComunicacionesComponent,
+		FichaMonederoComponent,
+		FichaPagoComponent,
+		FichaPreasistenciasComponent,
+		FichaProductosComponent,
+		FichaRegistroComunicacionComponent,
+		FichaRegistroEnvioMasivoComponent,
+		FichaRemesasComponent,
+		FichaRemesasResolucionesComponent,
+		FichaRemesasResultadosComponent,
+		FichaRetencionJudicialComponent,
+		FichaServiciosComponent,
+		FicherosAdeudosClassiqueComponent,
+		FicherosAdeudosComponent,
+		FicherosDevolucionesClassiqueComponent,
+		FicherosDevolucionesComponent,
+		FicherosTransferenciaClassiqueComponent,
+		FicherosTransferenciaComponent,
+		FiltroActasComponent,
+		FiltroBuscadorColegiadosComponent,
+		FiltroBuscadorProcuradorComponent,
+		FiltroBusquedaBaremosComponent,
+		FiltroBusquedaFacturacionComponent,
+		FiltroBusquedaRetencionesComponent,
+		FiltroCargaDesignaProcuradorComponent,
+		FiltroCertificacionFacComponent,
+		FiltroDesignacionesComponent,
+		FiltroGenerarImpreso190Component,
+		FiltroRemesasComponent,
+		FiltroRemesasResolucionesComponent,
+		FiltroRemesasResultadosComponent,
+		FiltrosAbonosSCJSComponent,
+		FiltrosBusquedaAdeudosComponent,
+		FiltrosBusquedaTransferenciasComponent,
+		FiltrosEjgComponent,
+		FiltrosExportacionesContabilidadComponent,
+		FiltrosFactProgramadasComponent,
+		FiltrosFacturasComponent,
+		FiltrosFicherosDevolucionesComponent,
+		FiltrosGuardiaColegiadoComponent,
+		FiltrosProductosComponent,
+		FiltrosSeriesFacturaComponent,
+		FiltrosServiciosComponent,
+		FormacionComponent,
+		FormularioBusquedaComponent,
+		FormularioBusquedaGuardiaComponent,
+		FormularioSubidaComponent,
+		FormularioSubidaGuardiaComponent,
+		GenAdeudosFactProgramadasComponent,
+		GeneracionSeriesFacturaComponent,
+		GenerarFacturaComponent,
+		GenerarImpreso190ClassiqueComponent,
+		GenerarImpreso190Component,
+		GenFacturaFactProgramadasComponent,
+		GestionActasClassiqueComponent,
+		GestionActasComponent,
+		GestionAdeudosComponent,
+		GestionarExpedientesComponent,
+		GestionarSolicitudesComponent,
+		GestionAuditoriaComponent,
+		GestionContadoresComponent,
+		GestionCuentasBancariasClassiqueComponent,
+		GestionCuentasBancariasComponent,
+		GestionDesignacionesComponent,
+		GestionEjgComponent,
+		GestionEntidad,
+		GestionExpedientesExeaComponent,
+		GestionFacturacionComponent,
+		GestionFacturasComponent,
+		GestionFicherosTransferenciasComponent,
+		GestionGuardiaColegiadoComponent,
+		GestionPagosComponent,
+		GestionProductosComponent,
+		GestionSeriesFacturaComponent,
+		GestionServiciosComponent,
+		GestionSolicitudesComponent,
+		GruposUsuarios,
+		GuardiaColegiadoComponent,
+		GuardiaGestionGuardiaColegiadoComponent,
+		GuardiasAsistenciasClassiqueComponent,
+		GuardiasAsistenciasComponent,
+		GuardiasBajasTemporalesClassiqueComponent,
+		GuardiasBajasTemporalesComponent,
+		GuardiasCentralitaClassiqueComponent,
+		GuardiasIncompatibilidadesClassiqueComponent,
+		GuardiasIncompatibilidadesComponent,
+		GuardiasSaltosCompensacionesClassiqueComponent,
+		GuardiasSaltosCompensacionesComponent,
+		GuardiasSolicitudesCentralitaComponent,
+		GuardiasSolicitudesTurnosClassiqueComponent,
+		GuardiasSolicitudesTurnosComponent,
+		HeaderComponent,
+		HomeComponent,
+		HoraComponent,
+		ImagePipe,
+		ImpugnacionComponent,
+		InfoFacturaFactProgramadasComponent,
+		InformeCalificacionComponent,
+		InformeFacturacionComponent,
+		InformeFacturacionMultipleComponent,
+		InformeFacturacionPersonalizadoComponent,
+		InformesGenericosComponent,
+		InputDivididoComponent,
+		JustificacionComponent,
+		JustificacionLetradoComponent,
+		LetradoEntranteComponent,
+		LetradoSalienteComponent,
+		LineasAbonosComponent,
+		LineasFacturasComponent,
+		ListaArchivosComponent,
+		ListaArchivosGuardiaComponent,
+		ListaCorreosComponent,
+		ListaIntercambiosAltaEjgComponent,
+		ListaIntercambiosDocumentacionEjgComponent,
+		LoginComponent,
+		LoginDevelopComponent,
+		LoginMultipleComponent,
+		LogoutComponent,
+		MaestroPJClassiqueComponent,
+		MaestroPJComponent,
+		MaestrosModulosClassiqueComponent,
+		MantenimientoCertificadosComponent,
+		MantenimientoComisariasClassiqueComponent,
+		MantenimientoComisariasComponent,
+		MantenimientoDuplicadosComponent,
+		MantenimientoFacturacionComponent,
+		MantenimientoFacturaComponent,
+		MantenimientoGruposFijosComponent,
+		MantenimientoJuzgadosClassiqueComponent,
+		MantenimientoJuzgadosComponent,
+		MantenimientoMandatosComponent,
+		MantenimientoPagosComponent,
+		MantenimientoPrisionesClassiqueComponent,
+		MantenimientoPrisionesComponent,
+		MantenimientoProcuradoresClassiqueComponent,
+		MantenimientoProcuradoresComponent,
+		MantenimientoProductosComponent,
+		MantenimientoServiciosComponent,
+		MantenimientoSufijosComponent,
+		MediadoresComponent,
+		MenuComponent,
+		MigasDePanComponent,
+		ModelosComunicacionesComponent,
+		ModelosComunicacionesConsultaComponent,
+		ModificacionDatosComponent,
+		MonederoComponent,
+		MovimientosMonederoComponent,
+		MovimientosVariosComponentClassique,
+		MutualidadAbogaciaFichaColegialComponent,
+		MutualidadAbogaciaPlanUniversal,
+		MutualidadAbogaciaSeguroAccidentes,
+		MyIframeComponent,
+		NuevaConsultaComponent,
+		NuevaConsultaExpertaComponent,
+		NuevaIncorporacionComponent,
+		NuevaSolicitudesModificacionComponent,
+		NuevoExpedienteComponent,
+		NuevoExpedienteExeaComponent,
+		ObservacionesAbonosSJCSComponent,
+		ObservacionesFacturasComponent,
+		ObservacionesRectificativaFacturasComponent,
+		ObservacionesSeriesFacturaComponent,
+		OtrasColegiacionesFichaColegialComponent,
+		PagoAbonosSJCSComponent,
+		PagoAutomaticoSeriesFacturaComponent,
+		PagosComponent,
+		ParametrosGenerales,
+		PartidasClassiqueComponent,
+		PartidosJudicialesClassiqueComponent,
+		PartidosJudicialesComponent,
+		PerfilesComponent,
+		PerfilesFichaComponent,
+		PermisosComponent,
+		PermutasGestionGuardiaColegiadoComponent,
+		PlantillaDocumentoComponent,
+		PlantillasEnvioComponent,
+		PlantillasEnviosConsultasComponent,
+		PoliticaCookiesComponent,
+		PrevisionesComponent,
+		PrevisionesFacturaComponent,
+		ProcuradorPreDesignacionComponent,
+		ProductosComponent,
+		ProgramacionCalendariosClassiqueComponent,
+		ProgramacionComponent,
+		ProgramacionEnvioMasivoComponent,
+		ProgramarFacturaComponent,
+		RecuperarConsultasComponent,
+		RegtelComponent,
+		RegtelEjgComponent,
+		RegtelFichaColegialComponent,
+		RelacionesComponent,
+		RemesasComponent,
+		RemesasResolucionesComponent,
+		RemesasResultadosComponent,
+		RemitentePlantillaComponent,
+		ResolucionComponent,
+		ResultadoAsistenciaExpresComponent,
+		ResultadoAsistenciasComponent,
+		ResultadoListaGuardiasComponent,
+		ResultadoSolicitudesCentralitaComponent,
+		ResumenPagosComponent,
+		RetencionesComponent,
+		RetencionesIRPFClassiqueComponent,
+		RetencionesIrpfColegialComponent,
+		RetencionesJudicialesComponent,
+		SaltosYCompensacionesClassiqueComponent,
+		SancionesFichaColegialComponent,
+		SearchColegiadosComponent,
+		SearchNoColegiadosComponent,
+		SeleccionarIdioma,
+		SerieFacturaFactProgramadasComponent,
+		SeriesFacturaClassiqueComponent,
+		SeriesFacturaComponent,
+		ServiciosAsociadosMonederoComponent,
+		ServiciosComponent,
+		ServiciosInteresComponent,
+		ServiciosInteresFichaColegialComponent,
+		ServiciosTramitacionComponent,
+		ServiciosTramitacionDetalleSojComponent,
+		SiNoPipe,
+		SociedadAbonosSJCSComponent,
+		SociedadesFichaColegialComponent,
+		SOJComponent,
+		SolicitanteDetalleSojComponent,
+		SolicitarCompraComponent,
+		SolicitudAnulacionComponent,
+		SolicitudCertificadosComponent,
+		SolicitudCompraSubscripcionComponent,
+		SolicitudesEspecificasComponent,
+		SolicitudesGenericasComponent,
+		SolicitudesIncorporacionComponent,
+		SolicitudesModificacionComponent,
+		SolicitudesTurnosGuardiasClassiqueComponent,
+		SolicitudesTurnosGuardiasComponent,
+		SubtipoCurricularComponent,
+		SustitucionesGestionGuardiaColegiadoComponent,
+		TablaAbonosSCJSComponent,
+		TablaAbonosSeleccionadasComponent,
+		TablaActasComponent,
+		TablaAdeudosComponent,
+		TablaAplicacionRetencionesComponent,
+		TablaBuscadorColegiadosComponent,
+		TablaBuscadorProcuradorComponent,
+		TablaBusquedaFacturacionComponent,
+		TablaBusquedaRetencionesAplicadasComponent,
+		TablaBusquedaRetencionesComponent,
+		TablaCargaDesignaProcuradorComponent,
+		TablaCertificacionFacComponent,
+		TablaEjgComisionComponent,
+		TablaEjgComponent,
+		TablaExportacionesContabilidadComponent,
+		TablaFactProgramadasComponent,
+		TablaFacturasComponent,
 		TablaFacturasSeleccionadasComponent,
-		TablaAbonosSeleccionadasComponent
+		TablaFicherosDevolucionesComponent,
+		TablaFicherosTransferenciasComponent,
+		TablaGenerarImpreso190Component,
+		TablaGuardiaColegiadoComponent,
+		TablaJustificacionExpresComponent,
+		TablaRemesasComponent,
+		TablaRemesasResolucionesComponent,
+		TablaRemesasResultadosComponent,
+		TablaResultadoComponent,
+		TablaResultadoDesplegableComponent,
+		TablaSeriesFacturaComponent,
+		TablaSimpleComponent,
+		TarjetaAplicacionEnPagosComponent,
+		TarjetaBusquedaCmcComponent,
+		TarjetaClienteCompraSuscripcionComponent,
+		TarjetaColegiadoComponent,
+		TarjetaComunicacionesComponent,
+		TarjetaDatosCargaDesignaProcuradorComponent,
+		TarjetaDatosCurricularesComponent,
+		TarjetaDatosFactFichaActComponent,
+		TarjetaDatosGeneralesCertificacionComponent,
+		TarjetaDatosGeneralesComponent,
+		TarjetaDatosGeneralesRemesasResolucionesComponent,
+		TarjetaDatosGeneralesRemesasResultadosComponent,
+		TarjetaDatosGenFichaActComponent,
+		TarjetaDatosRetencionComponent,
+		TarjetaDescuentosAnticiposCompraSuscripcionComponent,
+		TarjetaDocFichaActComponent,
+		TarjetaEjgsComponent,
+		TarjetaFacturacionComponent,
+		TarjetaFacturaCompraSuscripcionComponent,
+		TarjetaFicheroModeloCmcComponent,
+		TarjetaFiltroCompraProductosComponent,
+		TarjetaFiltroCuotasSuscripcionesComponent,
+		TarjetaFiltroMonederosComponent,
+		TarjetaHisFichaActComponent,
+		TarjetaInformesComponent,
+		TarjetaJusFichaActComponent,
+		TarjetaListaCompraProductosComponent,
+		TarjetaListaCuotasSuscripcionesComponent,
+		TarjetaListadoCmcComponent,
+		TarjetaListadoComponent,
+		TarjetaListadoEjgsComponent,
+		TarjetaListaMonederosComponent,
+		TarjetaMovimientosVariosAplicadosComponent,
+		TarjetaMovimientosVariosAsociadosComponent,
+		TarjetaProductosCompraSuscripcionComponent,
+		TarjetaRelFichaActComponent,
+		TarjetaRemesasEnvioComponent,
+		TarjetaServiciosCompraSuscripcionComponent,
+		TarjetaSolicitudCompraSuscripcionComponent,
+		TarjetaSubidaFicheroCmcComponent,
+		TipoCurricularComponent,
+		TiposActuacionComponent,
+		TiposAsistenciaClassiqueComponent,
+		TiposAsistenciaComponent,
+		TiposExpedientesComponent,
+		TiposProductosComponent,
+		TiposServiciosComponent,
+		TramosLECComponent,
+		TraspasoFactProgramadasComponent,
+		TraspasoSeriesFacturaComponent,
+		TrimPipePipe,
+		TurnoGestionGuardiaColegiadoComponent,
+		TurnoOficioComponent,
+		TurnosClassiqueComponent,
+		UnidadFamiliarComponent,
+		UsoFicherosCuentaBancariaComponent,
+		UsosSufijosCuentaBancariaComponent,
+		Usuarios,
+		VolanteExpresClassiqueComponent,
+		VolanteExpresComponent,
+		ZonasYSubzonasClassiqueComponent,
+		ZonasYSubzonasComponent
 	],
 	imports: [
-
-		SelectorModule,
-		Paginador3Module,
-		Paginador4Module,
-		BrowserModule,
-		MatTooltipModule,
-
-		HttpClientModule,
-		FormsModule,
-		ReactiveFormsModule,
-		routing,
-		MenubarModule,
-		PanelMenuModule,
-		DropdownModule,
-		ButtonModule,
-		DataTableModule,
-		TableModule,
-		InputTextModule,
-		InputTextareaModule,
-		CheckboxModule,
-		DialogModule,
-		RadioButtonModule,
-		ConfirmDialogModule,
-		ValidationModule,
-		GrowlModule,
-		CommonModule,
-		CalendarModule,
-		OverlayPanelModule,
-		ScheduleModule,
-		PipeTranslationModule,
 		AutoCompleteModule,
-		TooltipModule,
-		ListboxModule,
-		ChipsModule,
-
-		MultiSelectModule,
-		InputSwitchModule,
-		TableModule,
-		TreeModule,
-		PickListModule,
-		ListboxModule,
-		ProgressSpinnerModule,
-		FileUploadModule,
-		DialogModule,
-		PipeTranslationModule,
-		PipeNumberModule,
-		FechaModule,
-		PaginadorModule,
-		DialogoModule,
-		PrecioModule,
-		KeyFilterModule,
-		StepsModule,
-		BusquedaColegiadoExpressModule,
-		GeneralSJCSModule,
-		TarjetaResumenFijaModule,
-
-		SelectButtonModule,
-		ColorPickerModule,
-		// BusquedaAsuntosModule,
-		MatExpansionModule,
-		MatCheckboxModule,
-		MatInputModule,
-		MatSortModule,
-		MatSelectModule,
-		MatTableModule,
-		MatPaginatorModule,
-		MatDatepickerModule,
-		MatNativeDateModule,
-		PaginatorModule,
-		GuardiaModule,
-		SjcsModule,
-		OficioModule,
-		BusquedaAsuntosModule,
-		Paginador2Module,
-		TablaResultadoOrderModule,
-		TarjetaModule,
-		DestinatariosModule,
-		MaestrosModule,
-		Paginador3Module,
-		Paginador4Module,
 		BrowserAnimationsModule,
-		HttpClientModule,
+		BrowserModule,
+		BusquedaAsuntosModule,
+		BusquedaColegiadoExpressModule,
+		ButtonModule,
+		CalendarModule,
+		CheckboxModule,
+		ChipsModule,
+		ColorPickerModule,
+		CommonModule,
+		ConfirmDialogModule,
+		DataTableModule,
+		DestinatariosModule,
+		DialogModule,
+		DialogoModule,
+		DropDownListModule,
+		DropdownModule,
+		EditorModule,
+		FechaModule,
+		FileUploadModule,
 		FormsModule,
+		GeneralSJCSModule,
+		GrowlModule,
+		GuardiaModule,
+		HttpClientModule,
+		InputSwitchModule,
+		InputTextareaModule,
+		InputTextModule,
+		KeyFilterModule,
+		ListboxModule,
+		MaestrosModule,
+		MatCheckboxModule,
+		MatDatepickerModule,
+		MatExpansionModule,
+		MatInputModule,
+		MatNativeDateModule,
+		MatPaginatorModule,
+		MatSelectModule,
+		MatSlideToggleModule,
+		MatSortModule,
+		MatTableModule,
+		MatTooltipModule,
+		MenubarModule,
+		MovimientosVariosModule,
+		MultiSelectModule,
+		OficioModule,
+		OrderListModule,
+		OverlayPanelModule,
+		Paginador2Module,
+		Paginador3Module,
+		Paginador4Module,
+		PaginadorModule,
+		PaginatorModule,
+		PanelMenuModule,
+		PickListModule,
+		PipeNumberModule,
+		PipeTranslationModule,
+		PrecioModule,
+		ProgressSpinnerModule,
+		QueryBuilderModule,
+		RadioButtonEJSModule,
+		RadioButtonModule,
 		ReactiveFormsModule,
 		routing,
-		MenubarModule,
-		PanelMenuModule,
-		DropdownModule,
-		ButtonModule,
-		DataTableModule,
-		TableModule,
-		InputTextModule,
-		InputTextareaModule,
-		CheckboxModule,
-		DialogModule,
-		RadioButtonModule,
-		ConfirmDialogModule,
-		ValidationModule,
-		GrowlModule,
-		CommonModule,
-		CalendarModule,
-		OverlayPanelModule,
 		ScheduleModule,
-		PipeTranslationModule,
-		AutoCompleteModule,
-		ListboxModule,
-		ChipsModule,
-		MultiSelectModule,
-		InputSwitchModule,
-		TableModule,
-		TreeModule,
-		PickListModule,
-		ListboxModule,
-		ProgressSpinnerModule,
-		FileUploadModule,
-		DialogModule,
-		PipeTranslationModule,
-		PipeNumberModule,
-		DialogoModule,
-		PrecioModule,
-		KeyFilterModule,
-		StepsModule,
-		BusquedaColegiadoExpressModule,
-		GeneralSJCSModule,
-		TarjetaResumenFijaModule,
-
-		SelectButtonModule,
-		ColorPickerModule,
-		// BusquedaAsuntosModule,
-		EditorModule,
-
-
-
-		MatExpansionModule,
-		MatCheckboxModule,
-		MatInputModule,
-		MatSortModule,
-		MatSelectModule,
-		MatTableModule,
-		MatPaginatorModule,
-		MatDatepickerModule,
-		MatNativeDateModule,
-		MatSlideToggleModule,
-		PaginatorModule,
-		GuardiaModule,
-		SjcsModule,
-		OficioModule,
-		BusquedaAsuntosModule,
-		Paginador2Module,
-		QueryBuilderModule,
-		OrderListModule,
-		SliderModule,
-		DropDownListModule,
-		RadioButtonEJSModule,
-		TarjetaModule,
-		TablaResultadoOrderModule,
-		MovimientosVariosModule,
-		TarjetaFacturacionGenericaModule,
-		TablaBusquedaBaremosModule,
 		ScrollPanelModule,
+		SelectButtonModule,
+		SelectorModule,
+		SjcsModule,
+		SliderModule,
+		StepsModule,
+		TablaBusquedaBaremosModule,
 		TablaResultadoOrderModule,
+		TableModule,
+		TarjetaFacturacionGenericaModule,
 		TarjetaModule,
-		DestinatariosModule,
-		MaestrosModule
-		
+		TarjetaResumenFijaModule,
+		TooltipModule,
+		TreeModule,
+		ValidationModule		
 	],
-
 	exports: [DigitDecimaNumberDirective],
 	providers: [
-	
-		// { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
-		ImagePipe,
-		DatePipe,
-		OldSigaServices,
-		SigaServices,
-		CommonsService,
-		SigaStorageService,
-		cardService,
-		HeaderGestionEntidadService,
-		MessageService,
 		AuthenticationService,
-		ConfirmationService,
-		PersistenceService,
-		TrimPipePipe,
-		TablaResultadoDesplegableJEService,
-		TablaResultadoDesplegableAEService,
-		TablaResultadoMixDocDesigService,
-
-	
-	
-		// { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
-		ImagePipe,
-		DatePipe,
-		OldSigaServices,
-		SigaServices,
-		CommonsService,
-		SigaStorageService,
-		cardService,
-		HeaderGestionEntidadService,
-		MessageService,
-		AuthenticationService,
-		ConfirmationService,
-
-		PersistenceService,
-
-		TrimPipePipe,
-		TablaResultadoDesplegableJEService,
-		TablaResultadoDesplegableAEService,
-		TablaResultadoMixDocDesigService,
-		SigaNoInterceptorServices,
-		RetencionesService,
-		MovimientosVariosService,
-
 		AuthGuard,
-		{
-			provide: APP_BASE_HREF,
-			useValue: environment.baseHref
-		},
-		{
-			provide: HTTP_INTERCEPTORS,
-			useClass: JwtInterceptor,
-			multi: true
-		},
+		cardService,
+		CommonsService,
+		ConfirmationService,
 		CookieService,
+		DatePipe,
+		HeaderGestionEntidadService,
+		ImagePipe,
+		MessageService,
+		MovimientosVariosService,
+		OldSigaServices,
+		PersistenceService,
+		RetencionesService,
+		SigaNoInterceptorServices,
+		SigaServices,
+		SigaStorageService,
+		TablaResultadoDesplegableAEService,
+		TablaResultadoDesplegableJEService,
+		TablaResultadoMixDocDesigService,
+		TrimPipePipe,
+		{ provide: APP_BASE_HREF, useValue: environment.baseHref},
+		{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
 		{ provide: LOCALE_ID, useValue: 'es-ES' }
 	],
-
-
 	bootstrap: [AppComponent]
-
 })
 export class AppModule { }

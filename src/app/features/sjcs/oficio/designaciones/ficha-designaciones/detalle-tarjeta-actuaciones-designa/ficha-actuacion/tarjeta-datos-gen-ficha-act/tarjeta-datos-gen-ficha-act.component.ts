@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { Message, SelectItem } from 'primeng/components/common/api';
+import { ConfirmationService, Message, SelectItem } from 'primeng/components/common/api';
 import { CommonsService } from '../../../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../../../_services/siga.service';
 import { Actuacion } from '../../detalle-tarjeta-actuaciones-designa.component';
@@ -168,17 +168,20 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   datosBuscar: any;
   parametroNIG: any;
   parametroNProc: any;
+  avisoMismoNProcedimiento: boolean;
 
   constructor(private commonsService: CommonsService,
     private sigaServices: SigaServices,
     private datePipe: DatePipe,
     private translateService: TranslateService,
     private localStorageService: SigaStorageService,
-    private router: Router) { }
+    private router: Router,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.getNigValidador();
     this.getNprocValidador();
+    this.recuperarParametros();
     this.currentRoute = this.router.url;
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDatosGenerales)
       .then(respuesta => {
@@ -775,6 +778,76 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       this.editarEvent();
     }
 
+  }
+
+  checkDesignaJuzgadoProcedimiento() {
+    let designaCheck = new DesignaItem();
+    this.progressSpinner = true;
+    designaCheck.idJuzgado = this.datos.selectores.find(el => el.id == 'juzgado').value;
+    designaCheck.numProcedimiento = this.datos.inputNumPro.value;
+
+    this.sigaServices.post("designaciones_existeDesignaJuzgadoProcedimiento", designaCheck).subscribe(
+      n => {
+        this.progressSpinner = false;
+        if (this.avisoMismoNProcedimiento) {
+          if (n.body.split(',').length > 1) {
+            let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado (" + n.body +  "), ¿Desea continuar?";
+            let icon = "fa fa-question-circle";
+            let keyConfirmation = "confirmGuardar";
+            this.confirmationService.confirm({
+              key: keyConfirmation,
+              message: mess,
+              icon: icon,
+              accept: () => {
+                this.guardarAction();
+              },
+              reject: () => {
+                this.progressSpinner = false;
+                this.msgs = [
+                  {
+                    severity: "info",
+                    summary: "Cancel",
+                    detail: this.translateService.instant(
+                      "general.message.accion.cancelada"
+                    )
+                  }
+                ];
+              }
+            });
+          } else {
+            this.progressSpinner = true;
+            this.guardarAction();
+          }
+        } else {
+          this.guardarAction();
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        let severity = "error";
+        let summary = "No se ha podido guardar la actuación";
+        let detail = "";
+        this.msgs.push({
+          severity,
+          summary,
+          detail
+        });
+      }, () => {
+        this.progressSpinner = false;
+      });
+  }
+
+  recuperarParametros() {
+    let parametro = {
+      valor: "AVISO_MISMO_NPROCEDIMIENTO_JUZGADO"
+    };
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let respuesta = JSON.parse(data.body).parametro
+          this.avisoMismoNProcedimiento = respuesta == 1 ? true : false;
+        });
   }
 
   guardarEvent() {

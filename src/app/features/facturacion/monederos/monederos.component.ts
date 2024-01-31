@@ -58,22 +58,15 @@ export class MonederoComponent implements OnInit {
         } else {
           this.listaMonederos = JSON.parse(listaMonederosDTO.body).monederoItems
           this.muestraTablaMonederos = true;
-
           if (this.listaMonederos != undefined) {
-            //Se buscan los monederos activos
-            this.listaMonederosActivos = this.listaMonederos.filter(
-              (dato) =>  dato.importeRestante != 0);
+            this.listaMonederosActivos = this.listaMonederos;
           }
         }
-
-         this.progressSpinner = false;
-
-  //     },
-  //     err => {
-  //       this.progressSpinner = false;
-  //     }, () => {
-  //       this.progressSpinner = false;
-  //     });
+      }, err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      }, () => {
+        this.progressSpinner = false;
       });
   }
 

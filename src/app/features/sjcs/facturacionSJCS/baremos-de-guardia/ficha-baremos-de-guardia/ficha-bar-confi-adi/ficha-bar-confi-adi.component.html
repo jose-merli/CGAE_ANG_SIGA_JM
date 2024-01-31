@@ -93,6 +93,23 @@
                                 <i>€</i>
                             </div>
                         </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>{{ 'menu.justiciaGratuita.soj' | translate }}</label>
+                            <div class="input-icon input-icon-right" style="max-width: 49%;">
+                                <input type="number" [disabled]="!permisoEscritura" 
+                                    (input)="maskTwoDecimals($event, filtrosAdi.importeSOJ)" [(ngModel)]="importeSOJ"
+                                    class="form-control importesBaremos" />
+                                <i>€</i>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>{{ 'menu.justiciaGratuita.ejg' | translate }}</label>
+                            <div class="input-icon input-icon-right" style="max-width: 49%;">
+                                <input type="number" [disabled]="!permisoEscritura" 
+                                    (input)="maskTwoDecimals($event, filtrosAdi.importeEJG)" [(ngModel)]="importeEJG" class="form-control importesBaremos" />
+                                <i>€</i>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -147,16 +164,6 @@
                                 binary="true" name="contAsAc" (click)="changeContAsAc()"
                                 label="{{'facturacionSJCS.baremos.contActuaciones' | translate}}"></p-radioButton>
                         </div>-->
-                        <div class="form-group col-lg-6 col-md-6">
-                            <label>{{ 'menu.justiciaGratuita.soj' | translate }}</label>
-                            <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeSOJ"
-                                class="form-control importesBaremos" />
-                        </div>
-                        <div class="form-group col-lg-6 col-md-6">
-                            <label>{{ 'menu.justiciaGratuita.ejg' | translate }}</label>
-                            <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeEJG"
-                                class="form-control importesBaremos" />
-                        </div>
                     </div>
                 </div>
 

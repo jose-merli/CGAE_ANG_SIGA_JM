@@ -895,55 +895,71 @@ mensajeCargaMasiva(registrosProcesados,totalRegistros){
   }
 
   disabledAnular(){
-    let invalido:number = 0;
+    let deshabilitar = true;
     this.selectedDatos.forEach(element => {
-      if(element.tipo == 'ABONO')  invalido = invalido + 1
-     if( ["7", "8"].includes(element.estadoUlt)) invalido = invalido + 1
+      if(element.tipo == 'FACTURA' && ["1", "2", "4", "5"].includes(element.idEstado)) {
+        deshabilitar = false;
+      }
     });
-    return  invalido > 0 ? true : false;
+    return deshabilitar;
   }
 
   disabledRenegociar(){
-    let invalido:number = 0;
+    let deshabilitar = true;
     this.selectedDatos.forEach(element => {
-     if( !["1","2", "4", "5"].includes(element.estadoUlt)) invalido = invalido + 1
+     if(["4", "5"].includes(element.idEstado)) {
+      deshabilitar = false;
+     }
     });
-    return  invalido > 0 ? true : false;
+    return deshabilitar;
   }
 
   disabledNuevoCobro(){
-    let invalido:number = 0;
+    let deshabilitar = true;
     this.selectedDatos.forEach(element => {
-    if(element.tipo == 'ABONO')  invalido = invalido + 1
-     if( !["2"].includes(element.estadoUlt)) invalido = invalido + 1
+    if(element.tipo == 'FACTURA' && ["2"].includes(element.idEstado)) {
+      deshabilitar = false;
+    }
     });
-    return  invalido > 0 ? true : false;
+    return deshabilitar;
     // ultimaAccion.impTotalPorPagar == 0;
   }
 
   disabledNuevoAbono(): boolean {
-    let invalido:number = 0;
+    let deshabilitar = true;
     this.selectedDatos.forEach(element => {
-    if(element.tipo == 'ABONO')  invalido = invalido + 1
-     if( !["6","7"].includes(element.estadoUlt)) invalido = invalido + 1
+    if(element.tipo == 'ABONO' && ["6"].includes(element.idEstado)) {
+      deshabilitar = false;
+    }
     });
-    return  invalido > 0 ? true : false;
+    return deshabilitar;
   }
 
   disabledDevolver(): boolean {
-    let invalido:number = 0;
+    let deshabilitar = true;
     this.selectedDatos.forEach(element => {
-     if( !["5"].includes(element.estadoUlt)) invalido = invalido + 1
+     if(element.tipo == 'FACTURA' && ["1"].includes(element.idEstado)) {
+      deshabilitar = false;
+     } 
     });
-    return  invalido > 0 ? true : false;
+    return deshabilitar;
   }
 
   disabledEliminar(): boolean {
-    let invalido:number = 0;
+    let deshabilitar = true;
     this.selectedDatos.forEach(element => {
-     if( !["4"].includes(element.estadoUlt)) invalido = invalido + 1
+     if(element.tipo == 'FACTURA' && ["1"].includes(element.idEstado)) {
+      deshabilitar = false;
+     }
     });
-    return  invalido > 0 ? true : false;
+    return deshabilitar;
+  }
 
+  disabledGenerarInforme(): boolean {
+    return this.selectedDatos.length < 1;
+  }
+
+  disabledComunicar(): boolean {
+    return this.selectedDatos.length < 1;
   }
 }

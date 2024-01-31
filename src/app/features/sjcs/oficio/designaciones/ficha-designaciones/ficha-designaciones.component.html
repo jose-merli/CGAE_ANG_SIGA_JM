@@ -117,7 +117,7 @@
                                         </app-detalle-tarjeta-actuaciones-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Relaciones'">
-                                        <app-detalle-tarjeta-relaciones-designa [relaciones]="relaciones"
+                                        <app-detalle-tarjeta-relaciones-designa [relaciones]="relaciones" [nombreInteresado]="nombreInteresado"
                                             (searchRelaciones)="searchRelaciones()" (relacion)="relacion()">
                                         </app-detalle-tarjeta-relaciones-designa>
                                     </div>

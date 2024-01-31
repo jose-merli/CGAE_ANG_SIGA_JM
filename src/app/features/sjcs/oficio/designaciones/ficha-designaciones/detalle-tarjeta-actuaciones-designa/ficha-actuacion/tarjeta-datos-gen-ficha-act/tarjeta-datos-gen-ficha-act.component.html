@@ -84,7 +84,15 @@
       (click)="navigateComunicar()" [disabled]="isAnulada || modoLectura || modoLectura2"></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer" (click)="restablecer()"
       [disabled]="isAnulada || modoLectura || modoLectura2"></button>
-    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="guardarAction()"
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" (click)="checkDesignaJuzgadoProcedimiento()"
       [disabled]="isAnulada || modoLectura || modoLectura2"></button>
   </div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardar" width="425"
+  #confirmGuardar>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardar.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardar.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
