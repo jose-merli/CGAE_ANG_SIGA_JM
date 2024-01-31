@@ -406,6 +406,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           }
           else this.selectores[1].value = "";
         }
+        if(this.datosAsistencia){
+          this.getTipoDesignacionAsi();
+        }
         this.progressSpinner = false;
       },
       err => {
@@ -1340,6 +1343,26 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
 	 onChangeCheckSalto(event){
     this.salto = event
+  }
+
+  getTipoDesignacionAsi(){
+    let parametro = {
+      valor: "TIPO_DESIGNACION_DESDE_ASISTENCIA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let tipoDesigna = JSON.parse(data.body).parametro;
+          if(this.selectores[1].opciones.some(n => n.value === tipoDesigna)){
+            this.selectores[1].value = tipoDesigna;
+          }
+        },
+        err => {
+          //console.log(err);
+        }
+      );
   }
 }
 
