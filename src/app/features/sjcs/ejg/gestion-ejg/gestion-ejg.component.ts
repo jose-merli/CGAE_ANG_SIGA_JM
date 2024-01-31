@@ -145,8 +145,6 @@ export class GestionEjgComponent implements OnInit {
         this.updateTarjResumen();
       }
 
-      sessionStorage.removeItem("EJGItemDesigna");
-
     } else {
       if (sessionStorage.getItem("Nuevo")) {
         this.persistenceService.clearDatosEJG();
@@ -240,9 +238,15 @@ export class GestionEjgComponent implements OnInit {
     //sessionStorage.removeItem("EJGItem");
     //this.updateTarjResumen();
     this.datosEntradaTarjGenerica = this.body;
-    this.obtenerPermisos();
-    
+    if (sessionStorage.getItem("Nuevo") || sessionStorage.getItem("EJGItemDesigna") == "nuevo"){
+      this.updateTarjResumen();
+    }else{
+      this.obtenerPermisos();
+    }
 
+    if (sessionStorage.getItem("EJGItemDesigna") != null && sessionStorage.getItem("EJGItemDesigna") != undefined){
+      sessionStorage.removeItem("EJGItemDesigna");
+    }
 
     //this.commonsService.scrollTop();
     this.goTop();
@@ -256,8 +260,10 @@ export class GestionEjgComponent implements OnInit {
   
   updateTarjResumen() {
     if (!this.nuevo && this.body != null && this.body != undefined) {
-      if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
-        this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+      if(this.body.annio != null && this.body.annio!= undefined && this.body.numEjg != null && this.body.numEjg != undefined){
+        if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
+          this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+        }
       }
       if(this.body.fechaApertura != null && this.body.fechaApertura != undefined){
         let date = new Date(this.body.fechaApertura);
@@ -265,6 +271,15 @@ export class GestionEjgComponent implements OnInit {
         let month = (date.getMonth() + 1).toString().padStart(2, '0');
         let year = date.getFullYear();
         this.fechaAperturaFormat = `${day}/${month}/${year}`;
+      }
+
+      if((this.body.nombreApeSolicitante == null || this.body.nombreApeSolicitante == undefined) && sessionStorage.getItem("nombreInteresado") !=null){
+        this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
+      }
+
+      if((this.body.apellidosYNombre == null || this.body.apellidosYNombre == undefined) && sessionStorage.getItem("designaItemLink") !=null){
+        let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+        this.body.apellidosYNombre = designa.nombreColegiado;
       }
       
         this.datos = [
