@@ -27,6 +27,8 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
   reactivable: boolean = false;
   validada: boolean = false;
   desactivar: boolean = false;
+  showConfirmacionValidar: boolean = false;
+  showConfirmacionUpdate: boolean = false;
 
   constructor(private datepipe: DatePipe,
     private sigaServices: SigaServices,
@@ -87,8 +89,21 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
     this.checkEstados();
   }
 
-  save() {
+  comfirmarUpdate(){
+    if(this.isFechaJustificacionMenor()){
+      this.showConfirmacionUpdate = true;
+    }else{
+      this.save();
+    }
+  }
 
+  reject(){
+    this.showConfirmacionValidar = false;
+    this.showConfirmacionUpdate = false;
+  }
+
+  save() {
+    this.showConfirmacionUpdate = false;
     this.progressSpinner = true;
     this.sigaServices
       .postPaginado("actuaciones_saveTarjetaJustificacion", "?anioNumero=" + this.idAsistencia + "&idActuacion=" + this.actuacion.idActuacion, this.datosJustificacion)
@@ -116,12 +131,26 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
     this.checkEstados();
   }
 
+  comfirmarValidar(){
+    if(this.isFechaJustificacionMenor()){
+      this.showConfirmacionValidar = true;
+    }else{
+      this.validar();
+    }
+  }
+
   validar() {
+    this.showConfirmacionValidar = false;
     this.datosJustificacion.validada = '1';
     this.updateEstadoActuacion();
   }
 
+  isFechaJustificacionMenor(): boolean {
+    return this.datosJustificacion.fechaJustificacion != "" && this.actuacion.fechaActuacion != null && this.datosJustificacion.fechaJustificacion < this.actuacion.fechaActuacion;
+  }
+
   desvalidar() {
+    this.showConfirmacionValidar = false;
     if (this.actuacion.facturada) {
       this.showMsg('error', 'No se puede desvalidar una actuación ya facturada', '');
     } else {
@@ -132,6 +161,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
   }
 
   anular() {
+    this.showConfirmacionValidar = false;
     this.datosJustificacion.anulada = '1';
     this.datosJustificacion.validada = '0';
     this.updateEstadoActuacion();
