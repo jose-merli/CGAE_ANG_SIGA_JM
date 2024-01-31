@@ -84,7 +84,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   constructor(private sigaServices: SigaServices, private datepipe: DatePipe, private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService) { }
 
   ngOnInit() {
-    this.campos.idModulo = this.campos.idProcedimiento;
     this.campos.idProcedimiento = this.campos.idPretension;
     this.getNigValidador();
     this.getNprocValidador();
@@ -1119,8 +1118,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       n => {
         this.progressSpinner = false;
         if(this.avisoMismoNProcedimiento){
-          if (JSON.parse(n.body).existeDesignaJuzgadoProcedimiento > 1) {
-            let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado.¿Desea continuar?";
+          if (n.body.split(',').length > 1) {
+            let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado (" + n.body +  "), ¿Desea continuar?";
             let icon = "fa fa-question-circle";
             let keyConfirmation = "confirmGuardar";
             this.confirmationService.confirm({

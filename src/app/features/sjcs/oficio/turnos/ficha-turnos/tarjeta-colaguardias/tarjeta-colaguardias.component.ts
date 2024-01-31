@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges, AfterViewChecked } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { DatePipe, Location, UpperCasePipe } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -28,7 +28,7 @@ import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
   templateUrl: "./tarjeta-colaguardias.component.html",
   styleUrls: ["./tarjeta-colaguardias.component.scss"]
 })
-export class TarjetaColaGuardias implements OnInit {
+export class TarjetaColaGuardias implements OnInit, AfterViewChecked {
 
 
   openFicha: boolean = false;
@@ -57,8 +57,8 @@ export class TarjetaColaGuardias implements OnInit {
     "fromCombo": false,
     "minimoLetradosCola": 0
   };
-  rowGroups: Row[];
-  rowGroupsAux: Row[];
+  rowGroups: Row[] = [];
+  rowGroupsAux: Row[] = [];
   processedData = [];
   totalRegistros = 0;
   manual: Boolean;
@@ -110,6 +110,7 @@ export class TarjetaColaGuardias implements OnInit {
   @Input() permisoEscritura: boolean = false;
   updateCombo: boolean = false;
   updateTurnosItem: boolean = false;
+  private gotConf: boolean = false;
   // @Input() pesosSeleccionadosTarjeta;
   //Resultados de la busqueda
   // @Input() modoEdicion: boolean = false;
@@ -118,7 +119,7 @@ export class TarjetaColaGuardias implements OnInit {
   @ViewChild("tableComp") tableComp;
   @ViewChild("tableSaltos") tableSaltos;
   @ViewChild("multiSelect") multiSelect: MultiSelect;
-  @ViewChild(TablaResultadoOrderComponent) tablaOrder;
+  @ViewChild("tablaOrder") tablaOrder: TablaResultadoOrderComponent;
   fichasPosibles = [
     {
       key: "generales",
@@ -141,8 +142,20 @@ export class TarjetaColaGuardias implements OnInit {
     private router: Router, private activatedRoute: ActivatedRoute, private cdRef: ChangeDetectorRef) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.getCols();
+    if (changes && changes.idTurno && !changes.idTurno.previousValue && changes.idTurno.currentValue) {
+      this.initTables();
+    }
+  }
 
+  ngAfterViewChecked(): void {
+    if (this.tablaOrder && !this.gotConf) {
+      this.tablaOrder.getConfColaGuardias();
+      this.gotConf = true;
+      this.cargarTabla(this.turnosItem.idcomboguardias);
+    }
+  }
+
+  private initTables(): void {
     this.sigaServices.updateCombo$.subscribe(
       fecha => {
         this.updateCombo = fecha;
@@ -192,10 +205,7 @@ export class TarjetaColaGuardias implements OnInit {
                 }
                 if (this.guardias != undefined && this.guardias.length > 0) {
                   this.turnosItem.idcomboguardias = this.guardias[0].value;
-
-                  this.cargarTabla(this.turnosItem.idcomboguardias);
                   this.getCols();
-                  //this.inicio();
                 }
               } else {
                 this.existenGuardias = false;
@@ -221,7 +231,7 @@ export class TarjetaColaGuardias implements OnInit {
         this.abreCierraFicha('colaGuardias')
       }
     }
-    
+
   }
 
   ngOnInit() {
@@ -427,9 +437,8 @@ export class TarjetaColaGuardias implements OnInit {
       }, 500);
     });
 
-    this.tablaOrder.getConfColaGuardias();
   }
-
+  
   transformaFecha(fecha) {
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);
@@ -449,6 +458,7 @@ export class TarjetaColaGuardias implements OnInit {
   }
   fillFechaDesdeCalendar(event) {
     this.turnosItem.fechaActual = this.transformaFecha(event);
+    this.body.letradosIns = event;
     this.getColaGuardia();
   }
   setItalic(dato) {
@@ -817,7 +827,7 @@ export class TarjetaColaGuardias implements OnInit {
   }
 
   disabledBotones() {
-    if (!this.botActivos || !this.tablaOrder || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tablaOrder.selectedDatos || this.tablaOrder.selectedDatos.length == 0))
+    if (!this.botActivos || !this.tablaOrder || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tablaOrder.selectedArray || this.tablaOrder.selectedArray.length == 0))
       return false;
     return true;
   }
@@ -843,7 +853,6 @@ export class TarjetaColaGuardias implements OnInit {
         console.log(indexA);
       } 
     });
-    
     this.datos.splice(indexA+1, 0, datCopy);
     this.transformData();
     }
@@ -1267,7 +1276,7 @@ export class TarjetaColaGuardias implements OnInit {
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "40%"
         },
         {
@@ -1308,7 +1317,7 @@ export class TarjetaColaGuardias implements OnInit {
         },
         {
           id: "apellidosnombre",
-          name: "administracion.parametrosGenerales.literal.nombre.apellidos",
+          name: "administracion.parametrosGenerales.literal.nombre.apellidos.coma",
           size: "35%"
         },
         {
@@ -1367,6 +1376,8 @@ export class TarjetaColaGuardias implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+    this.tableComp.reset();
+    this.tableSaltos.reset();
   }
 
 
@@ -1584,7 +1595,7 @@ export class TarjetaColaGuardias implements OnInit {
         this.selectAll = false;
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        
+
         this.progressSpinner = false;
         this.getColaGuardia();
       },

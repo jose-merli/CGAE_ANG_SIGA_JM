@@ -5,9 +5,6 @@ import { FichaListaGuardiasComponent } from "./features/sjcs/guardia/definir-lis
 import { CertificacionFacComponent } from "./features/sjcs/facturacionSJCS/certificacion-fac/certificacion-fac.component";
 import { Routes, RouterModule } from "@angular/router";
 
-
-
-
 import { LoginDevelopComponent } from "./commons/login-develop/login-develop.component";
 import { LoginMultipleComponent } from "./commons/login-multiple/login-multiple.component";
 import { LoginComponent } from "./commons/login/login.component";
@@ -16,8 +13,6 @@ import { HomeComponent } from "./features/home/home.component";
 import { LogoutComponent } from "./commons/logout/logout.component";
 
 // Censo
-
-
 import { BusquedaNoColegiadosComponent } from './features/censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { CertificadosAcaComponent } from './features/censo/certificados-aca/certificados-aca.component';
 import { ComisionesCargosComponent } from './features/censo/comisiones-cargos/comisiones-cargos.component';
@@ -38,7 +33,6 @@ import { MantenimientoDuplicadosComponent } from './features/censo/mantenimiento
 import { MediadoresComponent } from './features/censo/mediadores/mediadores.component';
 import { CargasPeriodicasComponent } from './features/censo/cargas-periodicas/cargas-periodicas.component';
 import { ConfigurarPerfilComponent } from './features/censo/configurar-perfil/configurar-perfil.component';
-
 import { TipoCurricularComponent } from './features/censo/gestion-subtiposCV/tipo-curricular.component';
 import { BusquedaGeneralComponent } from './features/censo/busqueda-general/busqueda-general.component';
 import { DetalleIntegranteComponent } from './features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component';

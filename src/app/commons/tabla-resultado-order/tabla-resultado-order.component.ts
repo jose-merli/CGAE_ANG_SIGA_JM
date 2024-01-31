@@ -72,6 +72,7 @@ export class TablaResultadoOrderComponent implements OnInit {
     'idGuardia': '',
     'filtrosBusqueda' : ''
   };
+  @Input() mitadTabla: boolean = false;
   anySelectedBol = false;
   from = 0;
   to = 10;

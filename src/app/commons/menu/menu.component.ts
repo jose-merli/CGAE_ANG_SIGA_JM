@@ -11,6 +11,7 @@ import { TranslateService } from "../translate/translation.service";
   encapsulation: ViewEncapsulation.None
 })
 export class MenuComponent implements OnInit {
+  
   items: MenuItem[];
   closeMenu: boolean = false;
   bloquedMenu: boolean = false;

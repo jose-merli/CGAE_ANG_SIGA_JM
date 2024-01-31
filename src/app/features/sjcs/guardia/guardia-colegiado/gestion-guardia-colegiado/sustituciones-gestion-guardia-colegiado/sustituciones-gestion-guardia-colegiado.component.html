@@ -2,16 +2,38 @@
 <div class="busqueda-container">
   <div class="card">
     <div class="card-header header-ficha">
-      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+          <div class="img-colegiado">
+            <i class="fas fa-address-book icon-ficha"></i>
+          </div>
         </div>
-        <label class="title-ficha pointer">{{'guardiacolegiado.ficha.tarjeta.anulacionysustitucion' | translate}}</label>
+        <div class="col-lg-11 col-md-10 cabeza">
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha">{{'guardiacolegiado.ficha.tarjeta.anulacionysustitucion' | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between sub">
+            <label>{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}:
+              <span>{{comensustitucion}}</span>
+            </label>
+            <label>Motivo de Anulacion:
+              <span> {{body.observacionesAnulacion}}</span>
+            </label>
+ 
+            <i (click)="abreCierraFicha('generales')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+        <div class="img-colegiado">
+          <i class="fas fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'guardiacolegiado.ficha.tarjeta.anulacionysustitucion' | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
-    <div class="card-body card-body-ficha">
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
 
         <div class="bloque col-lg-6 col-md-6">
@@ -72,7 +94,7 @@
       </div>
     </div>
 
-    <div class="card-footer" >
+    <div *ngIf="openFicha" class="card-footer" >
       <div class="text-right main-button ">
         <button *ngIf="esLetrado && esColegiado" [disabled]="modoLectura || esLetrado || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
           label="{{ 'general.boton.solicitarSustitucion' | translate}}"></button>
@@ -85,6 +107,8 @@
     </div>
   </div>
 </div>
+
+
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>

@@ -15,6 +15,8 @@ import { DefensaJuridicaComponent } from './defensa-juridica/defensa-juridica.co
 import { ProcuradorPreDesignacionComponent } from './procurador-pre-designacion/procurador-pre-designacion.component';
 import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
 import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
+import { UnidadFamiliarComponent } from './unidad-familiar/unidad-familiar.component';
+import { RelacionesComponent } from './relaciones/relaciones.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -60,7 +62,7 @@ export class GestionEjgComponent implements OnInit {
   permisoListasIntercambiosPericles;
 
   iconoTarjetaResumen = "clipboard";
-
+  fechaAperturaFormat;
   manuallyOpened: Boolean;
   tarjetaDatosGenerales: string;
   tarjetaServiciosTramitacion: string;
@@ -99,6 +101,8 @@ export class GestionEjgComponent implements OnInit {
 
   comunicaciones;
 
+  @ViewChild(UnidadFamiliarComponent) unidadFamiliar; 
+  @ViewChild(RelacionesComponent) relaciones;
   @ViewChild(ServiciosTramitacionComponent) tramitacion;
   @ViewChild(EstadosComponent) tarjetaEstadosEJG: EstadosComponent;
   @ViewChild(ContrariosPreDesignacionComponent) contrariosPreDesigna;
@@ -118,6 +122,7 @@ export class GestionEjgComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   async ngOnInit() {
+    sessionStorage.removeItem("isLetrado");
     //this.progressSpinner = true;
 
     //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del EJG que se quiere mostrar
@@ -171,7 +176,7 @@ export class GestionEjgComponent implements OnInit {
         this.persistenceService.setDatosEJG(this.body);
         this.updateTarjResumen();
       }
-
+      
       if (this.body != undefined && this.body != null) {
         this.modoEdicion = true;
         this.updateTarjResumen();
@@ -183,6 +188,35 @@ export class GestionEjgComponent implements OnInit {
           this.body = new EJGItem();
           this.modoEdicion = false;
           this.openTarjetaDatosGenerales = true;
+        }else if(sessionStorage.getItem("nuevoNColegiado")){
+          if(sessionStorage.getItem("EJGItem")){
+            this.body = new EJGItem();
+            this.nuevo = true;
+            this.modoEdicion = false;
+            this.openTarjetaDatosGenerales = true;
+            this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
+                //Proveniente de la busqueda de colegiado sin art 27
+            if (sessionStorage.getItem("buscadorColegiados")) {
+
+              let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+              sessionStorage.removeItem('buscadorColegiados');
+
+              if (busquedaColegiado.nombreSolo != undefined) this.body.apellidosYNombre = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombreSolo;
+              else this.body.apellidosYNombre = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
+
+              if (busquedaColegiado.nColegiado != undefined){
+                this.body.numColegiado = busquedaColegiado.nColegiado;
+              }
+
+              //Asignacion de idPersona según el origen de la busqueda.
+              this.body.idPersona = busquedaColegiado.idPersona;
+              if (this.body.idPersona == undefined) this.body.idPersona = busquedaColegiado.idpersona;
+            }
+            this.persistenceService.setDatosEJG(this.body);
+            sessionStorage.removeItem("EJGItem");
+          }
+          
         }
         //vuelve de asociar una unidad familiar
         else {
@@ -192,6 +226,14 @@ export class GestionEjgComponent implements OnInit {
           this.updateTarjResumen();
           this.modoEdicion = true;
         }
+      }
+    }
+
+    if((this.body.ultimoEstado == true && this.persistenceService.getDatosEJG()) || (sessionStorage.getItem("justiciable") && this.modoEdicion)){
+      if(sessionStorage.getItem("nombreInteresado") && sessionStorage.getItem("nombreInteresado") !=  "null"){
+        this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
+        sessionStorage.removeItem("nombreInteresado");
+        this.updateTarjResumen()
       }
     }
     this.progressSpinner = false;
@@ -213,19 +255,52 @@ export class GestionEjgComponent implements OnInit {
   }
   
   updateTarjResumen() {
-      if (this.nuevo) {
-        if (this.body.numAnnioProcedimiento == null || this.body.numAnnioProcedimiento == undefined) {
-          this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
-        }
-       
+    if (!this.nuevo && this.body != null && this.body != undefined) {
+      if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
+        this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+      }
+      if(this.body.fechaApertura != null && this.body.fechaApertura != undefined){
+        let date = new Date(this.body.fechaApertura);
+        let day = date.getDate().toString().padStart(2, '0');
+        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+        let year = date.getFullYear();
+        this.fechaAperturaFormat = `${day}/${month}/${year}`;
+      }
+      
         this.datos = [
-          { label: "Año/Numero EJG",  value: this.body.numAnnioProcedimiento },
-          { label: "Solicitante",     value: this.body.nombreApeSolicitante },
-          { label: "Estado EJG",      value: this.body.estadoEJG },
-          { label: "Designado",       value: this.body.apellidosYNombre },
-          { label: "Dictamen",        value: this.body.dictamenSing },
-          { label: "CAJG",            value: this.body.resolucion },
-          { label: "Impugnación",     value: this.body.impugnacionDesc },
+          {
+            label: "EJG",
+            value: this.body.numAnnioProcedimiento
+          },
+          {
+            label: "F.apertura",
+            value: this.fechaAperturaFormat
+          },
+          {
+            label: "Solicitante",
+            value: this.body.nombreApeSolicitante
+          },
+
+          {
+            label: "Estado EJG",
+            value: this.body.estadoEJG
+          },
+          {
+            label: "Designado",
+            value: this.body.apellidosYNombre
+          },
+          {
+            label: "Dictamen",
+            value: this.body.dictamenSing
+          },
+          {
+            label: "CAJG",
+            value: this.body.resolucion
+          },
+          {
+            label: "Impugnación",
+            value: this.body.impugnacionDesc
+          },
         ];
       }
      
@@ -297,7 +372,14 @@ export class GestionEjgComponent implements OnInit {
   }
 
   guardadoSend(event) {
+    this.persistenceService.setDatosEJG(event);
+    if (sessionStorage.getItem("EJGItem")) {
+      sessionStorage.removeItem("EJGItem");
+    }
+    // this.router.navigate(['/gestionEjg']);
     this.ngOnInit();
+    this.unidadFamiliar.ngOnInit();
+    this.relaciones.ngOnInit();
   }
 
   newEstado() {
@@ -545,16 +627,6 @@ export class GestionEjgComponent implements OnInit {
           label: "general.message.datos.generales",
           value: document.getElementById("datosGenerales"),
           nombre: "datosGenerales",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      if (this.permisoEscrituraServiciosTramitacion != undefined) {
-        pruebaTarjeta = {
-          label: "justiciaGratuita.ejg.datosGenerales.ServiciosTramit",
-          value: document.getElementById("serviciosTramitacion"),
-          nombre: "serviciosTramitacion",
         };
 
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
@@ -877,5 +949,7 @@ export class GestionEjgComponent implements OnInit {
   actualizarEstados($event){
     this.tarjetaEstadosEJG.ngOnInit();
   }
+
+
 
 }

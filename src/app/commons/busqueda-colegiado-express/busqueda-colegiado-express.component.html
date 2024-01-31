@@ -8,16 +8,16 @@
 
 <form [formGroup]="colegiadoForm" (ngSubmit)="isBuscar(colegiadoForm.value)">
     <div class="form-row margin-form-row">
-        <div class="form-group-interlineado col-lg-3 col-md-3">
+        <div class="form-group-interlineado col-lg-3 col-md-3" [ngClass]="{'col-lg-6 col-md-6': datosGeneralesEjg}">
             <label>{{'justiciaGratuita.general.numColegiado' | translate}}</label>
             <input type="text" [ngClass]="{'camposObligatorios': styleObligatory}" class="form-control" pInputText formControlName="numColegiado" [(ngModel)]="numColegiado" [readonly]="disabled"
                 (change)="isBuscar(colegiadoForm.value)">
         </div>
-        <div class="form-group-interlineado col-lg-6 col-md-6">
+        <div class="form-group-interlineado col-lg-6 col-md-6" [ngClass]="{'col-lg-12 col-md-12 order-last': datosGeneralesEjg}">
             <label>{{'justiciaGratuita.general.apeNom' | translate}}</label>
             <input type="text" class="form-control" pInputText formControlName="nombreAp" [(ngModel)]="nombreAp" [readonly]="disabled">
         </div>
-        <div class="form-group-interlineado text-left main-button pt-3 col-lg-3 col-md-3">
+        <div class="form-group-interlineado text-left main-button pt-3 col-lg-3 col-md-3" [ngClass]="{'col-lg-6 col-md-6': datosGeneralesEjg}">
             <button [disabled]="!colegiadoForm.valid || disabled" pButton type="button"  icon="fa fa-eraser"
                  iconPos="left" (click)="clearForm()"></button>
             <button type="submit" [disabled]="!colegiadoForm.valid || disabled" pButton icon="fa fa-search"

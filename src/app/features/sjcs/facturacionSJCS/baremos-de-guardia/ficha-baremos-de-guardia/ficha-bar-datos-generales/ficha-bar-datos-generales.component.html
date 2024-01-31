@@ -18,11 +18,15 @@
                             translate }}
                         </label>
                     </div>
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between"  (click)="onHideTarjeta()">
                       <!--   <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
                             <span>A</span>
                         </label> -->
-                        <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right ml-auto" (click)="onHideTarjeta()"></i>
+                        <label *ngIf="datos != undefined">{{ "menu.facturacionSJCS.baremosDeGuardia.primeraGuardia" | translate }}: 
+                            <span *ngIf="datos != undefined">{{datos[0].nomturno}}</span></label>
+                        <label *ngIf="datos != undefined">{{ "menu.facturacionSJCS.baremosDeGuardia.totalGuardias" | translate }}: 
+                            <span *ngIf="datos != undefined">{{datos.length}}</span></label>
+                        <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
                     </div>
                 </div>
 

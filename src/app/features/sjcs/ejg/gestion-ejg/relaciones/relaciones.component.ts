@@ -638,6 +638,7 @@ export class RelacionesComponent implements OnInit {
 
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("nombreInteresado", this.bodyInicial.nombreApeSolicitante);
     sessionStorage.setItem("nuevaDesigna", "true");
     if (this.art27) sessionStorage.setItem("Art27", "true");
 

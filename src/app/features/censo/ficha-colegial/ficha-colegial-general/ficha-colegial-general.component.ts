@@ -117,6 +117,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   rowsPerPage: any = [];
   tipoCuenta: any[] = [];
   icon: string;
+  vieneDeFactura:any;
   selectedTipo: any[] = [];
   uploadedFiles: any[] = [];
   numSelected: number = 0;
@@ -435,6 +436,13 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.disabledAction = false;
     }
 
+    if(sessionStorage.getItem("vieneDeFactura")){
+      sessionStorage.removeItem("vieneDeFactura")
+      this.vieneDeFactura = true;
+    }else{
+      this.vieneDeFactura = false;
+    }
+
     if (sessionStorage.getItem("solimodifMensaje")) {
       this.solicitudModificacionMens = sessionStorage.getItem("solimodifMensaje");
       sessionStorage.removeItem("solimodifMensaje");
@@ -502,7 +510,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       if (sessionStorage.getItem("esColegiado")) {
         this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
       } else {
-        this.esColegiado = true;
+        this.esColegiado = false;
       }
 
       if (this.esColegiado) {
@@ -654,6 +662,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
          sessionStorage.removeItem("fromTarjetaLetradoInscripciones");
          this.router.navigate(["/fichaInscripcionesGuardia"]);
 
+    }else if(this.vieneDeFactura){
+      this.router.navigate(["/facturas"]);
     }else{
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("situacionGlobal");

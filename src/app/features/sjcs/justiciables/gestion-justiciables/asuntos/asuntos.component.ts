@@ -123,6 +123,8 @@ export class AsuntosComponent implements OnInit, OnChanges {
     this.body = this.persistenceService.getDatos();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
+    let nombreApellidos =  this.body.apellidos + " " + this.body.nombre
+    sessionStorage.setItem("nombreInteresado", nombreApellidos);
     sessionStorage.setItem("justiciable", JSON.stringify(this.bodyInicial));
     sessionStorage.setItem("deJusticiableANuevaDesigna", 'true');
     sessionStorage.setItem("nuevaDesigna", "true");
@@ -168,6 +170,8 @@ export class AsuntosComponent implements OnInit, OnChanges {
     }
     this.persistenceService.clearDatosEJG();
     sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+    let nombreApellidos =  this.body.apellidos + " " + this.body.nombre
+    sessionStorage.setItem("nombreInteresado", nombreApellidos);
     this.persistenceService.clearDatos();
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);
@@ -206,6 +210,8 @@ export class AsuntosComponent implements OnInit, OnChanges {
   // Crear Asistencia
   crearAsistencia() {
     sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+    let nombreApellidos =  this.body.apellidos + " " + this.body.nombre
+    sessionStorage.setItem("nombreInteresado", nombreApellidos);
     sessionStorage.setItem("nuevaAsistencia", "true");
     this.router.navigate(["/fichaAsistencia"]);
   }

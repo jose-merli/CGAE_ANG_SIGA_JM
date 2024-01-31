@@ -12,11 +12,15 @@
         <div class="d-flex justify-content-end mb-1" >
           <label class="mr-auto title-ficha pointer">{{'guardiacolegiado.ficha.tarjeta.diasDeGuardia' | translate}}</label>
         </div>
-        <div class="d-flex justify-content-between default" >
-          <div *ngFor="let item of fechas">
-
+        <div class="d-flex justify-content-between default">
+          <label>{{'guardiacolegiado.ficha.tarjeta.dias' | translate}}:
+          </label>
+          <div *ngFor="let fecha of fechas">
+            <label class="fecha-label">
+              <span style="white-space: nowrap;">{{fecha.label}}</span>
+            </label>
           </div>
-
+          
           <!--
           <label >{{'dato.jgr.guardia.guardias.guardia' | translate}}: 
             <span>{{turnosItem.nombre}}</span>
@@ -87,17 +91,10 @@
             <div *ngIf="!modificar" class="form-group-interlineado col-lg-6 col-md-6">
                 <label>Fechas Disponibles</label>
                 <p-dropdown class="select-form" [(ngModel)]='body.fechaIntro'
-                    placeholder="{{'general.boton.seleccionar' | translate}}" [options]="fechasDisponibles"
+                    placeholder="{{'general.boton.seleccionar' | translate}}" [options]="fechasDisponibles" (onChange)="onChangeRango($event)"
                     [filter]="false" filterBy="label,labelSinTilde" ></p-dropdown>
             
            </div>
-
-
-            <div class="form-group-interlineado col-lg-6 col-md-6">
-              <label>Motivo de Anulacion</label>
-              <textarea pInputTextarea [(ngModel)]="body.observacionesAnulacion"
-                class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900"></textarea>
-            </div>
           </div>
         </div>
 

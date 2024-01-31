@@ -18,6 +18,7 @@ export class DocumentosComponent implements OnInit {
   first: number = 0;
   selectedItem: number;
   selectAll: boolean = false;
+  habilitado: boolean = false;
 
   numSelected: number = 0;
   rowsPerPage: any = [];
@@ -87,7 +88,13 @@ export class DocumentosComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("comunicacionesSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
+      let body2 = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
       this.getDocumentos();
+      if(body2.estadoEnvio == "ARCHIVADO" || body2.estadoEnvio == "PROCESADO" || body2.estadoEnvio == "PROCESADO CON ERRORES"){
+        this.habilitado = false;
+      }else{
+        this.habilitado = true;
+      }
     }
   }
 
@@ -278,7 +285,7 @@ export class DocumentosComponent implements OnInit {
     this.progressSpinner = true;
 
     this.sigaServices
-      .postSendContent("enviosMasivos_subirDocumento", this.file)
+    this.sigaServices.postSendContentAndParameter("enviosMasivos_subirDocumento", "?idEnvio=" + this.body.idEnvio, this.file)
       .subscribe(
         data => {
           this.body.pathDocumento = data.rutaDocumento;

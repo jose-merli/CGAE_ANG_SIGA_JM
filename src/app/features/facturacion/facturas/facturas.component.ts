@@ -63,10 +63,11 @@ export class FacturasComponent implements OnInit {
 			this.tabla.table.sortField = '';
 			this.tabla.table.reset();
 			this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+			this.tabla.selectedDatos = [];
 			}
 
 			//comprobamos el mensaje de info de resultados
-			if (error!=undefined && error!=null) {
+			if (error != null && error.message != null) {
 			this.showMessage("info",this.translateService.instant("general.message.informacion"), this.translateService.instant(error.message));
 			}
 

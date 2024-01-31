@@ -342,8 +342,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     else if((this.ficha.fechaAceptada == null && this.ficha.fechaSolicitadaAnulacion == null) || this.ficha.fechaAnulada != null || (this.ficha.fechaSolicitadaAnulacion != null && this.esColegiado)){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
 		} 
-    //Se comprueba que todos los productos seleccionados tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
-    else if(this.esColegiado && this.ficha.productos != null && (this.ficha.productos.find(el => el.solicitarBaja == "0") != undefined)){
+    //Se comprueba que todos los productos seleccionados tienen la propiedad ‘Solicitar baja por internet’
+    else if(/*this.esColegiado &&*/ this.ficha.productos != null && (this.ficha.productos.find(el => el.solicitarBaja == "0") != undefined)){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitarBajaProd"), this.translateService.instant("facturacion.productos.solicitarBajaProdDesc"));
     }
     //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado

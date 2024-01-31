@@ -278,7 +278,9 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   crearEJG() {
 
     sessionStorage.setItem("EJGItemDesigna", "nuevo");
-
+    if(this.body.nombreInteresado){
+      sessionStorage.setItem("nombreInteresado", this.body.nombreInteresado.valueOf());
+    }
     sessionStorage.setItem("Designacion", JSON.stringify(this.body));
 
     this.router.navigate(["/gestionEjg"]);
@@ -307,7 +309,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         ejgItem.numero = dato.codigo;
         ejgItem.idInstitucion = dato.idinstitucion;
         ejgItem.tipoEJG = dato.idtipo;
-
+        sessionStorage.setItem("Designacion", JSON.stringify(this.body));
         let result;
         // al no poder obtener todos los datos del EJG necesarios para obtener su informacion
         //se hace una llamada a al base de datos pasando las claves primarias y obteniendo los datos necesarios
