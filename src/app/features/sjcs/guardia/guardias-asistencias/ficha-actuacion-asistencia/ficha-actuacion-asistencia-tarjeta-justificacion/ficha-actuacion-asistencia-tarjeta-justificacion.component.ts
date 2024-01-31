@@ -60,15 +60,15 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
         } else {
           this.datosJustificacion = n.tarjetaJustificacionItems[0];
           if (this.datosJustificacion.validada == '0') {
-            this.datosJustificacion.estado = '';
+            this.datosJustificacion.estado = 'Pendiente de validar';
           } else {
-            this.datosJustificacion.estado = 'VALIDADA';
+            this.datosJustificacion.estado = 'Validada';
             this.validada = true;
             this.desactivar = false;
             this.editable = false;
           }
           if (this.datosJustificacion.anulada == '1') {
-            this.datosJustificacion.estado = 'ANULADA';
+            this.datosJustificacion.estado = 'Anulada';
           }
           this.datosJustificacionAux = Object.assign({}, this.datosJustificacion);
           if (this.isLetrado && !this.datosJustificacion.fechaJustificacion) { //Si es letrado, deshabilitamos el campo de fecha y lo seteamos a la fecha actual
@@ -126,14 +126,14 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
       this.showMsg('error', 'No se puede desvalidar una actuación ya facturada', '');
     } else {
       this.datosJustificacion.validada = '0';
-      this.datosJustificacion.fechaJustificacion = null;
+      this.datosJustificacion.fechaJustificacion = '';
       this.updateEstadoActuacion();
     }
   }
 
   anular() {
     this.datosJustificacion.anulada = '1';
-    this.datosJustificacion.validada = '';
+    this.datosJustificacion.validada = '0';
     this.updateEstadoActuacion();
   }
 
@@ -165,15 +165,15 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
           } else {
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             if (this.datosJustificacion.validada == '0' || this.datosJustificacion.validada == '') {
-              this.datosJustificacion.estado = '';
+              this.datosJustificacion.estado = 'Pendiente de validar';
             } else if (this.datosJustificacion.validada == '1') {
-              this.datosJustificacion.estado = 'VALIDADA';
+              this.datosJustificacion.estado = 'Validada';
             }
             if (this.datosJustificacion.anulada == '1') {
-              this.datosJustificacion.estado = 'ANULADA';
+              this.datosJustificacion.estado = 'Anulada';
             }
-            this.datosJustificacion.validada = '';
-            this.datosJustificacion.anulada = '';
+            //this.datosJustificacion.validada = '';
+            //this.datosJustificacion.anulada = '';
             this.refreshTarjetas.emit(result.id);
             this.refreshHistorico.emit(true);
           }
