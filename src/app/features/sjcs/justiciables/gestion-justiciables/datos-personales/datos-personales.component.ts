@@ -17,6 +17,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   bodyInicial;
   bodyInicialTelefonos;
   direccionPostal: String = "";
+  resultadosPoblaciones: String = "";
   progressSpinner: boolean = true;
   permisoEscritura: boolean = true;
   isDisabledPoblacion: boolean = true;
@@ -267,6 +268,21 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         }
     }
     return valido;
+  }
+  
+  buscarPoblacion(e) {
+    if (e.target.value && e.target.value !== null && e.target.value !== "") {
+      if (e.target.value.length >= 3) {
+        this.getComboPoblacion(e.target.value);
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
+      } else {
+        this.comboPoblacion = [];
+        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
+      }
+    } else {
+      this.comboPoblacion = [];
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
+    }
   }
 
   /***** TARJETA *******/
