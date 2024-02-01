@@ -44,6 +44,7 @@ import { endpoints_expedientes } from '../utils/endpoints_expedientes';
 import { DocumentacionIncorporacionItem } from '../models/DocumentacionIncorporacionItem';
 import { saveAs } from 'file-saver/FileSaver';
 import { FichaPlantillasDocument } from '../models/FichaPlantillasDocumentoItem';
+import { FileAux } from '../models/sjcs/FileAux';
 
 @Injectable()
 export class SigaServices {
@@ -1342,13 +1343,13 @@ export class SigaServices {
 			});
 	}
 
-	postSendFilesFichaPlantillas(service: string, files: any, fichaPlantillaDocument: FichaPlantillasDocument[]): Observable<any> {
+	postSendFilesFichaPlantillas(service: string, files: FileAux[], fichaPlantillaDocument: FichaPlantillasDocument[]): Observable<any> {
 		let formData: FormData = new FormData();
 
 		// Agregar archivos
 		if (files != undefined) {
-			files.forEach((file) => {
-				formData.append('uploadFile', file, file.name);
+			files.forEach((fileAuxItem) => {
+				formData.append('uploadFile_'+fileAuxItem.idIdioma, fileAuxItem.file, fileAuxItem.file.name);
 			});
 		}
 	

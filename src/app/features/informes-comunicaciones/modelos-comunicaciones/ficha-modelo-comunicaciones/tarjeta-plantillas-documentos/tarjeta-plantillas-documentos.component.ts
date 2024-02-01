@@ -10,6 +10,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { FichaPlantillasDocument } from "../../../../../models/FichaPlantillasDocumentoItem";
 import { SufijoItem } from "../../../../../models/SufijoItem";
 import { PlantillaDocumentoItem } from "../../../../../models/PlantillaDocumentoItem";
+import { FileAux } from "../../../../../models/sjcs/FileAux";
 
 @Component({
   selector: "app-tarjeta-plantillas-documentos",
@@ -26,7 +27,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   clasesComunicaciones: any[];
   datos: FichaPlantillasDocument[];
   cols: any[];
-  formatoAccept : string;
+  formatoAccept: string;
   formatos: any[];
   first: number = 0;
   selectedItem: number;
@@ -45,21 +46,21 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   soloLectura: boolean = false;
   continuar: boolean;
   editar: boolean = true;
-  sufijos: SufijoItem[]; 
+  sufijos: SufijoItem[];
   idiomas: any[];
-  selectedSufijos: any[]; 
+  selectedSufijos: any[];
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
   progressSpinner: boolean = false;
   file: any;
-  files: any[]=[];
+  files: FileAux[] = [];
   nombreCompletoArchivo: any;
   extensionArchivo: any;
   disabledGuardar: any;
   documentos: any = [];
 
   @ViewChild("table") table: DataTable;
-  selectedDatos:FichaPlantillasDocument[];
+  selectedDatos: FichaPlantillasDocument[];
 
   fichasPosibles = [
     {
@@ -93,7 +94,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+
     this.getComboFormatos();
     this.getComboSufijos();
     this.busquedaIdioma();
@@ -105,7 +106,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     this.selectedItem = 10;
     this.cols = [
       { field: "idioma", header: "censo.usuario.labelIdioma" },
-       { field: 'nombreDocumento', header: 'informesycomunicaciones.consultas.ficha.plantilla' },
+      { field: 'nombreDocumento', header: 'informesycomunicaciones.consultas.ficha.plantilla' },
       { field: "nombreFicheroSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.ficheroSalida" },
       { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo" },
       { field: "formatoSalida", header: "informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.formatoSalida" }
@@ -254,7 +255,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   }
 
   getSessionStorage() {
-    
+
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyFichaPlantillasDocument.idModeloComunicacion = this.modelo.idModeloComunicacion;
@@ -277,20 +278,20 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       this.bodyFichaPlantillasDocument.sufijos = this.bodyFichaPlantillasDocument.sufijos;
       if (this.bodyFichaPlantillasDocument.sufijos && this.bodyFichaPlantillasDocument.sufijos.length > 0) {
         this.selectedSufijos = this.bodyFichaPlantillasDocument.sufijos;
-       // this.selectedSufijosInicial = JSON.parse(
+        // this.selectedSufijosInicial = JSON.parse(
         ////  JSON.stringify(this.selectedSufijos)
-       // ); SUFIJO -TODO
+        // ); SUFIJO -TODO
       }
     }
 
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
   }
 
-  getComboSufijos() { 
+  getComboSufijos() {
     this.sigaServices.get("plantillasDoc_combo_sufijos").subscribe(
       n => {
-        
-        this.sufijos = JSON.parse(JSON.stringify( n.sufijos));
+
+        this.sufijos = JSON.parse(JSON.stringify(n.sufijos));
       },
       err => {
         //console.log(err);
@@ -304,30 +305,30 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.getInformes();
     }
-    
+
   }
 
   getInformes() {
     this.sigaServices.post("modelos_detalle_informes", this.modelo).subscribe(
       data => {
-        let plantilla : PlantillaDocumentoItem = new PlantillaDocumentoItem();
-        let listaPlantillas : PlantillaDocumentoItem[] = [];
+        let plantilla: PlantillaDocumentoItem = new PlantillaDocumentoItem();
+        let listaPlantillas: PlantillaDocumentoItem[] = [];
         listaPlantillas.push(plantilla)
-       
+
         this.datos = JSON.parse(data.body).plantillasModeloDocumentos as FichaPlantillasDocument[];
         this.datos.forEach(element => {
           element.idModeloComunicacion = this.modelo.idModeloComunicacion;
           element.idClaseComunicacion = this.modelo.idClaseComunicacion;
           element.idInstitucion = this.modelo.idInstitucion;
           element.plantillas = listaPlantillas;
-    
+
         });
-      
+
 
         console.log("DATO")
         console.log(this.datos)
-         this.changeDetectorRef.detectChanges();
-       
+        this.changeDetectorRef.detectChanges();
+
       },
       err => {
         //console.log(err);
@@ -355,8 +356,8 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   }
 
   addInforme() {
-    let plantilla : PlantillaDocumentoItem = new PlantillaDocumentoItem();
-    let listaPlantillas : PlantillaDocumentoItem[] = [];
+    let plantilla: PlantillaDocumentoItem = new PlantillaDocumentoItem();
+    let listaPlantillas: PlantillaDocumentoItem[] = [];
     listaPlantillas.push(plantilla)
 
     let datoNew = new FichaPlantillasDocument();
@@ -364,7 +365,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     datoNew.idClaseComunicacion = this.modelo.idClaseComunicacion;
     datoNew.idInstitucion = this.modelo.idInstitucion;
     datoNew.plantillas = listaPlantillas;
- 
+
     this.datos.push(datoNew);
     //Modificarlo para añadir un nuevo item.
 
@@ -472,48 +473,26 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   }
 
   uploadFile(event: any, dato) {
+
     let fileList: FileList = event.files;
     this.file = fileList[0];
-    this.files.push(this.file)
+
+    let fileAux: FileAux = new FileAux();
+    fileAux.file = this.file;
+    fileAux.idIdioma = dato.idIdioma;
+
+    this.files.push(fileAux)
     dato.nombreFichero = fileList[0].name;
 
-  
+
     this.nombreCompletoArchivo = fileList[0].name;
-    dato.nombreDocumento =  this.nombreCompletoArchivo;
+    dato.nombreDocumento = this.nombreCompletoArchivo;
     this.extensionArchivo = this.nombreCompletoArchivo.substring(
       this.nombreCompletoArchivo.lastIndexOf("."),
       this.nombreCompletoArchivo.length
     );
 
-
-
-    // if (
-    //   extensionArchivo == null ||
-    //   extensionArchivo.trim() == "" ||
-    //   (!/\.(xls|xlsx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
-    //     this.body.idFormatoSalida == "1")
-    // ) {
-    //   this.file = undefined;
-    //   this.showMessage(
-    //     "info",
-    //     this.translateService.instant("general.message.informacion"),
-    //     this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
-    //   );
-    // } else if (
-    //   extensionArchivo == null ||
-    //   extensionArchivo.trim() == "" ||
-    //   (!/\.(doc|docx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
-    //     this.body.idFormatoSalida == "2")
-    // ) {
-    //   this.file = undefined;
-    //   this.showMessage(
-    //     "info",
-    //     this.translateService.instant("general.message.informacion"),
-    //     this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
-    //   );
-    // } else {
     this.validateSizeFile(dato);
-    // }
   }
 
   validateSizeFile(dato) {
@@ -524,9 +503,9 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
           let tam = response.combooItems[0].value;
           let tamBytes = tam * 1024 * 1024;
           if (this.file.size < tamBytes) {
-           // this.addFile(dato);
-           this.showInfo("Fichero Enlazado.");
-           this.progressSpinner = false;
+            // this.addFile(dato);
+            this.showInfo("Fichero Enlazado.");
+            this.progressSpinner = false;
           } else {
             this.showFail(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargarArchivo") + tam + " MB");
             this.progressSpinner = false;
@@ -534,62 +513,8 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
         });
   }
 
-  addFile(dato) {
-    this.progressSpinner = true;
-    this.sigaServices
-      .postSendContentAndParameter("plantillasDoc_subirPlantilla", "?idClaseComunicacion=" + this.bodyFichaPlantillasDocument.idClaseComunicacion, this.file)
-      .subscribe(
-        data => {
-          let plantilla = new PlantillaDocumentoItem();
-          plantilla.nombreDocumento = data.nombreDocumento;
-          plantilla.idIdioma = dato.idIdioma;
-          this.guardarDocumento(plantilla,dato);
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-          if (err.error.error.code == 400) {
-            if (err.error.error.description != null) {
-              this.showFail(err.error.error.description);
-            } else {
-              this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
-            }
-          } else {
-            this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
-            //console.log(err);
-          }
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
-  }
 
-  guardarDocumento(plantilla,dato) {
-    this.progressSpinner = true;
-    this.sigaServices
-      .post("plantillasDoc_insertarPlantilla", plantilla)
-      .subscribe(
-        data => {
-          this.showInfo(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.plantillaCargada"));
-          this.disabledGuardar = false;
-          plantilla.idPlantillaDocumento = JSON.parse(
-            data["body"]
-          ).idPlantillaDocumento;
-          this.bodyFichaPlantillasDocument.plantillas.push(plantilla);
-          this.documentos = this.bodyFichaPlantillasDocument.plantillas;
-          this.documentos = [...this.documentos];
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
-          //console.log(err);
-        }
-      );
-  }
-
-  preGuarduar(){
+  preGuarduar() {
     console.log("DATOS SELECCIONADOS.")
     console.log(this.selectedDatos)
 
@@ -597,7 +522,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     console.log(this.files)
 
     this.selectedDatos.forEach(element => {
-      
+
     });
 
     console.log("DATOS seelcte dDESPUES")
@@ -608,87 +533,52 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     console.log(this.datos)
   }
 
-  guardarData(){
+  guardarData() {
 
 
-      this.progressSpinner = true;
+    this.progressSpinner = true;
 
-//plantillasDoc_guardar_datosSalida
-      this.sigaServices.postSendFilesFichaPlantillas("plantillasDoc_guardar_plantillas", this.files,this.selectedDatos).subscribe(
-        data => {
-          this.showSuccess("Guardar datos de salida correctos");
-          console.log("DEspues de insertar.")
-          console.log(data)
+    let filesFiltrados: FileAux[] = [];
 
-         // this.body.idInforme = JSON.parse(data["body"]).data;
-       //   this.getDocumentos();
+    this.files.forEach((fileAux) => {
+      this.selectedDatos.forEach((ficha) => {
+        if (fileAux.idIdioma === ficha.idIdioma) {
+          filesFiltrados.push(fileAux);
+        }
+      });
+    });
 
-         // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-       /////   this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
-         // this.selectedSufijosInicial = JSON.parse(
+    //plantillasDoc_guardar_datosSalida
+    this.sigaServices.postSendFilesFichaPlantillas("plantillasDoc_guardar_plantillas", filesFiltrados, this.selectedDatos).subscribe(
+      data => {
+        this.showSuccess("Guardar datos de salida correctos");
+        console.log("DEspues de insertar.")
+        console.log(data)
+
+        // this.body.idInforme = JSON.parse(data["body"]).data;
+        //   this.getDocumentos();
+
+        // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        /////   this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
+        // this.selectedSufijosInicial = JSON.parse(
         //    JSON.stringify(this.selectedSufijos)
         //  );
 
-          this.progressSpinner = false;
+        this.progressSpinner = false;
 
-        },
-        err => {
-          this.showFail("Error guardar datos Salida");
-          //console.log(err);
-          this.progressSpinner = false;
-
-        },
-        () => {
-          this.progressSpinner = false;
-
-        }
-      );
-    
-  }
-
-  guardarDatosGenerales() {
-    this.progressSpinner = true;
-
-    this.body.sufijos = [];
-    let orden: number = 1;
-    this.selectedSufijos.forEach(element => {
-      let ordenString = orden.toString();
-      let objSufijo = {
-        idSufijo: element.idSufijo,
-        orden: ordenString,
-        nombreSufijo: element.nombreSufijo
-      };
-      this.body.sufijos.push(objSufijo);
-      orden = orden + 1;
-    });
-
-    this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
-      data => {
-
-        this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"));
-       // this.nuevoDocumento = false;
-        this.body.idInforme = JSON.parse(data["body"]).data;
-        sessionStorage.setItem(
-          "modelosInformesSearch",
-          JSON.stringify(this.body)
-        );
-        sessionStorage.removeItem("crearNuevaPlantillaDocumento");
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-       // this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
-        // this.selectedSufijosInicial = JSON.parse(
-        //   JSON.stringify(this.selectedSufijos)
-        // );
-       // this.docsInicial = JSON.parse(JSON.stringify(this.documentos));
       },
       err => {
-        this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"));
+        this.showFail("Error guardar datos Salida");
         //console.log(err);
         this.progressSpinner = false;
+
       },
       () => {
-      //  this.getDocumentos();
+        this.progressSpinner = false;
+
       }
     );
+
   }
 
 
