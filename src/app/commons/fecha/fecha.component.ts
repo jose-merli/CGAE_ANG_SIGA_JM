@@ -24,6 +24,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 	@Output() valueChangeSelected = new EventEmitter();
 	@Output() valueChangeInput = new EventEmitter();
 	@Output() valueFocus = new EventEmitter();
+	@Output() valueBlur = new EventEmitter();
 	@Output() fechaHoraSelectedButton = new EventEmitter();
 	@Input() minDate: Date;
 	@Input() maxDate: Date;
@@ -153,6 +154,8 @@ export class FechaComponent implements OnInit, AfterViewInit {
 				this.first = false;
 			}
 		}
+
+		this.valueBlur.emit(this.value);
 	}
 
 	input(e) {

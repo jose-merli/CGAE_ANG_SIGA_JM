@@ -72,16 +72,15 @@ export class LetradoEntranteComponent implements OnInit {
       this.disableFechaDesignacion = true;
     } else {
       this.body.art27 = false;
-      //SIGARNV-3125 INICIO
-      if(sessionStorage.getItem("entranteFechaDesignacion") != null 
-            && sessionStorage.getItem("entranteFechaDesignacion") != undefined){
+      if(sessionStorage.getItem("entranteFechaDesignacion") != null && sessionStorage.getItem("entranteFechaDesignacion") != undefined){
           this.body.fechaDesignacion = new Date(sessionStorage.getItem("entranteFechaDesignacion"));
+          sessionStorage.removeItem("entranteFechaDesignacion");
+      }else{
+        this.body.fechaDesignacion = null;
       }
-      //SIGARNV-3125 FIN
     }
 
     if (sessionStorage.getItem("isLetrado") == "true") this.disableCheck = true;
-
 
     this.sigaServices.get('getLetrado').subscribe(
       (data) => {
@@ -90,14 +89,8 @@ export class LetradoEntranteComponent implements OnInit {
         } else {
           this.isLetrado = false;
         }
-      },
-      (err) => {
-        //console.log(err);
       }
     );
-  }
-
-  incluirSalto() {
   }
 
   changeMotivo(event) {
@@ -143,26 +136,30 @@ export class LetradoEntranteComponent implements OnInit {
     this.msgs = [];
   }
 
-  fillFechaSolRenuncia(evento) {
-    this.body.fechaSolRenuncia = evento;
-  }
-
   fillFechaDesignacion(evento) {
     this.body.fechaDesignacion = evento;
-    //SIGARNV-3125 INICIO
-    sessionStorage.setItem("entranteFechaDesignacion", evento);
-    //SIGARNV-3125 FIN
+  }
+
+  setFechaDesignacion(evento) {
+    if(evento != null){
+      this.body.fechaDesignacion = evento;
+    }else{
+      this.body.fechaDesignacion = null;
+    }
   }
 
   search() {
     if(sessionStorage.getItem("designaItemLink")){
       let designaTurno = JSON.parse(sessionStorage.getItem("designaItemLink"));
-      sessionStorage.setItem("turnoDesigna",  JSON.stringify(designaTurno.idTurno));
+      sessionStorage.setItem("turnoDesigna", JSON.stringify(designaTurno.idTurno));
     }
     // Comprobar Art 27-28
     sessionStorage.setItem("origin", "AbogadoContrario");
     sessionStorage.setItem("Oldletrado", JSON.stringify(this.entrante));
     sessionStorage.setItem("Newletrado", JSON.stringify(this.body));
+    if(this.body.fechaDesignacion != null || this.body.fechaDesignacion != undefined){
+      sessionStorage.setItem("entranteFechaDesignacion", this.body.fechaDesignacion.getUTCMilliseconds.toString());
+    }
     if (this.body.art27) {//BUSQUEDA GENERAL
       this.router.navigate(["/busquedaGeneral"]);
     } else {//BUSQUEDA SJCS
@@ -175,5 +172,4 @@ export class LetradoEntranteComponent implements OnInit {
     this.body.numColegiado = "";
     this.body.apellidos = "";
   }
-
 }

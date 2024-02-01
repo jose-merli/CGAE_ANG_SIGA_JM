@@ -160,9 +160,6 @@ export class FichaCambioLetradoComponent implements OnInit {
   }
 
   clickSave() {
-    //SIGARNV-3125 INICIO
-    sessionStorage.removeItem("entranteFechaDesignacion");
-    //SIGARNV-3125 FIN
     //Campos obligatorios rellenados?
     if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) 
     && (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
