@@ -26,6 +26,7 @@ import { LoginDevelopComponent } from './commons/login-develop/login-develop.com
 import { LoginMultipleComponent } from './commons/login-multiple/login-multiple.component';
 import { LogoutComponent } from './commons/logout/logout.component';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
+
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
 import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';

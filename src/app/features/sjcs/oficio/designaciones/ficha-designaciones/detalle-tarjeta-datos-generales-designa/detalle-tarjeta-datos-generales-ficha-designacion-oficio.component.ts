@@ -27,6 +27,7 @@ import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent implements OnInit {
   @Output() actualizaFicha = new EventEmitter<DesignaItem>();
   busquedaColegiado: any;
+  siguienteColegiado : ColegiadoItem  = new ColegiadoItem();
   resaltadoDatos: boolean = false;
   msgs: Message[] = [];
   nuevaDesigna: any;
@@ -406,6 +407,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           }
           else this.selectores[1].value = "";
         }
+        if(this.datosAsistencia){
+          this.getTipoDesignacionAsi();
+        }
         this.progressSpinner = false;
       },
       err => {
@@ -499,9 +503,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.idTurno = idTurno;
         var idTipoDesignaColegio: number = +this.selectores[1].value;
         newDesigna.idTipoDesignaColegio = idTipoDesignaColegio;
-        newDesigna.numColegiado = this.inputs[0].value;
-        newDesigna.nombreColegiado = this.inputs[1].value;
-        newDesigna.apellidosNombre = this.inputs[2].value;
+        if(this.inputs[0].value != this.siguienteColegiado.numColegiado){ //sólo si no es el que mostramos con el turno. Se ha elegido uno diferente
+          newDesigna.numColegiado = this.inputs[0].value;
+          newDesigna.nombreColegiado = this.inputs[1].value;
+          newDesigna.apellidosNombre = this.inputs[2].value;
+        }
         newDesigna.idPersona = this.idPersona;
         newDesigna.fechaAlta = new Date(this.fechaGenerales);
         newDesigna.nif = this.nif;
@@ -521,7 +527,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           newDesigna.art27 = "1";
         }
 		
-		if (this.salto == true) {
+		    if (this.salto == true) {
           newDesigna.salto = "1";
         } else {
           newDesigna.salto = "0";
@@ -675,42 +681,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             }, () => {
               //aquí llamamos a nuestro nuevo servicio
               let filtros : TurnosItems = new TurnosItems();
-    filtros.idturno = this.turno;
-    filtros.fechaActual = new Date();
-    return this.sigaServices.post("turnos_busquedaColaOficioPrimerLetrado", filtros).toPromise().then(
-			n => {
-				let ultimoLetrado = JSON.parse(n.body).turnosItem[0];
-        if(ultimoLetrado != null && ultimoLetrado.numerocolegiado != null
-          && ultimoLetrado.numerocolegiado != this.ultimoLetradoDelTurno.numerocolegiado){
-            this.showMessage("warn", this.translateService.instant("general.message.warn"), this.translateService.instant("justiciaGratuita.oficio.designas.distintosColegiadosColaTurnos"));
-        }else if(ultimoLetrado.numerocolegiado == this.ultimoLetradoDelTurno.numerocolegiado){
-          //MENSAJE DE TODO CORRECTO
-          detail = "";
-          let dataRes = JSON.parse(n.body);
-          if (dataRes != null && dataRes.error != null && dataRes.error.code != null && dataRes.error.code == 202) {
-            severity = "warn";
-            summary = this.translateService.instant("general.message.warn")
-            detail = this.translateService.instant(dataRes.error.description);
-
-            this.msgs.push({
-              severity,
-              summary,
-              detail
-            });
-          }else{
-            this.showMessage("success",
-                        this.translateService.instant("messages.inserted.success"),
-                        'Se ha guardado correctamente');
-          }
-          
-          
-        }
-				this.progressSpinner = false;
-			},
-			err => {
-				this.progressSpinner = false;
-			},
-		);
+              filtros.idturno = this.turno;
+              filtros.fechaActual = new Date();
               this.progressSpinner = false;
             }
           );
@@ -1321,6 +1293,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           this.inputs[0].value = this.ultimoLetradoDelTurno.numerocolegiado;
           this.inputs[1].value = this.ultimoLetradoDelTurno.alfabeticoapellidos;
           this.inputs[2].value = this.ultimoLetradoDelTurno.nombrepersona;
+          
+          this.siguienteColegiado.numColegiado = this.ultimoLetradoDelTurno.numerocolegiado;
+          this.siguienteColegiado.apellidos = this.ultimoLetradoDelTurno.alfabeticoapellidos;
+          this.siguienteColegiado.nombre = this.ultimoLetradoDelTurno.nombrepersona;
         }else{
           this.inputs[0].value = "";
           this.inputs[1].value = "";
@@ -1340,6 +1316,26 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
 	 onChangeCheckSalto(event){
     this.salto = event
+  }
+
+  getTipoDesignacionAsi(){
+    let parametro = {
+      valor: "TIPO_DESIGNACION_DESDE_ASISTENCIA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let tipoDesigna = JSON.parse(data.body).parametro;
+          if(this.selectores[1].opciones.some(n => n.value === tipoDesigna)){
+            this.selectores[1].value = tipoDesigna;
+          }
+        },
+        err => {
+          //console.log(err);
+        }
+      );
   }
 }
 

@@ -782,6 +782,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   checkDesignaJuzgadoProcedimiento() {
     let designaCheck = new DesignaItem();
+    this.progressSpinner = true;
     designaCheck.idJuzgado = this.datos.selectores.find(el => el.id == 'juzgado').value;
     designaCheck.numProcedimiento = this.datos.inputNumPro.value;
 

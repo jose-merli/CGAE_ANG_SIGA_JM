@@ -328,12 +328,17 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
         }
         this.commonsServices.arregloTildesCombo(this.comboTipoEJG);
 
+        let parametro = {
+          valor: "TIPO_EJG_COLEGIO"
+        };
+
         this.sigaServices
-          .get("filtrosejg_getTipoEJGDefecto")
+          .post("busquedaPerJuridica_parametroColegio", parametro)
           .subscribe(
             data => {
+
               if (data != null && data != undefined) {
-                let tipoEJGAux = data;
+                let tipoEJGAux = JSON.parse(data.body).parametro;
                 for (let i = 0; i < this.comboTipoEJG.length; i++) {
                   if (this.comboTipoEJG[i].value == tipoEJGAux) {
                     this.body.tipoEJG = this.comboTipoEJG[i].value;
@@ -341,6 +346,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
                 }
               }
             });
+            
       },
       err => {
         //console.log(err);
