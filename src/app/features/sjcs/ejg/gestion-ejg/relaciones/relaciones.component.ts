@@ -644,7 +644,7 @@ export class RelacionesComponent implements OnInit {
 
     //Comprobamos si tiene una asistencia
     let asistenciaUnica: TarjetaAsistenciaItem;
-    let asistencias = this.relaciones.map((relacion) => relacion.sjcs == 'ASISTENCIA');
+    let asistencias = this.relaciones.filter((relacion) => relacion.sjcs == 'ASISTENCIA');
     if(asistencias.length == 1){
       let asistencia = this.relaciones.find((relacion) => relacion.sjcs == 'ASISTENCIA');
       let idAsistencia = asistencia.idsjcs.replace('A', '');

@@ -109,6 +109,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     disable: true, //SIGARNV-2371
     obligatorio: true
   }];
+  vieneDeEJG: boolean = false;
 
   constructor(private sigaServices: SigaServices,
     private datePipe: DatePipe,
@@ -377,6 +378,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if (sessionStorage.getItem("asistenciaUnica")) {
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistenciaUnica"));
       sessionStorage.removeItem("asistenciaUnica");
+
+      this.vieneDeEJG = true;
+
       //Numero colegiado letrado
       this.inputs[0].value = this.datosAsistencia.numeroColegiado;
       //Apellidos letrado
@@ -550,7 +554,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               //Añadida esta línea para que deshabilitar el combo del turno tras crear una nueva asignación
               this.selectores[0].disable = true;
 
-              if (this.datosAsistencia) {
+              if (this.datosAsistencia && this.vieneDeEJG == false) {
                 this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna", "?anioNumero=" + this.datosAsistencia.anioNumero + "&copiarDatos=S", newDesignaRfresh).subscribe(
                   n => {
 
@@ -574,7 +578,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     this.progressSpinner = false;
                     sessionStorage.removeItem("asistencia");
                   });
-              } else if (this.datosEJG != null && this.datosEJG != undefined) {//Introducimos aqui la asocion con EJG en el caso que venga de una ficha EJG
+              } else if (this.datosEJG != null && this.datosEJG != undefined && this.vieneDeEJG == true) {//Introducimos aqui la asocion con EJG en el caso que venga de una ficha EJG
 
                 //Realizamos un a peticion con un array strings sin determinar un objeto a medida ya que se considera que  
                 //el uso puntual de este servicio lo justifica.
