@@ -17,6 +17,8 @@ import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg
 import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
 import { UnidadFamiliarComponent } from './unidad-familiar/unidad-familiar.component';
 import { RelacionesComponent } from './relaciones/relaciones.component';
+import { ResolucionEJGItem } from '../../../../models/sjcs/ResolucionEJGItem';
+import { event } from 'jquery';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -272,6 +274,16 @@ export class GestionEjgComponent implements OnInit {
           this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
         }
       }
+      
+      if(this.body.annioCAJG != undefined && this.body.numCAJG != undefined){
+        if(this.body.resolucion == undefined){
+          this.body.numAnnioResolucion = this.body.annioCAJG + "/" + this.body.numCAJG;}
+          else{
+            this.body.numAnnioResolucion = this.body.annioCAJG + "/" + this.body.numCAJG + "/" + this.body.resolucion;
+          }
+        
+        
+      }
       if(this.body.fechaApertura != null && this.body.fechaApertura != undefined){
         let date = new Date(this.body.fechaApertura);
         let day = date.getDate().toString().padStart(2, '0');
@@ -308,7 +320,7 @@ export class GestionEjgComponent implements OnInit {
           },
           {
             label: "CAJG",
-            value: this.body.resolucion
+            value: this.body.numAnnioResolucion
           },
           {
             label: "Impugnación",
@@ -366,7 +378,7 @@ export class GestionEjgComponent implements OnInit {
             },
             {
               label: "CAJG",
-              value: this.body.resolucion
+              value: this.body.numAnnioResolucion
             },
             {
               label: "Impugnación",
@@ -983,6 +995,12 @@ export class GestionEjgComponent implements OnInit {
     this.tarjetaEstadosEJG.ngOnInit();
   }
 
+  changeResolucion($event:ResolucionEJGItem){
+    this.body.numCAJG = $event.numeroCAJG.toString();
+    this.body.annioCAJG = $event.anioCAJG.toString();
+
+    this.updateTarjResumen();
+  }
 
 
 }
