@@ -326,7 +326,10 @@ export class GestionEjgComponent implements OnInit {
 
         this.nuevo = true;
 
-        if((this.body.nombreApeSolicitante == null || this.body.nombreApeSolicitante == undefined) && sessionStorage.getItem("nombreInteresado") !=null){
+        if((this.body.nombreApeSolicitante == null || this.body.nombreApeSolicitante == undefined) 
+              && sessionStorage.getItem("nombreInteresado") !=null
+              && sessionStorage.getItem("nombreInteresado") != undefined
+              && sessionStorage.getItem("nombreInteresado") != ""){
             this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
             sessionStorage.removeItem("nombreInteresado");
           }else{
