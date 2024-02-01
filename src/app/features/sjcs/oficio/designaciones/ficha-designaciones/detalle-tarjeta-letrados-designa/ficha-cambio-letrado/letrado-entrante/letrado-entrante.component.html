@@ -60,12 +60,12 @@
             <div class="form-group col-lg-2 col-md-2">
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}} (*)</label>
               <app-fecha [inputStyleClass]="(body.fechaDesignacion == null) ? 'camposObligatorios': ''" [(value)]="body.fechaDesignacion"
-               (valueChangeSelected)="fillFechaDesignacion($event)" (valueChangeInput)="fillFechaDesignacion($event)" [utc]="false"
-                [disabled]="disableFechaDesignacion">
+               (valueChangeSelected)="fillFechaDesignacion($event)" (valueBlur)="setFechaDesignacion($event)" [disabled]="disableFechaDesignacion">
               </app-fecha>
             </div>
+            <!--  (valueChangeInput)="fillFechaDesignacion($event)" [utc]="false" -->
             <div *ngIf="!disableCheck" class="form-group col-lg-2 col-md-2">
-              <p-checkbox (onChange)="incluirSalto()" [(ngModel)]="body.salto" binary="true"
+              <p-checkbox [(ngModel)]="body.salto" binary="true"
                 label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate}}" 
                 name="salto" [hidden]="isLetrado" >
               </p-checkbox>
