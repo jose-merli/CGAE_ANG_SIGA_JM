@@ -79,7 +79,7 @@
                                         <app-detalle-tarjeta-documentacion-ficha-designacion-oficio
                                             [documentos]="documentos" [campos]="campos" [isLetrado]="isLetrado"
                                             [actuacionesDesignaItems]="actuacionesDesignaItems"
-                                            (buscarDocDesignaEvent)="getDocumentosDesigna()">
+                                            (buscarDocDesignaEvent)="getDocumentosDesigna()" [ejgsConExpedienteExt]="ejgsConExpedienteExt">
                                         </app-detalle-tarjeta-documentacion-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Contrarios'">

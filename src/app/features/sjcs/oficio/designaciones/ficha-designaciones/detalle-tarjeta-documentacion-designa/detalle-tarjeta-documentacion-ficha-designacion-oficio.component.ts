@@ -15,6 +15,7 @@ import { ActuacionDesignaItem } from '../../../../../../models/sjcs/ActuacionDes
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { Router } from '@angular/router';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { ConfirmationService } from 'primeng/api';
 
 interface Cabecera {
   id: string;
@@ -32,6 +33,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
   @Input() campos: DesignaItem;
   @Input() isLetrado: boolean;
   @Input() actuacionesDesignaItems: ActuacionDesignaItem[];
+  @Input() ejgsConExpedienteExt: any;
   usuarioLogado: UsuarioLogado;
   @Output() buscarDocDesignaEvent = new EventEmitter<any>();
   @ViewChild('table') table: ElementRef;
@@ -80,6 +82,9 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
   textFilter: string = "Seleccionar";
   comboAsociado = [];
   modoLectura: boolean = false;
+  esColegioZonaComun: boolean = false;
+  esIdentificadorPericlesDisponible: boolean = false;
+  ejgsConExpDocAdicional = [];
 
   constructor(
     private datepipe: DatePipe,
@@ -89,6 +94,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     private translateService: TranslateService,
     private cdRef: ChangeDetectorRef,
     private localStorageService: SigaStorageService,
+    private confirmationService: ConfirmationService,
     private router: Router
   ) { }
 
@@ -133,7 +139,16 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
         }
 
       })
-      .catch(err => console.log(err));
+    .catch(err => console.log(err));
+
+    this.esColegioConfiguradoEnvioCAJG().then(value => this.esColegioZonaComun = value)
+      .catch(() => this.esColegioZonaComun = false);
+      
+    if (sessionStorage.getItem("tieneExpedienteExt")){
+      this.esIdentificadorPericlesDisponible = true;
+      sessionStorage.removeItem('tieneExpedienteExt')
+    }
+
 
   }
 
@@ -691,6 +706,90 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       row.cells[2].disabled = false;
     }
 
+  }
+
+  esColegioConfiguradoEnvioCAJG(): Promise<boolean> {
+    return this.sigaServices.get("gestionejg_esColegioConfiguradoEnvioCAJG").toPromise().then(
+      n => {
+        if (n.error != undefined) {
+          return Promise.resolve(false);
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
+        return Promise.resolve(false);
+      }
+    )
+  }
+
+  async enviarDocumentacionAdicional() {
+    try {
+      if (this.esColegioZonaComun) {
+        if (this.selectedArray != undefined && this.selectedArray.length != 0 && await this.confirmEnviarDocumentacionAdicional()) { 
+            this.selectedArray.forEach(el => {
+
+              let row: Row = this.rowGroups.slice(el, el + 1)[0];
+              let idDocumentaciondes =  row.cells[6].value
+              this.ejgsConExpDocAdicional.push({idDocumentaciondes});
+            });
+
+          let requests = this.ejgsConExpDocAdicional.map(d => {
+            return { idDocumentacion: d.idDocumentaciondes };
+          });
+          this.ejgsConExpDocAdicional = [];
+          await Promise.all(requests.map(d => this.accionEnviarDocumentacionAdicional(d)));
+          this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+        } else {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      } else {
+        this.showMessage("error", "Error", "El colegio no pertenece a la zona común");
+      }
+    } catch (error) {
+      this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+    }
+  }
+
+  confirmEnviarDocumentacionAdicional(): Promise<boolean> {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmEnviarDocAdicional");
+    let icon = "fa fa-edit";
+    return new Promise((accept1, reject1) => {
+      this.confirmationService.confirm({
+        key: "envioDocumentacionAdicional",
+        message: mess,
+        icon: icon,
+        accept: () => accept1(true),
+        reject: () => accept1(false)
+      });
+    })
+  }
+
+  accionEnviarDocumentacionAdicional(body): Promise<any> {
+    this.progressSpinner = true;
+    return this.sigaServices.post("gestionejg_enviaDocumentacionAdicionalDes", body).toPromise().then(
+      n => {
+        this.progressSpinner = false;
+        const body = JSON.parse(n.body);
+        if (body.error != undefined) {
+          return Promise.reject(n.error);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        return Promise.reject();
+      }
+    );
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
 }
