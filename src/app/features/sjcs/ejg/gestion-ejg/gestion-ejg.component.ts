@@ -329,7 +329,10 @@ export class GestionEjgComponent implements OnInit {
         if((this.body.nombreApeSolicitante == null || this.body.nombreApeSolicitante == undefined) && sessionStorage.getItem("nombreInteresado") !=null){
             this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
             sessionStorage.removeItem("nombreInteresado");
+          }else{
+            this.body.nombreApeSolicitante = this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
           }
+
     
           if((this.body.nombreApeSolicitante == null || this.body.nombreApeSolicitante == undefined) && sessionStorage.getItem("asistencia") !=null){
             let asistencia = JSON.parse(sessionStorage.getItem("asistencia"));
