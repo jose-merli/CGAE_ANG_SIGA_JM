@@ -17,7 +17,6 @@ import { TreeModule } from 'primeng/primeng';
 import { JusticiableItem } from '../../../../../../models/sjcs/JusticiableItem';
 import { ScsDefendidosDesignasItem } from '../../../../../../models/sjcs/ScsDefendidosDesignasItem';
 import { AuthenticationService } from '../../../../../../_services/authentication.service';
-import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-designacion-oficio',
@@ -43,8 +42,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   datosAsistencia: TarjetaAsistenciaItem;
   sinModificacion:boolean = true;
   nif: any;
-  ultimoLetradoDelTurno: any;
-  turno: any;
   nombreColegiado: any;
   apellido1Colegiado: any;
   apellido2Colegiado: any;
@@ -648,7 +645,19 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               }
 
               this.busquedaDesignaciones(newDesignaRfresh);
-              
+              //MENSAJE DE TODO CORRECTO
+              detail = "";
+              let dataRes = JSON.parse(n.body);
+              if (dataRes.error.code == 202) {
+                severity = "warn";
+                summary = this.translateService.instant("general.message.warn")
+                detail = this.translateService.instant(dataRes.error.description);
+              }
+              this.msgs.push({
+                severity,
+                summary,
+                detail
+              });
 
               //console.log(n);
               this.progressSpinner = false;
@@ -676,44 +685,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               });
               this.progressSpinner = false;
             }, () => {
-              //aquí llamamos a nuestro nuevo servicio
-              let filtros : TurnosItems = new TurnosItems();
-    filtros.idturno = this.turno;
-    filtros.fechaActual = new Date();
-    return this.sigaServices.post("turnos_busquedaColaOficioPrimerLetrado", filtros).toPromise().then(
-			n => {
-				let ultimoLetrado = JSON.parse(n.body).turnosItem[0];
-        if(ultimoLetrado != null && ultimoLetrado.numerocolegiado != null
-          && ultimoLetrado.numerocolegiado != this.ultimoLetradoDelTurno.numerocolegiado){
-            this.showMessage("warn", this.translateService.instant("general.message.warn"), this.translateService.instant("justiciaGratuita.oficio.designas.distintosColegiadosColaTurnos"));
-        }else if(ultimoLetrado.numerocolegiado == this.ultimoLetradoDelTurno.numerocolegiado){
-          //MENSAJE DE TODO CORRECTO
-          detail = "";
-          let dataRes = JSON.parse(n.body);
-          if (dataRes != null && dataRes.error != null && dataRes.error.code != null && dataRes.error.code == 202) {
-            severity = "warn";
-            summary = this.translateService.instant("general.message.warn")
-            detail = this.translateService.instant(dataRes.error.description);
-
-            this.msgs.push({
-              severity,
-              summary,
-              detail
-            });
-          }else{
-            this.showMessage("success",
-                        this.translateService.instant("messages.inserted.success"),
-                        'Se ha guardado correctamente');
-          }
-          
-          
-        }
-				this.progressSpinner = false;
-			},
-			err => {
-				this.progressSpinner = false;
-			},
-		);
               this.progressSpinner = false;
             }
           );
@@ -919,6 +890,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         .subscribe(
           data => {
             let colegiadoItem = JSON.parse(data.body);
+            console.log(colegiadoItem)
 
             if (colegiadoItem.colegiadoItem.length == 1) {
               this.inputs[0].value = colegiadoItem.colegiadoItem[0].numColegiado;
@@ -1304,42 +1276,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     }
   }
 
-  comprobarLetradoColaTurno(turno : any){
-    if(turno != null && turno != ''){
-      
-    // busquedaColaOficio
-    let datos;
-    let primerLetrado;
-    //let turnosItem : TurnosItems = new TurnosItems();
-    //turnosItem.idturno = turno;
-    let filtros : TurnosItems = new TurnosItems();
-    filtros.idturno = turno;
-    this.turno = turno;
-    filtros.fechaActual = new Date();
-    return this.sigaServices.post("turnos_busquedaColaOficioPrimerLetrado", filtros).toPromise().then(
-			n => {
-				this.ultimoLetradoDelTurno = JSON.parse(n.body).turnosItem[0];
-
-        if(this.ultimoLetradoDelTurno != null && this.ultimoLetradoDelTurno.numerocolegiado != null){
-          this.inputs[0].value = this.ultimoLetradoDelTurno.numerocolegiado;
-          this.inputs[1].value = this.ultimoLetradoDelTurno.alfabeticoapellidos;
-          this.inputs[2].value = this.ultimoLetradoDelTurno.nombrepersona;
-        }else{
-          this.inputs[0].value = "";
-          this.inputs[1].value = "";
-          this.inputs[2].value = "";
-        }
-        
-				this.progressSpinner = false;
-			},
-			err => {
-				this.progressSpinner = false;
-			},
-		);
-
-    
-    }
-  }
 
 	 onChangeCheckSalto(event){
     this.salto = event

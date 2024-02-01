@@ -20,7 +20,7 @@
         <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
         <label *ngIf="selector.nombre != 'Turno'">{{selector.nombre}}</label>
         <label *ngIf="selector.nombre == 'Turno'">{{selector.nombre}}(*)</label>
-        <p-dropdown *ngIf="selector.nombre == 'Turno'" autoWidth="false" class="inputWidth" (ngModelChange)="comprobarLetradoColaTurno($event)"
+        <p-dropdown *ngIf="selector.nombre == 'Turno'" autoWidth="false" class="inputWidth"
           filterBy="label,labelSinTilde" [filter]="true" placeholder="Seleccionar" [disabled]="selector.disable"
           [ngModelOptions]="{standalone: true}" [(ngModel)]="selector.value" [options]="selector.opciones"
           [ngClass]="styleObligatorio('selector', selector.obligatorio)" showClear="true" class="select-form">
