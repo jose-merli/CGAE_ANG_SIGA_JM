@@ -656,7 +656,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
               this.busquedaDesignaciones(newDesignaRfresh);
               
-
+              this.showMessage("success",
+                        this.translateService.instant("messages.inserted.success"),
+                        'Se ha guardado correctamente');
               //console.log(n);
               this.progressSpinner = false;
             },
