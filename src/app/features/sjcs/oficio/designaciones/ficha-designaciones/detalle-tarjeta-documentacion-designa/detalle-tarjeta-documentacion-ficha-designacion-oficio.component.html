@@ -68,9 +68,20 @@
       (click)="nuevo()" [disabled]="modoLectura"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
       (click)="guardar()" [disabled]="modoLectura"></button>
+    <button *ngIf="esColegioZonaComun && esIdentificadorPericlesDisponible" 
+      [disabled]="selectedArray.length == 0" 
+      (click)="enviarDocumentacionAdicional()" pButton type="button" icon="fa fa-save" iconPos="left"
+      label="{{ 'justiciaGratuita.ejg.listaIntercambios.enviarDocAdicional' | translate }}"></button>
   </div>
 </div>
 </div>
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<p-confirmDialog key="envioDocumentacionAdicional" header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

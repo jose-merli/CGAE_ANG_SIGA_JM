@@ -111,9 +111,10 @@ export class EJGItem {
     //Resolucion
 
     annioActa: string;
-    numActa: string;
+    numActa: string; 
     annioCAJG: string;
     numCAJG: string;
+    numAnnioResolucion: string;
 
     ponente: string;
     resolucion: string;
