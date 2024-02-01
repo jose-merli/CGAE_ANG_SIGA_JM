@@ -1,21 +1,38 @@
+/*
 .form-group-date p-checkbox, .form-group p-checkbox {
-    margin-left: 0;
+  margin-left: 0;
 }
 
-
 .field-radiobutton {
-    margin-top: 0px;
-    margin-bottom: 25px;
-  }
+  margin-top: 0px;
+  margin-bottom: 25px;
+}
 
-  .radio-style{
-    display:flex;
+.radio-style{
+  display:flex;
 
-    ::ng-deep .ui-radiobutton {
-      .ui-radiobutton-box {
-         .ui-radiobutton-icon {
-          vertical-align: middle;
-        }
+  ::ng-deep .ui-radiobutton {
+    .ui-radiobutton-box {
+        .ui-radiobutton-icon {
+        vertical-align: middle;
       }
     }
   }
+}
+*/
+
+.table-phone {
+  width: 100%;
+  th {
+    background: #e6ecf1 !important;
+    text-align: center;
+    color: #595959 !important;
+    padding: 0.5rem;
+    border: 1px solid #e6ecf1 !important;
+    font-weight: normal;
+  }
+  td {
+    padding: 0.5rem;
+    border: 1px solid #e6ecf1 !important;
+  }
+}

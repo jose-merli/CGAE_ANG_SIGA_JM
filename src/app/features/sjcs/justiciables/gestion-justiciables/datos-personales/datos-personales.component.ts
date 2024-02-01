@@ -1,1331 +1,297 @@
 
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ConfirmationService } from 'primeng/components/common/api';
-import { TranslateService } from '../../../../../commons/translate';
-import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableTelefonoItem';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { AuthenticationService } from '../../../../../_services/authentication.service';
-import { Router } from '@angular/router';
-import { SigaConstants } from '../../../../../utils/SigaConstants';
-import { Checkbox } from '../../../../../../../node_modules/primeng/primeng';
-import { Dialog } from 'primeng/primeng';
-import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { TranslateService } from '../../../../../commons/translate';
 
 @Component({
   selector: 'app-datos-personales',
   templateUrl: './datos-personales.component.html',
   styleUrls: ['./datos-personales.component.scss']
 })
-export class DatosPersonalesComponent implements OnInit {
+export class DatosPersonalesComponent implements OnInit, OnChanges {
 
-  bodyInicial;
-  progressSpinner: boolean = false;
-  direccionPostal: String = "";
-  nombreVia: String = "";
-  poblacion: String = "";
-  provincia: String = "";
-  pais: String = "";
-  edadAdulta: number = 18;
   msgs;
-  comboTipoIdentificacion;
-  comboSexo;
-  comboTipoPersona;
-  comboEstadoCivil;
-  comboIdiomas;
-  comboProfesion;
-  comboRegimenConyugal;
-  comboMinusvalia;
-  comboPais;
-  comboNacionalidad;
-  comboProvincia;
-  poblacionBuscada;
-  comboPoblacion;
-  comboTipoVia;
-  direccion;
-
-  provinciaSelecionada;
+  bodyInicial;
+  bodyInicialTelefonos;
+  direccionPostal: String = "";
+  progressSpinner: boolean = true;
+  permisoEscritura: boolean = true;
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
-  codigoPostalValido;
-  poblacionExtranjera: boolean = true;
-  justiciableBusquedaItem: JusticiableBusquedaItem;
-  checkOtraProvincia;
+  modoEdicion: boolean = false;
+  
+  comboTipoVia;
+  comboPais;
+  comboProvincia;
+  comboPoblacion;
 
-  edicionEmail: boolean = false;
-  emailValido: boolean = true;
-  faxValido: boolean = true;
-  cpValido: boolean = true;
-  resultadosPoblaciones;
-
-  permisoEscritura: boolean = true;
-  nuevoTelefono: boolean = false;
-  personaRepetida: boolean = false;
-
-  showConfirmacion: boolean = false;
-  vieneDeJusticiable: boolean = false;
-  guardaOpcion: String;
-  count: number = 1;
-  rowsPerPage: any = [];
-
-  @ViewChild("provincia") checkbox: Checkbox;
-  @ViewChild("cdPersonalesUpdate") cdPersonalesUpdate: Dialog;
-  @ViewChild("cdGeneralesSave") cdGeneralesSave: Dialog;
-  @ViewChild("cdPreferenteSms") cdPreferenteSms: Dialog;
-  @ViewChild("table") tabla;
-
-  @Output() modoEdicionSend = new EventEmitter<any>();
-  @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
-  @Output() newJusticiable = new EventEmitter<any>();
-  @Output() searchJusticiableOverwritten = new EventEmitter<any>();
+  @Input() body: JusticiableItem;
+  @Input() showTarjeta;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<String>();
-  @Input() body: JusticiableItem;
-  @Input() tarjetaDatosPersonales;
-  @Input() showTarjeta;
-  @Input() fromJusticiable: boolean = false;
-  @Input() fromUniFamiliar: boolean = false;
-  @Input() modoRepresentante;
-  @Input() checkedViewRepresentante;
 
-  modoEdicion: boolean = false;
-
-  confirmationSave: boolean = false;
-  confirmationUpdate: boolean = false;
-
-  menorEdadJusticiable: boolean = false;
-  nuevoRepresentante: boolean;
-  nuevoInteresado: boolean;
-  nuevoContrario: boolean;
-  nuevoAsistido: boolean;
-  nuevoContrarioAsistencia: boolean;
-  nuevaUniFamiliar: boolean;
-  nuevoContrarioEJG: boolean;
-  nuevoSoj: boolean;
-  modoRepre: any;
-  idPersonaAntiguoJusticiable: string;
-  creaNuevoJusticiable: boolean;
-
-  constructor(private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private persistenceService: PersistenceService,
-    private commonsService: CommonsService,
-    private confirmationService: ConfirmationService,
-    private authenticationService: AuthenticationService,
-    private router: Router,
-    private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
 
   ngOnInit() {
-
-    if (sessionStorage.getItem("origin") == "newRepresentante") {
-      this.nuevoRepresentante = true;
-    } else if (sessionStorage.getItem("origin") == "newInteresado" || sessionStorage.getItem("origin") == "Interesado") {
-      this.nuevoInteresado = true;
-    } else if (sessionStorage.getItem("origin") == "newContrario" || sessionStorage.getItem("origin") == "Contrario") {
-      this.nuevoContrario = true;
-    } else if (sessionStorage.getItem("origin") == "newAsistido") {
-      this.nuevoAsistido = true;
-    } else if (sessionStorage.getItem("origin") == "newContrarioAsistencia" || sessionStorage.getItem("origin") == "Asistencia") {
-      this.nuevoContrarioAsistencia = true;
-    } else if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
-      this.nuevaUniFamiliar = true;
-    } else if (sessionStorage.getItem("origin") == "newContrarioEJG" || sessionStorage.getItem("origin") == "ContrarioEJG") {
-      this.nuevoContrarioEJG = true;
-    } else if (sessionStorage.getItem("origin") == "newSoj") {
-      this.nuevoSoj = true;
-    }else {
-      this.vieneDeJusticiable = true;
-    }
     this.progressSpinner = true;
-
-    if (this.body != undefined && this.body.idpersona != undefined) {
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
-      this.parseFechas();
-
-    } else {
-      this.body = new JusticiableItem();
-    }
-
-    //Obligatorio pais españa
-    this.body.idpaisdir1 = "191";
-
-    if (this.body.idpersona == undefined) {
-      this.modoEdicion = false;
-      this.body.fechaalta = new Date();
-
-    } else {
-      this.modoEdicion = true;
-
-      if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
-        this.body.idprovincia != "") {
-        this.isDisabledPoblacion = false;
-      } else {
-        this.isDisabledPoblacion = true;
-      }
-    }
-
-    this.progressSpinner = false;
-
-    this.sigaServices.guardarDatosSolicitudJusticiable$.subscribe((data) => {
-      this.body.autorizaavisotelematico = data.autorizaavisotelematico;
-      this.body.asistidoautorizaeejg = data.asistidoautorizaeejg;
-      this.body.asistidosolicitajg = data.asistidosolicitajg;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    });
-
+    this.modoEdicion = false;
+    this.body = new JusticiableItem();
+    this.body.idpaisdir1 = "191";  
     this.getCombos();
-    
-    if (sessionStorage.getItem("origin") != "newRepresentante" && sessionStorage.getItem("origin") != "newInteresado"
-    && sessionStorage.getItem("origin") != "newContrario" && sessionStorage.getItem("origin") != "newAsistido" 
-    && sessionStorage.getItem("origin") != "newContrarioAsistencia" && sessionStorage.getItem("origin") != "UnidadFamiliar"
-    && sessionStorage.getItem("origin") != "newContrarioEJG" && sessionStorage.getItem("origin") != "newSoj") {
-      this.vieneDeJusticiable = true;
-    }
-
   }
 
-
-  ngOnChanges() {
-    this.progressSpinner = true;
-
-    if (this.body != undefined) {
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.getDatosContacto();
-      this.parseFechas();
-    } else {
-      this.body = new JusticiableItem();
-      this.progressSpinner = false;
-    }
-
-    if (this.body.idpersona == undefined) {
-      this.modoEdicion = false;
-      this.body.fechaalta = new Date();
-    } else {
-      this.modoEdicion = true;
-
-      if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
-        this.body.idprovincia != "") {
-        this.isDisabledPoblacion = false;
-        this.getComboPoblacion("-1");
-      } else {
-        this.isDisabledPoblacion = true;
+  ngOnChanges() {    
+    if (this.body != undefined && this.body.idpersona != undefined) {
+      this.bodyInicial = {...this.body};
+      this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
+      if (this.body.idpersona != undefined) {
+        this.modoEdicion = true;
       }
     }
-
-    if (this.pais != "" && this.poblacion != "" && this.provincia != "") {
-      this.rellenarDireccionPostal();
-    }
-
-    if (this.body.nif != undefined && this.body.nif != null && this.body.nif != "") {
-      this.compruebaDNI();
-    }
-
-    if (this.tarjetaDatosPersonales == true) this.showTarjeta = this.tarjetaDatosPersonales;
-  }
-  parseFechas() {
-    if (this.body.fechanacimiento != undefined && this.body.fechanacimiento != null) {
-      this.calculateAge();
-      let fechaNacimiento = new Date(this.body.fechanacimiento);
-      this.body.fechanacimiento = fechaNacimiento;
-    }
-
-    if (this.body.fechaalta != undefined && this.body.fechaalta != null) {
-      let fechaAlta = new Date(this.body.fechaalta);
-      this.body.fechaalta = fechaAlta;
-    }
-
   }
 
-  getCombos() {
-    this.getComboSexo();
-    this.getComboEstadoCivil();
-    this.getComboTipoPersona();
-    this.getComboIdiomas();
-    this.getComboTiposIdentificacion();
-    this.getComboProfesion();
-    this.getComboRegimenConyugal();
-    this.getComboMinusvalia();
+  private getCombos() {
     this.getComboPais();
-    this.getComboProvincia();
     this.getComboTipoVia();
-  }
-
-  checkPermisosSave() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (!this.getDisabledSave()) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.save();
-      }
-    }
-  }
-
-  save() {
-
-    this.progressSpinner = true;
-    let url = "";
-    this.body.validacionRepeticion = false;
-    this.idPersonaAntiguoJusticiable = this.body.idpersona;
-    if ((this.body.edad != undefined && JSON.parse(this.body.edad) < this.edadAdulta && this.body.idrepresentantejg != undefined) || this.body.edad == undefined
-      || (this.body.edad != undefined && JSON.parse(this.body.edad) >= this.edadAdulta)) {
-      this.menorEdadJusticiable = false;
-
-    } else {
-      this.menorEdadJusticiable = true;
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
-    }
-
-    // Rellenar Dirección Postal
-    // Calle XXXX, Nº XX X X, XXXX XXXXX,XXXX(XXXXX)
-    this.getComboPais();
     this.getComboProvincia();
-    this.rellenarDireccionPostal();
-
-    if (!this.modoEdicion) {
-      //Si es menor no se guarda la fehca nacimiento hasta que no se le asocie un representante
-      if (this.menorEdadJusticiable) {
-        this.body.fechanacimiento = undefined;
-        this.body.edad = undefined;
-      }
-
-      url = "gestionJusticiables_createJusticiable";
-      this.validateCampos(url);
-    } else {
-
-      if (!this.menorEdadJusticiable) {
-        url = "gestionJusticiables_updateJusticiable";
-        //Comprueba que si autorizaavisotelematico el correo no se pueda borrar
-        if (this.bodyInicial.autorizaavisotelematico == "1") {
-          if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
-            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
-            this.progressSpinner = false;
-          } else {
-
-            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
-              this.callConfirmationUpdate();
-
-            } else {
-              let url = "gestionJusticiables_updateJusticiable";
-              this.validateCampos(url);
-            }
-          }
-        } else {
-          if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
-            this.callConfirmationUpdate();
-
-          } else {
-            let url = "gestionJusticiables_updateJusticiable";
-            this.validateCampos(url);
-          }
-        }
-
-      } else {
-        this.progressSpinner = false;
-      }
-    }
-    this.progressSpinner = false;
   }
 
-  validateCampos(url) {
-
-    if (this.body.nombre != null && this.body.nombre != undefined) {
-      this.body.nombre = this.body.nombre.trim();
-    }
-
-    if (this.body.apellido1 != null && this.body.apellido1 != undefined) {
-      this.body.apellido1 = this.body.apellido1.trim();
-    }
-
-    if (this.body.apellido2 != null && this.body.apellido2 != undefined) {
-      this.body.apellido2 = this.body.apellido2.trim();
-    }
-
-    if (this.body.codigopostal != null && this.body.codigopostal != undefined) {
-      this.body.codigopostal = this.body.codigopostal.trim();
-    }
-
-    if (this.body.nif != null && this.body.nif != undefined) {
-      this.body.nif = this.body.nif.trim();
-    }
-
-    if (this.body.direccion != null && this.body.direccion != undefined) {
-      this.body.direccion = this.body.direccion.trim();
-    }
-
-    if (this.body.escaleradir != null && this.body.escaleradir != undefined) {
-      this.body.escaleradir = this.body.escaleradir.trim();
-    }
-
-    if (this.body.pisodir != null && this.body.pisodir != undefined) {
-      this.body.pisodir = this.body.pisodir.trim();
-    }
-
-    if (this.body.puertadir != null && this.body.puertadir != undefined) {
-      this.body.puertadir = this.body.puertadir.trim();
-    }
-
-    if (this.body.puertadir != null && this.body.puertadir != undefined) {
-      this.body.puertadir = this.body.puertadir.trim();
-    }
-
-    if (this.body.correoelectronico != null && this.body.correoelectronico != undefined) {
-      this.body.correoelectronico = this.body.correoelectronico.trim();
-    }
-
-    if (this.body.fax != null && this.body.fax != undefined) {
-      this.body.fax = this.body.fax.trim();
-    }
-    this.callSaveService(url);
-  }
-
-  callSaveService(url) {
-
-    if (this.body.edad != undefined) {
-      this.body.edad = this.body.edad;
-    }
-
-    /*
-    if (this.datos != undefined && this.datos.length > 0) {
-      let arrayTelefonos = JSON.parse(JSON.stringify(this.datos));
-      arrayTelefonos.splice(0, 2);
-
-      for (let index = 0; index < arrayTelefonos.length; index++) {
-        arrayTelefonos[index].numeroTelefono = arrayTelefonos[index].numeroTelefono.trim();
-
-        if (arrayTelefonos[index].preferenteSmsCheck) {
-          arrayTelefonos[index].preferenteSms = "1";
-        } else {
-          arrayTelefonos[index].preferenteSms = "0";
-        }
-      }
-
-      this.body.telefonos = arrayTelefonos;
-    }
-    */
-
-    this.body.tipojusticiable = SigaConstants.SCS_JUSTICIABLE;
-    this.sigaServices.post(url, this.body).subscribe(
-      data => {
-        this.progressSpinner = false;
-        console.log(JSON.parse(data.body));
-        let idPersona = JSON.parse(data.body).id;
-        sessionStorage.setItem("nuevoJusticiableAInsertarEJG", idPersona);
-        //Si se manda un mensaje igual a C significa que el nif del justiciable introducido esta repetido 
-        if (JSON.parse(data.body).error.message != "C") {
-
-          if (!this.modoEdicion) {
-            this.modoEdicion = true;
-            let idJusticiable = JSON.parse(data.body).id;
-            this.body.idpersona = idJusticiable;
-            this.body.idinstitucion = this.authenticationService.getInstitucionSession();
-
-            if (!this.modoRepresentante) {
-              this.newJusticiable.emit(this.body);
-            }
-          } else {
-            this.getTelefonosJusticiable();
-
-            if (this.modoRepresentante) {
-              if (this.persistenceService.getBody() != undefined) {
-                let representante = this.persistenceService.getBody();
-                representante.nif = this.body.nif;
-                this.persistenceService.setBody(representante);
-              }
-
-            }
-
-          }
-
-          if (this.nuevoTelefono) {
-            this.nuevoTelefono = false;
-          }
-
-          if (this.modoRepresentante && !this.checkedViewRepresentante) {
-            this.persistenceService.setBody(this.body);
-            this.sigaServices.notifyGuardarDatosGeneralesRepresentante(this.body);
-          } else if (this.modoRepresentante && this.checkedViewRepresentante) {
-            this.sigaServices.notifyGuardarDatosGeneralesRepresentante(this.body);
-          } else {
-            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-            this.sigaServices.notifyGuardarDatosGeneralesJusticiable(this.body);
-          }
-
-          if (!this.menorEdadJusticiable) {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
-          }
-          this.preAsociarJusticiable();
-        } else {
-          this.callConfirmationSave(JSON.parse(data.body).id);
-          // this.personaRepetida = true;
-        }
-
-      },
-      err => {
-
-        if (JSON.parse(err.error).error.description != "") {
-          if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          }
-
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  preAsociarJusticiable() {
-    // Asociar solo si viene de EJG, Asistencia o Designa
-    if (sessionStorage.getItem("itemEJG") || sessionStorage.getItem("itemAsistencia") || sessionStorage.getItem("itemDesignas")) {
-      this.asociarJusticiable();
-      if (sessionStorage.getItem("itemEJG")) {
-        sessionStorage.removeItem("itemEJG");
-      }
-      if (sessionStorage.getItem("itemAsistencia")) {
-        sessionStorage.removeItem("itemAsistencia");
-      }
-      if (sessionStorage.getItem("itemDesignas")) {
-        sessionStorage.removeItem("itemDesignas");
-      }
-    }
-  }
-
-  insertUniFamiliar(justiciable) {
-    this.progressSpinner = true;
-
-    let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-    let data = []; 
-    let ejg2;
-    ejg2 = {uf_anio : ejg.annio, uf_idPersona : this.idPersonaAntiguoJusticiable, uf_idTipoejg : ejg.tipoEJG, uf_numero : ejg.numero};
-    data.push(ejg2);
-
-    // let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero]
-    let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, this.creaNuevoJusticiable, this.idPersonaAntiguoJusticiable];
-
-    this.sigaServices.post("gestionejg_insertFamiliarEJG", request).subscribe(
-      data => {
-        sessionStorage.removeItem('origin');
-        //Para que se abra la tarjeta de unidad familiar y se haga scroll a ella
-        sessionStorage.setItem('tarjeta', 'unidadFamiliar');
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-        //this.router.navigate(["/gestionEjg"]);
-        //Para prevenir que se vaya a una ficha en blanco despues de que se haya creado un justiciable
-        //this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
-        //ARR:  sessionStorage.removeItem("EJGItem");
-
-        let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-        this.persistenceService.setDatosEJG(ejg);
-        ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
-        sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
-
-        this.router.navigate(["/gestionEjg"]);
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error != null) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-  
-  asociarJusticiable() {
-    let icon = "fa fa-edit";
-    
-        if (this.nuevaUniFamiliar) {
-          if (this.checkUniFamiliar(this.body)) {
-            this.insertUniFamiliar(this.body);
-          } else {
-            if(this.guardaOpcion != "s"){
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"));
-            }
-          }
-        
-        // Asociar para Nuevo Representante
-        }else if (this.modoRepre) {
-          this.persistenceService.clearBody();
-          this.persistenceService.setBody(this.body);
-          //sessionStorage.setItem("newRepresentante",JSON.stringify(evento));
-          //this.router.navigate(["/gestionJusticiables"]);
-          if (sessionStorage.getItem("fichaJust") != null) {
-            sessionStorage.setItem("origin", sessionStorage.getItem("fichaJust"));
-            sessionStorage.removeItem("fichaJust");
-          }
-        } else {
-          let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
-          if (filtros.idRol == "2") {
-            let fichasPosibles = this.persistenceService.getFichasPosibles();
-            fichasPosibles[6].activa = true;
-            fichasPosibles[7].activa = true;
-            this.persistenceService.setFichasPosibles(fichasPosibles);
-          }
-        }
-  }
-  checkUniFamiliar(justiciable) {
-    let datosFamiliares: any = sessionStorage.getItem("datosFamiliares");
-    if (datosFamiliares != "") datosFamiliares = JSON.parse(datosFamiliares);
-    let exist = false;
-
-    if (datosFamiliares == "" || datosFamiliares == null || datosFamiliares == undefined) 
-      exist = false;
-    else {
-      //Comprobamos que el justiciable no esta ya en la designacion
-      datosFamiliares.forEach(element => {
-        if (element.uf_idPersona == justiciable.idpersona && element.fechaBaja == null) exist = true;
-      });
-    }
-
-    return !exist;
-  }
-
-  callConfirmationSave(id) {
-    this.progressSpinner = false;
-    this.confirmationSave = true;
-
-    this.confirmationService.confirm({
-      key: "cdGeneralesSave",
-      message: this.translateService.instant("gratuita.personaJG.mensaje.existeJusticiable.pregunta.crearNuevo"),
-      icon: "fa fa-search ",
-      accept: () => {
-        this.confirmationSave = false;
-        this.progressSpinner = true;
-        let url = "gestionJusticiables_createJusticiable";
-        //Ya estavalidada la repeticion y puede crear al justiciable
-        this.body.validacionRepeticion = true;
-        this.callSaveService(url);
-        this.cdGeneralesSave.hide();
-
-      }
-    });
-  }
-
-  callConfirmationUpdate() {
-    this.progressSpinner = false;
-    this.confirmationUpdate = true;
-    this.showConfirmacion = true;
-  }
-
-  reject() {
-
-    if (this.confirmationUpdate) {
-      this.confirmationUpdate = false;
-      this.progressSpinner = true;
-      this.modoEdicion = false;
-      let url = "gestionJusticiables_createJusticiable";
-      this.body.asuntos = undefined;
-      this.body.datosAsuntos = [];
-      this.body.numeroAsuntos = undefined;
-      this.body.ultimoAsunto = undefined;
-      //Ya estavalidada la repeticion y puede crear al justiciable
-      this.body.validacionRepeticion = true;
-      this.body.asociarRepresentante = true;
-      this.validateCampos(url);
-      this.cdPersonalesUpdate.hide();
-    } else if (this.confirmationSave) {
-      this.confirmationSave = false;
-
-      this.progressSpinner = true;
-      let url = "gestionJusticiables_createJusticiable";
-      //Ya esta validada la repeticion y puede crear al justiciable
-      this.body.validacionRepeticion = true;
-      this.body.asociarRepresentante = true;
-      this.callSaveService(url);
-      this.cdGeneralesSave.hide();
-    }
-  }
-
-  getTelefonosJusticiable() {
-    this.progressSpinner = true;
-    this.sigaServices.post("gestionJusticiables_getTelefonos", this.body).subscribe(result => {
-
-      this.body.telefonos = JSON.parse(result.body).telefonosJusticiables;
-      this.getDatosContacto();
-      this.progressSpinner = false;
-
-    }, error => {
-      this.progressSpinner = false;
-      //console.log(error);
-    });
-  }
-
-  getDatosContacto() {
-    this.count = 1;
-
-    let rowCorreoElectronico = new JusticiableTelefonoItem();
-    rowCorreoElectronico.tipo = "Correo-Electrónico";
-    rowCorreoElectronico.nombreTelefono = "Correo-Electrónico";
-    rowCorreoElectronico.numeroTelefono = this.body.correoelectronico;
-    rowCorreoElectronico.preferenteSmsCheck = false;
-    rowCorreoElectronico.count = this.count;
-
-    this.count += 1;
-
-    let rowFax = new JusticiableTelefonoItem();
-    rowFax.nombreTelefono = "Fax";
-    rowFax.tipo = "Fax";
-    rowFax.numeroTelefono = this.body.fax;
-    rowFax.preferenteSmsCheck = false;
-    rowFax.count = this.count;
-
-    this.count += 1;
-    
-    this.nuevoTelefono = true;
-
-    let dato = new JusticiableTelefonoItem();
-    dato.nuevo = true;
-    dato.preferenteSmsCheck = false;
-    dato.preferenteSms = "0";
-    dato.count = this.count;
-    dato.tlfValido = true;
-    dato.numeroTelefono = undefined;
-    dato.nombreTelefono = undefined;
-
-
-    this.count += 1;
-    // Rellenar Dirección Postal
-    this.rellenarDireccionPostal();
-
-    if (this.body.telefonos != null && this.body.telefonos != undefined && this.body.telefonos.length > 0) {
-      this.body.telefonos.forEach(element => {
-        element.count = this.count;
-        element.tipo = "Telefono";
-        element.nuevo = false;
-        element.tlfValido = true;
-
-        if (element.preferenteSms == null || element.preferenteSms == "0") {
-          element.preferenteSmsCheck = false;
-        } else {
-          element.preferenteSmsCheck = true;
-        }
-        this.count++;
-      });
-    }
-
-    //his.progressSpinner = false;
-    //this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-
-  }
-
-  getComboMinusvalia() {
-
-    this.progressSpinner = true;
-
-    this.sigaServices.get("gestionJusticiables_comboMinusvalias").subscribe(
-      n => {
-        this.comboMinusvalia = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboMinusvalia);
-        this.progressSpinner = false;
-
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-
-      }
-    );
-  }
-
-
-
-  getComboPais() {
-    //this.progressSpinner = true;
-
-    this.sigaServices.get("direcciones_comboPais").subscribe(
-      n => {
-        this.comboPais = n.combooItems;
-        this.comboNacionalidad = n.combooItems;
-
-        this.comboNacionalidad.push({ label: "DESCONOCIDO", value: "D" });
-
-        if (this.comboNacionalidad != null || this.comboNacionalidad != undefined) {
-          this.comboNacionalidad.forEach(element => {
-            if (element.value == this.body.idpais) {
-              this.pais = element.label;
-              // Rellenar Dirección Postal
-              this.rellenarDireccionPostal();
-            }
-          });
-        }
-
-
-        this.commonsService.arregloTildesCombo(this.comboPais);
-        //this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  getComboProfesion() {
-    this.progressSpinner = true;
-
-    this.sigaServices.get("gestionJusticiables_comboProfesiones").subscribe(
-      n => {
-        this.comboProfesion = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboProfesion);
-
-
-        this.progressSpinner = false;
-
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-
-      }
-    );
-  }
-
-  getComboRegimenConyugal() {
-    this.progressSpinner = true;
-
-    this.comboRegimenConyugal = [
-      { label: "Indetermninado", value: "I" },
-      { label: "Gananciales", value: "G" },
-      { label: "Separación de bienes", value: "S" }
-    ];
-
-    this.commonsService.arregloTildesCombo(this.comboRegimenConyugal);
-
-
-  }
-
-  getComboTipoPersona() {
-
-    this.progressSpinner = true;
-
-    this.comboTipoPersona = [
-      { label: "Física", value: "F" },
-      { label: "Jurídica", value: "J" }
-
-    ];
-
-    this.commonsService.arregloTildesCombo(this.comboTipoPersona);
-
-  }
-
-  getComboSexo() {
-
-    this.progressSpinner = true;
-
-    this.comboSexo = [
-      { label: "Hombre", value: "H" },
-      { label: "Mujer", value: "M" },
-      { label: "No Consta", value: "N" }
-    ];
-
-  }
-
-  getComboTiposIdentificacion() {
-    this.progressSpinner = true;
-
-    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
-      n => {
-        this.comboTipoIdentificacion = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboTipoIdentificacion);
-
-        this.progressSpinner = false;
-
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-
-      }
-    );
-  }
-
-  getComboTipoVia() {
-    this.progressSpinner = true;
+  private getComboTipoVia() {
     this.sigaServices.getParam("gestionJusticiables_comboTipoVias2", "?idTipoViaJusticiable=" + this.body.idtipovia).subscribe(
       n => {
         this.comboTipoVia = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTipoVia);
-
-        this.comboTipoVia.forEach(element => {
-          if (element.value == this.body.idtipovia) this.nombreVia = element.label;
-        });
-
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
       }
     );
-
   }
 
-  getComboEstadoCivil() {
-    this.progressSpinner = true;
-    this.sigaServices.get("fichaColegialGenerales_estadoCivil").subscribe(
+  private getComboPais() {
+    this.sigaServices.get("direcciones_comboPais").subscribe(
       n => {
-        this.comboEstadoCivil = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboEstadoCivil);
-
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }
-    );
-
-  }
-
-  getComboIdiomas() {
-    this.progressSpinner = true;
-    this.sigaServices.get("etiquetas_lenguaje").subscribe(
-      n => {
-        this.comboIdiomas = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboIdiomas);
-
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
+        this.comboPais = n.combooItems;
+        this.comboPais.push({ label: "DESCONOCIDO", value: "D" });
+        this.commonsService.arregloTildesCombo(this.comboPais);
       }
     );
   }
 
-  getComboProvincia() {
-    //this.progressSpinner = true;
+  private getComboProvincia() {
     this.sigaServices.get("integrantes_provincias").subscribe(
       n => {
         this.comboProvincia = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboProvincia);
-
-        if (this.comboProvincia != null || this.comboProvincia != undefined) {
-          this.comboProvincia.forEach(element => {
-            if (element.value == this.body.idprovincia) {
-              this.provincia = element.label;
-              // Rellenar Dirección Postal
-              this.rellenarDireccionPostal();
-            }
-          });
+        if (this.body.idprovincia != undefined && this.body.idprovincia != null && this.body.idprovincia != "") {
+          this.getComboPoblacion("-1");
+          this.isDisabledPoblacion = false;
+        } else{
+          this.rellenarDireccionPostal();
+          this.progressSpinner = false;
         }
+      }
+    );
+  }
 
+  private getComboPoblacion(filtro: string) {
+    this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + this.body.idprovincia + "&filtro=" + filtro).subscribe(
+        n => {
+          this.comboPoblacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
+          if(this.direccionPostal == ""){
+            this.rellenarDireccionPostal();
+          }else{
+            this.progressSpinner = false;
+          }
+        }
+      );
+  }
 
-        //if (this.body.idpoblacion != undefined && this.body.idpoblacion != null) {
-        //  this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
-        //}
+  /**** CHANGES ****/
+
+  onChangeCodigoPostal() {
+    if (this.commonsService.validateCodigoPostal(this.body.codigopostal) && this.body.codigopostal.length == 5) {
+      let value = this.body.codigopostal.substring(0, 2);
+      this.isDisabledPoblacion = false;
+      if (value != this.body.idprovincia) {
+        this.body.idprovincia = value;
+        this.body.idpoblacion = "";
+        this.comboPoblacion = [];
+        this.getComboPoblacion("-1");
+      }
+    } else {
+      this.isDisabledPoblacion = true;
+      this.body.idpoblacion = undefined;
+      this.body.idprovincia = undefined;
+    }
+  }
+
+  editarCompleto(event, dato) {
+    let NUMBER_REGEX = /^\d{1,5}$/;
+    if (NUMBER_REGEX.test(dato)) {
+      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
+        this.body.codigopostal = event.currentTarget.value.slice(0, 5);
+      }
+    } else {
+      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
+        this.body.codigopostal = event.currentTarget.value.slice(0, 5);
+      } else {
+        this.body.codigopostal = "";
+        event.currentTarget.value = "";
+      }
+    }
+  }
+
+  reset(){
+    if (this.modoEdicion) {
+      if (this.bodyInicial != undefined) {
+        this.body = {...this.bodyInicial};
+        this.body.telefonos = [];
+        this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
+      }
+    } else {
+      this.body = new JusticiableItem();
+      this.body.telefonos = [];
+      this.body.idpaisdir1 = "191";
+    }
+  }
+
+  save(){
+    if (!this.validate()) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Campos obligatorios no se han rellando");
+    } else {
+      this.progressSpinner = true;
+      this.deleteSpacing();
+      if (!this.modoEdicion) {
+        this.callSaveService("gestionJusticiables_createJusticiable");
+      } else {
+        this.callSaveService("gestionJusticiables_updateJusticiable");
+      }
+    }
+  }
+
+  deleteSpacing() {
+    if (this.body.direccion != null && this.body.direccion != undefined) {
+      this.body.direccion = this.body.direccion.trim();
+    }
+    if (this.body.escaleradir != null && this.body.escaleradir != undefined) {
+      this.body.escaleradir = this.body.escaleradir.trim();
+    }
+    if (this.body.pisodir != null && this.body.pisodir != undefined) {
+      this.body.pisodir = this.body.pisodir.trim();
+    }
+    if (this.body.puertadir != null && this.body.puertadir != undefined) {
+      this.body.puertadir = this.body.puertadir.trim();
+    }
+    if (this.body.correoelectronico != null && this.body.correoelectronico != undefined) {
+      this.body.correoelectronico = this.body.correoelectronico.trim();
+    }
+    if (this.body.fax != null && this.body.fax != undefined) {
+      this.body.fax = this.body.fax.trim();
+    }
+    if(this.body.telefonos.length > 0){
+      for(let i = 0; i < this.body.telefonos.length; i++){
+        this.body.telefonos[i].preferenteSms = '0';
+        if(this.body.telefonos[i].preferenteSmsCheck){
+          this.body.telefonos[i].preferenteSms = '1';
+        }
+      }
+    }
+  }
+
+  callSaveService(url) {
+    this.sigaServices.post(url, this.body).subscribe(
+      data => {
+        let dataJusticiable = JSON.parse(data.body);
+        if (dataJusticiable.error.message != "C") {
+          if (!this.modoEdicion) {
+            this.modoEdicion = true;
+            this.body.idpersona =  dataJusticiable.id;
+          } 
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
+        this.bodyInicial = {...this.body};
+        this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
+        this.rellenarDireccionPostal();
       },
-      error => { },
-      () => {
+      err => {
+        let dataJusticiable = JSON.parse(err.error);
+        if (dataJusticiable.error.description != "") {
+          if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), dataJusticiable.error.description);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(dataJusticiable.error.description));
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
         this.progressSpinner = false;
       }
     );
   }
 
-  getComboPoblacionByIdPoblacion(idpoblacion) {
-    //this.progressSpinner = true;
-
-    this.sigaServices
-      .getParam(
-        "gestionJusticiables_comboPoblacion",
-        "?idPoblacion=" +
-        idpoblacion
-      )
-      .subscribe(
-        n => {
-          this.comboPoblacion = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboPoblacion)
-
-          if (this.comboPoblacion != null || this.comboPoblacion != undefined) {
-            this.comboPoblacion.forEach(element => {
-              if (element.value == this.body.idpoblacion) {
-                this.poblacion = element.label;
-                // Rellenar Dirección Postal
-                this.rellenarDireccionPostal();
-              }
-            });
-          }
-
-
-        },
-        error => {
-          this.progressSpinner = false;
-
-        }, () => {
-          // this.progressSpinner = false;
-
-        }
-      );
-  }
-
-  getComboPoblacion(filtro: string) {
-    this.progressSpinner = true;
-    this.poblacionBuscada = this.getLabelbyFilter(filtro);
-
-    this.sigaServices
-      .getParam(
-        "direcciones_comboPoblacion",
-        "?idProvincia=" +
-        this.body.idprovincia +
-        "&filtro=" +
-        this.poblacionBuscada
-      )
-      .subscribe(
-        n => {
-          this.comboPoblacion = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboPoblacion);
-        },
-        error => {
-          this.progressSpinner = false;
-
-        }, () => {
-          this.progressSpinner = false;
-
-        }
-      );
-  }
-
-  buscarPoblacion(e) {
-    if (e.target.value && e.target.value !== null && e.target.value !== "") {
-      if (e.target.value.length >= 3) {
-        this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-      } else {
-        this.comboPoblacion = [];
-        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
+  rellenarDireccionPostal() {
+    if (this.body.direccion != undefined && this.body.direccion != null) {
+      this.comboTipoVia.forEach(element => { if (element.value == this.body.idtipovia) this.direccionPostal = element.label; });
+      this.direccionPostal = this.direccionPostal + ' ' + this.body.direccion;
+      this.direccionPostal = this.direccionPostal + ', ' + this.body.codigopostal;
+      if(this.comboPoblacion != undefined){
+        this.comboPoblacion.forEach(element => { if (element.value == this.body.idpoblacion) this.direccionPostal = this.direccionPostal + ', ' + element.label; });
       }
-    } else {
-      this.comboPoblacion = [];
-      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
+      this.comboProvincia.forEach(element => { if (element.value == this.body.idprovincia) this.direccionPostal = this.direccionPostal + ', ' + element.label; });
+      this.progressSpinner = false;
     }
   }
 
-  onChangeCodigoPostal() {
-    if (this.body.idpaisdir1 == "191" || this.body.idpaisdir1 == null || this.body.idpaisdir1 == undefined) {
-      if (
-        this.commonsService.validateCodigoPostal(this.body.codigopostal) &&
-        this.body.codigopostal.length == 5) {
-        let value = this.body.codigopostal.substring(0, 2);
-        this.provinciaSelecionada = value;
-        this.isDisabledPoblacion = false;
-        if (value != this.body.idprovincia) {
-          this.body.idprovincia = this.provinciaSelecionada;
-          this.body.idpoblacion = "";
-          this.comboPoblacion = [];
-          this.getComboPoblacion("-1");
-          this.isDisabledProvincia = true;
-          this.isDisabledPoblacion = false;
-        }
-        this.codigoPostalValido = true;
-        this.cpValido = true;
-      } else {
-        if (this.body.codigopostal != null && this.body.codigopostal != undefined && this.body.codigopostal != "") {
-          this.cpValido = false;
-        } else {
-          this.cpValido = true;
-        }
+  private validate() {
 
-        this.codigoPostalValido = false;
-        this.isDisabledPoblacion = true;
-        this.provinciaSelecionada = "";
-        this.body.idpoblacion = undefined;
-        this.body.idprovincia = undefined;
-      }
-    }
+    let valido = false;
 
-    if (this.body.codigopostal == undefined || this.body.codigopostal == "") {
-      this.cpValido = true;
-    }
-  }
-
-  onChangePais() {
-    //Si se selecciona un pais extranjero
-    if (this.body.idpaisdir1 != "191") {
-      this.body.idprovincia = "";
-      this.body.idpoblacion = "";
-      this.poblacionExtranjera = true;
-      this.isDisabledPoblacion = true;
-      this.comboPoblacion = [];
-      //Si se selecciona españa
-    } else {
-      this.poblacionExtranjera = false;
-
-      if (this.body.idprovincia != undefined && this.body.idprovincia != null && this.body.idprovincia != "") {
-        this.isDisabledPoblacion = false;
-      } else {
-        this.isDisabledPoblacion = true;
-      }
-
-      this.isDisabledProvincia = true;
-
-      if (this.body.codigopostal != undefined && this.body.codigopostal != null) {
-        this.onChangeCodigoPostal();
-      }
-
-    }
-  }
-
-
-  onChangeProvincia() {
-    this.body.idpoblacion = "";
-    this.comboPoblacion = [];
-  }
-
-  onChangeOtherProvincia(event) {
-    if (event) {
-      this.isDisabledPoblacion = true;
-
-      if (this.body.idpais == "191") {
-        this.isDisabledProvincia = false;
-      }
-
-      if (
-        (this.body.idpoblacion == null &&
-          this.body.idpoblacion == undefined) ||
-        this.body.idpoblacion == "") {
-        this.showMessage("error", "Error", this.translateService.instant("censo.datosDirecciones.mensaje.seleccionar.poblacion"));
-        this.isDisabledPoblacion = false;
-        this.isDisabledProvincia = true;
-        this.checkbox.checked = false;
-      }
-    } else {
-
-      if (
-        this.body.idpais == "191" &&
-        !this.checkOtraProvincia
-      ) {
-        this.isDisabledPoblacion = false;
-      }
-
-      this.isDisabledProvincia = true;
-      this.onChangeCodigoPostal();
-      this.checkOtraProvincia = false;
-    }
-  }
-
-  compruebaDNI() {
-
-    if (this.body.nif != undefined && this.body.nif.trim() != "" && this.body.nif != null) {
-      //if (this.body.idtipoidentificacion != "50") {
-      if (this.commonsService.isValidDNI(this.body.nif)) {
-        this.body.idtipoidentificacion = "10";
-        return true;
-      } else if (this.commonsService.isValidPassport(this.body.nif)) {
-        this.body.idtipoidentificacion = "30";
-        return true;
-      } else if (this.commonsService.isValidNIE(this.body.nif)) {
-        this.body.idtipoidentificacion = "40";
-        return true;
-      } else if (this.commonsService.isValidCIF(this.body.nif)) {
-        this.body.idtipoidentificacion = "20";
-        return true;
-      } else {
-        this.body.idtipoidentificacion = "30";
-        return true;
-      }
-      //}
-    } else {
-      this.body.idtipoidentificacion = undefined;
-    }
-
-  }
-
-  getLabelbyFilter(string): string {
-    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-para poder filtrar el dato con o sin estos caracteres*/
-    let labelSinTilde = string;
-    let accents =
-      "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-    let accentsOut =
-      "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-    let i;
-    let x;
-    for (i = 0; i < string.length; i++) {
-      if ((x = accents.indexOf(string.charAt(i))) != -1) {
-        labelSinTilde = string.replace(string.charAt(i), accentsOut[x]);
-        return labelSinTilde;
-      }
-    }
-
-    return labelSinTilde;
-  }
-
-  checkPermisosRest() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.rest();
-    }
-  }
-
-  rest() {
-
-    this.nuevoTelefono = false;
-    this.body.idpaisdir1 = "191";
-
-    if (this.modoEdicion) {
-      if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-      if (this.body.idpoblacion != undefined) {
-        this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
-      }
-
-      this.parseFechas();
-
-      //if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-      this.faxValido = true;
-      this.emailValido = true;
-
-      if (this.body.idpaisdir1 != "191") {
-        this.poblacionExtranjera = true;
-      } else {
-        this.poblacionExtranjera = false;
-      }
-
-    } else {
-      this.body = new JusticiableItem();
-    }
-  }
-
-  fillFechaNacimiento(event) {
-    if (event != null && event != undefined) {
-      this.body.fechanacimiento = event;
-      this.calculateAge();
-    } else {
-      this.body.edad = undefined;
-    }
-
-  }
-
-  checkPermisosNewData() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (!this.permisoEscritura) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.newData();
-      }
-    }
-  }
-
-  newData() {
-
-    this.nuevoTelefono = true;
-
-    let dato = new JusticiableTelefonoItem();
-    dato.nuevo = true;
-    dato.preferenteSmsCheck = false;
-    dato.preferenteSms = "0";
-    dato.count = this.count;
-    dato.tlfValido = true;
-    dato.numeroTelefono = undefined;
-    dato.nombreTelefono = undefined;
-
-    this.count += 1;
-  }
-
-  /*
-  onChangePreferente(dato) {
-
-    let checkedFind = this.datos.find(x => x.preferenteSmsCheck == true && x.count != dato.count);
-
-    if (checkedFind != undefined) {
-
-      let icon = "fa fa-edit";
-      let message = this.translateService.instant("justiciaGratuita.justiciables.message.cambiarTelefonoPreferente");
-
-      this.confirmationService.confirm({
-        key: "cdPreferenteSms",
-        message: message,
-        icon: icon,
-        accept: () => {
-
-          this.datos.forEach(element => {
-            element.preferenteSmsCheck = false;
-            element.preferenteSms = "0";
-          });
-
-          dato.preferenteSmsCheck = true;
-          dato.preferenteSms = "1";
-        },
-        reject: () => {
-
-          dato.preferenteSmsCheck = false;
-
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Cancelada",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
+    if (this.body.idtipovia != undefined && this.body.idtipovia != "" &&
+    this.body.direccion != undefined && this.body.direccion != "" && 
+    this.body.codigopostal != undefined && this.body.codigopostal != "" &&
+    this.body.idprovincia != undefined && this.body.idprovincia != "" &&
+    this.body.idpoblacion != undefined && this.body.idpoblacion != "" ) {
+        if(this.body.telefonos.length > 0){
+          valido = true;
+          for(let i = 0; i < this.body.telefonos.length; i++){
+            if(this.body.telefonos[i].nombreTelefono == undefined || this.body.telefonos[i].numeroTelefono == undefined || 
+            this.body.telefonos[i].nombreTelefono == "" || this.body.telefonos[i].numeroTelefono == ""){
+              valido = false;
+              break;
             }
-          ];
+          }
+        } else {
+          valido = true;
         }
-      });
     }
-  }
-  */
-
-  calculateAge() {
-    let hoy = new Date();
-    let cumpleanos = new Date(this.body.fechanacimiento);
-    let edad = hoy.getFullYear() - cumpleanos.getFullYear();
-    var m = hoy.getMonth() - cumpleanos.getMonth();
-
-    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-      edad--;
-    }
-
-    if (edad < 0) {
-      this.body.edad = "0";
-    } else {
-      this.body.edad = JSON.stringify(edad);
-    }
-
-    // if (JSON.parse(this.body.edad) < this.edadAdulta) {
-    //   this.sigaServices.notifyEsMenorEdad(this.body);
-    // }
+    return valido;
   }
 
-  searchJusticiableByNif() {
+  /***** TARJETA *******/
+  onHideTarjeta() {
+    this.showTarjeta = !this.showTarjeta; // Funcionalidad para mostrar contenido de la Tarjeta pulsando a la misma.
+    this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Personales.
+    this.idOpened.emit('Personales'); // Constante para abrir la Tarjeta de Personales.
+  }
 
-    if (this.body.nif.trim() != undefined && this.body.nif.trim() != "") {
-      let bodyBusqueda = new JusticiableBusquedaItem();
-      bodyBusqueda.nif = this.body.nif;
-      this.notifySearchJusticiableByNif.emit(bodyBusqueda);
+  /**** TELEFONO ****/
+  addTelefono() {
+    if(this.body.telefonos == null){
+      this.body.telefonos = [];
     }
-
+    this.body.telefonos.push(new JusticiableTelefonoItem());
   }
 
-  search() {
-    this.persistenceService.clearBody();
-    this.router.navigate(["/justiciables"], { queryParams: { rp: "2" } });
+  deleteTelefono(index: number) {
+    this.body.telefonos.splice(index, 1);
+    if (this.body.telefonos.length == 0) {
+      this.body.telefonos.push(new JusticiableTelefonoItem());
+    }
   }
 
+  /**** MSGS  *****/
   clear() {
     this.msgs = [];
   }
@@ -1338,226 +304,4 @@ para poder filtrar el dato con o sin estos caracteres*/
       detail: msg
     });
   }
-
-
-  getDisabledSave() {
-
-    let valido = false;
-
-    if (this.body.idtipovia != undefined && this.body.idtipovia != "" &&
-    this.body.direccion != undefined && this.body.direccion != "" && 
-    this.body.codigopostal != undefined && this.body.codigopostal != "" &&
-    this.body.idprovincia != undefined && this.body.idprovincia != "" &&
-    this.body.idpoblacion != undefined && this.body.idpoblacion != "" ) {
-
-        valido = true;
-    }
-
-    return valido;
-  }
-
-  onHideTarjeta() {
-    this.showTarjeta = !this.showTarjeta; // Funcionalidad para mostrar contenido de la Tarjeta pulsando a la misma.
-    this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Personales.
-    this.idOpened.emit('Personales'); // Constante para abrir la Tarjeta de Personales.
-  }
-
-  changeEmail(value) {
-    this.emailValido = this.commonsService.validateEmail(value.numeroTelefono);
-
-    if (this.emailValido) {
-      this.body.correoelectronico = value.numeroTelefono;
-    }
-  }
-
-  changeTelefono(value) {
-    value.tlfValido = this.commonsService.validateTelefono(value.numeroTelefono);
-  }
-
-  changeFax(value) {
-    this.faxValido = this.commonsService.validateFax(value.numeroTelefono);
-
-    if (this.faxValido) {
-      this.body.fax = value.numeroTelefono;
-    }
-  }
-
-  editEmail() {
-    if (this.edicionEmail)
-      this.edicionEmail = false;
-    else this.edicionEmail = true;
-  }
-
-  checkPermisosRestData() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.restData();
-    }
-  }
-
-  restData() {
-
-    //if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    this.faxValido = true;
-    this.emailValido = true;
-  }
-
-  /*
-  checkPermisosDeleteData(selectedDatos) {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (this.disabledDelete()) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.deleteData(selectedDatos);
-      }
-    }
-  }
-
-  deleteData(selectedDatos) {
-
-    selectedDatos.forEach(element => {
-
-      if (!element.nuevo) {
-        let pos = this.datos.findIndex(
-          x => x.idTelefono == element.idTelefono);
-
-        if (pos != -1) {
-          this.datos.splice(pos, 1);
-        }
-      } else {
-        let pos = this.datos.findIndex(
-          x => x.count == element.count);
-
-        if (pos != -1) {
-          this.datos.splice(pos, 1);
-        }
-      }
-
-    });
-
-    this.selectedDatos = [];
-  }
-
-  onRowSelect(dato) {
-
-    if (!this.selectMultiple && !this.selectAll) {
-      if (this.selectionMode == "single") {
-        this.selectedDatos = undefined;
-      } else {
-        this.selectedDatos.pop();
-      }
-    } else {
-      if (dato.data.count == 1 || dato.data.count == 2) {
-        this.selectedDatos.pop();
-      }
-    }
-
-  }
-  */
-
-  editarCompleto(event, dato) {
-    let NUMBER_REGEX = /^\d{1,5}$/;
-    if (NUMBER_REGEX.test(dato)) {
-      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
-        this.body.codigopostal = event.currentTarget.value.slice(0, 5);
-        this.cpValido = true;
-      }
-    } else {
-
-      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
-        this.body.codigopostal = event.currentTarget.value.slice(0, 5);
-        this.cpValido = true;
-      } else {
-        this.body.codigopostal = "";
-        event.currentTarget.value = "";
-        this.cpValido = true;
-      }
-
-    }
-  }
-
- /* ORIGINAL    */
-
-  /*
-  disabledDelete() {
-    if (!this.selectMultiple && !this.selectAll) {
-      return true;
-
-    } else {
-
-      if ((this.selectionMode == "" && !this.selectedDatos) ||
-        ((this.selectionMode == "multiple" && this.selectedDatos.length == 0))) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-  */
-
-  rellenarDireccionPostal() {
-
-    if (this.body.codigopostal == null || this.body.codigopostal == undefined) {
-      this.body.codigopostal = "";
-    }
-
-    if (this.body.direccion == null || this.body.direccion == undefined) {
-      this.direccionPostal == "";
-    } else {
-      this.direccionPostal = this.nombreVia+" "+ this.body.direccion + ", " + this.body.codigopostal + ",  " + this.poblacion + ", " +
-        this.provincia + " (" + this.pais + ") ";
-    }
-
-  }
-  guardar(){
-    if(this.guardaOpcion=="s"){
-      
-      this.progressSpinner = true;
-      this.confirmationUpdate = false;
-      let url = "gestionJusticiables_updateJusticiable";
-      this.validateCampos(url);
-      
-    }else if(this.guardaOpcion=="n"){
-      if (this.confirmationUpdate) {
-        this.confirmationUpdate = false;
-        this.progressSpinner = true;
-        this.modoEdicion = false;
-        let url = "gestionJusticiables_createJusticiable";
-        this.creaNuevoJusticiable = true;
-        this.body.asuntos = undefined;
-        this.body.datosAsuntos = [];
-        this.body.numeroAsuntos = undefined;
-        this.body.ultimoAsunto = undefined;
-        //Ya estavalidada la repeticion y puede crear al justiciable
-        this.body.validacionRepeticion = true;
-        this.body.asociarRepresentante = true;
-        this.validateCampos(url);
-        this.cdPersonalesUpdate.hide();
-      } else if (this.confirmationSave) {
-        this.confirmationSave = false;
-  
-        this.progressSpinner = true;
-        let url = "gestionJusticiables_createJusticiable";
-        //Ya esta validada la repeticion y puede crear al justiciable
-        this.body.validacionRepeticion = true;
-        this.body.asociarRepresentante = true;
-        this.callSaveService(url);
-        this.cdGeneralesSave.hide();
-      }
-
-    }
-    this.showConfirmacion = false;
-  }
-
-  cancelar(){
-    this.showConfirmacion = false;
-  }
-
 }
