@@ -19,6 +19,7 @@ import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { TurnosItem } from '../../../../../../models/sjcs/TurnosItem';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 import { ActivatedRoute } from '@angular/router';
+import { forEach } from '@angular/router/src/utils/collection';
 @Component({
   selector: "app-tarjeta-colaoficio",
   templateUrl: "./tarjeta-colaoficio.component.html",
@@ -354,8 +355,8 @@ export class TarjetaColaOficio implements OnInit {
         this.datosSaltos = [];
         this.datosCompensaciones = [];
 
-        datosSaltosAux = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
-        datosCompensacionesAux = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
+        datosSaltosAux = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S' && this.isActivoColaActual(datos.idPersona));
+        datosCompensacionesAux = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C' && this.isActivoColaActual(datos.idPersona));
 
         datosSaltosAux.forEach(element => {
           //if (this.datosSaltos.find(item => item.idPersona === element.idPersona) != undefined) {
@@ -937,5 +938,19 @@ export class TarjetaColaOficio implements OnInit {
 
   goToSaltosYComp() {
     this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: this.idTurno } });
+  }
+
+  isActivoColaActual(idPersona: number): boolean{
+    let isActive = false;
+    if(this.datos){
+      this.datos.forEach(element  => {
+        if (element.idpersona == idPersona){
+          isActive = true;
+        }
+      });
+    }else {
+      isActive= true;
+    }
+    return isActive;
   }
 }
