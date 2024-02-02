@@ -23,6 +23,8 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   modoEdicion: boolean = false;
+  validateForm: boolean = true;
+  hasChange: boolean = false;
   
   comboTipoVia;
   comboPais;
@@ -126,6 +128,11 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       this.body.idpoblacion = undefined;
       this.body.idprovincia = undefined;
     }
+    this.hasChange = true;
+  }
+
+  onChangeInput(){
+    this.hasChange = true;
   }
 
   editarCompleto(event, dato) {
@@ -156,6 +163,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       this.body.telefonos = [];
       this.body.idpaisdir1 = "191";
     }
+    this.hasChange = false;
   }
 
   save(){
@@ -215,6 +223,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         this.bodyInicial = {...this.body};
         this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
         this.rellenarDireccionPostal();
+        this.hasChange = false;
       },
       err => {
         let dataJusticiable = JSON.parse(err.error);
@@ -247,7 +256,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
   private validate() {
 
-    let valido = false;
+    this.validateForm = false;
 
     if (this.body.idtipovia != undefined && this.body.idtipovia != "" &&
     this.body.direccion != undefined && this.body.direccion != "" && 
@@ -255,19 +264,19 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.body.idprovincia != undefined && this.body.idprovincia != "" &&
     this.body.idpoblacion != undefined && this.body.idpoblacion != "" ) {
         if(this.body.telefonos.length > 0){
-          valido = true;
+          this.validateForm = true;
           for(let i = 0; i < this.body.telefonos.length; i++){
             if(this.body.telefonos[i].nombreTelefono == undefined || this.body.telefonos[i].numeroTelefono == undefined || 
             this.body.telefonos[i].nombreTelefono == "" || this.body.telefonos[i].numeroTelefono == ""){
-              valido = false;
+              this.validateForm = false;
               break;
             }
           }
         } else {
-          valido = true;
+          this.validateForm = true;
         }
     }
-    return valido;
+    return this.validateForm;
   }
   
   buscarPoblacion(e) {
@@ -285,6 +294,12 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     }
   }
 
+  styleObligatorio(evento){
+    if(!this.validateForm){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
   /***** TARJETA *******/
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta; // Funcionalidad para mostrar contenido de la Tarjeta pulsando a la misma.
@@ -298,6 +313,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       this.body.telefonos = [];
     }
     this.body.telefonos.push(new JusticiableTelefonoItem());
+    this.hasChange = true;
   }
 
   deleteTelefono(index: number) {
@@ -305,6 +321,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     if (this.body.telefonos.length == 0) {
       this.body.telefonos.push(new JusticiableTelefonoItem());
     }
+    this.hasChange = true;
   }
 
   /**** MSGS  *****/
