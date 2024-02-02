@@ -1118,7 +1118,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       n => {
         this.progressSpinner = false;
         if(this.avisoMismoNProcedimiento){
-          if (n.body.split(',').length > 1) {
+          if (n.body.split(',').length > 0 && n.body != '0') {
             let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado (" + n.body +  "), ¿Desea continuar?";
             let icon = "fa fa-question-circle";
             let keyConfirmation = "confirmGuardar";

@@ -34,7 +34,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   comboAcreditaciones: ComboItemAcreditacion[] = [];
   comboPrisiones: SelectItem[] = [];
   comboMotivosCambio: SelectItem[] = [];
-
+  designaActual : DesignaItem;
   parametroConfigCombos: any;
 
   valorFormatoProc: string;
@@ -179,6 +179,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
+    this.designaActual = JSON.parse(sessionStorage.getItem("designaItemLink"));
     this.getNigValidador();
     this.getNprocValidador();
     this.recuperarParametros();
@@ -783,6 +784,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   checkDesignaJuzgadoProcedimiento() {
     let designaCheck = new DesignaItem();
     this.progressSpinner = true;
+    if(this.designaActual != null){
+        designaCheck.ano = this.designaActual.anio;
+        designaCheck.numero = this.designaActual.numero;
+    }
     designaCheck.idJuzgado = this.datos.selectores.find(el => el.id == 'juzgado').value;
     designaCheck.numProcedimiento = this.datos.inputNumPro.value;
 
@@ -790,7 +795,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       n => {
         this.progressSpinner = false;
         if (this.avisoMismoNProcedimiento) {
-          if (n.body.split(',').length > 1) {
+          if (n.body.split(',').length > 0 && n.body != '0') {
             let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado (" + n.body +  "), ¿Desea continuar?";
             let icon = "fa fa-question-circle";
             let keyConfirmation = "confirmGuardar";

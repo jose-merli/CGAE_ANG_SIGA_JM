@@ -84,5 +84,6 @@ export class DesignaItem {
 	idPersona: String;
 	salto: String;
 	error: Error;
+  anio: number;
     constructor() { }
   }
