@@ -6,6 +6,8 @@ import { Message, ConfirmationService, MenuItem } from "primeng/components/commo
 import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { Identifiers } from "@angular/compiler";
+import { FichaPlantillasDocument } from "../../../../../models/FichaPlantillasDocumentoItem";
+import { InformesModelosComItem } from "../../../../../models/InformesModelosComunicacionesItem";
 
 @Component({
   selector: "app-tarjeta-consultas",
@@ -22,6 +24,7 @@ export class TarjetaConsultasComponent implements OnInit {
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   datos: any = [];
   cols: any = [];
+  bodyInicial: any = [];
   first: number = 0;
   selectedItem: number;
   selectAll: boolean = false;
@@ -31,7 +34,7 @@ export class TarjetaConsultasComponent implements OnInit {
   formatos: any = [];
   sufijos: any = [];
   plantillas: any = [];
-  body: ModelosComunicacionesItem = new ModelosComunicacionesItem();
+  body: FichaPlantillasDocument = new FichaPlantillasDocument();
   tiposEnvio: any = [];
   nuevaPlantilla: boolean = false;
   idPlantillaEnvios: string;
@@ -49,10 +52,13 @@ export class TarjetaConsultasComponent implements OnInit {
   showConsultas: boolean = false;
   @ViewChild("table") table: DataTable;
   selectedDatos;
-
+  consultasGuardadas: boolean = true;
   msgsSteps: Message[] = [];
   activeStep: number;
   steps: MenuItem[];
+  
+  modeloItem: ModelosComunicacionesItem = new ModelosComunicacionesItem();
+  informeItem: InformesModelosComItem = new InformesModelosComItem();
 
   consultasCombo: any[];
   consultasComboDatos: any[];
@@ -93,12 +99,19 @@ export class TarjetaConsultasComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     //this.getDatos();
-    this.getResultados()
+    //this.getResultados()
+    this.getSessionStorage();
     this.getPlantillas();
+
+
+    if (this.body.idInforme != undefined && this.body.idInforme != null) {
+      this.getResultados();
+     // this.getDocumentos();
+    }
     this.getConsultasDisponibles()
 
     this.getSteps();
@@ -109,9 +122,9 @@ export class TarjetaConsultasComponent implements OnInit {
 
     this.selectedItem = 10;
 
-   
+
     this.cols = [
-      { field: "plantillas", header: "informesycomunicaciones.consultas.objetivo" },
+      { field: "plantillas", header: "informesycomunicaciones.consultas.ficha.plantilla" },
       { field: "objetivo", header: "informesycomunicaciones.consultas.objetivo" },
       { field: "idConsulta", header: "menu.informesYcomunicaciones.consultas.fichaConsulta.consulta" },
       { field: "region", header: "informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.region" }
@@ -149,7 +162,7 @@ export class TarjetaConsultasComponent implements OnInit {
     ) {
       this.soloLectura = true;
     }
-    
+
     this.datos = [
       { consulta: "", finalidad: "", objetivo: "Condicional", idObjetivo: "3" },
       {
@@ -174,13 +187,28 @@ export class TarjetaConsultasComponent implements OnInit {
 
   }
 
-  abreCierraFicha() {
-    if (sessionStorage.getItem("crearNuevoModelo") == null) {
-      this.openFicha = !this.openFicha;
-      if (this.openFicha) {
-        this.getDatos();
-      }
+ 
+
+  getSessionStorage() {
+    if (sessionStorage.getItem("modelosSearch") != null) {
+      this.modeloItem = JSON.parse(sessionStorage.getItem("modelosSearch"));
+      this.body.idModeloComunicacion = this.modeloItem.idModeloComunicacion;
+      this.body.idClaseComunicacion = this.modeloItem.idClaseComunicacion;
+      this.body.idInstitucion = this.modeloItem.idInstitucion;
     }
+    if (sessionStorage.getItem("modelosInformesSearch") != null) {
+      this.informeItem = JSON.parse(
+        sessionStorage.getItem("modelosInformesSearch")
+      );
+      this.body.idInforme = this.informeItem.idInforme;
+      this.body.nombreFicheroSalida = this.informeItem.nombreFicheroSalida;
+      this.body.formatoSalida = this.informeItem.formatoSalida;
+      this.body.idFormatoSalida = this.informeItem.idFormatoSalida;
+
+   
+    }
+
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
   }
 
   getSteps() {
@@ -426,6 +454,22 @@ export class TarjetaConsultasComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
+  onChangeConsultas(e, comboConsultas) {
+    let id = e.value;
+    if (id == "") {
+      for (let dato of this.datos) {
+        if (!dato.idConsulta && dato.idConsulta == id) {
+          dato.idConsulta = id;
+          dato.finalidad = "";
+          dato.idInstitucion = "";
+        }
+      }
+    } else {
+      this.getInstitucion(id, comboConsultas);
+      //this.getFinalidad(id);
+    }
+    this.consultasGuardadas = false;
+  }
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -437,6 +481,22 @@ export class TarjetaConsultasComponent implements OnInit {
       this.selectedDatos = [];
       this.numSelected = 0;
     }
+  }
+
+  getInstitucion(id, comboConsultas) {
+    for (let dato of this.datos) {
+      if (dato.idConsulta && dato.idConsulta != "" && dato.idConsulta == id) {
+        dato.idConsulta = id;
+        let continua = true;
+        comboConsultas.forEach(element => {
+          if (continua && element.value == id) {
+            dato.idInstitucion = element.idInstitucion;
+            continua = false;
+          }
+        });
+      }
+    }
+    this.datos = [...this.datos];
   }
 
   onChangeSelectAll() {
@@ -467,87 +527,70 @@ export class TarjetaConsultasComponent implements OnInit {
     // }
   }
 
-  getDatos() {
-    if (sessionStorage.getItem("modelosSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
-      let service = "modelos_detalle_plantillasEnvio";
-      if (this.showHistorico) {
-        service = "modelos_detalle_plantillasHist";
-      }
-
-      this.sigaServices.post(service, this.body.idModeloComunicacion).subscribe(
-        result => {
-          let data = JSON.parse(result.body);
-          this.datos = data.plantillas;
-          this.datos.map(e => {
-            if (e.porDefecto == "Si") {
-              e.porDefecto = true;
-            } else {
-              e.porDefecto = false;
-            }
-            return (
-              (e.nueva = false),
-              (e.idAntiguaPlantillaEnvios = e.idPlantillaEnvios),
-              (e.idAntiguaTipoEnvios = e.idTipoEnvios)
-            );
-          });
-          if (!this.showHistorico) {
-            this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-          }
-        },
-        error => {},
-        () => {}
-      );
-    }
+  addConsulta() {
+    let obj = {
+      consulta: null,
+      finalidad: null,
+      objetivo: "DATOS",
+      idObjetivo: "4",
+      idInstitucion: ""
+    };
+    this.datos.push(obj);
+    this.datos = [...this.datos];
   }
 
-  guardar(dato) {
-    this.progressSpinner = true;
-    let datosAux = JSON.parse(JSON.stringify(this.datos));
+ 
 
-    datosAux.forEach(element => {
-      if (element.porDefecto == true) {
-        element.porDefecto = "Si";
+  guardarConsultas() {
+    let destinatarios = this.datos.map(e => {
+      if (typeof e.idConsulta != "undefined" && e.idConsulta != "") {
+        return true;
       } else {
-        element.porDefecto = "No";
-      }
-
-      if (element.nueva) {
-        element.idModeloComunicacion = this.body.idModeloComunicacion;
+        return false;
       }
     });
 
+    if (destinatarios.indexOf(true) != -1 || this.body.idClaseComunicacion == "5") {
+      this.guardarConsultasOk();
+    }
+  }
+
+  guardarConsultasOk() {
+
+    this.progressSpinner = true;
+    this.body.consultas = [];
+    this.datos.map(e => {
+      let obj = {
+        idConsulta: e.idConsulta,
+        idConsultaAnterior: e.idConsultaAnterior,
+        idObjetivo: e.idObjetivo,
+        idInstitucion: e.idInstitucion,
+        idClaseComunicacion: this.body.idClaseComunicacion,
+        region: e.region
+      };
+      this.body.consultas.push(obj);
+    });
+
     this.sigaServices
-      .post("modelos_detalle_guardarPlantilla", datosAux)
+      .post("plantillasDoc_consultas_guardar", this.body)
       .subscribe(
-        result => {
+        data => {
+          this.showSuccess(this.translateService.instant("informesycomunicaciones.consultas.ficha.correctGuardadoConsulta"));
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-          this.nuevaPlantilla = false;
-          this.showSuccess(
-            this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"
-            )
-          );
-          this.selectedDatos = [];
           this.progressSpinner = false;
+
         },
-        error => {
+        err => {
+          this.showFail(this.translateService.instant("informesycomunicaciones.consultas.ficha.errorGuardadoConsulta"));
           this.progressSpinner = false;
-          this.showFail(
-            this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"
-            )
-          );
-          //console.log(error);
+          //console.log(err);
         },
         () => {
-          this.getDatos();
           this.progressSpinner = false;
+          this.getResultados();
+          this.consultasGuardadas = true;
         }
       );
-
-    this.isNuevo = false;
-    this.selectMultiple = false;
   }
 
   // Mensajes
@@ -570,104 +613,10 @@ export class TarjetaConsultasComponent implements OnInit {
     this.msgs = [];
   }
 
-  eliminar(dato) {
-    this.confirmationService.confirm({
-      // message: this.translateService.instant("messages.deleteConfirmation"),
-      message:
-        this.translateService.instant(
-          "informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar"
-        ) +
-        " " +
-        dato.length +
-        " " +
-        this.translateService.instant(
-          "informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados"
-        ),
-      icon: "fa fa-trash-alt",
-      accept: () => {
-        this.confirmarEliminar(dato);
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
+ 
 
-  confirmarEliminar(dato) {
-    this.progressSpinner = true;
-    this.eliminarArray = [];
-    dato.forEach(element => {
-      if (element.porDefecto == true) {
-        element.porDefecto = "Si";
-      } else {
-        element.porDefecto = "No";
-      }
-      let objEliminar = {
-        idModeloComunicacion: this.body.idModeloComunicacion,
-        idPlantillaEnvios: element.idPlantillaEnvios,
-        idInstitucion: this.body.idInstitucion,
-        idTipoEnvios: element.idTipoEnvios,
-        idAntiguaPlantillaEnvios: element.idAntiguaPlantillaEnvios,
-        idAntiguaTipoEnvios: element.idAntiguaTipoEnvios,
-        porDefecto: element.porDefecto
-      };
-      this.eliminarArray.push(objEliminar);
-    });
-    this.sigaServices
-      .post("modelos_detalle_borrarPlantilla", this.eliminarArray)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.showSuccess(
-            this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado"
-            )
-          );
-          this.selectedDatos = [];
-        },
-        err => {
-          this.progressSpinner = false;
-          this.showFail(
-            this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado"
-            )
-          );
-          //console.log(err);
-        },
-        () => {
-          this.getDatos();
-          this.progressSpinner = false;
-        }
-      );
 
-    this.selectMultiple = false;
-  }
 
-  getTipoEnvios(idPlantillaEnvios) {
-    this.sigaServices
-      .post("modelos_detalle_tipoEnvioPlantilla", idPlantillaEnvios)
-      .subscribe(
-        data => {
-          for (let dato of this.datos) {
-            if (dato.idPlantillaEnvios == idPlantillaEnvios) {
-              dato.tipoEnvio = JSON.parse(data["body"]).tipoEnvio;
-              dato.idTipoEnvios = JSON.parse(data["body"]).idTipoEnvios;
-            }
-          }
-        },
-        err => {
-          //console.log(err);
-        }
-      );
-  }
 
   getHistorico(key) {
     if (key == "visible") {
@@ -675,10 +624,10 @@ export class TarjetaConsultasComponent implements OnInit {
     } else if (key == "hidden") {
       this.showHistorico = false;
     }
-    this.getDatos();
+    //this.getDatos();
   }
 
-  onChangeTipoEnvio(e) {}
+  onChangeTipoEnvio(e) { }
 
   getPlantillas() {
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
@@ -691,7 +640,7 @@ export class TarjetaConsultasComponent implements OnInit {
       err => {
         //console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -717,28 +666,10 @@ export class TarjetaConsultasComponent implements OnInit {
   }
 
   onChangePlantilla(e) {
-    let idPlantillaEnvios = e.value;
-    if (idPlantillaEnvios == "") {
-      for (let dato of this.datos) {
-        if (
-          !dato.idPlantillaEnvios &&
-          dato.idPlantillaEnvios == idPlantillaEnvios
-        ) {
-          dato.idPlantillaEnvios = idPlantillaEnvios;
-          dato.tipoEnvio = "";
-        }
-      }
 
-      this.isGuardar = true;
-    } else {
-      this.getTipoEnvios(idPlantillaEnvios);
-      this.isGuardar = false;
-    }
-
-    this.selectedDatos = [];
   }
 
-  onChangePlantillas($event, data){
+  onChangePlantillas($event, data) {
 
   }
 
