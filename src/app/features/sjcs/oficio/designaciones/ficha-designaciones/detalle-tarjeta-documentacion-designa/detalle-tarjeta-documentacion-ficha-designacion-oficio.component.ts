@@ -16,6 +16,7 @@ import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { Router } from '@angular/router';
 import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { ConfirmationService } from 'primeng/api';
+import { element } from 'protractor';
 
 interface Cabecera {
   id: string;
@@ -728,16 +729,22 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
     try {
       if (this.esColegioZonaComun) {
         if (this.selectedArray != undefined && this.selectedArray.length != 0 && await this.confirmEnviarDocumentacionAdicional()) { 
+
+          this.ejgsConExpedienteExt.forEach(element => {
             this.selectedArray.forEach(el => {
-
+              let anio = element.anio;
+              let numero = element.numero;
+              let idtipo = element.idtipo;
               let row: Row = this.rowGroups.slice(el, el + 1)[0];
-              let idDocumentaciondes =  row.cells[6].value
-              this.ejgsConExpDocAdicional.push({idDocumentaciondes});
+              let idDocumentaciondes =  row.cells[6].value;
+              this.ejgsConExpDocAdicional.push({anio, idtipo, numero, idDocumentaciondes});
             });
-
-          let requests = this.ejgsConExpDocAdicional.map(d => {
-            return { idDocumentacion: d.idDocumentaciondes };
           });
+          
+          let requests = this.ejgsConExpDocAdicional.map(d => {
+            return { anio: d.anio, idTipoEjg: d.idtipo, numero: d.numero, idDocumentacion: d.idDocumentaciondes };
+          });
+          this.ejgsConExpedienteExt = [];
           this.ejgsConExpDocAdicional = [];
           await Promise.all(requests.map(d => this.accionEnviarDocumentacionAdicional(d)));
           this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
