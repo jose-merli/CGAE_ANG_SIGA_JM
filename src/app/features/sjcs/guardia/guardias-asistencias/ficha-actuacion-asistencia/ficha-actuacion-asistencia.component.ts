@@ -125,11 +125,11 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       this.tarjetaFija.campos = [
         {
           "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.annioNum") + ' asistencia',
-          "value": ''
+          "value": this.asistencia.anioNumero
         },
         {
           "key": this.translateService.instant("censo.resultadosSolicitudesModificacion.literal.fecha") + ' Asistencia',
-          "value": ""
+          "value": this.asistencia.fechaAsistencia.substr(0, 11)
         },
         {
           "key": this.translateService.instant("dato.jgr.guardia.guardias.turno"),
@@ -224,7 +224,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
         },
         {
           "key": this.translateService.instant("censo.resultadosSolicitudesModificacion.literal.fecha") + ' Asistencia',
-          "value": this.asistencia.fechaAsistencia
+          "value": this.asistencia.fechaAsistencia.substr(0, 11)
         },
         {
           "key": this.translateService.instant("dato.jgr.guardia.guardias.turno"),
