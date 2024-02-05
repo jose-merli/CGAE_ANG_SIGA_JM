@@ -98,6 +98,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   fromCliente: boolean = false;
   fromAbogadoContrarioEJG: boolean = false;
   fromDesignaciones: boolean = false;
+  fromCompraSuscripcion: boolean = false;
   disableInput:boolean = false;
   migaPan: string = '';
   migaPan2: string = '';
@@ -162,6 +163,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
     if(sessionStorage.getItem("origin") == "AbogadoContrarioEJG"){
       this.fromAbogadoContrarioEJG = true;
+    }
+    if(sessionStorage.getItem("origin") == "newProducto"){
+      console.log('Entro a get');
+      this.fromCompraSuscripcion = true;
     }
     else if(sessionStorage.getItem("origin")=="newCliente"){
       sessionStorage.removeItem('origin');
@@ -988,11 +993,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
     
     //let colegioSelec = this.colegios_seleccionados[0].idInstitucion;
     // En caso que venga de una ficha de contrario
-    if (this.fromAbogadoContrario || this.fromAbogadoContrarioEJG || this.fromCliente) {
+    if (this.fromAbogadoContrario || this.fromAbogadoContrarioEJG || this.fromCliente || this.fromCompraSuscripcion) {
       sessionStorage.setItem('abogado', JSON.stringify(id));
-      if(this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
-      else sessionStorage.setItem("origin", "ContrarioEJG");
-      this.location.back();
+      if (this.fromCompraSuscripcion) {
+        sessionStorage.setItem("origin", "newProduct");
+        this.router.navigate(["/fichaCompraSuscripcion"])
+      } else {
+        if (this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
+        else sessionStorage.setItem("origin", "ContrarioEJG");
+        this.location.back();
+      }
     }
     //En caso que se este seleccionando un nuevo porcurador
     else if (this.nuevoProcurador) {
