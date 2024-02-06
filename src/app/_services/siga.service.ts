@@ -676,6 +676,7 @@ export class SigaServices {
 		plantillasDoc_combo_consultas: 'plantillasDoc/combo/consultas',
 		plantillasDoc_combo_formatos: 'plantillasDoc/combo/formatos',
 		plantillasDoc_combo_sufijos: 'plantillasDoc/combo/sufijos',
+		plantillasDoc_combo_sufijos_agrupados: 'plantillasDoc/combo/sufijosAgrupados',
 		plantillasDoc_consultas_guardar: 'plantillasDoc/consultas/guardar',
 		plantillasDoc_consultas_borrar: 'plantillasDoc/consultas/borrar',
 		plantillasDoc_consultas: 'plantillasDoc/consultas',
