@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnInit, ViewChild,Output } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { TranslateService } from '../../../../../commons/translate';
@@ -38,6 +38,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
   procurador;
   listaPrueba = [];
   relaciones: any;
+  ejgsConExpedienteExt = [];
   comunicaciones: any;
   isLetrado: boolean = false;
   usuarioLogado;
@@ -1481,6 +1482,13 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
           this.relaciones = JSON.parse(n.body).relacionesItem;
           let primero = this.relaciones[0];
           let error = JSON.parse(n.body).error;
+
+          this.relaciones.forEach(element => {
+            if (element.idExpedienteExt != null ){  
+              this.ejgsConExpedienteExt.push(element);
+              sessionStorage.setItem("tieneExpedienteExt", 'true');
+            }
+          });
 
           if (error != null && error.description != null) {
             this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);

@@ -54,6 +54,7 @@ export class ResolucionComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() newEstado = new EventEmitter();
   @Input() openTarjetaResolucion;
+  @Output() changeResolucion = new EventEmitter<ResolucionEJGItem>();
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
@@ -75,6 +76,7 @@ export class ResolucionComponent implements OnInit {
     this.getComboPonente();
     this.getComboOrigen();
     this.checkPerfil();
+  
 
     this.commonsServices.checkAcceso(procesos_ejg.resolucion)
       .then(respuesta => {
@@ -160,6 +162,7 @@ export class ResolucionComponent implements OnInit {
         //Se desbloquea el desplegable de fundamento juridico si hay una resolucion seleccionada al inciar la tarjeta.
         if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) this.isDisabledFundamentosJurid = false;
         this.progressSpinner = false;
+        this.changeResolucion.emit(this.resolucion);
       },
       err => {
         this.progressSpinner = false;

@@ -243,9 +243,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
 
   crearEJG() {
     sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
-    if(this.asistencia.asistido != null && this.asistencia.asistido != undefined){
-      sessionStorage.setItem("nombreInteresado", this.asistencia.asistido);
-    }
+    sessionStorage.setItem("nombreInteresado", this.asistencia.asistido);
     sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);

@@ -75,7 +75,7 @@
         </app-informe-calificacion>
         
         <app-resolucion id="resol" *ngIf="permisoEscrituraResolucion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaResolucion]="tarjetaResolucion" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaResolucion]="openTarjetaResolucion"
-        (newEstado)="newEstado()">
+        (newEstado)="newEstado()" (changeResolucion)="changeResolucion($event)">
         </app-resolucion>
 
         <app-impugnacion *ngIf="permisoEscrituraImpugnacion != undefined && modoEdicion"

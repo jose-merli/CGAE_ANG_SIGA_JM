@@ -26,7 +26,9 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 		nifCifCliente: new FormControl(''),
 		nombreApellidosCliente: new FormControl('')
 	});
-	
+
+	numeroColegiado: string;
+	nifCif: string;
 	idColegioCliente: string;
 	idPersona: string = '';
 
@@ -51,16 +53,22 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 			} else if (sessionStorage.getItem('abogado')) {
 				let data = JSON.parse(sessionStorage.getItem('abogado'));
 				if (data != undefined) {
+					let nombre = '';
+					let numeroColegiado = '';
 					if(Array.isArray(data)){
 						data = data[0];
-						this.clientForm.get("numeroColegiadoCliente").setValue(data.numeroColegiado);
-						this.clientForm.get("nombreApellidosCliente").setValue(data.apellidos + " " + data.nombre);
+						nombre = data.numeroColegiado;
+						numeroColegiado = data.apellidos + " " + data.nombre;
 					} else{
-						this.clientForm.get("numeroColegiadoCliente").setValue(data.numColegiado);
-						this.clientForm.get("nombreApellidosCliente").setValue(data.nombre);
+						nombre = data.numColegiado;
+						numeroColegiado = data.nombre;
 					}
+					this.clientForm.get("numeroColegiadoCliente").setValue(numeroColegiado);
+					this.clientForm.get("nombreApellidosCliente").setValue(nombre);
 					this.clientForm.get("nifCifCliente").setValue(data.nif);
 					this.idPersona = data.idPersona;
+					this.nifCif = data.nif;
+					this.numeroColegiado = numeroColegiado;
 				}
 				sessionStorage.removeItem("abogado");
 			}
@@ -101,13 +109,17 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 
 	onBlurNumeroColegiado(){
 		if(!this.isLetrado){
-			this.searchClient(this.clientForm.get('numeroColegiadoCliente').value, true);
+			if(this.numeroColegiado != this.clientForm.get('numeroColegiadoCliente').value){
+				this.searchClient(this.clientForm.get('numeroColegiadoCliente').value, true);
+			}
 		}
 	}
 	
 	onBlurNifCif(){
 		if(!this.isLetrado){
-			this.searchClient(this.clientForm.get('nifCifCliente').value, false);
+			if(this.nifCif != this.clientForm.get('nifCifCliente').value){
+				this.searchClient(this.clientForm.get('nifCifCliente').value, false);
+			}
 		}
 	}
 
@@ -170,6 +182,10 @@ export class BuscadorColegiadosExpressComponent implements OnInit {
 						this.clientForm.get("nifCifCliente").setValue(colegiados.colegiadoJGItem[0].nifcif);
 						this.clientForm.get("nombreApellidosCliente").setValue(colegiados.colegiadoJGItem[0].nombre);
 						this.idPersona = colegiados.colegiadoJGItem[0].idPersona;
+
+						this.nifCif = colegiados.colegiadoJGItem[0].nifcif;
+						this.numeroColegiado = colegiados.colegiadoJGItem[0].nColegiado;
+
 					} else {
 						this.showMessage("warn", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.justificacionExpres.colegiadoNoEncontrado"));
 					}
