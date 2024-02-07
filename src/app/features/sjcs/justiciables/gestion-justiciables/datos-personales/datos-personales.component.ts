@@ -263,18 +263,16 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.body.codigopostal != undefined && this.body.codigopostal != "" &&
     this.body.idprovincia != undefined && this.body.idprovincia != "" &&
     this.body.idpoblacion != undefined && this.body.idpoblacion != "" ) {
-        if(this.body.telefonos.length > 0){
-          this.validateForm = true;
-          for(let i = 0; i < this.body.telefonos.length; i++){
-            if(this.body.telefonos[i].nombreTelefono == undefined || this.body.telefonos[i].numeroTelefono == undefined || 
-            this.body.telefonos[i].nombreTelefono == "" || this.body.telefonos[i].numeroTelefono == ""){
-              this.validateForm = false;
-              break;
-            }
-          }
-        } else {
-          this.validateForm = true;
+      this.validateForm = true;
+    }
+    if(this.body.telefonos.length > 0){
+      for(let i = 0; i < this.body.telefonos.length; i++){
+        if(this.body.telefonos[i].nombreTelefono == undefined || this.body.telefonos[i].numeroTelefono == undefined || 
+        this.body.telefonos[i].nombreTelefono == "" || this.body.telefonos[i].numeroTelefono == ""){
+          this.deleteTelefono(i)
+          i--;
         }
+      }
     }
     return this.validateForm;
   }
