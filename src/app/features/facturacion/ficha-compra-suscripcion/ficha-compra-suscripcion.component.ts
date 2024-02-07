@@ -186,40 +186,18 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   }
 
   getEstado(): void {
-    let filas = [];
-    if(this.ficha.fechaPendiente!=null){
-      let fila = new FilaHistoricoPeticionItem();
-      fila.fecha = this.ficha.fechaPendiente;
-      fila.estado = this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente");
-      filas.push(fila);
+
+    this.lastFilaHistorica = {fecha: this.ficha.fechaPendiente, estado: this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente")};
+    if(this.ficha.fechaAnulada != null) {
+      this.lastFilaHistorica = {fecha: this.ficha.fechaAnulada, estado: this.translateService.instant("facturacion.productos.anulada")};
+    } else if(this.ficha.fechaSolicitadaAnulacion != null) {
+      this.lastFilaHistorica = {fecha: this.ficha.fechaSolicitadaAnulacion, estado: this.translateService.instant("facturacion.productos.anulacionSolicitada")};
+    } else if(this.ficha.fechaAceptada != null) {
+      this.lastFilaHistorica = {fecha: this.ficha.fechaAceptada, estado: this.translateService.instant("facturacion.productos.aceptada")};
+    } else if(this.ficha.fechaDenegada != null) {
+      this.lastFilaHistorica = {fecha: this.ficha.fechaDenegada, estado: this.translateService.instant("facturacion.productos.denegada")};
     }
-    if(this.ficha.fechaDenegada!=null){
-      let fila = new FilaHistoricoPeticionItem();
-      fila.fecha = this.ficha.fechaDenegada;
-      fila.estado = this.translateService.instant("facturacion.productos.denegada");
-      filas.push(fila);
-    }
-    if(this.ficha.fechaAceptada!=null){
-      let fila = new FilaHistoricoPeticionItem();
-      fila.fecha = this.ficha.fechaAceptada;
-      fila.estado = this.translateService.instant("facturacion.productos.aceptada");
-      filas.push(fila);
-    }
-    if(this.ficha.fechaSolicitadaAnulacion!=null){
-      let fila = new FilaHistoricoPeticionItem();
-      fila.fecha = this.ficha.fechaSolicitadaAnulacion;
-      fila.estado = this.translateService.instant("facturacion.productos.anulacionSolicitada");
-      filas.push(fila);
-    }
-    if(this.ficha.fechaAnulada!=null){
-      let fila = new FilaHistoricoPeticionItem();
-      fila.fecha = this.ficha.fechaAnulada;
-      fila.estado = this.translateService.instant("facturacion.productos.anulada");
-      filas.push(fila);
-    }
-    let lastfecha = Math.max(...filas.map(fila => new Date(fila.fecha).getTime()));
-    let filasFiltradas = filas.filter(fila => fila.fecha === lastfecha);
-    this.lastFilaHistorica = filasFiltradas[filasFiltradas.length-1];
+
     let indexEstado = this.datosTarjetaResumen.findIndex(dato => dato.label === 'Estado');
     indexEstado === -1 ? this.datosTarjetaResumen.push({label:'Estado', value: this.lastFilaHistorica.estado}) : 
         this.datosTarjetaResumen[indexEstado].value = this.lastFilaHistorica.estado;

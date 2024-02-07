@@ -41,7 +41,7 @@
             </div>
             <div *ngIf="filas.length > 0" class="col-2">
               <label>Fecha aprobación
-                <span>{{ ficha.fechaCompra | date: 'dd/MM/yyyy' }}</span>
+                <span>{{ ficha.fechaAceptada | date: 'dd/MM/yyyy' }}</span>
               </label>
             </div>
             <div *ngIf="filas.length > 0" class="col-2">
@@ -90,7 +90,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>Fecha aprobacion
               </label>
-              <input [ngModel]="ficha.fechaCompra | date: 'dd/MM/yyyy'" type="string" class="form-control" disabled pInputText />
+              <input [ngModel]="ficha.fechaAceptada | date: 'dd/MM/yyyy'" type="string" class="form-control" disabled pInputText />
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>Última modificación
