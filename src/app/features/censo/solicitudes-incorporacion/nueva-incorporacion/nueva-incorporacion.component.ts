@@ -161,6 +161,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   fileListOrdenado: File[] = [];
 
   @ViewChild("table") table : Table;
+  errorDocumentos: boolean = false;
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -1462,6 +1463,7 @@ export class NuevaIncorporacionComponent implements OnInit {
                   this.iniciarTramiteEXEA();
                 }else{
                   this.showFailNotTraduce('Falta documentación obligatoria por adjuntar');
+                  this.errorDocumentos = true;
                   this.progressSpinner = false;
                 }
               } else {
@@ -1747,7 +1749,8 @@ export class NuevaIncorporacionComponent implements OnInit {
               detail: "Error al guardar la solicitud."
             }
           ];
-        }
+        },
+        () => this.validateSizeFile()
       );
 
   }
@@ -2710,7 +2713,10 @@ para poder filtrar el dato con o sin estos caracteres*/
           if(result.error){
             this.showFailNotTraduce(result.error.description);
           }else{
-            this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+            if(!this.errorDocumentos){
+              this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+            }
+            this.errorDocumentos = false;
             this.getDocRequerida();
           }
         },
