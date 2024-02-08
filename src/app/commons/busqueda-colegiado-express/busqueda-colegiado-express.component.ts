@@ -25,6 +25,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() obligatorio: boolean;
   @Input() datosGeneralesEjg:boolean;
   @Output() idPersona = new EventEmitter<string>();
+  @Output() setDatosEjg = new EventEmitter();
   progressSpinner: boolean = false;
   nColegiado: string = "";
   apellidosNombre: string = "";
@@ -226,11 +227,13 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
           //Comprobamos el estado del checkbox para el art 27-28
           if (this.art27) sessionStorage.setItem("art27", "true");
 
+          this.setDatosEjg.emit();
           if (this.art27){
             sessionStorage.setItem("Art27Activo", "true");
             this.router.navigate(["/busquedaGeneral"]);
-          }
-          else this.router.navigate(["/buscadorColegiados"]);
+          } else {
+            this.router.navigate(["/buscadorColegiados"]);
+          } 
         }
       }
     // this.buscarDisabled=false;

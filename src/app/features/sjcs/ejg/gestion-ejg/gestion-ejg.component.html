@@ -2,20 +2,23 @@
     <div class="header-title">
         <i class="fa fa-square"></i>
         <p>{{'menu.justiciaGratuita' | translate}}
-            <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}
+        <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}
     </div>
     <div>
-        <app-tarjeta-resumen-fija class="pb-50" *ngIf="permisoEscrituraResumen != undefined"
-            [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos"
-            [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen"
-            (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+        
+        <app-tarjeta-resumen-fija class="pb-50"
+            [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" 
+            [chincheta]="true" 
+            [datos]="datosResumen"
+            [icono]="'clipboard'">
         </app-tarjeta-resumen-fija>
         
-        <app-datos-generales-ejg (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" 
-        *ngIf="permisoEscrituraDatosGenerales != undefined" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)" 
-        (guardadoSend)="guardadoSend($event)" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (newEstado)="newEstado()" [nuevo] ="nuevo">
+        <app-datos-generales-ejg [checkPermission]="permisos.datosGenerales" 
+            (guardadoSend)="guardadoSend($event)"
+            [modoEdicion]="modoEdicion" [nuevo]="nuevo" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" [datos]="body">
         </app-datos-generales-ejg>
 
+        <!--
         <app-unidad-familiar *ngIf="permisoEscrituraUnidadFamiliar != undefined && modoEdicion"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
             [tarjetaUnidadFamiliar]="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion"
@@ -104,20 +107,20 @@
             (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac" (opened)="manuallyOpened = $event"
             (idOpened)="isCloseReceive($event)">
         </app-tarjeta-facturacion-generica>
-
-        <!-- Listas de intercabios - Integración Pericles -->
+        
         <app-lista-intercambios-alta-ejg *ngIf="permisoListasIntercambiosPericles != undefined && modoEdicion" [body]="body"
             [openTarjetaListaIntercambiosAltaEjg]="openTarjetaListaIntercambiosAltaEjg"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
         </app-lista-intercambios-alta-ejg>
+
         <app-lista-intercambios-documentacion-ejg *ngIf="permisoListasIntercambiosPericles != undefined && modoEdicion" [body]="body"
             [openTarjetaListaIntercambiosDocumentacionEjg]="openTarjetaListaIntercambiosDocumentacionEjg"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
         </app-lista-intercambios-documentacion-ejg>
+        -->
     </div>
 
 </div>
 <div class="mt-3 text-right main-button" id="down">
-    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
-        label="{{ 'general.boton.volver' | translate }}"></button>
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
 </div>
