@@ -43,6 +43,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   isLetrado: boolean;
   datosAsistencia: TarjetaAsistenciaItem;
   sinModificacion:boolean = true;
+  vieneDeEJG: boolean = false;
   nif: any;
   ultimoLetradoDelTurno: any;
   turno: any;
@@ -109,7 +110,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     disable: true, //SIGARNV-2371
     obligatorio: true
   }];
-  vieneDeEJG: boolean = false;
+
 
   constructor(private sigaServices: SigaServices,
     private datePipe: DatePipe,
@@ -127,6 +128,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.resaltadoDatos = true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     this.initDatos = this.campos;
+    this.vieneDeEJG = false;
     if (!this.nuevaDesigna) {
       //EDICION
       this.disableButtons = true;
@@ -334,6 +336,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.datosEJG = JSON.parse(sessionStorage.getItem("EJG"));
       sessionStorage.removeItem("EJG");
       sessionStorage.setItem("EJGcopy", JSON.stringify(this.datosEJG));
+      this.vieneDeEJG = true;
       //Datos de la tarjeta datos generales
       //Comprobar art 27.
       if (sessionStorage.getItem("Art27")) {
@@ -378,8 +381,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if (sessionStorage.getItem("asistenciaUnica")) {
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistenciaUnica"));
       sessionStorage.removeItem("asistenciaUnica");
-
-      this.vieneDeEJG = true;
 
       //Numero colegiado letrado
       this.inputs[0].value = this.datosAsistencia.numeroColegiado;
