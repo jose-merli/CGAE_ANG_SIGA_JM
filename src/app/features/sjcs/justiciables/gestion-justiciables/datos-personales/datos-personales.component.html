@@ -119,8 +119,8 @@
                 <th><button pButton type="button" icon="fas fa-plus" (click)="addTelefono()"></button></th>
               </tr>
               <tr *ngFor="let telefono of body.telefonos; let i = index">
-                <td><input pInputText type="text" class="form-control" [(ngModel)]="telefono.nombreTelefono" [ngClass]="styleObligatorio(telefono.nombreTelefono)" (change)="onChangeInput()"></td>
-                <td><input pInputText type="text" class="form-control" [(ngModel)]="telefono.numeroTelefono" [ngClass]="styleObligatorio(telefono.numeroTelefono)" (change)="onChangeInput()"></td>
+                <td><input pInputText type="text" class="form-control" [(ngModel)]="telefono.nombreTelefono" (change)="onChangeInput()"></td>
+                <td><input pInputText type="text" class="form-control" [(ngModel)]="telefono.numeroTelefono" (change)="onChangeInput()"></td>
                 <td><p-checkbox binary="true" [(ngModel)]="telefono.preferenteSmsCheck"></p-checkbox></td>
                 <td><button pButton type="button" icon="far fa-trash-alt" (click)="deleteTelefono(i)"></button></td>
               </tr>
