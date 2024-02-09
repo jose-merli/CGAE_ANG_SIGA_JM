@@ -266,15 +266,13 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       this.validateForm = true;
     }
     if(this.body.telefonos.length > 0){
-      let i = 0;
-      while (i < this.body.telefonos.length) {
-        if(this.body.telefonos[i].nombreTelefono === undefined || this.body.telefonos[i].numeroTelefono === undefined || 
-           this.body.telefonos[i].nombreTelefono === "" || this.body.telefonos[i].numeroTelefono === ""){
-            this.deleteTelefono(i);
-        } else {
-            i++;
+      for(let i = 0; i < this.body.telefonos.length; i++){
+        if(this.body.telefonos[i].nombreTelefono == undefined || this.body.telefonos[i].numeroTelefono == undefined || 
+        this.body.telefonos[i].nombreTelefono == "" || this.body.telefonos[i].numeroTelefono == ""){
+          this.deleteTelefono(i)
+          i--;
         }
-    }
+      }
     }
     return this.validateForm;
   }
@@ -318,9 +316,9 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
   deleteTelefono(index: number) {
     this.body.telefonos.splice(index, 1);
-    // if (this.body.telefonos.length == 0) {
-    //   this.body.telefonos.push(new JusticiableTelefonoItem());
-    // }
+    if (this.body.telefonos.length == 0) {
+      this.body.telefonos.push(new JusticiableTelefonoItem());
+    }
     this.hasChange = true;
   }
 
