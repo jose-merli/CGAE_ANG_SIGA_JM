@@ -78,6 +78,9 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
   progressSpinner: boolean = false;
   esColegiado: boolean; // Con esta variable se determina si el usuario conectado es un colegiado o no.
 
+  historico: boolean;
+  datosMostrados: ListaSuscripcionesItem[];
+
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService,
     private commonsService: CommonsService, private router: Router,
@@ -101,6 +104,9 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
     else {
       this.currentDate = new Date();
     }
+    this.selectedRows = [];
+    this.numSelectedRows = 0;
+    this.filterDatosByHistorico();
   }
 
   initComboEstadoSuscripcion() {
@@ -436,7 +442,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
   //Metodo activado al pulsar sobre el checkbox Seleccionar todo
   onChangeSelectAllRows() {
     if (this.selectAllRows === true) {
-      this.selectedRows = this.listaSuscripciones;
+      this.selectedRows = this.datosMostrados;
       this.numSelectedRows = this.listaSuscripciones.length;
 
     } else {
@@ -493,6 +499,34 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
 				this.permisoAnularSuscripcion = respuesta;
 			})
 			.catch((error) => console.error(error));
+  }
+
+  // Botón de ocultar o mostrar histórico
+  toggleHistorico(): void {
+    this.historico = !this.historico;
+
+    this.filterDatosByHistorico();
+
+    this.selectedRows = [];
+    this.numSelectedRows = 0;
+    this.suscripcionesTable.reset();
+    this.selectAllRows = false;
+    if (this.selectMultipleRows) {
+      this.selectMultipleRows = false;
+    }
+
+    setTimeout(() => {
+      this.commonsService.scrollTablaFoco('suscripcionesTable');
+      this.commonsService.scrollTop();
+    }, 5);
+  }
+
+  // Mostrar u ocultar histórico
+  filterDatosByHistorico(): void {
+    if (this.historico)
+      this.datosMostrados = this.listaSuscripciones.filter(dato => dato.fechaAnulada != null);
+    else
+      this.datosMostrados = this.listaSuscripciones.filter(dato => dato.fechaAnulada == null);
   }
 
 }
