@@ -55,7 +55,7 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
   ngOnInit() {
     let today = new Date();
     this.progressSpinner = true;
-    this.filtrosSuscripciones.fechaSolicitudDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
+    //this.filtrosSuscripciones.fechaSolicitudDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
     this.filtrosSuscripciones.aFechaDe = new Date();
 
     this.getComboCategoria();
