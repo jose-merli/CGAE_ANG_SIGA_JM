@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component,EventEmitter, Output, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
@@ -40,6 +40,9 @@ export class DatosGeneralesFichaComponent implements OnInit {
   progressSpinner: boolean = false;
   resaltadoDatos: boolean = false;
   informeUnico: boolean = false;
+
+  @Output() cambioDatoGeneral = new EventEmitter<DatosGeneralesFicha>();
+  
   fichasPosibles = [
     {
       key: "generales",
@@ -63,6 +66,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     }
   ];
 
+  
   constructor(
     private router: Router,
     private translateService: TranslateService,
@@ -219,6 +223,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
                     );
                     sessionStorage.removeItem("crearNuevoModelo");
                     this.sigaServices.notifyRefreshPerfiles();
+                    this.cambioDatoGeneral.emit(this.body)
                   },
                   err => {
                     //console.log(err);

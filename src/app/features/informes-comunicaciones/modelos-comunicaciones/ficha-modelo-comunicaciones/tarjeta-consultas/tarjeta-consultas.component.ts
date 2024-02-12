@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, OnChanges, Input,ViewChild, ChangeDetectorRef, SimpleChanges } from "@angular/core";
 import { DataTable } from "primeng/datatable";
 import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
 import { SigaServices } from "../../../../../_services/siga.service";
@@ -8,6 +8,7 @@ import { TranslateService } from "../../../../../commons/translate/translation.s
 import { Identifiers } from "@angular/compiler";
 import { FichaPlantillasDocument } from "../../../../../models/FichaPlantillasDocumentoItem";
 import { InformesModelosComItem } from "../../../../../models/InformesModelosComunicacionesItem";
+import { DatosGeneralesFicha } from "../../../../../models/DatosGeneralesFichaItem";
 
 @Component({
   selector: "app-tarjeta-consultas",
@@ -49,6 +50,7 @@ export class TarjetaConsultasComponent implements OnInit {
   isGuardar: boolean = false;
   progressSpinner: boolean = false;
   editar: boolean = true;
+  isNew: boolean = false;
   showConsultas: boolean = false;
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -67,6 +69,8 @@ export class TarjetaConsultasComponent implements OnInit {
   consultasComboCondicional: any[];
   consultasComboPlantillas: any[];
 
+  @Input() datoRecargar: DatosGeneralesFicha;
+  @Input() botonActivo: boolean = false;
   fichasPosibles = [
     {
       key: "generales",
@@ -106,13 +110,14 @@ export class TarjetaConsultasComponent implements OnInit {
     //this.getResultados()
     this.getSessionStorage();
     this.getPlantillas();
-
-
-    if (this.body.idInforme != undefined && this.body.idInforme != null) {
-      this.getResultados();
-     // this.getDocumentos();
-    }
     this.getConsultasDisponibles()
+
+    this.getResultados();
+   //// if (this.body.idInforme != undefined && this.body.idInforme != null) {
+     // this.getResultados();
+     // this.getDocumentos();
+   // }
+   // this.getConsultasDisponibles()
 
     this.getSteps();
 
@@ -196,7 +201,13 @@ export class TarjetaConsultasComponent implements OnInit {
       this.body.idClaseComunicacion = this.modeloItem.idClaseComunicacion;
       this.body.idInstitucion = this.modeloItem.idInstitucion;
     }
-    if (sessionStorage.getItem("modelosInformesSearch") != null) {
+
+    if(this.isNew){
+      this.body.idModeloComunicacion = this.datoRecargar.idModeloComunicacion;
+      this.body.idClaseComunicacion = this.datoRecargar.idClaseComunicacion;
+      this.body.idInstitucion = this.datoRecargar.idInstitucion;
+    }
+    /*if (sessionStorage.getItem("modelosInformesSearch") != null) {
       this.informeItem = JSON.parse(
         sessionStorage.getItem("modelosInformesSearch")
       );
@@ -206,7 +217,7 @@ export class TarjetaConsultasComponent implements OnInit {
       this.body.idFormatoSalida = this.informeItem.idFormatoSalida;
 
    
-    }
+    }*/
 
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
   }
@@ -293,6 +304,7 @@ export class TarjetaConsultasComponent implements OnInit {
     if (this.showHistorico) {
       service = "plantillasDoc_consultas_historico";
     }
+    this.body.idInforme = '1'; // IdInforme por defecto.
     this.sigaServices.post(service, this.body).subscribe(
       data => {
         this.datos = JSON.parse(data["body"]).consultaItem;
@@ -624,10 +636,16 @@ export class TarjetaConsultasComponent implements OnInit {
     } else if (key == "hidden") {
       this.showHistorico = false;
     }
-    //this.getDatos();
+    this.getResultados();
   }
 
-  onChangeTipoEnvio(e) { }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.datoRecargar && !changes.datoRecargar.firstChange) {
+      console.log(this.datoRecargar);
+      this.isNew = true;
+      this.ngOnInit();
+    }
+  }
 
   getPlantillas() {
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
@@ -665,13 +683,6 @@ export class TarjetaConsultasComponent implements OnInit {
     this.selectMultiple = false;
   }
 
-  onChangePlantilla(e) {
-
-  }
-
-  onChangePlantillas($event, data) {
-
-  }
 
   // onChangePorDefecto(e) {
 

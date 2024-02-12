@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter,  ChangeDetectorRef, ViewChild, SimpleChanges } from "@angular/core";
 import { Router } from "@angular/router";
 import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
@@ -11,6 +11,7 @@ import { FichaPlantillasDocument } from "../../../../../models/FichaPlantillasDo
 import { SufijoItem } from "../../../../../models/SufijoItem";
 import { PlantillaDocumentoItem } from "../../../../../models/PlantillaDocumentoItem";
 import { FileAux } from "../../../../../models/sjcs/FileAux";
+import { DatosGeneralesFicha } from "../../../../../models/DatosGeneralesFichaItem";
 
 @Component({
   selector: "app-tarjeta-plantillas-documentos",
@@ -59,6 +60,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   extensionArchivo: any;
   disabledGuardar: any;
   documentos: any = [];
+  @Input() datoRecargar: DatosGeneralesFicha;
 
   @ViewChild("table") table: DataTable;
   selectedDatos: FichaPlantillasDocument[] = [];
@@ -85,7 +87,8 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       activa: true
     }
   ];
-
+  isNew: Boolean = false;
+  @Output() activaInformes = new EventEmitter<void>();
   constructor(
     private router: Router,
     private translateService: TranslateService,
@@ -261,18 +264,10 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       this.bodyFichaPlantillasDocument.idClaseComunicacion = this.modelo.idClaseComunicacion;
       this.bodyFichaPlantillasDocument.idInstitucion = this.modelo.idInstitucion;
     }
-    if (sessionStorage.getItem("modelosInformesSearch") != null) {
-      this.informeItem = JSON.parse(
-        sessionStorage.getItem("modelosInformesSearch")
-      );
-      this.bodyFichaPlantillasDocument.idInforme = this.informeItem.idInforme;
-      this.bodyFichaPlantillasDocument.nombreFicheroSalida = this.informeItem.nombreFicheroSalida;
-      this.bodyFichaPlantillasDocument.formatoSalida = this.informeItem.formatoSalida;
-      this.bodyFichaPlantillasDocument.idFormatoSalida = this.informeItem.idFormatoSalida;
-
-      if (this.bodyFichaPlantillasDocument.idFormatoSalida != undefined) {
-        this.changeFormato();
-      }
+    if (this.isNew) {
+      this.modelo.idModeloComunicacion = this.datoRecargar.idModeloComunicacion;
+      this.modelo.idClaseComunicacion = this.datoRecargar.idClaseComunicacion;
+      this.modelo.idInstitucion = this.datoRecargar.idInstitucion;
 
     }
 
@@ -312,6 +307,9 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
         listaPlantillas.push(plantilla)
 
         this.datos = JSON.parse(data.body).plantillasModeloDocumentos as FichaPlantillasDocument[];
+
+        if(this.datos.length > 0) this.activaInformes.emit();
+        
         this.datos.forEach(element => {
           element.idModeloComunicacion = this.modelo.idModeloComunicacion;
           element.idClaseComunicacion = this.modelo.idClaseComunicacion;
@@ -504,6 +502,14 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     );
 
     this.validateSizeFile(dato);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.datoRecargar && !changes.datoRecargar.firstChange) {
+      console.log(this.datoRecargar);
+      this.isNew = true;
+      this.ngOnInit();
+    }
   }
 
   validateSizeFile(dato) {
