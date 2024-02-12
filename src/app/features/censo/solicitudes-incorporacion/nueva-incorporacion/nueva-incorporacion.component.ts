@@ -2681,11 +2681,14 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   ordenarDocumentosSubidos(){
     let y=0;
+    const nombresDocumentosIncluidos: string[] = [];
+
       for(let i=0; i < this.documentos.length; i++){
         for(let j=0; j < this.fileList.length; j++){
           
-          if(this.documentos[i].nombreDoc == this.fileList[j].name){
+          if(this.documentos[i].nombreDoc == this.fileList[j].name && !nombresDocumentosIncluidos.includes(this.fileList[j].name)){
             this.fileListOrdenado[y] = this.fileList[j]; 
+            nombresDocumentosIncluidos.push(this.fileList[j].name);
             y++;
             break;
           }
