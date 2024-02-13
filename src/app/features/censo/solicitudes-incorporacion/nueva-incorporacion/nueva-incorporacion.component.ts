@@ -2681,16 +2681,20 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   ordenarDocumentosSubidos(){
     let y=0;
-      for(let i=0; i < this.documentos.length; i++){
-        for(let j=0; j < this.fileList.length; j++){
+    let nombresDocumentosIncluidos: string[] = [];
+
+      for(let i=0; i < this.fileList.length; i++){
+        for(let j=0; j < this.documentos.length; j++){
           
-          if(this.documentos[i].nombreDoc == this.fileList[j].name){
-            this.fileListOrdenado[y] = this.fileList[j]; 
+          if(this.documentos[j].nombreDoc == this.fileList[i].name && !nombresDocumentosIncluidos.includes(this.fileList[i].name)){
+            this.fileListOrdenado[y] = this.fileList[i]; 
+            nombresDocumentosIncluidos.push(this.fileList[i].name);
             y++;
             break;
           }
 
         }
+        nombresDocumentosIncluidos = [];
       }
   }
 
