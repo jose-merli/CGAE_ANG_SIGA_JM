@@ -300,6 +300,7 @@ export class TarjetaConsultasComponent implements OnInit {
   }
 
   getResultados() {
+    if(this.body.idClaseComunicacion != null){
     let service = "plantillasDoc_consultas";
     if (this.showHistorico) {
       service = "plantillasDoc_consultas_historico";
@@ -340,6 +341,8 @@ export class TarjetaConsultasComponent implements OnInit {
             }
           ];
         } else {
+
+
           let multidocumento = this.datos.map(e => {
             if (e.idObjetivo == "2") {
               return true;
@@ -426,6 +429,11 @@ export class TarjetaConsultasComponent implements OnInit {
         this.datos.map(e => {
           return (e.idConsultaAnterior = e.idConsulta);
         });
+        this.datos.forEach(element => {
+          if(element.idiomasPlantillas != null){
+            element.plantillas = element.idiomasPlantillas.toString();
+          }
+        });
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
       },
       err => {
@@ -434,6 +442,7 @@ export class TarjetaConsultasComponent implements OnInit {
       }
     );
   }
+}
 
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
@@ -715,9 +724,9 @@ export class TarjetaConsultasComponent implements OnInit {
   }
 
   onShowConsultas() {
-    if (sessionStorage.getItem("crearNuevaPlantillaDocumento") == null) {
+   // if (sessionStorage.getItem("crearNuevaPlantillaDocumento") == null) {
       this.showConsultas = !this.showConsultas;
-    }
+    ////}
   }
 
   restablecer() {

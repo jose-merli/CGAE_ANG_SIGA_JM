@@ -65,7 +65,7 @@
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
                   <div *ngIf="col.field == 'idioma'">
-                    <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" (onChange)="onIdiomaSeleccionado(dato,$event)"
+                    <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" 
                       [showClear]="true" filterBy="label,labelSinTilde" [options]="idiomasDisponibles"
                       [(ngModel)]="dato.idIdioma" class="select-form"></p-dropdown>
                   </div>
