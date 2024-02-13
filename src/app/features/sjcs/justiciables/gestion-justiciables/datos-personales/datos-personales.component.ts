@@ -5,6 +5,7 @@ import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableT
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 
 @Component({
   selector: 'app-datos-personales',
@@ -39,22 +40,60 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
 
   async ngOnInit() {
+    console.log("Entrada onInit");
     this.progressSpinner = true;
     this.modoEdicion = false;
     this.body = new JusticiableItem();
     this.body.idpaisdir1 = "191";  
     await this.getCombos();
+    console.log("Comprobamos body: " + JSON.stringify(this.body));
+    console.log("Salida onInit");
+  }
 
+  async callServiceSearch() {
+
+    console.log("Entrada callServiceSearch");
+    if (sessionStorage.getItem("justiciableDatosPersonalesSearch")) {
+      console.log("Datos sesion rellenos justiciableDatosPersonalesSearch");
+      this.progressSpinner = true;
+      let justiciableBusqueda: JusticiableBusquedaItem  = JSON.parse(sessionStorage.getItem("justiciableDatosPersonalesSearch"));
+      sessionStorage.removeItem("justiciableDatosPersonalesSearch");
+
+      await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
+        n => {
+          console.log("Respuesta OK llamada al servicio callServiceSearch");
+          this.body = JSON.parse(n.body).justiciable;
+          this.modoEdicion = true;
+          this.progressSpinner = false;
+          console.log("Comprobamos body servicio busqueda: " + JSON.stringify(this.body));
+          console.log("Modo Edicion servicio busqueda: " + this.modoEdicion);
+        },
+        err => {
+          console.log("Error llamada al servicio callServiceSearch");
+          this.progressSpinner = false;
+        });
+    }
+    console.log("Comprobamos body: " + JSON.stringify(this.body));
+    console.log("Salida callServiceSearch");
+  }
+
+  ngAfterViewInit() {
+    this.callServiceSearch();
   }
 
   ngOnChanges() {    
+    console.log("Entrada onChanges");
     if (this.body != undefined && this.body.idpersona != undefined) {
+      console.log("Tiene body: " + JSON.stringify(this.body));
       this.bodyInicial = {...this.body};
       this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
       if (this.body.idpersona != undefined) {
+        console.log("Tiene idPersona: " + this.body.idpersona);
         this.modoEdicion = true;
       }
     }
+    console.log("Comprobamos body: " + JSON.stringify(this.body));
+    console.log("Salida onChanges");
   }
 
   private async getCombos() {

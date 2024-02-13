@@ -813,6 +813,8 @@ export class GestionJusticiablesComponent implements OnInit {
     justiciableBusqueda.idpersona = justiciableBusqueda1.idpersona;
     }
 
+    sessionStorage.setItem("justiciableDatosPersonalesSearch", JSON.stringify(justiciableBusqueda));
+    
     await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
       n => {
 
