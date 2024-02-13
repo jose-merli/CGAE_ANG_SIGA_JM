@@ -99,8 +99,8 @@ export class DefensaJuridicaComponent implements OnInit {
         if (this.designa.nig != null && this.designa.nig != undefined) {
           this.body.nig = this.designa.nig.toString();
         }
-        if (this.designa.observaciones != null && this.designa.observaciones != undefined) {
-          this.body.observaciones = this.designa.observaciones.toString();
+        if (this.designa.resumenAsunto != null && this.designa.resumenAsunto != undefined) {
+          this.body.observaciones = this.designa.resumenAsunto.toString();
         }
         if (this.designa.idCalidad != null && this.designa.idCalidad != undefined) {
           this.body.calidad = this.designa.idCalidad.toString();

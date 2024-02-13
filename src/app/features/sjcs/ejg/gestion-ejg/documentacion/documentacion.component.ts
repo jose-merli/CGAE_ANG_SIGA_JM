@@ -502,34 +502,46 @@ export class DocumentacionComponent implements OnInit {
   download() {
     this.progressSpinner = true;
 
-    //this.body.nuevoEJG=!this.modoEdicion;
+    //solo se descargan los documentos que tengan un fichero adjunto
     let documentos: any[] = [];
-    if (this.selectedDatos.length == 0) documentos.push(this.body);
-    else if(this.selectedDatos.length == 1 && this.showModal )documentos.push(this.body)
-    else documentos = this.selectedDatos;
+    if (this.selectedDatos.length == 0 && this.body.idFichero != null){
+      documentos.push(this.body);
+    }  else {
+      this.selectedDatos.forEach(doc => {
+        if(doc.idFichero != null)
+        documentos.push(doc)
+      })
+    }
 
-    this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentosEjg", documentos).subscribe(
-      data => {
-        let blob = null;
+    if (documentos.length == 0){
+      this.showMessage("warn", this.translateService.instant("general.message.informacion"), this.translateService.instant("ejg.documento.download.empty.info"));    
+      this.progressSpinner = false;
+    }else {
 
-          if (documentos.length == 1) {
-              let mime = data.type;//this.getMimeType(documentos[0].nombreFichero.substring(documentos[0].nombreFichero.lastIndexOf("."), documentos[0].nombreFichero.length));
-              blob = new Blob([data], { type: mime });
-              saveAs(blob, documentos[0].nombreFichero);
-            
-          } else {
-            blob = new Blob([data], { type: "application/zip" });
-            saveAs(blob, "documentos.zip");
-          }
+      this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentosEjg", documentos).subscribe(
+        data => {
+          let blob = null;
 
-        this.selectedDatos = [];
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("formacion.mensaje.extesion.fichero.erronea"));
-      }
-    );
+            if (documentos.length == 1) {
+                let mime = data.type;//this.getMimeType(documentos[0].nombreFichero.substring(documentos[0].nombreFichero.lastIndexOf("."), documentos[0].nombreFichero.length));
+                blob = new Blob([data], { type: mime });
+                saveAs(blob, documentos[0].nombreFichero);
+              
+            } else {
+              blob = new Blob([data], { type: "application/zip" });
+              saveAs(blob, "documentos.zip");
+            }
+
+          this.selectedDatos = [];
+          this.progressSpinner = false;
+        },
+        err => {
+          this.selectedDatos = [];
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("ejg.documento.download.error"));
+        }
+      );
+    }
   }
 
   checkPermisosPrint() {

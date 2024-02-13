@@ -86,7 +86,9 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   @Input("resaltadoDatos") resaltadoDatos: boolean;
   @Input("esColegiado") esColegiado: boolean;
   @Input("permisoAbogado") permisoAbogado: boolean;
+  @Input() nuevaCompraSusc: boolean = false;
   @Output() actualizaFicha = new EventEmitter<Boolean>();
+  @Output() scrollToOblig = new EventEmitter<String>();
   @ViewChild("productsTable") tablaProductos;
 
   selectedRows: ListaProductosCompraItem[] = [];
@@ -107,6 +109,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   totalUnidades: number;
   datosTarjeta: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
   pagoCabecera: string;
+  newProduct: boolean = false;
 
   constructor(public sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -136,6 +139,9 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       this.productosTarjeta = this.ficha.productos;
     }
     this.datosTarjeta = this.ficha;
+    if(this.nuevaCompraSusc){
+      this.newProduct = true;
+    }
   }
 
   ngOnDestroy() {
@@ -155,7 +161,6 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         listaProductosCompraDTO => {
 
           this.productosTarjeta = listaProductosCompraDTO.listaProductosCompraItems;
-
           if (listaProductosCompraDTO.error.code == 200) {
             // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           } else {
@@ -298,37 +303,58 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   updateProductosPeticion() {
     this.progressSpinner = true;
 
-    let peticion: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
-
     this.datosTarjeta.productos = this.productosTarjeta;
-    this.sigaServices.post("PyS_updateProductosPeticion", this.datosTarjeta).subscribe(
-      n => {
-
-        if (n.status != 200) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
-          this.checkTotal();
-          if(Number(this.ficha.impTotal)<Number(this.ficha.impAnti)){
-            this.ficha.impAnti = Number(this.ficha.impTotal);
+    if (this.newProduct) {
+      this.newProduct = false;
+      this.sigaServices.post('PyS_solicitarCompra', this.datosTarjeta).subscribe(
+        (n) => {
+          if( n.status != 200) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.ficha.nSolicitud =JSON.parse(n.body).id;
+            //Se actualiza la información de la ficha
+            this.actualizaFicha.emit(true);
+            this.scrollToOblig.emit("solicitud");
           }
-
-          this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
-          //this.actualizaFicha.emit();
-          
-          this.cantidadEditable = false;
-          this.precioUnitarioEditable = false;
-          this.ivaEditable = false;
-          this.observacionesEditable = false;
+          this.progressSpinner = false;
+        },
+        (err) => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.progressSpinner = false;
         }
-
-        this.progressSpinner = false;
-
-      },
-      err => {
-        this.progressSpinner = false;
-      });
+      );
+    } else {
+      this.sigaServices.post("PyS_updateProductosPeticion", this.datosTarjeta).subscribe(
+        n => {
+  
+          if (n.status != 200) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+  
+            this.checkTotal();
+            if(Number(this.ficha.impTotal)<Number(this.ficha.impAnti)){
+              this.ficha.impAnti = Number(this.ficha.impTotal);
+            }
+  
+            this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
+            //this.actualizaFicha.emit();
+            
+            this.cantidadEditable = false;
+            this.precioUnitarioEditable = false;
+            this.ivaEditable = false;
+            this.observacionesEditable = false;
+            this.scrollToOblig.emit("solicitud");
+          }
+  
+          this.progressSpinner = false;
+  
+        },
+        err => {
+          this.progressSpinner = false;
+        });
+    }
   }
 
   //Metodo para obtener los valores del combo IVA
@@ -704,6 +730,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   onChangePago(){
+    this.datosTarjeta.idFormaPagoSeleccionada = this.selectedPago;
     this.newFormaPagoCabecera();
     if((this.selectedPago == "80" || this.selectedPago == '20') && this.ficha.idPersona == null){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.incorrect"));
