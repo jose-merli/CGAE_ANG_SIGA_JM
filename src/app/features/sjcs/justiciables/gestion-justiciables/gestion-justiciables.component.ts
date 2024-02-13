@@ -812,41 +812,38 @@ export class GestionJusticiablesComponent implements OnInit {
       justiciableBusqueda.idinstitucion = justiciableBusqueda1.idinstitucion;
     justiciableBusqueda.idpersona = justiciableBusqueda1.idpersona;
     }
-    
+
     this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
       n => {
-
-        if (sessionStorage.getItem("origin") == "newRepresentante") {
-          this.bodyRep = JSON.parse(n.body).justiciable;
-          sessionStorage.setItem("bodyRepresentante", JSON.stringify(this.bodyRep));
-          this.body = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
-        }else{
-          this.body = JSON.parse(n.body).justiciable;
-        
-          if (!this.modoRepresentante && !this.justiciableOverwritten && !this.justiciableCreateByUpdate) {
-            this.body.numeroAsuntos = justiciableBusqueda.numeroAsuntos;
-            this.body.ultimoAsunto = justiciableBusqueda.ultimoAsunto;
-          } else if (this.justiciableOverwritten) {
-            this.justiciableOverwritten = false;
-            this.modoEdicion = true;
-            this.datosPersonales.modoEdicion = true;
-            this.datosPersonales.body = this.body;
-            this.getAsuntos();
-          } if (this.justiciableCreateByUpdate) {
-            this.justiciableCreateByUpdate = false;
-            this.modoEdicion = true;
-            this.datosPersonales.modoEdicion = true;
-            this.datosPersonales.body = this.body;
-            //Al crearse uno nuevo desde justiciables no se le asocia ningun asunto por eso se resetean los valores
-            this.body.numeroAsuntos = "0";
-            this.body.ultimoAsunto = undefined;
-          } else {
-            this.body.numeroAsuntos = undefined;
-            this.body.ultimoAsunto = undefined;
-            this.getAsuntos();
+        setTimeout(() => {
+          if (sessionStorage.getItem("origin") == "newRepresentante") {
+            this.bodyRep = JSON.parse(n.body).justiciable;
+            sessionStorage.setItem("bodyRepresentante", JSON.stringify(this.bodyRep));
+            this.body = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
+          }else{
+            this.body = JSON.parse(n.body).justiciable;
+          
+            if (!this.modoRepresentante && !this.justiciableOverwritten && !this.justiciableCreateByUpdate) {
+              this.body.numeroAsuntos = justiciableBusqueda.numeroAsuntos;
+              this.body.ultimoAsunto = justiciableBusqueda.ultimoAsunto;
+            } else if (this.justiciableOverwritten) {
+              this.justiciableOverwritten = false;
+              this.modoEdicion = true;
+              this.getAsuntos();
+            } if (this.justiciableCreateByUpdate) {
+              this.justiciableCreateByUpdate = false;
+              this.modoEdicion = true;
+              //Al crearse uno nuevo desde justiciables no se le asocia ningun asunto por eso se resetean los valores
+              this.body.numeroAsuntos = "0";
+              this.body.ultimoAsunto = undefined;
+            } else {
+              this.body.numeroAsuntos = undefined;
+              this.body.ultimoAsunto = undefined;
+              this.getAsuntos();
+            }
           }
-        }
-        this.progressSpinner = false;
+          this.progressSpinner = false;
+        }, 2000);
 
       },
       err => {
