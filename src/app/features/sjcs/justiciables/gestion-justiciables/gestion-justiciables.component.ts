@@ -14,6 +14,7 @@ import { AuthenticationService } from '../../../../_services/authentication.serv
 import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
 import { EJGItem } from "../../../../models/sjcs/EJGItem";
 import { procesos_ejg } from "../../../../permisos/procesos_ejg";
+import { DatosPersonalesComponent } from "./datos-personales/datos-personales.component";
 
 @Component({
   selector: 'app-gestion-justiciables',
@@ -61,6 +62,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
   @ViewChild("topScroll") outlet;
   @ViewChild(DatosRepresentanteComponent) datosRepresentante;
+  @ViewChild(DatosPersonalesComponent) datosPersonales;
   //@ViewChild(AsuntosComponent) actualizaAsuntos;
 
   fromJusticiable;
@@ -801,6 +803,7 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   callServiceSearch(justiciableBusqueda1) {
+    this.progressSpinner = true;
     let justiciableBusqueda: JusticiableBusquedaItem  = new JusticiableBusquedaItem();
     if(justiciableBusqueda1[0]){
       justiciableBusqueda.idinstitucion = justiciableBusqueda1[0].idInstitucion;
@@ -826,10 +829,14 @@ export class GestionJusticiablesComponent implements OnInit {
           } else if (this.justiciableOverwritten) {
             this.justiciableOverwritten = false;
             this.modoEdicion = true;
+            this.datosPersonales.modoEdicion = true;
+            this.datosPersonales.body = this.body;
             this.getAsuntos();
           } if (this.justiciableCreateByUpdate) {
             this.justiciableCreateByUpdate = false;
             this.modoEdicion = true;
+            this.datosPersonales.modoEdicion = true;
+            this.datosPersonales.body = this.body;
             //Al crearse uno nuevo desde justiciables no se le asocia ningun asunto por eso se resetean los valores
             this.body.numeroAsuntos = "0";
             this.body.ultimoAsunto = undefined;
