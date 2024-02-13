@@ -38,12 +38,13 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.progressSpinner = true;
     this.modoEdicion = false;
     this.body = new JusticiableItem();
     this.body.idpaisdir1 = "191";  
-    this.getCombos();
+    await this.getCombos();
+
   }
 
   ngOnChanges() {    
@@ -56,10 +57,10 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     }
   }
 
-  private getCombos() {
-    this.getComboPais();
-    this.getComboTipoVia();
-    this.getComboProvincia();
+  private async getCombos() {
+    await this.getComboPais();
+    await this.getComboTipoVia();
+    await this.getComboProvincia();
   }
 
   private getComboTipoVia() {
@@ -102,11 +103,8 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         n => {
           this.comboPoblacion = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboPoblacion);
-          if(this.direccionPostal == ""){
-            this.rellenarDireccionPostal();
-          }else{
-            this.progressSpinner = false;
-          }
+          this.rellenarDireccionPostal();
+          this.progressSpinner = false;
         }
       );
   }
