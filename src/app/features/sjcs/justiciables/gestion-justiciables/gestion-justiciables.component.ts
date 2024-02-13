@@ -814,7 +814,7 @@ export class GestionJusticiablesComponent implements OnInit {
     }
 
     sessionStorage.setItem("justiciableDatosPersonalesSearch", JSON.stringify(justiciableBusqueda));
-    
+
     await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
       n => {
 
@@ -1027,6 +1027,8 @@ export class GestionJusticiablesComponent implements OnInit {
 
 
   searchByIdPersona(bodyBusqueda) {
+
+    sessionStorage.setItem("justiciableDatosPersonalesSearch", JSON.stringify(bodyBusqueda));
 
     this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', bodyBusqueda).subscribe(
       (n) => {
