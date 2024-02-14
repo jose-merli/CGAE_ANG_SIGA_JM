@@ -725,6 +725,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       rowGroup.rows[1].cells[3].value = event;
     }
   }
+  fillFechaNacimiento(event, cell, rowId, row, rowGroup, padre, index) {
+    cell.value[5] = event;
+    this.rowIdsToUpdate.push(rowId);
+  }
   fillFecha(event, cell, rowId, row, rowGroup, padre, index) {
 
     this.rowValidadas = [];
@@ -2198,6 +2202,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             rowGroup.rows[0].cells[0].value[3] = justiciableItem.nombre;
             rowGroup.rows[0].cells[0].value[4] = justiciableItem.sexo;
 
+            if (justiciableItem.fechanacimiento && rowGroup.rows[0].cells[0].value.length >= 6){
+              rowGroup.rows[0].cells[0].value[5] = new Date(justiciableItem.fechanacimiento);
+            }
+
           }
         },
         err => {
@@ -2630,6 +2638,32 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     if (cell.value[5] == 'Asistencia') {
       rowGroup.rows[0].cells[5].value = '';
     }
+  }
+
+  onChangeSelectJuzCom(cell, row, cambioJuzCom){
+    if (cell.value[5] != 'Asistencia'){
+      // son actuaciones y solo pueden tomar 1 de los valores
+      if (cambioJuzCom == 'C') {
+        // Cambia a Comisaría
+        cell.value[4] = 'C';
+
+        // Borrar valor juzgado
+        cell.value[3] = '';
+
+        // borrar nº Procedimiento
+        row.cells[5].value[1] = ''
+      } else {
+        // Cambia a juzgado
+        cell.value[4] = 'J';
+
+        // borrar valor comisaria
+        cell.value[2] = '';
+
+        // borrar nº Diligencia
+        row.cells[5].value[0] = ''
+      }
+    } 
+
   }
 
   navigateComunicarJE(rowGroup, identificador) {

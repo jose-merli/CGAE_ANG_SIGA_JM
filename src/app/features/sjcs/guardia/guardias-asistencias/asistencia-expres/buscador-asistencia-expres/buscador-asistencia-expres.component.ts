@@ -51,6 +51,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   @Output() buscarAE = new EventEmitter<boolean>();
   @Output() clearAE = new EventEmitter<boolean>();
   @Output() hideResponse = new EventEmitter<boolean>();
+  @Output() search = new EventEmitter<null>();
   progressSpinner: boolean = false;
   
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
@@ -384,6 +385,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
               }
 
               //this.asistenciaExpresVieneDeBuscadorExpres = false;
+              this.search.emit();
+
           },
           err => {
             //console.log(err);
@@ -522,5 +525,6 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     }
 
     this.buscarAE.emit();
+    this.search.emit();
   }
 }

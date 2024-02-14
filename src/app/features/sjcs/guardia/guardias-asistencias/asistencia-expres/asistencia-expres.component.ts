@@ -318,17 +318,25 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
   fromJsonToRowGroups(asistencias : TarjetaAsistenciaItem[]){
  
-    let nombreApellidosType, fechaActuacionType, lugarType, nDiligenciaType, fechaAsistenciaType;
+    let nombreApellidosType, fechaActuacionType, lugarType, nDiligenciaType, fechaAsistenciaType, nDiligenciaTypeAsunto;
     let nombreApellidosValue, delitosObservacionesValue, ejgValue, fechaActuacionValue, lugarValue, nDiligenciaValue, fechaAsistenciaValue, numProcedimientoDiligenciaAsistenciaValue;
     let objetoActuacion = {};
     let objetoAsistencia = {};
     let arrayAsistencias = [];
+    let fechaNacimientoDate;
 
     asistencias.forEach((asistencia, indice) => {
 
-      nDiligenciaType = 'input';
-      nombreApellidosType = '5InputSelector';
-      nombreApellidosValue = [asistencia.nif, asistencia.apellido1, asistencia.apellido2, asistencia.nombre, asistencia.sexo];
+      nDiligenciaType = '2input';
+      nDiligenciaTypeAsunto = '2input';
+      nombreApellidosType = '6InputSelector';
+      if(asistencia.fechaNacimiento != null){
+        fechaNacimientoDate = new Date(Date.parse(asistencia.fechaNacimiento));
+      }
+      else{
+        fechaNacimientoDate = null;
+      }
+      nombreApellidosValue = [asistencia.nif, asistencia.apellido1, asistencia.apellido2, asistencia.nombre, asistencia.sexo, fechaNacimientoDate];
 
       if(asistencia.idDelito || asistencia.observaciones){
         let comboDelitosValue = [];
@@ -348,21 +356,19 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         ejgValue = '';
       }
 
-      lugarType = 'buttomSelect';
-
-      if (asistencia.comisaria != null && asistencia.comisaria != '') {
-        lugarValue = [this.textoComActivo, this.comboComisarias, this.comboJuzgados, 'C' //C o J dependiendo si el lugar es una comisaria o juzgado
-          , asistencia.comisaria, 'Asistencia'];
-        numProcedimientoDiligenciaAsistenciaValue = asistencia.numDiligencia ? asistencia.numDiligencia : '';
-      } else if (asistencia.juzgado != null && asistencia.juzgado != '') {
-        lugarValue = [this.textoJuzActivo, this.comboComisarias, this.comboJuzgados, 'J' //C o J dependiendo si el lugar es una comisaria o juzgado
-          , asistencia.juzgado, 'Asistencia'];
-        numProcedimientoDiligenciaAsistenciaValue = asistencia.numProcedimiento ? asistencia.numProcedimiento : '';
-      } else {
-        lugarValue = [this.textoComActivo, this.comboComisarias, this.comboJuzgados, 'C' //C o J dependiendo si el lugar es una comisaria o juzgado
-          , '', 'Asistencia'];
-        numProcedimientoDiligenciaAsistenciaValue = '';
-      }
+      lugarType = 'ComJuzSelect';
+      let comisaria = asistencia.comisaria != null ? asistencia.comisaria: '';
+      let Jusgado = asistencia.juzgado != null ? asistencia.juzgado: '';
+      lugarValue = [this.comboComisarias, this.comboJuzgados, 
+                      comisaria, // valor comisaria
+                      Jusgado, // valor Juzgado
+                      'CJ', //CJ contiene los calores de juzgado y comisaría
+                      'Asistencia'
+                    ];
+      numProcedimientoDiligenciaAsistenciaValue = [];
+      numProcedimientoDiligenciaAsistenciaValue[0]= asistencia.numDiligencia;
+      numProcedimientoDiligenciaAsistenciaValue[1]= asistencia.numProcedimiento;
+      
       
       fechaAsistenciaType = 'datePicker';
       if(asistencia.fechaAsistencia != null){
@@ -375,12 +381,12 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       let arrayDatosAsistencia = [];
 
       arrayDatosAsistencia = [
-        {type: nombreApellidosType, value: nombreApellidosValue, combo: this.comboSexo, size: 445.5},
+        {type: nombreApellidosType, value: nombreApellidosValue, combo: this.comboSexo, size: 545.5},
         {type: '2SelectorInput', value: delitosObservacionesValue, combo: this.comboDelitos, size: 225.75},
         {type: 'link', value: ejgValue, size: 100},
         {type: fechaAsistenciaType, value: fechaAsistenciaValue, showTime: true, size: 200},
-        {type: lugarType, value: lugarValue, size: 550},
-        {type: nDiligenciaType, value: numProcedimientoDiligenciaAsistenciaValue, size: 100},
+        {type: lugarType, value: lugarValue, size: 400},
+        {type: nDiligenciaType, value: numProcedimientoDiligenciaAsistenciaValue, size: 150},
         {type: 'invisible', value: asistencia.idTipoEjg}
       ];
 
@@ -404,30 +410,37 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           comisariaJuzgado = actuacion.comisariaJuzgado;
           idJuzgadoComisaria = actuacion.lugar;
         }
-        lugarType = 'buttomSelect';
-
+        lugarType = 'ComJuzSelect';
+        nDiligenciaValue = ['','']
         if (comisariaJuzgado != null && comisariaJuzgado == 'J') {
-          lugarValue = [this.textoJuzActivo, this.comboComisarias, this.comboJuzgados, comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
-            , idJuzgadoComisaria, 'Actuacion'];
+          lugarValue = [this.comboComisarias, this.comboJuzgados, 
+            '', // valor comisaría vacio
+            idJuzgadoComisaria, 
+            comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
+            ,'Actuacion'
+          ];
+          nDiligenciaValue[1] = actuacion.numeroAsunto;
+
         } else {
-          lugarValue = [this.textoComActivo, this.comboComisarias, this.comboJuzgados, comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
-            , idJuzgadoComisaria, 'Actuacion'];
+          lugarValue = [this.comboComisarias, this.comboJuzgados, 
+            idJuzgadoComisaria, 
+            '', // valor juzgado vacio
+            comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
+            , idJuzgadoComisaria, 'Actuacion'
+          ];
+          nDiligenciaValue[0] = actuacion.numeroAsunto;
         }
         
-        if(actuacion.numeroAsunto){
-          nDiligenciaValue = actuacion.numeroAsunto;
-        }else{
-          nDiligenciaValue = '';
-        }
+        
         let arrayDatosActuacion = [];
 
         arrayDatosActuacion = [
-          {type: 'invisible', value: '', combo: this.comboSexo, size: 445.5},
+          {type: 'invisible', value: '', combo: this.comboSexo, size: 545.5},
           {type: 'invisible', value: '', combo: this.comboDelitos, size: 225.75},
           {type: 'invisible', value: '', size: 100},
           {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 200},
-          {type: lugarType, value: lugarValue, size: 550},
-          {type: nDiligenciaType, value: nDiligenciaValue, size: 100}
+          {type: lugarType, value: lugarValue, size: 400},
+          {type: nDiligenciaTypeAsunto, value: nDiligenciaValue, size: 150}
         ]
 
         let key = letra + 1;
@@ -565,22 +578,39 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             tarjetaAsistenciaItem.apellido1 = row.cells[0].value[1];
             tarjetaAsistenciaItem.apellido2 = row.cells[0].value[2];
             tarjetaAsistenciaItem.sexo = row.cells[0].value[4];
+            if (row.cells[0].value[5]  instanceof Date){
+              tarjetaAsistenciaItem.fechaNacimiento = this.datepipe.transform(row.cells[0].value[5] , 'dd/MM/yyyy');
+            }else{
+              tarjetaAsistenciaItem.fechaNacimiento = row.cells[0].value[5];
+            }
             if(row.cells[1].value[0]){
               tarjetaAsistenciaItem.idDelito = row.cells[1].value[0];
             }
             tarjetaAsistenciaItem.observaciones = row.cells[1].value[1];
 
-            if (row.cells[4].value[3] == 'C') {
-              tarjetaAsistenciaItem.comisaria = row.cells[4].value[4];
-              tarjetaAsistenciaItem.numDiligencia = row.cells[5].value;
-            } else if (row.cells[4].value[3] == 'J') {
-              tarjetaAsistenciaItem.juzgado = row.cells[4].value[4];
-              tarjetaAsistenciaItem.numProcedimiento = row.cells[5].value;
+            // Guardar comisaria de la asistencia
+            if (row.cells[4].value[2] != ''){
+              tarjetaAsistenciaItem.comisaria = row.cells[4].value[2];
+              tarjetaAsistenciaItem.numDiligencia = row.cells[5].value[0];
             }
 
-            comisariaJuzgadoAsistencia = row.cells[4].value[3];
-            lugarAsistencia = row.cells[4].value[4];
-            numAsuntoAsistencia = row.cells[5].value;
+          
+            // Guardamos juzgado de la asistencia
+            if (row.cells[4].value[3] != ''){
+              tarjetaAsistenciaItem.juzgado = row.cells[4].value[3];
+              tarjetaAsistenciaItem.numProcedimiento = row.cells[5].value[1];
+            }
+            
+            //Por defecto se selecciona la comisaria de la asistencia para la actuación
+            if (row.cells[4].value[2] != ''){ 
+              comisariaJuzgadoAsistencia = 'C';
+              lugarAsistencia = row.cells[4].value[2];
+              numAsuntoAsistencia = row.cells[5].value[0];
+            } else{
+              comisariaJuzgadoAsistencia = 'J';
+              lugarAsistencia = row.cells[4].value[3];
+              numAsuntoAsistencia = row.cells[5].value[1];
+            }
           }
 
           //En caso de venir la fecha rellena a mano la transformo para que no falle el datepite
@@ -618,9 +648,19 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             actuacionAsistenciaItem.lugar = lugarAsistencia;
             actuacionAsistenciaItem.numeroAsunto = numAsuntoAsistencia;
           } else {
-            actuacionAsistenciaItem.comisariaJuzgado = row.cells[4].value[3];
-            actuacionAsistenciaItem.lugar = row.cells[4].value[4];
-            actuacionAsistenciaItem.numeroAsunto = row.cells[5].value;
+            // Si se selcciona comisaría
+            if (row.cells[4].value[2] != ''){
+              actuacionAsistenciaItem.comisariaJuzgado = 'C';
+              actuacionAsistenciaItem.lugar = row.cells[4].value[2];
+              actuacionAsistenciaItem.numeroAsunto = row.cells[5].value[0];
+            }
+            // si se selecciona Juzgado
+            else {
+              actuacionAsistenciaItem.comisariaJuzgado = 'J'
+              actuacionAsistenciaItem.lugar = row.cells[4].value[3];
+              actuacionAsistenciaItem.numeroAsunto = row.cells[5].value[1];
+            }
+              
           }
           actuacionAsistenciaItem.fechaJustificacion = this.resultadoAE.fechaJustificacion;
 
