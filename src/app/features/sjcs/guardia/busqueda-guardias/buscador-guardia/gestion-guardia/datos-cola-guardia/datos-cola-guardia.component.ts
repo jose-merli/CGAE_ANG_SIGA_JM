@@ -892,16 +892,25 @@ inicio(){
     if (duplicar){
     let indexA;
     let datCopy;
+    let numeroGrupoMayor = Math.max(...this.datos.map(item => item.numeroGrupo));
+
     this.datos.forEach((dat, index) => {
+
+      if(dat.ultimoCola == 1)
+        dat.ultimoCola = 0
+
       if (dat.nColegiado == this.selectedRow.cells[2].value){
         datCopy = Object.assign({},dat);
-        datCopy.numeroGrupo = Number(this.selectedRow.cells[0].value);
+        //datCopy.numeroGrupo = Number(this.selectedRow.cells[0].value);
+        datCopy.numeroGrupo = Number(numeroGrupoMayor) + 1;
         datCopy.orden = "0"; // duplicados se identifican por orden <= 0
         datCopy.idGrupoGuardiaColegiado = null; // duplicados no tienen idGrupoGuardiaColegiado 
         indexA = index;
+        datCopy.ultimoCola = 1;
       } 
     });
-    this.datos.splice(indexA+1, 0, datCopy);
+    //this.datos.splice(indexA+1, 0, datCopy);
+    this.datos.push(datCopy)
     this.transformData();
   }
   console.log(this.datos);
