@@ -6,7 +6,7 @@
 
 <div class="card mt-3">
   <div class="card-body p-0">
-    <p-table #suscripcionesTable [value]="listaSuscripciones" [columns]="cols" [(selection)]="selectedRows"
+    <p-table #suscripcionesTable [value]="datosMostrados" [columns]="cols" [(selection)]="selectedRows"
       selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
       (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
       (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both" id="suscripcionesTable">
@@ -33,18 +33,18 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div *ngIf="col.field !='fechaSolicitud' && col.field != 'fechaEfectiva'" >
-              <span *ngIf="col.field == 'nSolicitud'" class="enlace" (click)="openTabFicha(rowData)">{{rowData[col.field]}}</span>
-              <span *ngIf="col.field == 'concepto'  && rowData['idEstadoSolicitud'] != 5" class="enlace" (click)="openTabServicio(rowData)">{{rowData[col.field]}} (a {{currentDate | date: 'dd/MM/yyyy'}}) </span>
-              <span *ngIf="col.field == 'concepto' && rowData['idEstadoSolicitud'] == 5" class="enlace" (click)="openTabServicio(rowData)">{{rowData[col.field]}}</span>
-              <span *ngIf="col.field == 'idEstadoSolicitud'">{{estadosSuscripcionObject[rowData[col.field]-1].label}}</span>
-              <span *ngIf="col.field != 'concepto' && col.field != 'nSolicitud' && col.field != 'idEstadoSolicitud'">{{rowData[col.field]}}</span>
+              <span [ngClass]="{ historico: historico }" *ngIf="col.field == 'nSolicitud'" class="enlace" (click)="openTabFicha(rowData)">{{rowData[col.field]}}</span>
+              <span [ngClass]="{ historico: historico }" *ngIf="col.field == 'concepto'  && rowData['idEstadoSolicitud'] != 5" class="enlace" (click)="openTabServicio(rowData)">{{rowData[col.field]}} (a {{currentDate | date: 'dd/MM/yyyy'}}) </span>
+              <span [ngClass]="{ historico: historico }" *ngIf="col.field == 'concepto' && rowData['idEstadoSolicitud'] == 5" class="enlace" (click)="openTabServicio(rowData)">{{rowData[col.field]}}</span>
+              <span [ngClass]="{ historico: historico }" *ngIf="col.field == 'idEstadoSolicitud'">{{estadosSuscripcionObject[rowData[col.field]-1].label}}</span>
+              <span [ngClass]="{ historico: historico }" *ngIf="col.field != 'concepto' && col.field != 'nSolicitud' && col.field != 'idEstadoSolicitud'">{{rowData[col.field]}}</span>
 
             </div>
             <div *ngIf="col.field =='fechaSolicitud' || (col.field == 'fechaEfectiva' && rowData['fechaBaja'] == null)" >
-              <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
+              <span [ngClass]="{ historico: historico }">{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
             <div *ngIf="col.field =='fechaEfectiva' && rowData['fechaBaja'] != null" >
-              <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}} - {{rowData['fechaBaja'] | date: 'dd/MM/yyyy'}}</span>
+              <span [ngClass]="{ historico: historico }">{{rowData[col.field] | date: 'dd/MM/yyyy'}} - {{rowData['fechaBaja'] | date: 'dd/MM/yyyy'}}</span>
             </div>
           </td>
         </tr>
@@ -85,6 +85,9 @@
 
     <p-footer>
       <div class="text-right main-button">
+      <!-- Histórico -->
+        <button pButton *ngIf="historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate }}"></button>
+        <button pButton *ngIf="!historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
       <!-- Aprobar -->
         <button pButton *ngIf="!esColegiado"  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="selectedRows.length == 0"></button>

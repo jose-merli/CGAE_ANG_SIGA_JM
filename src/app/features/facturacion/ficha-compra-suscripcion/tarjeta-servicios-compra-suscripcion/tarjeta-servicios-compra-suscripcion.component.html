@@ -23,31 +23,61 @@
             <label class="mr-auto title-ficha">{{ "menu.productosYServicios.categorias.servicios" | translate }}
             </label>
           </div>
-          <div class="row">
-            <div class="col-2">
+          <div class="form-row col-lg-12 col-md-12" style="padding-right: 0; padding-left: 0">
+            <div class="col-2" style="max-width: 15%; padding-left: 5px;">
               <label>{{ "facturacion.servicios.servicio" | translate }}
                 <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].descripcion }}</span>
               </label>
             </div>
-            <div class="col-2">
+            <div class="col-1">
               <label>{{ "facturacion.productos.tipo" | translate }}
                 <span *ngIf="serviciosTarjeta.length > 0 && serviciosTarjeta[0].automatico == '1'" >{{'facturacion.servicios.automatico' | translate}}</span>
                 <span *ngIf="serviciosTarjeta.length > 0 && serviciosTarjeta[0].automatico != '1'" >{{'facturacion.servicios.manual' | translate}}</span>
               </label>
             </div>
-            <div class="col-2">
+            <div class="col-2" style="max-width: 11%;">
               <label>{{ "form.busquedaCursos.literal.precio" | translate }}
                 <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].precioServicioDesc }}</span>
               </label>
             </div>
-            <div class="col-2">
+            <div class="col-1">
+              <label>Importe neto
+                <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].impNeto }} €</span>
+              </label>
+            </div>
+            <div class="col-1">
+              <label>Periodicidad
+                <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].periodicidadDesc }}</span>
+              </label>
+            </div>
+            <div class="col-1">
+              <label>IVA
+                <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].iva }}</span>
+              </label>
+            </div>
+            <div class="col-2" style="max-width: 10%;">
+              <label>Fecha Alta
+                <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].fechaAlta | date: 'dd/MM/yyyy'}}</span>
+              </label>
+            </div>
+            <div class="col-2" style="max-width: 10%;">
+              <label>Fecha Baja
+                <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].fechaBaja | date: 'dd/MM/yyyy'}}</span>
+              </label>
+            </div>
+            <div class="col-1">
               <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total" | translate }}
                 <span *ngIf="serviciosTarjeta.length > 0">{{ serviciosTarjeta[0].total }} €</span>
               </label>
             </div>
-            <div class="col-2">
+            <!--<div class="col-2">
               <label>{{ "facturacion.productos.formapago" | translate }}
                 <span>{{ pagoCabecera }}</span>
+              </label>
+            </div>-->
+            <div class="col-1" style="text-align: end;">
+              <label>Total servicios:
+                <span *ngIf="serviciosTarjeta.length > 0">{{ registrosTotales }}</span>
               </label>
             </div>
             <div class="d-flex justify-content-start mb-1 ml-auto">
@@ -67,8 +97,18 @@
         <app-fecha disabled  [(value)]="ficha.aFechaDeServicio"></app-fecha>
       </div>
       <div class="card-body card-body-ficha row">
-        <div class="row">
-          <div class="col-lg-11 col-md-11">
+        <div class="form-row col-lg-12 col-md-12">
+          <div class="col-lg-1 col-md-1 centerAlign tablaFlechas">
+            <div class="col-lg-12 col-md-12 centerAlign" style="
+            top: 50%;
+            transform: translate(0, -50%);"><button class="styledBut" [disabled]="disableUp"
+                class="pointer p-2" (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
+            <div class="col-lg-12 col-md-12 centerAlign" style="
+            top: 50%;
+            transform: translate(0, -50%);"><button class="styledBut" [disabled]="disableDown"
+                class="pointer p-2" (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
+          </div>
+          <div class="col-lg-11 col-md-11 tablaDatos">
             <p-table #servicesSuscripcionTable [value]="serviciosTarjeta" [columns]="cols" [(selection)]="selectedRows"
               selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
               (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
@@ -162,26 +202,26 @@
               </ng-template>
             </p-table>
           </div>
-          <div class="col-lg-1 col-md-1 centerAlign">
-            <div class="col-lg-12 col-md-12 centerAlign" style="
-            top: 50%;
-            transform: translate(0, -50%);"><button class="styledBut" [disabled]="disableUp"
-                class="pointer p-2" (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
-            <div class="col-lg-12 col-md-12 centerAlign" style="
-            top: 50%;
-            transform: translate(0, -50%);"><button class="styledBut" [disabled]="disableDown"
-                class="pointer p-2" (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
-          </div>
+          
         </div>
         <div class="col-lg-12 col-md-12">
           <div class="form-row col-lg-12 col-md-12">
-            <div class="form-group col-lg-6 col-md-6">
+            <div [ngClass]="selectedPago == '80' || selectedPago == '20' ? 'form-group col-lg-3 col-md-3' : 'form-group col-lg-6 col-md-6'">
               <label>{{ "facturacion.productos.formapago" | translate }}
               </label>
               <p-dropdown [ngClass]="styleObligatorio(selectedPago)" class="select-form" [options]="comboComun" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || selectedPago == '-1' || comboComun.length == 0"
                 placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangePago()" [(ngModel)]="selectedPago" showClear="true">
               </p-dropdown>
             </div>
+            <!-- Desplegable condicional que solo aparece si la forma de pago seleccionada es "Domiciliación bancaria". corresponde a idformapago = 20 -->
+            <div *ngIf="selectedPago == '80' || selectedPago == '20'" class="form-group col-lg-3 col-md-3">
+              <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}
+              </label>
+              <p-dropdown [ngClass]="styleObligatorio(datosTarjeta.cuentaBancSelecc)" class="select-form" [options]="cuentasBanc"
+              [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.idPersona == null"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="datosTarjeta.cuentaBancSelecc"
+                showClear="true"></p-dropdown>
+             </div>
             <div *ngIf="ficha.servicios != null" class="form-row col-lg-6 col-md-6">
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{ "facturacion.productos.totalUnidades" | translate }}
@@ -205,14 +245,14 @@
               </div>
             </div>
             <!-- Desplegable condicional que solo aparece si la forma de pago seleccionada es "Domiciliación bancaria". corresponde a idformapago = 20 -->
-            <div *ngIf="selectedPago == '80' || selectedPago == '20'" class="form-group col-lg-6 col-md-6">
+            <!--<div *ngIf="selectedPago == '80' || selectedPago == '20'" class="form-group col-lg-6 col-md-6">
               <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}
               </label>
               <p-dropdown [ngClass]="styleObligatorio(datosTarjeta.cuentaBancSelecc)" class="select-form" [options]="cuentasBanc"
               [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.idPersona == null"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="datosTarjeta.cuentaBancSelecc"
                 showClear="true"></p-dropdown>
-             </div>
+             </div>-->
           </div>
           <div class="text-right main-button">
             <!-- Guardar -->

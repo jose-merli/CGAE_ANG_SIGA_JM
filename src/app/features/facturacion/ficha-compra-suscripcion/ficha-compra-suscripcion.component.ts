@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { FichaCompraSuscripcionItem } from '../../../models/FichaCompraSuscripcionItem';
 import { SigaServices } from '../../../_services/siga.service';
 import { Message } from 'primeng/components/common/api';
@@ -7,6 +7,9 @@ import { TranslateService } from '../../../commons/translate';
 import { ListaProductosCompraItem } from '../../../models/ListaProductosCompraItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaStorageService } from '../../../siga-storage.service';
+import { ComboItem } from '../../../models/ComboItem';
+import { FilaHistoricoPeticionItem } from '../../../models/FilaHistoricoPeticionItem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ficha-compra-suscripcion',
@@ -27,12 +30,19 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
   usuario: any[] = [];
   permisoAbogado:boolean = false;
+  datosTarjetaResumen;
+  iconoTarjetaResumen = "clipboard";
+  comboPagos: ComboItem[] = [];
+  pagoSeleccionado: String;
+  lastFilaHistorica: FilaHistoricoPeticionItem = new FilaHistoricoPeticionItem;
+  nuevaCompraSusc: boolean = false;
 
 
   @ViewChild("cliente") tarjCliente;
   @ViewChild("productos") tarjProductos;
   @ViewChild("servicios") tarjServicios;
   @ViewChild("facturas") tarjFacturas;
+  @ViewChild("solicitud") tarjSolicitud;
   @ViewChild("descuentos") tarjDescuentos;
   esColegiado: boolean; // Con esta variable se determina si el usuario conectado es un colegiado o no.
 
@@ -40,9 +50,12 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   constructor(private location: Location, 
     private sigaServices: SigaServices, private translateService: TranslateService,
     private commonsService : CommonsService,
-    private localStorageService: SigaStorageService,) { }
+    private localStorageService: SigaStorageService,
+    private datePipe: DatePipe,
+    private router: Router) { }
 
   ngOnInit() {
+    this.datosTarjetaResumen = [];
     if(this.localStorageService.isLetrado){
       this.esColegiado = true;
     }
@@ -56,14 +69,16 @@ export class FichaCompraSuscripcionComponent implements OnInit {
       sessionStorage.removeItem("mensaje");
       sessionStorage.removeItem("volver");
     }
-
+    if(sessionStorage.getItem("origin") == "newProduct"){
+      this.nuevaCompraSusc = true;
+    }
     sessionStorage.removeItem("origin");
 
     if(sessionStorage.getItem("FichaCompraSuscripcion")){
       this.ficha = JSON.parse(sessionStorage.getItem("FichaCompraSuscripcion"));
       sessionStorage.removeItem("FichaCompraSuscripcion");
-      // this.getComboFormaPago();
     }
+    this.initCabecera();
   }
 
   compruebaAbogado(){  this.sigaServices.get("usuario_logeado").subscribe(n => {
@@ -73,6 +88,22 @@ export class FichaCompraSuscripcionComponent implements OnInit {
     }
 
   });}
+
+  getComboFormaPago(): void {
+    this.sigaServices.get("productosBusqueda_comboFormaPago").subscribe(
+      comboDTO => {
+        this.comboPagos = comboDTO.combooItems;
+        this.progressSpinner = false;
+        if(this.ficha.idFormaPagoSeleccionada){
+          this.pagoSeleccionado = this.comboPagos.filter(combo => combo.value == this.ficha.idFormaPagoSeleccionada)[0].label;
+          this.datosTarjetaResumen.push({label:'Forma de pago', value: this.pagoSeleccionado});
+          this.getEstado();
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+      });
+  }
 
   actualizarFicha(event: boolean = true){
     this.progressSpinner = true;
@@ -96,7 +127,9 @@ export class FichaCompraSuscripcionComponent implements OnInit {
           }
 
           this.ficha = newF;
-
+          this.datosTarjetaResumen = [];
+          this.initCabecera();
+          this.getEstado();
           if(this.ficha.servicios != null){
             this.tarjServicios.getServiciosSuscripcion();
           }
@@ -128,10 +161,50 @@ export class FichaCompraSuscripcionComponent implements OnInit {
     if(element == "servicios"){
       this.tarjServicios.showTarjeta = true;
     }
+    if(element == "solicitud"){
+      this.getEstado();
+      this.tarjSolicitud.showTarjeta = true;
+      this.tarjServicios.showTarjeta = false;
+      this.tarjProductos.showTarjeta = false;
+    }
+  }
+
+  initCabecera(): void {
+    this.datosTarjetaResumen.push({label:'Nº solicitud', value: this.ficha.nSolicitud});
+    this.datosTarjetaResumen.push({label:'Fecha solicitud', value: this.datePipe.transform(this.ficha.fechaPendiente, 'dd/MM/yyyy')});
+    if (this.ficha.productos && this.ficha.productos.length > 0) {
+      this.datosTarjetaResumen.push({label:'Productos', value: this.ficha.productos[0].descripcion});
+      this.datosTarjetaResumen.push({label:'Total productos', value: this.ficha.productos.length})
+    } else if (this.ficha.servicios && this.ficha.servicios.length > 0){
+      this.datosTarjetaResumen.push({label:'Servicios', value: this.ficha.servicios[0].descripcion});
+      this.datosTarjetaResumen.push({label:'Total servicios', value: this.ficha.servicios.length})
+    }
+    this.datosTarjetaResumen.push({label:'Importe total', value: this.ficha.impTotal ? this.ficha.impTotal + "€" : "0,00€"});
+    if (this.ficha && this.comboPagos.length === 0) {
+      this.getComboFormaPago();
+    }
+  }
+
+  getEstado(): void {
+
+    this.lastFilaHistorica = {fecha: this.ficha.fechaPendiente, estado: this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente")};
+    if(this.ficha.fechaAnulada != null) {
+      this.lastFilaHistorica = {fecha: this.ficha.fechaAnulada, estado: this.translateService.instant("facturacion.productos.anulada")};
+    } else if(this.ficha.fechaSolicitadaAnulacion != null) {
+      this.lastFilaHistorica = {fecha: this.ficha.fechaSolicitadaAnulacion, estado: this.translateService.instant("facturacion.productos.anulacionSolicitada")};
+    } else if(this.ficha.fechaAceptada != null) {
+      this.lastFilaHistorica = {fecha: this.ficha.fechaAceptada, estado: this.translateService.instant("facturacion.productos.aceptada")};
+    } else if(this.ficha.fechaDenegada != null) {
+      this.lastFilaHistorica = {fecha: this.ficha.fechaDenegada, estado: this.translateService.instant("facturacion.productos.denegada")};
+    }
+
+    let indexEstado = this.datosTarjetaResumen.findIndex(dato => dato.label === 'Estado');
+    indexEstado === -1 ? this.datosTarjetaResumen.push({label:'Estado', value: this.lastFilaHistorica.estado}) : 
+        this.datosTarjetaResumen[indexEstado].value = this.lastFilaHistorica.estado;
   }
 
   backTo(){
-    this.location.back();
+    this.nuevaCompraSusc ? this.router.navigate(["/compraProductos"]): this.location.back();
   }
 
   showMessage(severity, summary, msg) {

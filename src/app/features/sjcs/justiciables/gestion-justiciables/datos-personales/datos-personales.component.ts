@@ -294,7 +294,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         } else {
             i++;
         }
-      }
+    }
     }
     return this.validateForm;
   }
