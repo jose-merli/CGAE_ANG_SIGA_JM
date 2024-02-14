@@ -62,4 +62,5 @@ export class TarjetaAsistenciaItem{
 	  idInstitucion: string;
 	  salto: string;
 	  isSustituto : string;
+	  fechaNacimiento: string;
 }

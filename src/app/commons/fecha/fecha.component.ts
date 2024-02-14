@@ -36,6 +36,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 	@Input() disabledDelete: boolean;
 	@Input() inputStyleClass: string;
 	@Input() appendTo = null;
+	@Input() placeholder: string;
 
 	es: any = esCalendar;
 	fechaSelectedFromCalendar: boolean = false;

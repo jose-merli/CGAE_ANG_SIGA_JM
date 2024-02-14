@@ -6,7 +6,7 @@
             <p-radioButton *ngFor="let radio of radios" [(ngModel)]="modeSearch" (click)="changeSearch()" class="mr-4" name="modo" [value]="radio.value" [label]="radio.label" [disabled]="radio.disabled"></p-radioButton>
         </div>
         <div *ngIf="searchExpres">
-            <app-buscador-asistencia-expres (buscarAE)="buscarAE()" (clearAE)="clearAE()"></app-buscador-asistencia-expres><!--[modoBusqueda]="modoBusqueda"-->
+            <app-buscador-asistencia-expres (buscarAE)="buscarAE()" (clearAE)="clearAE()" (search)="search()"></app-buscador-asistencia-expres><!--[modoBusqueda]="modoBusqueda"-->
         </div>
         <div *ngIf="!searchExpres">
             <app-buscador-asistencias (searchAgain)="searchAsistenciasEvent($event)"></app-buscador-asistencias> <!--[modoBusqueda]="modoBusqueda"-->
