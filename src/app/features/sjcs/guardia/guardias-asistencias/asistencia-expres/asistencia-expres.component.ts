@@ -601,15 +601,15 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
               tarjetaAsistenciaItem.numProcedimiento = row.cells[5].value[1];
             }
             
-            //Por defecto se selecciona la comisaria de la asistencia para la actuación
-            if (row.cells[4].value[2] != ''){ 
-              comisariaJuzgadoAsistencia = 'C';
-              lugarAsistencia = row.cells[4].value[2];
-              numAsuntoAsistencia = row.cells[5].value[0];
-            } else{
+            //Por defecto se selecciona el juzgado de la asistencia para la actuación
+            if(row.cells[4].value[3] != ''){
               comisariaJuzgadoAsistencia = 'J';
               lugarAsistencia = row.cells[4].value[3];
               numAsuntoAsistencia = row.cells[5].value[1];
+            } else {
+              comisariaJuzgadoAsistencia = 'C';
+              lugarAsistencia = row.cells[4].value[2];
+              numAsuntoAsistencia = row.cells[5].value[0];
             }
           }
 
@@ -648,18 +648,19 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             actuacionAsistenciaItem.lugar = lugarAsistencia;
             actuacionAsistenciaItem.numeroAsunto = numAsuntoAsistencia;
           } else {
-            // Si se selcciona comisaría
-            if (row.cells[4].value[2] != ''){
-              actuacionAsistenciaItem.comisariaJuzgado = 'C';
-              actuacionAsistenciaItem.lugar = row.cells[4].value[2];
-              actuacionAsistenciaItem.numeroAsunto = row.cells[5].value[0];
-            }
             // si se selecciona Juzgado
-            else {
+            if (row.cells[4].value[3] != ''){
               actuacionAsistenciaItem.comisariaJuzgado = 'J'
               actuacionAsistenciaItem.lugar = row.cells[4].value[3];
               actuacionAsistenciaItem.numeroAsunto = row.cells[5].value[1];
             }
+            // Si se selcciona comisaría
+            else {
+              actuacionAsistenciaItem.comisariaJuzgado = 'C';
+              actuacionAsistenciaItem.lugar = row.cells[4].value[2];
+              actuacionAsistenciaItem.numeroAsunto = row.cells[5].value[0];
+            }
+            
               
           }
           actuacionAsistenciaItem.fechaJustificacion = this.resultadoAE.fechaJustificacion;

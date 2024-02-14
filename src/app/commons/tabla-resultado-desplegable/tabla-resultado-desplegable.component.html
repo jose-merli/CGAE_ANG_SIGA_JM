@@ -494,14 +494,14 @@
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'ComJuzSelect' && pantalla != 'JE'">
                     
                                 <div class="w-100">
-                                    <p-dropdown autoWidth="false" class="center width70 showFull"
+                                    <p-dropdown autoWidth="false" class="center showFull"
                                     [(ngModel)]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[3] != '' ? cell.value[3] : cell.value[2])"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [options]="cell.value[0]" showClear="true"
                                     filterBy="label,labelSinTilde" styleClass="widthAll"
                                     (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup); onChangeSelectJuzCom(cell, row, 'C')"></p-dropdown>
 
-                                    <p-dropdown autoWidth="false" class="center width70 showFull"
+                                    <p-dropdown autoWidth="false" class="center showFull"
                                     [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[2] != '' ? cell.value[2] : cell.value[3])"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [options]="cell.value[1]" showClear="true"
