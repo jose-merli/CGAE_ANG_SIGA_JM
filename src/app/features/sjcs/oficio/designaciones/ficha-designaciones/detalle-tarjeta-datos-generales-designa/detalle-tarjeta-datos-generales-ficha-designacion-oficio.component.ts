@@ -543,6 +543,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         if (this.resaltadoDatos == false) {
           this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
             n => {
+              this.nuevaDesigna
               let newId = JSON.parse(n.body);
               sessionStorage.removeItem("nuevaDesigna");
               sessionStorage.setItem("nuevaDesigna", "false");
@@ -554,7 +555,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
               //Añadida esta línea para que deshabilitar el combo del turno tras crear una nueva asignación
               this.selectores[0].disable = true;
-
+              this.sinModificacion = true;
               if (this.datosAsistencia && this.vieneDeEJG == false) {
                 this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna", "?anioNumero=" + this.datosAsistencia.anioNumero + "&copiarDatos=S", newDesignaRfresh).subscribe(
                   n => {
@@ -783,6 +784,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     }
     
     if (detail == "Restablecer") {
+      if(sessionStorage.getItem("nuevaDesigna") && sessionStorage.getItem("nuevaDesigna") == "false"){
+        this.nuevaDesigna = false;
+        sessionStorage.removeItem("nuevaDesigna");
+      }
       
       this.initDatos = this.campos;
       if (!this.nuevaDesigna) {
@@ -1008,6 +1013,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             if (this.resaltadoDatos == false) {
               this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
                 n => {
+                  this.nuevaDesigna = false;
                   let newId = JSON.parse(n.body);
                   sessionStorage.removeItem("nuevaDesigna");
                   sessionStorage.setItem("nuevaDesigna", "false");
@@ -1015,6 +1021,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                   newDesignaRfresh.ano = newDesigna.ano;
                   newDesignaRfresh.codigo = newId.id;
                   newDesignaRfresh.idTurnos = [String(newDesigna.idTurno)];
+                  this.sinModificacion = true;
                   if (this.datosAsistencia) {
                     this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna", "?anioNumero=" + this.datosAsistencia.anioNumero + "&copiarDatos=S", newDesignaRfresh).subscribe(
                       n => {
