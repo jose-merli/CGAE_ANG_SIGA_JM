@@ -146,7 +146,7 @@ export class EJGItem {
     informacionEconomica?: boolean;
     editableComision: number;
 
-    idExpedienteExt: String;
+    idExpedienteExt: number;
 
     constructor() { }
 }

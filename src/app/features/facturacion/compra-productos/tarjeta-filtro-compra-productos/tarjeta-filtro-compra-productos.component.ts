@@ -272,8 +272,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
       (n) => {
         this.progressSpinner = false;
         sessionStorage.setItem("FichaCompraSuscripcion", n.body);
-        sessionStorage.setItem("origin", "newProducto");
-        this.router.navigate(["/busquedaGeneral"]);
+        this.router.navigate(["/fichaCompraSuscripcion"]);
       },
       (err) => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));

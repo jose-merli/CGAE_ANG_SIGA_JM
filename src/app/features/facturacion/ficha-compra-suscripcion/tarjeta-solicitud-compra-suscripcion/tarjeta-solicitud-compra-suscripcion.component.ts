@@ -28,7 +28,6 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   @Input("tarjProductos") tarjProductos : TarjetaProductosCompraSuscripcionComponent;
   @Input("tarjServicios") tarjServicios : TarjetaServiciosCompraSuscripcionComponent;
   @Input("esColegiado") esColegiado: boolean;
-  @Input() filaCabecera: FilaHistoricoPeticionItem;
   
   @Output() actualizaFicha = new EventEmitter<Boolean>();
   @Output() scrollToOblig = new EventEmitter<String>();
@@ -51,13 +50,11 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   permisoAprobarSuscripcion: boolean = false;
 
   progressSpinner : boolean = false;
-  showTarjeta: boolean = false;
+  showTarjeta: boolean = true;
 
   showModalSerieFacturacion = false;
   comboSeriesFacturacion: any[] = [];
   serieFacturacionSeleccionada: string;
-  nombreApellidos: string;
-  fechaUltModificacion: Date;
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService, 
@@ -68,7 +65,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   ngOnInit() {
     this.processHist();
     this.checkPermisos();
-    this.nombreApellidos = this.ficha.nombre + " " + this.ficha.apellidos;
+
   }
 
   ngOnChanges(changes: SimpleChanges){

@@ -435,7 +435,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     },
       err => {
         this.progressSpinner = false;
-        this.showMessage('error', this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
+        this.showMessage('error', 'El LOG no pudo descargarse', 'El LOG no pudo descargarse');
       });
   }
 

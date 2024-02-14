@@ -351,10 +351,6 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
 
     sessionStorage.setItem("modoBusqueda","a");
   }
-  changeColegiadoKeyUp(event){
-    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
-    this.filtro.numColegiado = event.nColegiado;
-  }
 
   fillFechaAsistenciaHasta(event){
     if(event){

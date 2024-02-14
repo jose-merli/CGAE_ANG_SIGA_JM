@@ -36,7 +36,6 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   msgs;
   @Output() colegiado = new EventEmitter<any>();
   isLetrado: boolean = false;
-  @Output() numColegiadoKeyUp = new EventEmitter<any>();
 
   constructor(private localStorageService: SigaStorageService, private router: Router, private sigaServices: SigaServices, private translateService: TranslateService, private PpersistenceService: PersistenceService) { }
 
@@ -266,15 +265,6 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     }
 
     this.colegiado.emit(colegiado);
-  }
-
-  colegiadoKeyUp(){
-    const colegiado = {
-      nColegiado: this.colegiadoForm.get('numColegiado').value,
-      nombreAp: this.colegiadoForm.get('nombreAp').value
-    }
-
-    this.numColegiadoKeyUp.emit(colegiado);
   }
 
   busquedaColegiadoJE() {

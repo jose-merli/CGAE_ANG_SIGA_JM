@@ -85,7 +85,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   @Output() actualizaFicha = new EventEmitter<Boolean>();
   @ViewChild("servicesTable") tablaServicios;
   @ViewChild("servicesSuscripcionTable") tablaServiciosSuscripcion;
-  @Output() scrollToOblig = new EventEmitter<String>();
 
   selectedRows: ListaServiciosSuscripcionItem[] = [];
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
@@ -115,7 +114,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   comboServiciosManuales: ListaServiciosItems[];
   // tiposObject: ComboItem[];
   // subscriptionTypeSelectValues: Subscription;
-  registrosTotales: number = 0;
 
   constructor(public sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -143,7 +141,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       if(this.ficha.servicios.length>0){
         this.ficha.servicios.forEach(el => el.idPeticion = this.ficha.nSolicitud);
         this.serviciosTarjeta = this.ficha.servicios;
-        this.registrosTotales = this.serviciosTarjeta.length;
         if(this.ficha.idPersona != null && this.serviciosTarjeta.length >0){
           this.getComboPrecios();
         }
@@ -176,8 +173,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
         listaServiciosSuscripcionDTO => {
 
           this.serviciosTarjeta = listaServiciosSuscripcionDTO.listaServiciosSuscripcionItems;
-          this.registrosTotales = this.serviciosTarjeta.length;
-          
+
           if (listaServiciosSuscripcionDTO.error.code == 200) {
             // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           } else {
