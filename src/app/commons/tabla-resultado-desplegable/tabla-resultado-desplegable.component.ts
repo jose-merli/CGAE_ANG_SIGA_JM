@@ -2203,7 +2203,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             rowGroup.rows[0].cells[0].value[4] = justiciableItem.sexo;
 
             if (justiciableItem.fechanacimiento && rowGroup.rows[0].cells[0].value.length >= 6){
-              rowGroup.rows[0].cells[0].value[5] = this.formatDate(new Date(justiciableItem.fechanacimiento))
+              rowGroup.rows[0].cells[0].value[5] = new Date(justiciableItem.fechanacimiento);
             }
 
           }
