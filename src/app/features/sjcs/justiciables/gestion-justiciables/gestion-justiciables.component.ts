@@ -802,7 +802,7 @@ export class GestionJusticiablesComponent implements OnInit {
     this.progressSpinner = false;
   }
 
-  callServiceSearch(justiciableBusqueda1) {
+  async callServiceSearch(justiciableBusqueda1) {
     this.progressSpinner = true;
     let justiciableBusqueda: JusticiableBusquedaItem  = new JusticiableBusquedaItem();
     if(justiciableBusqueda1[0]){
@@ -813,9 +813,11 @@ export class GestionJusticiablesComponent implements OnInit {
     justiciableBusqueda.idpersona = justiciableBusqueda1.idpersona;
     }
 
-    this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
+    sessionStorage.setItem("justiciableDatosPersonalesSearch", JSON.stringify(justiciableBusqueda));
+
+    await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
       n => {
-        setTimeout(() => {
+
           if (sessionStorage.getItem("origin") == "newRepresentante") {
             this.bodyRep = JSON.parse(n.body).justiciable;
             sessionStorage.setItem("bodyRepresentante", JSON.stringify(this.bodyRep));
@@ -830,7 +832,7 @@ export class GestionJusticiablesComponent implements OnInit {
               this.justiciableOverwritten = false;
               this.modoEdicion = true;
               this.getAsuntos();
-            } if (this.justiciableCreateByUpdate) {
+            } else if (this.justiciableCreateByUpdate) {
               this.justiciableCreateByUpdate = false;
               this.modoEdicion = true;
               //Al crearse uno nuevo desde justiciables no se le asocia ningun asunto por eso se resetean los valores
@@ -843,7 +845,6 @@ export class GestionJusticiablesComponent implements OnInit {
             }
           }
           this.progressSpinner = false;
-        }, 2000);
 
       },
       err => {
@@ -852,12 +853,12 @@ export class GestionJusticiablesComponent implements OnInit {
       });
   }
 
-  getAsuntos() {
+  async getAsuntos() {
     let busquedaJusticiable = new JusticiableBusquedaItem();
     busquedaJusticiable.idpersona = this.body.idpersona;
 
     if(this.body.idpersona != undefined){
-      this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
+      await this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
         n => {
 
           this.datosAsuntos = JSON.parse(n.body).asuntosJusticiableItems;
@@ -1026,6 +1027,8 @@ export class GestionJusticiablesComponent implements OnInit {
 
 
   searchByIdPersona(bodyBusqueda) {
+
+    sessionStorage.setItem("justiciableDatosPersonalesSearch", JSON.stringify(bodyBusqueda));
 
     this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', bodyBusqueda).subscribe(
       (n) => {

@@ -5,6 +5,7 @@ import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableT
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 
 @Component({
   selector: 'app-datos-personales',
@@ -38,12 +39,34 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.progressSpinner = true;
     this.modoEdicion = false;
     this.body = new JusticiableItem();
     this.body.idpaisdir1 = "191";  
-    this.getCombos();
+    await this.getCombos();
+  }
+
+  async callServiceSearch() {
+    if (sessionStorage.getItem("justiciableDatosPersonalesSearch")) {
+      this.progressSpinner = true;
+      let justiciableBusqueda: JusticiableBusquedaItem  = JSON.parse(sessionStorage.getItem("justiciableDatosPersonalesSearch"));
+      sessionStorage.removeItem("justiciableDatosPersonalesSearch");
+
+      await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
+        n => {
+          this.body = JSON.parse(n.body).justiciable;
+          this.modoEdicion = true;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        });
+    }
+  }
+
+  ngAfterViewInit() {
+    this.callServiceSearch();
   }
 
   ngOnChanges() {    
@@ -56,10 +79,10 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     }
   }
 
-  private getCombos() {
-    this.getComboPais();
-    this.getComboTipoVia();
-    this.getComboProvincia();
+  private async getCombos() {
+    await this.getComboPais();
+    await this.getComboTipoVia();
+    await this.getComboProvincia();
   }
 
   private getComboTipoVia() {
@@ -102,11 +125,8 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         n => {
           this.comboPoblacion = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboPoblacion);
-          if(this.direccionPostal == ""){
-            this.rellenarDireccionPostal();
-          }else{
-            this.progressSpinner = false;
-          }
+          this.rellenarDireccionPostal();
+          this.progressSpinner = false;
         }
       );
   }
@@ -199,7 +219,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     if (this.body.fax != null && this.body.fax != undefined) {
       this.body.fax = this.body.fax.trim();
     }
-    if(this.body.telefonos.length > 0){
+    if(this.body.telefonos != null && this.body.telefonos.length > 0){
       for(let i = 0; i < this.body.telefonos.length; i++){
         this.body.telefonos[i].preferenteSms = '0';
         if(this.body.telefonos[i].preferenteSmsCheck){
@@ -265,7 +285,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.body.idpoblacion != undefined && this.body.idpoblacion != "" ) {
       this.validateForm = true;
     }
-    if(this.body.telefonos.length > 0){
+    if(this.body.telefonos != null && this.body.telefonos.length > 0){
       let i = 0;
       while (i < this.body.telefonos.length) {
         if(this.body.telefonos[i].nombreTelefono === undefined || this.body.telefonos[i].numeroTelefono === undefined || 
