@@ -29,7 +29,7 @@ export class DefensaJuridicaComponent implements OnInit {
   bodyInicial: EJGItem;
   @Input() permisoEscritura: boolean;
   permisoDefensaJuridica: boolean;
-
+  @Output() createDesigna = new EventEmitter<any>();
   isDisabledProcedimiento: boolean = true;
 
   searchParametrosSCS: ParametroDto = new ParametroDto();
@@ -344,16 +344,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   createDes() {
-    this.progressSpinner = true;
-    //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
-    this.body = this.persistenceService.getDatosEJG();
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
-    sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
-    sessionStorage.setItem("nuevaDesigna", "true");
-    //if (this.art27) sessionStorage.setItem("Art27", "true");
-    this.progressSpinner = false;
-    this.router.navigate(["/fichaDesignaciones"]);
+    this.createDesigna.emit();
   }
 
   rest() {

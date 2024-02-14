@@ -1001,6 +1001,10 @@ export class GestionEjgComponent implements OnInit {
 
     this.updateTarjResumen();
   }
+  createDesigna(){
+    this.relaciones.checkPermisosCrearDesignacion();
+  }
+  
 
 
 }

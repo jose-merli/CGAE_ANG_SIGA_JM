@@ -31,7 +31,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   permisoEscritura: boolean = false;
   @Input() tarjetaDatosGenerales: string;
   @Input() art27: boolean = false;
-
+  @Output() createDesigna = new EventEmitter<any>();
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() guardadoSend = new EventEmitter<any>();
   @Output() newEstado = new EventEmitter();
@@ -912,16 +912,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   }
 
   createDes() {
-    this.progressSpinner = true;
-    //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
-    this.body = this.persistenceService.getDatosEJG();
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
-    sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
-    sessionStorage.setItem("nuevaDesigna", "true");
-    if (this.art27) sessionStorage.setItem("Art27", "true");
-    this.progressSpinner = false;
-    this.router.navigate(["/fichaDesignaciones"]);
+    this.createDesigna.emit();
   }
 
   checkPermisosAddExp() {
