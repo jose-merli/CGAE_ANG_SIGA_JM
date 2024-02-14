@@ -71,6 +71,7 @@ export class TarjetaConsultasComponent implements OnInit {
 
   @Input() datoRecargar: DatosGeneralesFicha;
   @Input() botonActivo: boolean = false;
+  @Input() getInforme: boolean = false;
   fichasPosibles = [
     {
       key: "generales",
@@ -305,7 +306,6 @@ export class TarjetaConsultasComponent implements OnInit {
     if (this.showHistorico) {
       service = "plantillasDoc_consultas_historico";
     }
-    this.body.idInforme = '1'; // IdInforme por defecto.
     this.sigaServices.post(service, this.body).subscribe(
       data => {
         this.datos = JSON.parse(data["body"]).consultaItem;
@@ -650,8 +650,11 @@ export class TarjetaConsultasComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.datoRecargar && !changes.datoRecargar.firstChange) {
-      console.log(this.datoRecargar);
       this.isNew = true;
+      this.ngOnInit();
+    }
+    if(changes.getInforme){
+      this.getInforme = false;
       this.ngOnInit();
     }
   }
@@ -659,8 +662,6 @@ export class TarjetaConsultasComponent implements OnInit {
   getPlantillas() {
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
       data => {
-        console.log("plantillas")
-        console.log(data)
         this.plantillas = data.combooItems;
         // this.plantillas.unshift({ label: "Seleccionar", value: "" });
       },

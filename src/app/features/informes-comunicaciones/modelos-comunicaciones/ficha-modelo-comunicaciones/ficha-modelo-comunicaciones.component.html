@@ -10,9 +10,9 @@
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-datos-generales-ficha (cambioDatoGeneral)="controlCambioDG($event)" *ngSwitchCase="'generales'"></app-datos-generales-ficha>
     <app-perfiles-ficha *ngSwitchCase="'perfiles'"></app-perfiles-ficha>
-    <app-tarjeta-informes *ngSwitchCase="'informes'"></app-tarjeta-informes>
-    <app-tarjeta-plantillas-documentos (activaInformes)="activarBoton()" [datoRecargar]="datoGeneral" *ngSwitchCase="'plantillaDocumentos'"></app-tarjeta-plantillas-documentos>
-    <app-tarjeta-consultas  [botonActivo]="botonActivo" [datoRecargar]="datoGeneral" *ngSwitchCase="'consultas'"></app-tarjeta-consultas> 
+    <!--<app-tarjeta-informes *ngSwitchCase="'informes'"></app-tarjeta-informes>-->
+    <app-tarjeta-plantillas-documentos (getInformesEvent)="getInformesInfo()" (activaInformes)="activarBoton()" [datoRecargar]="datoGeneral" *ngSwitchCase="'plantillaDocumentos'"></app-tarjeta-plantillas-documentos>
+    <app-tarjeta-consultas  [botonActivo]="botonActivo" [getInforme]="getInforme" [datoRecargar]="datoGeneral" *ngSwitchCase="'consultas'"></app-tarjeta-consultas> 
     <!--app-tarjeta-comunicaciones
       *ngSwitchCase="'comunicacion'"
     ></app-tarjeta-comunicaciones-->
