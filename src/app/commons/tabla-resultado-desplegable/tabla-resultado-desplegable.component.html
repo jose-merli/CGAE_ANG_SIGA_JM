@@ -217,8 +217,8 @@
                                         <app-fecha [(value)]="cell.value[5]" [utc]="false"
                                             [showTime]="cell.showTime" [(ngModel)]="cell.value[5]" style="width: 33.33%;"
                                             placeholder="{{'justiciaGratuita.guardia.asistenciasexpress.fnacimiento' | translate}}"
-                                            (valueChangeSelected)="fillFechaNacimiento($event, cell, rowGroup.id)"
-                                            (valueChangeInput)="fillFechaNacimiento($event, cell, rowGroup.id)">
+                                            (valueChangeSelected)="fillFechaValue($event, cell, rowGroup.id, 5)"
+                                            (valueChangeInput)="fillFechaValue($event, cell, rowGroup.id, 5)">
                                         </app-fecha>
                                     </div>
                                     <div class="d-flex flex-row">    
@@ -237,6 +237,19 @@
                                             (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                             placeholder="{{'administracion.parametrosGenerales.literal.nombre' | translate}}">
                                     </div>
+                                </div>
+                            </span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'dateAndTime' && pantalla != 'JE'"
+                                [ngClass]="{'column-d-flex': changeDisplay() == true}">
+                                <div class="d-flex flex-column flex-wrap w-100 align-items-center">
+                                    <app-fecha [(value)]="cell.value[0]" [utc]="false"
+                                        [showTime]="false" [(ngModel)]="cell.value[0]" class="w-100"
+                                        (valueChangeSelected)="fillFechaValue($event, cell, rowGroup.id, 0)"
+                                        (valueChangeInput)="fillFechaValue($event, cell, rowGroup.id, 0)">
+                                    </app-fecha>
+                                    <input type="time" class="form-control hora-minuto-input"
+                                        [(ngModel)]="cell.value[1]" [value]="cell.value[1]" [ngClass]="cell.value[1]"
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);">
                                 </div>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'"
@@ -518,6 +531,20 @@
                                     <input type="text" class="form-control" pInputText size="10"
                                         [placeholder]="cell.value" [(ngModel)]="cell.value"
                                         (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup, false, i)">
+                                </span>
+                                
+                                <span class="w100 cell-value" *ngIf="cell.type == 'dateAndTime' && pantalla != 'JE'"
+                                    [ngClass]="{'column-d-flex': changeDisplay() == true}">
+                                    <div class="d-flex flex-column flex-wrap w-100 align-items-center">
+                                        <app-fecha [(value)]="cell.value[0]" [utc]="false"
+                                            [showTime]="false" [(ngModel)]="cell.value[0]" class="w-100"
+                                            (valueChangeSelected)="fillFechaValue($event, cell, rowGroup.id, 0)"
+                                            (valueChangeInput)="fillFechaValue($event, cell, rowGroup.id, 0)">
+                                        </app-fecha>
+                                        <input type="time" class="form-control hora-minuto-input"
+                                            [(ngModel)]="cell.value[1]" [value]="cell.value[1]" [ngClass]="cell.value[1]"
+                                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);">
+                                    </div>
                                 </span>
                                 <span class="w100 cell-value" *ngIf="cell.type == '2input' && pantalla != 'JE'">
                                     <input type="text" class="form-control" pInputText size="10" 

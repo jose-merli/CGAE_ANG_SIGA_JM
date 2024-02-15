@@ -47,5 +47,13 @@
 }
 
 .marginButtons{
-  margin-top: 115px;
+  margin-top: 60px;
+}
+
+:host ::ng-deep p-paginator.toBottomRight {
+  bottom: 85px  !important
+}
+
+:host ::ng-deep div.toBottomLeft {
+  bottom: 85px !important
 }

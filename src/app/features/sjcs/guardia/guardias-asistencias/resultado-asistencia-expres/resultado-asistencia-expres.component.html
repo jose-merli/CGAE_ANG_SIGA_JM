@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 
-<app-tabla-resultado-desplegable [filtroAsistencia]="filtro" [seleccionarTodo]="seleccionarTodo" [ngClass]="{'customCursor': selectMultiple}"
+<app-tabla-resultado-desplegable [filtroAsistencia]="filtro" [seleccionarTodo]="seleccionarTodo" class="paginador-resulatdo-AE" [ngClass]="{'customCursor': selectMultiple}"
     [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
     (anySelected)="notifyAnySelected($event)" [pantalla]="pantalla" (guardarFiltroAE)="guardarFiltroAE()">
 </app-tabla-resultado-desplegable>

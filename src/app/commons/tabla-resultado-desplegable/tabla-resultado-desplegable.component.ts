@@ -725,8 +725,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       rowGroup.rows[1].cells[3].value = event;
     }
   }
-  fillFechaNacimiento(event, cell, rowId, row, rowGroup, padre, index) {
-    cell.value[5] = event;
+  fillFechaValue(event, cell, rowId, valueId){
+    cell.value[valueId] = event;
     this.rowIdsToUpdate.push(rowId);
   }
   fillFecha(event, cell, rowId, row, rowGroup, padre, index) {
