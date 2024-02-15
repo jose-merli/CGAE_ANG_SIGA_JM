@@ -68,10 +68,11 @@ export class TarjetaConsultasComponent implements OnInit {
   consultasComboMulti: any[];
   consultasComboCondicional: any[];
   consultasComboPlantillas: any[];
-
+  esPorDefecto: boolean = false;
   @Input() datoRecargar: DatosGeneralesFicha;
   @Input() botonActivo: boolean = false;
   @Input() getInforme: boolean = false;
+  institucionActual: number;
   fichasPosibles = [
     {
       key: "generales",
@@ -468,6 +469,36 @@ export class TarjetaConsultasComponent implements OnInit {
         // }
       }
     );
+  }
+
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+
+      // El modo de la pantalla viene por los permisos de la aplicación
+      if (sessionStorage.getItem("permisoModoLectura") == 'true' || sessionStorage.getItem("soloLectura") == 'true') {
+        this.esPorDefecto = true;
+      }
+
+      if (sessionStorage.getItem("esPorDefecto") != undefined) {
+        if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000 || sessionStorage.getItem("soloLectura") === 'true') {
+          this.esPorDefecto = true;
+        } else {
+          this.esPorDefecto = false;
+        }
+      } else {
+        this.modeloItem = JSON.parse(sessionStorage.getItem('modelosSearch'));
+        if (this.modeloItem.porDefecto == 'SI' && this.institucionActual != 2000) {
+          if (
+            sessionStorage.getItem("soloLectura") != null &&
+            sessionStorage.getItem("soloLectura") != undefined &&
+            sessionStorage.getItem("soloLectura") == "true"
+          ) {
+            this.esPorDefecto = true;
+          }
+        }
+      }
+    });
   }
 
   onChangeRowsPerPages(event) {
