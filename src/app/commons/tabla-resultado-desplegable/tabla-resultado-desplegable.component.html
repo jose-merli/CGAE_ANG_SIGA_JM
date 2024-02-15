@@ -23,7 +23,7 @@
         <div class="table-header ">
             <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index"
                 [ngStyle]="setMyStyles(cabecera.size)" #BorderedHeader [id]="cabecera.id">
-                <div class="ajustarCabecera" [ngStyle]="setMyStyles(cabecera.size)">
+                <div class="ajustarCabecera w-100" [ngStyle]="setMyStyles(cabecera.size)">
                     <div [mat-sort-header]=cabecera.id [pTooltip]="cabecera.nameComplete" tooltipPosition="top"
                         disableClear>
                         {{cabecera.name}}</div>
@@ -217,8 +217,8 @@
                                         <app-fecha [(value)]="cell.value[5]" [utc]="false"
                                             [showTime]="cell.showTime" [(ngModel)]="cell.value[5]" style="width: 33.33%;"
                                             placeholder="{{'justiciaGratuita.guardia.asistenciasexpress.fnacimiento' | translate}}"
-                                            (valueChangeSelected)="fillFechaNacimiento($event, cell, rowGroup.id)"
-                                            (valueChangeInput)="fillFechaNacimiento($event, cell, rowGroup.id)">
+                                            (valueChangeSelected)="fillFechaValue($event, cell, rowGroup.id, 5)"
+                                            (valueChangeInput)="fillFechaValue($event, cell, rowGroup.id, 5)">
                                         </app-fecha>
                                     </div>
                                     <div class="d-flex flex-row">    
@@ -237,6 +237,19 @@
                                             (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                             placeholder="{{'administracion.parametrosGenerales.literal.nombre' | translate}}">
                                     </div>
+                                </div>
+                            </span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'dateAndTime' && pantalla != 'JE'"
+                                [ngClass]="{'column-d-flex': changeDisplay() == true}">
+                                <div class="d-flex flex-column flex-wrap w-100 align-items-center">
+                                    <app-fecha [(value)]="cell.value[0]" [utc]="false"
+                                        [showTime]="false" [(ngModel)]="cell.value[0]" class="w-100"
+                                        (valueChangeSelected)="fillFechaValue($event, cell, rowGroup.id, 0)"
+                                        (valueChangeInput)="fillFechaValue($event, cell, rowGroup.id, 0)">
+                                    </app-fecha>
+                                    <input type="time" class="form-control ui-inputtext"
+                                        [(ngModel)]="cell.value[1]" [value]="cell.value[1]" [ngClass]="cell.value[1]"
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);">
                                 </div>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'"
@@ -291,14 +304,14 @@
                     
                                 <div class="w-100">
                                     <p-dropdown autoWidth="false" class="center showFull"
-                                    [(ngModel)]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[3] != '' ? cell.value[3] : cell.value[2])"
+                                    [(ngModel)]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[3] != '' &&  cell.value[3] != null ? cell.value[3] : cell.value[2])"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [options]="cell.value[0]" showClear="true"
                                     filterBy="label,labelSinTilde" styleClass="widthAll"
                                     (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup); onChangeSelectJuzCom(cell, row, 'C')"></p-dropdown>
 
                                     <p-dropdown autoWidth="false" class="center showFull"
-                                    [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[2] != '' ? cell.value[2] : cell.value[3])"
+                                    [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[2] != '' &&  cell.value[2] != null ? cell.value[2] : cell.value[3])"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [options]="cell.value[1]" showClear="true"
                                     filterBy="label,labelSinTilde" styleClass="widthAll"
@@ -495,14 +508,14 @@
                     
                                 <div class="w-100">
                                     <p-dropdown autoWidth="false" class="center showFull"
-                                    [(ngModel)]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[3] != '' ? cell.value[3] : cell.value[2])"
+                                    [(ngModel)]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[3] != ''  &&  cell.value[3] != null ? cell.value[3] : cell.value[2])"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [options]="cell.value[0]" showClear="true"
                                     filterBy="label,labelSinTilde" styleClass="widthAll"
                                     (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup); onChangeSelectJuzCom(cell, row, 'C')"></p-dropdown>
 
                                     <p-dropdown autoWidth="false" class="center showFull"
-                                    [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[2] != '' ? cell.value[2] : cell.value[3])"
+                                    [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[2] != ''  &&  cell.value[2] != null? cell.value[2] : cell.value[3])"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [options]="cell.value[1]" showClear="true"
                                     filterBy="label,labelSinTilde" styleClass="widthAll"
@@ -518,6 +531,20 @@
                                     <input type="text" class="form-control" pInputText size="10"
                                         [placeholder]="cell.value" [(ngModel)]="cell.value"
                                         (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup, false, i)">
+                                </span>
+                                
+                                <span class="w100 cell-value" *ngIf="cell.type == 'dateAndTime' && pantalla != 'JE'"
+                                    [ngClass]="{'column-d-flex': changeDisplay() == true}">
+                                    <div class="d-flex flex-column flex-wrap w-100 align-items-center">
+                                        <app-fecha [(value)]="cell.value[0]" [utc]="false"
+                                            [showTime]="false" [(ngModel)]="cell.value[0]" class="w-100"
+                                            (valueChangeSelected)="fillFechaValue($event, cell, rowGroup.id, 0)"
+                                            (valueChangeInput)="fillFechaValue($event, cell, rowGroup.id, 0)">
+                                        </app-fecha>
+                                        <input type="time" class="form-control ui-inputtext"
+                                            [(ngModel)]="cell.value[1]" [value]="cell.value[1]" [ngClass]="cell.value[1]"
+                                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);">
+                                    </div>
                                 </span>
                                 <span class="w100 cell-value" *ngIf="cell.type == '2input' && pantalla != 'JE'">
                                     <input type="text" class="form-control" pInputText size="10" 

@@ -1111,13 +1111,26 @@ p-footer .main-button {
   width: 100%;
 }
 
+.subir-plantilla-mod .main-button,
+.subir-plantilla-mod .ui-button {
+  background: none !important;
+}
+
 .subir-plantilla .fa-plus {
   color: $grey1 !important;
   text-align: center;
   width: 100%;
 }
 
+.subir-plantilla-mod .fa-plus {
+  color: $grey1 !important;
+}
+
 .subir-plantilla .fa-plus:before {
+  content: "\f093";
+}
+
+.subir-plantilla-mod .fa-plus:before {
   content: "\f093";
 }
 

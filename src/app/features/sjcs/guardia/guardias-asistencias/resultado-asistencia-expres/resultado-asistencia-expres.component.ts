@@ -216,9 +216,8 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     cellEJG.value = '';
     cellEJG.size = 100;
 
-    cellFechaActuacion.type = 'datePickerAsist';
-    cellFechaActuacion.value = this.fechaFormateada(this.filtro.diaGuardia);
-    cellFechaActuacion.showTime = true;
+    cellFechaActuacion.type = 'dateAndTime';
+    cellFechaActuacion.value = [ this.fechaFormateada(this.filtro.diaGuardia), '00:00'];
     cellFechaActuacion.size = 200;
 
     cellLugar.type = 'ComJuzSelect';
@@ -250,8 +249,8 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     cellEJG2.value = '';
     cellEJG2.size= 100;
 
-    cellFechaActuacion2.type = 'datePickerAct';
-    cellFechaActuacion2.value = this.fechaFormateada(this.filtro.diaGuardia);
+    cellFechaActuacion2.type = 'dateAndTime';
+    cellFechaActuacion2.value = [ this.fechaFormateada(this.filtro.diaGuardia), '00:00'];
     cellFechaActuacion2.showTime = true;
     cellFechaActuacion2.size = 200;
 
@@ -307,8 +306,8 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       cellEJG.value = '';
       cellEJG.size = 100;
 
-      cellFechaActuacion.type = 'datePicker';
-      cellFechaActuacion.value = this.fechaFormateada(this.filtro.diaGuardia);
+      cellFechaActuacion.type = 'dateAndTime';
+      cellFechaActuacion.value = [ this.fechaFormateada(this.filtro.diaGuardia), '00:00'];
       cellFechaActuacion.showTime = true;
       cellFechaActuacion.size = 200;
 
@@ -385,32 +384,22 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
           //controlar fecha con el instance of date y setearla "bonita"
           let fechaPlana;
           rowGroupsToUpdate.forEach(rowGroupTU => {
-            if(!(rowGroupTU.rows[0].cells[3].value instanceof Date)){
-              if(rowGroupTU.rows[0].cells[3].value != undefined && rowGroupTU.rows[0].cells[3].value != undefined) {
-                fechaPlana = rowGroupTU.rows[0].cells[3].value.target.value;
+            if(!(rowGroupTU.rows[0].cells[3].value[0] instanceof Date)){
+              if(rowGroupTU.rows[0].cells[3].value[0] != undefined) {
+                fechaPlana = rowGroupTU.rows[0].cells[3].value[0].target.value;
               } else{
-                fechaPlana = rowGroupTU.rows[0].cells[3].value;
+                fechaPlana = rowGroupTU.rows[0].cells[3].value[0];
               }
-
-              if(fechaPlana.length < 11) {
-                rowGroupTU.rows[0].cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
-              } else {
-                rowGroupTU.rows[0].cells[3].value = moment(fechaPlana, 'DD/MM/YYYY HH:mm').toDate();
-              }
+              rowGroupTU.rows[0].cells[3].value[0] = moment(fechaPlana, 'DD/MM/YYYY').toDate();
             } 
             
-            if(!(rowGroupTU.rows[1].cells[3].value instanceof Date)){
-              if(rowGroupTU.rows[1].cells[3].value != undefined && rowGroupTU.rows[1].cells[3].value != undefined) {
-                fechaPlana = rowGroupTU.rows[1].cells[3].value.target.value;
+            if(!(rowGroupTU.rows[1].cells[3].value[0] instanceof Date)){
+              if(rowGroupTU.rows[1].cells[3].value[0] != undefined ) {
+                fechaPlana = rowGroupTU.rows[1].cells[3].value[0].target.value;
               } else{
-                fechaPlana = rowGroupTU.rows[1].cells[3].value;
+                fechaPlana = rowGroupTU.rows[1].cells[3].value[0];
               }
-
-              if(fechaPlana.length < 11) {
-                rowGroupTU.rows[1].cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
-              } else {
-                rowGroupTU.rows[1].cells[3].value = moment(fechaPlana, 'DD/MM/YYYY HH:mm').toDate();
-              }
+              rowGroupTU.rows[1].cells[3].value[0] = moment(fechaPlana, 'DD/MM/YYYY').toDate();
             }
           });
           sessionStorage.setItem("asistenciasGuardar", JSON.stringify(rowGroupsToUpdate));

@@ -10,14 +10,17 @@ export class FichaPlantillasDocument {
   formatoSalida: String;
   idFormatoSalida: String;
   nombreFicheroSalida: String;
-  idSufijo: String[];
+  idSufijo: String;
   idFinalidad: String;
   idTipoEjecucion: String;
   idInforme: String;
   plantillas: PlantillaDocumentoItem[] = [];
   consultas: ConsultasPlantillasInformesItem[] = [];
   sufijos: SufijoItem[] = [];
+  sufijo: String;
   generacionExcel:number;  
+  nombreFichero:String;
+  idPlantillas : String;
   constructor() { }
 }
 

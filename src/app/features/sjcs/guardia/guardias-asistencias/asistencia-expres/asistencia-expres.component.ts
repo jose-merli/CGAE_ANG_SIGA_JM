@@ -370,11 +370,13 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       numProcedimientoDiligenciaAsistenciaValue[1]= asistencia.numProcedimiento;
       
       
-      fechaAsistenciaType = 'datePicker';
+      fechaAsistenciaType = 'dateAndTime';
+      
       if(asistencia.fechaAsistencia != null){
-        fechaAsistenciaValue = new Date(Date.parse(asistencia.fechaAsistencia));
+        let date: Date = new Date(Date.parse(asistencia.fechaAsistencia));
+        fechaAsistenciaValue = [date,  this.datepipe.transform(date, 'HH:mm')];
       }else{
-        fechaAsistenciaValue = null;
+        fechaAsistenciaValue = [null, '00:00'];
       }
 
       let arrayActuaciones = [];
@@ -384,7 +386,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         {type: nombreApellidosType, value: nombreApellidosValue, combo: this.comboSexo, size: 545.5},
         {type: '2SelectorInput', value: delitosObservacionesValue, combo: this.comboDelitos, size: 225.75},
         {type: 'link', value: ejgValue, size: 100},
-        {type: fechaAsistenciaType, value: fechaAsistenciaValue, showTime: true, size: 200},
+        {type: fechaAsistenciaType, value: fechaAsistenciaValue, size: 200},
         {type: lugarType, value: lugarValue, size: 400},
         {type: nDiligenciaType, value: numProcedimientoDiligenciaAsistenciaValue, size: 150},
         {type: 'invisible', value: asistencia.idTipoEjg}
@@ -397,11 +399,13 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
         let letra = (indiceAct + 10).toString(36).toUpperCase();
 
-        fechaActuacionType = 'datePicker';
-        if(actuacion.fechaActuacion!=null){
-          fechaActuacionValue = new Date(Date.parse(actuacion.fechaActuacion));
+        fechaActuacionType = 'dateAndTime';
+      
+        if(actuacion.fechaActuacion != null){
+          let date: Date = new Date(Date.parse(actuacion.fechaActuacion));
+          fechaActuacionValue = [date,  this.datepipe.transform(date, 'HH:mm')];
         }else{
-          fechaActuacionValue = null;
+          fechaActuacionValue = [null, '00:00'];
         }
 
         let comisariaJuzgado = 'C';
@@ -438,7 +442,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           {type: 'invisible', value: '', combo: this.comboSexo, size: 545.5},
           {type: 'invisible', value: '', combo: this.comboDelitos, size: 225.75},
           {type: 'invisible', value: '', size: 100},
-          {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 200},
+          {type: fechaActuacionType, value: fechaActuacionValue, size: 200},
           {type: lugarType, value: lugarValue, size: 400},
           {type: nDiligenciaTypeAsunto, value: nDiligenciaValue, size: 150}
         ]
@@ -589,20 +593,20 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             tarjetaAsistenciaItem.observaciones = row.cells[1].value[1];
 
             // Guardar comisaria de la asistencia
-            if (row.cells[4].value[2] != ''){
+            if (row.cells[4].value[2] != '' && row.cells[4].value[2] != null){
               tarjetaAsistenciaItem.comisaria = row.cells[4].value[2];
               tarjetaAsistenciaItem.numDiligencia = row.cells[5].value[0];
             }
 
           
             // Guardamos juzgado de la asistencia
-            if (row.cells[4].value[3] != ''){
+            if (row.cells[4].value[3] != '' && row.cells[4].value[3] != null){
               tarjetaAsistenciaItem.juzgado = row.cells[4].value[3];
               tarjetaAsistenciaItem.numProcedimiento = row.cells[5].value[1];
             }
             
             //Por defecto se selecciona el juzgado de la asistencia para la actuación
-            if(row.cells[4].value[3] != ''){
+            if(row.cells[4].value[3] != '' && row.cells[4].value[3] != null){
               comisariaJuzgadoAsistencia = 'J';
               lugarAsistencia = row.cells[4].value[3];
               numAsuntoAsistencia = row.cells[5].value[1];
@@ -614,33 +618,43 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           }
 
           //En caso de venir la fecha rellena a mano la transformo para que no falle el datepite
-          if(!(row.cells[3].value instanceof Date)){
+          if(!(row.cells[3].value[0] instanceof Date)){
             let fechaPlana;
-            if(row.cells[3].value.target != undefined && row.cells[3].value.target.value != undefined) { //Si no marcamos refuerzo recuperamos de value.target.value
-              fechaPlana = row.cells[3].value.target.value;
+            if(row.cells[3].value[0].target != undefined && row.cells[3].value[0].target.value != undefined) { //Si no marcamos refuerzo recuperamos de value.target.value
+              fechaPlana = row.cells[3].value[0].target.value;
             } else {
-              fechaPlana = row.cells[3].value; //Si se marca refuerzo viene directamente relleno en value
+              fechaPlana = row.cells[3].value[0]; //Si se marca refuerzo viene directamente relleno en value
             }
 
-            if(fechaPlana.length < 11) {
-              row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
-            } else if (fechaPlana.length == 24) {
-              row.cells[3].value = new Date(fechaPlana);
+            if (fechaPlana.length == 24) {
+              row.cells[3].value[0] = new Date(fechaPlana);
             } else {
-              row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY HH:mm').toDate();
+              row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
             }
 
             //Si marcamos refuerzo el moment(fechaPlana) da error de Invalid Date, le reasignamos su valor original
-            if(row.cells[3].value == 'Invalid Date'){
-              row.cells[3].value = fechaPlana;
+            if(row.cells[3].value[0] == 'Invalid Date'){
+              row.cells[3].value[0] = fechaPlana;
             }
           }
+          // si no se ha seteado los minutos HH:mm
+          if (row.cells[3].value[1].length != 5){
+            row.cells[3].value[1] = '00:00'
+          }
 
-          if(row.cells[3].value){
-            if (tarjetaAsistenciaItem.filtro.diaGuardia == this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy')) {
-              tarjetaAsistenciaItem.fechaAsistencia = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
+          if(row.cells[3].value[0] && row.cells[3].value[1]){
+            // row.cells[3].value[0] -> date
+            // row.cells[3].value[1] -> HH:mm
+            // no se puede cambiar la fecha de la asistencia
+            if (index == 0 ) {
+              tarjetaAsistenciaItem.fechaAsistencia = tarjetaAsistenciaItem.filtro.diaGuardia + ' ' + row.cells[3].value[1];
             }
-            actuacionAsistenciaItem.fechaActuacion = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
+            // la primera actuación tiene que tener la fecha de la asistencia
+            if (index == 1){
+              actuacionAsistenciaItem.fechaActuacion = tarjetaAsistenciaItem.filtro.diaGuardia + ' ' + row.cells[3].value[1];
+            } else{
+              actuacionAsistenciaItem.fechaActuacion = this.datepipe.transform(row.cells[3].value[0], 'dd/MM/yyyy') +' '+ row.cells[3].value[1];
+            }
           }
 
           if (index == 1 && isNuevaAsistencia != null && isNuevaAsistencia != '' && isNuevaAsistencia == 'S') {
@@ -649,7 +663,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             actuacionAsistenciaItem.numeroAsunto = numAsuntoAsistencia;
           } else {
             // si se selecciona Juzgado
-            if (row.cells[4].value[3] != ''){
+            if (row.cells[4].value[3] != '' && row.cells[4].value[3] != null){
               actuacionAsistenciaItem.comisariaJuzgado = 'J'
               actuacionAsistenciaItem.lugar = row.cells[4].value[3];
               actuacionAsistenciaItem.numeroAsunto = row.cells[5].value[1];
