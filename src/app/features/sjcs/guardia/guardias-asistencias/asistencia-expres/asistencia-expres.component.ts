@@ -593,20 +593,20 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             tarjetaAsistenciaItem.observaciones = row.cells[1].value[1];
 
             // Guardar comisaria de la asistencia
-            if (row.cells[4].value[2] != ''){
+            if (row.cells[4].value[2] != '' && row.cells[4].value[2] != null){
               tarjetaAsistenciaItem.comisaria = row.cells[4].value[2];
               tarjetaAsistenciaItem.numDiligencia = row.cells[5].value[0];
             }
 
           
             // Guardamos juzgado de la asistencia
-            if (row.cells[4].value[3] != ''){
+            if (row.cells[4].value[3] != '' && row.cells[4].value[3] != null){
               tarjetaAsistenciaItem.juzgado = row.cells[4].value[3];
               tarjetaAsistenciaItem.numProcedimiento = row.cells[5].value[1];
             }
             
             //Por defecto se selecciona el juzgado de la asistencia para la actuación
-            if(row.cells[4].value[3] != ''){
+            if(row.cells[4].value[3] != '' && row.cells[4].value[3] != null){
               comisariaJuzgadoAsistencia = 'J';
               lugarAsistencia = row.cells[4].value[3];
               numAsuntoAsistencia = row.cells[5].value[1];
@@ -663,7 +663,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             actuacionAsistenciaItem.numeroAsunto = numAsuntoAsistencia;
           } else {
             // si se selecciona Juzgado
-            if (row.cells[4].value[3] != ''){
+            if (row.cells[4].value[3] != '' && row.cells[4].value[3] != null){
               actuacionAsistenciaItem.comisariaJuzgado = 'J'
               actuacionAsistenciaItem.lugar = row.cells[4].value[3];
               actuacionAsistenciaItem.numeroAsunto = row.cells[5].value[1];
