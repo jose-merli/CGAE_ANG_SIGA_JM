@@ -5,6 +5,7 @@ import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableT
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 
 @Component({
   selector: 'app-datos-personales',
@@ -38,28 +39,60 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.progressSpinner = true;
     this.modoEdicion = false;
     this.body = new JusticiableItem();
-    this.body.idpaisdir1 = "191";  
-    this.getCombos();
+    this.body.idpaisdir1 = "191";
+    await this.getCombos();
+  }
+
+  async callServiceSearch() {
+    if (sessionStorage.getItem("justiciableDatosPersonalesSearch")) {
+      this.progressSpinner = true;
+      let justiciableBusqueda: JusticiableBusquedaItem  = JSON.parse(sessionStorage.getItem("justiciableDatosPersonalesSearch"));
+      sessionStorage.removeItem("justiciableDatosPersonalesSearch");
+
+      await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
+        n => {
+          this.body = JSON.parse(n.body).justiciable;
+          if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
+            this.addTelefono();
+          } 
+          this.bodyInicial = {...this.body};
+          this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
+          this.modoEdicion = true;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        });
+    }
+  }
+
+  ngAfterViewInit() {
+    this.callServiceSearch();
   }
 
   ngOnChanges() {    
     if (this.body != undefined && this.body.idpersona != undefined) {
+      if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
+        this.addTelefono();
+      } 
+
       this.bodyInicial = {...this.body};
-      this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
+      this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
+
       if (this.body.idpersona != undefined) {
         this.modoEdicion = true;
       }
     }
   }
 
-  private getCombos() {
-    this.getComboPais();
-    this.getComboTipoVia();
-    this.getComboProvincia();
+  private async getCombos() {
+    await this.getComboPais();
+    await this.getComboTipoVia();
+    await this.getComboProvincia();
   }
 
   private getComboTipoVia() {
@@ -102,11 +135,8 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         n => {
           this.comboPoblacion = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboPoblacion);
-          if(this.direccionPostal == ""){
-            this.rellenarDireccionPostal();
-          }else{
-            this.progressSpinner = false;
-          }
+          this.rellenarDireccionPostal();
+          this.progressSpinner = false;
         }
       );
   }
@@ -156,11 +186,16 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       if (this.bodyInicial != undefined) {
         this.body = {...this.bodyInicial};
         this.body.telefonos = [];
-        this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
+        if (typeof this.bodyInicialTelefonos == 'string') {
+          this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
+        } else {
+          this.body.telefonos = JSON.parse(JSON.stringify(this.bodyInicialTelefonos));
+        }
       }
     } else {
       this.body = new JusticiableItem();
       this.body.telefonos = [];
+      this.body.telefonos[0] = new JusticiableTelefonoItem();
       this.body.idpaisdir1 = "191";
     }
     this.hasChange = false;
@@ -199,7 +234,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     if (this.body.fax != null && this.body.fax != undefined) {
       this.body.fax = this.body.fax.trim();
     }
-    if(this.body.telefonos.length > 0){
+    if(this.body.telefonos != null && this.body.telefonos.length > 0){
       for(let i = 0; i < this.body.telefonos.length; i++){
         this.body.telefonos[i].preferenteSms = '0';
         if(this.body.telefonos[i].preferenteSmsCheck){
@@ -224,6 +259,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
         this.rellenarDireccionPostal();
         this.hasChange = false;
+        this.progressSpinner = false;
       },
       err => {
         let dataJusticiable = JSON.parse(err.error);
@@ -265,14 +301,16 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.body.idpoblacion != undefined && this.body.idpoblacion != "" ) {
       this.validateForm = true;
     }
-    if(this.body.telefonos.length > 0){
-      for(let i = 0; i < this.body.telefonos.length; i++){
-        if(this.body.telefonos[i].nombreTelefono == undefined || this.body.telefonos[i].numeroTelefono == undefined || 
-        this.body.telefonos[i].nombreTelefono == "" || this.body.telefonos[i].numeroTelefono == ""){
-          this.deleteTelefono(i)
-          i--;
+    if(this.body.telefonos != null && this.body.telefonos.length > 0){
+      let i = 1;
+      while (i < this.body.telefonos.length) {
+        if(this.body.telefonos[i-1].nombreTelefono === undefined || this.body.telefonos[i-1].numeroTelefono === undefined || 
+           this.body.telefonos[i-1].nombreTelefono === "" || this.body.telefonos[i-1].numeroTelefono === ""){
+            this.deleteTelefono(i-1);
+        } else {
+            i++;
         }
-      }
+    }
     }
     return this.validateForm;
   }
@@ -315,10 +353,14 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   }
 
   deleteTelefono(index: number) {
-    this.body.telefonos.splice(index, 1);
-    if (this.body.telefonos.length == 0) {
-      this.body.telefonos.push(new JusticiableTelefonoItem());
+    if (this.body.telefonos.length == 1) {
+      this.body.telefonos[0] = new JusticiableTelefonoItem();
+    } else {
+      this.body.telefonos.splice(index, 1);
     }
+    // if (this.body.telefonos.length == 0) {
+    //   this.body.telefonos.push(new JusticiableTelefonoItem());
+    // }
     this.hasChange = true;
   }
 

@@ -133,15 +133,15 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
         },
         {
           "key": this.translateService.instant("dato.jgr.guardia.guardias.turno"),
-          "value": ""
+          "value": this.asistencia.descripcionTurno || ""
         },
         {
           "key": this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"),
-          "value": ""
+          "value": this.asistencia.descripcionGuardia || ""
         },
         {
           "key": this.translateService.instant("justiciaGratuita.guardia.fichaactuacion.numeroactuacion"),
-          "value": ""
+          "value": (+this.asistencia.numeroActuaciones + 1).toString()
         },
         {
           "key": this.translateService.instant('justiciaGratuita.oficio.designas.actuaciones.fechaActuacion'),
@@ -149,11 +149,11 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
         },
         {
           "key": this.translateService.instant("dato.jgr.guardia.inscripciones.letrado"),
-          "value": ""
+          "value": this.asistencia.numeroColegiado + " - " + this.asistencia.nombreColegiado || ""
         },
         {
           "key": this.translateService.instant("justiciaGratuita.guardia.solicitudescentralita.asistido"),
-          "value": ""
+          "value": this.asistencia.asistido || ""
         }
       ]
 

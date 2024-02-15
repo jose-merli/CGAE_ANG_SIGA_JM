@@ -199,26 +199,77 @@
                                     [options]="cell.combo" showClear="true" styleClass="widthAll"
                                     (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
                             </span>
+                            <span class="w100 cell-value" *ngIf="cell.type == '6InputSelector' && pantalla != 'JE'"
+                                [ngClass]="{'column-d-flex': changeDisplay() == true}">
+                                <div class="d-flex flex-column flex-wrap w-100">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <input type="text" class="form-control " pInputText size="10" style="width: 33.33%;"
+                                            [(ngModel)]="cell.value[0]" [value]="cell.value[0]" [ngClass]="cell.value[0]"
+                                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);"
+                                            (change)="onChangeNifJg($event.target.value, rowGroup.id, row, rowGroup);"
+                                            placeholder="{{'administracion.usuarios.literal.NIF' | translate}}">
+                                        <p-dropdown autoWidth="false" class="un-tercio" [(ngModel)]="cell.value[4]"
+                                            [ngClass]="styleObligatorio(cell.value[4])"
+                                            placeholder="{{'censo.busquedaClientesAvanzada.literal.sexo' | translate}}"
+                                            [options]="cell.combo" showClear="true" styleClass="widthAll"
+                                            (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)">
+                                        </p-dropdown>
+                                        <app-fecha [(value)]="cell.value[5]" [utc]="false"
+                                            [showTime]="cell.showTime" [(ngModel)]="cell.value[5]" style="width: 33.33%;"
+                                            placeholder="{{'justiciaGratuita.guardia.asistenciasexpress.fnacimiento' | translate}}"
+                                            (valueChangeSelected)="fillFechaNacimiento($event, cell, rowGroup.id)"
+                                            (valueChangeInput)="fillFechaNacimiento($event, cell, rowGroup.id)">
+                                        </app-fecha>
+                                    </div>
+                                    <div class="d-flex flex-row">    
+                                        <input type="text" class="form-control " pInputText size="10"
+                                            [(ngModel)]="cell.value[1]" [value]="cell.value[1]"
+                                            [ngClass]="styleObligatorio(cell.value[1])"
+                                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
+                                            placeholder="{{'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}">
+                                        <input type="text" class="form-control " pInputText size="10"
+                                            [(ngModel)]="cell.value[2]" [value]="cell.value[2]"
+                                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
+                                            placeholder="{{'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}">                               
+                                        <input type="text" class="form-control " pInputText size="10"
+                                            [(ngModel)]="cell.value[3]" [value]="cell.value[3]"
+                                            [ngClass]="styleObligatorio(cell.value[3])"
+                                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
+                                            placeholder="{{'administracion.parametrosGenerales.literal.nombre' | translate}}">
+                                    </div>
+                                </div>
+                            </span>
                             <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
                                 <!--<p-dropdown autoWidth="false" class="center width60" [(ngModel)]="cell.value[0]" placeholder = "{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}"
                                     [options]="cell.combo" filterBy="label,labelSinTilde" [filter]="true" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>-->
+                                <div  class="w-100">
+                                    <p-multiSelect class="select-form center w-100" [(ngModel)]='cell.value[0]'
+                                        [options]="cell.combo" [filter]="true" maxSelectedLabels="10"
+                                        filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+                                        defaultLabel="{{ 'justiciaGratuita.ejg.preDesigna.delitos' | translate}}"
+                                        (onChange)="onChangeMulti($event, rowGroup.id, cell, z, true, z)"></p-multiSelect>
 
-                                <p-multiSelect class="select-form center width60" [(ngModel)]='cell.value[0]'
-                                    [options]="cell.combo" [filter]="true" maxSelectedLabels="10"
-                                    filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
-                                    defaultLabel="{{ 'justiciaGratuita.ejg.preDesigna.delitos' | translate}}"
-                                    (onChange)="onChangeMulti($event, rowGroup.id, cell, z, true, z)"></p-multiSelect>
-
-                                <input type="text" class="form-control" pInputText size="10" [value]="cell.value[1]"
-                                    [(ngModel)]="cell.value[1]"
-                                    (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
-                                    placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
+                                    <input type="text" class="form-control" pInputText size="10" [value]="cell.value[1]"
+                                        [(ngModel)]="cell.value[1]"
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
+                                        placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
+                                </div>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'">
                                 <input type="text" class="form-control" pInputText size="10" [placeholder]="cell.value"
                                     [(ngModel)]="cell.value"
-                                    (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup, true, z)"></span>
+                                    (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup, true, z)">
+                            </span>
+                            <span class="w100 cell-value" *ngIf="cell.type == '2input' && pantalla != 'JE'">
+                                <input type="text" class="form-control" pInputText size="10" 
+                                    placeholder="{{'gratuita.mantAsistencias.literal.numeroDiligenciasolo' | translate}}"
+                                    [(ngModel)]="cell.value[0]" [value]="cell.value[0]">
+
+                                <input type="text" class="form-control" pInputText size="10" [placeholder]="cell.value[1]"
+                                    placeholder="{{'justiciaGratuita.justiciables.literal.numprocedimiento' | translate}}"
+                                    [(ngModel)]="cell.value[1]" [value]="cell.value[1]">
+                            </span>
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
                                 <div class="main-button" style="width: 30%;">
                                     <button pButton type="button" iconPos="left" [label]="cell.value[0]"
@@ -234,6 +285,27 @@
                                     [options]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]" showClear="true"
                                     filterBy="label,labelSinTilde" styleClass="widthAll"
                                     (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
+                                
+                            </span>
+                            <span class="w100 cell-value d-flex" *ngIf="cell.type == 'ComJuzSelect' && pantalla != 'JE'">
+                    
+                                <div class="w-100">
+                                    <p-dropdown autoWidth="false" class="center showFull"
+                                    [(ngModel)]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[3] != '' ? cell.value[3] : cell.value[2])"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [options]="cell.value[0]" showClear="true"
+                                    filterBy="label,labelSinTilde" styleClass="widthAll"
+                                    (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup); onChangeSelectJuzCom(cell, row, 'C')"></p-dropdown>
+
+                                    <p-dropdown autoWidth="false" class="center showFull"
+                                    [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[2] != '' ? cell.value[2] : cell.value[3])"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [options]="cell.value[1]" showClear="true"
+                                    filterBy="label,labelSinTilde" styleClass="widthAll"
+                                    (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup); onChangeSelectJuzCom(cell, row, 'J')"></p-dropdown>
+                                </div>
+                                
+                                
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">
                                 <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{ cell.value[1] }}</span>
@@ -391,12 +463,13 @@
                                 </span>
                                 <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'"
                                     [ngClass]="{'column-d-flex': changeDisplay() == true}">
-                                    <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[0]"
-                                        placeholder="{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}"
-                                        [filter]="true" [options]="cell.combo" showClear="true"
-                                        filterBy="label,labelSinTilde" styleClass="widthAll"
-                                        (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
-                                    <input type="text" class="form-control" pInputText [value]="cell.value[1]"
+                                    <p-multiSelect class="select-form center " [(ngModel)]='cell.value[0]'
+                                        [options]="cell.combo" [filter]="true" maxSelectedLabels="10"
+                                        filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+                                        defaultLabel="{{ 'justiciaGratuita.ejg.preDesigna.delitos' | translate}}"
+                                        (onChange)="onChangeMulti($event, rowGroup.id, cell, z, true, z)"></p-multiSelect>
+
+                                    <input type="text" class="form-control" pInputText size="10" [value]="cell.value[1]"
                                         [(ngModel)]="cell.value[1]"
                                         (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                         placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
@@ -417,13 +490,44 @@
                                         showClear="true" filterBy="label,labelSinTilde" styleClass="widthAll"
                                         (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, false, i)"></p-dropdown>
                                 </span>
+                                
+                            <span class="w100 cell-value d-flex" *ngIf="cell.type == 'ComJuzSelect' && pantalla != 'JE'">
+                    
+                                <div class="w-100">
+                                    <p-dropdown autoWidth="false" class="center showFull"
+                                    [(ngModel)]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[3] != '' ? cell.value[3] : cell.value[2])"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [options]="cell.value[0]" showClear="true"
+                                    filterBy="label,labelSinTilde" styleClass="widthAll"
+                                    (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup); onChangeSelectJuzCom(cell, row, 'C')"></p-dropdown>
+
+                                    <p-dropdown autoWidth="false" class="center showFull"
+                                    [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[2] != '' ? cell.value[2] : cell.value[3])"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [options]="cell.value[1]" showClear="true"
+                                    filterBy="label,labelSinTilde" styleClass="widthAll"
+                                    (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup); onChangeSelectJuzCom(cell, row, 'J')"></p-dropdown>
+                                </div>
+                                
+                                
+                            </span>
                                 <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">
                                     <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{ cell.value[1] }}</span>
                                 </span>
                                 <span class="w100 cell-value" *ngIf="cell.type == 'input'">
                                     <input type="text" class="form-control" pInputText size="10"
                                         [placeholder]="cell.value" [(ngModel)]="cell.value"
-                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup, false, i)"></span>
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup, false, i)">
+                                </span>
+                                <span class="w100 cell-value" *ngIf="cell.type == '2input' && pantalla != 'JE'">
+                                    <input type="text" class="form-control" pInputText size="10" 
+                                        placeholder="{{'gratuita.mantAsistencias.literal.numeroDiligenciasolo' | translate}}"
+                                        [(ngModel)]="cell.value[0]" [value]="cell.value[0]">
+    
+                                    <input type="text" class="form-control" pInputText size="10" [placeholder]="cell.value[1]"
+                                        placeholder="{{'justiciaGratuita.justiciables.literal.numprocedimiento' | translate}}"
+                                        [(ngModel)]="cell.value[1]" [value]="cell.value[1]">
+                                </span>
                                 <span class="w100 cell-value selectWrap wrapText"
                                     *ngIf="cell.type == 'multiselect1' || cell.type == 'multiselect2' || cell.type == 'multiselect3'">
                                     <!--<p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected" [defaultLabel]="textFilter"

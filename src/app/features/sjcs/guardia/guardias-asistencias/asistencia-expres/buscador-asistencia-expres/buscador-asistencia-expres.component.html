@@ -73,10 +73,10 @@
                                 </app-busqueda-colegiado-express>
                             </div>
                             <div class="form-group-interlineado col-lg-1 col-md-1">
-                                <br>
+                                <label for="salto" class="check-salto">{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate }}</label>
                                 <p-checkbox [disabled]="isLetrado" (onChange)="onChangeCheckSalto($event)" (ngModel)="salto" binary="true"
-                                    label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate }}" name="groupname" [ngModelOptions]="{standalone: true}"
-                                ></p-checkbox>
+                                    inputId="salto" name="groupname" [ngModelOptions]="{standalone: true}">
+                                </p-checkbox>
                             </div>
                         </div>
                     </ng-template>

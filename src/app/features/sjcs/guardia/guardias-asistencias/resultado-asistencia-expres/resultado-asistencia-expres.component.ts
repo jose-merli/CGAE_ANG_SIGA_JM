@@ -95,7 +95,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       {
         id: "idApNombreSexo",
         name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceraasistido") + " (*)",
-        size: 445.5
+        size: 545.5
       },
       {
         id: "delitosYobservaciones",
@@ -114,13 +114,13 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       },
       {
         id: "lugar",
-        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceralugar"),
-        size: 550
+        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceracomisariajuzgado"),
+        size: 400
       },
       {
         id: "diligencia",
         name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceradiligencia"),
-        size: 100
+        size: 150
       }
     ];
   }
@@ -132,6 +132,10 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     } else {
       this.isDisabled = true;
       this.disableCrearEJG = true;
+    }
+    // si no hay registros añadir nueva asistencia
+    if ( this.rowGroups.length === 0 && this.comboComisarias.length > 0 &&  this.comboJuzgadosAE.length > 0){
+      this.nuevaAsistencia();
     }
   }
 
@@ -197,10 +201,11 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     let cellLugar2 : Cell = new Cell();
     let cellNDiligencia2: Cell = new Cell();
     
-    cellAsistido.type = '5InputSelector';
-    cellAsistido.value = ['','','','',''];
+    // datos asistencía
+    cellAsistido.type = '6InputSelector';
+    cellAsistido.value = ['','','','','',''];
     cellAsistido.combo = this.comboSexo;
-    cellAsistido.size = 445.5;
+    cellAsistido.size = 545.5;
 
     cellDelitosObservaciones.type = '2SelectorInput';
     cellDelitosObservaciones.value = ['',''];
@@ -216,23 +221,25 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     cellFechaActuacion.showTime = true;
     cellFechaActuacion.size = 200;
 
-    cellLugar.type = 'buttomSelect';
-    cellLugar.value = [this.textoComActivo, this.comboComisarias, this.comboJuzgadosAE
-                        , 'C'
-                        ,''
-                        , 'Asistencia'
+    cellLugar.type = 'ComJuzSelect';
+    cellLugar.value = [this.comboComisarias, this.comboJuzgadosAE
+                        , '' // valor comisaria
+                        , '' // valor juzgado
+                        , 'CJ' // indica que se seleccionan la comisaria y juzgado
+                        , 'Asistencia' // indica si que es una asistencia y no una actuación
                         , 'S' // Indica que la asistencia es nueva, se utiliza al guardar por primera vez la asistencia
                       ];
-    cellLugar.size = 550;
+    cellLugar.size = 400;
 
-    cellNDiligencia.type = 'input';
-    cellNDiligencia.value = '';
-    cellNDiligencia.size = 100;
+    cellNDiligencia.type = '2input';
+    cellNDiligencia.value = ['', ''];
+    cellNDiligencia.size = 150;
 
+    // datos asistencia
     cellAsistido2.type = 'invisible';
     cellAsistido2.value = '';
     cellAsistido2.combo = this.comboSexo;
-    cellAsistido2.size = 445.5;
+    cellAsistido2.size = 545.5;
 
     cellDelitosObservaciones2.type = 'invisible';
     cellDelitosObservaciones2.value = '';
@@ -248,16 +255,17 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     cellFechaActuacion2.showTime = true;
     cellFechaActuacion2.size = 200;
 
-    cellLugar2.type = 'buttomSelect';
-    cellLugar2.value = [this.textoComActivo ,this.comboComisarias, this.comboJuzgadosAE
-                        , 'C'
-                        ,''
+    cellLugar2.type = 'ComJuzSelect';
+    cellLugar2.value = [this.comboComisarias, this.comboJuzgadosAE
+                        , '' // valor comisaria
+                        , '' // valor juzgado
+                        , 'C' // se seleciona comisaría solo
                       ];
-    cellLugar2.size = 550;
+    cellLugar2.size = 400;
     
-    cellNDiligencia2.type = 'input';
-    cellNDiligencia2.value = '';
-    cellNDiligencia2.size = 100;
+    cellNDiligencia2.type = '2input';
+    cellNDiligencia2.value = [''];
+    cellNDiligencia2.size = 150;
 
     row1.cells = [cellAsistido, cellDelitosObservaciones, cellEJG, cellFechaActuacion, cellLugar, cellNDiligencia];
     row2.cells = [cellAsistido2, cellDelitosObservaciones2, cellEJG2, cellFechaActuacion2, cellLugar2, cellNDiligencia2];
@@ -288,7 +296,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       cellAsistido.type = 'invisible';
       cellAsistido.value = '';
       cellAsistido.combo = this.comboSexo;
-      cellAsistido.size = 445.5;
+      cellAsistido.size = 545.5;
 
       cellDelitosObservaciones.type = 'invisible';
       cellDelitosObservaciones.value = '';
@@ -304,17 +312,18 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       cellFechaActuacion.showTime = true;
       cellFechaActuacion.size = 200;
 
-      cellLugar.type = 'buttomSelect';
-      cellLugar.value = [this.textoComActivo , this.comboComisarias, this.comboJuzgadosAE
-                          , 'C'
-                          ,''
-                          , 'Actuacion'
+      cellLugar.type = 'ComJuzSelect';
+      cellLugar.value = [this.comboComisarias, this.comboJuzgadosAE
+                          ,'' // valor comisaria
+                          ,'' // valor juzgado
+                          ,'C' // indica que se seleciona la comisaría
+                          , 'Actuacion' // indica que es una actuación
                         ];
-      cellLugar.size = 550;
+      cellLugar.size = 400;
       
-      cellNDiligencia.type = 'input';
-      cellNDiligencia.value = '';
-      cellNDiligencia.size = 100;
+      cellNDiligencia.type = '2input';
+      cellNDiligencia.value = ['', ''];
+      cellNDiligencia.size = 150;
       //Si es un RowGroup que puede estar colapsado lo comprobamos y si es asi la fila que añadimos tambien lo estara
       let index = this.rowGroups.findIndex(rowGroup => rowGroup.id == this.tabla.selectedArray[0]);
       if(this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.length > 1
@@ -432,7 +441,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
         if (index != 1) {
           row.cells.forEach(cell => {
             
-            if (cell.type == '5InputSelector') {
+            if (cell.type == '5InputSelector' || cell.type == '6InputSelector' ) {
 
               cell.value.forEach((val, index) => {
 
@@ -443,14 +452,20 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
                   }
                 }
               });
-            } else if (cell.type == 'buttomSelect') {
+            
+            } else if (cell.type == 'actuacionSelect' || cell.type == 'asuntoSelect') {
 
-              cell.value.forEach((val, index) => {
-
-                if ((val == undefined || val == '') && index == 4) {
+              if (cell.value.length >= 3  ){
+                let comisaria = cell.value[2];
+                let juzgado = cell.value[3];
+                // obligatorio tener soleccionado al menos uno
+                if ((comisaria == undefined || comisaria == '') && (juzgado == undefined || juzgado == '') ) {
                   error = true;
                 }
-              });
+              }
+            }
+            else if (cell.type == 'a') {
+
             }
           });
         }
