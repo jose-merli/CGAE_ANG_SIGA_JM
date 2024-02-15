@@ -43,7 +43,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
     this.modoEdicion = false;
     this.body = new JusticiableItem();
-    this.body.idpaisdir1 = "191";  
+    this.body.idpaisdir1 = "191";
     await this.getCombos();
   }
 
@@ -56,6 +56,11 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
         n => {
           this.body = JSON.parse(n.body).justiciable;
+          if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
+            this.addTelefono();
+          } 
+          this.bodyInicial = {...this.body};
+          this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
           this.modoEdicion = true;
           this.progressSpinner = false;
         },
@@ -71,8 +76,13 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
   ngOnChanges() {    
     if (this.body != undefined && this.body.idpersona != undefined) {
+      if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
+        this.addTelefono();
+      } 
+
       this.bodyInicial = {...this.body};
-      this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
+      this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
+
       if (this.body.idpersona != undefined) {
         this.modoEdicion = true;
       }
@@ -176,11 +186,16 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       if (this.bodyInicial != undefined) {
         this.body = {...this.bodyInicial};
         this.body.telefonos = [];
-        this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
+        if (typeof this.bodyInicialTelefonos == 'string') {
+          this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
+        } else {
+          this.body.telefonos = JSON.parse(JSON.stringify(this.bodyInicialTelefonos));
+        }
       }
     } else {
       this.body = new JusticiableItem();
       this.body.telefonos = [];
+      this.body.telefonos[0] = new JusticiableTelefonoItem();
       this.body.idpaisdir1 = "191";
     }
     this.hasChange = false;
@@ -244,6 +259,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
         this.rellenarDireccionPostal();
         this.hasChange = false;
+        this.progressSpinner = false;
       },
       err => {
         let dataJusticiable = JSON.parse(err.error);
@@ -286,11 +302,11 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       this.validateForm = true;
     }
     if(this.body.telefonos != null && this.body.telefonos.length > 0){
-      let i = 0;
+      let i = 1;
       while (i < this.body.telefonos.length) {
-        if(this.body.telefonos[i].nombreTelefono === undefined || this.body.telefonos[i].numeroTelefono === undefined || 
-           this.body.telefonos[i].nombreTelefono === "" || this.body.telefonos[i].numeroTelefono === ""){
-            this.deleteTelefono(i);
+        if(this.body.telefonos[i-1].nombreTelefono === undefined || this.body.telefonos[i-1].numeroTelefono === undefined || 
+           this.body.telefonos[i-1].nombreTelefono === "" || this.body.telefonos[i-1].numeroTelefono === ""){
+            this.deleteTelefono(i-1);
         } else {
             i++;
         }
@@ -337,7 +353,11 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   }
 
   deleteTelefono(index: number) {
-    this.body.telefonos.splice(index, 1);
+    if (this.body.telefonos.length == 1) {
+      this.body.telefonos[0] = new JusticiableTelefonoItem();
+    } else {
+      this.body.telefonos.splice(index, 1);
+    }
     // if (this.body.telefonos.length == 0) {
     //   this.body.telefonos.push(new JusticiableTelefonoItem());
     // }
