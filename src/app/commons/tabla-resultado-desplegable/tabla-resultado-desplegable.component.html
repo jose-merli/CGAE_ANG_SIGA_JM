@@ -23,7 +23,7 @@
         <div class="table-header ">
             <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index"
                 [ngStyle]="setMyStyles(cabecera.size)" #BorderedHeader [id]="cabecera.id">
-                <div class="ajustarCabecera" [ngStyle]="setMyStyles(cabecera.size)">
+                <div class="ajustarCabecera w-100" [ngStyle]="setMyStyles(cabecera.size)">
                     <div [mat-sort-header]=cabecera.id [pTooltip]="cabecera.nameComplete" tooltipPosition="top"
                         disableClear>
                         {{cabecera.name}}</div>
@@ -247,7 +247,7 @@
                                         (valueChangeSelected)="fillFechaValue($event, cell, rowGroup.id, 0)"
                                         (valueChangeInput)="fillFechaValue($event, cell, rowGroup.id, 0)">
                                     </app-fecha>
-                                    <input type="time" class="form-control hora-minuto-input"
+                                    <input type="time" class="form-control ui-inputtext"
                                         [(ngModel)]="cell.value[1]" [value]="cell.value[1]" [ngClass]="cell.value[1]"
                                         (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);">
                                 </div>
@@ -541,7 +541,7 @@
                                             (valueChangeSelected)="fillFechaValue($event, cell, rowGroup.id, 0)"
                                             (valueChangeInput)="fillFechaValue($event, cell, rowGroup.id, 0)">
                                         </app-fecha>
-                                        <input type="time" class="form-control hora-minuto-input"
+                                        <input type="time" class="form-control ui-inputtext"
                                             [(ngModel)]="cell.value[1]" [value]="cell.value[1]" [ngClass]="cell.value[1]"
                                             (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);">
                                     </div>
