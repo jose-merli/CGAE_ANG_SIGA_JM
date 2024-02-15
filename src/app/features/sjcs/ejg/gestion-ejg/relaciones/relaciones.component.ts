@@ -252,7 +252,9 @@ export class RelacionesComponent implements OnInit {
               this.noAsociaSOJ = true;
               break;
             case 'DESIGNACIÓN':
-              //if(relacion.)
+              if(relacion.art27){
+                this.art27 = true;
+              }
               this.guardadoSend.emit(true);
               break;
           }

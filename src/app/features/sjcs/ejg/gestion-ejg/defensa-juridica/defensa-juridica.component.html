@@ -94,7 +94,7 @@
             </div>
             <div class="form-group col-lg-12 col-md-12 w-100">
               <label>{{"justiciaGratuita.ejg.preDesigna.delitos" | translate}}</label>
-              <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='delitos' [options]="comboDelitos" [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimits="10" [panelStyle]="{width:'100%'}" [disabled]="!permisoEscritura"></p-multiSelect>
+              <p-multiSelect [defaultLabel]="'Seleccionar'" autoWidth="false" [(ngModel)]='delitos' [options]="comboDelitos" [selectedItemsLabel]="'{0} opciones seleccionadas'" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimits="10" [panelStyle]="{width:'100%'}" [disabled]="!permisoEscritura"></p-multiSelect>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{'justiciaGratuita.ejg.defensaJuridica.comentario' | translate}}</label>
