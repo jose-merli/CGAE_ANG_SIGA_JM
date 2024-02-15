@@ -67,6 +67,14 @@ export class TarjetaComunicacionesComponent implements OnInit {
     {
       key: "comunicacion",
       activa: false
+    },
+    {
+      key: "consultas",
+      activa: false
+    },
+    {
+      key: "plantillaDocumentos",
+      activa: true
     }
   ];
 
