@@ -662,7 +662,7 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
               } else if (sessionStorage.getItem("justiciable")) {
                 // Asociar Justiciable al EJG Interesados.
                   this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
-                  let requestEjg = [datosItem.annio, datosItem.numEjg, datosItem.idTipoEjg, this.datosJusticiables.idpersona];
+                  let requestEjg = [datosItem.annio, datosItem.numero, datosItem.tipoEJG, this.datosJusticiables.idpersona];
                   // Objeto Asocicación de Justiciables y EJG.
                   this.sigaServices.post("gestionJusticiables_asociarJusticiableEjg", requestEjg).subscribe(
                     m => {
@@ -997,7 +997,10 @@ export class DatosGeneralesEjgComponent implements OnInit, OnDestroy{
   }
   
   getComboTurno() {
-    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno=1").subscribe(
+    if( this.body.idTurno == null){
+      this.body.idTurno = "1";
+    }
+    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno=" + this.body.idTurno).subscribe(
       n => {
         
         this.comboTurno = n.combooItems;

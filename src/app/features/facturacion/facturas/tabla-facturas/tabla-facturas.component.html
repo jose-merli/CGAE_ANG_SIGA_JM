@@ -138,10 +138,10 @@
 
       <!-- Botón debería ser "consultar/editar" -->
       <button pButton type="button" icon="fas fa-history" iconPos="left" 
-      label="{{'general.boton.generarInforme' | translate }}" [disabled]="esColegiado"></button>
+      label="{{'general.boton.generarInforme' | translate }}" [disabled]="esColegiado || disabledGenerarInforme()"></button>
 
       <!-- Botón debería ser "comunicar" -->
-      <button pButton type="button" icon="fas fa-history" iconPos="left"  [disabled]="esColegiado"
+      <button pButton type="button" icon="fas fa-history" iconPos="left"  [disabled]="esColegiado || disabledComunicar()"
       label="{{'general.boton.comunicar' | translate }}"></button>
 
       <!-- Botón debería ser "generar fichero transferencias" -->

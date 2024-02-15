@@ -3,9 +3,9 @@
 <div #tablaFoco>
 
   <p-table class="tabla-listado" [responsive]="true" #table class="tabla-listado" [paginator]="true" [value]="datos"
-    dataKey="keyForTabla" [columns]="cols" [rows]="selectedItem" paginatorPosition="both" [(selection)]="selectedDatos"
+    [columns]="cols" [rows]="selectedItem" paginatorPosition="both" [(selection)]="selectedDatos"
     [selectionMode]="selectionMode" (onRowSelect)="selectDesSelectFila()" (onRowUnselect)="selectDesSelectFila()"
-    [customSort]="true" [autoLayout]="true">
+    [autoLayout]="true">
 
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
@@ -15,7 +15,7 @@
 
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th *ngFor="let col of columns | slice:0:10" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+        <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
           {{ col.header | translate }}
           <p-sortIcon [field]="col.field"></p-sortIcon>
           <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text"

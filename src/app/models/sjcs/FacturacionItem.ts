@@ -27,6 +27,7 @@ export class FacturacionItem {
 	importeGuardia: String;
 	importeSoj: String;
 	importeEjg: String;
+	archivada: boolean = false;
 
 	constructor() { }
 }

@@ -25,16 +25,24 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   selectAll: boolean = false;
-
+  archivada: boolean = true;
+  btnMostrar: String = '';
+  btnArchivar: String = '';
+  distintos: boolean = false;
   message;
   first = 0;
   initDatos;
+  botonArchivar: boolean = true;
+  botonDesarchivar: boolean = false;
 
   @Input() datos;
   @Input() filtroSeleccionado;
   @Input() permisos;
 
   @Output() delete = new EventEmitter<FacturacionItem>();
+  @Output() archivar = new EventEmitter<any[]>();
+  @Output() desarchivar = new EventEmitter<any[]>();
+  @Output() viewAll = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
@@ -55,6 +63,8 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
       this.selectedItem = paginacion.selectedItem;
     }
 
+    this.mostrarOcultar();
+    this.btnArchivar = this.translateService.instant("general.boton.archivar");
     this.getCols();
 
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
@@ -62,6 +72,35 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
 
   selectDesSelectFila() {
     this.numSelected = this.selectedDatos.length;
+    let counts = {};
+    this.selectedDatos.forEach(name => {
+      if (counts[name.archivada]) {
+        counts[name.archivada] += 1;
+      } else {
+        counts[name.archivada] = 1;
+      }
+    });
+    //2.
+    const result = Object.keys(counts).map(name => {
+      return {
+        name: name,
+        matches: counts[name]
+      };
+    });
+    if(result.length > 1){
+      this.distintos = true;
+    }else{
+      this.distintos = false;
+      if(counts['false']){
+        this.botonArchivar = true;
+        this.botonDesarchivar = false;
+        this.btnArchivar = this.translateService.instant("general.boton.archivar");
+      }else if(this.archivada){
+        this.botonArchivar = false;
+        this.botonDesarchivar = true;
+        this.btnArchivar = this.translateService.instant("form.busquedaCursos.literal.boton.desarchivar");
+      }
+    }
   }
 
   openFicha(datos) {
@@ -206,11 +245,39 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     }
   }
 
-  disabledEliminar() {
-    if (undefined != this.selectedDatos && this.selectedDatos.length != 1) {
-      return true;
+  confirmArchivar() {
+    let mess = (!this.selectedDatos[0].archivada ? this.translateService.instant("messages.archivarConfirmation") : this.translateService.instant("messages.desarchivarConfirmation"));
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        if(!this.archivada){
+          this.archivar.emit(this.selectedDatos);
+        }else{
+          if(this.botonDesarchivar){
+            this.desarchivar.emit(this.selectedDatos);
+          }else{
+            this.archivar.emit(this.selectedDatos);
+          }
+          
+        }
+      },
+      reject: () => {
+        this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+      }
+    });
+  }
+
+  mostrarOcultar() {
+    this.archivada = !this.archivada;
+    if(this.archivada){
+      this.btnMostrar = this.translateService.instant("general.message.ocultarHistorico");
+      this.btnArchivar = this.translateService.instant("form.busquedaCursos.literal.boton.desarchivar");
     } else {
-      return false;
+      this.btnMostrar = this.translateService.instant("general.message.mostrarHistorico");
+      this.btnArchivar = this.translateService.instant("general.boton.archivar");
     }
+    this.viewAll.emit(this.archivada);
   }
 }

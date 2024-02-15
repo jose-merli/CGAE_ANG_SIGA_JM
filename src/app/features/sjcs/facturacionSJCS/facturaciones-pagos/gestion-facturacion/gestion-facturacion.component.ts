@@ -235,6 +235,9 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
     this.sigaService.getParam("facturacionsjcs_datosfacturacion", "?idFacturacion=" + this.idFacturacion).subscribe(
       data => {
         this.facturacion = data.facturacionItem[0];
+        if(this.facturacion.archivada){
+          this.modoEdicion = false;
+        }
       },
       err => { },
       () => {

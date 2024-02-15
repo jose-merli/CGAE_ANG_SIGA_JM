@@ -254,6 +254,11 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
     this.checkTengoPermiso();
 
+    if(sessionStorage.getItem("nombreInteresado") && sessionStorage.getItem("nombreInteresado") != "null"){
+      this.nombreInteresado = sessionStorage.getItem("nombreInteresado");
+      sessionStorage.removeItem("nombreInteresado");
+    }
+
     if(sessionStorage.getItem("designaItemLink")!= null && sessionStorage.getItem("designaItemLink") != undefined && sessionStorage.getItem("designaItemLink") != "undefined"){
       this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
     }
@@ -697,7 +702,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         },
         {
           "key": "Interesado",
-          "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
+          "value": this.nombreInteresado
         },
         {
           "key": "Número Actuaciones",
@@ -759,7 +764,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       ];
       let interesadosVacio = [{
         "key": null,
-        "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
+        "value": this.nombreInteresado
       },]
       let contrariosVacio = [{
         "key": null,
@@ -1410,12 +1415,12 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
             if (tarjInteresados != undefined) {
               tarjInteresados.campos = [{
                 "key": null,
-                "value": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio')
+                "value": this.nombreInteresado
               }]
             }
 
-            this.tarjetaFija.campos[3].value = this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
-            this.nombreInteresado = this.translateService.instant('justiciaGratuita.oficio.designas.interesados.vacio');
+            this.tarjetaFija.campos[3].value = this.nombreInteresado;
+            this.nombreInteresado = this.nombreInteresado;
           }
 
           else {

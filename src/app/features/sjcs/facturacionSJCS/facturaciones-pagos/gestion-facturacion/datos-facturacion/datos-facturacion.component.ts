@@ -243,7 +243,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
     let url = "";
     if ((!this.cerrada && JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && this.body.nombre.trim() != "") || (this.checkRegularizar != this.checkRegularizarInicial) || (this.checkVisible != this.checkVisibleInicial)) {
 
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta)) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta)) {
         if (undefined == this.body.regularizacion) {
           this.body.regularizacion = "0";
         }
@@ -529,7 +529,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         return true;
       }
     } else {
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta)) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta)) {
         return false;
       } else {
         return true;
