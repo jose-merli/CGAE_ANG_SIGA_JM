@@ -33,7 +33,7 @@
         </app-relaciones>
 
         <app-defensa-juridica [checkPermission]="permisos.defensaJuridica" *ngIf="modoEdicion" id="tarjetaDefensaJuridica"
-            (guardadoSend)="guardadoSend($event)" (crearDesignacion)="crearDesignacion()"
+            (guardadoSend)="guardadoSend($event)" (crearDesignacion)="crearDesignacion()" (updateIntercambios)="actualizarTarjetasIntercambios()"
             [permisoEscritura]="isPermisoTarjeta('tarjetaDefensaJuridica')"
             [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaDefensaJuridica]="isOpenTarjeta('tarjetaDefensaJuridica')">
         </app-defensa-juridica>

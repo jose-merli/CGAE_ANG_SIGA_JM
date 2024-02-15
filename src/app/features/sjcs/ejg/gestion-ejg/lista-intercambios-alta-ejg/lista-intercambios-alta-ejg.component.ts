@@ -42,7 +42,7 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit {
     this.msgs = [];
   }
 
-  private getListaIntercambios() {
+  getListaIntercambios() {
     const request = { idInstitucion: this.body.idInstitucion, annio: this.body.annio, tipoEJG: this.body.tipoEJG, numero: this.body.numero };
     return this.sigaServices.post("gestionejg_getListaIntercambiosAltaEjg", request).subscribe(
       n => {

@@ -59,7 +59,7 @@ export class ListaIntercambiosDocumentacionEjgComponent implements OnInit {
     ];
   }
 
-  private getListaIntercambios(){
+  getListaIntercambios(){
     const request = { idInstitucion: this.body.idInstitucion, annio: this.body.annio, tipoEJG: this.body.tipoEJG, numero: this.body.numero };
     this.sigaServices.post("gestionejg_getListaIntercambiosDocumentacionEjg", request).subscribe(
       n => {

@@ -10,6 +10,8 @@ import { Message } from 'primeng/primeng';
 import { procesos_ejg } from '../../../../permisos/procesos_ejg';
 import { ResolucionEJGItem } from '../../../../models/sjcs/ResolucionEJGItem';
 import { RelacionesComponent } from './relaciones/relaciones.component';
+import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
+import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -33,6 +35,8 @@ export class GestionEjgComponent implements OnInit {
   enlacesResumen = [];
 
   @ViewChild(RelacionesComponent) relacionesComponent: RelacionesComponent;
+  @ViewChild(ListaIntercambiosAltaEjgComponent) listaIntercambiosAltaEjg: ListaIntercambiosAltaEjgComponent;
+  @ViewChild(ListaIntercambiosDocumentacionEjgComponent) listaIntercambiosDocumentacionEjg: ListaIntercambiosDocumentacionEjgComponent;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -115,16 +119,18 @@ export class GestionEjgComponent implements OnInit {
   }
 
   crearDesignacion(){
-    this.relacionesComponent.crearDesignacion();
+    if (this.relacionesComponent != undefined) {
+      this.relacionesComponent.crearDesignacion();
+    }
   }
 
   actualizarTarjetasIntercambios() {
-    //if (this.listaIntercambiosAltaEjg != undefined) {
-    //  this.listaIntercambiosAltaEjg.actualizarDatosTarjeta();
-    //}
-    //if (this.listaIntercambiosDocumentacionEjg != undefined) {
-    // this.listaIntercambiosDocumentacionEjg.actualizarDatosTarjeta();
-    //}
+    if (this.listaIntercambiosAltaEjg != undefined) {
+      this.listaIntercambiosAltaEjg.getListaIntercambios();
+    }
+    if (this.listaIntercambiosDocumentacionEjg != undefined) {
+      this.listaIntercambiosDocumentacionEjg.getListaIntercambios();
+    }
   }
 
   isAsociaDES(event) {

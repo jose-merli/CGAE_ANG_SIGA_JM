@@ -17,6 +17,7 @@ export class ExpedientesEconomicosComponent implements OnInit {
   @Input() openTarjetaExpedientesEconomicos;
   @Input() permisoEscritura: boolean = false;
   @Output() guardadoSend = new EventEmitter<void>();
+  @Output() updateIntercambios = new EventEmitter<void>();
 
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
@@ -144,9 +145,8 @@ export class ExpedientesEconomicosComponent implements OnInit {
       await Promise.all(requests.map(d => this.accionEnviarDocumentacionAdicional(d))).then((values) => {
         this.progressSpinner = false;
       });
-      //ARR: Terminar
-      //this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
-      //this.actualizarTarjetasIntercambios.emit();
+      this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+      this.updateIntercambios.emit();
   }
 
   private accionEnviarDocumentacionAdicional(body): Promise<any> {
