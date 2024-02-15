@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { Message } from 'primeng/primeng';
 import { procesos_ejg } from '../../../../permisos/procesos_ejg';
+import { ResolucionEJGItem } from '../../../../models/sjcs/ResolucionEJGItem';
+import { RelacionesComponent } from './relaciones/relaciones.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -18,12 +20,19 @@ export class GestionEjgComponent implements OnInit {
 
   msgs: Message[];
   body: EJGItem = new EJGItem();
-  modoEdicion: boolean = false;
+
+  modoEdicion: boolean = true;
   nuevo: boolean = false;
+  haveDesignacion: boolean = false;
   progressSpinner = false;
-  openTarjetaDatosGenerales: Boolean = true;
+
+  tarjetas = new Map();
+
   permisos: any = {};
   datosResumen: any;
+  enlacesResumen = [];
+
+  @ViewChild(RelacionesComponent) relacionesComponent: RelacionesComponent;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -39,23 +48,41 @@ export class GestionEjgComponent implements OnInit {
     this.progressSpinner = true;
     
     this.body = new EJGItem();
+    this.getTarjetas();
 
     if(this.persistenceService.getDatosEJG()){
       this.body = this.persistenceService.getDatosEJG();
       this.persistenceService.clearDatosEJG();
-    } else if (sessionStorage.getItem("EJGItemDesigna") != null && sessionStorage.getItem("EJGItemDesigna") != 'nuevo') {
-      this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
-      sessionStorage.removeItem("EJGItemDesigna");
-    } else if (sessionStorage.getItem("fichaEJG") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("fichaEJG"));
-      sessionStorage.removeItem("fichaEJG");
-    } else if (sessionStorage.getItem("datosDesdeJusticiable") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("datosDesdeJusticiable"));
-      sessionStorage.removeItem("datosDesdeJusticiable");
+    } else if (sessionStorage.getItem("EJGItem") != null && sessionStorage.getItem("EJGItem") != undefined) {
+      this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
+      sessionStorage.removeItem("EJGItem");
     } else {
-      this.nuevo = true;
       this.body.fechaApertura = new Date();
-
+      this.body.perceptivo = '1';
+      this.body.calidad = '0';
+      this.body.creadoDesde = 'M'
+      if (sessionStorage.getItem("Designacion")) {
+        sessionStorage.setItem("designaItem", sessionStorage.getItem("Designacion"));
+        sessionStorage.removeItem("Designacion");
+        this.body.creadoDesde = 'O';
+        if(sessionStorage.getItem("nombreInteresado")){
+          this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
+        }
+      } else if (sessionStorage.getItem("asistencia")) {
+        sessionStorage.setItem("asistenciaItem", sessionStorage.getItem("asistencia"));
+        let asistencia = JSON.parse(sessionStorage.getItem("asistencia"));
+        sessionStorage.removeItem("asistencia");
+        this.body.creadoDesde = 'A'
+        this.body.nombreApeSolicitante = asistencia.asistido;
+      } else if(sessionStorage.getItem("justiciable")){
+        sessionStorage.setItem("justiciableItem", sessionStorage.getItem("justiciable"));
+        let justiciable = JSON.parse(sessionStorage.getItem("justiciable"));
+        sessionStorage.removeItem("justiciable");
+        this.body.nombreApeSolicitante =  justiciable.apellidos + ", " + justiciable.nombre;
+      }
+      this.sigaServices.get("institucionActual").subscribe(n => {
+        this.body.idInstitucion = n.value;
+      });
       let parametro = { valor: "TIPO_EJG_COLEGIO"};
       this.sigaServices.post("busquedaPerJuridica_parametroColegio", parametro).subscribe(
         data => {
@@ -66,37 +93,92 @@ export class GestionEjgComponent implements OnInit {
       );
     }
 
-    if (this.body.fechaApertura != undefined && this.body.fechaApertura.constructor === String) {
-      this.body.fechaApertura = new Date(this.body.fechaApertura);
-    }
-    if (this.body.fechapresentacion != undefined && this.body.fechapresentacion.constructor === String) {
-      this.body.fechapresentacion = new Date(this.body.fechapresentacion);
-    }
-    if (this.body.fechalimitepresentacion != undefined && this.body.fechalimitepresentacion.constructor === String) {
-      this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
+    if(this.body.annio == null || this.body.annio == undefined || this.body.numero == null || this.body.numero == undefined){
+      this.nuevo = true;
+      this.modoEdicion = false;
     }
 
     this.updateTarjResumen();
   }
 
   guardadoSend(event) {
+    this.body = {...event};
+    this.nuevo = false;
+    this.modoEdicion = true;
+    this.updateTarjResumen();
+  }
+
+  guardadoResolucion(event: ResolucionEJGItem){
+    this.body.numCAJG = event.numeroCAJG.toString();
+    this.body.annioCAJG = event.anioCAJG.toString();
+    this.updateTarjResumen();
+  }
+
+  crearDesignacion(){
+    this.relacionesComponent.crearDesignacion();
+  }
+
+  actualizarTarjetasIntercambios() {
+    //if (this.listaIntercambiosAltaEjg != undefined) {
+    //  this.listaIntercambiosAltaEjg.actualizarDatosTarjeta();
+    //}
+    //if (this.listaIntercambiosDocumentacionEjg != undefined) {
+    // this.listaIntercambiosDocumentacionEjg.actualizarDatosTarjeta();
+    //}
+  }
+
+  isAsociaDES(event) {
+    this.haveDesignacion = event;
   }
 
   backTo() {
     this.persistenceService.clearDatos();
-    if (sessionStorage.getItem("asistencia")) {
+    if (sessionStorage.getItem("designaItem")) {
+      sessionStorage.removeItem("designaItem");
+      this.router.navigate(["/fichaDesignaciones"]);
+    } else if (sessionStorage.getItem("asistenciaItem")) {
+      sessionStorage.removeItem("asistenciaItem");
       this.router.navigate(['/fichaAsistencia']);
-    }else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null){
+    } else if (sessionStorage.getItem("justiciableItem")) {
+      sessionStorage.removeItem("justiciableItem");
+      this.router.navigate(['/gestionJusticiables']);
+    } else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null){
+      this.persistenceService.clearDatosEJG();
+      this.persistenceService.setVolverEJG();
       this.router.navigate(["/ejg"]);
     }else{
       this.location.back();
     }
   }
 
-  updateTarjResumen() {
+  isOpenTarjeta(idTarjeta: string){
+    return this.tarjetas.get(idTarjeta).visibility;
+  }
+
+  isPermisoTarjeta(idTarjeta: string){
+    return this.tarjetas.get(idTarjeta).permission;
+  }
+
+  openTarjeta(event: string){
+    let data = this.tarjetas.get(event);
+    data.visibility = true;
+    this.tarjetas.set(event, data);
+  }
+
+  private getPermiso(permiso: string){
+    return this.commonsService.checkAcceso(permiso).then(
+      respuesta => {
+        return respuesta;
+      }, err => {
+        return false;
+      }
+    );
+  }
+
+  private updateTarjResumen() {
 
     this.datosResumen = [
-      { label: "EJG", value: this.body.numAnnioProcedimiento },
+      { label: "EJG", value: (this.body.numEjg == undefined ? "" : "E" + this.body.annio + "/" + this.body.numEjg) },
       { label: "F.apertura", value:  this.datePipe.transform(this.body.fechaApertura, "dd/MM/yyyy")},
       { label: "Solicitante", value: this.body.nombreApeSolicitante },
       { label: "Estado EJG", value: this.body.estadoEJG },
@@ -105,16 +187,100 @@ export class GestionEjgComponent implements OnInit {
       { label: "CAJG", value: this.body.numAnnioResolucion },
       { label: "Impugnación", value: this.body.impugnacionDesc }
     ];
-    /*
-    this.datosResumen = [
-      { label: "Año/Numero EJG", value: this.body.numAnnioProcedimiento },
-      { label: "Solicitante", value: this.body.nombreApeSolicitante }, 
-      { label: "Estado EJG", value: this.body.estadoEJG },
-      { label: "Designado", value: this.body.apellidosYNombre },
-      { label: "Dictamen", value: this.body.dictamenSing },
-      { label: "CAJG", value: this.body.numAnnioResolucion },
-      { label: "Impugnación", value: this.body.impugnacionDesc },
-    ];
-    */
+
+    this.enlacesResumen = [];
+    if(this.nuevo){
+      if(this.getPermiso(procesos_ejg.datosGenerales)){
+        this.enlacesResumen.push({label: "general.message.datos.generales", value: document.getElementById("tarjetaDatosGenerales"), nombre: "tarjetaDatosGenerales"});
+        this.tarjetas.set("tarjetaDatosGenerales", {visibility: true, permission: true});
+      }
+    }else{
+      if(this.getPermiso(procesos_ejg.datosGenerales)){
+        this.enlacesResumen.push({label: "general.message.datos.generales", value: document.getElementById("tarjetaDatosGenerales"), nombre: "tarjetaDatosGenerales"});
+        this.tarjetas.set("tarjetaDatosGenerales", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.unidadFamiliar)){
+        this.enlacesResumen.push({label: "justiciaGratuita.justiciables.rol.unidadFamiliar", value: document.getElementById("tarjetaUnidadFamiliar"), nombre: "tarjetaUnidadFamiliar"});
+        this.tarjetas.set("tarjetaUnidadFamiliar", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.expedientesEconomicos)){
+        this.enlacesResumen.push({label: "justiciaGratuita.ejg.datosGenerales.ExpedientesEconomicos", value: document.getElementById("tarjetaExpedientesEconomicos"), nombre: "tarjetaExpedientesEconomicos"});
+        this.tarjetas.set("tarjetaExpedientesEconomicos", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.relaciones)){
+        this.enlacesResumen.push({label: "justiciaGratuita.ejg.datosGenerales.Relaciones", value: document.getElementById("tarjetaRelaciones"), nombre: "tarjetaRelaciones"});
+        this.tarjetas.set("tarjetaRelaciones", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.defensaJuridica)){
+        this.enlacesResumen.push({label: "justiciaGratuita.ejg.preDesigna.defensaJuridica", value: document.getElementById("tarjetaDefensaJuridica"), nombre: "tarjetaDefensaJuridica"});
+        this.tarjetas.set("tarjetaDefensaJuridica", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.contrarios)){
+        this.enlacesResumen.push({label: "justiciaGratuita.ejg.preDesigna.contrarios", value: document.getElementById("tarjetaContrariosPreDesigna"), nombre: "tarjetaContrariosPreDesigna"});
+        this.tarjetas.set("tarjetaContrariosPreDesigna", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.procurador)){
+        this.enlacesResumen.push({label: "justiciaGratuita.oficio.designas.contrarios.procurador", value: document.getElementById("tarjetaProcuradorPreDesigna"), nombre: "tarjetaProcuradorPreDesigna"});
+        this.tarjetas.set("tarjetaProcuradorPreDesigna", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.estados)){
+        this.enlacesResumen.push({label: "censo.fichaIntegrantes.literal.estado", value: document.getElementById("tarjetaEstados"), nombre: "tarjetaEstados"});
+        this.tarjetas.set("tarjetaEstados", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.documentacion)){
+        this.enlacesResumen.push({label: "menu.facturacionSJCS.mantenimientoDocumentacionEJG", value: document.getElementById("tarjetaDocumentacion"), nombre: "tarjetaDocumentacion"});
+        this.tarjetas.set("tarjetaDocumentacion", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.informeCalif)){
+        this.enlacesResumen.push({label: "justiciaGratuita.ejg.datosGenerales.InformeCalificacion", value: document.getElementById("tarjetaInformeCalificacion"), nombre: "tarjetaInformeCalificacion"});
+        this.tarjetas.set("tarjetaInformeCalificacion", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.resolucion)){
+        this.enlacesResumen.push({label: "justiciaGratuita.maestros.fundamentosResolucion.resolucion", value: document.getElementById("tarjetaResolucion"), nombre: "tarjetaResolucion"});
+        this.tarjetas.set("tarjetaResolucion", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.impugnacion)){
+        this.enlacesResumen.push({label: "justiciaGratuita.ejg.datosGenerales.Impugnacion", value: document.getElementById("tarjetaImpugnacion"), nombre: "tarjetaImpugnacion"});
+        this.tarjetas.set("tarjetaImpugnacion", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.regtel)){
+        this.enlacesResumen.push({label: "censo.regtel.literal.titulo", value: document.getElementById("tarjetaRegtel"), nombre: "tarjetaRegtel"});
+        this.tarjetas.set("tarjetaRegtel", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.comunicaciones)){
+        this.enlacesResumen.push({label: "menu.enviosAGrupos", value: document.getElementById("tarjetaComunicaciones"), nombre: "tarjetaComunicaciones"});
+        this.tarjetas.set("tarjetaComunicaciones", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.facturaciones)){
+        this.enlacesResumen.push({label: "facturacionSJCS.tarjGenFac.facturaciones", value: document.getElementById("tarjetaFac"), nombre: "tarjetaFac"});
+        this.tarjetas.set("tarjetaFac", {visibility: false, permission: true});
+      }
+      if(this.getPermiso(procesos_ejg.intercambiosPericles)){
+        this.enlacesResumen.push({label: "justiciaGratuita.ejg.listaIntercambios.listaExpedientes", value: document.getElementById("tarjetaListaIntercambiosAltaEjg"), nombre: "tarjetaListaIntercambiosAltaEjg"});
+        this.tarjetas.set("tarjetaListaIntercambiosAltaEjg", {visibility: false, permission: true});
+        this.enlacesResumen.push({label: "justiciaGratuita.ejg.listaIntercambios.listaDocumentacion", value: document.getElementById("tarjetaListaIntercambiosDocumentacionEjg"), nombre: "tarjetaListaIntercambiosDocumentacionEjg"});
+        this.tarjetas.set("tarjetaListaIntercambiosDocumentacionEjg", {visibility: false, permission: true});
+      }
+    }
+  }
+
+  private getTarjetas(){
+    this.tarjetas.set('tarjetaDatosGenerales', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaUnidadFamiliar', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaExpedientesEconomicos', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaRelaciones', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaDefensaJuridica', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaContrariosPreDesigna', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaProcuradorPreDesigna', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaEstados', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaDocumentacion', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaInformeCalificacion', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaResolucion', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaImpugnacion', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaRegtel', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaComunicaciones', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaFac', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaListaIntercambiosAltaEjg', {visibility: false, permission: false});
+    this.tarjetas.set('tarjetaListaIntercambiosDocumentacionEjg', {visibility: false, permission: false});
   }
 }

@@ -54,8 +54,6 @@ export class TablaEjgComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-
-  @Input() filtro;
   @Input() totalRegistrosBusquedaEJG;
   @Input() remesa;
   @Input() comboEstadoEJG;
@@ -129,9 +127,6 @@ export class TablaEjgComponent implements OnInit {
         this.ejgObject = JSON.parse(n.body).ejgItems;
         this.datosItem = this.ejgObject[0];
         this.persistenceService.setDatosEJG(this.datosItem);
-        this.persistenceService.setFiltrosEJG(this.filtro);
-        //this.ngOnInit();
-        //this.consultaUnidadFamiliar(selected);
         if (sessionStorage.getItem("EJGItem")) {
           sessionStorage.removeItem("EJGItem");
         }
@@ -633,16 +628,6 @@ export class TablaEjgComponent implements OnInit {
     selectedDatos.forEach(element => {
       if (element.estadoEJG != LRC && element.estadoEJG != LRCAD) this.disableAddRemesa = true;
     })}
-
-
-    
-    /* if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="17"){
-      this.disableAddRemesa = false;
-    }
-    else{
-      this.disableAddRemesa = true;
-    } */
-
   }
 
   fillFechaEstado(event) {

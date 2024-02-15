@@ -1,82 +1,77 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="busqueda-container" id="informeCalificacion">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!esFichaActiva('informeCalificacion')" class="form-row">
-        <div class="col-lg-1 col-md-A2" (click)="abreCierraFicha('informeCalificacion')">
+      <div *ngIf="!openTarjetaInformeCalificacion" class="form-row">
+        <div class="col-lg-1 col-md-A2" (click)="abreCierraFicha()">
           <div class="img-colegiado">
             <i class="fas fa-certificate icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('informeCalificacion')">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
             <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.datosGenerales.InformeCalificacion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="dictamen">{{fechaDictCabecera | date: 'dd/MM/yyyy'}}</span></label>
-              <label>{{ "justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen" | translate }}: <span *ngIf="dictamen">{{dictamen.dictamenSing}}</span></label>
-              <label>{{ "justiciaGratuita.ejg.datosGenerales.Fundamento" | translate }}: <span *ngIf="dictamen">{{fundamentoCalifCabecera}}</span></label>
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('informeCalificacion')"></i>
+            <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span>{{fechaDictCabecera | date: 'dd/MM/yyyy'}}</span></label>
+            <label>{{ "justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen" | translate }}: <span>{{datos.dictamenSing}}</span></label>
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.Fundamento" | translate }}: <span>{{fundamentoCalifCabecera}}</span></label>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('informeCalificacion')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('informeCalificacion')">
-        <div class="img-colegiado">
-          <i class="fas fa-certificate icon-ficha"></i>
-        </div>
+      <div *ngIf="openTarjetaInformeCalificacion" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+        <div class="img-colegiado"> <i class="fas fa-certificate icon-ficha"></i> </div>
         <label class="title-ficha pointer">{{ 'justiciaGratuita.ejg.datosGenerales.InformeCalificacion' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-
-    <div *ngIf="esFichaActiva('informeCalificacion')" class="card-body card-body-ficha">
+    <div *ngIf="openTarjetaInformeCalificacion" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-12 col-md-12">
           <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{ "justiciaGratuita.ejg.datosGenerales.datos.FundamentoCalificacion" | translate}} </label>
           <div class="form-row">
-            <div *ngIf="dictamen" class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}
-              </label>
-              <app-fecha [(value)]="dictamen.fechaDictamen" (valueChangeSelected)="fillFechaDictamen($event)" (valueChangeInput)="fillFechaDictamen($event)"></app-fecha>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}</label>
+              <app-fecha [(value)]="datos.fechaDictamen" (valueChangeSelected)="fillFechaDictamen($event)" (valueChangeInput)="fillFechaDictamen($event)"></app-fecha>
             </div>
-            <div *ngIf="dictamen" class="form-group col-lg-3 col-md-3">
-                <label>{{ "justiciaGratuita.ejg.datosGenerales.Dictamen" | translate }}</label>
-                <p-dropdown autoWidth="false" [(ngModel)]='dictamen.idTipoDictamen' [options]="comboDictamen" class="select-form" placeholder="Seleccionar"
-                 (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.Dictamen" | translate }}</label>
+              <p-dropdown autoWidth="false" [(ngModel)]='datos.idTipoDictamen' [options]="comboDictamen" class="select-form" placeholder="Seleccionar" (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
-            <div *ngIf="dictamen" class="form-group col-lg-6 col-md-6">
-                  <label>{{ "justiciaGratuita.maestros.fundamentosCalificacion.fundamentos.fundamentosCalificacion" | translate }}</label>
-                  <p-dropdown [(disabled)]="isDisabledFundamentosCalif" class="select-form" [(ngModel)]='dictamen.fundamentoCalif' placeholder="Seleccionar"
-                    [options]="comboFundamentoCalif" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "justiciaGratuita.maestros.fundamentosCalificacion.fundamentos.fundamentosCalificacion" | translate }}</label>
+              <p-dropdown [(disabled)]="isDisabledFundamentosCalif" class="select-form" [(ngModel)]='datos.fundamentoCalif' placeholder="Seleccionar" [options]="comboFundamentoCalif" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
           </div>
           <div class="form-row">
-              <div class="form-group col-lg-12 col-md-12">
-                  <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}
-                  </label>
-                  <textarea class="form-control ui-inputtext" autoResize="autoResize" maxLength="300" pInputTextarea [(ngModel)]="dictamen.dictamen" ></textarea>
-                </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}</label>
+              <textarea class="form-control ui-inputtext" autoResize="autoResize" maxLength="300" pInputTextarea [(ngModel)]="datos.dictamen"></textarea>
             </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <div *ngIf="esFichaActiva('informeCalificacion')" class="card-footer">
+    <div *ngIf="openTarjetaInformeCalificacion" class="card-footer">
       <div class="text-right main-button ">
         <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="checkPermisosRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="!permisoEscritura || dictamen.iddictamen == null" (click)="checkPermisosConfirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.borrarDictamen' | translate}}"></button>
+        <button [disabled]="!permisoEscritura || datos.iddictamen == null" (click)="checkPermisosConfirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.borrarDictamen' | translate}}"></button>
         <button [disabled]="!permisoEscritura" (click)="checkPermisosDownload()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.informe' | translate}}"></button>
-      </div> 
+      </div>
     </div>
-    <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
-      <p-footer>
-        <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-        <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
-      </p-footer>
-    </p-confirmDialog>
   </div>
 </div>
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

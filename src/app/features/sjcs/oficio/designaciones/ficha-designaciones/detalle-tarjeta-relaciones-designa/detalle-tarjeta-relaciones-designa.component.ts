@@ -48,6 +48,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     private datepipe: DatePipe,
     private router: Router,
     private confirmationService: ConfirmationService,
+    private persistenceService: PersistenceService
   ) { }
 
 
@@ -276,14 +277,12 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   checkPermisosCrearEJG() {
     this.crearEJG();
   }
-  crearEJG() {
 
-    sessionStorage.setItem("EJGItemDesigna", "nuevo");
+  crearEJG() {
     if(this.nombreInteresado){
       sessionStorage.setItem("nombreInteresado", this.nombreInteresado);
     }
     sessionStorage.setItem("Designacion", JSON.stringify(this.body));
-
     this.router.navigate(["/gestionEjg"]);
   }
 
@@ -317,7 +316,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
           n => {
             result = JSON.parse(n.body).ejgItems;
-            sessionStorage.setItem("EJGItemDesigna", JSON.stringify(result[0]));
+            this.persistenceService.setDatosEJG(result[0]);
             let error = JSON.parse(n.body).error;
 
             this.progressSpinner = false;

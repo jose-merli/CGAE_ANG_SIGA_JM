@@ -592,7 +592,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         //this.router.navigate(["/gestionEjg"]);
         //Para prevenir que se vaya a una ficha en blanco despues de que se haya creado un justiciable
         //this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
-        //ARR:  sessionStorage.removeItem("EJGItem");
+        //sessionStorage.removeItem("EJGItem");
 
         let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
         this.persistenceService.setDatosEJG(ejg);

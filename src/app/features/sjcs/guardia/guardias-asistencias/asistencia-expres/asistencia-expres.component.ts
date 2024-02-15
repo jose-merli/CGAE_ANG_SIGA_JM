@@ -951,7 +951,6 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
               this.search();
             }
           }
-          //ARR
           //this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
         }
       }

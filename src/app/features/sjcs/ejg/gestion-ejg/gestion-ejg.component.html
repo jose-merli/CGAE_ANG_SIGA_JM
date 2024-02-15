@@ -7,117 +7,102 @@
     <div>
         
         <app-tarjeta-resumen-fija class="pb-50"
-            [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" 
-            [chincheta]="true" 
-            [datos]="datosResumen"
-            [icono]="'clipboard'">
+            (isOpen)="openTarjeta($event)"
+            [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosResumen" [enlaces]="enlacesResumen" [icono]="'clipboard'">
         </app-tarjeta-resumen-fija>
         
-        <app-datos-generales-ejg [checkPermission]="permisos.datosGenerales" 
-            (guardadoSend)="guardadoSend($event)"
-            [modoEdicion]="modoEdicion" [nuevo]="nuevo" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" [datos]="body">
+        <app-datos-generales-ejg [checkPermission]="permisos.datosGenerales" id="tarjetaDatosGenerales"
+            (guardadoSend)="guardadoSend($event)" (crearDesignacion)="crearDesignacion()"
+            [permisoEscritura]="isPermisoTarjeta('tarjetaDatosGenerales')" [haveDesignacion]="haveDesignacion"
+            [datos]="body" [modoEdicion]="modoEdicion" [nuevo]="nuevo" [openTarjetaDatosGenerales]="isOpenTarjeta('tarjetaDatosGenerales')">
         </app-datos-generales-ejg>
 
-        <!--
-        <app-unidad-familiar *ngIf="permisoEscrituraUnidadFamiliar != undefined && modoEdicion"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaUnidadFamiliar]="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaUnidadFamiliar]="openTarjetaUnidadFamiliar" (updateRes)="updateTarjResumen()">
+        <app-unidad-familiar [checkPermission]="permisos.unidadFamiliar" *ngIf="modoEdicion" id="tarjetaUnidadFamiliar"
+            (guardadoSend)="guardadoSend($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaUnidadFamiliar')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaUnidadFamiliar]="isOpenTarjeta('tarjetaUnidadFamiliar')">
         </app-unidad-familiar>
-
-        <app-expedientes-economicos *ngIf="permisoEscrituraExpedientesEconomicos != undefined && modoEdicion"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaExpedientesEconomicos]="tarjetaExpedientesEconomicos" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaExpedientesEconomicos]="openTarjetaExpedientesEconomicos"
-            (actualizarTarjetasIntercambios)="actualizarTarjetasIntercambios()">
+        
+        <app-expedientes-economicos [checkPermission]="permisos.expedientesEconomicos" *ngIf="modoEdicion" id="tarjetaExpedientesEconomicos"
+            (guardadoSend)="guardadoSend($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaExpedientesEconomicos')"
+            [body]="body" [modoEdicion]="modoEdicion" [openTarjetaExpedientesEconomicos]="isOpenTarjeta('tarjetaExpedientesEconomicos')">
         </app-expedientes-economicos>
-
-        <app-relaciones *ngIf="permisoEscrituraRelaciones != undefined && modoEdicion"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaRelaciones]="tarjetaRelaciones" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaRelaciones]="openTarjetaRelaciones" (noAsocDes)="asignNoAsocDes($event)"
-            (actLetradoDesignado)="actualizaLetradoDesignado($event)">
+    
+        <app-relaciones [checkPermission]="permisos.relaciones" *ngIf="modoEdicion" id="tarjetaRelaciones"
+            (guardadoSend)="isAsociaDES($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaRelaciones')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaRelaciones]="isOpenTarjeta('tarjetaRelaciones')">
         </app-relaciones>
 
-        <app-defensa-juridica *ngIf="permisoDefensaJuridica != undefined && modoEdicion" [permisoEscritura]="modoEdicion"  
-            id="defensaJuridica">
+        <app-defensa-juridica [checkPermission]="permisos.defensaJuridica" *ngIf="modoEdicion" id="tarjetaDefensaJuridica"
+            (guardadoSend)="guardadoSend($event)" (crearDesignacion)="crearDesignacion()"
+            [permisoEscritura]="isPermisoTarjeta('tarjetaDefensaJuridica')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaDefensaJuridica]="isOpenTarjeta('tarjetaDefensaJuridica')">
         </app-defensa-juridica>
         
-        <app-contrarios-pre-designacion *ngIf="permisoContrarios != undefined && modoEdicion" [permisoEscritura]="modoEdicion"
-            id="contrariosPreDesigna"(opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
-            
+        <app-contrarios-pre-designacion [checkPermission]="permisos.contrarios" *ngIf="modoEdicion" id="tarjetaContrariosPreDesigna"    
+            [permisoEscritura]="isPermisoTarjeta('tarjetaContrariosPreDesigna')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaContrariosPreDesigna]="isOpenTarjeta('tarjetaContrariosPreDesigna')">
         </app-contrarios-pre-designacion>
         
-        <app-procurador-pre-designacion *ngIf="permisoProcurador != undefined && modoEdicion" [permisoEscritura]="modoEdicion" 
-            id="procuradorPreDesigna" (actualizarEstados)="actualizarEstados ($event)">
+        <app-procurador-pre-designacion [checkPermission]="permisos.procurador" *ngIf="modoEdicion" id="tarjetaProcuradorPreDesigna"
+            (guardadoSend)="guardadoSend($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaProcuradorPreDesigna')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaProcuradorPreDesigna]="isOpenTarjeta('tarjetaProcuradorPreDesigna')">
         </app-procurador-pre-designacion>
-
-        <app-estados *ngIf="permisoEscrituraEstados != undefined && modoEdicion" (opened)="manuallyOpened = $event"
-            (idOpened)="isCloseReceive($event)" [tarjetaEstados]="tarjetaEstados" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaEstados]="openTarjetaEstados" (actualizarTarjetasIntercambios)="actualizarTarjetasIntercambios()" 
-            #tarjetaEstadosEJG>
+    
+        <!-- TERMINAR -->
+        <app-estados [checkPermission]="permisos.estados" *ngIf="modoEdicion" id="tarjetaEstados"
+            (guardadoSend)="guardadoSend($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaEstados')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaEstados]="isOpenTarjeta('tarjetaEstados')">
         </app-estados>
 
-        <app-documentacion *ngIf="permisoEscrituraDocumentacion != undefined && modoEdicion"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaDocumentacion]="tarjetaDocumentacion" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaDocumentacion]="openTarjetaDocumentacion"
-            (actualizarTarjetasIntercambios)="actualizarTarjetasIntercambios()">
+        <app-documentacion [checkPermission]="permisos.documentacion" *ngIf="modoEdicion" id="tarjetaDocumentacion"
+            (guardadoSend)="guardadoSend($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaDocumentacion')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaDocumentacion]="isOpenTarjeta('tarjetaDocumentacion')">
         </app-documentacion>
-
-        <app-informe-calificacion *ngIf="permisoEscrituraInformeCalif != undefined && modoEdicion"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaInformeCalificacion]="tarjetaInformeCalificacion" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            (newEstado)="newEstado()" [openTarjetaInformeCalificacion]="openTarjetaInformeCalificacion">
-        </app-informe-calificacion>
         
-        <app-resolucion id="resol" *ngIf="permisoEscrituraResolucion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaResolucion]="tarjetaResolucion" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaResolucion]="openTarjetaResolucion"
-        (newEstado)="newEstado()" (changeResolucion)="changeResolucion($event)">
+        <!-- TERMINAR -->
+        <app-informe-calificacion [checkPermission]="permisos.informeCalif" *ngIf="modoEdicion" id="tarjetaInformeCalificacion"
+            (guardadoSend)="guardadoSend($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaInformeCalificacion')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaInformeCalificacion]="isOpenTarjeta('tarjetaInformeCalificacion')">
+        </app-informe-calificacion>
+
+        <!-- TERMINAR -->
+        <app-resolucion [checkPermission]="permisos.resolucion" *ngIf="modoEdicion" id="tarjetaResolucion"
+            (guardadoSend)="guardadoResolucion($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaResolucion')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaResolucion]="isOpenTarjeta('tarjetaResolucion')">
         </app-resolucion>
 
-        <app-impugnacion *ngIf="permisoEscrituraImpugnacion != undefined && modoEdicion"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaImpugnacion]="tarjetaImpugnacion" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaImpugnacion]="openTarjetaImpugnacion" (newEstado)="newEstado()"
-            (updateRes)="updateTarjResumen()">
+        <!-- TERMINAR -->
+        <app-impugnacion [checkPermission]="permisos.impugnacion" *ngIf="modoEdicion" id="tarjetaImpugnacion"
+            (guardadoSend)="guardadoSend($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaImpugnacion')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaImpugnacion]="isOpenTarjeta('tarjetaImpugnacion')">
         </app-impugnacion>
 
-        <app-regtel-ejg *ngIf="permisoEscrituraRegtel != undefined && modoEdicion" (opened)="manuallyOpened = $event"
-            (idOpened)="isCloseReceive($event)" [tarjetaRegtel]="tarjetaRegtel" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaRegtel]="openTarjetaRegtel"
-            (actualizarTarjetasIntercambios)="actualizarTarjetasIntercambios()">
+        <!-- TERMINAR -->
+        <app-regtel-ejg [checkPermission]="permisos.regtel" *ngIf="modoEdicion"  id="tarjetaRegtel"
+            (guardadoSend)="actualizarTarjetasIntercambios()" [permisoEscritura]="isPermisoTarjeta('tarjetaRegtel')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaRegtel]="isOpenTarjeta('tarjetaRegtel')">
         </app-regtel-ejg>
 
-        <app-comunicaciones-ejg *ngIf="permisoEscrituraComunicaciones != undefined && modoEdicion"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaComunicaciones]="tarjetaComunicaciones" [modoEdicion]="modoEdicion"
-            (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaComunicaciones]="openTarjetaComunicaciones">
+        <app-comunicaciones-ejg [checkPermission]="permisos.comunicaciones" *ngIf="modoEdicion" id="tarjetaComunicaciones"
+            [permisoEscritura]="isPermisoTarjeta('tarjetaComunicaciones')"
+            [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaComunicaciones]="isOpenTarjeta('tarjetaComunicaciones')">
         </app-comunicaciones-ejg>
 
-        <app-tarjeta-facturacion-generica *ngIf="permisoEscrituraFacturaciones != undefined && modoEdicion" [datosEntrada]="datosEntradaTarjGenerica" [pantalla]="'EJG'"
-            (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac" (opened)="manuallyOpened = $event"
-            (idOpened)="isCloseReceive($event)">
+        <!--[permisoEscritura]="isPermisoTarjeta('tarjetaFac')"-->
+        <app-tarjeta-facturacion-generica [checkPermission]="permisos.facturaciones" *ngIf="modoEdicion" id="tarjetaFac"
+            (guardarDatos)="guardadoSend()"
+            [datosEntrada]="body" [pantalla]="'EJG'" [showTarjeta]="isOpenTarjeta('tarjetaFac')">
         </app-tarjeta-facturacion-generica>
         
-        <app-lista-intercambios-alta-ejg *ngIf="permisoListasIntercambiosPericles != undefined && modoEdicion" [body]="body"
-            [openTarjetaListaIntercambiosAltaEjg]="openTarjetaListaIntercambiosAltaEjg"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
+        <app-lista-intercambios-alta-ejg [checkPermission]="permisos.intercambiosPericles" *ngIf="modoEdicion" id="tarjetaListaIntercambiosAltaEjg"
+            [permisoEscritura]="isPermisoTarjeta('tarjetaListaIntercambiosAltaEjg')"
+            [body]="body" [openTarjetaListaIntercambiosAltaEjg]="isOpenTarjeta('tarjetaListaIntercambiosAltaEjg')">
         </app-lista-intercambios-alta-ejg>
-
-        <app-lista-intercambios-documentacion-ejg *ngIf="permisoListasIntercambiosPericles != undefined && modoEdicion" [body]="body"
-            [openTarjetaListaIntercambiosDocumentacionEjg]="openTarjetaListaIntercambiosDocumentacionEjg"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
+        
+        <app-lista-intercambios-documentacion-ejg [checkPermission]="permisos.intercambiosPericles" *ngIf="modoEdicion" id="tarjetaListaIntercambiosDocumentacionEjg"
+            [permisoEscritura]="isPermisoTarjeta('tarjetaListaIntercambiosDocumentacionEjg')"
+            [body]="body" [openTarjetaListaIntercambiosDocumentacionEjg]="isOpenTarjeta('tarjetaListaIntercambiosDocumentacionEjg')">
         </app-lista-intercambios-documentacion-ejg>
-        -->
     </div>
 
 </div>

@@ -424,7 +424,7 @@ export class TarjetaEjgsComponent implements OnInit {
         this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
           n => {
             result = JSON.parse(n.body).ejgItems;
-            sessionStorage.setItem("EJGItemDesigna", JSON.stringify(result[0]));
+            this.persistenceService.setDatosEJG(result[0]);
             let error = JSON.parse(n.body).error;
 
             this.progressSpinner = false;

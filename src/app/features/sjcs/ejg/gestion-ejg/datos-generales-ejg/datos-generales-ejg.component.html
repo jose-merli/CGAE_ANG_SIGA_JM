@@ -112,7 +112,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <div>
                 <label>{{ "justiciaGratuita.ejg.datosGenerales.estadoExpediente.expedienteRelacionado" | translate}}:</label><br />
-                <!--<label>{{tipoExpedienteDes}}</label>-->
+                <span>{{tipoExpedienteDes}}</span>
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -130,9 +130,9 @@
 
     <div *ngIf="openTarjetaDatosGenerales" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="asociarDes()" pButton [disabled]="!permisoEscritura  || !modoEdicion" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button>
+        <button (click)="asociarDes()" pButton [disabled]="!permisoEscritura  || !modoEdicion || haveDesignacion" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button>
         <button (click)="createDes()" pButton [disabled]="!permisoEscritura || !modoEdicion" type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
-        <button (click)="addExp()" pButton [disabled]="!permisoEscritura || !modoEdicion || !tieneAsocDes" type="button" icon="fa fa-plus" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
+        <button (click)="addExp()" pButton [disabled]="!permisoEscritura || !modoEdicion" type="button" icon="fa fa-plus" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
         <button (click)="comunicar()" pButton [disabled]="!modoEdicion" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
         <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!permisoEscritura" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura" label="{{ 'general.boton.guardar' | translate}}"></button>

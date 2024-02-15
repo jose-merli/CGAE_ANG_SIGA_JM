@@ -322,7 +322,6 @@ export class DetalleSOJComponent implements OnInit {
       sessionStorage.removeItem("datosEJG");
     }
     sessionStorage.setItem("justiciableSOJ", sessionStorage.getItem("justiciable"));
-    sessionStorage
     sessionStorage.setItem("Nuevo", "true");
     this.body.numSoj = sessionStorage.getItem("numeroNuevoSOJ");
     let sojItem = JSON.stringify(this.body);

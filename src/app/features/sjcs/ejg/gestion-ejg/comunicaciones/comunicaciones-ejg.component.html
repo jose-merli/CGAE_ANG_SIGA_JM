@@ -1,38 +1,38 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="busqueda-container" id="comunicaciones">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!esFichaActiva('comunicaciones')" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('comunicaciones')">
+      <div *ngIf="!openTarjetaComunicaciones" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
           <div class="img-colegiado">
             <i class="fa fa-inbox icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('comunicaciones')">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
             <label class="mr-auto title-ficha pointer">{{'informesycomunicaciones.modelosdecomunicacion.ficha.comunicaciones' | translate}}</label>
           </div>
-          <div class="d-flex justify-content-between default" >
-            <label >{{'informesycomunicaciones.modelosdecomunicacion.ficha.numComunicaciones' | translate}}: 
-              <span>{{numComunicaciones}}</span>
-            </label>
-            
-            <i class="fa fa-angle-down ml-auto" (click)="abreCierraFicha('comunicaciones')"></i>
+          <div class="d-flex justify-content-between default">
+            <label>{{'informesycomunicaciones.modelosdecomunicacion.ficha.numComunicaciones' | translate}}: <span>{{numComunicaciones}}</span></label>
+            <i class="fa fa-angle-down ml-auto" (click)="abreCierraFicha()"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('comunicaciones')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('comunicaciones')">
-        <div class="img-colegiado">
-          <i class="fa fa-inbox icon-ficha"></i>
-        </div>
+      <div *ngIf="openTarjetaComunicaciones" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+        <div class="img-colegiado"><i class="fa fa-inbox icon-ficha"></i></div>
         <label class="title-ficha pointer">{{'informesycomunicaciones.modelosdecomunicacion.ficha.comunicaciones' | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="esFichaActiva('comunicaciones')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
+    <div *ngIf="openTarjetaComunicaciones" class="px-0 pt-0 pb-0 card-body card-body-ficha">
       <div>
-        <!-- TABLA RESULTADOS -->
-        <p-table [value]="comunicaciones" [columns]="cols" [selectionMode]="single" [responsive]="true" #table class="tabla-listado" [paginator]="true" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both" [rows]="selectedItem">
+        <p-table [value]="comunicaciones" [columns]="cols" [selectionMode]="single" [responsive]="true" #table
+          class="tabla-listado" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of cols" [style.width]="col.width">
@@ -40,59 +40,34 @@
           </ng-template>
           <ng-template pTemplate="header" let-columns>
             <tr>
-              <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-                {{ col.header | translate }}
+              <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">{{ col.header | translate }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
-                <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text"
-                  (input)="table.filter($event.target.value, col.field, 'contains')" />
+                <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value, col.field, 'contains')" />
               </th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-
-                <div *ngIf="col.field=='destinatario'">
-                  <span class="enlace" (click)="navigateTo([dato])">{{dato[col.field]}}</span>
-                </div>
-
-                <div *ngIf="col.field!='destinatario' && col.field !='fechaProgramada' && col.field!='fechaCreacion'">
-                  <span>{{dato[col.field]}}</span>
-                </div>
-
-                <div *ngIf="col.field=='fechaProgramada' || col.field=='fechaCreacion'">
-                  <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-                </div>
+                <div *ngIf="col.field=='destinatario'"><span class="enlace" (click)="navigateTo(dato)">{{dato[col.field]}}</span></div>
+                <div *ngIf="col.field!='destinatario' && col.field !='fechaProgramada' && col.field!='fechaCreacion'"><span>{{dato[col.field]}}</span></div>
+                <div *ngIf="col.field=='fechaProgramada' || col.field=='fechaCreacion'"><span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span></div>
               </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage" let-columns>
-            <tr>
-              <td [attr.colspan]="columns.length">
-                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
-              </td>
-            </tr>
+            <tr><td [attr.colspan]="columns.length">{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}</td></tr>
           </ng-template>
           <ng-template pTemplate="paginatorleft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
-                translate }}{{table.first + 1}} al {{table.first
-                + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-                {{table.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
-                translate }}: {{numSelected}}
-              </label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
               <label>{{"general.message.mostrar" | translate}}</label>
-              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
-              </p-dropdown>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages()"></p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             </div>
           </ng-template>
-        </p-table> 
+        </p-table>
       </div>
     </div>
-</div>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>
+  </div>

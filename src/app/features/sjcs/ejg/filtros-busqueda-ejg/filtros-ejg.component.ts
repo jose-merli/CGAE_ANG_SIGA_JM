@@ -147,10 +147,11 @@ export class FiltrosEjgComponent implements OnInit {
     }
 
     if(this.persistenceService.getVolverEJG() != undefined){
+      this.persistenceService.clearVolverEJG();
       this.volverDesdeEJG = true;
     }
 
-    if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getVolverEJG() != undefined) {
+    if (this.persistenceService.getFiltrosEJG() != undefined && this.volverDesdeEJG) {
         this.body = this.persistenceService.getFiltrosEJG();
         if (this.body.dictamen != undefined && this.body.dictamen != null && this.body.dictamen != "") this.bodyDictamen = Array.from(this.body.dictamen);
     
@@ -168,7 +169,6 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
     
           this.persistenceService.clearFiltrosEJG();
-          this.persistenceService.clearVolverEJG();
           this.busqueda.emit(this.historico);
     
     } else {
@@ -762,11 +762,10 @@ export class FiltrosEjgComponent implements OnInit {
       return true;
     }
   }
+
   //Busca ejg según los filtros
   isBuscar() {
     if (this.checkFilters()) {
-      //this.persistenceService.setFiltros(this.body);
-      // this.persistenceService.setFiltrosAux(this.body);
       if (this.disableBuscar() == false) {
         if (this.tipoLetradoRelleno == false && (this.idTurnoRelleno == true && this.numColegiadoRelleno == true)) {
           this.camposObligatoriosTurnoOLetrado();
@@ -815,15 +814,9 @@ export class FiltrosEjgComponent implements OnInit {
           this.selectRoles = false;
         }
   
-        sessionStorage.setItem(
-          "filtrosEJG",
-          JSON.stringify(this.body));
-
-
+        this.persistenceService.setFiltrosEJG(this.body);
         this.busqueda.emit(false);
-        this.body.dictamen = "";
-        
-
+        this.body.dictamen = "";     
       }
     }
   }

@@ -1,31 +1,30 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="busqueda-container" id="regtel">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!esFichaActiva('regtel')" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('regtel')">
+      <div *ngIf="!openTarjetaRegtel" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
           <div class="img-colegiado">
             <i class="fas fa-file-alt icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('regtel')">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
             <label class="mr-auto title-ficha pointer">{{ "censo.regtel.literal.titulo" | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <!-- <label *ngIf="nRegtel == 0">{{ "censo.regtel.literal.numero.directorios" | translate }} <span>{{ "general.message.no.registros" | translate }}</span></label>
-            <label *ngIf="nRegtel > 0">{{ "censo.regtel.literal.numero.directorios" | translate }} <span>{{nRegtel}}</span></label>
-            <label></label> -->
-            <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
-              <span>{{ messageRegtel }}</span>
-            </label>
-            <!-- <label *ngIf="nDocumentos > 3 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined">{{ "enviosMasivos.literal.documentos" | translate }}: <span>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</span></label>-->
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('regtel')"></i>
+            <label>{{ "censo.regtel.literal.numero.directorios" | translate }} <span>{{ messageRegtel }}</span></label>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('regtel')" class=" header-ficha-open d-flex justify-content-start align-items-center"
-        (click)="abreCierraFicha('regtel')">
+      <div *ngIf="openTarjetaRegtel" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha()">
         <div class="img-colegiado">
           <i class="fas fa-file-alt icon-ficha"></i>
         </div>
@@ -33,22 +32,17 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="esFichaActiva('regtel')" class="card-body card-body-ficha">
+    <div *ngIf="openTarjetaRegtel" class="px-0 pt-0 pb-0 card-body card-body-ficha">
       <div>
         <p-dataTable #table emptyMessage="{{ messageRegtel }}" [(selection)]="selectedDatosRegtel" [responsive]="true"
           selectionMode="single" dataKey="id" #tableRegTel class="tabla-listado" [value]="regtel" [sortOrder]="0"
           [sortField]="fechaModificacion" [paginator]="activarPaginacionRegTel()"
           (onRowSelect)="onRowSelectedRegTel(selectedDatosRegtel)" (onRowUnselect)=" onRowDesselectedRegTel()"
           paginatorPosition="both" [rows]="selectedItemRegtel" pageLinks="4">
-          <p-column *ngFor="let col of colsRegtel" [sortable]="true" [field]="col.field"
-            [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true"
-            filterMatchMode="contains">
+          <p-column *ngFor="let col of colsRegtel" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">
               <div *ngIf="setItalicRegtel(datoH)">
-                <span [ngStyle]="{
-                  'font-style': 'italic',
-                  'font-weight': 'bold'
-                }">{{ datoH[col.field] }}</span>
+                <span [ngStyle]="{'font-style': 'italic','font-weight': 'bold'}">{{ datoH[col.field] }}</span>
               </div>
               <div *ngIf="!setItalicRegtel(datoH)">
                 <span>{{ datoH[col.field] }}</span>
@@ -61,61 +55,36 @@
             </ng-template>
             <ng-template *ngIf="col.field == 'fechaModificacion'" let-datoH="rowData" pTemplate="body">
               <span *ngIf="!setItalicRegtel(datoH)">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
-              <span *ngIf="setItalicRegtel(datoH)"
-                [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
-                datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+              <span *ngIf="setItalicRegtel(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
             </ng-template>
           </p-column>
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros'
-                | translate}} {{ tableRegTel.first + 1
-                }} al {{ tableRegTel.first + tableRegTel.rows }} de un total de {{ tableRegTel.totalRecords }}</label>
-              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
-                translate }}: {{ numSelectedRegtel }}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableRegTel.first + 1}} al {{ tableRegTel.first + tableRegTel.rows }} de un total de {{ tableRegTel.totalRecords }}</label>
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedRegtel }}</label>
               <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedItemRegtel" [options]="rowsPerPage"
-                (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-              <label class="pl-1">
-                {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
-              </label>
-
+              <p-dropdown [(ngModel)]="selectedItemRegtel" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+              <label class="pl-1">{{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}</label>
             </div>
           </ng-template>
         </p-dataTable>
       </div>
       <br />
-
       <div class="card-footer">
         <div class="text-right main-button">
-          <button [disabled]="buttonVisibleRegtelAtras" (click)="onClickAtrasRegtel()" pButton type="button"
-            icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-          <button
-            [disabled]="buttonVisibleRegtelCarpeta"
-            (click)="checkPermisosShowFolder()" pButton type="button" icon="fa fa-history" iconPos="left"
-            label="{{ 'censo.regtel.literal.vercarpeta' | translate}}"></button>
-          <button [disabled]="buttonVisibleRegtelDescargar"
-            (click)="checkPermisosDownload()" pButton type="button" icon="fa fa-download" iconPos="left"
-            label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
-
-          <button *ngIf="buttonVisibleEnvioDocumentacionAdicional && esIdentificadorPericlesDisponible"
-            [disabled]="selectedDatosRegtel == undefined || !permisoEscritura" 
-            (click)="enviarDocumentacionAdicional()" pButton type="button" icon="fa fa-save" iconPos="left"
-            label="{{ 'justiciaGratuita.ejg.listaIntercambios.enviarDocAdicional' | translate }}"></button>
+          <button [disabled]="buttonVisibleRegtelAtras" (click)="onClickAtrasRegtel()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+          <button [disabled]="buttonVisibleRegtelCarpeta" (click)="checkPermisosShowFolder()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'censo.regtel.literal.vercarpeta' | translate}}"></button>
+          <button [disabled]="buttonVisibleRegtelDescargar" (click)="checkPermisosDownload()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
+          <button *ngIf="buttonVisibleEnvioDocumentacionAdicional && esIdentificadorPericlesDisponible" [disabled]="selectedDatosRegtel == undefined || !permisoEscritura" (click)="enviarDocumentacionAdicional()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'justiciaGratuita.ejg.listaIntercambios.enviarDocAdicional' | translate }}"></button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtelFicha" icon="icon" width="425"
-  #regtelFicha>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtelFicha" icon="icon" width="425" #regtelFicha>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="regtelFicha.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="regtelFicha.reject()"></button>
   </p-footer>
 </p-confirmDialog>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>

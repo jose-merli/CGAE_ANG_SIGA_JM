@@ -179,7 +179,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
           result = JSON.parse(n.body).ejgItems;
           sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
           sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
-          sessionStorage.setItem("EJGItemDesigna", JSON.stringify(result[0]));
+          this.persistenceService.setDatosEJG(result[0]);
           let error = JSON.parse(n.body).error;
 
           this.progressSpinner = false;
@@ -243,7 +243,6 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
 
   crearEJG() {
     sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
-    sessionStorage.setItem("nombreInteresado", this.asistencia.asistido);
     sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);

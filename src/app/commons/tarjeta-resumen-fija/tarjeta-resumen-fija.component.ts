@@ -17,6 +17,7 @@ export class TarjetaResumenFijaComponent implements OnInit {
   @Input() enlaces;
   @Input() manuallyOpened;
   @Output() isOpen = new EventEmitter<any>();
+
   iconClass;
   checkTitulo;
   enlaceAnterior:any[];
@@ -44,25 +45,14 @@ export class TarjetaResumenFijaComponent implements OnInit {
       down = null;
     }
   }
+
   goToCard(enlace, nombre) {
-    let findDato; // Comprobar si estoy pulsando el mismo enlace que pulsé por primera vez
-
-   
-    if(this.enlaceAnterior != undefined && this.enlaceAnterior.length > 0){
-     this.enlaceAnterior.forEach(element => {
-       if(element == enlace.id){
-         findDato = element;
-       }
-     });
+    if(enlace != null){
+      //enlace.scrollIntoView({ block: "center", behavior: 'smooth',inline: "start" });
+      enlace.scrollIntoView();
     }
-    
-    //if(findDato == undefined){
-      enlace.scrollIntoView({ block: "center", behavior: 'smooth',inline: "start" });
-      this.isOpen.emit(nombre);
-      this.enlaceAnterior = [];
-      this.enlaceAnterior.push(enlace.id);
-    //}
-    
+    this.isOpen.emit(nombre);
+    this.enlaceAnterior = [];
+    this.enlaceAnterior.push(enlace.id);
   }
-
 }

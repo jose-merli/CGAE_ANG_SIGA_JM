@@ -1,47 +1,38 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="busqueda-container" id="documentacion">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!esFichaActiva('documentacion')" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('documentacion')">
-          <div class="img-colegiado">
-            <i class="fas fa-briefcase icon-ficha"></i>
-          </div>
+      <div *ngIf="!openTarjetaDocumentacion" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+          <div class="img-colegiado"><i class="fas fa-briefcase icon-ficha"></i></div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('documentacion')">
-            <label class="mr-auto title-ficha pointer">{{ "menu.facturacionSJCS.mantenimientoDocumentacionEJG" |
-              translate }}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha pointer">{{ "menu.facturacionSJCS.mantenimientoDocumentacionEJG" | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label *ngIf="nDocumentos > 3">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}:
-              <span>{{nDocumentos}}</span></label>
-            <label *ngIf="nDocumentos <= 3 && nDocumentos > 0 ">{{
-              "enviosMasivos.literal.documentos" | translate }}:
-              <span>{{tiposCabecera}}</span></label>
-            <label *ngIf="nDocumentos == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}:
-              <span>{{ "general.message.no.registros" | translate }}</span></label>
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('documentacion')"></i>
+            <label *ngIf="this.documentos.length > 3">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}:<span>{{this.documentos.length}}</span></label>
+            <label *ngIf="this.documentos.length <= 3 && this.documentos.length > 0 ">{{"enviosMasivos.literal.documentos" | translate }}:<span>{{tiposCabecera}}</span></label>
+            <label *ngIf="this.documentos.length == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}:<span>{{ "general.message.no.registros" | translate }}</span></label>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('documentacion')"
-        class=" header-ficha-open d-flex justify-content-start align-items-center"
-        (click)="abreCierraFicha('documentacion')">
-        <div class="img-colegiado">
-          <i class="fas fa-briefcase icon-ficha"></i>
-        </div>
-        <label class="title-ficha pointer">{{ "menu.facturacionSJCS.mantenimientoDocumentacionEJG" | translate
-          }}</label>
+      <div *ngIf="openTarjetaDocumentacion" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+        <div class="img-colegiado"><i class="fas fa-briefcase icon-ficha"></i></div>
+        <label class="title-ficha pointer">{{ "menu.facturacionSJCS.mantenimientoDocumentacionEJG" | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="esFichaActiva('documentacion')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
-      <!--  <div *ngIf="esFichaActiva('documentacion')" class="card-body card-body-ficha">-->
-      <!-- TABLA RESULTADOS -->
-      <p-table [value]="documentos" [columns]="cols" [(selection)]="selectedDatos"
-        [responsive]="true" #tableDocumentacion class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-        (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+    <div *ngIf="openTarjetaDocumentacion" class="px-0 pt-0 pb-0 card-body card-body-ficha">
+      <p-table [value]="documentos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true"
+        #tableDocumentacion class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+        (onRowUnselect)="actualizaSeleccionados()" [ngClass]="{ 'customCursor': selectMultiple}"
         selectionMode="multiple" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -50,13 +41,9 @@
         </ng-template>
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-              {{ col.header | translate }}
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">{{ col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
-                *ngSwitchCase="col.field" pInputText type="text" (input)="
-           tableDocumentacion.filter($event.target.value, col.field, 'contains')
-         " />
+              <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableDocumentacion.filter($event.target.value, col.field, 'contains')" />
             </th>
           </tr>
         </ng-template>
@@ -64,111 +51,45 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div *ngIf="col.field == 'flimite_presentacion' || col.field == 'f_presentacion'">
-                <div *ngIf="setItalic(dato)">
-                  <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
-                    dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-                </div>
-                <div *ngIf="!setItalic(dato)">
-                  <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-                </div>
+                <span [ngClass]="{'eliminado': dato.fechaBaja != null}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
               </div>
-              <div
-                *ngIf="col.field != 'flimite_presentacion' && col.field != 'f_presentacion' && col.field != 'propietario' && col.field != 'regEntradaSalida' && col.field != 'labelDocumento' && col.field != 'nombreFichero'">
-                <div *ngIf="setItalic(dato)">
-                  <span
-                    [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-                </div>
-                <div *ngIf="!setItalic(dato)">
-                  <span class="enlace" (click)="openModal(dato)">{{dato[col.field]}}</span>
-                </div>
+              <div *ngIf="col.field != 'flimite_presentacion' && col.field != 'f_presentacion' && col.field != 'propietario' && col.field != 'regEntradaSalida' && col.field != 'labelDocumento' && col.field != 'nombreFichero'">
+                  <span [ngClass]="{'eliminado': dato.fechaBaja != null, 'enlace': dato.fechaBaja == null}" (click)="editDocumento(dato)">{{dato[col.field]}}</span>
               </div>
-
-              <div
-                *ngIf="col.field == 'labelDocumento'">
-                <div *ngIf="setItalic(dato)">
-                  <span
-                  [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-                </div>
-                <div *ngIf="!setItalic(dato)">
-                  <span class="enlace" (click)="openModal(dato)">{{ "justiciaGratuita.ejg.documentacion.tipoDoc" | translate }} > <br>{{dato[col.field]}}</span>
-                </div>
+              <div *ngIf="col.field == 'labelDocumento'">
+                <span [ngClass]="{'eliminado': dato.fechaBaja != null, 'enlace': dato.fechaBaja == null}" (click)="editDocumento(dato)">{{dato[col.field]}}</span>
               </div>
-
               <div *ngIf="col.field == 'nombreFichero'">
-                <div *ngIf="setItalic(dato)" class="d-flex justify-content-between">
-                  <span
-                  [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}  
-                </span>
-                  <i (click)="openFileSelector(dato)" class="fas fa-upload d-flex align-self-center ml-auto"></i>
-                  <input hidden type="file" #fileInput  (change)="onFileSelected($event, idDocumentacion)" />
-                </div>
-                <div *ngIf="!setItalic(dato)" class="d-flex justify-content-between">
-                  <span class="enlace" (click)="openModal(dato)">{{dato[col.field]}} </span>
-                  <i (click)="openFileSelector(dato)" class="fas fa-upload d-flex align-self-center ml-auto"></i>
-                  <input hidden type="file" #fileInput (change)="onFileSelected($event, idDocumentacion)" />
-                </div>
+                <span [ngClass]="{'eliminado': dato.fechaBaja != null, 'enlace': dato.fechaBaja == null}" (click)="editDocumento(dato)">{{dato[col.field]}}</span>
+                <i (click)="openFileSelector()" class="fas fa-upload d-flex align-self-center ml-auto"></i>
+                <input hidden type="file" #fileInput (change)="onFileSelected($event, dato)" />
               </div>
-              <div
-                *ngIf="col.field == 'regEntradaSalida'">
-                <div *ngIf="setItalic(dato)">
-                  <span
-                    [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">
-                    <span class="regEntradaSalida">Entrada:</span>{{dato['regEntrada']}}
-                    <span class="regEntradaSalida">Salida:</span>{{dato['regSalida']}}
-                  </span>
-                </div>
-                <div *ngIf="!setItalic(dato)">
-                  <span class="regEntradaSalida">Entrada:</span>{{dato['regEntrada']}}<br>
+              <div *ngIf="col.field == 'regEntradaSalida'">
+                <span [ngClass]="{'eliminado': dato.fechaBaja != null}">
+                  <span class="regEntradaSalida">Entrada:</span>{{dato['regEntrada']}}
                   <span class="regEntradaSalida">Salida:</span>{{dato['regSalida']}}
-                </div>
+                </span>
               </div>
-
               <div *ngIf="col.field == 'propietario'">
-                <div *ngIf="setItalic(dato) && dato[col.field] == '1'">
-                  <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
-                    "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
-                </div>
-                <div *ngIf="!setItalic(dato) && dato[col.field] == '1'">
-                  <span>{{ "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
-                </div>
-                <div *ngIf="setItalic(dato) && dato[col.field] == '0'">
-                  <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{
-                    "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
-                </div>
-                <div *ngIf="!setItalic(dato) && dato[col.field] == '0'">
-                  <span>{{ "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
-                </div>
+                <span *ngIf="dato[col.field] == '1'" [ngClass]="{'eliminado': dato.fechaBaja != null}">{{"justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
+                <span *ngIf="dato[col.field] == '0'" [ngClass]="{'eliminado': dato.fechaBaja != null}">{{"justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
               </div>
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage" let-columns>
-          <tr>
-            <td [attr.colspan]="columns.length">
-              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
-            </td>
-          </tr>
+          <tr><td [attr.colspan]="columns.length">{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}</td></tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
-              translate }}{{tableDocumentacion.first + 1}} al
-              {{tableDocumentacion.first + tableDocumentacion.rows}}
-              {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
-              }} {{tableDocumentacion.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{
-              'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
-            </label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{
-              'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
-            </label>
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{tableDocumentacion.first + 1}} al {{tableDocumentacion.first + tableDocumentacion.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate}} {{tableDocumentacion.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}</label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0</label>
             <label>{{"general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
-            </p-dropdown>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages()"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll"
-                binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
             </div>
           </div>
         </ng-template>
@@ -176,45 +97,18 @@
 
       <div class="card-footer">
         <div class="text-right main-button">
-          <!-- <button [disabled]="selectedDatos.length != 1 || !permisoEscritura"
-            (click)="openModal()" pButton type="button"
-            label="{{ 'general.boton.consultar' | translate}}/{{ 'general.boton.edit' | translate}}"></button> -->
-          <button [disabled]="!permisoEscritura || selectedDatos.length != 0" (click)="openModal(null)" pButton
-            type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          <button [disabled]="selectedDatos.length == 0" (click)="download()" pButton type="button"
-            icon="fa fa-download" iconPos="left"
-            label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
-          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura" (click)="deleteDocumentacion()" pButton
-            type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button [disabled]="nDocumentos == 0 || !permisoEscritura" (click)="checkPermisosPrint()" pButton
-            type="button" icon="fa fa-print" iconPos="left" label="{{ 'general.boton.imprimir' | translate}}"></button>
-
-          <button *ngIf="esColegioZonaComun && esIdentificadorPericlesDisponible" 
-            [disabled]="selectedDatos.length == 0 || !permisoEscritura" 
-            (click)="enviarDocumentacionAdicional()" pButton type="button" icon="fa fa-save" iconPos="left"
-            label="{{ 'justiciaGratuita.ejg.listaIntercambios.enviarDocAdicional' | translate }}"></button>
+          <button [disabled]="!permisoEscritura" (click)="editDocumento()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          <button [disabled]="selectedDatos.length == 0" (click)="download()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
+          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura" (click)="deleteDocumentacion()" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura" (click)="print()" pButton type="button" icon="fa fa-print" iconPos="left" label="{{ 'general.boton.imprimir' | translate}}"></button>
+          <!--
+          <button *ngIf="esColegioZonaComun && esIdentificadorPericlesDisponible" [disabled]="selectedDatos.length == 0 || !permisoEscritura" (click)="enviarDocumentacionAdicional()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'justiciaGratuita.ejg.listaIntercambios.enviarDocAdicional' | translate }}"></button>
+          -->
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <p-confirmDialog key="envioDocumentacionAdicional" header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
   <p-footer>
@@ -222,77 +116,56 @@
     <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
   </p-footer>
 </p-confirmDialog>
-<!-- width="80%" -->
-<p-dialog width="1300" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModal"
-  (onHide)="cerrarDialog()">
+
+<p-dialog width="1300" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNewDoc" (onHide)="cerrarNuevoDoc()">
   <p-header class="title">
-    <label *ngIf="body.idDocumentacion==null">{{'general.boton.new' | translate}} </label>
-    <label *ngIf="body.idDocumentacion!=null">{{'general.boton.consultar' | translate}} </label>
+    <label *ngIf="documento.idDocumentacion == null">{{'general.boton.new' | translate}} </label>
+    <label *ngIf="documento.idDocumentacion != null">{{'general.boton.consultar' | translate}} </label>
   </p-header>
-  <!-- <div class="bloque col-lg-6 col-md-6"> -->
   <div class="form-row">
     <div class="form-group col-lg-3 col-md-3">
       <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaLimitePresentacion" | translate }}</label>
-      <app-fecha [(value)]="body.flimite_presentacion" (valueChangeSelected)="fillFechaLimPre($event)"
-        (valueChangeInput)="fillFechaLimPre($event)">
-      </app-fecha>
+      <app-fecha [(value)]="documento.flimite_presentacion" (valueChangeSelected)="fillFechaLimPre($event)" (valueChangeInput)="fillFechaLimPre($event)"></app-fecha>
     </div>
     <div class="form-group col-lg-3 col-md-3">
       <label>{{ "justiciaGratuita.ejg.documentacion.fechaPre" | translate }}</label>
-      <app-fecha [(value)]="body.f_presentacion" (valueChangeSelected)="fillFechaPre($event)"
-        (valueChangeInput)="fillFechaPre($event)">
-      </app-fecha>
+      <app-fecha [(value)]="documento.f_presentacion" (valueChangeSelected)="fillFechaPre($event)" (valueChangeInput)="fillFechaPre($event)"></app-fecha>
     </div>
     <div class="form-group col-lg-6 col-md-6 pr-0">
       <label>{{ 'justiciaGratuita.ejg.documentacion.Presentador' | translate}}(*)</label>
-      <p-dropdown [(ngModel)]='body.presentador' class="select-form" placeholder="Seleccionar"
-        [options]="comboPresentador" [filter]="true" [disabled]="body.idDocumentacion!=null"
-        filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio(body.presentador)"></p-dropdown>
+      <p-dropdown [(ngModel)]='documento.presentador' class="select-form" placeholder="Seleccionar"
+        [options]="comboPresentador" [filter]="true" [disabled]="documento.idDocumentacion!=null"
+        filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio(documento.presentador)"></p-dropdown>
     </div>
     <div class="form-group col-lg-3 col-md-3 pr-0">
       <label>{{ 'justiciaGratuita.ejg.documentacion.regEntrada' | translate}}</label>
-      <input type="text" class="form-control" pInputText [(ngModel)]="body.regEntrada">
+      <input type="text" class="form-control" pInputText [(ngModel)]="documento.regEntrada">
     </div>
     <div class="form-group col-lg-3 col-md-3 pr-0">
       <label>{{ 'justiciaGratuita.ejg.documentacion.regSalida' | translate}}</label>
-      <input type="text" class="form-control" pInputText [(ngModel)]="body.regSalida">
+      <input type="text" class="form-control" pInputText [(ngModel)]="documento.regSalida">
     </div>
     <div class="form-group col-lg-6 col-md-6 pr-0">
       <label>{{ 'administracion.parametrosGenerales.literal.abreviatura' | translate}}</label>
-      <input type="text" class="form-control" maxLength="100" pInputText [(ngModel)]="body.descripcionDoc">
+      <input type="text" class="form-control" maxLength="100" pInputText [(ngModel)]="documento.descripcionDoc">
     </div>
     <div class="form-group-interlineado col-lg-6 col-md-6">
       <label>{{ "justiciaGratuita.ejg.documentacion.tipoDoc" | translate }}(*)</label>
-      <p-dropdown [(ngModel)]='body.idTipoDocumento' class="select-form" placeholder="Seleccionar"
-        [options]="comboTipoDocumentacion" [disabled]="body.idDocumentacion!=null" [filter]="true"
+      <p-dropdown [(ngModel)]='documento.idTipoDocumento' class="select-form" placeholder="Seleccionar"
+        [options]="comboTipoDocumentacion" [disabled]="documento.idDocumentacion!=null" [filter]="true"
         (onChange)="getComboDocumentos()" filterBy="label,labelSinTilde" [showClear]="true"
-        [ngClass]="styleObligatorio(body.idTipoDocumento)">
+        [ngClass]="styleObligatorio(documento.idTipoDocumento)">
       </p-dropdown>
     </div>
     <div class="form-group-interlineado col-lg-6 col-md-6">
       <label>{{ "justiciaGratuita.ejg.documentacion.Documento" | translate }}(*)</label>
-      <p-dropdown [(ngModel)]='body.idDocumento' [disabled]="body.idDocumentacion!=null || body.idTipoDocumento == null"
+      <p-dropdown [(ngModel)]='documento.idDocumento' [disabled]="documento.idDocumentacion!=null || documento.idTipoDocumento == null"
         class="select-form" placeholder="Seleccionar" [options]="comboDocumentos" [filter]="true"
-        filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio(body.idDocumento)"></p-dropdown>
+        filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio(documento.idDocumento)"></p-dropdown>
     </div>
   </div>
-  <!-- </div> -->
-  <!-- <div class="bloque col-lg-6 col-md-6"> -->
-  <div class="form-row">
-    
-  </div>
-  <!--</div> -->
   <div class="text-right main-button col-lg-12 col-md-12">
-    <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
-      label="{{'general.boton.restablecer' | translate}}"></button><!-- [disabled]="disableBotonAnadir" -->
-    <button *ngIf="body.idDocumentacion==null" (click)="checkNewDoc()" pButton type="button" icon="fa fa-save"
-      iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
-    <button *ngIf="body.idDocumentacion!=null" (click)="actualizar()" pButton type="button" icon="fa fa-save"
-      iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
+    <button (click)="documentoRest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
+    <button (click)="guardarDoc()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
   </div>
 </p-dialog>
-
-<!-- Spinner -->
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>

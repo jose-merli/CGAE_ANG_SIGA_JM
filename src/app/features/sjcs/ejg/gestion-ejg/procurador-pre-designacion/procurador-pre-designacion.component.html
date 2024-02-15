@@ -1,121 +1,62 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
 <div class="ficha-container" id="procuradorPreDesigna">
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierra()">
-      <!-- <div *ngIf="openPro" class="header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fa fa-user icon-ficha"></i>
-        </div>
-        <label class="title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
-      </div> -->
-      <div *ngIf="!openPro" class="form-row">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openTarjetaProcuradorPreDesigna" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fa fa-user icon-ficha"></i>
-          </div>
+          <div class="img-colegiado"><i class="fa fa-user icon-ficha"></i></div>
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate
-              }}
-            </label>
+            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate}}</label>
           </div>
           <div class="row">
-            <div class="col-3">
-              <label>{{ 'justiciaGratuita.oficio.designaciones.fechaDesignacion' | translate }}
-                <span>{{ fechaCabecera | date: 'dd/MM/yyyy' }}</span>
-              </label>
-            </div>
-            <div class="col-3">
-              <label>{{ 'administracion.parametrosGenerales.literal.nombre.apellidos' | translate }}
-                <span>{{ nombreCabecera}}</span>
-              </label>
-            </div>
+            <div class="col-3"><label>{{ 'justiciaGratuita.oficio.designaciones.fechaDesignacion' | translate }}<span>{{ resumen.fecha | date: 'dd/MM/yyyy' }}</span></label></div>
+            <div class="col-3"><label>{{ 'administracion.parametrosGenerales.literal.nombre.apellidos' | translate }}<span>{{ resumen.nombre }}</span></label></div>
             <div class="col-3"></div>
-            <div class="col-3">
-              <i class="fa fa-angle-down float-right"></i>
-            </div>
+            <div class="col-3"><i class="fa fa-angle-down float-right"></i></div>
           </div>
         </div>
       </div>
-      <div *ngIf="openPro" class=" header-ficha-open d-flex justify-content-start align-items-center"
-        ><!-- (click)="abreCierra()" -->
-        <!-- (click)="" -->
-        <div class="img-colegiado">
-          <i class="fa fa-user icon-ficha"></i>
-        </div>
-        <label class="title-ficha pointer">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate
-        }}</label>
-      <i class="fa fa-angle-up ml-auto"></i>
+      <div *ngIf="openTarjetaProcuradorPreDesigna" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado"><i class="fa fa-user icon-ficha"></i></div>
+        <label class="title-ficha pointer">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="openPro" class="card-body card-body-ficha">
+    <div *ngIf="openTarjetaProcuradorPreDesigna" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-2 col-md-2 col-sm-2 p-2">
-          <div class="positionUpload img-colegiado text-center my-0 mx-auto">
-            <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
-          </div>
+          <div class="positionUpload img-colegiado text-center my-0 mx-auto"><i class="fa fa-user" style="font-size:6.5rem;color:grey"></i></div>
         </div>
         <div class="bloque col-lg-10 col-md-10 col-sm-10">
-          <!-- <div class="form-row">
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} (*)
-              </label>
-              <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="generalBody.idtipoidentificacion" showClear="true" disabled></p-dropdown>
-            </div> 
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
-              </label>
-              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" maxlength="20" pInputText (ngModelChange)="compruebaDNIInput()"
-                [disabled]="!permisoEscritura" />
-            </div>
-            <div class="form-group col-lg-3 col-md-3 main-button pt-3">
-              <label></label>
-              <button (click)="checkPermisosSearchRepresentanteByNif()" pButton type="button" icon="fa fa-search" iconPos="center" [disabled]="!permisoEscritura"></button>
-            </div>
-          </div> -->
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
-              </label>
-              <input [(ngModel)]="generalBody.nColegiado" type="text" disabled class="form-control" [maxLength]="100"
-                pInputText />
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}</label>
+              <input [(ngModel)]="procurador.nColegiado" type="text" disabled class="form-control" [maxLength]="100" pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}
-              </label>
-              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100"
-                pInputText />
+              <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}</label>
+              <input [(ngModel)]="procurador.nombre" type="text" disabled class="form-control" [maxLength]="100" pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "justiciaGratuita.oficio.justificacionExpres.numDesignacion" | translate }}
-              </label>
-              <input [(ngModel)]="generalBody.numerodesignacion" type="text" class="form-control"
-                 [maxLength]="20" [disabled]="!perEscritura" (keypress)="numberOnly($event)" pInputText/> <!--[ngClass]="styleObligatorio(generalBody.numerodesignacion)" -->
+              <label>{{ "justiciaGratuita.oficio.justificacionExpres.numDesignacion" | translate }}</label>
+              <input [(ngModel)]="procurador.numerodesignacion" type="text" class="form-control" [maxLength]="20" [disabled]="!permisoEscritura" (keypress)="numberOnly($event)" pInputText />
             </div>
             <div class="form-group-interlineado col-lg-6 col-md-6">
-              <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate }}
-              </label>
-              <app-fecha [(value)]="generalBody.fechaDesigna" [disabled]="!perEscritura"
-                (valueChangeSelected)="fillFechaDesigna($event)" (valueChangeInput)="fillFechaDesigna($event)" [inputStyleClass]="styleObligatorio(generalBody.fechaDesigna)">
-              </app-fecha>
+              <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate }}</label>
+              <app-fecha [(value)]="procurador.fechaDesigna" [disabled]="!permisoEscritura" (valueChangeSelected)="fillFechaDesigna($event)" (valueChangeInput)="fillFechaDesigna($event)" [inputStyleClass]="styleObligatorio(procurador.fechaDesigna)"></app-fecha>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div *ngIf="openPro" class="card-footer">
+    <div *ngIf="openTarjetaProcuradorPreDesigna" class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="Disassociate()" type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
-          [disabled]="!permisoProcurador ||  disabledDisassociate()"></button>
-        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
-          [disabled]="!permisoProcurador" label="{{ 'general.boton.search' | translate}}"></button>
-        <button pButton (click)="checkPermisosAsso()" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoProcurador || disabledSave()"></button>
+        <button pButton [disabled]="!permisoEscritura || disableButton()" (click)="disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"></button>
+        <button pButton [disabled]="!permisoEscritura" (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button pButton [disabled]="!permisoEscritura || disableButton()" (click)="associate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -413,7 +413,8 @@ export class GestionJusticiablesComponent implements OnInit {
         this.fillJusticiableBuesquedaItemToUnidadFamiliarEJG();
       } else if (this.fromContrarioEJG && !this.modoRepresentante) {
         this.modoEdicion = true;
-        this.justiciableBusquedaItem = this.persistenceService.getDatosEJG();
+        this.justiciableBusquedaItem = JSON.parse(sessionStorage.getItem("itemJusticiable"));
+        sessionStorage.removeItem("itemJusticiable");
         sessionStorage.setItem("fichaJusticiable", JSON.stringify(this.justiciableBusquedaItem));
         this.search();
 

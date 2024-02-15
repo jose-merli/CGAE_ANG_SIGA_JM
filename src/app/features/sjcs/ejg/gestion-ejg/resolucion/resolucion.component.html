@@ -1,52 +1,44 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="busqueda-container" id="resolucion">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!esFichaActiva('resolucion')" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('resolucion')">
+      <div *ngIf="!openTarjetaResolucion" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
           <div class="img-colegiado">
             <i class="fas fa-gavel icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('resolucion')">
-            <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.maestros.fundamentosResolucion.resolucion' |
-              translate }}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.maestros.fundamentosResolucion.resolucion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span
-                *ngIf="resolucion">{{resolucion.fechaResolucionCAJG | date: 'dd/MM/yyyy'}}</span></label>
-            <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoResolucion" | translate }}:
-              <span>{{ResolDesc}}</span></label>
-            <label id="maxHeader">{{ "justiciaGratuita.ejg.datosGenerales.Fundamento" | translate }}:
-              <span>{{fundamentoJuridicoDesc}}</span></label>
-            <label>{{ "justiciaGratuita.ejg.resolucion.anioNumeroCAJG" | translate }}:
-              <span>{{resolucion.anioCAJG}}/{{resolucion.numeroCAJG}}</span></label>
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('resolucion')"></i>
+            <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="resolucion">{{resolucion.fechaResolucionCAJG | date: 'dd/MM/yyyy'}}</span></label>
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoResolucion" | translate }}: <span>{{ResolDesc}}</span></label>
+            <label id="maxHeader">{{ "justiciaGratuita.ejg.datosGenerales.Fundamento" | translate }}: <span>{{fundamentoJuridicoDesc}}</span></label>
+            <label>{{ "justiciaGratuita.ejg.resolucion.anioNumeroCAJG" | translate }}: <span>{{resolucion.anioCAJG}}/{{resolucion.numeroCAJG}}</span></label>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('resolucion')"
-        class=" header-ficha-open d-flex justify-content-start align-items-center"
-        (click)="abreCierraFicha('resolucion')">
-        <div class="img-colegiado">
-          <i class="fas fa-gavel icon-ficha"></i>
-        </div>
-        <label class="title-ficha pointer">{{ 'justiciaGratuita.maestros.fundamentosResolucion.resolucion' | translate
-          }}</label>
+      <div *ngIf="openTarjetaResolucion" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+        <div class="img-colegiado"><i class="fas fa-gavel icon-ficha"></i></div>
+        <label class="title-ficha pointer">{{ 'justiciaGratuita.maestros.fundamentosResolucion.resolucion' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-
-    <div *ngIf="esFichaActiva('resolucion')" class="card-body card-body-ficha">
+    <div *ngIf="openTarjetaResolucion" class="card-body card-body-ficha">
       <div *ngIf="resolucion != undefined" class="row">
         <div class="form-group col-lg-4 col-md-4">
-          <label style="font-weight: bold; padding-bottom: 5px"> {{
-            "justiciaGratuita.ejg.gestionejg.DatosResolucion" | translate}} </label>
+          <label style="font-weight: bold; padding-bottom: 5px"> {{"justiciaGratuita.ejg.gestionejg.DatosResolucion" | translate}} </label>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "justiciaGratuita.ejg.datosGenerales.AnnioActa" | translate }} -- {{
-                "justiciaGratuita.ejg.datosGenerales.FechaResolucion" | translate }}</label>
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.AnnioActa" | translate }} -- {{"justiciaGratuita.ejg.datosGenerales.FechaResolucion" | translate }}</label>
               <p-dropdown class="select-form" [(ngModel)]='resolucion.idAnnioActa' placeholder="Seleccionar"
                 [options]="comboActaAnnio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"
                 [disabled]="!habilitarActas" (onChange)="fillFechaResol($event)">
@@ -54,8 +46,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResCAJG' | translate }}</label>
-              <app-fecha [(value)]="resolucion.fechaResolucionCAJG" (valueChangeSelected)="fillFechaResCAJG($event)"
-                (valueChangeInput)="fillFechaResCAJG($event)"></app-fecha>
+              <app-fecha [(value)]="resolucion.fechaResolucionCAJG" (valueChangeSelected)="fillFechaResCAJG($event)" (valueChangeInput)="fillFechaResCAJG($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.maestros.fundamentosResolucion.resolucion" | translate }}</label>
@@ -71,112 +62,84 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.annioCAJG' | translate}}</label>
-              <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.anioCAJG"
-                (keypress)="numberOnly($event)" maxlength="4">
+              <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.anioCAJG" (keypress)="numberOnly($event)" maxlength="4">
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label> / {{'justiciaGratuita.sjcs.designas.DatosIden.numero' | translate}}</label>
               <input type="text" class="form-control" maxLength="20" pInputText [(ngModel)]="resolucion.numeroCAJG">
             </div>
-            <div *ngIf="resolucion.docResolucion != undefined && resolucion.docResolucion!=null && permisoEscritura"
-              class="form-group col-lg-6 col-md-6">
+            <div *ngIf="resolucion.docResolucion != undefined && resolucion.docResolucion!=null && permisoEscritura" class="form-group col-lg-6 col-md-6">
               <label> {{'justiciaGratuita.ejg.resolucion.documentoResolucion' | translate}}</label>
               <div class="main-button">
-                <button (click)="descargarDocumentoResolucion()" pButton type="button" icon="fa fa-download"
-                  iconPos="left" label="{{ resolucion.docResolucion }}"></button>
+                <button (click)="descargarDocumentoResolucion()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ resolucion.docResolucion }}"></button>
               </div>
             </div>
-
           </div>
         </div>
         <div class="col-lg-4 col-md-4 bordes">
-          <label style="font-weight: bold; padding-bottom: 5px"> {{
-            "censo.nuevaSolicitud.observaciones" | translate}} </label>
+          <label style="font-weight: bold; padding-bottom: 5px"> {{"censo.nuevaSolicitud.observaciones" | translate}} </label>
           <div class="row">
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}</label>
-              <textarea pInputTextarea [(ngModel)]="resolucion.ratificacionDictamen" [disabled]="!permisoEscritura"
-                class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900"></textarea>
+              <textarea pInputTextarea [(ngModel)]="resolucion.ratificacionDictamen" [disabled]="!permisoEscritura" class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900"></textarea>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.Notas" | translate }}</label>
-              <textarea [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="resolucion.notasCAJG"
-                [disabled]="!permisoEscritura" class="form-control ui-inputtext" autoResize="autoResize"
-                maxLength="3900"></textarea>
+              <textarea [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="resolucion.notasCAJG" [disabled]="!permisoEscritura" class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900"></textarea>
             </div>
           </div>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label style="font-weight: bold; padding-bottom: 5px"> {{
-            "justiciaGratuita.ejg.gestionejg.otrosDatos" | translate}} </label>
+          <label style="font-weight: bold; padding-bottom: 5px"> {{"justiciaGratuita.ejg.gestionejg.otrosDatos" | translate}} </label>
           <div class="row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"justiciaGratuita.ejg.datosGenerales.Ponente" | translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]='resolucion.idPonente' placeholder="Seleccionar"
-                [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]='resolucion.idPonente' placeholder="Seleccionar" [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
-
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"justiciaGratuita.ejg.datosGenerales.FechaPresPonente" | translate}}</label>
-              <app-fecha [(value)]="resolucion.fechaPresentacionPonente"
-                (valueChangeSelected)="fillFechaPresPonente($event)" (valueChangeInput)="fillFechaPresPonente($event)">
-              </app-fecha>
+              <app-fecha [(value)]="resolucion.fechaPresentacionPonente" (valueChangeSelected)="fillFechaPresPonente($event)" (valueChangeInput)="fillFechaPresPonente($event)"></app-fecha>
             </div>
-
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ 'censo.resultadosSolicitudesModificacion.literal.fecha' | translate }} {{
-                'formacion.fichaCalendario.notificacion.cabecera' | translate }}</label>
-              <app-fecha [(value)]="resolucion.fechaNotificacion" (valueChangeSelected)="fillFechaNotif($event)"
-                (valueChangeInput)="fillFechaNotif($event)"></app-fecha>
+              <label>{{ 'censo.resultadosSolicitudesModificacion.literal.fecha' | translate }} {{'formacion.fichaCalendario.notificacion.cabecera' | translate }}</label>
+              <app-fecha [(value)]="resolucion.fechaNotificacion" (valueChangeSelected)="fillFechaNotif($event)" (valueChangeInput)="fillFechaNotif($event)"></app-fecha>
             </div>
-
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResFirme' | translate }}</label>
-              <app-fecha [(value)]="resolucion.fechaRatificacion" (valueChangeSelected)="fillFechaResFirme($event)"
-                (valueChangeInput)="fillFechaResFirme($event)"></app-fecha>
+              <app-fecha [(value)]="resolucion.fechaRatificacion" (valueChangeSelected)="fillFechaResFirme($event)" (valueChangeInput)="fillFechaResFirme($event)"></app-fecha>
             </div>
-
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"menu.expediente.sanciones.busquedaPorSanciones.origen.literal" | translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]='resolucion.idOrigencajg' placeholder="Seleccionar"
-                [options]="comboOrigen" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]='resolucion.idOrigencajg' placeholder="Seleccionar" [options]="comboOrigen" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
-
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.RefaAuto" | translate }}</label>
               <input type="text" class="form-control" pInputText [(ngModel)]="resolucion.refAuto" maxLength="250">
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <p-checkbox (onClick)="onChangeCheckT($event)" [(ngModel)]="resolucion.turnadoRatificacion" binary="true"
-                label="{{ 'justiciaGratuita.ejg.datosGenerales.RequiereTurnado' | translate }}" name="groupname"
-                [disabled]="!permisoEscritura"></p-checkbox>
+                label="{{ 'justiciaGratuita.ejg.datosGenerales.RequiereTurnado' | translate }}" name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <p-checkbox (onClick)="onChangeCheckR($event)" [(ngModel)]="resolucion.requiereNotificarProc"
-                binary="true" label="{{ 'justiciaGratuita.ejg.datosGenerales.NotificarProcurador' | translate }}"
-                name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
+                binary="true" label="{{ 'justiciaGratuita.ejg.datosGenerales.NotificarProcurador' | translate }}" name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
             </div>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('resolucion')" class="card-footer">
+      <div *ngIf="openTarjetaResolucion" class="card-footer">
         <div class="text-right main-button ">
-          <button (click)="checkPermisosOpenActa()" pButton [disabled]="!permisoEscritura" type="button"
-            label="{{ 'general.boton.iralaActa' | translate}}"></button>
-          <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button"
-            icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura || disabledSave()" type="button"
-            icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+          <button (click)="checkPermisosOpenActa()" pButton [disabled]="!permisoEscritura" type="button" label="{{ 'general.boton.iralaActa' | translate}}"></button>
+          <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura || disabledSave()" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         </div>
       </div>
-      <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cd" #cd>
-        <p-footer>
-          <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-          <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
-        </p-footer>
-      </p-confirmDialog>
     </div>
   </div>
-  <div *ngIf="progressSpinner" class="overlay-spinner">
-    <div class="loader"></div>
-  </div>
+
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cd" #cd>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
