@@ -110,6 +110,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
   openTab(evento) {
     this.persistenceService.setDatosEJG(this.datos);
+    sessionStorage.setItem("EJGItem", JSON.stringify(this.datos));
     sessionStorage.setItem("origin", "UnidadFamiliar");
     sessionStorage.setItem("Familiar", JSON.stringify(evento));
     this.router.navigate(["/gestionJusticiables"]);
