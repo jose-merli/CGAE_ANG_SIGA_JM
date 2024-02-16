@@ -101,6 +101,7 @@ export class RelacionesComponent implements OnInit {
     if (!this.permisoEscritura) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
+      this.persistenceService.setDatosEJG(this.datos);
       let identificador = dato.sjcs;
       switch (identificador) {
         case 'ASISTENCIA':
