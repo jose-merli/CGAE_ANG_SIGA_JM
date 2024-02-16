@@ -99,9 +99,11 @@ export class CalendariosComponent implements OnInit {
   getCalProg(){
     //this.progressSpinner = true;
 
-    let datos = this.persistenceService.getDatos();
+    let datos;
     
-    if(datos.idGuardia == undefined || datos.idGuardia == null){
+    if (typeof this.persistenceService.getDatos() == 'string') {
+      datos= JSON.parse(this.persistenceService.getDatos());
+    } else {
       datos = this.persistenceService.getDatos();
     }
 
