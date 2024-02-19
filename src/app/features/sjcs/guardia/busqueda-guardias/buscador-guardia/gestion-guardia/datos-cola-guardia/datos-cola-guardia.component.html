@@ -148,7 +148,7 @@
               <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                   <ng-container *ngFor="let col of columns; let  i = index">
-                    <td [ngClass]="i == 0 ? 'col-text-right' : 'col-text-center'">
+                    <td [ngClass]="i == 0 || i == 1? 'col-text-right' : 'col-text-center'">
                       <div *ngIf="col.field !='fecha'" style="white-space: pre;">
                         <span>{{dato[col.field]}}</span>
                       </div>

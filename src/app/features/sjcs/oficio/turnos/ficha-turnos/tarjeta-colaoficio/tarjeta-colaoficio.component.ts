@@ -354,6 +354,7 @@ export class TarjetaColaOficio implements OnInit {
         let datosSaltosAux, datosCompensacionesAux;
         this.datosSaltos = [];
         this.datosCompensaciones = [];
+        let index = 1;
 
         datosSaltosAux = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S' && this.isActivoColaActual(datos.idPersona));
         datosCompensacionesAux = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C' && this.isActivoColaActual(datos.idPersona));
@@ -366,7 +367,9 @@ export class TarjetaColaOficio implements OnInit {
           //}
         });
         this.datosSaltos.sort((a , b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+        this.datosSaltos.forEach(salto => salto.orden = index++);
 
+        
         datosCompensacionesAux.forEach(element => {
           //if (this.datosCompensaciones.find(item => item.idPersona === element.idPersona) != undefined) {
           //  this.datosCompensaciones.find(item => item.idPersona === element.idPersona).numeroSaltosComp = this.datosCompensaciones.find(item => item.idPersona === element.idPersona).numeroSaltosComp + 1;
@@ -375,6 +378,8 @@ export class TarjetaColaOficio implements OnInit {
           //}
         });
         this.datosCompensaciones.sort((a , b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+        index = 1;
+        this.datosCompensaciones.forEach(comp => comp.orden = index++);
 
         let error = JSON.parse(n.body).error;
       });
@@ -707,12 +712,14 @@ export class TarjetaColaOficio implements OnInit {
     ];
 
     this.colsCompensaciones = [
+      { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
       { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
       { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
       { field: "fecha", header: "justiciaGratuita.oficio.turnos.fecha", width: "22%" }
     ];
 
     this.colsSaltos = [
+      { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
       { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
       { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
       { field: "fecha", header: "justiciaGratuita.oficio.turnos.fecha", width: "22%" }
