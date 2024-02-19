@@ -735,14 +735,14 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   navigateToSJCS(row: FacturaEstadosPagosItem) {
-    let factura: FacturasItem = new FacturasItem();
+    let factura: FacturasItem = new FacturasItem(); //FacAbonoItem
     factura.idAbono = row.idAbono;
     factura.tipo = "ABONO";
 
-    sessionStorage.setItem("facturasItem", JSON.stringify(this.bodyInicial));
+    //essionStorage.setItem("facturasItem", JSON.stringify(this.bodyInicial));
     sessionStorage.setItem("abonosSJCSItem", JSON.stringify(factura));
-    sessionStorage.setItem("volverAbonoSJCS", "true");
-    this.router.navigate(["/gestionFacturas"]);
+    sessionStorage.setItem("volverSJCS", "true");
+    this.router.navigate(["/fichaAbonosSJCS"]);
   }
 
   // Enlace al fichero de adeudos
