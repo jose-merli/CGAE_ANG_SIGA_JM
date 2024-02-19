@@ -56,7 +56,6 @@ export class FichaAbonosSCJSComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getFactura", `?idFactura=0&idAbono=${idAbono}&tipo=ABONO`).toPromise().then(
       n => {
-        this.progressSpinner = false;
         let datos: FacturasItem[] = n.facturasItems;
 
         if (datos == undefined || datos.length == 0) {
@@ -64,6 +63,21 @@ export class FichaAbonosSCJSComponent implements OnInit {
         }
 
         this.body = datos[0];
+        
+        // Actualizar tarjeta resumen
+        this.updateTarjetaResumen();
+        this.updateEnlacesTarjetaResumen();
+      }, err => { 
+        this.progressSpinner = false;
+        this.showMessage("error", "Error", this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+
+    this.sigaServices.post("factuarcionsjscs_buscarAbonos", this.datos).subscribe(
+      n => {
+        this.progressSpinner = false;
+        this.datos = JSON.parse(n.body).listaFacAbonoItem[0];
+        this.datos.fechaEmision = this.transformDate(this.datos.fechaEmision);
         
         // Actualizar tarjeta resumen
         this.updateTarjetaResumen();
