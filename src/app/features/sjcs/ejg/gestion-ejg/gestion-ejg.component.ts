@@ -102,6 +102,10 @@ export class GestionEjgComponent implements OnInit {
       this.modoEdicion = false;
     }
 
+  }
+
+  ngAfterViewInit(){
+    // Ejecutamos esto depues de iniciar la vista para que obtenga id de los campos del html
     this.updateTarjResumen();
   }
 
