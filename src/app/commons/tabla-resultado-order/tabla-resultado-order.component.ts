@@ -831,7 +831,7 @@ return rowsByGroup;
 valueChange(i, z, $event){
   //console.log('valueChange')
   if (this.pantalla == 'colaGuardias'){
-    let posicion = this.numperPage*(this.numPage) + i
+    let posicion = this.numperPage*(this.paginador.pagNumber) + i
     if ( z == 1){
       this.rowGroups[posicion].cells[z].value = Number($event.target.value);
     } else {
