@@ -242,9 +242,15 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
       //     this.comboGuardias = n.combooItems;
       //   },
       let fechaHoraAsistencia = "";
-      if(this.horaFAsistencia != undefined && this.horaFAsistencia != null && this.horaFAsistencia != ""){
+      if(this.asistencia.fechaAsistencia.length == 16){
+        // fecha con hora "dd/MM/yyyy HH:mm"
+        fechaHoraAsistencia = this.asistencia.fechaAsistencia
+      }
+      else if(this.horaFAsistencia != undefined && this.horaFAsistencia != null && this.horaFAsistencia != ""){
+        //fecha y hora por separado
         fechaHoraAsistencia = this.asistencia.fechaAsistencia + " " + this.horaFAsistencia;
-      } else {
+      }else {
+        // fecha sin hora
         fechaHoraAsistencia = this.asistencia.fechaAsistencia + " 00:00";
       }
 
