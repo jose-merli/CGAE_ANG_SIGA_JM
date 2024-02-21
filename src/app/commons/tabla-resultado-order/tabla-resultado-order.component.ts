@@ -132,7 +132,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() dataConfOrdColaHered: String;
   @Input() guardiaComunicar : GuardiaItem;
   @Input() tablaEnFichaGuardias = false;
-
+  errorCantidadLetrados : boolean = false;
   constructor(
     private renderer: Renderer2,
     private sigaServices: SigaServices,
@@ -336,19 +336,18 @@ export class TablaResultadoOrderComponent implements OnInit {
       this.totalRegistros = this.rowGroups.length;
     } else {
       this.wrongPositionArr = [];
-      if (this.pantalla == 'colaGuardias'){
-      this.orderByOrder(1);
-      } else{
-        this.orderByOrder(1);
-      }
-      this.displayWrongSequence();
       let errorVacio = this.checkEmpty();
+      if (this.pantalla == 'colaGuardias'){
+        errorVacio = false;
+      } 
+      this.orderByOrder(1);
+      this.displayWrongSequence();
+     
       let errorSecuenciaOrden = false;
       let errorSecuenciaGrupo = false;
       let errorMismoLetradoEnGrupo = false;
       let errorGrupoNoOrden = false;
-      let errorCantidadLetrados = false;
-
+      this.errorCantidadLetrados = false;
       if (this.pantalla == 'colaGuardias') {
         // if (!ultimo){
         //   errorSecuenciaGrupo = this.checkSequence(0);
@@ -357,7 +356,7 @@ export class TablaResultadoOrderComponent implements OnInit {
         errorMismoLetradoEnGrupo = this.checkLetrados();
         errorGrupoNoOrden = this.checkOrdeIfGrupo();
         if(this.porGrupos){
-          errorCantidadLetrados = this.checkCantidadLetrados();
+          this.errorCantidadLetrados = this.checkCantidadLetrados();
         }
         
       }else{
@@ -365,21 +364,7 @@ export class TablaResultadoOrderComponent implements OnInit {
       }
       
       this.totalRegistros = this.rowGroups.length;
-      if (!errorVacio && !errorSecuenciaOrden && !errorSecuenciaGrupo){
-        
-        if (!ultimo){
-            this.updateColaGuardia();
-        }else{
-            this.updateColaGuardiaSameOrder();
-        }
-        if(errorCantidadLetrados){
-          this.showMsg('warn', 'Se ha guardado correctamente pero al menos uno de los grupos no cumple con el número mínimo de letrados según la configuración', '')
-        }else{
-          this.showMsg('success', 'Se ha guardado correctamente', '');
-        }
-        
-        this.progressSpinner = false;
-      } else if (errorGrupoNoOrden){
+      if (errorGrupoNoOrden){
         this.showMsg('error', 'Error. Todo letrado que pertenezcan a un grupo, tienen que tener valor en el campo orden.', '')
         this.progressSpinner = false;
       } else if (errorMismoLetradoEnGrupo){
@@ -397,7 +382,15 @@ export class TablaResultadoOrderComponent implements OnInit {
       } else if (errorSecuenciaGrupo && errorSecuenciaOrden){
         this.showMsg('error', 'Error. Los valores en las columnas "Grupo" y "Orden" deben ser secuenciales.', '')
         this.progressSpinner = false;
+      }else{
+        if (!ultimo) {
+          this.updateColaGuardia();
+        } else {
+          this.updateColaGuardiaSameOrder();
+        }
+        this.progressSpinner = false;
       }
+    
       
       this.progressSpinner = false; //Necesario?
       return errorVacio;
@@ -618,7 +611,7 @@ checkCantidadLetrados(){
   let mapOcurrencias = this.countOccurrences(arrayGrupos);
   let arrayOcurrencias = Array.from(mapOcurrencias.values());
 
-  return arrayOcurrencias.some((grupo) => grupo < this.minimoLetrado);
+  return arrayOcurrencias.some((grupo) => grupo < parseInt(this.minimoLetrado));
  
 }
 
@@ -741,8 +734,8 @@ orderByOrder(x){
         this.orderSubGroups(rowsByGroup, x);
       }
 
-      if (rowsByGroup.length < this.minimoLetrado){
-        this.showMsg('error', 'Error. No se cumple el mínimo número de letrados por grupos configurado', '')
+      if (rowsByGroup.length > 0 && rowsByGroup.length < parseInt(this.minimoLetrado)){
+        this.showMsg('warn', 'Error. No se cumple el mínimo número de letrados por grupos configurado', '')
         this.progressSpinner = false;
       }
     }else{
