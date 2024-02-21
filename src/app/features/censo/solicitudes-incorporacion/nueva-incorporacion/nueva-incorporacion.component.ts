@@ -136,6 +136,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   guardado: boolean = false;
 
   isActivoEXEA : boolean = false;
+  isIniciadoEXEA : boolean = false;
   //TABLA DOCUMENTACION
   rowsPerPage: any = [];
   cols;
@@ -1357,7 +1358,8 @@ export class NuevaIncorporacionComponent implements OnInit {
       || this.solicitudEditar.idTratamiento != this.tratamientoSelected
       || this.solicitudEditar.idPais != this.paisSelected
       || this.solicitudEditar.poblacionExtranjera != this.poblacionExtranjeraSelected
-      || JSON.stringify(this.solicitudEditar) != JSON.stringify(this.bodyInicial)) {
+      || JSON.stringify(this.solicitudEditar) != JSON.stringify(this.bodyInicial)
+      || this.isIniciadoEXEA) {
       return true;
     } else {
       return false;
@@ -1370,6 +1372,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.aprobarSolicitud();
       }else{
         this.datosBancariosErroneos();
+        
       }
     } else {
       this.showFailNotTraduce("Es necesario informar de la fecha de incorporación antes de aprobar. Rellénela y guarde");
@@ -1380,13 +1383,17 @@ export class NuevaIncorporacionComponent implements OnInit {
     if (this.habilitaAceptar()) {
       if (this.solicitudEditar.fechaIncorporacion != null &&
         this.solicitudEditar.fechaIncorporacion != undefined) {
-
+        if (this.isActivoEXEA){
+          this.isIniciadoEXEA = true;
+        }
         this.isSave = false;
+        this.progressSpinner = true;
+
         if (this.isGuardar() || this.numColegiadoDuplicado) {
           this.guardar(false);
         }
 
-        this.progressSpinner = true;
+        
         this.resaltadoDatos = false;
         this.resaltadoDatosAprobar = false;
         this.resaltadoDatosBancos = false;
@@ -1465,11 +1472,13 @@ export class NuevaIncorporacionComponent implements OnInit {
                   this.showFailNotTraduce('Falta documentación obligatoria por adjuntar');
                   this.errorDocumentos = true;
                   this.progressSpinner = false;
+                  this.isIniciadoEXEA = false;
                 }
               } else {
                 this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
                 this.numColegiadoDuplicado = true;
                 this.progressSpinner = false;
+                this.isIniciadoEXEA = false;
               }
 
             },
@@ -1477,6 +1486,7 @@ export class NuevaIncorporacionComponent implements OnInit {
               let resultado = JSON.parse(error["error"]);
               this.showFail(resultado.error.message.toString());
               this.progressSpinner = false;
+              this.isIniciadoEXEA = false;
             }
           );
 
@@ -2712,12 +2722,15 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.ordenarDocumentosSubidos();
       this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.fileListOrdenado, this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
         n => {
-          this.progressSpinner = false;
+          if(!this.isIniciadoEXEA){
+            // hasta que se termine de iniciar el exea no se quita el spinner
+            this.progressSpinner = false;
+          }
           let result = n;
           if(result.error){
             this.showFailNotTraduce(result.error.description);
           }else{
-            if(!this.errorDocumentos){
+            if(!this.errorDocumentos && !this.isIniciadoEXEA){
               this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
             }
             this.errorDocumentos = false;
@@ -2728,7 +2741,10 @@ para poder filtrar el dato con o sin estos caracteres*/
           //console.log(err);
           this.progressSpinner = false;
         }, () => {
-          this.progressSpinner = false;
+          if(!this.isIniciadoEXEA){
+            // hasta que se termine de iniciar el exea no se quita el spinner
+            this.progressSpinner = false;
+          }
         }
       );
     } else {
@@ -2868,6 +2884,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   iniciarTramiteEXEA(){
+    this.isIniciadoEXEA = true;
     this.progressSpinner = true;
     this.sigaServices
     .post("expedientesEXEA_iniciarTramite", this.solicitudEditar.idSolicitud + "/" + this.asunto)
@@ -2876,6 +2893,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         let body = JSON.parse(data.body);
         if(body.error){
           this.showFailNotTraduce('Error al iniciar el trámite de EXEA: ' + body.error.message);
+
         }else{
           this.showInfo('Trámite iniciado correctamente');
           sessionStorage.removeItem("editedSolicitud");
@@ -2906,14 +2924,17 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.progressSpinner = false;
           this.showSuccess("Trámite iniciado correctamente");
         }
+        this.isIniciadoEXEA = false;
         this.progressSpinner = false;
       },
       error => {
         this.showFailNotTraduce('Error al iniciar el trámite de EXEA: ' + error);
         this.progressSpinner = false;
+        this.isIniciadoEXEA = false;
       },
       ()=>{
         this.progressSpinner = false;
+        this.isIniciadoEXEA = false;
       }
     );
   }
