@@ -57,9 +57,6 @@ export class GestionEjgComponent implements OnInit {
     if(this.persistenceService.getDatosEJG()){
       this.body = this.persistenceService.getDatosEJG();
       this.persistenceService.clearDatosEJG();
-      if (sessionStorage.getItem("EJGcopy")){
-        sessionStorage.removeItem("EJGcopy");
-      }
     } else if (sessionStorage.getItem("EJGItem") != null && sessionStorage.getItem("EJGItem") != undefined) {
       this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
       sessionStorage.removeItem("EJGItem");
