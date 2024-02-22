@@ -263,8 +263,8 @@ inicio(){
           if (mismoGrupo.length <= 1 && repes.length < 1 && !ceros) {
             if (!it.numeroGrupo && it.orden || it.numeroGrupo && !it.orden) {
               mismoGrupo.push("Habia un campo vacio");
-              mismoGrupo.push("Habia un campo vacio");
-            } else {
+             mismoGrupo.push("Habia un campo vacio");
+            }  else {
               mismoGrupo = this.datos.filter(element => {
                 if (element.numeroGrupo == it.numeroGrupo && element.idPersona == it.idPersona && it.numeroGrupo)
                   return true;
@@ -393,6 +393,16 @@ inicio(){
     this.sigaService.post(
       "busquedaGuardias_updateColaGuardia", colaGuardiaModificadoSt).subscribe(
         data => {
+          let body = JSON.parse(data.body);
+          if(body.error != undefined && body.error.code == 400){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), body.error.description);
+          }else if(this.tablaOrder.errorCantidadLetrados){
+            this.showMessage('warn', 'Se ha guardado correctamente pero al menos uno de los grupos no cumple con el número mínimo de letrados según la configuración', '')
+          }
+            else{
+            this.showMessage('success', 'Se ha guardado correctamente', '');
+          }
+         
           this.getColaGuardia();
           this.progressSpinner = false;
         }, err => {
@@ -992,12 +1002,14 @@ if (rest){
   private getCols(): void {
 
     this.colsCompensaciones = [
+      { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
       { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
       { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
       { field: "fecha", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
     ];
 
     this.colsSaltos = [
+      { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
       { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
       { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
       { field: "fecha", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
@@ -1056,8 +1068,10 @@ if (rest){
     this.sigaServices.postPaginado("saltosCompensacionesGuardia_buscar", "?numPagina=1", filtrosModificados).subscribe(
       n => {
         let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
+        let orden = 1;
         this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
         this.datosSaltos.forEach(salto => {
+          salto.orden = orden++;
           if(salto.letrado == null && salto.letradosGrupo != null){
             salto.letrado = '\n';
             salto.colegiadoGrupo = '\n';
@@ -1067,8 +1081,10 @@ if (rest){
             });
           }
         });
+        orden = 1;
         this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
         this.datosCompensaciones.forEach(comp => {
+          comp.orden = orden++;
           if(comp.letrado == null && comp.letradosGrupo != null){
             comp.letrado = '\n';
             comp.colegiadoGrupo = '\n';

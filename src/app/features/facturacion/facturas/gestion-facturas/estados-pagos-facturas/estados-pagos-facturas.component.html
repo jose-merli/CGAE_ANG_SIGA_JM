@@ -177,7 +177,7 @@
                       <span *ngIf="!dato['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['numeroFactura'] }}</a></span>
                       <span *ngIf="dato['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['comisionFactura'] }}</a></span>
                     </span>
-                    <span *ngIf="!dato.comentario && !dato.nuevo && dato['idPagosjg']">Abono <a class="enlace" (click)="navigateToSJCS(dato)">{{ dato['idPagosjg'] }}</a></span>
+                    <span *ngIf="!dato.comentario && !dato.nuevo && dato['numeroAbono']">Abono <a class="enlace" (click)="navigateToSJCS(dato)">{{ dato['numeroAbono'] }}</a></span>
                     <span *ngIf="!dato.comentario && !dato.nuevo && dato['enlaceAbono']">Rectif. <a class="enlace" (click)="navigateToAbono(dato)">{{ dato['numeroAbono'] }}</a></span>
                   
                     <div *ngIf="dato.nuevo && [ACCION_FACTURA_ANULACION, ACCION_ABONO_RENEGOCIACION, ACCION_FACTURA_NUEVO_CAJA].includes(nuevoEstado.idAccion)">

@@ -1334,12 +1334,14 @@ export class TarjetaColaGuardias implements OnInit, AfterViewChecked {
     }
 
     this.colsCompensaciones = [
+      { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
       { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
       { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
       { field: "fecha", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
     ];
 
     this.colsSaltos = [
+      { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
       { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
       { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
       { field: "fecha", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
@@ -1627,8 +1629,10 @@ export class TarjetaColaGuardias implements OnInit, AfterViewChecked {
     this.sigaServices.postPaginado("saltosCompensacionesGuardia_buscar", "?numPagina=1", filtrosModificados).subscribe(
       n => {
         let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
+        let orden = 1;
         this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
         this.datosSaltos.forEach(salto => {
+          salto.orden = orden++;
           if(salto.letrado == null && salto.letradosGrupo != null){
             salto.letrado = '\n';
             salto.colegiadoGrupo = '\n';
@@ -1638,8 +1642,10 @@ export class TarjetaColaGuardias implements OnInit, AfterViewChecked {
             });
           }
         });
+        orden = 1;
         this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
         this.datosCompensaciones.forEach(comp => {
+          comp.orden = orden++;
           if(comp.letrado == null && comp.letradosGrupo != null){
             comp.letrado = '\n';
             comp.colegiadoGrupo = '\n';
