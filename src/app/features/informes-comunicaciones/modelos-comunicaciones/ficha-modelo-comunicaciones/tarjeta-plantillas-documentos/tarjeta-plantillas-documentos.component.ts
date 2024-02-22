@@ -61,7 +61,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   disabledGuardar: any;
   documentos: any = [];
   @Input() datoRecargar: DatosGeneralesFicha;
- 
+
   @ViewChild("table") table: DataTable;
   selectedDatos: FichaPlantillasDocument[] = [];
 
@@ -88,7 +88,6 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     }
   ];
   isNew: Boolean = false;
-  @Output() getInformesEvent = new EventEmitter<void>();
   @Output() activaInformes = new EventEmitter<void>();
   constructor(
     private router: Router,
@@ -318,6 +317,10 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
           element.plantillas = listaPlantillas;
           element.idSufijo = element.sufijo
         });
+
+
+        console.log("DATO")
+        console.log(this.datos)
         this.changeDetectorRef.detectChanges();
 
       },
@@ -503,7 +506,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.datoRecargar && !changes.datoRecargar.firstChange) {
-      //console.log(this.datoRecargar);
+      console.log(this.datoRecargar);
       this.isNew = true;
       this.ngOnInit();
     }
@@ -528,7 +531,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   }
 
   guardarData() {
-    if(this.controlDuplicados() && this.controlObligatorio()){
+    if(this.controlDuplicados()){
       this.progressSpinner = true;
 
       let filesFiltrados: FileAux[] = [];
@@ -545,7 +548,17 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       this.sigaServices.postSendFilesFichaPlantillas("plantillasDoc_guardar_plantillas", filesFiltrados, this.selectedDatos).subscribe(
         data => {
           this.showSuccess("Guardar datos de salida correctos");
-          this.getInformesEvent.emit();
+          
+  
+          // this.body.idInforme = JSON.parse(data["body"]).data;
+          //   this.getDocumentos();
+  
+          // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          /////   this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
+          // this.selectedSufijosInicial = JSON.parse(
+          //    JSON.stringify(this.selectedSufijos)
+          //  );
+  
           this.progressSpinner = false;
   
         },
@@ -564,18 +577,12 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
         }
       );
     }else{
-      ///Mostrar mensaje error duplicado u obligatorio.
-      this.showFail("Compruebe el dato a Guardar.");
+      ///Mostrar mensaje error duplicado.
+      this.showFail("Idiomas duplicados");
     }
 
    
 
-  }
-
-  controlObligatorio() {
-    return this.selectedDatos.every(element => {
-      return element.idIdioma && element.idFormatoSalida && element.nombreFicheroSalida;
-    });
   }
 
 

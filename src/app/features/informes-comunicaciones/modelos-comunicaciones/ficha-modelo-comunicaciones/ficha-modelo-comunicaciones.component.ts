@@ -14,7 +14,6 @@ export class FichaModeloComunicacionesComponent implements OnInit {
   fichasPosibles: any[];
   filtrosModelos;
   botonActivo = false;
-  getInforme = false;
   datoGeneral: DatosGeneralesFicha;
 
   constructor(
@@ -71,10 +70,6 @@ export class FichaModeloComunicacionesComponent implements OnInit {
 
   activarBoton() {
     this.botonActivo = true;
-  }
-
-  getInformesInfo(){
-    this.getInforme= true;
   }
 
 }
