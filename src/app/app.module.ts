@@ -202,7 +202,6 @@ import { DatosGeneralesFichaComponent } from './features/informes-comunicaciones
 import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
 import { PerfilesFichaComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/perfiles-ficha/perfiles-ficha.component';
 import { TarjetaComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-comunicaciones/tarjeta-comunicaciones.component';
-import { TarjetaConsultasComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-consultas/tarjeta-consultas.component';
 import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/plantilla-documento/plantilla-documento.component';
 import { TarjetaInformesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/tarjeta-informes.component';
 import { ModelosComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/modelos-comunicaciones.component';
@@ -1369,7 +1368,6 @@ enableRipple(true);
 		TarjetaListaMonederosComponent,
 		TarjetaMovimientosVariosAplicadosComponent,
 		TarjetaMovimientosVariosAsociadosComponent,
-		TarjetaConsultasComponent,
 	    TarjetaProductosCompraSuscripcionComponent,
 		TarjetaRelFichaActComponent,
 		TarjetaRemesasEnvioComponent,
