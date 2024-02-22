@@ -292,6 +292,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       let cellFechaActuacion : Cell = new Cell();
       let cellLugar : Cell = new Cell();
       let cellNDiligencia: Cell = new Cell();
+      let rowGroup: RowGroup;
       cellAsistido.type = 'invisible';
       cellAsistido.value = '';
       cellAsistido.combo = this.comboSexo;
@@ -333,10 +334,44 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
                                       this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[1]);
       }
       rowToAdd.cells = [cellAsistido, cellDelitosObservaciones, cellEJG, cellFechaActuacion, cellLugar, cellNDiligencia];
-      this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.push(rowToAdd);
+      rowGroup =  this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]);
+
+      this.copyValuesAsistenciaToActuacion(rowGroup, rowToAdd);
+      rowGroup.rows.push(rowToAdd);
       this.tabla.totalRegistros = this.rowGroups.length;
     }
 
+  }
+  copyValuesAsistenciaToActuacion(rowGroup: RowGroup, rowAtuacion : Row){
+    // copia los valores de la celdas de lugar y Número Diligencia/Procedimiento
+    let cellLugar, CellNumDilProc: Cell;
+    let comisaria, juzgado, numDili, NumProce;
+    if (rowGroup.rows.length > 1){
+      cellLugar = rowGroup.rows[0].cells[4]
+      CellNumDilProc = rowGroup.rows[0].cells[5]
+
+      comisaria = cellLugar.value[2];
+      juzgado = cellLugar.value[3];
+      numDili = CellNumDilProc.value[0];
+      NumProce = CellNumDilProc.value[1];
+
+      if (juzgado != null && juzgado!=''){
+        rowAtuacion.cells[4].value[2]='';
+        rowAtuacion.cells[4].value[3]=juzgado;
+        rowAtuacion.cells[4].value[4]='J';
+
+        rowAtuacion.cells[5].value[0]=''
+        rowAtuacion.cells[5].value[1]=NumProce
+
+      }else if (comisaria != null && comisaria!= ''){
+        rowAtuacion.cells[4].value[2]=comisaria;
+        rowAtuacion.cells[4].value[3]='';
+        rowAtuacion.cells[4].value[4]='C';
+
+        rowAtuacion.cells[5].value[0]=numDili
+        rowAtuacion.cells[5].value[1]=''
+      }
+    }
   }
   crearEJG(){
     if(this.filtro && this.tabla.selectedArray.length>0){
@@ -374,8 +409,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
         }
 
         rowGroup.rows[1].cells[3] = rowGroup.rows[0].cells[3];
-        rowGroup.rows[1].cells[4] = rowGroup.rows[0].cells[4];
-        rowGroup.rows[1].cells[5] = rowGroup.rows[0].cells[5];
+        this.copyValuesAsistenciaToActuacion(rowGroup, rowGroup.rows[1]);
       });
 
       if (this.filtro.isSustituto != null) {
