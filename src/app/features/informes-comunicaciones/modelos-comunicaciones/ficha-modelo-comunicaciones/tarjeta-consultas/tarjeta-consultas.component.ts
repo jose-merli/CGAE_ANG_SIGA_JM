@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { DataTable } from "primeng/datatable";
 import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
 import { SigaServices } from "../../../../../_services/siga.service";
-import { Message, ConfirmationService, MenuItem } from "primeng/components/common/api";
+import { Message, ConfirmationService } from "primeng/components/common/api";
 import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { Identifiers } from "@angular/compiler";
@@ -40,25 +40,15 @@ export class TarjetaConsultasComponent implements OnInit {
   eliminarArray: any = [];
   showHistorico: boolean = false;
   datosInicial: any = [];
-  consultas: any = [];
+
   soloLectura: boolean = false;
   isNuevo: boolean = false;
   isGuardar: boolean = false;
   progressSpinner: boolean = false;
   editar: boolean = true;
-  showConsultas: boolean = false;
+  
   @ViewChild("table") table: DataTable;
   selectedDatos;
-
-  msgsSteps: Message[] = [];
-  activeStep: number;
-  steps: MenuItem[];
-
-  consultasCombo: any[];
-  consultasComboDatos: any[];
-  consultasComboDestinatarios: any[];
-  consultasComboMulti: any[];
-  consultasComboCondicional: any[];
 
   fichasPosibles = [
     {
@@ -80,10 +70,6 @@ export class TarjetaConsultasComponent implements OnInit {
     {
       key: "consultas",
       activa: false
-    },
-    {
-      key: "plantillaDocumentos",
-      activa: true
     }
   ];
 
@@ -95,12 +81,8 @@ export class TarjetaConsultasComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    //this.getDatos();
-    this.getResultados()
+    this.getDatos();
     this.getPlantillas();
-    this.getConsultasDisponibles()
-
-    this.getSteps();
 
     this.sigaServices.deshabilitarEditar$.subscribe(() => {
       this.editar = false;
@@ -108,17 +90,18 @@ export class TarjetaConsultasComponent implements OnInit {
 
     this.selectedItem = 10;
 
-   
     this.cols = [
-      { field: "objetivo", header: "informesycomunicaciones.consultas.objetivo" },
-      { field: "idConsulta", header: "menu.informesYcomunicaciones.consultas.fichaConsulta.consulta" },
-      { field: "region", header: "informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.region" }
-    ];
-
-    this.consultas = [
-      { label: "Seleccione una consulta", value: null },
-      { label: "A", value: "1" },
-      { label: "B", value: "2" }
+      {
+        field: "idPlantillaEnvios",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      { field: "tipoEnvio", header: "enviosMasivos.literal.tipoEnvio" },
+      {
+        field: "porDefecto",
+        header:
+          "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto",
+        width: "15%"
+      }
     ];
 
     this.rowsPerPage = [
@@ -147,29 +130,6 @@ export class TarjetaConsultasComponent implements OnInit {
     ) {
       this.soloLectura = true;
     }
-    
-    this.datos = [
-      { consulta: "", finalidad: "", objetivo: "Condicional", idObjetivo: "3" },
-      {
-        consulta: "",
-        finalidad: "",
-        objetivo: "Destinatario",
-        idObjetivo: "1",
-        idInstitucion: ""
-      },
-      {
-        consulta: "",
-        finalidad: "",
-        objetivo: "Multidocumento",
-        idObjetivo: "2",
-        idInstitucion: ""
-      },
-      { consulta: "", finalidad: "", objetivo: "Datos", idObjetivo: "4" }
-    ];
-    // this.body.idConsulta = this.consultas[1].value;
-
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-
   }
 
   abreCierraFicha() {
@@ -181,71 +141,9 @@ export class TarjetaConsultasComponent implements OnInit {
     }
   }
 
-  getSteps() {
-    this.steps = [
-      {
-        label: this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos"),
-        command: (event: any) => {
-          this.activeStep = 0;
-          this.msgsSteps = [];
-          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.uno"));
-        }
-      },
-      {
-        label: this.translateService.instant("enviosMasivos.literal.destinatarios"),
-        command: (event: any) => {
-          this.activeStep = 1;
-          this.msgsSteps = [];
-          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.dos"));
-        }
-      },
-      {
-        label: this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.multidocumento"),
-        command: (event: any) => {
-          this.activeStep = 2;
-          this.msgsSteps = [];
-          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.tres"));
-        }
-      },
-      {
-        label: this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.condicional"),
-        command: (event: any) => {
-          this.activeStep = 3;
-          this.msgsSteps = [];
-          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.cuatro"));
-        }
-      }
-    ];
-  }
-
-  getConsultasDisponibles() {
-    this.sigaServices
-      .post("plantillasDoc_combo_consultas", this.body)
-      .subscribe(
-        data => {
-          this.consultasComboDatos = JSON.parse(data["body"]).consultasDatos;
-          this.consultasComboDestinatarios = JSON.parse(
-            data["body"]
-          ).consultasDestinatarios;
-          this.consultasComboMulti = JSON.parse(data["body"]).consultasMultidoc;
-          this.consultasComboCondicional = JSON.parse(
-            data["body"]
-          ).consultasCondicional;
-        },
-        err => {
-          this.showFail("Error al cargar las consultas");
-          //console.log(err);
-        }
-      );
-  }
-
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
-  }
-
-  showInfoSteps(mensaje: string) {
-    this.msgsSteps.push({ severity: "info", summary: "", detail: mensaje });
   }
 
   getFichaPosibleByKey(key): any {
@@ -256,141 +154,6 @@ export class TarjetaConsultasComponent implements OnInit {
       return fichaPosible[0];
     }
     return {};
-  }
-
-  getResultados() {
-    let service = "plantillasDoc_consultas";
-    if (this.showHistorico) {
-      service = "plantillasDoc_consultas_historico";
-    }
-    this.sigaServices.post(service, this.body).subscribe(
-      data => {
-        this.datos = JSON.parse(data["body"]).consultaItem;
-        if (this.datos.length <= 0) {
-          this.datos = [
-            {
-              idConsulta: "",
-              finalidad: "",
-              objetivo: "Destinatario",
-              idObjetivo: "1",
-              idInstitucion: ""
-            },
-            {
-              idConsulta: "",
-              finalidad: "",
-              objetivo: "Condicional",
-              idObjetivo: "3",
-              idInstitucion: ""
-            },
-            {
-              idConsulta: "",
-              finalidad: "",
-              objetivo: "Multidocumento",
-              idObjetivo: "2",
-              idInstitucion: ""
-            },
-            {
-              idConsulta: "",
-              finalidad: "",
-              objetivo: "Datos",
-              idObjetivo: "4",
-              idInstitucion: ""
-            }
-          ];
-        } else {
-          let multidocumento = this.datos.map(e => {
-            if (e.idObjetivo == "2") {
-              return true;
-            } else {
-              return false;
-            }
-          });
-
-          let datos = this.datos.map(e => {
-            if (e.idObjetivo == "4") {
-              return true;
-            } else {
-              return false;
-            }
-          });
-          let dest = this.datos.map(e => {
-            if (e.idObjetivo == "1") {
-              return true;
-            } else {
-              return false;
-            }
-          });
-          let condicional = this.datos.map(e => {
-            if (e.idObjetivo == "3") {
-              return true;
-            } else {
-              return false;
-            }
-          });
-          if (multidocumento.indexOf(true) == -1) {
-            this.datos.push({
-              idConsulta: "",
-              finalidad: "",
-              objetivo: "Multidocumento",
-              idObjetivo: "2",
-              idInstitucion: ""
-            });
-          }
-          if (datos.indexOf(true) == -1) {
-            this.datos.push({
-              idConsulta: "",
-              finalidad: "",
-              objetivo: "Datos",
-              idObjetivo: "4",
-              idInstitucion: ""
-            });
-          }
-          if (dest.indexOf(true) == -1) {
-            this.datos.push({
-              idConsulta: "",
-              finalidad: "",
-              objetivo: "Destinatario",
-              idObjetivo: "1",
-              idInstitucion: ""
-            });
-          }
-          if (condicional.indexOf(true) == -1) {
-            this.datos.push({
-              idConsulta: "",
-              finalidad: "",
-              objetivo: "Condicional",
-              idObjetivo: "3",
-              idInstitucion: ""
-            });
-          }
-        }
-
-        this.datos.sort(function (a, b) {
-          if (a.idObjetivo == "3") {
-            return -1;
-          } else if (a.idObjetivo == "4") {
-            return 1;
-          } else {
-            if (a.idObjetivo > b.idObjetivo) {
-              return 1;
-            }
-            if (a.idObjetivo < b.idObjetivo) {
-              return -1;
-            }
-            return 0;
-          }
-        });
-
-        this.datos.map(e => {
-          return (e.idConsultaAnterior = e.idConsulta);
-        });
-        this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-      },
-      err => {
-        this.showFail(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargaConsulta"));
-        //console.log(err);
-      }
-    );
   }
 
   checkAcceso() {
@@ -681,8 +444,6 @@ export class TarjetaConsultasComponent implements OnInit {
   getPlantillas() {
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
       data => {
-        console.log("plantillas")
-        console.log(data)
         this.plantillas = data.combooItems;
         // this.plantillas.unshift({ label: "Seleccionar", value: "" });
       },
@@ -764,12 +525,6 @@ export class TarjetaConsultasComponent implements OnInit {
     }
 
     this.selectedDatos = [];
-  }
-
-  onShowConsultas() {
-    if (sessionStorage.getItem("crearNuevaPlantillaDocumento") == null) {
-      this.showConsultas = !this.showConsultas;
-    }
   }
 
   restablecer() {

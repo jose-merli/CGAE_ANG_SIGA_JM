@@ -43,11 +43,11 @@ export class FichaModeloComunicacionesComponent implements OnInit {
       {
         key: "consultas",
         active: false
-      },
+      }/*
       {
-        key: "plantillaDocumentos",
-        activa: true
-      }
+        key: "comunicacion",
+        activa: false
+      }*/
     ];
   }
 
