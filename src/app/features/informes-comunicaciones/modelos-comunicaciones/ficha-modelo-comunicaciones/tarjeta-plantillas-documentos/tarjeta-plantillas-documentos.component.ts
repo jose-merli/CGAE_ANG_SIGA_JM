@@ -61,7 +61,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   documentos: any = [];
 
   @ViewChild("table") table: DataTable;
-  selectedDatos: FichaPlantillasDocument[] = [];
+  selectedDatos: FichaPlantillasDocument[];
 
   fichasPosibles = [
     {
@@ -253,6 +253,20 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     return !tieneDuplicados;
   }
 
+
+  onChangeSufijo(dato) {
+    this.selectedSufijos.map(e => {
+      if (e.value == "1" && dato.itemValue.value == "1") {
+        e.abr = "A";
+      } else if (e.value == "2" && dato.itemValue.value == "2") {
+        e.abr = "B";
+      } else if (e.value == "3" && dato.itemValue.value == "3") {
+        e.abr = "C";
+      }
+      return e.abr;
+    });
+  }
+
   getSessionStorage() {
 
     if (sessionStorage.getItem("modelosSearch") != null) {
@@ -296,7 +310,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   }
 
   getDatos() {
-    //this.getSessionStorage();
+    this.getSessionStorage();
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.getInformes();
@@ -317,7 +331,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
           element.idClaseComunicacion = this.modelo.idClaseComunicacion;
           element.idInstitucion = this.modelo.idInstitucion;
           element.plantillas = listaPlantillas;
-          element.idSufijo = element.sufijo
+
         });
 
 
@@ -542,7 +556,8 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       this.sigaServices.postSendFilesFichaPlantillas("plantillasDoc_guardar_plantillas", filesFiltrados, this.selectedDatos).subscribe(
         data => {
           this.showSuccess("Guardar datos de salida correctos");
-          
+          console.log("DEspues de insertar.")
+          console.log(data)
   
           // this.body.idInforme = JSON.parse(data["body"]).data;
           //   this.getDocumentos();
@@ -564,9 +579,6 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
         },
         () => {
           this.progressSpinner = false;
-          this.files = [];
-          this.selectedDatos = [];
-          this.getInformes();
   
         }
       );

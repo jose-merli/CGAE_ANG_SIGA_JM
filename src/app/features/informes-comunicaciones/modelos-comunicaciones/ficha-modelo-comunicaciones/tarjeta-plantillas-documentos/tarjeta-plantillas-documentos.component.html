@@ -226,7 +226,7 @@
           <button (click)="addInforme()" pButton type="button" icon="fa fa-plus" iconPos="left"
             label="{{ 'general.boton.new' | translate }}" [disabled]="this.datos.length >= 4|| soloLectura || !editar"></button>     
             <button (click)="guardarData()" pButton type="button" icon="fa fa-plus" iconPos="left"
-            label="Guardar" [disabled]="this.selectedDatos.length == 0||soloLectura || !editar"></button>
+            label="Guardar" [disabled]="soloLectura || !editar"></button>
         </div>
       </div>
     </div>
