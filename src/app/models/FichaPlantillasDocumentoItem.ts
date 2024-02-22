@@ -18,7 +18,6 @@ export class FichaPlantillasDocument {
   consultas: ConsultasPlantillasInformesItem[] = [];
   sufijos: SufijoItem[] = [];
   generacionExcel:number;  
-  nombreFichero:String;
   constructor() { }
 }
 

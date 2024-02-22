@@ -59,7 +59,6 @@ export class TarjetaConsultasComponent implements OnInit {
   consultasComboDestinatarios: any[];
   consultasComboMulti: any[];
   consultasComboCondicional: any[];
-  consultasComboPlantillas: any[];
 
   fichasPosibles = [
     {
@@ -111,7 +110,6 @@ export class TarjetaConsultasComponent implements OnInit {
 
    
     this.cols = [
-      { field: "plantillas", header: "informesycomunicaciones.consultas.objetivo" },
       { field: "objetivo", header: "informesycomunicaciones.consultas.objetivo" },
       { field: "idConsulta", header: "menu.informesYcomunicaciones.consultas.fichaConsulta.consulta" },
       { field: "region", header: "informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.region" }
@@ -736,10 +734,6 @@ export class TarjetaConsultasComponent implements OnInit {
     }
 
     this.selectedDatos = [];
-  }
-
-  onChangePlantillas($event, data){
-
   }
 
   // onChangePorDefecto(e) {
