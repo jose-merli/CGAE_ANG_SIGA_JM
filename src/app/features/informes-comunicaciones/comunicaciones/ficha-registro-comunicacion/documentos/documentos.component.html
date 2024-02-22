@@ -97,22 +97,8 @@
             </div>
           </ng-template>
         </p-table>
-        <div *ngIf="openFicha" class="card-footer">
-          <div class="text-right main-button">
-            <!-- <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
-            <p-fileUpload #fubauto chooseLabel="{{ 'general.boton.adjuntarFichero' | translate }}" name="file" mode="basic"
-              accept=".pdf,.doc,.docx" multiple="multiple" (onSelect)="uploadFile($event)" auto="true"
-              [disabled]="!habilitado">
-            </p-fileUpload>
-            <button (click)="eliminar(selectedDatos)" *ngIf="selectedDatos && selectedDatos !=''" pButton type="button"
-              icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"
-              [disabled]="!habilitado"></button>
-          </div>
-        </div>
       </div>
-      
     </div>
-   
   </div>
 </div>
 

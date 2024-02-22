@@ -16,7 +16,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
   styleUrls: ["./datos-generales-ficha.component.scss"]
 })
 export class DatosGeneralesFichaComponent implements OnInit {
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   permisoEscritura;
   activacionEditar: boolean = true;
   derechoAcceso: any;
@@ -51,10 +51,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
     },
     {
       key: "comunicacion",
-      activa: false
-    },
-    {
-      key: "consultas",
       activa: false
     }
   ];

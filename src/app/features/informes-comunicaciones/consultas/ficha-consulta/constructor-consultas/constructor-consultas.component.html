@@ -35,9 +35,9 @@
           <ejs-querybuilder width="80%" #constructorConsultas class="row" [rule]="importRules" locale="sigaIdiomas" (created)="setRules()" (actionBegin)="obtenerComboCampo($event)">
             <e-columns>
               <div *ngFor="let campo of configColumnasDTO.configColumnasQueryBuilderItem; let i = index">          
-                <e-column *ngIf="campo.tipocampo != 'date'" [field]="campo.idcampo" [label]="campo.nombreenconsulta" [type]="campo.tipocampo" [operators]="customOperators"></e-column>
-                <e-column *ngIf="campo.tipocampo == 'date'" [field]="campo.idcampo" [label]="campo.nombreenconsulta" [type]="campo.tipocampo" [operators]="customOperators" format="dd/MM/yyyy"></e-column>
-                <e-column *ngIf= "" [field]="campo.idcampo" [label]="campo.nombreenconsulta" [type]="campo.tipocampo">
+                <e-column *ngIf="campo.selectayuda == null && campo.tipocampo != 'date'" [field]="campo.idcampo" [label]="campo.nombreenconsulta" [type]="campo.tipocampo" [operators]="customOperators"></e-column>
+                <e-column *ngIf="campo.selectayuda == null && campo.tipocampo == 'date'" [field]="campo.idcampo" [label]="campo.nombreenconsulta" [type]="campo.tipocampo" [operators]="customOperators" format="dd/MM/yyyy"></e-column>
+                <e-column *ngIf="campo.selectayuda != null" [field]="campo.idcampo" [label]="campo.nombreenconsulta" [type]="campo.tipocampo">
                   <ng-template #ruleTemplate let-data>
                     <div class="e-rule e-rule-template">
                       <div class="e-rule-filter">
