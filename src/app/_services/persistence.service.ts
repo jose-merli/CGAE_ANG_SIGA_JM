@@ -21,6 +21,10 @@ export class PersistenceService {
     private filtrosBusquedaGeneralSJCS: string = "filtrosBusquedaGeneralSJCS";
     private idJuzgadoName: string = "idJuzgado";
     private historicoJuzgadoName: string = "historicoJuzgado";
+    private designacionName: string = "Designacion";
+    private asistenciaName: string = "asistencia";
+    private fromDesignacionesName: string = "fromDesignaciones";
+    private designaItemName: string = "designaItem";
 
     constructor() { }
 
@@ -253,6 +257,22 @@ export class PersistenceService {
 
     clearFiltrosBusquedaGeneralSJCS() {
         sessionStorage.removeItem(this.filtrosBusquedaGeneralSJCS);
+    }
+
+    clearDesignacion(){
+        sessionStorage.removeItem(this.designacionName);
+    }
+
+    clearAsistencia(){
+        sessionStorage.removeItem(this.asistenciaName);
+    }
+
+    clearFromDesignaciones(){
+        sessionStorage.removeItem(this.fromDesignacionesName);
+    }
+
+    clearDesignaItem(){
+        sessionStorage.removeItem(this.designaItemName);
     }
 
 
