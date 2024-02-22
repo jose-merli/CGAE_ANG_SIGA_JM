@@ -167,7 +167,7 @@
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
 
-                  <span *ngIf="col.field != 'preseleccionado'">
+                  <span *ngIf="col.field != 'preseleccionado' && col.field != 'nombreFicheroSalida'">
                     {{ dato[col.field] }}</span>
 
                   <div *ngIf="col.field == 'sufijo'">
@@ -177,7 +177,8 @@
                   <span *ngIf="col.field == 'preseleccionado'">
                     <i class="fa fa-check"></i>
                   </span>
-                  
+                  <a [routerLink]="" class="enlace" *ngIf="col.field =='nombreFicheroSalida'">
+                    {{dato[col.field]}}</a>
                 </td>
               </tr>
             </ng-template>

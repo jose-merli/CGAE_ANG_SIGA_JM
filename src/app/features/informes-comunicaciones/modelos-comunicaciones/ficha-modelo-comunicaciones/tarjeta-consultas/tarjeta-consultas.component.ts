@@ -123,8 +123,6 @@ export class TarjetaConsultasComponent implements OnInit {
 
     this.getSteps();
 
-    this.getInstitucionActual()
-
     this.sigaServices.deshabilitarEditar$.subscribe(() => {
       this.editar = false;
     });
