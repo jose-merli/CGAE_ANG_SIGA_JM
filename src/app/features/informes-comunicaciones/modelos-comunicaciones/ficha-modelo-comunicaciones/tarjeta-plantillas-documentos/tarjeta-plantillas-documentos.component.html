@@ -65,14 +65,14 @@
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
                   <div *ngIf="col.field == 'idioma'">
-                    <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" (onChange)="onIdiomaSeleccionado(dato,$event)"
-                      [showClear]="true" filterBy="label,labelSinTilde" [options]="idiomasDisponibles"
+                    <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true"
+                      [showClear]="true" filterBy="label,labelSinTilde" [options]="idiomas"
                       [(ngModel)]="dato.idIdioma" class="select-form"></p-dropdown>
                   </div>
-                    <div *ngIf="col.field == 'nombreDocumento'" >
+                    <div *ngIf="col.field == 'nombreDocumento'">
                       {{dato.nombreDocumento}}
                       <p-fileUpload 
-                      #fubauto chooseLabel="" class="subir-plantilla-mod main-button" mode="basic" name="file" auto="true"
+                      #fubauto chooseLabel="" class="subir-plantilla  main-button" mode="basic" name="file" auto="true"
                       [accept]="formatoAccept" (onSelect)="uploadFile($event, dato)" auto="true">
                     </p-fileUpload>
                     </div>
@@ -96,7 +96,7 @@
                (onChange)="onSufijosChange(dato)"></p-multiSelect>-->
                <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true"
                [showClear]="true" filterBy="label,labelSinTilde" [options]="sufijos"
-               [(ngModel)]="dato.idSufijo" class="select-form"></p-dropdown>
+               [(ngModel)]="dato.sufijo" class="select-form" (onChange)="onSufijosChange()"></p-dropdown>
                   </div>
                   
                 </td>
@@ -224,9 +224,12 @@
             icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"
             (click)="eliminar(selectedDatos)"></button>
           <button (click)="addInforme()" pButton type="button" icon="fa fa-plus" iconPos="left"
-            label="{{ 'general.boton.new' | translate }}" [disabled]="this.datos.length >= 4|| soloLectura || !editar"></button>     
+            label="{{ 'general.boton.new' | translate }}" [disabled]="soloLectura || !editar"></button>     
             <button (click)="guardarData()" pButton type="button" icon="fa fa-plus" iconPos="left"
             label="Guardar" [disabled]="soloLectura || !editar"></button>
+            <button (click)="preGuarduar()" pButton type="button" icon="fa fa-plus" iconPos="left"
+            label="PREGUARDAR" [disabled]="soloLectura || !editar"></button>
+     
         </div>
       </div>
     </div>
@@ -235,7 +238,13 @@
 </div>
 
 
-
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

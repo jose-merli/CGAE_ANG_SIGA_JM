@@ -25,7 +25,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   permisosArray: any[];
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   clasesComunicaciones: any[];
-  datos: FichaPlantillasDocument[] = [];
+  datos: FichaPlantillasDocument[];
   cols: any[];
   formatoAccept: string;
   formatos: any[];
@@ -46,9 +46,8 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   soloLectura: boolean = false;
   continuar: boolean;
   editar: boolean = true;
-  sufijos= [];
+  sufijos: SufijoItem[];
   idiomas: any[];
-  idiomasDisponibles: any[];
   selectedSufijos: any[];
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
@@ -231,7 +230,6 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     }
   }
 
-
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
@@ -242,17 +240,6 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       this.numSelected = 0;
     }
   }
-
-  controlDuplicados(): boolean {
-    let idiomasUnicos = new Set();
-    let tieneDuplicados = this.datos.some(dato => {
-      let yaExiste = idiomasUnicos.has(dato.idIdioma);
-      idiomasUnicos.add(dato.idIdioma);
-      return yaExiste;
-    });
-    return !tieneDuplicados;
-  }
-
 
   onChangeSufijo(dato) {
     this.selectedSufijos.map(e => {
@@ -288,20 +275,23 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
         this.changeFormato();
       }
 
+      this.bodyFichaPlantillasDocument.sufijos = this.bodyFichaPlantillasDocument.sufijos;
+      if (this.bodyFichaPlantillasDocument.sufijos && this.bodyFichaPlantillasDocument.sufijos.length > 0) {
+        this.selectedSufijos = this.bodyFichaPlantillasDocument.sufijos;
+        // this.selectedSufijosInicial = JSON.parse(
+        ////  JSON.stringify(this.selectedSufijos)
+        // ); SUFIJO -TODO
+      }
     }
 
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
   }
 
   getComboSufijos() {
-    this.sigaServices.get("plantillasDoc_combo_sufijos_agrupados").subscribe(
+    this.sigaServices.get("plantillasDoc_combo_sufijos").subscribe(
       n => {
 
         this.sufijos = JSON.parse(JSON.stringify(n.sufijos));
-        this.sufijos = this.sufijos.map(sufijo => ({
-          label: sufijo.nombreSufijo, // Usamos 'nombreSufijo' como la etiqueta visible
-          value: sufijo.idSufijo // Usamos 'idSufijo' como el valor asociado
-        }));
       },
       err => {
         //console.log(err);
@@ -381,7 +371,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
 
   }
 
- eliminar( dato) {
+  eliminar(dato) {
 
     let keyConfirmation = "deletePlantillaDoc";
 
@@ -407,58 +397,44 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     });
   }
 
-  confirmarEliminar(dato) { //dato = this.selectedDatos.
+  confirmarEliminar(dato) {
+    this.progressSpinner = true;
+    this.eliminarArray = [];
+    dato.forEach(element => {
+      let objEliminar = {
+        idModeloComunicacion: this.modelo.idModeloComunicacion,
+        idInstitucion: this.modelo.idInstitucion,
+        idInforme: element.idInforme
+      };
+      this.eliminarArray.push(objEliminar);
+    });
+    this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.selectedDatos = [];
+        this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
+      },
+      err => {
+        let error = JSON.parse(err.error).description;
+        this.progressSpinner = false;
 
-    let conIdPlantilla = this.selectedDatos.filter(dato => dato.idPlantillas !== undefined);
-    let sinIdPlantilla = this.selectedDatos.filter(dato => dato.idPlantillas === undefined);
-
-    this.datos = this.datos.filter(dato => !sinIdPlantilla.includes(dato));
-
-    if (conIdPlantilla.length > 0) {
-      this.progressSpinner = true;
-      this.eliminarArray = [];
-      this.eliminarArray = [...conIdPlantilla];
-
-      dato.forEach(element => {
-        let objEliminar = {
-          idModeloComunicacion: this.modelo.idModeloComunicacion,
-          idInstitucion: this.modelo.idInstitucion,
-          idInforme: element.idInforme
-        };
-        this.eliminarArray.push(objEliminar);
-      });
-      this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.selectedDatos = [];
-          this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
-        },
-        err => {
-          let error = JSON.parse(err.error).description;
-          this.progressSpinner = false;
-
-          if (error == "ultimo")
-            this.showFail(
-              this.translateService.instant(
-                "censo.modelosComunicaciones.gestion.errorUltimaPlantilla"
-              )
-            );
-          else {
-            this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
-            //console.log(err);
-          }
-
-        },
-        () => {
-          this.progressSpinner = false;
-          this.getInformes();
+        if (error == "ultimo")
+          this.showFail(
+            this.translateService.instant(
+              "censo.modelosComunicaciones.gestion.errorUltimaPlantilla"
+            )
+          );
+        else {
+          this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
+          //console.log(err);
         }
-      );
-    }else{
-      this.selectedDatos = [];
-      this.getInformes();
-    }
 
+      },
+      () => {
+        this.progressSpinner = false;
+        this.getInformes();
+      }
+    );
   }
 
   // Mensajes
@@ -489,7 +465,6 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     this.sigaServices.get("etiquetas_lenguaje").subscribe(
       n => {
         this.idiomas = n.combooItems;
-        this.idiomasDisponibles = this.idiomas;
       },
       err => {
         //console.log(err);
@@ -538,58 +513,82 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
         });
   }
 
+
+  preGuarduar() {
+    console.log("DATOS SELECCIONADOS.")
+    console.log(this.selectedDatos)
+
+    console.log("FILES")
+    console.log(this.files)
+
+    this.selectedDatos.forEach(element => {
+
+    });
+
+    console.log("DATOS seelcte dDESPUES")
+
+    console.log(this.selectedDatos)
+
+    console.log("DATOS PUROS")
+    console.log(this.datos)
+  }
+
   guardarData() {
-    if(this.controlDuplicados()){
-      this.progressSpinner = true;
 
-      let filesFiltrados: FileAux[] = [];
-  
-      this.files.forEach((fileAux) => {
-        this.selectedDatos.forEach((ficha) => {
-          if (fileAux.idIdioma === ficha.idIdioma) {
-            filesFiltrados.push(fileAux);
-          }
-        });
-      });
-  
-      //plantillasDoc_guardar_datosSalida
-      this.sigaServices.postSendFilesFichaPlantillas("plantillasDoc_guardar_plantillas", filesFiltrados, this.selectedDatos).subscribe(
-        data => {
-          this.showSuccess("Guardar datos de salida correctos");
-          console.log("DEspues de insertar.")
-          console.log(data)
-  
-          // this.body.idInforme = JSON.parse(data["body"]).data;
-          //   this.getDocumentos();
-  
-          // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-          /////   this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
-          // this.selectedSufijosInicial = JSON.parse(
-          //    JSON.stringify(this.selectedSufijos)
-          //  );
-  
-          this.progressSpinner = false;
-  
-        },
-        err => {
-          this.showFail("Error guardar datos Salida");
-          //console.log(err);
-          this.progressSpinner = false;
-  
-        },
-        () => {
-          this.progressSpinner = false;
-  
+
+    this.progressSpinner = true;
+
+    let filesFiltrados: FileAux[] = [];
+
+    this.files.forEach((fileAux) => {
+      this.selectedDatos.forEach((ficha) => {
+        if (fileAux.idIdioma === ficha.idIdioma) {
+          filesFiltrados.push(fileAux);
         }
-      );
-    }else{
-      ///Mostrar mensaje error duplicado.
-      this.showFail("Idiomas duplicados");
-    }
+      });
+    });
 
-   
+    //plantillasDoc_guardar_datosSalida
+    this.sigaServices.postSendFilesFichaPlantillas("plantillasDoc_guardar_plantillas", filesFiltrados, this.selectedDatos).subscribe(
+      data => {
+        this.showSuccess("Guardar datos de salida correctos");
+        console.log("DEspues de insertar.")
+        console.log(data)
+
+        // this.body.idInforme = JSON.parse(data["body"]).data;
+        //   this.getDocumentos();
+
+        // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        /////   this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
+        // this.selectedSufijosInicial = JSON.parse(
+        //    JSON.stringify(this.selectedSufijos)
+        //  );
+
+        this.progressSpinner = false;
+
+      },
+      err => {
+        this.showFail("Error guardar datos Salida");
+        //console.log(err);
+        this.progressSpinner = false;
+
+      },
+      () => {
+        this.progressSpinner = false;
+
+      }
+    );
 
   }
 
+
+
+  onSufijosChange(dato: any) {
+    console.log('Sufijos Data1:', dato);
+
+
+    // Puedes agregar aquí cualquier lógica adicional que necesites
+    // para manejar los cambios en los sufijos seleccionados.
+  }
 
 }

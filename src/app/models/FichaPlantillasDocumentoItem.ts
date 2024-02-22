@@ -10,7 +10,7 @@ export class FichaPlantillasDocument {
   formatoSalida: String;
   idFormatoSalida: String;
   nombreFicheroSalida: String;
-  idSufijo: String;
+  idSufijo: String[];
   idFinalidad: String;
   idTipoEjecucion: String;
   idInforme: String;
@@ -19,7 +19,6 @@ export class FichaPlantillasDocument {
   sufijos: SufijoItem[] = [];
   generacionExcel:number;  
   nombreFichero:String;
-  idPlantillas : String;
   constructor() { }
 }
 
