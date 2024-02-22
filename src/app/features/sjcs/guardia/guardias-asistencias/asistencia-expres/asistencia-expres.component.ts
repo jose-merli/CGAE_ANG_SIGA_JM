@@ -318,17 +318,25 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
   fromJsonToRowGroups(asistencias : TarjetaAsistenciaItem[]){
  
-    let nombreApellidosType, fechaActuacionType, lugarType, nDiligenciaType, fechaAsistenciaType;
+    let nombreApellidosType, fechaActuacionType, lugarType, nDiligenciaType, fechaAsistenciaType, nDiligenciaTypeAsunto;
     let nombreApellidosValue, delitosObservacionesValue, ejgValue, fechaActuacionValue, lugarValue, nDiligenciaValue, fechaAsistenciaValue, numProcedimientoDiligenciaAsistenciaValue;
     let objetoActuacion = {};
     let objetoAsistencia = {};
     let arrayAsistencias = [];
+    let fechaNacimientoDate;
 
     asistencias.forEach((asistencia, indice) => {
 
-      nDiligenciaType = 'input';
-      nombreApellidosType = '5InputSelector';
-      nombreApellidosValue = [asistencia.nif, asistencia.apellido1, asistencia.apellido2, asistencia.nombre, asistencia.sexo];
+      nDiligenciaType = '2input';
+      nDiligenciaTypeAsunto = '2input';
+      nombreApellidosType = '6InputSelector';
+      if(asistencia.fechaNacimiento != null){
+        fechaNacimientoDate = new Date(Date.parse(asistencia.fechaNacimiento));
+      }
+      else{
+        fechaNacimientoDate = null;
+      }
+      nombreApellidosValue = [asistencia.nif, asistencia.apellido1, asistencia.apellido2, asistencia.nombre, asistencia.sexo, fechaNacimientoDate];
 
       if(asistencia.idDelito || asistencia.observaciones){
         let comboDelitosValue = [];
@@ -348,39 +356,39 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         ejgValue = '';
       }
 
-      lugarType = 'buttomSelect';
-
-      if (asistencia.comisaria != null && asistencia.comisaria != '') {
-        lugarValue = [this.textoComActivo, this.comboComisarias, this.comboJuzgados, 'C' //C o J dependiendo si el lugar es una comisaria o juzgado
-          , asistencia.comisaria, 'Asistencia'];
-        numProcedimientoDiligenciaAsistenciaValue = asistencia.numDiligencia ? asistencia.numDiligencia : '';
-      } else if (asistencia.juzgado != null && asistencia.juzgado != '') {
-        lugarValue = [this.textoJuzActivo, this.comboComisarias, this.comboJuzgados, 'J' //C o J dependiendo si el lugar es una comisaria o juzgado
-          , asistencia.juzgado, 'Asistencia'];
-        numProcedimientoDiligenciaAsistenciaValue = asistencia.numProcedimiento ? asistencia.numProcedimiento : '';
-      } else {
-        lugarValue = [this.textoComActivo, this.comboComisarias, this.comboJuzgados, 'C' //C o J dependiendo si el lugar es una comisaria o juzgado
-          , '', 'Asistencia'];
-        numProcedimientoDiligenciaAsistenciaValue = '';
-      }
+      lugarType = 'ComJuzSelect';
+      let comisaria = asistencia.comisaria != null ? asistencia.comisaria: '';
+      let Jusgado = asistencia.juzgado != null ? asistencia.juzgado: '';
+      lugarValue = [this.comboComisarias, this.comboJuzgados, 
+                      comisaria, // valor comisaria
+                      Jusgado, // valor Juzgado
+                      'CJ', //CJ contiene los calores de juzgado y comisaría
+                      'Asistencia'
+                    ];
+      numProcedimientoDiligenciaAsistenciaValue = [];
+      numProcedimientoDiligenciaAsistenciaValue[0]= asistencia.numDiligencia;
+      numProcedimientoDiligenciaAsistenciaValue[1]= asistencia.numProcedimiento;
       
-      fechaAsistenciaType = 'datePicker';
+      
+      fechaAsistenciaType = 'dateAndTime';
+      
       if(asistencia.fechaAsistencia != null){
-        fechaAsistenciaValue = new Date(Date.parse(asistencia.fechaAsistencia));
+        let date: Date = new Date(Date.parse(asistencia.fechaAsistencia));
+        fechaAsistenciaValue = [date,  this.datepipe.transform(date, 'HH:mm')];
       }else{
-        fechaAsistenciaValue = null;
+        fechaAsistenciaValue = [null, '00:00'];
       }
 
       let arrayActuaciones = [];
       let arrayDatosAsistencia = [];
 
       arrayDatosAsistencia = [
-        {type: nombreApellidosType, value: nombreApellidosValue, combo: this.comboSexo, size: 445.5},
+        {type: nombreApellidosType, value: nombreApellidosValue, combo: this.comboSexo, size: 545.5},
         {type: '2SelectorInput', value: delitosObservacionesValue, combo: this.comboDelitos, size: 225.75},
         {type: 'link', value: ejgValue, size: 100},
-        {type: fechaAsistenciaType, value: fechaAsistenciaValue, showTime: true, size: 200},
-        {type: lugarType, value: lugarValue, size: 550},
-        {type: nDiligenciaType, value: numProcedimientoDiligenciaAsistenciaValue, size: 100},
+        {type: fechaAsistenciaType, value: fechaAsistenciaValue, size: 200},
+        {type: lugarType, value: lugarValue, size: 400},
+        {type: nDiligenciaType, value: numProcedimientoDiligenciaAsistenciaValue, size: 150},
         {type: 'invisible', value: asistencia.idTipoEjg}
       ];
 
@@ -391,11 +399,13 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
         let letra = (indiceAct + 10).toString(36).toUpperCase();
 
-        fechaActuacionType = 'datePicker';
-        if(actuacion.fechaActuacion!=null){
-          fechaActuacionValue = new Date(Date.parse(actuacion.fechaActuacion));
+        fechaActuacionType = 'dateAndTime';
+      
+        if(actuacion.fechaActuacion != null){
+          let date: Date = new Date(Date.parse(actuacion.fechaActuacion));
+          fechaActuacionValue = [date,  this.datepipe.transform(date, 'HH:mm')];
         }else{
-          fechaActuacionValue = null;
+          fechaActuacionValue = [null, '00:00'];
         }
 
         let comisariaJuzgado = 'C';
@@ -404,30 +414,37 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           comisariaJuzgado = actuacion.comisariaJuzgado;
           idJuzgadoComisaria = actuacion.lugar;
         }
-        lugarType = 'buttomSelect';
-
+        lugarType = 'ComJuzSelect';
+        nDiligenciaValue = ['','']
         if (comisariaJuzgado != null && comisariaJuzgado == 'J') {
-          lugarValue = [this.textoJuzActivo, this.comboComisarias, this.comboJuzgados, comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
-            , idJuzgadoComisaria, 'Actuacion'];
+          lugarValue = [this.comboComisarias, this.comboJuzgados, 
+            '', // valor comisaría vacio
+            idJuzgadoComisaria, 
+            comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
+            ,'Actuacion'
+          ];
+          nDiligenciaValue[1] = actuacion.numeroAsunto;
+
         } else {
-          lugarValue = [this.textoComActivo, this.comboComisarias, this.comboJuzgados, comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
-            , idJuzgadoComisaria, 'Actuacion'];
+          lugarValue = [this.comboComisarias, this.comboJuzgados, 
+            idJuzgadoComisaria, 
+            '', // valor juzgado vacio
+            comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
+            , idJuzgadoComisaria, 'Actuacion'
+          ];
+          nDiligenciaValue[0] = actuacion.numeroAsunto;
         }
         
-        if(actuacion.numeroAsunto){
-          nDiligenciaValue = actuacion.numeroAsunto;
-        }else{
-          nDiligenciaValue = '';
-        }
+        
         let arrayDatosActuacion = [];
 
         arrayDatosActuacion = [
-          {type: 'invisible', value: '', combo: this.comboSexo, size: 445.5},
+          {type: 'invisible', value: '', combo: this.comboSexo, size: 545.5},
           {type: 'invisible', value: '', combo: this.comboDelitos, size: 225.75},
           {type: 'invisible', value: '', size: 100},
-          {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 200},
-          {type: lugarType, value: lugarValue, size: 550},
-          {type: nDiligenciaType, value: nDiligenciaValue, size: 100}
+          {type: fechaActuacionType, value: fechaActuacionValue, size: 200},
+          {type: lugarType, value: lugarValue, size: 400},
+          {type: nDiligenciaTypeAsunto, value: nDiligenciaValue, size: 150}
         ]
 
         let key = letra + 1;
@@ -565,52 +582,79 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             tarjetaAsistenciaItem.apellido1 = row.cells[0].value[1];
             tarjetaAsistenciaItem.apellido2 = row.cells[0].value[2];
             tarjetaAsistenciaItem.sexo = row.cells[0].value[4];
+            if (row.cells[0].value[5]  instanceof Date){
+              tarjetaAsistenciaItem.fechaNacimiento = this.datepipe.transform(row.cells[0].value[5] , 'dd/MM/yyyy');
+            }else{
+              tarjetaAsistenciaItem.fechaNacimiento = row.cells[0].value[5];
+            }
             if(row.cells[1].value[0]){
               tarjetaAsistenciaItem.idDelito = row.cells[1].value[0];
             }
             tarjetaAsistenciaItem.observaciones = row.cells[1].value[1];
 
-            if (row.cells[4].value[3] == 'C') {
-              tarjetaAsistenciaItem.comisaria = row.cells[4].value[4];
-              tarjetaAsistenciaItem.numDiligencia = row.cells[5].value;
-            } else if (row.cells[4].value[3] == 'J') {
-              tarjetaAsistenciaItem.juzgado = row.cells[4].value[4];
-              tarjetaAsistenciaItem.numProcedimiento = row.cells[5].value;
+            // Guardar comisaria de la asistencia
+            if (row.cells[4].value[2] != '' && row.cells[4].value[2] != null){
+              tarjetaAsistenciaItem.comisaria = row.cells[4].value[2];
+              tarjetaAsistenciaItem.numDiligencia = row.cells[5].value[0];
             }
 
-            comisariaJuzgadoAsistencia = row.cells[4].value[3];
-            lugarAsistencia = row.cells[4].value[4];
-            numAsuntoAsistencia = row.cells[5].value;
+          
+            // Guardamos juzgado de la asistencia
+            if (row.cells[4].value[3] != '' && row.cells[4].value[3] != null){
+              tarjetaAsistenciaItem.juzgado = row.cells[4].value[3];
+              tarjetaAsistenciaItem.numProcedimiento = row.cells[5].value[1];
+            }
+            
+            //Por defecto se selecciona el juzgado de la asistencia para la actuación
+            if(row.cells[4].value[3] != '' && row.cells[4].value[3] != null){
+              comisariaJuzgadoAsistencia = 'J';
+              lugarAsistencia = row.cells[4].value[3];
+              numAsuntoAsistencia = row.cells[5].value[1];
+            } else {
+              comisariaJuzgadoAsistencia = 'C';
+              lugarAsistencia = row.cells[4].value[2];
+              numAsuntoAsistencia = row.cells[5].value[0];
+            }
           }
 
           //En caso de venir la fecha rellena a mano la transformo para que no falle el datepite
-          if(!(row.cells[3].value instanceof Date)){
+          if(!(row.cells[3].value[0] instanceof Date)){
             let fechaPlana;
-            if(row.cells[3].value.target != undefined && row.cells[3].value.target.value != undefined) { //Si no marcamos refuerzo recuperamos de value.target.value
-              fechaPlana = row.cells[3].value.target.value;
+            if(row.cells[3].value[0].target != undefined && row.cells[3].value[0].target.value != undefined) { //Si no marcamos refuerzo recuperamos de value.target.value
+              fechaPlana = row.cells[3].value[0].target.value;
             } else {
-              fechaPlana = row.cells[3].value; //Si se marca refuerzo viene directamente relleno en value
+              fechaPlana = row.cells[3].value[0]; //Si se marca refuerzo viene directamente relleno en value
             }
 
-            if(fechaPlana.length < 11) {
-              row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
-            } else if (fechaPlana.length == 24) {
-              row.cells[3].value = new Date(fechaPlana);
+            if (fechaPlana.length == 24) {
+              row.cells[3].value[0] = new Date(fechaPlana);
             } else {
-              row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY HH:mm').toDate();
+              row.cells[3].value = moment(fechaPlana, 'DD/MM/YYYY').toDate();
             }
 
             //Si marcamos refuerzo el moment(fechaPlana) da error de Invalid Date, le reasignamos su valor original
-            if(row.cells[3].value == 'Invalid Date'){
-              row.cells[3].value = fechaPlana;
+            if(row.cells[3].value[0] == 'Invalid Date'){
+              row.cells[3].value[0] = fechaPlana;
             }
           }
+          // si no se ha seteado los minutos HH:mm
+          if (row.cells[3].value[1].length != 5){
+            row.cells[3].value[1] = '00:00'
+          }
 
-          if(row.cells[3].value){
-            if (tarjetaAsistenciaItem.filtro.diaGuardia == this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy')) {
-              tarjetaAsistenciaItem.fechaAsistencia = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
+          if(row.cells[3].value[0] && row.cells[3].value[1]){
+            // row.cells[3].value[0] -> date
+            // row.cells[3].value[1] -> HH:mm
+            // no se puede cambiar la fecha de la asistencia
+            if (index == 0 ) {
+              tarjetaAsistenciaItem.fechaAsistencia = tarjetaAsistenciaItem.filtro.diaGuardia + ' ' + row.cells[3].value[1];
             }
-            actuacionAsistenciaItem.fechaActuacion = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
+            // la primera actuación tiene que tener la fecha de la asistencia
+            if (index == 1){
+              actuacionAsistenciaItem.fechaActuacion = tarjetaAsistenciaItem.filtro.diaGuardia + ' ' + row.cells[3].value[1];
+            } else{
+              actuacionAsistenciaItem.fechaActuacion = this.datepipe.transform(row.cells[3].value[0], 'dd/MM/yyyy') +' '+ row.cells[3].value[1];
+            }
           }
 
           if (index == 1 && isNuevaAsistencia != null && isNuevaAsistencia != '' && isNuevaAsistencia == 'S') {
@@ -618,9 +662,20 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             actuacionAsistenciaItem.lugar = lugarAsistencia;
             actuacionAsistenciaItem.numeroAsunto = numAsuntoAsistencia;
           } else {
-            actuacionAsistenciaItem.comisariaJuzgado = row.cells[4].value[3];
-            actuacionAsistenciaItem.lugar = row.cells[4].value[4];
-            actuacionAsistenciaItem.numeroAsunto = row.cells[5].value;
+            // si se selecciona Juzgado
+            if (row.cells[4].value[3] != '' && row.cells[4].value[3] != null){
+              actuacionAsistenciaItem.comisariaJuzgado = 'J'
+              actuacionAsistenciaItem.lugar = row.cells[4].value[3];
+              actuacionAsistenciaItem.numeroAsunto = row.cells[5].value[1];
+            }
+            // Si se selcciona comisaría
+            else {
+              actuacionAsistenciaItem.comisariaJuzgado = 'C';
+              actuacionAsistenciaItem.lugar = row.cells[4].value[2];
+              actuacionAsistenciaItem.numeroAsunto = row.cells[5].value[0];
+            }
+            
+              
           }
           actuacionAsistenciaItem.fechaJustificacion = this.resultadoAE.fechaJustificacion;
 
@@ -951,7 +1006,6 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
               this.search();
             }
           }
-          //ARR
           //this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
         }
       }

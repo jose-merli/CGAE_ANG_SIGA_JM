@@ -26,21 +26,29 @@
         <app-fecha [(value)]="asistencia.fechaEstado" (valueChangeSelected)="fillFechaEstado($event)" [disabled]="true"
         (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
       </div>
-      <div class="form-group col-lg-2 col-md-2">
+      <div class="form-group col-lg-1 col-md-1">
         <label>{{'formacion.busquedaInscripcion.fechaSolicitud' | translate}}</label>
-        <app-fecha [(value)]="asistencia.fechaSolicitud" (valueChangeSelected)="fillFechaSolicitud($event)" [showTime]="true"
+        <app-fecha [(value)]="asistencia.fechaSolicitud" (valueChangeSelected)="fillFechaSolicitud($event)"
         (valueChangeInput)="fillFechaSolicitud($event)" [disabled]="ineditable"></app-fecha>
+      </div>
+      <div class="form-group col-lg-1 col-md-1">
+        <label>{{'sjcs.guardia.asistencia.HoraSolicitud' | translate}}</label>
+        <input type="time" class="form-control" placeholder="HH:MI" [(ngModel)]="horaFSolicitud"/>
       </div>
       <div class="form-group col-lg-1 col-md-1">
         <label>{{'justiciaGratuita.guardia.fichaasistencia.fechacierre' | translate}}</label>
         <app-fecha [(value)]="asistencia.fechaCierre" (valueChangeSelected)="fillFechaCierre($event)"
         (valueChangeInput)="fillFechaCierre($event)" [disabled]="ineditable"></app-fecha>
       </div>
-      <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-group-interlineado col-lg-2 col-md-2">
           <label>{{'censo.resultadosSolicitudesModificacion.literal.fecha' | translate}} {{'agenda.fichaEventos.datosAsistencia.asistencia' | translate}}(*)</label>
-          <app-fecha [(value)]="asistencia.fechaAsistencia" (valueChangeSelected)="fillFechaAsistencia($event)" [showTime]="true"
+          <app-fecha [(value)]="asistencia.fechaAsistencia" (valueChangeSelected)="fillFechaAsistencia($event)"
           (valueChangeInput)="fillFechaAsistencia($event)" [disabled]="disableDataForEdit || ineditable"
           [inputStyleClass]="styleObligatorio(asistencia.fechaAsistencia)" (fechaHoraSelectedButton)="markSelectedButtonToday($event)"></app-fecha>
+      </div>
+      <div class="form-group col-lg-1 col-md-1">
+        <label>{{'sjcs.guardia.asistencia.HoraAsistencia' | translate}}</label>
+        <input type="time" class="form-control" placeholder="HH:MI" pInputText [disabled]="disableDataForEdit || ineditable" [(ngModel)]="horaFAsistencia"/>
       </div>
       <div class="form-group-interlineado col-lg-3 col-md-3">
         <label>{{"dato.jgr.guardia.guardias.turno" | translate}}(*)</label>

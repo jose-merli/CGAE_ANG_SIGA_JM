@@ -4,12 +4,9 @@
   <div class="loader"></div>
 </div>
 
-<div id="facSJCSTarjFacGene">
-
+<div class="busqueda-container" id="facSJCSTarjFacGene">
   <div class="card">
-
     <div class="card-header header-ficha">
-
       <div *ngIf="!showTarjeta" class="form-row">
 
         <div class="col-lg-1 col-md-2">
@@ -23,12 +20,10 @@
             <label class="mr-auto title-ficha">{{ 'facturacionSJCS.tarjGenFac.facturaciones' | translate }}</label>
           </div>
           <div [ngClass]="{'d-flex justify-content-between': (datos && datos != null && datos.length > 0)}">
-            <label
-              *ngIf="datos && datos != null && datos.length > 0">{{ 'facturacionSJCS.tarjGenFac.total' | translate }}:
+            <label *ngIf="datos && datos != null && datos.length > 0">{{ 'facturacionSJCS.tarjGenFac.total' | translate }}:
               <span>{{ totalFacturado | currency: 'EUR'}}</span>
             </label>
-            <label
-              *ngIf="datos && datos != null && datos.length > 0">{{ 'facturacionSJCS.tarjGenFac.pagado' | translate }}:
+            <label *ngIf="datos && datos != null && datos.length > 0">{{ 'facturacionSJCS.tarjGenFac.pagado' | translate }}:
               <span>{{ totalPagado | number : '1.2-2'}} %</span>
             </label>
             <i *ngIf="!showTarjeta && (datos && datos != null && datos.length > 0)" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
@@ -59,7 +54,7 @@
 
     </div>
 
-    <div *ngIf="showTarjeta" class="card-body card-body-ficha">
+    <div *ngIf="showTarjeta" class="px-0 pt-0 pb-0 card-body card-body-ficha">
 
       <p-table class="tabla-listado" [responsive]="true" #table class="tabla-listado" [paginator]="true" [value]="datos"
         dataKey="id" [columns]="cols" [rows]="selectedItem" [selectionMode]="selectionMode"

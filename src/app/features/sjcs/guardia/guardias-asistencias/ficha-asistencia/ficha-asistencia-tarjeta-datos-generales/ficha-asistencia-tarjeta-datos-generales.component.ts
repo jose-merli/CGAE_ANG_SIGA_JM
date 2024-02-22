@@ -64,7 +64,8 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     numColegiado: '',
     nombreAp: ''
   };
-
+  horaFSolicitud: String;
+  horaFAsistencia: String;
   currentRoute: String;
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
@@ -114,7 +115,6 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
             }
           }
         }
-      
         this.disableDataForEdit = false;
         sessionStorage.removeItem("datosAsistencia");
       }
@@ -146,7 +146,14 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
     this.getComboEstadosAsistencia();
     this.getComboRefuerzoSustitucion();
-
+    if (this.asistencia.fechaAsistencia){
+      const fechaHoraAsist = this.asistencia.fechaAsistencia.split(" ");
+      this.horaFAsistencia = fechaHoraAsist[1];
+    }
+    if (this.asistencia.fechaSolicitud){
+      const fechaHoraSol = this.asistencia.fechaSolicitud.split(" ");
+      this.horaFSolicitud = fechaHoraSol[1];
+    }
   }
 
   getComboRefuerzoSustitucion() {
@@ -234,7 +241,14 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
       //   n => {
       //     this.comboGuardias = n.combooItems;
       //   },
-      this.sigaServices.getParam("combo_guardiaPorTurnoDiasSemana", "?idTurno=" + this.asistencia.idTurno + "&fecha=" + this.asistencia.fechaAsistencia).subscribe(
+      let fechaHoraAsistencia = "";
+      if(this.horaFAsistencia != undefined && this.horaFAsistencia != null && this.horaFAsistencia != ""){
+        fechaHoraAsistencia = this.asistencia.fechaAsistencia + " " + this.horaFAsistencia;
+      } else {
+        fechaHoraAsistencia = this.asistencia.fechaAsistencia + " 00:00";
+      }
+
+      this.sigaServices.getParam("combo_guardiaPorTurnoDiasSemana", "?idTurno=" + this.asistencia.idTurno + "&fecha=" + fechaHoraAsistencia).subscribe(
         n => {
           this.comboGuardias = n.combooItems;
         },
@@ -450,7 +464,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
   fillFechaAsistencia(event) {
     if (event) {
-      this.asistencia.fechaAsistencia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
+      this.asistencia.fechaAsistencia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
       this.getTurnosByColegiadoFecha();
     } else {
       this.asistencia.fechaAsistencia = '';
@@ -465,7 +479,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
   fillFechaSolicitud(event) {
     if (event) {
-      this.asistencia.fechaSolicitud = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
+      this.asistencia.fechaSolicitud = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
     } else {
       this.asistencia.fechaSolicitud = '';
     }
@@ -528,7 +542,14 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   }
 
   fillParams() {
-    let parametros = '?guardiaDia=' + this.asistencia.fechaAsistencia;
+    let fechaHoraAsistencia = "";
+    if(this.horaFAsistencia != undefined && this.horaFAsistencia != null && this.horaFAsistencia != ""){
+      fechaHoraAsistencia = this.asistencia.fechaAsistencia + " " + this.horaFAsistencia;
+    } else {
+      fechaHoraAsistencia = this.asistencia.fechaAsistencia + " 00:00";
+    }
+
+    let parametros = '?guardiaDia=' + fechaHoraAsistencia;
 
     if (this.asistencia.idLetradoGuardia !== null
       && this.asistencia.idLetradoGuardia !== undefined
@@ -580,12 +601,40 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     }
   }
 
+comprobarFechaHora(){
+
+  let fechaHoraAsist =[];
+  if(this.asistencia.fechaAsistencia != null && this.asistencia.fechaAsistencia != undefined && this.asistencia.fechaAsistencia != "") {
+    fechaHoraAsist = this.asistencia.fechaAsistencia.split(" ");
+
+    if (this.horaFAsistencia != null && this.horaFAsistencia != undefined && this.horaFAsistencia != ""){
+      this.asistencia.fechaAsistencia = fechaHoraAsist[0] + " " + this.horaFAsistencia;
+    }
+    if (this.horaFAsistencia == undefined || this.horaFAsistencia == ""){
+      this.asistencia.fechaAsistencia = fechaHoraAsist[0] + " 00:00";
+    }
+  }
+  
+  let fechaHoraSol = [];
+  if(this.asistencia.fechaSolicitud != null && this.asistencia.fechaSolicitud != undefined && this.asistencia.fechaSolicitud != "") {
+    fechaHoraSol = this.asistencia.fechaSolicitud.split(" ");
+
+    if (this.horaFSolicitud != null && this.horaFSolicitud != undefined && this.horaFSolicitud != "" ){ 
+      this.asistencia.fechaSolicitud = fechaHoraSol[0] + " " + this.horaFSolicitud;
+    }
+    if (this.horaFSolicitud == undefined || this.horaFSolicitud == ""){
+      this.asistencia.fechaSolicitud = fechaHoraSol[0] + " 00:00";
+    }
+  }  
+}
+
   saveAsistencia() {
     //console.log("+++++++++++ VALUE OF fechaHoraSelectedButton = " + this.fechaHoraSelectedButton);
     let isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     if (this.checkDatosObligatorios()) {
       this.progressSpinner = true
       let idAsistencia = this.idAsistenciaCopy ? this.idAsistenciaCopy : '';
+      this.comprobarFechaHora();
       let asistencias: TarjetaAsistenciaItem[] = [this.asistencia];
       this.sigaServices
         .postPaginado("busquedaGuardias_guardarAsistenciasDatosGenerales", "?idAsistenciaCopy=" + idAsistencia + "&isLetrado=" + isLetrado + "&isTodaySelected=" + this.fechaHoraSelectedButton, asistencias)
@@ -593,7 +642,11 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           n => {
             let result = JSON.parse(n["body"]);
             if (result.error) {
-              this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+              if(result.error.description.includes("Unparseable date")){
+                this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar.fechaHora"), '');
+              }else{
+                this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+              }
             } else {
               this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
               if (this.preasistencia) {

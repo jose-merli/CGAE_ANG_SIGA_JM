@@ -14,9 +14,20 @@
     margin-right: auto;
     margin-left:0.25rem;
 }
-
 .fix-fija{
     top: 12.8% !important
+}
+.enlace {
+    color: blue; 
+    text-decoration: underline
+}
+.box-enlace {
+    padding: 2px 10px 2px 10px;
+}
+.arrows {
+    position: absolute;
+    right: 0;
+    bottom: 10px;
 }
 
 

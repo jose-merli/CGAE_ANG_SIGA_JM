@@ -170,8 +170,6 @@ export class AsuntosComponent implements OnInit, OnChanges {
     }
     this.persistenceService.clearDatosEJG();
     sessionStorage.setItem("justiciable", JSON.stringify(this.body));
-    let nombreApellidos =  this.body.apellidos + " " + this.body.nombre
-    sessionStorage.setItem("nombreInteresado", nombreApellidos);
     this.persistenceService.clearDatos();
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);
@@ -474,7 +472,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
         this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
           n => {
             result = JSON.parse(n.body).ejgItems;
-            sessionStorage.setItem("EJGItemDesigna", JSON.stringify(result[0]));
+            this.persistenceService.setDatosEJG(result[0]);
             let error = JSON.parse(n.body).error;
 
             this.progressSpinner = false;

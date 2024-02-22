@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -7,9 +7,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
 import { DataTable } from "primeng/datatable";
-import { forEach } from '@angular/router/src/utils/collection';
 import { DatePipe } from '@angular/common';
-import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-estados',
@@ -17,18 +15,18 @@ import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
   styleUrls: ['./estados.component.scss']
 })
 export class EstadosComponent implements OnInit {
+
+  @Input() datos: EJGItem;
   @Input() modoEdicion;
-  permisoEscritura: boolean = false;
   @Input() tarjetaEstados: string;
+  @Input() permisoEscritura: boolean = false;
+  @Input() openTarjetaEstados;
+  @Output() guardadoSend = new EventEmitter<any>();
 
   openFicha: boolean = false;
-  nuevo;
-  body: EJGItem;
-  bodyInicial;
   rowsPerPage: any = [];
   cols;
   msgs;
-  item: EJGItem;
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -58,98 +56,50 @@ export class EstadosComponent implements OnInit {
   editaEstado: boolean = false;
   estadoAutomatico: boolean = false;
   resaltadoDatosGenerales: boolean = false;
-  fichaPosible = {
-    key: "estados",
-    activa: false
-  }
 
   inserCol: any[] = [];
 
   activacionTarjeta: boolean = false;
-  @Output() opened = new EventEmitter<Boolean>();
-  @Output() idOpened = new EventEmitter<Boolean>();
-  @Input() openTarjetaEstados;
-  //@Output() busqueda = new EventEmitter<boolean>();
 
-  @ViewChild("table")
-  table: DataTable;
+  @ViewChild("table") table: DataTable;
+
   creaEstado: boolean = false;
   numSelectedEstados: number;
   restablecer: boolean;
-
-  //[x: string]: any;
   esColegioZonaComun: boolean = false;
-  @Output() actualizarTarjetasIntercambios = new EventEmitter<void>();
-
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private commonsServices: CommonsService,
     private translateService: TranslateService, private confirmationService: ConfirmationService,
-    private changeDetectorRef: ChangeDetectorRef, private datepipe: DatePipe) { }
+    private changeDetectorRef: ChangeDetectorRef, private datepipe: DatePipe) { }
 
   ngOnInit() {
-    if (this.persistenceService.getDatosEJG()) {
-      this.nuevo = false;
-      this.modoEdicion = true;
-      this.body = this.persistenceService.getDatosEJG();
-      this.item = this.body;
-      this.creaEstado = true;
-      this.getEstados(this.item);
-      this.getCols();
-    } else {
-      this.nuevo = true;
-      this.modoEdicion = false;
-      this.item = new EJGItem();
-    }
-
+    this.modoEdicion = true;
+    this.creaEstado = true;
+    this.getEstados(this.datos);
+    this.getCols();
     this.getComboEstado();
-
-    this.esZonaComun().then(value => this.esColegioZonaComun = value)
-      .catch(() => this.esColegioZonaComun = false);
-
-      this.commonsServices.checkAcceso(procesos_ejg.estados)
-      .then(respuesta => {
-        this.permisoEscritura = respuesta;
-      }
-      ).catch(error => console.error(error));
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.openTarjetaEstados == true) {
-      if (this.openFicha == false) {
-        this.fichaPosible.activa = !this.fichaPosible.activa;
-        this.openFicha = !this.openFicha;
-      }
-    }
+    this.esZonaComun().then(value => this.esColegioZonaComun = value).catch(() => this.esColegioZonaComun = false);
   }
 
   getEstados(selected) {
-    // this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getEstados", selected).subscribe(
       n => {
         this.estados = JSON.parse(n.body).estadoEjgItems;
         this.datosEstados = this.estados;
-        // this.nExpedientes = this.expedientesEcon.length;
-        // this.persistenceService.setFiltrosAux(this.expedientesEcon);
-        // this.router.navigate(['/gestionEjg']);
         this.checkEstados = JSON.parse(JSON.stringify(this.estados));
-        //this.progressSpinner = false;
-
-        if (this.estados != undefined && this.estados.length > 0) {
-        }
-      },
-      err => {
-        //console.log(err);
       }
     );
     for (let i in this.datosEstados) {
       this.datosEstados[i].isMod = false;
     }
   }
+
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
     else return true;
   }
+
   openTab(evento) {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -161,6 +111,7 @@ export class EstadosComponent implements OnInit {
       }
     }
   }
+
   getCols() {
     this.cols = [
       { field: "fechaInicio", header: "censo.nuevaSolicitud.fechaEstado", width: "10%" },
@@ -174,24 +125,13 @@ export class EstadosComponent implements OnInit {
     this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
+      { label: 10, value: 10 },
+      { label: 20, value: 20 },
+      { label: 30, value: 30 },
+      { label: 40, value: 40 }
     ];
   }
+
   isSelectMultiple() {
     this.selectAll = false;
     if (this.permisoEscritura) {
@@ -295,19 +235,15 @@ export class EstadosComponent implements OnInit {
         this.activarRestablecerEstados();
         return;
       }
-
     }
-
 
     this.sigaServices.post("gestionejg_borrarEstado", this.selectedDatos).subscribe(
       n => {
-        //console.log(n);
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.getEstados(this.item);
+        this.getEstados(this.datos);
       },
       err => {
-        //console.log(err);
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
@@ -316,26 +252,20 @@ export class EstadosComponent implements OnInit {
   }
 
   getComboEstado() {
-    //this.progressSpinner = true;
-
     this.sigaServices.getParam("filtrosejg_comboEstadoEJG", "?filtroEstadoEjg=2").subscribe(
       n => {
         this.comboEstadoEJG = n.combooItems;
-        //this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
         this.progressSpinner = false;
       },
       err => {
-        //console.log(err);
         this.progressSpinner = false;
       }
     );
   }
 
   changeEstado() {
-
     this.showModalAnadirEstado = true;
     this.getComboEstado();
-
   }
 
   nuevaFila() {
@@ -347,7 +277,6 @@ export class EstadosComponent implements OnInit {
     this.valueComboEstado = "";
     this.observacionesEstado = "";
 
-    //this.datosEstados = JSON.parse(JSON.stringify(this.estados));
     let dummy = {
       fechaInicio: "",
       fechaModificacion: "",
@@ -362,7 +291,6 @@ export class EstadosComponent implements OnInit {
 
     this.datosEstados = [dummy, ...this.datosEstados];
     this.datosEstados[0].isMod = false;
-    //this.getComboEstado();
   }
 
   cancelaAnadirEstado() {
@@ -408,30 +336,24 @@ export class EstadosComponent implements OnInit {
 
     if (this.creaEstado == true) {
       let estadoNew = new EstadoEJGItem();
-      if(this.fechaIni){
-        let fechaAux :number = this.formatDate4(this.formatDate3(this.fechaIni));
+      if (this.fechaIni) {
+        let fechaAux: number = this.formatDate4(this.formatDate3(this.fechaIni));
         estadoNew.fechaInicio = new Date(fechaAux);
       } else {
         estadoNew.fechaInicio = new Date();
       }
-      
+
       estadoNew.idEstadoejg = this.valueComboEstado;
       estadoNew.observaciones = this.observacionesEstado;
-
-      estadoNew.numero = this.item.numero;
-      estadoNew.anio = this.item.annio;
-      estadoNew.idinstitucion = this.item.idInstitucion;
-      estadoNew.idtipoejg = this.item.tipoEJG;
-
+      estadoNew.numero = this.datos.numero;
+      estadoNew.anio = this.datos.annio;
+      estadoNew.idinstitucion = this.datos.idInstitucion;
+      estadoNew.idtipoejg = this.datos.tipoEJG;
       if (this.esColegioZonaComun && estadoNew.idEstadoejg === "7" && !(await this.confirmacionEnviarCAJGCambiarEstado())) {
-        this.getEstados(this.item);
+        this.getEstados(this.datos);
         return;
       }
 
-
-      //this.progressSpinner = true;
-
-      
       this.sigaServices.post("gestionejg_nuevoEstado", estadoNew).subscribe(
         n => {
           this.progressSpinner = false;
@@ -439,10 +361,10 @@ export class EstadosComponent implements OnInit {
           this.valueComboEstado = "";
           this.observacionesEstado = "";
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.getEstados(this.item);
+          this.getEstados(this.datos);
 
           if (this.esColegioZonaComun && estadoNew.idEstadoejg === "7") {
-            this.actualizarTarjetasIntercambios.emit();
+            this.guardadoSend.emit(this.datos);
           }
         },
         err => {
@@ -452,7 +374,7 @@ export class EstadosComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
-      
+
       //this.creaEstado = false;
     } else {
 
@@ -461,7 +383,7 @@ export class EstadosComponent implements OnInit {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("informesycomunicaciones.consultas.noPuedeEditarConsulta"));
       } else {
-        let fechaAux :number = this.formatDate4(this.formatDate3(this.selectedDatos[0].fechaInicio));
+        let fechaAux: number = this.formatDate4(this.formatDate3(this.selectedDatos[0].fechaInicio));
         this.selectedDatos[0].fechaInicio = fechaAux;
         this.selectedDatos[0].idEstadoejg = this.valueComboEstado;
         this.selectedDatos[0].observaciones = this.observacionesEstado;
@@ -473,23 +395,17 @@ export class EstadosComponent implements OnInit {
             this.valueComboEstado = "";
             this.observacionesEstado = "";
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.getEstados(this.item);
+            this.getEstados(this.datos);
           },
           err => {
-            //console.log(err);
             this.progressSpinner = false;
-            //this.busqueda.emit(false);
             this.selectedDatos = [];
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
         );
       }
-
-
     }
-
     this.activarRestablecerEstados();
-
   }
 
   confirmacionEnviarCAJGCambiarEstado(): Promise<boolean> {
@@ -518,41 +434,23 @@ export class EstadosComponent implements OnInit {
   }
 
   searchHistorical() {
-    this.item.historico = !this.item.historico;
+    this.datos.historico = !this.datos.historico;
     this.historico = !this.historico;
     if (this.historico) {
       this.editMode = false;
-      this.nuevo = false;
       this.selectAll = false;
       this.numSelected = 0;
     }
     this.selectMultiple = false;
     this.selectionMode = "single";
     this.persistenceService.setHistorico(this.historico);
-    this.getEstados(this.item);
-
-
+    this.getEstados(this.datos);
   }
 
-  esFichaActiva(key) {
-    return this.fichaPosible.activa;
+  abreCierraFicha() {
+    this.openTarjetaEstados = !this.openTarjetaEstados;
   }
-  abreCierraFicha(key) {
-    this.resaltadoDatosGenerales = true;
-    if (
-      key == "estados" &&
-      !this.activacionTarjeta
-    ) {
-      this.fichaPosible.activa = !this.fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-    if (this.activacionTarjeta) {
-      this.fichaPosible.activa = !this.fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-    this.opened.emit(this.openFicha);
-    this.idOpened.emit(key);
-  }
+
   checkPermisosDelete() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
 
@@ -588,83 +486,70 @@ export class EstadosComponent implements OnInit {
     }
   }
 
-  formatDate2(date) {
-      const pattern = 'yyyy-MM-dd';
-        return this.datepipe.transform(date, pattern);
-      }
-  formatDate3(date) {
-      //const pattern = 'dd-MM-yyyy';
-      let year = date.substring(6,10)
-      let month = date.substring(3,5)
-      let day = date.substring(0,2)
-      let date2 =  day + '-' + month + '-' + year;
-      return date2; //this.datepipe.transform(date, pattern);
-      } 
-  formatDate4(date) {
+  formatDate2(date) {
+    const pattern = 'yyyy-MM-dd';
+    return this.datepipe.transform(date, pattern);
+  }
+  formatDate3(date) {
+    //const pattern = 'dd-MM-yyyy';
+    let year = date.substring(6, 10)
+    let month = date.substring(3, 5)
+    let day = date.substring(0, 2)
+    let date2 = day + '-' + month + '-' + year;
+    return date2; //this.datepipe.transform(date, pattern);
+  }
+  formatDate4(date) {
     date = date.split("-");
-    var newDate = new Date( date[2], date[1] - 1, date[0]);
+    var newDate = new Date(date[2], date[1] - 1, date[0]);
     return newDate.getTime();
-  } 
-  changeDateFormat(date1){
-        //console.log('date1: ', date1)
-        let year = date1.substring(0, 4)
-        let month = date1.substring(5,7)
-        let day = date1.substring(8, 10)
-        let date2 = day + '/' + month + '/' + year;
-        return date2;
-      } 
-  
+  }
+  changeDateFormat(date1) {
+    //console.log('date1: ', date1)
+    let year = date1.substring(0, 4)
+    let month = date1.substring(5, 7)
+    let day = date1.substring(8, 10)
+    let date2 = day + '/' + month + '/' + year;
+    return date2;
+  }
+
   onRowSelectEstados(i) {
     let indice = parseInt(i);
     this.restablecer = true;
     this.editaEstado = false;
-    if(this.datosEstados[0].nuevoRegistro == true){
+    if (this.datosEstados[0].nuevoRegistro == true) {
       this.creaEstado = true;
-    }else if (this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null) {
-          this.estadoAutomatico = false;
-          this.editaEstado = true;
-          this.creaEstado = false;
-          this.guardar = true;
-          for (let j = 0; j < this.datosEstados.length; j++) {
-            if (j == indice) {
-              this.datosEstados[indice].isMod = true;
-              //this.getComboEstado();
-            } else {
-              this.datosEstados[j].isMod = false;
-            }
-          }
-
-
+    } else if (this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null) {
+      this.estadoAutomatico = false;
+      this.editaEstado = true;
+      this.creaEstado = false;
+      this.guardar = true;
+      for (let j = 0; j < this.datosEstados.length; j++) {
+        if (j == indice) {
+          this.datosEstados[indice].isMod = true;
+          //this.getComboEstado();
         } else {
-          this.estadoAutomatico = true;
-          this.datosEstados[indice].isMod = false;
-          this.restablecer = false;
-          this.editaEstado = false;
-          this.guardar = false;
-          this.creaEstado = true;
-          this.selectedDatos = [];
+          this.datosEstados[j].isMod = false;
+        }
+      }
+    } else {
+      this.estadoAutomatico = true;
+      this.datosEstados[indice].isMod = false;
+      this.restablecer = false;
+      this.editaEstado = false;
+      this.guardar = false;
+      this.creaEstado = true;
+      this.selectedDatos = [];
 
     }
 
-    //this.fechaIni = this.changeDateFormat(this.formatDate2(this.datosEstados[i].fechaInicio).toString()); 
-    //if(this.editaEstado == true && this.fechaIni != "" && this.datosEstados[i].fechaInicio != this.fechaIni){
-    //  this.datosEstados[i].fechaInicio = this.fechaIni;
-    //}else 
-    if(this.editaEstado == true && this.fechaIni == ""){
+    if (this.editaEstado == true && this.fechaIni == "") {
       this.fechaIni = this.changeDateFormat(this.formatDate2(this.datosEstados[i].fechaInicio).toString());
     }
-    if(this.editaEstado == true && this.valueComboEstado != "" && this.datosEstados[i].idEstadoejg != this.valueComboEstado){
+    if (this.editaEstado == true && this.valueComboEstado != "" && this.datosEstados[i].idEstadoejg != this.valueComboEstado) {
       this.datosEstados[i].idEstadoejg = this.valueComboEstado;
-    }else if(this.editaEstado == true && this.valueComboEstado == ""){
+    } else if (this.editaEstado == true && this.valueComboEstado == "") {
       this.valueComboEstado = this.datosEstados[i].idEstadoejg;
     }
-
-
-    /* if (this.datosEstados[0].nuevoRegistro == true) {
-      this.creaEstado = true;
-    } else {
-      this.creaEstado = false;
-    } */
   }
 
   activarRestablecerEstados() {
@@ -673,7 +558,7 @@ export class EstadosComponent implements OnInit {
     this.creaEstado = true;
     this.guardar = false;
     this.selectedDatos = [];
-    this.getEstados(this.item);
+    this.getEstados(this.datos);
     this.fechaIni = "";
     this.valueComboEstado = "";
     this.observacionesEstado = "";
@@ -683,9 +568,9 @@ export class EstadosComponent implements OnInit {
     this.observacionesEstado = event.target.value;
   }
 
-  fillFechaInicio(event, i){
+  fillFechaInicio(event, i) {
     this.fechaIni = this.changeDateFormat(this.formatDate2(event).toString());
-    if(i!= undefined){
+    if (i != undefined) {
       this.datosEstados[i].fechaInicio = this.fechaIni;
     }
   }
