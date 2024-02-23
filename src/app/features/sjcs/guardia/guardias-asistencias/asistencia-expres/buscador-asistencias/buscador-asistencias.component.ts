@@ -157,6 +157,8 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     this.persistenceService.clearDesignacion();
     this.persistenceService.clearAsistencia();
     this.persistenceService.clearDatosEJG();
+    this.persistenceService.clearDesignaItem();
+    this.persistenceService.clearDesignaItemLink();
   }
 
 
