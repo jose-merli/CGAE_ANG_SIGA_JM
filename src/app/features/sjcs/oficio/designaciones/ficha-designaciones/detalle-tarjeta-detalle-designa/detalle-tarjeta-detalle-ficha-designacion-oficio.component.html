@@ -93,15 +93,15 @@
   </div>
 </div>
 </div>
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardar" width="425"
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardarDet" width="425"
   #confirmGuardar>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardar.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardar.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardarDet.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardarDet.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmAnular" width="425"
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmAnularDet" width="425"
   #confirmAnular>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="confirmAnular.accept()"></button>
