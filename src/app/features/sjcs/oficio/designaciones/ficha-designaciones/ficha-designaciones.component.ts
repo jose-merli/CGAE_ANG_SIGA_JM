@@ -646,6 +646,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       this.searchInteresados();
       this.searchContrarios(false);
       this.searchRelaciones();
+      this.searchRelacionesConIdExpedienteExt();
       this.searchLetrados();
       this.getIdPartidaPresupuestaria(this.campos);
       this.getActuacionesDesigna(false);
@@ -1483,13 +1484,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
           let primero = this.relaciones[0];
           let error = JSON.parse(n.body).error;
 
-          this.relaciones.forEach(element => {
-            if (element.idExpedienteExt != null ){  
-              this.ejgsConExpedienteExt.push(element);
-              sessionStorage.setItem("tieneExpedienteExt", 'true');
-            }
-          });
-
           if (error != null && error.description != null) {
             this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
           }
@@ -1562,6 +1556,41 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         },
         () => {
 
+        }
+      );
+    }
+  }
+
+  searchRelacionesConIdExpedienteExt() {
+    if (!this.nuevaDesigna) {
+      this.progressSpinner = true;
+      let data = sessionStorage.getItem("designaItemLink");
+      let designaItem = JSON.parse(data);
+
+      let item = [designaItem.ano, designaItem.idTurno, designaItem.idInstitucion, designaItem.numero];
+
+      this.sigaServices.post("designacionesBusquedaRelacionesConIdExpedienteExt", item).subscribe(
+        n => {
+          let relacionesConExpedienteExt = JSON.parse(n.body).relacionesItem;
+          let error = JSON.parse(n.body).error;
+
+          relacionesConExpedienteExt.forEach(element => {
+            if (element.idExpedienteExt != null ){  
+              this.ejgsConExpedienteExt.push(element);
+              sessionStorage.setItem("tieneExpedienteExt", 'true');
+            }
+          });
+
+          if (error != null && error.description != null) {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
         }
       );
     }

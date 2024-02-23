@@ -9,6 +9,7 @@ import { FiltroAsistenciaItem } from '../../../../../../models/guardia/FiltroAsi
 import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-buscador-asistencias',
@@ -59,7 +60,8 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     private commonsService : CommonsService,
     private datePipe : DatePipe,
     private sigaStorageService : SigaStorageService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private persistenceService: PersistenceService) { }
     textFilter: string = "Seleccionar";
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.modoBusqueda.currentValue == 'a' && this.filtro.numColegiado){
@@ -151,6 +153,12 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     this.getComboProcedimientos();
     this.getComboEstadoAsistido();
     this.getComboTipoAsistenciaColegio();
+
+    this.persistenceService.clearDesignacion();
+    this.persistenceService.clearAsistencia();
+    this.persistenceService.clearDatosEJG();
+    this.persistenceService.clearDesignaItem();
+    this.persistenceService.clearDesignaItemLink();
   }
 
 

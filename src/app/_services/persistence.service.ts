@@ -25,6 +25,7 @@ export class PersistenceService {
     private asistenciaName: string = "asistencia";
     private fromDesignacionesName: string = "fromDesignaciones";
     private designaItemName: string = "designaItem";
+    private designaItemLinkName: string = "designaItemLink";
 
     constructor() { }
 
@@ -273,6 +274,10 @@ export class PersistenceService {
 
     clearDesignaItem(){
         sessionStorage.removeItem(this.designaItemName);
+    }
+
+    clearDesignaItemLink(){
+        sessionStorage.removeItem(this.designaItemLinkName);
     }
 
 
