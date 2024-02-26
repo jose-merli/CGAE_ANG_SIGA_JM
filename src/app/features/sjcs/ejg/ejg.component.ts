@@ -80,18 +80,13 @@ export class EJGComponent implements OnInit {
     if (this.persistenceService.getDatosEJG() != null) {
       this.persistenceService.clearDatosEJG();
     }
-    if (sessionStorage.getItem("Designacion")){
-      sessionStorage.removeItem("Designacion");
-    }
-    if (sessionStorage.getItem("designaItem")){
-      sessionStorage.removeItem("designaItem");
-    }
-    if (sessionStorage.getItem("fromDesignaciones")){
-      sessionStorage.removeItem("fromDesignaciones");
-    }
-    if (sessionStorage.getItem("asistencia")){
-      sessionStorage.removeItem("asistencia");
-    }
+
+    this.persistenceService.clearDesignacion();
+    this.persistenceService.clearDesignaItem();
+    this.persistenceService.clearFromDesignaciones();
+    this.persistenceService.clearAsistencia();
+    this.persistenceService.clearDatosEJG();
+    this.persistenceService.clearDesignaItemLink();
   }
 
   searchEJGs(event) {

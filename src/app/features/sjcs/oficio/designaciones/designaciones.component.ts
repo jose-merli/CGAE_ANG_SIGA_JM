@@ -14,6 +14,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
 import { element } from 'protractor';
 import { ColegiadoItem } from '../../../../models/ColegiadoItem';
+import { PersistenceService } from '../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-designaciones',
@@ -49,7 +50,8 @@ export class DesignacionesComponent implements OnInit {
   totalRegistrosBusquedaDesignaciones: any;
 
   constructor(public sigaServices: OldSigaServices, public sigaServicesNew: SigaServices, private location: Location,  private commonsService: CommonsService, 
-    private datePipe: DatePipe, private translateService: TranslateService, private localStorageService: SigaStorageService) {
+    private datePipe: DatePipe, private translateService: TranslateService, private localStorageService: SigaStorageService,
+    private persistenceService: PersistenceService,) {
 
 
     this.url = sigaServices.getOldSigaUrl("designaciones");
@@ -89,6 +91,12 @@ export class DesignacionesComponent implements OnInit {
         }
       });
     }
+
+    this.persistenceService.clearDesignacion();
+    this.persistenceService.clearAsistencia();
+    this.persistenceService.clearDatosEJG();
+    this.persistenceService.clearDesignaItem();
+    this.persistenceService.clearDesignaItemLink();
   }
 
   getDataLoggedUser() {

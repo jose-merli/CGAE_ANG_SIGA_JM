@@ -135,7 +135,7 @@
         <button (click)="addExp()" pButton [disabled]="!permisoEscritura || !modoEdicion || !haveDesignacion" type="button" icon="fa fa-plus" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
         <button (click)="comunicar()" pButton [disabled]="!modoEdicion" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
         <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!permisoEscritura" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="checkSave()" pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

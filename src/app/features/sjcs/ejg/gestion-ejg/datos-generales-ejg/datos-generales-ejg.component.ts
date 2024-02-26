@@ -55,6 +55,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   comboPrestaciones = [];
   comboTurno = [];
   comboGuardia = [];
+  resaltadoDatos: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
@@ -117,8 +118,34 @@ export class DatosGeneralesEjgComponent implements OnInit {
     );
   }
 
+  checkSave() {
+    if (this.checkCamposObligatorios()) {
+      this.muestraCamposObligatorios();
+    } else {
+      this.save();
+    }
+  }
+
   styleObligatorio(evento) {
-    return this.commonsServices.styleObligatorio(evento);
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsServices.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
+  }
+
+  checkCamposObligatorios() {
+    this.datos.tipoEJG = this.datos.tipoEJG.trim();
+
+    if (this.datos.fechaApertura != undefined && this.datos.fechaApertura != null &&
+      this.datos.tipoEJG != undefined && this.datos.tipoEJG != null && this.datos.tipoEJG.length > 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   numberOnly(event): boolean {
