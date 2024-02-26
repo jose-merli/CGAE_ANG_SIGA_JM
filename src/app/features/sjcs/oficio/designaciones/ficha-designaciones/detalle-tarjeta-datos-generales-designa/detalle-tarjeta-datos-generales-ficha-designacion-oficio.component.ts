@@ -310,7 +310,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.selectores[1].value = "";
     }
 
-	 if (sessionStorage.getItem("salto") == 'true') {
+	  if (sessionStorage.getItem("salto") == 'true') {
       this.salto = true;
       sessionStorage.removeItem("salto");
     }else{
@@ -439,6 +439,17 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           if(this.datosAsistencia.idTurno){
             this.selectores[0].value = this.datosAsistencia.idTurno;
           }
+        }else if(this.vieneDeEJG && this.datosEJG.idTurno){
+          // si viene de un EJG asignamos el mismo turno del EJG, si el tipo turno es 2 (Designación) o null
+            this.sigaServices.getParam("componenteGeneralJG_tipoTurno", "?idTurno=" + this.datosEJG.idTurno).subscribe(
+              n => {
+                if (n == null || n == 2){
+                  this.selectores[0].value = this.datosEJG.idTurno;
+                  if ( this.selectores[0].nombre == 'Turno'){
+                    this.comprobarLetradoColaTurno(this.datosEJG.idTurno);
+                  }
+                }
+              });
         }
         //Condicion pensada para que se aplique cuandose crea una designacion desde EJG
         /*if (this.datosEJG != undefined && this.datosEJG != null) {

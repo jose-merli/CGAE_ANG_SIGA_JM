@@ -97,6 +97,7 @@ export class DesignacionesComponent implements OnInit {
     this.persistenceService.clearDatosEJG();
     this.persistenceService.clearDesignaItem();
     this.persistenceService.clearDesignaItemLink();
+    this.persistenceService.clearEJGCopy();
   }
 
   getDataLoggedUser() {
