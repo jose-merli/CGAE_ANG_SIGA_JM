@@ -161,7 +161,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.hasChange = true;
   }
 
-  onChangeInput(){
+  onChangeInput(event){
     this.hasChange = true;
   }
 
