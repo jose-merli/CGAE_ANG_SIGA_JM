@@ -12,6 +12,7 @@ import { ResolucionEJGItem } from '../../../../models/sjcs/ResolucionEJGItem';
 import { RelacionesComponent } from './relaciones/relaciones.component';
 import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
 import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
+import { DesignaItem } from '../../../../models/sjcs/DesignaItem';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -66,11 +67,21 @@ export class GestionEjgComponent implements OnInit {
       this.body.calidad = '0';
       this.body.creadoDesde = 'M'
       if (sessionStorage.getItem("Designacion")) {
-        sessionStorage.setItem("designaItem", sessionStorage.getItem("Designacion"));
+        let designa: any = JSON.parse(sessionStorage.getItem("Designacion"));
+        sessionStorage.setItem("designaItem", designa);
         sessionStorage.removeItem("Designacion");
         this.body.creadoDesde = 'O';
         if(sessionStorage.getItem("nombreInteresado")){
           this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
+        }
+        if (designa.idTurno){
+          // si viene de un Designa asignamos el mismo turno del Designa, si el tipo turno es 1 (Tramitación) o null
+          this.sigaServices.getParam("componenteGeneralJG_tipoTurno", "?idTurno=" + designa.idTurno).subscribe(
+            idTipoTurno => {
+              if (idTipoTurno == null || idTipoTurno == 1){
+                this.body.idTurno = designa.idTurno;
+              }
+            });
         }
       } else if (sessionStorage.getItem("asistencia")) {
         sessionStorage.setItem("asistenciaItem", sessionStorage.getItem("asistencia"));
