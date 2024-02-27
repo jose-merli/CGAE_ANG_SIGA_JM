@@ -154,11 +154,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     this.getComboEstadoAsistido();
     this.getComboTipoAsistenciaColegio();
 
-    this.persistenceService.clearDesignacion();
-    this.persistenceService.clearAsistencia();
-    this.persistenceService.clearDatosEJG();
-    this.persistenceService.clearDesignaItem();
-    this.persistenceService.clearDesignaItemLink();
+    this.persistenceService.clearRelacionesEjgDesignaAsistencia();
   }
 
 
