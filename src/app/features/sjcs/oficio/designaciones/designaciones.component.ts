@@ -92,12 +92,7 @@ export class DesignacionesComponent implements OnInit {
       });
     }
 
-    this.persistenceService.clearDesignacion();
-    this.persistenceService.clearAsistencia();
-    this.persistenceService.clearDatosEJG();
-    this.persistenceService.clearDesignaItem();
-    this.persistenceService.clearDesignaItemLink();
-    this.persistenceService.clearEJGCopy();
+    this.persistenceService.clearRelacionesEjgDesignaAsistencia();
   }
 
   getDataLoggedUser() {

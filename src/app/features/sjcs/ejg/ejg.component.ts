@@ -81,12 +81,7 @@ export class EJGComponent implements OnInit {
       this.persistenceService.clearDatosEJG();
     }
 
-    this.persistenceService.clearDesignacion();
-    this.persistenceService.clearDesignaItem();
-    this.persistenceService.clearFromDesignaciones();
-    this.persistenceService.clearAsistencia();
-    this.persistenceService.clearDatosEJG();
-    this.persistenceService.clearDesignaItemLink();
+    this.persistenceService.clearRelacionesEjgDesignaAsistencia();
   }
 
   searchEJGs(event) {

@@ -67,8 +67,8 @@ export class GestionEjgComponent implements OnInit {
       this.body.calidad = '0';
       this.body.creadoDesde = 'M'
       if (sessionStorage.getItem("Designacion")) {
+        sessionStorage.setItem("designaItem", sessionStorage.getItem("Designacion"));
         let designa: any = JSON.parse(sessionStorage.getItem("Designacion"));
-        sessionStorage.setItem("designaItem", designa);
         sessionStorage.removeItem("Designacion");
         this.body.creadoDesde = 'O';
         if(sessionStorage.getItem("nombreInteresado")){

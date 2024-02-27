@@ -27,6 +27,7 @@ export class PersistenceService {
     private designaItemName: string = "designaItem";
     private designaItemLinkName: string = "designaItemLink";
     private ejgCopyName: string = "EJGcopy";
+    private asistenciaItemName: string = "asistenciaItem";
 
     constructor() { }
 
@@ -285,7 +286,20 @@ export class PersistenceService {
         sessionStorage.removeItem(this.ejgCopyName);
     }
 
+    clearAsistenciaItem(){
+        sessionStorage.removeItem(this.asistenciaItemName);
+    }
 
+    clearRelacionesEjgDesignaAsistencia(){
+        this.clearDatosEJG();
+        this.clearEJGCopy();
+        this.clearAsistencia();
+        this.clearAsistenciaItem();
+        this.clearDesignacion();
+        this.clearDesignaItem();
+        this.clearDesignaItemLink();
+        this.clearFromDesignaciones();
+    }
 
     clearPersistence() {
         this.clearFiltros();
