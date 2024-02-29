@@ -91,8 +91,6 @@ export class DesignacionesComponent implements OnInit {
         }
       });
     }
-
-    this.persistenceService.clearRelacionesEjgDesignaAsistencia();
   }
 
   getDataLoggedUser() {

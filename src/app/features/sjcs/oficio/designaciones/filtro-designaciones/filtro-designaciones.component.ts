@@ -14,6 +14,7 @@ import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { ParametroDto } from '../../../../../models/ParametroDto';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -105,7 +106,8 @@ export class FiltroDesignacionesComponent implements OnInit {
   };
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices, private location: Location, private router: Router,
-    private localStorageService: SigaStorageService, private commonsService: CommonsService, private confirmationService: ConfirmationService,) { }
+    private localStorageService: SigaStorageService, private commonsService: CommonsService, private confirmationService: ConfirmationService,   
+    private persistenceService: PersistenceService) { }
 
   ngOnInit(): void {
     //Si venimos de busqueda de colegiado desde justificacion expres
@@ -1374,6 +1376,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   nuevo() {
     this.progressSpinner = true
+    this.persistenceService.clearRelacionesEjgDesignaAsistencia();
     sessionStorage.setItem("nuevaDesigna", "true");
     this.router.navigate(["/fichaDesignaciones"]);
     this.progressSpinner = false;
