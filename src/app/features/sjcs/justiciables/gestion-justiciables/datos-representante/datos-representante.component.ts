@@ -71,6 +71,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	@Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
 	@Output() opened = new EventEmitter<Boolean>();
     @Output() idOpened = new EventEmitter<String>();
+	@Output() bodyChange = new EventEmitter<JusticiableItem>();
 
 
 	constructor(
@@ -528,6 +529,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",", this.generalBody.nombre)]
 			this.sigaServices.post('designaciones_updateRepresentanteInteresado', request).subscribe(
 				(n) => {
+					this.bodyChange.emit(this.body);
 					this.progressSpinner = false;
 					this.showMessage(
 						'success',
@@ -547,6 +549,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",", this.generalBody.nombre)]
 			this.sigaServices.post('designaciones_updateRepresentanteContrario', request).subscribe(
 				(n) => {
+					this.bodyChange.emit(this.body);
 					this.progressSpinner = false;
 					this.showMessage(
 						'success',
@@ -566,6 +569,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.apellidos.concat(",", this.generalBody.nombre), this.generalBody.idpersona]
 			this.sigaServices.post('gestionejg_updateRepresentanteContrarioEJG', request).subscribe(
 				(n) => {
+					this.bodyChange.emit(this.body);
 					this.progressSpinner = false;
 					this.showMessage(
 						'success',
@@ -583,6 +587,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		else {
 			this.sigaServices.post('gestionJusticiables_associateRepresentante', this.body).subscribe(
 				(n) => {
+					this.bodyChange.emit(this.body);
 					this.progressSpinner = false;
 					this.showMessage(
 						'success',

@@ -66,6 +66,7 @@ export class DatosProcuradorContrarioComponent implements OnInit, OnChanges {
 	@Output() contrarioEJG = new EventEmitter<boolean>();
 	@Output() opened = new EventEmitter<Boolean>();
 	@Output() idOpened = new EventEmitter<String>();
+	@Output() bodyChange = new EventEmitter<JusticiableItem>();
 
 	confirmationSave: boolean = false;
 	confirmationUpdate: boolean = false;
