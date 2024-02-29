@@ -43,7 +43,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
   checkVisibleInicial: boolean = false;
   selectedItem: number = 10;
   minDate: Date;
-
+  archivada: boolean = false;
   body: FacturacionItem = new FacturacionItem();
   bodyAux: FacturacionItem = new FacturacionItem();
 
@@ -106,6 +106,10 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
 
           if (undefined != data.facturacionItem[0].fechaDesde) {
             this.body.fechaDesde = new Date(data.facturacionItem[0].fechaDesde);
+          }
+          
+          if (undefined != data.facturacionItem[0].archivada) {
+            this.archivada = data.facturacionItem[0].archivada;
           }
 
           if (undefined != data.facturacionItem[0].fechaHasta) {
@@ -529,7 +533,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         return true;
       }
     } else {
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta)) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta) && (this.body.archivada = false)) {
         return false;
       } else {
         return true;
