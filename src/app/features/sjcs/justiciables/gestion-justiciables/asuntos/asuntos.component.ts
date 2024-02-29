@@ -62,6 +62,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<String>();
+  @Output() bodyChange = new EventEmitter<JusticiableItem>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
