@@ -40,12 +40,40 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.progressSpinner = true;
     this.modoEdicion = false;
     this.body = new JusticiableItem();
     this.body.idpaisdir1 = "191";
-    this.getCombos();
+    await this.getCombos();
+  }
+
+  async callServiceSearch() {
+    if (sessionStorage.getItem("justiciableDatosPersonalesSearch")) {
+      this.progressSpinner = true;
+      let justiciableBusqueda: JusticiableBusquedaItem  = JSON.parse(sessionStorage.getItem("justiciableDatosPersonalesSearch"));
+      sessionStorage.removeItem("justiciableDatosPersonalesSearch");
+
+      await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
+        n => {
+          this.body = JSON.parse(n.body).justiciable;
+          if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
+            this.addTelefono();
+          } 
+          this.bodyInicial = {...this.body};
+          this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
+          this.modoEdicion = true;       
+          this.bodyChange.emit(this.body);
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        });
+    }
+  }
+
+  ngAfterViewInit() {
+    this.callServiceSearch();
   }
 
   ngOnChanges(changes: SimpleChanges) {   
@@ -184,7 +212,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       if (!this.modoEdicion) {
         this.callSaveService("gestionJusticiables_createJusticiable");
       } else {
-        this.callSaveService("gestionJusticiables_updateJusticiable");
+        this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
       }
     }
   }
