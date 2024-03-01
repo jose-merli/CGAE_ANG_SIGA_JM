@@ -516,7 +516,10 @@ export class TarjetaConsultasComponent implements OnInit {
         }
       } else {
         this.modeloItem = JSON.parse(sessionStorage.getItem('modelosSearch'));
-        if (this.modeloItem.porDefecto && this.modeloItem.porDefecto == 'SI' && this.institucionActual != 2000) {
+        if (this.modeloItem != null 
+          && this.modeloItem.porDefecto != null 
+          && this.modeloItem.porDefecto == "SI" 
+          && this.institucionActual != 2000){
           if (
             sessionStorage.getItem("soloLectura") != null &&
             sessionStorage.getItem("soloLectura") != undefined &&
