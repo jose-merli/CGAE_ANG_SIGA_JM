@@ -40,54 +40,12 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.progressSpinner = true;
     this.modoEdicion = false;
     this.body = new JusticiableItem();
     this.body.idpaisdir1 = "191";
-    await this.getCombos();
-  }
-
-  async callServiceSearch() {
-    if (sessionStorage.getItem("justiciableDatosPersonalesSearch")) {
-      this.progressSpinner = true;
-      let justiciableBusqueda: JusticiableBusquedaItem  = JSON.parse(sessionStorage.getItem("justiciableDatosPersonalesSearch"));
-      sessionStorage.removeItem("justiciableDatosPersonalesSearch");
-
-      await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
-        n => {
-          let justiciable : JusticiableItem = JSON.parse(n.body).justiciable;
-          this.body.idtipovia = justiciable.idtipovia;
-          this.body.direccion = justiciable.direccion;
-          this.body.numerodir = justiciable.numerodir;
-          this.body.escaleradir = justiciable.escaleradir;
-          this.body.pisodir = justiciable.pisodir;
-          this.body.puertadir = justiciable.puertadir;
-          this.body.idpaisdir1 = justiciable.idpaisdir1;
-          this.body.codigopostal = justiciable.codigopostal;
-          this.body.idprovincia = justiciable.idprovincia;
-          this.body.idpoblacion = justiciable.idpoblacion;
-          this.body.correoelectronico = justiciable.correoelectronico;
-          this.body.fax = justiciable.fax;
-          this.body.telefonos = justiciable.telefonos;
-
-          if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
-            this.addTelefono();
-          } 
-          this.bodyInicial = {...this.body};
-          this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
-          this.modoEdicion = true;
-          this.progressSpinner = false;
-          this.bodyChange.emit(this.body);
-        },
-        err => {
-          this.progressSpinner = false;
-        });
-    }
-  }
-
-  ngAfterViewInit() {
-    this.callServiceSearch();
+    this.getCombos();
   }
 
   ngOnChanges(changes: SimpleChanges) {   

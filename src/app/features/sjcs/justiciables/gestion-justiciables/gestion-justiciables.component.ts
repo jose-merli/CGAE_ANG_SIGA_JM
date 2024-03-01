@@ -1287,7 +1287,7 @@ export class GestionJusticiablesComponent implements OnInit {
     this.body.correoelectronico = body.correoelectronico;
     this.body.fax = body.fax;
     this.body.telefonos = body.telefonos;
-
+    body = {... this.body};
   }
 
 }
