@@ -614,9 +614,9 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       );
     }else if(!this.controlDuplicados()){
       ///Mostrar mensaje error duplicado u obligatorio.
-      this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.plantillaDocumentos.mensage.errorDuplicados'));
+      this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.plantillaDocumentos.errorDuplicados'));
     }else{
-      this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.plantillaDocumentos.mensage.errorIncompleto'))
+      this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.plantillaDocumentos.errorIncompleto'))
     }
 
    
