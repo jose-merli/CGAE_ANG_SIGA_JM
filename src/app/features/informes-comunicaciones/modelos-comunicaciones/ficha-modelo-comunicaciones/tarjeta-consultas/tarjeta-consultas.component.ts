@@ -452,7 +452,8 @@ export class TarjetaConsultasComponent implements OnInit {
             element.plantillas = element.plantillas.join(', ')
           }
         });
-        if(this.datos.length > 0 && this.consultasComboDestinatarios.length > 0){
+
+        if(this.datos.length > 0 &&  this.consultasComboDestinatarios && this.consultasComboDestinatarios.length > 0){
           let consultaPrimerRegistroObj = this.consultasComboDestinatarios.find(consulta => consulta.value === this.datos[0].idConsulta);
            this.consultaPrimerRegistro = consultaPrimerRegistroObj ? consultaPrimerRegistroObj.label : "";
         }
