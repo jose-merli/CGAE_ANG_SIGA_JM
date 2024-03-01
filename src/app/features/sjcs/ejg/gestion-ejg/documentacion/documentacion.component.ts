@@ -23,8 +23,6 @@ export class DocumentacionComponent implements OnInit {
   @Input() openTarjetaDocumentacion;
   @Output() guardadoSend = new EventEmitter<any>();
 
-  @ViewChild('fileInput') fileInput;
-
   progressSpinner: boolean = false;
   selectMultiple: boolean = false;
   showModalNewDoc: boolean = false;
@@ -73,8 +71,8 @@ export class DocumentacionComponent implements OnInit {
     this.selectAll = false;
   }
 
-  openFileSelector(){
-    this.fileInput.nativeElement.click();
+  openFileSelector(rowidex){
+    document.getElementById("input-file-" + rowidex).click();
   }
 
   onFileSelected(event, documentacion){
@@ -120,7 +118,7 @@ export class DocumentacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("formacion.mensaje.extesion.fichero.erronea"));
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("ejg.documento.download.error"));
       }
     );
   }

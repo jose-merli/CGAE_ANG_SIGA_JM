@@ -31,5 +31,6 @@ export class DocumentacionEjgItem {
 	numero: number;
   propietario: string;
   propietarioDes: string;
+  idInstitucion: string;
   constructor() { }
 }
