@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, ViewChild,Output } from '@angular/core';
+import { Component, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { TranslateService } from '../../../../../commons/translate';
@@ -7,7 +7,6 @@ import { ActuacionDesignaItem } from '../../../../../models/sjcs/ActuacionDesign
 import { ActuacionDesignaObject } from '../../../../../models/sjcs/ActuacionDesignaObject';
 import { ConfirmationService, Message } from 'primeng/api';
 import { Row, DetalleTarjetaProcuradorFichaDesignaionOficioService } from './detalle-tarjeta-procurador-designa/detalle-tarjeta-procurador-ficha-designaion-oficio.service';
-import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component';
 import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -15,7 +14,6 @@ import { Router } from '@angular/router';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { DetalleTarjetaRelacionesDesignaComponent } from './detalle-tarjeta-relaciones-designa/detalle-tarjeta-relaciones-designa.component';
-import { RelacionesItem } from '../../../../../models/sjcs/RelacionesItem';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { DocumentoDesignaItem } from '../../../../../models/sjcs/DocumentoDesignaItem';
 import { DocumentoDesignaObject } from '../../../../../models/sjcs/DocumentoDesignaObject';
@@ -36,7 +34,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
   designaItem;
   procurador;
-  listaPrueba = [];
   relaciones: any;
   ejgsConExpedienteExt = [];
   comunicaciones: any;
@@ -249,7 +246,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private localStorageService: SigaStorageService,
     private persistenceService: PersistenceService) { }
-    
 
   ngOnInit() {
 
@@ -271,14 +267,12 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     this.idPersonaLogado = this.localStorageService.idPersona;
     this.numColegiadoLogado = this.localStorageService.numColegiado;
     if(this.isLetrado==undefined){
-      this.commonsService.getLetrado()
-      .then(respuesta => {
+      this.commonsService.getLetrado().then(respuesta => {
         this.isLetrado = respuesta;
         if(this.isLetrado){
           this.getDataLoggedUser();
         }
       });
-      
     }
 
     this.msjEliminarDesignacion = this.translateService.instant("justiciaGratuita.oficio.designaciones.eliminarDesignacion");
@@ -335,7 +329,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
     this.motivosRenuncia();
     if (sessionStorage.getItem('tarjeta') == 'sjcsDesigContra') {
-      //let colegiadoGeneral = JSON.parse(sessionStorage.getItem("sjcsDesigContra"));
       let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigContra');
       if (tarj != undefined) {
         tarj.opened = true;
@@ -343,7 +336,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       }
     }
     if (sessionStorage.getItem('tarjeta') == 'sjcsDesigInt') {
-      //let colegiadoGeneral = JSON.parse(sessionStorage.getItem("sjcsDesigContra"));
       let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigInt');
       if (tarj != undefined) {
         tarj.opened = true;
@@ -352,7 +344,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     }
     if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-      //sessionStorage.removeItem("buscadorColegiados");
       let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigaDatosGen');
       if (tarj != undefined) {
         tarj.opened = true;
@@ -366,8 +357,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     }
 
     // Controlar Permiso de Datos Generales
-    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaDatosGenerales)
-      .then(respuesta => {
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaDatosGenerales).then(respuesta => {
         this.permisoDatosGenerales = respuesta;
         // Añadir en la lista tarjetas.
         if (this.permisoDatosGenerales == undefined) {
@@ -378,8 +368,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .catch(err => console.log(err));
 
     // Controlar Permiso de Detalle Designas
-    this.commonsService.checkAcceso(procesos_oficio.designasDeDesignas)
-      .then(respuesta => {
+    this.commonsService.checkAcceso(procesos_oficio.designasDeDesignas).then(respuesta => {
         this.permisoDeDesignas = respuesta;
         // Añadir en la lista tarjetas.
         if (this.permisoDeDesignas == undefined) {
@@ -398,8 +387,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         }
       })
     // Controlar Permiso de Interesados
-    this.commonsService.checkAcceso(procesos_oficio.designasDefendidos)
-      .then(respuesta => {
+    this.commonsService.checkAcceso(procesos_oficio.designasDefendidos).then(respuesta => {
         this.permisoInteresados = respuesta;
         // Añadir en la lista tarjetas.
         if (this.permisoInteresados == undefined) {
@@ -669,22 +657,8 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
         });
       }
-      //this.searchColegiado();
-      /* {
-        "key": "Nº Colegiado",
-        "value": "6492"
-      },
-      {
-        "key": "Nombre",
-        "value": "MIGUEL HFGSGS AJSKFI"
-      },
-      {
-        "key": "Fecha designación",
-        "value": "02/07/2007"
-      } */
       this.progressSpinner = false;
     } else {
-
 
       this.progressSpinner = false;
 
@@ -801,11 +775,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       for (let index = 1; index < this.listaTarjetas.length - 1; index++) {
         this.listaTarjetas[index].detalle = false;
       }
-      /* this.listaTarjetas[4].enlaces=[{
-      id: null,
-          ref: null,
-          nombre: this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
-      }] */
 
       this.progressSpinner = false;
       // Rellenar Nombre de Justiciable Tarjeta Resumen.
@@ -825,7 +794,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       }
     }
     
-
     this.progressSpinner = false;
   }
 
@@ -839,21 +807,15 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         let permisosTree = JSON.parse(data.body);
         let permisosArray = permisosTree.permisoItems;
         derechoAcceso = permisosArray[0].derechoacceso;
-
-        
-      
         if (derechoAcceso == 3) {
           //permiso total
           this.tengoPermiso = true;
         } else {
           this.tengoPermiso = false;
         }
-
       }
     );
   }
-
-  
 
   ngOnChanges() {
     if (sessionStorage.getItem("buscadorColegiados")) {
@@ -874,15 +836,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         this.listaTarjetas[index].detalle = true;
       }
     }
-
-    /*
-        if (sessionStorage.getItem("rowGroupsProcurador")) {
-          sessionStorage.removeItem("rowGroupsProcurador");
-        }
-    
-        if (this.changes.rowGroups.currentValue) {
-          sessionStorage.setItem("rowGroupsProcurador", JSON.stringify(this.changes.rowGroups.currentValue));
-        }*/
   }
 
   ngAfterViewInit() {
@@ -916,8 +869,8 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         this.openTarjetaDesignaInteresados = true;
         break;
     }
-
   }
+
   isCloseReceive(event) {
     if (event != undefined) {
       switch (event) {
@@ -930,6 +883,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       }
     }
   }
+
   goTop() {
     let top = document.getElementById("top");
     if (top) {
@@ -937,17 +891,18 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       top = null;
     }
   }
+
   backTo() {
     sessionStorage.setItem("volver", "true");
-    if (sessionStorage.getItem("vieneDeFichaJusticiable")) {
-      sessionStorage.removeItem("vieneDeFichaJusticiable")
-    }
-
-    if (sessionStorage.getItem("idAsistencia")) {
-      //sessionStorage.setItem("vieneDeFichaDesigna", "true");
+    if(sessionStorage.getItem("vieneDeFichaJusticiable")){
+      sessionStorage.removeItem("vieneDeFichaJusticiable"); 
+      this.router.navigate(['/gestionJusticiables']);
+    } else if (this.persistenceService.getDatosEJG()) {
+      this.router.navigate(['/gestionEjg']);
+    } else if (sessionStorage.getItem("idAsistencia")) {
       this.router.navigate(['/fichaAsistencia']);
     }
-      this.location.back();
+    this.location.back();
   }
 
   transformaFecha(fecha) {
@@ -999,7 +954,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       historico: historico,
       idPersonaColegiado: idPersonaColegiado
     };
-
 
     this.sigaServices.post("actuaciones_designacion", params).subscribe(
       data => {
@@ -2418,7 +2372,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       }
     );
-
   }
 
   changeDataDatosFacEvent(event) {
@@ -2432,6 +2385,5 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     if (tarjDatosFac != undefined) {
       tarjDatosFac.campos = camposFacturacion;
     }
-
   }
 }

@@ -82,11 +82,7 @@ export class TablaJusticiablesComponent implements OnInit {
 
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-
   }
-
-  
-
 
   openTab(evento) {
     //Si hemos accedido desde algún asunto no accedemos a la ficha del justiciable
@@ -97,13 +93,12 @@ export class TablaJusticiablesComponent implements OnInit {
         this.persistenceService.clearDatos();
         this.persistenceService.setDatos(evento);
         this.persistenceService.clearBody();
-        this.router.navigate(["/gestionJusticiables"]);
       } else {
         this.persistenceService.clearBody();
         this.persistenceService.setBody(evento);
-        this.router.navigate(["/gestionJusticiables"]);
       }
       sessionStorage.setItem("vieneDeFichaJusticiable", "true") ;
+      this.router.navigate(["/gestionJusticiables"]);
     }
   }
 
@@ -176,10 +171,7 @@ export class TablaJusticiablesComponent implements OnInit {
 
   insertUniFamiliar(justiciable) {
     this.progressSpinner = true;
-
-    let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-
-
+    let ejg: EJGItem =  this.persistenceService.getDatosEJG();
     let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero]
     this.sigaServices.post("gestionejg_insertFamiliarEJG", request).subscribe(
       data => {
@@ -188,11 +180,7 @@ export class TablaJusticiablesComponent implements OnInit {
         sessionStorage.setItem('tarjeta', 'unidadFamiliar');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-        //this.router.navigate(["/gestionEjg"]);
-        //Para prevenir que se vaya a una ficha en blanco despues de que se haya creado un justiciable
-        this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
-        sessionStorage.removeItem("EJGItem");
-        this.location.back();
+        this.router.navigate(["/gestionEjg"]);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error != null) {

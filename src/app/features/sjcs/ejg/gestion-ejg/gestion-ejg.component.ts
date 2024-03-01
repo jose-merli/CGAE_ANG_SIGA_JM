@@ -12,7 +12,6 @@ import { ResolucionEJGItem } from '../../../../models/sjcs/ResolucionEJGItem';
 import { RelacionesComponent } from './relaciones/relaciones.component';
 import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
 import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
-import { DesignaItem } from '../../../../models/sjcs/DesignaItem';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -23,6 +22,8 @@ export class GestionEjgComponent implements OnInit {
 
   msgs: Message[];
   body: EJGItem = new EJGItem();
+  tipoRelacion: string = "";
+  tipoObject: any = {};
 
   modoEdicion: boolean = true;
   nuevo: boolean = false;
@@ -32,7 +33,7 @@ export class GestionEjgComponent implements OnInit {
   tarjetas = new Map();
 
   permisos: any = {};
-  datosResumen: any;
+  datosResumen = [];
   enlacesResumen = [];
 
   @ViewChild(RelacionesComponent) relacionesComponent: RelacionesComponent;
@@ -67,33 +68,37 @@ export class GestionEjgComponent implements OnInit {
       this.body.calidad = '0';
       this.body.creadoDesde = 'M'
       if (sessionStorage.getItem("Designacion")) {
-        sessionStorage.setItem("designaItem", sessionStorage.getItem("Designacion"));
-        let designa: any = JSON.parse(sessionStorage.getItem("Designacion"));
-        sessionStorage.removeItem("Designacion");
         this.body.creadoDesde = 'O';
+        this.tipoRelacion = "designacion";
+        this.tipoObject = JSON.parse(sessionStorage.getItem("Designacion"));
         if(sessionStorage.getItem("nombreInteresado")){
           this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
         }
-        if (designa.idTurno){
+        if (this.tipoObject.idTurno){
           // si viene de un Designa asignamos el mismo turno del Designa, si el tipo turno es 1 (Tramitación) o null
-          this.sigaServices.getParam("componenteGeneralJG_tipoTurno", "?idTurno=" + designa.idTurno).subscribe(
+          this.sigaServices.getParam("componenteGeneralJG_tipoTurno", "?idTurno=" + this.tipoObject.idTurno).subscribe(
             idTipoTurno => {
               if (idTipoTurno == null || idTipoTurno == 1){
-                this.body.idTurno = designa.idTurno;
+                this.body.idTurno = this.tipoObject.idTurno;
               }
             });
         }
+		sessionStorage.removeItem("Designacion");
       } else if (sessionStorage.getItem("asistencia")) {
-        sessionStorage.setItem("asistenciaItem", sessionStorage.getItem("asistencia"));
-        let asistencia = JSON.parse(sessionStorage.getItem("asistencia"));
-        sessionStorage.removeItem("asistencia");
+        this.tipoObject = JSON.parse(sessionStorage.getItem("asistencia"));
         this.body.creadoDesde = 'A'
-        this.body.nombreApeSolicitante = asistencia.asistido;
+        this.body.nombreApeSolicitante = this.tipoObject.asistido;
+        this.tipoRelacion = "asistencia";
+        sessionStorage.removeItem("asistencia");
       } else if(sessionStorage.getItem("justiciable")){
-        sessionStorage.setItem("justiciableItem", sessionStorage.getItem("justiciable"));
-        let justiciable = JSON.parse(sessionStorage.getItem("justiciable"));
+        this.tipoObject = JSON.parse(sessionStorage.getItem("justiciable"));
+        this.body.nombreApeSolicitante =  this.tipoObject.apellidos + ", " + this.tipoObject.nombre;
+        this.tipoRelacion = "justiciable";
         sessionStorage.removeItem("justiciable");
-        this.body.nombreApeSolicitante =  justiciable.apellidos + ", " + justiciable.nombre;
+      } else if(sessionStorage.getItem("SOJ")){
+        this.tipoObject = JSON.parse(sessionStorage.getItem("SOJ"));
+        this.tipoRelacion = "soj";
+        sessionStorage.removeItem("SOJ");
       }
       this.sigaServices.get("institucionActual").subscribe(n => {
         this.body.idInstitucion = n.value;
@@ -154,14 +159,11 @@ export class GestionEjgComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearDatos();
-    if (sessionStorage.getItem("designaItem")) {
-      sessionStorage.removeItem("designaItem");
+    if (this.tipoRelacion === "designacion") {
       this.router.navigate(["/fichaDesignaciones"]);
-    } else if (sessionStorage.getItem("asistenciaItem")) {
-      sessionStorage.removeItem("asistenciaItem");
+    } else if (this.tipoRelacion === "asistencia") {
       this.router.navigate(['/fichaAsistencia']);
-    } else if (sessionStorage.getItem("justiciableItem")) {
-      sessionStorage.removeItem("justiciableItem");
+    } else if (this.tipoRelacion === "justiciable") {
       this.router.navigate(['/gestionJusticiables']);
     } else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null){
       this.persistenceService.clearDatosEJG();

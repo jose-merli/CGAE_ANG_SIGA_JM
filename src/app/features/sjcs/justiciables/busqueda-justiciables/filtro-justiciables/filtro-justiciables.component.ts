@@ -104,21 +104,15 @@ export class FiltroJusticiablesComponent implements OnInit {
 
   backTo() {
     // Quitar para no poder Asociar Justiciables en caso de entrar en Uno.
-    // if (sessionStorage.getItem("itemEJG")) {
-    //   sessionStorage.removeItem("itemEJG");
-    // }
-    // if (sessionStorage.getItem("itemAsistencia")) {
-    //   sessionStorage.removeItem("itemAsistencia");
-    // }
-     if (sessionStorage.getItem("itemDesignas")) {
-       sessionStorage.removeItem("itemDesignas");
-     }
-    if (sessionStorage.getItem("EJGItem") && this.nuevaUniFamiliar) {
-      this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
-      sessionStorage.removeItem("EJGItem");
+    if (sessionStorage.getItem("itemDesignas")) {
+      sessionStorage.removeItem("itemDesignas");
     }
     sessionStorage.removeItem("fichaJust");
-    this.location.back();
+    if(this.persistenceService.getDatosEJG()){
+      this.router.navigate(["/gestionEjg"]);
+    } else {
+      this.location.back();
+    }
   }
 
   getComboRoles() {
@@ -126,9 +120,6 @@ export class FiltroJusticiablesComponent implements OnInit {
       n => {
         this.comboRoles = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboRoles);
-      },
-      err => {
-        //console.log(err);
       }
     );
   }

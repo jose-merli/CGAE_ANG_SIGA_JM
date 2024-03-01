@@ -1,21 +1,16 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Location } from "@angular/common";
 import { ConfirmationService } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
-import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableTelefonoItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { Subject } from 'rxjs';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { Router } from '@angular/router';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
-import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
-import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
-import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
-import { Dialog, DialogModule } from 'primeng/primeng';
+import { Dialog } from 'primeng/primeng';
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
@@ -28,50 +23,29 @@ import { ContrarioItem } from '../../../../../models/guardia/ContrarioItem';
 export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   bodyInicial;
-  datosInicial;
   progressSpinner: boolean = false;
 
   edadAdulta: number = 18;
   modoEdicion: boolean = false;
   msgs;
-  comboTipoIdentificacion;
-  comboSexo;
   comboTipoPersona;
-  comboEstadoCivil;
-  comboIdiomas;
-  comboProfesion;
-  comboRegimenConyugal;
-  comboMinusvalia;
-  comboPais;
+  comboTipoIdentificacion;
   comboNacionalidad;
-  comboProvincia;
-  poblacionBuscada;
-  comboPoblacion;
-  comboTipoVia;
+  comboIdiomas;
+  comboSexo;
+  comboEstadoCivil;
+  comboRegimenConyugal;
+  comboProfesion;
+  comboMinusvalia;
   nuevoJusticiable: boolean = false;
   showConfirmacion: boolean = false;
   vieneDeJusticiable: boolean = false;
   creaNuevoJusticiable: boolean = false;
   idPersonaAntiguoJusticiable;
 
-  provinciaSelecionada;
-  isDisabledPoblacion: boolean = true;
-  isDisabledProvincia: boolean = true;
-  codigoPostalValido;
-  poblacionExtranjera: boolean = true;
   justiciableBusquedaItem: JusticiableBusquedaItem;
-  cols;
-  datos: JusticiableTelefonoItem[] = [];
-  checkOtraProvincia;
-
-  edicionEmail: boolean = false;
-  emailValido: boolean = true;
-  faxValido: boolean = true;
-  cpValido: boolean = true;
-  resultadosPoblaciones;
 
   permisoEscritura: boolean = true;
-  nuevoTelefono: boolean = false;
   personaRepetida: boolean = false;
   modoRepre: boolean = false;
   searchJusticiable: boolean = false;
@@ -83,22 +57,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   nuevoContrarioEJG: boolean = false;
   nuevoSoj: boolean = false;
 
-  count: number = 1;
-  selectedDatos = [];
-  rowsPerPage: any = [];
-
-  selectedItem: number = 10;
-  selectAll: boolean = false;
-  numSelected = 0;
-  selectMultiple: boolean = false;
-
-  selectionMode = "";
-
-  @ViewChild("provincia") checkbox: Checkbox;
   @ViewChild("cdGeneralesUpdate") cdGeneralesUpdate: Dialog;
   @ViewChild("cdGeneralesSave") cdGeneralesSave: Dialog;
-  @ViewChild("cdPreferenteSms") cdPreferenteSms: Dialog;
-  @ViewChild("table") tabla;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
@@ -117,7 +77,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   @Input() checkedViewRepresentante;
   @Input() tarjetaDatosGenerales;  // Tarjeta Datos Generales para comprobar su estado.
 
-
   confirmationSave: boolean = false;
   confirmationUpdate: boolean = false;
   nuevoRepresentante: boolean = false;
@@ -135,8 +94,10 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private changeDetectorRef: ChangeDetectorRef,
-    private location: Location) { }
+    private location: Location) { 
+
+
+    }
 
   ngOnInit() {
 
@@ -162,12 +123,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.vieneDeJusticiable = true;
     }
 
-
     if (this.body != undefined && this.body.idpersona != undefined) {
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
       this.parseFechas();
-
     } else {
       this.body = new JusticiableItem();
       if (sessionStorage.getItem("nif")) {
@@ -185,17 +143,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.body.fechaalta = new Date();
     } else {
       this.modoEdicion = true;
-
-      if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
-        this.body.idprovincia != "") {
-        this.isDisabledPoblacion = false;
-      } else {
-        this.isDisabledPoblacion = true;
-      }
-
     }
-
-    this.progressSpinner = false;
 
     this.sigaServices.guardarDatosSolicitudJusticiable$.subscribe((data) => {
       this.body.autorizaavisotelematico = data.autorizaavisotelematico;
@@ -205,8 +153,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     });
 
     this.getCombos();
-    this.getColsDatosContacto();
-    this.getDatosContacto();
+
+    this.progressSpinner = false;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -214,11 +162,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     if (this.body != undefined) {
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.getDatosContacto();
       this.parseFechas();
     } else {
       this.body = new JusticiableItem();
-      this.progressSpinner = false;
     }
 
     //Obligatorio pais españa
@@ -229,13 +175,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.body.fechaalta = new Date();
     } else {
       this.modoEdicion = true;
-
-      if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
-        this.body.idprovincia != "") {
-        this.isDisabledPoblacion = false;
-      } else {
-        this.isDisabledPoblacion = true;
-      }
     }
 
     this.styleObligatorio(this.body.nombre);
@@ -245,6 +184,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     // Comprobar que la tarjeta general venga rellena y la mostramos.
     if (this.tarjetaDatosGenerales == true) this.showTarjeta = this.tarjetaDatosGenerales;
+
+    this.progressSpinner = false;
   }
 
   parseFechas() {
@@ -270,9 +211,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.getComboProfesion();
     this.getComboRegimenConyugal();
     this.getComboMinusvalia();
-    this.getComboPais();
-    this.getComboProvincia();
-    this.getComboTipoVia();
   }
 
   checkInteresado(justiciable) {
@@ -314,24 +252,20 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
       data => {
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         sessionStorage.removeItem('origin');
         sessionStorage.setItem('tarjeta', 'sjcsDesigInt');
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
         sessionStorage.setItem("creaInsertaJusticiableDesigna", "true");
         this.location.back();
-        //this.router.navigate(["/fichaDesignaciones"]);
       },
       err => {
+        this.progressSpinner = false;
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
       }
     );
   }
@@ -374,57 +308,43 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     
     this.sigaServices.post("designaciones_insertContrario", request).subscribe(
       data => {
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         sessionStorage.removeItem('origin');
         sessionStorage.setItem('tarjeta', 'sjcsDesigContra');
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-
         this.router.navigate(["/fichaDesignaciones"]);
       },
       err => {
+        this.progressSpinner = false;
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
       }
     );
   }
-
 
   asociarAsistido(justiciable: JusticiableItem) {
 
     let idAsistencia = sessionStorage.getItem("asistenciaAsistido");
     if (idAsistencia) {
-
-      this.sigaServices
-        .postPaginado("busquedaGuardias_asociarAsistido", "?anioNumero=" + idAsistencia + "&actualizaDatos='S'", justiciable)
-        .subscribe(
-          data => {
-            let result = JSON.parse(data["body"]);
-            if (result.error) {
-              this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-            } else {
-              this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
-              this.router.navigate(["/fichaAsistencia"]);
-            }
-
-          },
-          err => {
-            //console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
+      this.sigaServices.postPaginado("busquedaGuardias_asociarAsistido", "?anioNumero=" + idAsistencia + "&actualizaDatos='S'", justiciable).subscribe(
+        data => {
+          this.progressSpinner = false;
+          let result = JSON.parse(data["body"]);
+          if (result.error) {
+            this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+          } else {
+            this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
+            this.router.navigate(["/fichaAsistencia"]);
           }
-        );
-
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
     }
-
   }
 
   asociarContrarioAsistencia(justiciable: JusticiableItem) {
@@ -449,6 +369,26 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
         this.sigaServices.post("busquedaGuardias_actualizarContrario", request).subscribe(
           data => {
+            this.progressSpinner = false;
+            let result = JSON.parse(data["body"]);
+            if (result.error) {
+              this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            } else {
+              this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
+              this.router.navigate(["/fichaAsistencia"]);
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+          }
+        );
+      }
+
+      //Creamos un justiciable desde cero
+      else {
+        this.sigaServices.postPaginado("busquedaGuardias_asociarContrario", "?anioNumero=" + idAsistencia, justiciables).subscribe(
+          data => {
+            this.progressSpinner = false;
             let result = JSON.parse(data["body"]);
             if (result.error) {
               this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
@@ -459,37 +399,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             }
           },
           err => {
-            //console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
             this.progressSpinner = false;
           }
         );
-      }
-
-      //Creamos un justiciable desde cero
-      else {
-        this.sigaServices.postPaginado("busquedaGuardias_asociarContrario", "?anioNumero=" + idAsistencia, justiciables)
-          .subscribe(
-            data => {
-              let result = JSON.parse(data["body"]);
-              if (result.error) {
-                this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-              } else {
-                this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
-
-                this.router.navigate(["/fichaAsistencia"]);
-              }
-            },
-            err => {
-              //console.log(err);
-              this.progressSpinner = false;
-            },
-            () => {
-              this.progressSpinner = false;
-            }
-          );
       }
     }
   }
@@ -524,20 +436,17 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   insertContrarioEJG(justiciable) {
     this.progressSpinner = true;
 
-    let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+    let ejg: EJGItem = this.persistenceService.getDatosEJG();
 
     // let request = [justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero];
     let request = [justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, this.creaNuevoJusticiable, this.idPersonaAntiguoJusticiable];
 
     this.sigaServices.post("gestionejg_insertContrarioEJG", request).subscribe(
       data => {
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         sessionStorage.removeItem('origin');
         sessionStorage.setItem('tarjeta', 'contrariosPreDesigna');
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-        this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
-        sessionStorage.removeItem("EJGItem");
-
         this.router.navigate(["/gestionEjg"]);
       },
       err => {
@@ -546,9 +455,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        this.progressSpinner = false;
-      },
-      () => {
         this.progressSpinner = false;
       }
     );
@@ -574,51 +480,33 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   insertUniFamiliar(justiciable) {
     this.progressSpinner = true;
 
-    let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-    let data = []; 
-    let ejg2;
-    ejg2 = {uf_anio : ejg.annio, uf_idPersona : this.idPersonaAntiguoJusticiable, uf_idTipoejg : ejg.tipoEJG, uf_numero : ejg.numero};
-    data.push(ejg2);
-
-    // let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero]
+    let ejg: EJGItem = this.persistenceService.getDatosEJG();
     let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, this.creaNuevoJusticiable, this.idPersonaAntiguoJusticiable];
 
     this.sigaServices.post("gestionejg_insertFamiliarEJG", request).subscribe(
       data => {
-        sessionStorage.removeItem('origin');
-        //Para que se abra la tarjeta de unidad familiar y se haga scroll a ella
-        sessionStorage.setItem('tarjeta', 'unidadFamiliar');
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-        //this.router.navigate(["/gestionEjg"]);
-        //Para prevenir que se vaya a una ficha en blanco despues de que se haya creado un justiciable
-        //this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
-        //sessionStorage.removeItem("EJGItem");
-
-        let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-        this.persistenceService.setDatosEJG(ejg);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        //Para que se abra la tarjeta de unidad familiar y se haga scroll a ella
+        sessionStorage.removeItem('origin');
+        sessionStorage.setItem('tarjeta', 'unidadFamiliar');
         ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
-        sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
-
+        this.persistenceService.setDatosEJG(ejg);
         this.router.navigate(["/gestionEjg"]);
       },
       err => {
+        this.progressSpinner = false;
         if (err != undefined && JSON.parse(err.error).error != null) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
       }
     );
   }
 
   checkPermisosSave() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -662,13 +550,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         //Comprueba que si autorizaavisotelematico el correo no se pueda borrar
         if (this.bodyInicial.autorizaavisotelematico == "1") {
           if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
-            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
             this.progressSpinner = false;
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
           } else {
-
             if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
               this.callConfirmationUpdate();
-
             } else {
               let url = "gestionJusticiables_updateJusticiable";
               this.validateCampos(url);
@@ -678,14 +564,12 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           //Si tiene mas de un asunto preguntamos el dialog de guardar en todos o como nuevo
           if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
             this.callConfirmationUpdate();
-            
-          //Si no tiene mas asuntos directamente guardamos sin preguntar
           } else {
+            //Si no tiene mas asuntos directamente guardamos sin preguntar
             let url = "gestionJusticiables_updateJusticiable";
             this.validateCampos(url);
           }
         }
-
       } else {
         this.progressSpinner = false;
       }
@@ -793,27 +677,22 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       itemSojJusticiable.justiciable = justiciable; 
     }
     if (itemSojJusticiable != undefined || itemSojJusticiable != null ) {
-      this.sigaServices
-        .post("gestionSoj_asociarSOJ", itemSojJusticiable)
-        .subscribe(
-          data => {
-            let result = JSON.parse(data["body"]);
-            if (result.error) {
-              this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-            } else {
-              this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
-              this.router.navigate(["/detalle-soj"]);
-            }
-
-          },
-          err => {
-            this.showMessage('error', this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
+      this.sigaServices.post("gestionSoj_asociarSOJ", itemSojJusticiable).subscribe(
+        data => {
+          this.progressSpinner = false;
+          let result = JSON.parse(data["body"]);
+          if (result.error) {
+            this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+          } else {
+            this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
+            this.router.navigate(["/detalle-soj"]);
           }
-        );
+        },
+        err => {
+          this.showMessage('error', this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.progressSpinner = false;
+        }
+      );
     }
   }
 
@@ -875,23 +754,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.body.edad = this.body.edad;
     }
 
-    if (this.datos != undefined && this.datos.length > 0) {
-      let arrayTelefonos = JSON.parse(JSON.stringify(this.datos));
-      arrayTelefonos.splice(0, 2);
-
-      for (let index = 0; index < arrayTelefonos.length; index++) {
-        arrayTelefonos[index].numeroTelefono = arrayTelefonos[index].numeroTelefono.trim();
-
-        if (arrayTelefonos[index].preferenteSmsCheck) {
-          arrayTelefonos[index].preferenteSms = "1";
-        } else {
-          arrayTelefonos[index].preferenteSms = "0";
-        }
-      }
-
-      this.body.telefonos = arrayTelefonos;
-    }
-
     if (!(this.body.fechanacimiento instanceof Date)) {
       this.body.fechanacimiento = null;
     }
@@ -904,13 +766,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
         //Si se manda un mensaje igual a C significa que el nif del justiciable introducido esta repetido 
         if (JSON.parse(data.body).error.message != "C") {
-
-          //Si la persona es sobreescrita
-          // if (this.personaRepetida) {
-          //   this.modoEdicion = true;
-          //   this.personaRepetida = false;
-          //   this.searchJusticiableOverwritten.emit(this.body);
-          // }
 
           if (!this.modoEdicion) {
             this.modoEdicion = true;
@@ -934,8 +789,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
               this.newJusticiable.emit(this.body);
             }
           } else {
-            this.getTelefonosJusticiable();
-
             if (this.modoRepresentante) {
               if (this.persistenceService.getBody() != undefined) {
                 let representante = this.persistenceService.getBody();
@@ -945,12 +798,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             }
           }
 
-          if (this.nuevoTelefono) {
-            this.nuevoTelefono = false;
-          }
-
-          this.selectedDatos = [];
-
           if (this.modoRepresentante && !this.checkedViewRepresentante) {
             this.persistenceService.setBody(this.body);
             this.sigaServices.notifyGuardarDatosGeneralesRepresentante(this.body);
@@ -958,7 +805,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.sigaServices.notifyGuardarDatosGeneralesRepresentante(this.body);
           } else {
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-            this.datosInicial = JSON.parse(JSON.stringify(this.datos));
             this.sigaServices.notifyGuardarDatosGeneralesJusticiable(this.body);
           }
 
@@ -974,21 +820,18 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.bodyChange.emit(this.body);
       },
       err => {
-
+        this.progressSpinner = false;
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
           if (JSON.parse(err.error).error.code == "600") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           }
-
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
         //Actualizamos la Tarjeta Asuntos
         this.persistenceService.setDatos(this.body);
         this.actualizaAsunto.emit(this.body);
@@ -1003,11 +846,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   preAsociarJusticiable() {
     // Asociar solo si viene de EJG, Asistencia o Designa
-    if (sessionStorage.getItem("itemEJG") || sessionStorage.getItem("itemAsistencia") || sessionStorage.getItem("itemDesignas")) {
+    if (this.persistenceService.getDatosEJG() || sessionStorage.getItem("itemAsistencia") || sessionStorage.getItem("itemDesignas")) {
       this.asociarJusticiable();
-      if (sessionStorage.getItem("itemEJG")) {
-        sessionStorage.removeItem("itemEJG");
-      }
       if (sessionStorage.getItem("itemAsistencia")) {
         sessionStorage.removeItem("itemAsistencia");
       }
@@ -1027,15 +867,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       message: this.translateService.instant("gratuita.personaJG.mensaje.existeJusticiable.pregunta.crearNuevo"),
       icon: "fa fa-search ",
       accept: () => {
-        // this.progressSpinner = true;
-        // this.modoEdicion = true;
-        // let url = "gestionJusticiables_updateJusticiable";
-        // this.body.idpersona = id;
-        // this.body.validacionRepeticion = false;
-        // this.callSaveService(url);
-        // this.confirmationSave = false;
-
-
         this.confirmationSave = false;
         this.progressSpinner = true;
         let url = "gestionJusticiables_createJusticiable";
@@ -1045,7 +876,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.cdGeneralesSave.hide();
       },
       reject: () => {
-
       }
     });
   }
@@ -1054,45 +884,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.progressSpinner = false;
     this.confirmationUpdate = true;
     this.showConfirmacion = true;
-
-    /*this.confirmationService.confirm({
-      key: "cdGeneralesUpdate",
-      message: this.translateService.instant("gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos"),
-      icon: "fa fa-search ",
-      accept: () => {
-        this.progressSpinner = true;
-        this.confirmationUpdate = false;
-        let url = "gestionJusticiables_updateJusticiable";
-        this.validateCampos(url);
-      },
-      reject: () => {
-        if (this.confirmationUpdate) {
-          this.confirmationUpdate = false;
-          this.progressSpinner = true;
-          this.modoEdicion = false;
-          let url = "gestionJusticiables_createJusticiable";
-          this.body.asuntos = undefined;
-          this.body.datosAsuntos = [];
-          this.body.numeroAsuntos = undefined;
-          this.body.ultimoAsunto = undefined;
-          //Ya estavalidada la repeticion y puede crear al justiciable
-          this.body.validacionRepeticion = true;
-          this.body.asociarRepresentante = true;
-          this.validateCampos(url);
-          this.cdGeneralesUpdate.hide();
-        } else if (this.confirmationSave) {
-          this.confirmationSave = false;
-
-          this.progressSpinner = true;
-          let url = "gestionJusticiables_createJusticiable";
-          //Ya esta validada la repeticion y puede crear al justiciable
-          this.body.validacionRepeticion = true;
-          this.body.asociarRepresentante = true;
-          this.callSaveService(url);
-          this.cdGeneralesSave.hide();
-        }
-      }
-    });*/
   }
 
   reject() {
@@ -1124,165 +915,25 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     }
   }
 
-  getTelefonosJusticiable() {
-    this.progressSpinner = true;
-    this.sigaServices.post("gestionJusticiables_getTelefonos", this.body).subscribe(result => {
-
-      this.body.telefonos = JSON.parse(result.body).telefonosJusticiables;
-      this.getDatosContacto();
-      this.progressSpinner = false;
-
-    }, error => {
-      this.progressSpinner = false;
-      //console.log(error);
-    });
-  }
-
-  getColsDatosContacto() {
-
-    this.cols = [
-      { field: 'tipo', header: "censo.busquedaClientesAvanzada.literal.tipoCliente" },
-      { field: 'numeroTelefono', header: "administracion.parametrosGenerales.literal.valor" }
-    ]
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
-  }
-
-  getDatosContacto() {
-    this.datos = [];
-    this.count = 1;
-
-
-    let rowCorreoElectronico = new JusticiableTelefonoItem();
-    rowCorreoElectronico.tipo = "Correo-Electrónico";
-    rowCorreoElectronico.nombreTelefono = "Correo-Electrónico";
-    rowCorreoElectronico.numeroTelefono = this.body.correoelectronico;
-    rowCorreoElectronico.preferenteSmsCheck = false;
-    rowCorreoElectronico.count = this.count;
-
-    this.count += 1;
-
-    let rowFax = new JusticiableTelefonoItem();
-    rowFax.nombreTelefono = "Fax";
-    rowFax.tipo = "Fax";
-    rowFax.numeroTelefono = this.body.fax;
-    rowFax.preferenteSmsCheck = false;
-    rowFax.count = this.count;
-
-    this.count += 1;
-
-    this.datos.push(rowCorreoElectronico);
-    this.datos.push(rowFax);
-
-    if (this.body.telefonos != null && this.body.telefonos != undefined && this.body.telefonos.length > 0) {
-      this.body.telefonos.forEach(element => {
-        element.count = this.count;
-        element.tipo = "Telefono";
-        element.nuevo = false;
-        element.tlfValido = true;
-
-        if (element.preferenteSms == null || element.preferenteSms == "0") {
-          element.preferenteSmsCheck = false;
-        } else {
-          element.preferenteSmsCheck = true;
-        }
-
-        this.datos.push(element);
-        this.count++;
-      });
-    }
-
-    this.progressSpinner = false;
-    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-
-  }
-
   getComboMinusvalia() {
-
-    this.progressSpinner = true;
-
     this.sigaServices.get("gestionJusticiables_comboMinusvalias").subscribe(
       n => {
         this.comboMinusvalia = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboMinusvalia);
-        this.progressSpinner = false;
-
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-
-      }
-    );
-  }
-
-
-
-  getComboPais() {
-    this.progressSpinner = true;
-
-    this.sigaServices.get("direcciones_comboPais").subscribe(
-      n => {
-        this.comboPais = n.combooItems;
-        this.comboNacionalidad = n.combooItems;
-
-        this.comboNacionalidad.push({ label: "DESCONOCIDO", value: "0" });
-        this.commonsService.arregloTildesCombo(this.comboPais);
-        this.progressSpinner = false;
-
-      // Asignar por defecto nacionalidad(España).
-      if (sessionStorage.getItem("nuevoJusticiable")) {
-        this.body.idpais = this.comboNacionalidad[0].value;
-        this.nuevoJusticiable = true;
-      }
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
       }
     );
   }
 
   getComboProfesion() {
-    this.progressSpinner = true;
-
     this.sigaServices.get("gestionJusticiables_comboProfesiones").subscribe(
       n => {
         this.comboProfesion = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboProfesion);
-
-
-        this.progressSpinner = false;
-
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-
       }
     );
   }
 
   getComboRegimenConyugal() {
-    this.progressSpinner = true;
-
     this.comboRegimenConyugal = [
       { label: "Indeterminado", value: "I" },
       { label: "Gananciales", value: "G" },
@@ -1296,17 +947,12 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.body.regimenConyugal = this.comboRegimenConyugal[0].value;
       this.nuevoJusticiable = true;
     }
-
   }
 
   getComboTipoPersona() {
-
-    this.progressSpinner = true;
-
     this.comboTipoPersona = [
       { label: "Física", value: "F" },
       { label: "Jurídica", value: "J" }
-
     ];
     // Asignar por defecto el Valor Física.
     if (sessionStorage.getItem("nuevoJusticiable")) {
@@ -1314,15 +960,10 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.tipoPersona = this.comboTipoPersona[0].value;
       this.nuevoJusticiable = true;
     }
-
     this.commonsService.arregloTildesCombo(this.comboTipoPersona);
-
   }
 
   getComboSexo() {
-
-    this.progressSpinner = true;
-
     this.comboSexo = [
       { label: "Hombre", value: "H" },
       { label: "Mujer", value: "M" },
@@ -1337,270 +978,40 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   }
 
   getComboTiposIdentificacion() {
-    this.progressSpinner = true;
-
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
         this.comboTipoIdentificacion = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTipoIdentificacion);
-
-        this.progressSpinner = false;
-
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-
       }
     );
-  }
-
-  getComboTipoVia() {
-    this.progressSpinner = true;
-    this.sigaServices.get("gestionJusticiables_comboTipoVias").subscribe(
-      n => {
-        this.comboTipoVia = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboTipoVia);
-
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }
-    );
-
   }
 
   getComboEstadoCivil() {
-    this.progressSpinner = true;
     this.sigaServices.get("fichaColegialGenerales_estadoCivil").subscribe(
       n => {
         this.comboEstadoCivil = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadoCivil);
-               // Asignar por defecto el estado civil(Desconocido).
-               if (sessionStorage.getItem("nuevoJusticiable")) {
-                this.body.idestadocivil = this.comboEstadoCivil[1].value;
-                this.nuevoJusticiable = true;
-             }
-
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
+        // Asignar por defecto el estado civil(Desconocido).
+        if (sessionStorage.getItem("nuevoJusticiable")) {
+          this.body.idestadocivil = this.comboEstadoCivil[1].value;
+          this.nuevoJusticiable = true;
+        }
       }
     );
-
-    }
+  }
 
   getComboIdiomas() {
-    this.progressSpinner = true;
     this.sigaServices.get("etiquetas_lenguaje").subscribe(
       n => {
         this.comboIdiomas = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboIdiomas);
-
-        this.progressSpinner = false;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
       }
     );
-  }
-
-  getComboProvincia() {
-    this.progressSpinner = true;
-    this.sigaServices.get("integrantes_provincias").subscribe(
-      n => {
-        this.comboProvincia = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboProvincia);
-
-        if (this.body.idpoblacion != undefined && this.body.idpoblacion != null) {
-          this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
-        }
-      },
-      error => { },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  getComboPoblacionByIdPoblacion(idpoblacion) {
-    this.progressSpinner = true;
-
-    this.sigaServices
-      .getParam(
-        "gestionJusticiables_comboPoblacion",
-        "?idPoblacion=" +
-        idpoblacion
-      )
-      .subscribe(
-        n => {
-          this.comboPoblacion = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboPoblacion)
-
-        },
-        error => {
-          this.progressSpinner = false;
-
-        }, () => {
-          this.progressSpinner = false;
-
-        }
-      );
-  }
-
-  getComboPoblacion(filtro: string) {
-    this.progressSpinner = true;
-    this.poblacionBuscada = this.getLabelbyFilter(filtro);
-
-    this.sigaServices
-      .getParam(
-        "direcciones_comboPoblacion",
-        "?idProvincia=" +
-        this.body.idprovincia +
-        "&filtro=" +
-        this.poblacionBuscada
-      )
-      .subscribe(
-        n => {
-          this.comboPoblacion = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboPoblacion);
-        },
-        error => {
-          this.progressSpinner = false;
-
-        }, () => {
-          this.progressSpinner = false;
-
-        }
-      );
-  }
-
-  buscarPoblacion(e) {
-    if (e.target.value && e.target.value !== null && e.target.value !== "") {
-      if (e.target.value.length >= 3) {
-        this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-      } else {
-        this.comboPoblacion = [];
-        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
-      }
-    } else {
-      this.comboPoblacion = [];
-      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-    }
-  }
-
-  onChangeCodigoPostal() {
-    if (this.body.idpaisdir1 == "191" || this.body.idpaisdir1 == null || this.body.idpaisdir1 == undefined) {
-      if (
-        this.commonsService.validateCodigoPostal(this.body.codigopostal) &&
-        this.body.codigopostal.length == 5) {
-        let value = this.body.codigopostal.substring(0, 2);
-        this.provinciaSelecionada = value;
-        this.isDisabledPoblacion = false;
-        if (value != this.body.idprovincia) {
-          this.body.idprovincia = this.provinciaSelecionada;
-          this.body.idpoblacion = "";
-          this.comboPoblacion = [];
-          this.isDisabledProvincia = true;
-          this.isDisabledPoblacion = false;
-        }
-        this.codigoPostalValido = true;
-        this.cpValido = true;
-      } else {
-        if (this.body.codigopostal != null && this.body.codigopostal != undefined && this.body.codigopostal != "") {
-          this.cpValido = false;
-        } else {
-          this.cpValido = true;
-        }
-
-        this.codigoPostalValido = false;
-        this.isDisabledPoblacion = true;
-        this.provinciaSelecionada = "";
-        this.body.idpoblacion = undefined;
-        this.body.idprovincia = undefined;
-      }
-    }
-
-    if (this.body.codigopostal == undefined || this.body.codigopostal == "") {
-      this.cpValido = true;
-    }
-  }
-
-  onChangePais() {
-    //Si se selecciona un pais extranjero
-    if (this.body.idpaisdir1 != "191") {
-      this.body.idprovincia = "";
-      this.body.idpoblacion = "";
-      this.poblacionExtranjera = true;
-      this.isDisabledPoblacion = true;
-      this.comboPoblacion = [];
-      //Si se selecciona españa
-    } else {
-      this.poblacionExtranjera = false;
-
-      if (this.body.idprovincia != undefined && this.body.idprovincia != null && this.body.idprovincia != "") {
-        this.isDisabledPoblacion = false;
-      } else {
-        this.isDisabledPoblacion = true;
-      }
-
-      this.isDisabledProvincia = true;
-
-      if (this.body.codigopostal != undefined && this.body.codigopostal != null) {
-        this.onChangeCodigoPostal();
-      }
-
-    }
-  }
-
-
-  onChangeProvincia() {
-    this.body.idpoblacion = "";
-    this.comboPoblacion = [];
-  }
-
-  onChangeOtherProvincia(event) {
-    if (event) {
-      this.isDisabledPoblacion = true;
-
-      if (this.body.idpais == "191") {
-        this.isDisabledProvincia = false;
-      }
-
-      if (
-        (this.body.idpoblacion == null &&
-          this.body.idpoblacion == undefined) ||
-        this.body.idpoblacion == "") {
-        this.showMessage("error", "Error", this.translateService.instant("censo.datosDirecciones.mensaje.seleccionar.poblacion"));
-        this.isDisabledPoblacion = false;
-        this.isDisabledProvincia = true;
-        this.checkbox.checked = false;
-      }
-    } else {
-
-      if (
-        this.body.idpais == "191" &&
-        !this.checkOtraProvincia
-      ) {
-        this.isDisabledPoblacion = false;
-      }
-
-      this.isDisabledProvincia = true;
-      this.onChangeCodigoPostal();
-      this.checkOtraProvincia = false;
-    }
   }
 
   compruebaDNI() {
 
     if (this.body.nif != undefined && this.body.nif.trim() != "" && this.body.nif != null) {
-      //if (this.body.idtipoidentificacion != "50") {
       if (this.commonsService.isValidDNI(this.body.nif)) {
         this.body.idtipoidentificacion = "10";
         return true;
@@ -1617,21 +1028,16 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.body.idtipoidentificacion = "30";
         return true;
       }
-      //}
     } else {
       this.body.idtipoidentificacion = undefined;
     }
-
   }
 
   getLabelbyFilter(string): string {
-    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-para poder filtrar el dato con o sin estos caracteres*/
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, para poder filtrar el dato con o sin estos caracteres*/
     let labelSinTilde = string;
-    let accents =
-      "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-    let accentsOut =
-      "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+    let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
     let i;
     let x;
     for (i = 0; i < string.length; i++) {
@@ -1640,13 +1046,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         return labelSinTilde;
       }
     }
-
     return labelSinTilde;
   }
 
   checkPermisosRest() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -1655,32 +1059,13 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   rest() {
-
-    this.nuevoTelefono = false;
-    this.selectedDatos = [];
-    this.body.idpaisdir1 = "191";
-
     if (this.modoEdicion) {
       if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-      if (this.body.idpoblacion != undefined) {
-        this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
-      }
-
       this.parseFechas();
-
-      if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-      this.faxValido = true;
-      this.emailValido = true;
-
-      if (this.body.idpaisdir1 != "191") {
-        this.poblacionExtranjera = true;
-      } else {
-        this.poblacionExtranjera = false;
-      }
-
     } else {
       this.body = new JusticiableItem();
     }
+    this.body.idpaisdir1 = "191";
   }
 
   fillFechaNacimiento(event) {
@@ -1689,80 +1074,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.calculateAge();
     } else {
       this.body.edad = undefined;
-    }
-
-  }
-
-  checkPermisosNewData() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (!this.permisoEscritura || this.selectAll || this.selectMultiple) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.newData();
-      }
-    }
-  }
-
-  newData() {
-
-    this.nuevoTelefono = true;
-
-    let dato = new JusticiableTelefonoItem();
-    dato.nuevo = true;
-    dato.preferenteSmsCheck = false;
-    dato.preferenteSms = "0";
-    dato.count = this.count;
-    dato.tlfValido = true;
-    dato.numeroTelefono = undefined;
-    dato.nombreTelefono = undefined;
-
-    this.datos.push(dato);
-
-    this.count += 1;
-  }
-
-  onChangePreferente(dato) {
-
-    let checkedFind = this.datos.find(x => x.preferenteSmsCheck == true && x.count != dato.count);
-
-    if (checkedFind != undefined) {
-
-      let icon = "fa fa-edit";
-      let message = this.translateService.instant("justiciaGratuita.justiciables.message.cambiarTelefonoPreferente");
-
-      this.confirmationService.confirm({
-        key: "cdPreferenteSms",
-        message: message,
-        icon: icon,
-        accept: () => {
-
-          this.datos.forEach(element => {
-            element.preferenteSmsCheck = false;
-            element.preferenteSms = "0";
-          });
-
-          dato.preferenteSmsCheck = true;
-          dato.preferenteSms = "1";
-        },
-        reject: () => {
-
-          dato.preferenteSmsCheck = false;
-
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Cancelada",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
-        }
-      });
     }
   }
 
@@ -1781,10 +1092,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.body.edad = JSON.stringify(edad);
     }
-
-    // if (JSON.parse(this.body.edad) < this.edadAdulta) {
-    //   this.sigaServices.notifyEsMenorEdad(this.body);
-    // }
   }
 
   searchJusticiableByNif() {
@@ -1794,7 +1101,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       bodyBusqueda.nif = this.body.nif;
       this.notifySearchJusticiableByNif.emit(bodyBusqueda);
     }
-
   }
 
   search() {
@@ -1815,43 +1121,20 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
   }
 
-
   disabledSave() {
-    if (//this.body.idtipoidentificacion != undefined && this.body.idtipoidentificacion != "" &&
-      //this.body.nif != undefined && this.body.nif.trim() != "" &&
-      this.body.nombre != undefined && this.body.nombre.trim() != "" &&
+    if (this.body.nombre != undefined && this.body.nombre.trim() != "" &&
       this.body.apellido1 != undefined && this.body.apellido1.trim() != "" &&
-      this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" &&
-      this.faxValido && this.emailValido && this.cpValido) {
+      this.body.tipopersonajg != undefined && this.body.tipopersonajg != "") {
 
-      if (this.datos.length > 2) {
-        let valido = true;
-
-        let arrayTelefonos = JSON.parse(JSON.stringify(this.datos));
-        arrayTelefonos.splice(0, 2);
-
-        arrayTelefonos.forEach(element => {
-
-          if (valido) {
-            if (element.tlfValido && element.numeroTelefono != undefined && element.numeroTelefono.trim() != "") {
-              valido = true;
-            } else {
-              valido = false;
-            }
-          } else {
-            return true;
+      if(this.body.telefonos != null && this.body.telefonos.length > 0){
+        for (let i = 0; i < this.body.telefonos.length; i++){
+          if(this.body.telefonos[i].numeroTelefono === undefined || this.body.telefonos[i].numeroTelefono === ""){
+            this.body.telefonos.splice(i, 1);
           }
-        });
-
-        if (valido) {
-          return false;
-        } else {
-          return true;
         }
       }
 
       return false;
-
     } else {
       return true;
     }
@@ -1863,187 +1146,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.idOpened.emit('datosGenerales'); // Constante para abrir la Tarjeta de Resumen.
   }
 
-  changeEmail(value) {
-    this.emailValido = this.commonsService.validateEmail(value.numeroTelefono);
-
-    if (this.emailValido) {
-      this.body.correoelectronico = value.numeroTelefono;
-    }
-  }
-
-  changeTelefono(value) {
-    value.tlfValido = this.commonsService.validateTelefono(value.numeroTelefono);
-  }
-
-  changeFax(value) {
-    this.faxValido = this.commonsService.validateFax(value.numeroTelefono);
-
-    if (this.faxValido) {
-      this.body.fax = value.numeroTelefono;
-    }
-  }
-
-  editEmail() {
-    if (this.edicionEmail)
-      this.edicionEmail = false;
-    else this.edicionEmail = true;
-  }
-
-  checkPermisosRestData() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.restData();
-    }
-  }
-
-  restData() {
-
-    if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    this.faxValido = true;
-    this.emailValido = true;
-    this.selectedDatos = [];
-  }
-
-  checkPermisosDeleteData(selectedDatos) {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (this.disabledDelete()) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.deleteData(selectedDatos);
-      }
-    }
-  }
-
-  deleteData(selectedDatos) {
-
-    selectedDatos.forEach(element => {
-
-      if (!element.nuevo) {
-        let pos = this.datos.findIndex(
-          x => x.idTelefono == element.idTelefono);
-
-        if (pos != -1) {
-          this.datos.splice(pos, 1);
-        }
-      } else {
-        let pos = this.datos.findIndex(
-          x => x.count == element.count);
-
-        if (pos != -1) {
-          this.datos.splice(pos, 1);
-        }
-      }
-
-    });
-
-    this.selectedDatos = [];
-  }
-
-  onRowSelect(dato) {
-
-    if (!this.selectMultiple && !this.selectAll) {
-      if (this.selectionMode == "single") {
-        this.selectedDatos = undefined;
-      } else {
-        this.selectedDatos.pop();
-      }
-    } else {
-      if (dato.data.count == 1 || dato.data.count == 2) {
-        this.selectedDatos.pop();
-      }
-    }
-
-  }
-
-  editarCompleto(event, dato) {
-    let NUMBER_REGEX = /^\d{1,5}$/;
-    if (NUMBER_REGEX.test(dato)) {
-      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
-        this.body.codigopostal = event.currentTarget.value.slice(0, 5);
-        this.cpValido = true;
-      }
-    } else {
-
-      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
-        this.body.codigopostal = event.currentTarget.value.slice(0, 5);
-        this.cpValido = true;
-      } else {
-        this.body.codigopostal = "";
-        event.currentTarget.value = "";
-        this.cpValido = true;
-      }
-
-    }
-  }
-
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.tabla.reset();
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll) {
-      this.selectionMode = "multiple";
-      let arrays = JSON.parse(JSON.stringify(this.datos));
-      arrays.shift();
-      arrays.shift();
-      this.selectedDatos = JSON.parse(JSON.stringify(arrays));
-      this.selectMultiple = true;
-
-    } else {
-      this.selectionMode = "";
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectMultiple = false;
-    }
-
-  }
-
-  isSelectMultiple() {
-    if (this.permisoEscritura) {
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "";
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.selectionMode = "multiple";
-        this.numSelected = 0;
-      }
-    }
-  }
-
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-  }
-
-  disabledDelete() {
-    if (!this.selectMultiple && !this.selectAll) {
-      return true;
-
-    } else {
-
-      if ((this.selectionMode == "" && !this.selectedDatos) ||
-        ((this.selectionMode == "multiple" && this.selectedDatos.length == 0))) {
-        return true;
-      } else {
-        return false;
-      }
-
-    }
-
-  }
-
   styleObligatorio(evento) {
     if ((evento == undefined || evento == null || evento == "")) {
       return this.commonsService.styleObligatorio(evento);
@@ -2051,7 +1153,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
   muestraCamposObligatorios() {
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
-
   }
 
   guardar(){
@@ -2063,22 +1164,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.validateCampos(url);
       
     }else if(this.guardaOpcion=="n"){
-      // if (this.confirmationUpdate) {
-      //   this.confirmationUpdate = false;
-      //   this.progressSpinner = true;
-      //   this.modoEdicion = false;
-      //   let url = "gestionJusticiables_createJusticiable";
-      //   this.body.asuntos = undefined;
-      //   this.body.datosAsuntos = [];
-      //   this.body.numeroAsuntos = undefined;
-      //   this.body.ultimoAsunto = undefined;
-      //   //Ya estavalidada la repeticion y puede crear al justiciable
-      //   this.body.validacionRepeticion = true;
-      //   this.body.asociarRepresentante = true;
-      //   this.validateCampos(url);
-      //   this.cdGeneralesUpdate.hide();
-      // } else if (this.confirmationSave) {
-      
+
       //Creamos un nuevo justiciable y actualizamos la relacion de Asunto del justiciable antiguo por el nuevo
       this.modoEdicion = false;
       this.modoRepresentante = true;  
@@ -2095,10 +1181,10 @@ para poder filtrar el dato con o sin estos caracteres*/
       //Indicamos que venimos como nuevo Justiciable editando
       this.creaNuevoJusticiable = true;
       this.callSaveService(url);
-      // }
     }
     this.showConfirmacion = false;
   }
+
   cancelar(){
     this.showConfirmacion = false;
   }
