@@ -89,6 +89,10 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     }
     this.colsCurriculares = [
       {
+        field: "idCv",
+        header: "administracion.grupos.literal.id"
+      },
+      {
         field: "fechaDesde",
         header: "facturacion.seriesFacturacion.literal.fInicio"
       },
