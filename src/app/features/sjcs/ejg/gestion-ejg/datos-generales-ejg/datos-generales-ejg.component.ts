@@ -25,6 +25,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Input() permisoEscritura: boolean = false;
   @Input() haveDesignacion: boolean = false;
   @Input() openTarjetaDatosGenerales: boolean = false;
+  @Input() tipo: string = "";
+  @Input() tipoObject: any = {};
   @Output() crearDesignacion = new EventEmitter<any>();
   @Output() guardadoSend = new EventEmitter<any>();
 
@@ -227,10 +229,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
             this.datos.numEjg = ejgObject[0].numEjg;
             this.datosIniciales = {...this.datos};
 
-            if (sessionStorage.getItem("designaItem")) {
+            if (this.tipo === "designacion") {
 
               //En el caso que se proceda de una designación, se asocia el EJG con la designación
-              let designa: DesignaItem = JSON.parse(sessionStorage.getItem("designaItem"));
+              let designa: DesignaItem = this.tipoObject;
             
               //El formato de el atributo designa.ano es "D[año]/[numDesigna]"
               let designaAnio = designa.ano.toString().slice(1, 5);
@@ -257,11 +259,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
                   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
                 }
               );
-            } else if (sessionStorage.getItem("SOJ")) {
+            } else if (this.tipo === "soj") {
             
               //Si viene desde SOJ asociamos ejg y soj
-              let soj = JSON.parse(sessionStorage.getItem("SOJ"));
-              sessionStorage.removeItem("SOJ");
+              let soj = this.tipoObject;
               let request = [null, soj.anio, soj.numero, soj.idTipoSoj, this.datos.tipoEJG, this.datos.annio, this.datos.numEjg];
             
               this.sigaServices.post("soj_asociarEJGaSOJ", request).subscribe(
@@ -274,9 +275,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
                   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
                 }
               );
-            } else if (sessionStorage.getItem("justiciableItem")) {
+            } else if (this.tipo === "justiciable") {
               // Asociar Justiciable al EJG Interesados.
-              let datosJusticiables = JSON.parse(sessionStorage.getItem("justiciableItem"));
+              let datosJusticiables = this.tipoObject
               let requestEjg = [this.datos.annio, this.datos.numero, this.datos.tipoEJG, datosJusticiables.idpersona];
               
               // Objeto Asocicación de Justiciables y EJG.
@@ -289,9 +290,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
                   this.guardadoSend.emit(this.datos);
                 }
               );
-            } else if (sessionStorage.getItem("asistenciaItem")) {
+            } else if (this.tipo === "asistencia") {
             
-              let datosAsistencia = JSON.parse(sessionStorage.getItem("asistenciaItem"));
+              let datosAsistencia = this.tipoObject;
               
               let ejgItem: EJGItem = new EJGItem();
               ejgItem.annio = String(this.datos.annio);
@@ -348,7 +349,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
     } else {
       this.persistenceService.setDatosEJG(this.datos);
       sessionStorage.setItem("radioTajertaValue", 'des');
-      sessionStorage.setItem("EJG", JSON.stringify(this.datos));
       this.router.navigate(["/busquedaAsuntos"]);
     }
   }

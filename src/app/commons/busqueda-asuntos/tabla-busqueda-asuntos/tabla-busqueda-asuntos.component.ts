@@ -148,43 +148,7 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
     this.msgs = [];
   }
 
-   openTab(event) {
+  openTab(event) {
      this.elementoAsociado.emit(event.data);
-  } 
-
-
-  /* getAsunto(event) {
-    if (this.datos != null) {
-
-      let asunto = event.data.asunto.split("/");
-
-      let anoDesigna = asunto[0].split("D")[1];
-
-      let turno = event.data.turnoGuardia.split("/")[0];
-
-      //     let request = [anoDesigna, this.datos.annio, this.datos.tipoEJG,
-      //       //, newDesigna.idTurno.toString(), newId.id, this.datosEJG.numero
-      //       turno, asunto[1], this.datos.numero
-      //     ];
-
-      this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
-        m => {
-
-          if (JSON.parse(m.body).error.code == 200) this.showMessage("success", "Asociación con EJG realizada correctamente", "");
-          else this.showMessage("error", "Asociación con EJG fallida", "");
-          sessionStorage.removeItem("EJG");
-          this.location.back();
-        },
-        err => {
-          this.showMessage("error",
-            "No se ha asociado el EJG correctamente",
-            ""
-          );
-          this.progressSpinner = false;
-        }
-      );
-
-
-    }
-  } */
+  }
 }

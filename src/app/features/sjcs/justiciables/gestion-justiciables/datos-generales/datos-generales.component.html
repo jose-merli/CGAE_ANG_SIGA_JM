@@ -189,122 +189,10 @@
           </div>
         </div>
       </div>
-      <!--<div class="row">
-
-        <div class="col-lg-12 col-md-12">
-          <div class="form-row">
-            <div class="form-group col-lg-12 col-md-3 input-ayuda">
-              <div class="col-3">
-                <label style="font-weight: bold;">{{ 'envios.definir.literal.datosdestino' | translate }}</label>
-              </div>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ 'justiciaGratuita.justiciables.literal.tipoVia' | translate }}</label>
-              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                [(ngModel)]="body.idtipovia" [showClear]="true" [filter]="true" [options]="comboTipoVia"
-                [disabled]="!permisoEscritura">
-              </p-dropdown>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{"censo.consultaDirecciones.literal.direccion" | translate}}
-              </label>
-              <input [(ngModel)]="body.direccion" type="text" class="form-control" [maxLength]="95"
-                [disabled]="!permisoEscritura" pInputText>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"gratuita.busquedaAsistencias.literal.numero" | translate}}
-              </label>
-              <input type="text" class="form-control" maxLength="5" [(ngModel)]="body.numerodir"
-                [disabled]="!permisoEscritura" pInputText>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"gratuita.busquedaAsistencias.literal.escalera" | translate}}
-              </label>
-              <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.escaleradir"
-                [disabled]="!permisoEscritura" pInputText>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"gratuita.personaJG.literal.pisodir" | translate}}
-              </label>
-              <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.pisodir"
-                [disabled]="!permisoEscritura" pInputText>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"gratuita.personaJG.literal.puertadir" | translate}}
-              </label>
-              <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.puertadir"
-                [disabled]="!permisoEscritura" pInputText>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{"censo.datosDireccion.literal.pais2" | translate}}
-              </label>
-              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                [(ngModel)]="body.idpaisdir1" [showClear]="true" [filter]="true" [options]="comboPais"
-                (onChange)="onChangePais()" disabled>
-              </p-dropdown>
-            </div>
-
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{"censo.ws.literal.codigopostal" | translate}}
-              </label>
-              <input type="text" class="form-control" maxlength="5" [(ngModel)]="body.codigopostal"
-                (ngModelChange)="onChangeCodigoPostal()" [disabled]="!permisoEscritura"
-                (input)='editarCompleto($event,body.codigopostal)' pInputText>
-            </div>
-
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{"censo.datosDireccion.literal.provincia" | translate}}
-              </label>
-
-              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                [(ngModel)]='body.idprovincia' [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true"
-                filterBy="label,labelSinTilde" [options]="comboProvincia"
-                [disabled]="isDisabledProvincia || !permisoEscritura">
-              </p-dropdown>
-            </div>
-
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ 'gratuita.personaJG.literal.otraProvincia' | translate }}</label>
-              <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" #provincia binary="true" (onChange)="onChangeOtherProvincia($event)"
-                [disabled]="!permisoEscritura"></p-checkbox>
-            </div> 
-
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{"censo.consultaDirecciones.literal.poblacion" | translate}}
-              </label>
-              <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form"
-                [(ngModel)]='body.idpoblacion' [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"
-                [options]="comboPoblacion" (input)="buscarPoblacion($event)"
-                [emptyFilterMessage]="resultadosPoblaciones" [disabled]="isDisabledPoblacion || !permisoEscritura">
-              </p-dropdown>
-            </div>
-            <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDirecciones.literal.poblacion" | translate}}</label>
-              <input [(ngModel)]="body.idpoblacion" type="text" class="form-control" [maxLength]="99" pInputText>
-            </div> 
-
-          </div>
-        </div>
-      </div>-->
     </div>
-    
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <!--<div *ngIf="!fromJusticiable" class="form-group col-lg-3 col-md-3 main-button pt-3">
-          <label></label>
-          <button (click)="searchJusticiableByNif()" pButton type="button" icon="fa fa-search" iconPos="center"
-            [disabled]="!permisoEscritura"></button>
-        </div>-->
         <button *ngIf="!fromJusticiable" pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.search' | translate}}" [disabled]="!permisoEscritura"></button>
         <button pButton (click)="checkPermisosRest()" type="button" icon="fa fa-undo" iconPos="left"
@@ -321,32 +209,21 @@
   <div class="loader"></div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdGeneralesSave" #cdGeneralesSave>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdGeneralesSave" #cdGeneralesSave>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdGeneralesSave.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="cdGeneralesSave.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdGeneralesUpdate" #cdGeneralesUpdate>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdGeneralesUpdate" #cdGeneralesUpdate>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdGeneralesUpdate.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdPreferenteSms" #cdPreferenteSms>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdPreferenteSms.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="cdPreferenteSms.reject()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdAsociarJusticiable" #cdAsociarJusticiable>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdAsociarJusticiable" #cdAsociarJusticiable>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdAsociarJusticiable.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="cdAsociarJusticiable.reject()"></button>

@@ -124,7 +124,6 @@ export class DefensaJuridicaComponent implements OnInit {
     } else {
       this.persistenceService.setDatosEJG(this.datos);
       sessionStorage.setItem("radioTajertaValue", 'des');
-      sessionStorage.setItem("EJG", JSON.stringify(this.datos));
       this.router.navigate(["/busquedaAsuntos"]);
     }
   }
