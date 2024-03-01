@@ -458,10 +458,11 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       });
       this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
         data => {
+          this.getInformesEvent.emit();
           this.progressSpinner = false;
           this.selectedDatos = [];
           this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
-          this.getInformesEvent.emit();
+         
         },
         err => {
           let error = JSON.parse(err.error).description;

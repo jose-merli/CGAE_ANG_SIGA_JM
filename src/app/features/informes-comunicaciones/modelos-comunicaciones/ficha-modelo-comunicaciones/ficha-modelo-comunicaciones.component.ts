@@ -16,7 +16,7 @@ export class FichaModeloComunicacionesComponent implements OnInit {
   botonActivo = false;
   getInforme = false;
   datoGeneral: DatosGeneralesFicha;
-
+  esNuevoRegistro : boolean = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location,
@@ -32,6 +32,11 @@ export class FichaModeloComunicacionesComponent implements OnInit {
       this.filtrosModelos = JSON.parse(sessionStorage.getItem("filtrosModelos"));
       sessionStorage.setItem("filtrosModelosModelos", JSON.stringify(this.filtrosModelos));
       sessionStorage.removeItem("filtrosModelos");
+    }
+
+    if(sessionStorage.getItem("crearNuevoModelo")){
+      this.esNuevoRegistro = true;
+      sessionStorage.removeItem("crearNuevoModelo");
     }
 
     this.fichasPosibles = [
@@ -74,7 +79,7 @@ export class FichaModeloComunicacionesComponent implements OnInit {
   }
 
   getInformesInfo(){
-    this.getInforme= true;
+    this.getInforme=  !this.getInforme;
   }
 
 }

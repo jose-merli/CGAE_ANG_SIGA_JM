@@ -100,6 +100,8 @@ export class TarjetaConsultasComponent implements OnInit {
       activa: true
     }
   ];
+  contadorIdObjetivo = { "1": 0, "2": 0, "3": 0, "4": 0 };
+
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -233,24 +235,24 @@ export class TarjetaConsultasComponent implements OnInit {
   getSteps() {
     this.steps = [
       {
-        label: this.translateService.instant("enviosMasivos.literal.destinatarios"),
+        label: this.translateService.instant("enviosMasivos.literal.destinatarios" ) + " (" +this.contadorIdObjetivo["1"] + ")",
         command: (event: any) => {
           this.activeStep = 0;
           this.msgsSteps = [];
-          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.uno"));
+          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.uno")); 
         }
       },
       {
        
-        label: this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos"),
+        label: this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos") + " (" +this.contadorIdObjetivo["4"] + ")",
         command: (event: any) => {
           this.activeStep = 1;
           this.msgsSteps = [];
-          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.dos"));
+          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.dos") );
         }
       },
       {
-        label: this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.multidocumento"),
+        label: this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.multidocumento")+ " (" +this.contadorIdObjetivo["2"] + ")",
         command: (event: any) => {
           this.activeStep = 2;
           this.msgsSteps = [];
@@ -258,11 +260,11 @@ export class TarjetaConsultasComponent implements OnInit {
         }
       },
       {
-        label: this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.condicional"),
+        label: this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.condicional") + " (" +this.contadorIdObjetivo["3"] + ")",
         command: (event: any) => {
           this.activeStep = 3;
           this.msgsSteps = [];
-          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.cuatro"));
+          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.cuatro") );
         }
       }
     ];
@@ -454,6 +456,13 @@ export class TarjetaConsultasComponent implements OnInit {
           let consultaPrimerRegistroObj = this.consultasComboDestinatarios.find(consulta => consulta.value === this.datos[0].idConsulta);
            this.consultaPrimerRegistro = consultaPrimerRegistroObj ? consultaPrimerRegistroObj.label : "";
         }
+        this.contadorIdObjetivo = { "1": 0, "2": 0, "3": 0, "4": 0 };
+        this.datos.forEach(e => {
+          if (e.idConsulta.length > 0 && this.contadorIdObjetivo.hasOwnProperty(e.idObjetivo)) {
+            this.contadorIdObjetivo[e.idObjetivo]++;
+          }
+        });
+        this.getSteps()
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
       },
       err => {
@@ -507,7 +516,7 @@ export class TarjetaConsultasComponent implements OnInit {
         }
       } else {
         this.modeloItem = JSON.parse(sessionStorage.getItem('modelosSearch'));
-        if (this.modeloItem.porDefecto == 'SI' && this.institucionActual != 2000) {
+        if (this.modeloItem.porDefecto && this.modeloItem.porDefecto == 'SI' && this.institucionActual != 2000) {
           if (
             sessionStorage.getItem("soloLectura") != null &&
             sessionStorage.getItem("soloLectura") != undefined &&
@@ -653,7 +662,6 @@ export class TarjetaConsultasComponent implements OnInit {
           this.showSuccess(this.translateService.instant("informesycomunicaciones.consultas.ficha.correctGuardadoConsulta"));
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           this.progressSpinner = false;
-
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.consultas.ficha.errorGuardadoConsulta"));
