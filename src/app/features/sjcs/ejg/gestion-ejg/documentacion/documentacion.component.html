@@ -61,8 +61,8 @@
               </div>
               <div *ngIf="col.field == 'nombreFichero'">
                 <span [ngClass]="{'eliminado': dato.fechaBaja != null, 'enlace': dato.fechaBaja == null}" (click)="editDocumento(dato)">{{dato[col.field]}}</span>
-                <i (click)="openFileSelector()" class="fas fa-upload d-flex align-self-center ml-auto"></i>
-                <input hidden type="file" #fileInput (change)="onFileSelected($event, dato)" />
+                <i (click)="openFileSelector(rowIndex)" class="fas fa-upload d-flex align-self-center ml-auto"></i>
+                <input hidden type="file" [id]="'input-file-' + rowIndex" #fileInput (change)="onFileSelected($event, dato)" />
               </div>
               <div *ngIf="col.field == 'regEntradaSalida'">
                 <span [ngClass]="{'eliminado': dato.fechaBaja != null}">

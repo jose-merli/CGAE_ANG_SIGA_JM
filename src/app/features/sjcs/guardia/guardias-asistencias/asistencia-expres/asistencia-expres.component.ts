@@ -923,6 +923,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
 
   nuevaAsistencia(){
+    this.persistenceService.clearRelacionesEjgDesignaAsistencia();
     sessionStorage.setItem("nuevaAsistencia","true");
     sessionStorage.setItem("filtroAsistencia",JSON.stringify(this.filtro.filtro));
     this.router.navigate(["/fichaAsistencia"]);

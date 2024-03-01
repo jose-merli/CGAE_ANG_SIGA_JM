@@ -56,6 +56,7 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<String>();
+  @Output() bodyChange = new EventEmitter<JusticiableItem>();
 
 
   constructor(private router: Router,
@@ -259,6 +260,8 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
               this.persistenceService.setDatos(ejg);
             }
           }
+
+          this.bodyChange.emit(this.body);
         } else {
           this.showMessage("error", this.translateService.instant('general.message.incorrect'),
             this.translateService.instant('general.message.error.realiza.accion'));

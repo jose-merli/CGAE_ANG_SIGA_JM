@@ -45,8 +45,9 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 	@Output() createJusticiableByUpdateSolicitud = new EventEmitter<any>();
 	@Output() opened = new EventEmitter<Boolean>();
 	@Output() idOpened = new EventEmitter<String>();
-	@Input() showTarjeta;
+	@Output() bodyChange = new EventEmitter<JusticiableItem>();
 	@Input() body: JusticiableItem;
+	@Input() showTarjeta;
 	@Input() tarjetaDatosSolicitud;
 
 	constructor(
@@ -271,6 +272,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 					this.translateService.instant('general.message.accion.realizada')
 				);
 				this.sigaServices.notifyGuardarDatosSolicitudJusticiable(this.body);
+				this.bodyChange.emit(this.body);
 				this.progressSpinner = false;
 			},
 			(err) => {

@@ -74,7 +74,16 @@ export class GestionEjgComponent implements OnInit {
         if(sessionStorage.getItem("nombreInteresado")){
           this.body.nombreApeSolicitante = sessionStorage.getItem("nombreInteresado");
         }
-        sessionStorage.removeItem("Designacion");
+        if (this.tipoObject.idTurno){
+          // si viene de un Designa asignamos el mismo turno del Designa, si el tipo turno es 1 (Tramitación) o null
+          this.sigaServices.getParam("componenteGeneralJG_tipoTurno", "?idTurno=" + this.tipoObject.idTurno).subscribe(
+            idTipoTurno => {
+              if (idTipoTurno == null || idTipoTurno == 1){
+                this.body.idTurno = this.tipoObject.idTurno;
+              }
+            });
+        }
+		sessionStorage.removeItem("Designacion");
       } else if (sessionStorage.getItem("asistencia")) {
         this.tipoObject = JSON.parse(sessionStorage.getItem("asistencia"));
         this.body.creadoDesde = 'A'

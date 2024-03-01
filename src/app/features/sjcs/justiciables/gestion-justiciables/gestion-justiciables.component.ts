@@ -57,6 +57,8 @@ export class GestionJusticiablesComponent implements OnInit {
   tarjetaDatosAbogado: boolean = false;
   tarjetaDatosProcurador: boolean = false;
   tarjetaDatosUnidadFamiliar: boolean = false;
+  updateDatosPersonale: boolean = false
+  
 
   @ViewChild("topScroll") outlet;
   @ViewChild(DatosRepresentanteComponent) datosRepresentante;
@@ -1259,6 +1261,27 @@ export class GestionJusticiablesComponent implements OnInit {
       }
     }, 5)
     this.progressSpinner = false;
+  }
+
+  datosGeneralesChange(body: JusticiableItem){
+    this.body = {... body};
+  }
+
+  datosPersonalesChange(body: JusticiableItem){
+    this.body.idtipovia = body.idtipovia;
+    this.body.direccion = body.direccion;
+    this.body.numerodir = body.numerodir;
+    this.body.escaleradir = body.escaleradir;
+    this.body.pisodir = body.pisodir;
+    this.body.puertadir = body.puertadir;
+    this.body.idpaisdir1 = body.idpaisdir1;
+    this.body.codigopostal = body.codigopostal;
+    this.body.idprovincia = body.idprovincia;
+    this.body.idpoblacion = body.idpoblacion;
+    this.body.correoelectronico = body.correoelectronico;
+    this.body.fax = body.fax;
+    this.body.telefonos = body.telefonos;
+
   }
 
 }

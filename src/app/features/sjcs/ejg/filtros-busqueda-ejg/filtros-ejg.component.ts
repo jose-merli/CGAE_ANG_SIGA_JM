@@ -901,7 +901,7 @@ export class FiltrosEjgComponent implements OnInit {
     if (sessionStorage.getItem("EJGItem")) {
       sessionStorage.removeItem("EJGItem");
     }
-
+    this.persistenceService.clearRelacionesEjgDesignaAsistencia();
     this.persistenceService.clearDatos();
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);

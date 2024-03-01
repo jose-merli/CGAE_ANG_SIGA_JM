@@ -67,6 +67,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   @Output() opened = new EventEmitter<Boolean>();  // Evento para abrir la tarjeta
   @Output() idOpened = new EventEmitter<String>(); // Evento para pasar la Información.
   @Output() actualizaAsunto = new EventEmitter<JusticiableItem>();
+  @Output() bodyChange = new EventEmitter<JusticiableItem>();
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
@@ -816,6 +817,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           this.callConfirmationSave(JSON.parse(data.body).id);
           // this.personaRepetida = true;
         }
+        this.bodyChange.emit(this.body);
       },
       err => {
         this.progressSpinner = false;

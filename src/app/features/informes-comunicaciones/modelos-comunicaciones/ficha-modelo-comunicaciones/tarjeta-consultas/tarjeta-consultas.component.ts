@@ -69,6 +69,7 @@ export class TarjetaConsultasComponent implements OnInit {
   consultasComboCondicional: any[];
   consultasComboPlantillas: any[];
   esPorDefecto: boolean = false;
+  consultaPrimerRegistro: string = "";
   @Input() datoRecargar: DatosGeneralesFicha;
   @Input() botonActivo: boolean = false;
   @Input() getInforme: boolean = false;
@@ -173,7 +174,6 @@ export class TarjetaConsultasComponent implements OnInit {
     }
 
     this.datos = [
-      { consulta: "", finalidad: "", objetivo: "Condicional", idObjetivo: "3" },
       {
         consulta: "",
         finalidad: "",
@@ -181,6 +181,7 @@ export class TarjetaConsultasComponent implements OnInit {
         idObjetivo: "1",
         idInstitucion: ""
       },
+      { consulta: "", finalidad: "", objetivo: "Datos", idObjetivo: "4" },
       {
         consulta: "",
         finalidad: "",
@@ -188,7 +189,10 @@ export class TarjetaConsultasComponent implements OnInit {
         idObjetivo: "2",
         idInstitucion: ""
       },
-      { consulta: "", finalidad: "", objetivo: "Datos", idObjetivo: "4" }
+      { consulta: "", finalidad: "", objetivo: "Condicional", idObjetivo: "3" }
+  
+     
+     
     ];
     // this.body.idConsulta = this.consultas[1].value;
 
@@ -229,7 +233,7 @@ export class TarjetaConsultasComponent implements OnInit {
   getSteps() {
     this.steps = [
       {
-        label: this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos"),
+        label: this.translateService.instant("enviosMasivos.literal.destinatarios"),
         command: (event: any) => {
           this.activeStep = 0;
           this.msgsSteps = [];
@@ -237,7 +241,8 @@ export class TarjetaConsultasComponent implements OnInit {
         }
       },
       {
-        label: this.translateService.instant("enviosMasivos.literal.destinatarios"),
+       
+        label: this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos"),
         command: (event: any) => {
           this.activeStep = 1;
           this.msgsSteps = [];
@@ -272,6 +277,10 @@ export class TarjetaConsultasComponent implements OnInit {
           this.consultasComboDestinatarios = JSON.parse(
             data["body"]
           ).consultasDestinatarios;
+          if(this.datos.length > 0 && this.consultasComboDestinatarios.length > 0){
+            let consultaPrimerRegistroObj = this.consultasComboDestinatarios.find(consulta => consulta.value === this.datos[0].idConsulta);
+             this.consultaPrimerRegistro = consultaPrimerRegistroObj ? consultaPrimerRegistroObj.label : "";
+          }
           this.consultasComboMulti = JSON.parse(data["body"]).consultasMultidoc;
           this.consultasComboCondicional = JSON.parse(
             data["body"]
@@ -324,8 +333,8 @@ export class TarjetaConsultasComponent implements OnInit {
             {
               idConsulta: "",
               finalidad: "",
-              objetivo: "Condicional",
-              idObjetivo: "3",
+              objetivo: "Datos",
+              idObjetivo: "4",
               idInstitucion: ""
             },
             {
@@ -338,10 +347,12 @@ export class TarjetaConsultasComponent implements OnInit {
             {
               idConsulta: "",
               finalidad: "",
-              objetivo: "Datos",
-              idObjetivo: "4",
+              objetivo: "Condicional",
+              idObjetivo: "3",
               idInstitucion: ""
             }
+        
+         
           ];
         } else {
 
@@ -414,19 +425,16 @@ export class TarjetaConsultasComponent implements OnInit {
         }
 
         this.datos.sort(function (a, b) {
-          if (a.idObjetivo == "3") {
-            return -1;
-          } else if (a.idObjetivo == "4") {
-            return 1;
-          } else {
-            if (a.idObjetivo > b.idObjetivo) {
-              return 1;
-            }
-            if (a.idObjetivo < b.idObjetivo) {
-              return -1;
-            }
-            return 0;
-          }
+         let order = { "1": 1, "4" : 2, "2":3, "3":4 }
+         let rankA = order[a.idObjetivo]
+         let rankB = order[b.idObjetivo]
+         if(rankA < rankB){
+          return -1;
+         }
+        else if(rankA > rankB){
+          return 1;
+        }
+          return 0;
         });
 
         this.datos.map(e => {
@@ -434,9 +442,18 @@ export class TarjetaConsultasComponent implements OnInit {
         });
         this.datos.forEach(element => {
           if(element.idiomasPlantillas != null){
-            element.plantillas = element.idiomasPlantillas.toString();
+            element.plantillas = element.idiomasPlantillas.map((nombreA:string) =>{
+              let index = nombreA.lastIndexOf('.');
+              if(index === -1) return nombreA;
+              return nombreA.substring(0,index);
+            });
+            element.plantillas = element.plantillas.join(', ')
           }
         });
+        if(this.datos.length > 0 && this.consultasComboDestinatarios.length > 0){
+          let consultaPrimerRegistroObj = this.consultasComboDestinatarios.find(consulta => consulta.value === this.datos[0].idConsulta);
+           this.consultaPrimerRegistro = consultaPrimerRegistroObj ? consultaPrimerRegistroObj.label : "";
+        }
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
       },
       err => {
@@ -521,6 +538,10 @@ export class TarjetaConsultasComponent implements OnInit {
     } else {
       this.getInstitucion(id, comboConsultas);
       //this.getFinalidad(id);
+    }
+    if(this.datos.length > 0 && this.consultasComboDestinatarios.length > 0){
+      let consultaPrimerRegistroObj = this.consultasComboDestinatarios.find(consulta => consulta.value === this.datos[0].idConsulta);
+       this.consultaPrimerRegistro = consultaPrimerRegistroObj ? consultaPrimerRegistroObj.label : "";
     }
     this.consultasGuardadas = false;
   }

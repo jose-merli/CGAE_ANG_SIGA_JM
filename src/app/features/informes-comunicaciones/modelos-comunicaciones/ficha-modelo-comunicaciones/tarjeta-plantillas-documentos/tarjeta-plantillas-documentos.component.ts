@@ -12,6 +12,7 @@ import { SufijoItem } from "../../../../../models/SufijoItem";
 import { PlantillaDocumentoItem } from "../../../../../models/PlantillaDocumentoItem";
 import { FileAux } from "../../../../../models/sjcs/FileAux";
 import { DatosGeneralesFicha } from "../../../../../models/DatosGeneralesFichaItem";
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: "app-tarjeta-plantillas-documentos",
@@ -61,6 +62,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   disabledGuardar: any;
   documentos: any = [];
   @Input() datoRecargar: DatosGeneralesFicha;
+  sufijoPrimerRegistro : string = ""
  
   @ViewChild("table") table: DataTable;
   selectedDatos: FichaPlantillasDocument[] = [];
@@ -318,6 +320,12 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
           element.plantillas = listaPlantillas;
           element.idSufijo = element.sufijo
         });
+
+        if(this.datos.length > 0 && this.sufijos.length > 0){
+          let informePrimerRegistro = this.sufijos.find(sufi => sufi.value === this.datos[0].sufijo);
+          this.sufijoPrimerRegistro = informePrimerRegistro ?   informePrimerRegistro.label : "";
+        }
+
         this.changeDetectorRef.detectChanges();
 
       },
@@ -332,6 +340,13 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
       this.formatoAccept = ".doc,.docx,.fo";
     } else if (this.body.idFormatoSalida == "1") {
       this.formatoAccept = ".xls,.xlsx,.fo";
+    }
+  }
+
+  onChangeSufi(){
+    if(this.datos.length > 0 && this.sufijos.length > 0){
+      let informePrimerRegistro = this.sufijos.find(sufi => sufi.value === this.datos[0].sufijo);
+      this.sufijoPrimerRegistro = informePrimerRegistro ?   informePrimerRegistro.label : "";
     }
   }
 
@@ -360,6 +375,39 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     this.datos.push(datoNew);
     //Modificarlo para añadir un nuevo item.
 
+  }
+
+  downloadDocumento(dato) {
+    let objDownload = {
+     
+      idPlantillaDocumento:  dato[0].idPlantillaDocumento,
+      idClaseComunicacion: dato[0].idClaseComunicacion,
+      idIdioma:dato[0].idIdioma
+    };
+    this.progressSpinner = true;
+    this.sigaServices
+      .postDownloadFiles("plantillasDoc_descargarPlantilla", objDownload)
+      .subscribe(data => {
+        const blob = new Blob([data], { type: "application/octet-stream" });
+        if (blob.size == 0) {
+          this.showFail(
+            this.translateService.instant(
+              "messages.general.error.ficheroNoExiste"
+            )
+          );
+        } else {
+          saveAs(data, dato[0].nombreDocumento);
+        }
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      },
+        err => {
+          //console.log(err);
+          this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
+          );
+        }, () => {
+          this.progressSpinner = false
+        });
   }
 
  eliminar( dato) {
@@ -413,6 +461,7 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
           this.progressSpinner = false;
           this.selectedDatos = [];
           this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
+          this.getInformesEvent.emit();
         },
         err => {
           let error = JSON.parse(err.error).description;
@@ -563,9 +612,11 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
   
         }
       );
-    }else{
+    }else if(!this.controlDuplicados()){
       ///Mostrar mensaje error duplicado u obligatorio.
-      this.showFail("Compruebe el dato a Guardar.");
+      this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.plantillaDocumentos.errorDuplicados'));
+    }else{
+      this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.plantillaDocumentos.errorIncompleto'))
     }
 
    
