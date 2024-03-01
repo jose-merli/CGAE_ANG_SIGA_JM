@@ -62,8 +62,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
           } 
           this.bodyInicial = {...this.body};
           this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
-          this.modoEdicion = true;       
-          this.bodyChange.emit(this.body);
+          this.modoEdicion = true;
           this.progressSpinner = false;
         },
         err => {
