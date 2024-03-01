@@ -69,36 +69,38 @@
         <p-table [(selection)]="selectedDatosCurriculares" pageLinks="4" [responsive]="true" [ngClass]="{ customCursor: selectMultipleCurriculares }"
           selectionMode="multiple" #tableCurriculares class="tabla-listado" [value]="datosCurriculares" [columns]="colsCurriculares"
           [sortOrder]="1" (onRowSelect)="clickFilaCurricular($event)" [paginator]="activarPaginacionCurriculares()" paginatorPosition="both"
-          [rows]="selectedItemCurriculares" (onRowUnselect)="
-          actualizaSeleccionadosCurriculares(selectedDatosCurriculares)
-        ">
+          [rows]="selectedItemCurriculares" (onRowUnselect)="actualizaSeleccionadosCurriculares(selectedDatosCurriculares)">
           <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div *ngIf="col.field == 'dateFechaInicio' || col.field == 'dateFechaFin'">
+                <!--
+                <div *ngIf="col.field == 'fechaDesde' || col.field == 'fechaHasta'">
                   <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
                   <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
                 </div>
+              -->
 
-                <div *ngIf="col.field != 'dateFechaInicio' && col.field != 'dateFechaFin'&& col.field != 'descripcion' ">
+                <div *ngIf="col.field != 'fechaDesde' && col.field != 'idCv'">
                   <div *ngIf="setItalic(datoH)">
                     <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
                   </div>
-
                   <div *ngIf="!setItalic(datoH)">
                     <span>{{datoH[col.field]}}</span>
                   </div>
                 </div>
-                <div *ngIf="col.field == 'descripcion' && !setItalic(datoH)">
+                
+                <div *ngIf="(col.field == 'idCv' || col.field == 'fechaDesde') && !setItalic(datoH)">
                   <a [routerLink]="" (click)="redireccionarCurriculares([datoH])" class="enlace">{{datoH[col.field]}}</a>
                 </div>
-                <div *ngIf="col.field == 'descripcion' && setItalic(datoH)">
+                
+                <div *ngIf="(col.field == 'idCv' || col.field == 'fechaDesde') && setItalic(datoH)">
                   <a [routerLink]="" [ngStyle]="{
                   'font-style': 'italic',
                   'font-weight': 'bold',
                   'text-decoration': 'line-through'
                 }" (click)="redireccionarCurriculares([datoH])" class="enlace">{{datoH[col.field]}}</a>
                 </div>
+
               </td>
             </tr>
           </ng-template>
