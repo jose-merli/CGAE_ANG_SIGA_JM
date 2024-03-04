@@ -126,7 +126,7 @@ export class GestionEjgComponent implements OnInit {
   }
 
   guardadoSend(event) {
-    this.body = {...event};
+    this.body = event;
     this.nuevo = false;
     this.modoEdicion = true;
     this.updateTarjResumen();

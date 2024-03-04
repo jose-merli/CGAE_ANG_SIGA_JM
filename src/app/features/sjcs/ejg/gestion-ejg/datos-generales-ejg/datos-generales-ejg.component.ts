@@ -242,13 +242,20 @@ export class DatosGeneralesEjgComponent implements OnInit {
               //Se asociado el nuevo EJG creado a la designación de origen
               this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
                 m => {
-                  this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            
                   //Se copia la informacion de la designacion de origen al nuevo EJG creado
                   this.sigaServices.post("gestionJusticiables_copyDesigna2Ejg", request).subscribe(
                     x => {
-                      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                      this.guardadoSend.emit(this.datos);
+                      // actualiza la información del ejg con la BBDD porque se añaden información asistencia al relacionar EJG con designa
+                      this.sigaServices.getParam("justificacionExpres_getEJG", "?num=" + this.datos.numero + "&anioEjg=" +  this.datos.annio +"&tipoEjg="+this.datos.tipoEJG).subscribe(
+                        scsejg =>{
+                          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                          this.datos.comisaria = scsejg.comisaria;
+                          this.datos.numerodiligencia = scsejg.numerodiligencia;
+                          this.guardadoSend.emit(this.datos);
+                        }, err => {
+                          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error obtener los datos del EJG actualizados");
+                        }
+                      );
                     },
                     err => {
                       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
