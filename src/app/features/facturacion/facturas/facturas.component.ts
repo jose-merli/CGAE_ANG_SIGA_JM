@@ -44,6 +44,7 @@ export class FacturasComponent implements OnInit {
 	}
 
 	buscarFacturas() {
+		sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(false));
 		this.filtro = JSON.parse(JSON.stringify(this.filtros.body));
 
 		this.progressSpinner = true;
