@@ -251,6 +251,13 @@ export class DatosGeneralesEjgComponent implements OnInit {
                           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                           this.datos.comisaria = scsejg.comisaria;
                           this.datos.numerodiligencia = scsejg.numerodiligencia;
+                          this.datos.nig = scsejg.nig;
+                          this.datos.asunto = scsejg.asunto;
+                          this.datos.juzgado = scsejg.juzgado;
+                          this.datos.delitosSeleccionados = scsejg.delitos;
+                          this.datos.procedimiento = scsejg.numeroprocedimiento; 
+                          this.datos.idPretension = scsejg.idpretension;
+                          this.datos.observaciones = scsejg.observaciones;
                           this.guardadoSend.emit(this.datos);
                         }, err => {
                           this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error obtener los datos del EJG actualizados");
