@@ -80,6 +80,7 @@ export class GestionEjgComponent implements OnInit {
             idTipoTurno => {
               if (idTipoTurno == null || idTipoTurno == 1){
                 this.body.idTurno = this.tipoObject.idTurno;
+                this.body.idGuardia = this.tipoObject.idGuardia;
               }
             });
         }
@@ -90,6 +91,16 @@ export class GestionEjgComponent implements OnInit {
         this.body.nombreApeSolicitante = this.tipoObject.asistido;
         this.tipoRelacion = "asistencia";
         sessionStorage.removeItem("asistencia");
+        if (this.tipoObject.idTurno){
+          // si viene de una asistencia asignamos el mismo turno de la asistencia, si el tipo turno es 1 (Tramitación) o null
+          this.sigaServices.getParam("componenteGeneralJG_tipoTurno", "?idTurno=" + this.tipoObject.idTurno).subscribe(
+            idTipoTurno => {
+              if (idTipoTurno == null || idTipoTurno == 1){
+                this.body.idTurno = this.tipoObject.idTurno;
+                this.body.idGuardia = this.tipoObject.idGuardia;
+              }
+            });
+        }
       } else if(sessionStorage.getItem("justiciable")){
         this.tipoObject = JSON.parse(sessionStorage.getItem("justiciable"));
         this.body.nombreApeSolicitante =  this.tipoObject.apellidos + ", " + this.tipoObject.nombre;
