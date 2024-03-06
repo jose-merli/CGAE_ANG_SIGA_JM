@@ -29,6 +29,7 @@ export class PersistenceService {
     private ejgCopyName: string = "EJGcopy";
     private asistenciaItemName: string = "asistenciaItem";
     private asistenciaCopyName: string = "asistenciaCopy";
+    private idAsistenciaName: string = "idAsistencia"
 
     constructor() { }
 
@@ -295,6 +296,11 @@ export class PersistenceService {
         sessionStorage.removeItem(this.asistenciaCopyName);
     }
 
+    clearIdAsistencia(){
+        sessionStorage.removeItem(this.idAsistenciaName);
+    }
+
+
     clearRelacionesEjgDesignaAsistencia(){
         this.clearDatosEJG();
         this.clearEJGCopy();
@@ -305,6 +311,7 @@ export class PersistenceService {
         this.clearDesignaItemLink();
         this.clearFromDesignaciones();
         this.clearAsistenciaCopy();
+        this.clearIdAsistencia();
     }
 
     clearPersistence() {
