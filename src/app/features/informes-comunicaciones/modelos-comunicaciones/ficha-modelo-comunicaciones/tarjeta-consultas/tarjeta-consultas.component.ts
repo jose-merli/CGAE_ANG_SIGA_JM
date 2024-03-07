@@ -239,6 +239,7 @@ export class TarjetaConsultasComponent implements OnInit {
         command: (event: any) => {
           this.activeStep = 0;
           this.msgsSteps = [];
+          this.applyFilterObjectivo(1);
           this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.uno")); 
         }
       },
@@ -248,6 +249,7 @@ export class TarjetaConsultasComponent implements OnInit {
         command: (event: any) => {
           this.activeStep = 1;
           this.msgsSteps = [];
+          this.applyFilterObjectivo(4);
           this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.dos") );
         }
       },
@@ -256,6 +258,7 @@ export class TarjetaConsultasComponent implements OnInit {
         command: (event: any) => {
           this.activeStep = 2;
           this.msgsSteps = [];
+          this.applyFilterObjectivo(2);
           this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.tres"));
         }
       },
@@ -264,6 +267,7 @@ export class TarjetaConsultasComponent implements OnInit {
         command: (event: any) => {
           this.activeStep = 3;
           this.msgsSteps = [];
+          this.applyFilterObjectivo(3);
           this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.cuatro") );
         }
       }
@@ -804,5 +808,13 @@ export class TarjetaConsultasComponent implements OnInit {
     this.selectedDatos = [];
     this.numSelected = 0;
     this.showHistorico = false;
+  }
+
+  applyFilterObjectivo(idObjetivo: number){
+    let datosFiltered: any[];
+    datosFiltered = this.datosInicial.filter((dato) =>
+      dato.idObjetivo == idObjetivo
+    );
+    this.datos = [...datosFiltered];
   }
 }
