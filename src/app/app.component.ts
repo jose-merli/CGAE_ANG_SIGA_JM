@@ -9,6 +9,7 @@ import {
 import { CookieService } from "ngx-cookie-service";
 import { AuthenticationService } from "./_services/authentication.service";
 import { SigaServices } from "./_services/siga.service";
+import { DeadmanService } from "./_services/deadman.service";
 import { ColegiadoItem } from "./models/ColegiadoItem";
 import { SigaStorageService } from "./siga-storage.service";
 @Component({
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private autenticateService: AuthenticationService,
+    private deadmanService: DeadmanService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private cookieService: CookieService,
@@ -42,10 +44,9 @@ export class AppComponent implements OnInit {
   ) { }
 
    async ngOnInit(): Promise<void> {
-    //sessionStorage.removeItem("authenticated");
-    //  sessionStorage.clear();
-    		
 
+    this.deadmanService.startDeadmanTimer();
+    
     this.router.events.subscribe(evt => {
       if (evt instanceof NavigationEnd) {
         this.router.navigated = false;

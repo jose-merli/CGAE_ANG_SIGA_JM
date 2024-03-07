@@ -1,25 +1,19 @@
-import {
-    HttpBackend,
-    HttpClient,
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest
-} from '@angular/common/http';
+import { HttpBackend, HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
 import { OldSigaServices } from '../_services/oldSiga.service';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-	    private oldSigaServices: OldSigaServices;
-    private http: HttpClient;
-    constructor(handler: HttpBackend, oldSigaServices: OldSigaServices, private router: Router) {
-        this.http = new HttpClient(handler);
-        this.oldSigaServices = oldSigaServices;
+	
+    //private oldSigaServices: OldSigaServices;
+    //private http: HttpClient;
+    
+    constructor(handler: HttpBackend, private router: Router) {
+        //this.http = new HttpClient(handler);
+        //this.oldSigaServices = oldSigaServices;
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -48,15 +42,23 @@ export class JwtInterceptor implements HttpInterceptor {
         //     }
         // );
 
-        //send the newly created request
-        return next.handle(authReq).catch((error, caught) => {
-            //intercept the respons error and displace it to the console
-            console.log('Error Occurred');
-            console.log(error);
-            //return the error to the method that called it
-            return Observable.throw(error);
-        }) as any;
+        return next.handle(authReq).pipe(
+            catchError((error: HttpErrorResponse) => {
+                if (error != undefined && error.error != undefined && error.status === 401 && error.error) {
+                    //sessionStorage.clear();
+                } else if (error != undefined && error.error != undefined && error.status === 403) {
+                    sessionStorage.setItem("codError", error.status + "");
+                    sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
+                    this.router.navigate(["/errorAcceso"]);
+                } else if (error != undefined && error.error != undefined) {
+                    sessionStorage.setItem("codError", error.status + "");
+                    sessionStorage.setItem("descError", error.error);
+                }
+                return Observable.throw(error);
+            })
+        ) as any;
     }
+
     /*oldSigaMantenerSesion(): Observable<any> {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded'

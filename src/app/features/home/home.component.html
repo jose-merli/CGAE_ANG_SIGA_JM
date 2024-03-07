@@ -1,6 +1,9 @@
 <div class="home">
-  <!--<div class="tituloComponent">
-    <H1 class="titulo">{{"home.title"|translate}}</H1>
-  </div>-->
   <img class="imagenFondo" src="./assets/images/logoSIGAblanco.png">
 </div>
+
+<p-confirmDialog styleClass="msgExpired" [closable]="false" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-window-close" label="Salir" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

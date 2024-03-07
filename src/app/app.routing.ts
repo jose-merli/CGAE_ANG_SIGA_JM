@@ -324,20 +324,13 @@ import { SaltosYCompensacionesClassiqueComponent } from './features/sjcsClassiqu
 import { SolicitudesTurnosGuardiasClassiqueComponent } from './features/sjcsClassique/oficioClassique/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassique/turnos/turnos.component';
 
-
-
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
 	{ path: 'login', component: LoginMultipleComponent },
 	{ path: 'loginDefault', component: LoginComponent },
 	{ path: 'loginDevelop', component: LoginDevelopComponent },
 	{ path: "logout", component: LogoutComponent },
-
-	{
-		path: 'politicaCookies',
-		component: PoliticaCookiesComponent,
-		canActivate: [AuthGuard]
-	},
+	{ path: 'politicaCookies', component: PoliticaCookiesComponent, canActivate: [AuthGuard]},
 
 	// Censo
 	{
