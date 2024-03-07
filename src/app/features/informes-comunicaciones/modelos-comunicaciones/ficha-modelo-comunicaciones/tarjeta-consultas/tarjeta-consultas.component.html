@@ -5,7 +5,7 @@
     <div class="card-header header-ficha">
 
       <div *ngIf="!showConsultas">
-        <div class="form-row">
+        <div class="form-row" (click)="onShowConsultas()" >
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado" (click)="onShowConsultas()">
               <i class="fas fa-file-alt icon-ficha"></i>
