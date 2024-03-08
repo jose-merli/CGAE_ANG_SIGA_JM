@@ -152,49 +152,38 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
 
   isOpenReceive(event) {
     this.progressSpinner = true;
-    this.search(event, 50);
+    this.search(event);
   }
 
 
-  search(event, filas: Number) {
+  search(event) {
 
     if (!this.modoRepresentante) {
       this.filtros.filtros = this.persistenceService.getFiltros()
     }
 
-    this.filtros.filtros.filas = filas;
+    this.sigaServices.post("busquedaJusticiables_searchJusticiables", this.filtros.filtros).subscribe(
+      n => {
 
-    if(filas != -1){
+        this.datos = JSON.parse(n.body).justiciableBusquedaItems;
+        let error = JSON.parse(n.body).error;
+        this.buscar = true;
+        this.progressSpinner = false;
 
-      this.sigaServices.post("busquedaJusticiables_searchJusticiables", this.filtros.filtros).subscribe(
-        n => {
-
-          this.datos = JSON.parse(n.body).justiciableBusquedaItems;
-          let error = JSON.parse(n.body).error;
-          this.buscar = true;
-          this.progressSpinner = false;
-
-          if (this.tabla != undefined) {
-            this.tabla.tabla.sortOrder = 0;
-            this.tabla.tabla.sortField = '';
-            this.tabla.tabla.reset();
-            this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
-          }
-          if (error != null && error.description != null) {
-            this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
-          }
-          
-          if(filas == 0){
-            this.search(event, -1);
-          }else{
-            this.search(event, 0);
-          }
-        },
-        err => {
-          this.progressSpinner = false;
-          //console.log(err);
-        });
-    }
+        if (this.tabla != undefined) {
+          this.tabla.tabla.sortOrder = 0;
+          this.tabla.tabla.sortField = '';
+          this.tabla.tabla.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+        }
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        //console.log(err);
+      });
   }
 
   showMessage(severity, summary, msg) {
