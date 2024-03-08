@@ -1346,34 +1346,6 @@ export class SigaServices {
 			});
 	}
 
-	postSendFilesFichaPlantillas(service: string, files: FileAux[], fichaPlantillaDocument: FichaPlantillasDocument[]): Observable<any> {
-		let formData: FormData = new FormData();
-
-		// Agregar archivos
-		if (files != undefined) {
-			files.forEach((fileAuxItem) => {
-				formData.append('uploadFile_'+fileAuxItem.idIdioma, fileAuxItem.file, fileAuxItem.file.name);
-			});
-		}
-	
-		// Agregar datos adicionales
-		if (fichaPlantillaDocument !== undefined) {
-			formData.append('fichaPlantillaDocument', JSON.stringify(fichaPlantillaDocument));
-		}
-	
-		// No necesitas establecer el Content-Type para FormData
-		// Angular lo hará automáticamente con el tipo correcto y el boundary
-		let headers = new HttpHeaders();
-		//headers.append('Content-Type', 'multipart/form-data');
-		headers.append('Accept', 'application/json');
-	
-		return this.http.post(environment.newSigaUrl + this.endpoints[service], formData, {
-			headers: headers
-		}).map((response) => {
-			return response;
-		});
-	}
-
 	postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {
 		let formData: FormData = new FormData();
 
