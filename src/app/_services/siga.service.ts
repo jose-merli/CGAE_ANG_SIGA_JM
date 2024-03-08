@@ -814,7 +814,7 @@ export class SigaServices {
 			options = { params: params, observe: 'body'};
 		}
 
-		return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
+		return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service], options).map((response) => {
 			return response;
 		});
 	}
