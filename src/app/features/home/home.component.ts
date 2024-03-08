@@ -89,7 +89,6 @@ export class HomeComponent implements OnInit {
 	}
 
 	oldSigaLogin() {
-		
 		this.sigaServices.get('getTokenOldSiga').subscribe(
 			token => {
 				sessionStorage.setItem('AuthOldSIGA', token.valor);
@@ -98,7 +97,7 @@ export class HomeComponent implements OnInit {
 						//console.log("Login en SIGA Classique correcto");
 					},
 					err => {
-						//console.log(err);
+						//console.log(err); 
 					}
 				);
 			},
@@ -106,7 +105,6 @@ export class HomeComponent implements OnInit {
 				sessionStorage.setItem('isLetrado', 'true');
 			}
 		);
-		
 	}
 
 	getLetrado() {

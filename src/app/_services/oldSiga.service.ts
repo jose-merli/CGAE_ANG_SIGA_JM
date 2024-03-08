@@ -179,13 +179,30 @@ export class OldSigaServices {
 		}
 	}
 
-	getBackend(service: string): Observable<any> {
-		return this.http
-		  .get(this.getOldSigaUrl(service))
-		  .map(response => {
+	getBackend(service: string, reqParams?: Map<string,string>, respose: boolean = false): Observable<any> {
+
+		let headers = new HttpHeaders({
+			"Content-Type": "application/x-www-form-urlencoded"
+		});
+
+		let params = new HttpParams();
+		if(reqParams != undefined){
+			reqParams.forEach((value, key) => {
+				params = params.set(key, value);
+			});
+		}
+
+		let options = {};
+		if(respose){
+			options = { params: params, observe: 'response', headers: headers, responseType: 'text'};
+		} else {
+			options = { params: params, observe: 'body', headers: headers};
+		}
+
+		return this.http.get(this.getOldSigaUrl(service), options).map(response => {
 			return response;
-		  });
-	  }
+		});
+	}
 
 	get(url: string): Observable<any> {
 		let headers = new HttpHeaders({
