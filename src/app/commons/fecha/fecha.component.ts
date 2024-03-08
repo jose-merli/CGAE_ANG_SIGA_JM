@@ -156,8 +156,10 @@ export class FechaComponent implements OnInit, AfterViewInit {
 	}
 
 	input(e) {
+		if (e != null && !isNaN(Date.parse(e))) {
 		this.fechaSelectedFromCalendar = false;
 		this.valueChangeInput.emit(e);
+		}
 		//evento necesario para informar de las fechas que borren manualmente (teclado)
 	}
 
