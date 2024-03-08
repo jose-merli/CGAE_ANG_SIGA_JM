@@ -410,17 +410,17 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
         });
   }
 
- eliminar( dato) {
+ eliminar() {
 
     let keyConfirmation = "deletePlantillaDoc";
 
     this.confirmationService.confirm({
       key: keyConfirmation,
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar') + ' ' + dato.length + ' ' + this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados'),
+      message: this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar') + ' ' + this.selectedDatos.length + ' ' + this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados'),
       icon: "fa fa-trash-alt",
       accept: () => {
-        this.confirmarEliminar(dato);
+        this.confirmarEliminar();
       },
       reject: () => {
         this.msgs = [
@@ -436,32 +436,39 @@ export class TarjetaPlantillasDocumentosComponent implements OnInit {
     });
   }
 
-  confirmarEliminar(dato) { //dato = this.selectedDatos.
+  confirmarEliminar() {
 
     let conIdPlantilla = this.selectedDatos.filter(dato => dato.idPlantillas !== undefined);
     let sinIdPlantilla = this.selectedDatos.filter(dato => dato.idPlantillas === undefined);
 
+    // los datos a eliminar que no tenga id de plantilla se quitan directamente de los datos
     this.datos = this.datos.filter(dato => !sinIdPlantilla.includes(dato));
+    this.datos = [... this.datos];
 
     if (conIdPlantilla.length > 0) {
       this.progressSpinner = true;
-      this.eliminarArray = [];
+      // eliminamos los datos con id plantilla
       this.eliminarArray = [...conIdPlantilla];
 
-      dato.forEach(element => {
-        let objEliminar = {
-          idModeloComunicacion: this.modelo.idModeloComunicacion,
-          idInstitucion: this.modelo.idInstitucion,
-          idInforme: element.idInforme
-        };
-        this.eliminarArray.push(objEliminar);
+      this.selectedDatos.forEach(element => {
+        if (element.idModeloComunicacion == null || element.idInstitucion == null){
+          let objEliminar = {
+            idModeloComunicacion: this.modelo.idModeloComunicacion,
+            idInstitucion: this.modelo.idInstitucion,
+            idInforme: element.idInforme
+          };
+          this.eliminarArray.push(objEliminar);
+        }
+       
       });
+
       this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
         data => {
+          this.getInformesEvent.emit();
           this.progressSpinner = false;
           this.selectedDatos = [];
           this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
-          this.getInformesEvent.emit();
+         
         },
         err => {
           let error = JSON.parse(err.error).description;

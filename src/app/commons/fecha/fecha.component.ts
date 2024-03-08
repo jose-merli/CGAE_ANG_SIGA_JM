@@ -125,34 +125,30 @@ export class FechaComponent implements OnInit, AfterViewInit {
 		let REGEX = /[a-zA-Z]/;
 		//evento necesario para informar de las fechas que metan manualmente (escribiendo o pegando)
 		if (!this.fechaSelectedFromCalendar) {
-			if (!this.first) {
-				let newValue = e.target.value;
-				if (this.showTime) {
-					if (!REGEX.test(newValue)) {
-						if (newValue.length < 11) {
-							let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
-							this.calendar.onSelect.emit(fecha);
-						} else {
-							let fecha = moment(newValue, 'DD/MM/YYYY hh:mm').toDate();
-							this.calendar.onSelect.emit(fecha);
-						}
+			let newValue = e.target.value;
+			if (this.showTime) {
+				if (!REGEX.test(newValue)) {
+					if (newValue.length < 11) {
+						let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+						this.calendar.onSelect.emit(fecha);
+					} else {
+						let fecha = moment(newValue, 'DD/MM/YYYY hh:mm').toDate();
+						this.calendar.onSelect.emit(fecha);
+					}
+				} else {
+					this.calendar.overlayVisible = false;
+					this.value = null;
+				}
+			} else {
+				if (newValue != null && newValue != '') {
+					if (!REGEX.test(newValue) && newValue.length < 11) {
+						let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
+						this.calendar.onSelect.emit(fecha);
 					} else {
 						this.calendar.overlayVisible = false;
 						this.value = null;
 					}
-				} else {
-					if (newValue != null && newValue != '') {
-						if (!REGEX.test(newValue) && newValue.length < 11) {
-							let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
-							this.calendar.onSelect.emit(fecha);
-						} else {
-							this.calendar.overlayVisible = false;
-							this.value = null;
-						}
-					}
 				}
-			} else {
-				this.first = false;
 			}
 		}
 
@@ -160,12 +156,11 @@ export class FechaComponent implements OnInit, AfterViewInit {
 	}
 
 	input(e) {
+		if (e != null && !isNaN(Date.parse(e))) {
 		this.fechaSelectedFromCalendar = false;
 		this.valueChangeInput.emit(e);
-		//evento necesario para informar de las fechas que borren manualmente (teclado)
-		if (e.inputType == 'deleteContentBackward' && !this.showTime) {
-			this.borrarFecha();
 		}
+		//evento necesario para informar de las fechas que borren manualmente (teclado)
 	}
 
 	focus(e) {

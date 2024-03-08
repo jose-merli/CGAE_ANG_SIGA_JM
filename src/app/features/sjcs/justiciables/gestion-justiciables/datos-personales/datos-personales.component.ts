@@ -56,21 +56,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
       await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
         n => {
-          let justiciable : JusticiableItem = JSON.parse(n.body).justiciable;
-          this.body.idtipovia = justiciable.idtipovia;
-          this.body.direccion = justiciable.direccion;
-          this.body.numerodir = justiciable.numerodir;
-          this.body.escaleradir = justiciable.escaleradir;
-          this.body.pisodir = justiciable.pisodir;
-          this.body.puertadir = justiciable.puertadir;
-          this.body.idpaisdir1 = justiciable.idpaisdir1;
-          this.body.codigopostal = justiciable.codigopostal;
-          this.body.idprovincia = justiciable.idprovincia;
-          this.body.idpoblacion = justiciable.idpoblacion;
-          this.body.correoelectronico = justiciable.correoelectronico;
-          this.body.fax = justiciable.fax;
-          this.body.telefonos = justiciable.telefonos;
-
+          this.body = JSON.parse(n.body).justiciable;
           if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
             this.addTelefono();
           } 
@@ -78,7 +64,6 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
           this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
           this.modoEdicion = true;
           this.progressSpinner = false;
-          this.bodyChange.emit(this.body);
         },
         err => {
           this.progressSpinner = false;
@@ -226,7 +211,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       if (!this.modoEdicion) {
         this.callSaveService("gestionJusticiables_createJusticiable");
       } else {
-        this.callSaveService("gestionJusticiables_updateJusticiable");
+        this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
       }
     }
   }

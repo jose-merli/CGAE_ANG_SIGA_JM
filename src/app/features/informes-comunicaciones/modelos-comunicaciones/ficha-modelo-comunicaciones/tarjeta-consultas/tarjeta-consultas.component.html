@@ -5,7 +5,7 @@
     <div class="card-header header-ficha">
 
       <div *ngIf="!showConsultas">
-        <div class="form-row">
+        <div class="form-row" (click)="onShowConsultas()" >
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado" (click)="onShowConsultas()">
               <i class="fas fa-file-alt icon-ficha"></i>
@@ -13,13 +13,14 @@
           </div>
 
           <div class="form-group-interlineado pt-3 col-lg-1 col-md-1">
-            <label class="mr-auto title-ficha">{{ 'menu.consultas' | translate }}</label>
+            <label class="mr-auto title-ficha">{{ 'tarjeta.informesYcomunicaciones.consultas' | translate }}</label>
           </div>
 
           <div class="form-group-interlineado ">
             <label>{{ 'informesycomunicaciones.modelosdecomunicacion.ficha.plantillaConsultas.plantillas' | translate }}</label>
             <div class="form-group-interlineado ">
-              <span *ngIf="datos.length > 0"> {{datos[0].plantillas}} </span>
+              <span *ngIf="datos.length > 0 && datos[0].plantillas.length < 50"> {{datos[0].plantillas}} </span>
+              <span *ngIf="datos.length > 0 && datos[0].plantillas.length >= 50"> {{datos[0].plantillas.substring(0,50) + "..."}} </span>
             </div>
           </div>
 
