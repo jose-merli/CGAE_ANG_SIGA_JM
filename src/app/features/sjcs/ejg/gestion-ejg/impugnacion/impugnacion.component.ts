@@ -204,11 +204,11 @@ export class ImpugnacionComponent implements OnInit {
   }
 
   fillFechaAuto(event) {
-    if(event != null)this.datos.fechaAuto = new Date(event);
+    if(event != null && !isNaN(Date.parse(event)))this.datos.fechaAuto = new Date(event);
   }
 
   fillFechaPublicacion(event) {
-    if(event != null)this.datos.fechaPublicacion = new Date(event);
+    if(event != null && !isNaN(Date.parse(event)))this.datos.fechaPublicacion = new Date(event);
   }
 
   onChangeCheckBis(event) {

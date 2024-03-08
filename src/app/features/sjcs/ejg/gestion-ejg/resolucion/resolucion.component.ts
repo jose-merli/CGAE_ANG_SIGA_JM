@@ -369,7 +369,7 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaPresPonente(event) {
-    if (event != null){
+    if (event != null && !isNaN(Date.parse(event))){
       this.resolucion.fechaPresentacionPonente = new Date(event);
     } else{
       this.resolucion.fechaPresentacionPonente = null;
@@ -377,7 +377,7 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaResCAJG(event) {
-    if (event != null){
+    if (event != null && !isNaN(Date.parse(event))){
        this.resolucion.fechaResolucionCAJG = new Date(event);
     } else{
       this.resolucion.fechaResolucionCAJG = null;
@@ -401,7 +401,7 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaNotif(event) {
-    if (event != null){
+    if (event != null  && !isNaN(Date.parse(event))){
       this.resolucion.fechaNotificacion = new Date(event);
     }
     else{
@@ -410,7 +410,7 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaResFirme(event) {
-    if (event != null) {
+    if (event != null  && !isNaN(Date.parse(event))) {
       this.resolucion.fechaRatificacion = new Date(event);
     }
     else{
