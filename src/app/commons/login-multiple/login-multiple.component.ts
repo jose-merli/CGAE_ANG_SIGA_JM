@@ -156,7 +156,9 @@ export class LoginMultipleComponent implements OnInit {
 		var ir = null;
 		this.form.controls['location'].setValue(newValue.value);
 		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
-		this.sigaServices.getPerfil('rolesColegioUsuario', newValue.value).subscribe((n) => {
+		const reqParams = new Map();
+		reqParams.set('institucion', newValue.value);
+		this.sigaServices.getBackend('rolesColegioUsuario', reqParams).subscribe((n) => {
 			this.roles = n.combooItems;
 			if (n.error) {
 				console.log('ERROR', n.error.message);

@@ -261,6 +261,8 @@ import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { BusquedaColegiadosComponentNew } from './new-features/censo/busqueda-colegiados/busqueda-colegiados.component';
 
 import { JwtInterceptor } from './_interceptor/jwt.interceptor';
+
+import { DeadmanService } from './_services/deadman.service';
 import { AuthenticationService } from './_services/authentication.service';
 import { CommonsService } from './_services/commons.service';
 import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.service';
@@ -1483,6 +1485,7 @@ enableRipple(true);
 	exports: [DigitDecimaNumberDirective],
 	providers: [
 		AuthenticationService,
+		DeadmanService,
 		AuthGuard,
 		cardService,
 		CommonsService,

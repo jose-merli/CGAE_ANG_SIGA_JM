@@ -601,7 +601,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                         let ejgDesignas = JSON.parse(x.body).ejgDesignaItems;
                         this.sigaServices.post("designacion_getPreDesignaEJG", ejgDesignas[0]).subscribe(
                           y => {
-                            if (y.statusText == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                            if (y.statusText == "OK"){
+                               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                               this.busquedaDesignaciones(newDesignaRfresh);
+                              }
                             else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
                             this.progressSpinner = false;
                           }

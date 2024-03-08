@@ -1,24 +1,9 @@
 import { Injectable } from '@angular/core';
-import {
-	HttpClient,
-	HttpResponse,
-	HttpParams,
-	HttpResponseBase,
-	HttpHeaders,
-	HttpBackend,
-	HttpErrorResponse
-} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpBackend, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { environment } from '../../environments/environment';
 import { MenuItem } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
-import { RequestOptions, Headers, ResponseContentType } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
 import { endpoints_maestros } from "../utils/endpoints_maestros";
 import { endpoints_justiciables } from "../utils/endpoints_justiciables";
@@ -771,14 +756,66 @@ export class SigaServices {
 	rutaMenu$ = this.rutaMenu.asObservable();
 
 	setRutaMenu(ruta: string) {
-
 		this.rutaMenu.next(ruta);
-
 	}
 
 	constructor(private http: HttpClient, handler: HttpBackend, private httpbackend: HttpClient) {
 		this.httpbackend = new HttpClient(handler);
 	}
+
+	/** BACKEND **/
+
+	//TODO: Descomentar esto para trabajar en local
+	/*
+	getBackend(service: string, reqParams?: Map<string,string>, respose: boolean = false): Observable<any> {
+		let headers = new HttpHeaders({'CAS-username': '30964112V', 'CAS-displayName': 'Prueba', 'CAS-roles': 'AC0000 Personal::AC0000 SIGA-Admin', 'CAS-defaultRole': 'AC0000 Personal'});
+		//let headers = new HttpHeaders({'CAS-username': '08967425R', 'CAS-displayName': 'Prueba', 'CAS-roles': 'A30030 7676 Abogado::A04013 2121 Colegiado No Ejerciente::A14021 3776 Abogado::A07040 7676 Abogado::A30030 Personal', 'CAS-defaultRole': 'A04013 2121 Colegiado No Ejerciente'});
+		//let headers = new HttpHeaders({'CAS-username': '51120235K', 'CAS-displayName': 'Prueba', 'CAS-roles': 'A14021 Personal::A04013 7676 Abogado', 'CAS-defaultRole': 'A14021 Personal'});
+		//let headers = new HttpHeaders({'CAS-username': '20349999J', 'CAS-displayName': 'Prueba', 'CAS-roles': '', 'CAS-defaultRole': ''});
+		//let headers = new HttpHeaders({'CAS-username': '20461012M', 'CAS-displayName': 'Prueba', 'CAS-roles': 'A12040 1578 Abogado Residente', 'CAS-defaultRole': 'A12040 1578 Abogado Residente'});
+
+		let params = new HttpParams();
+		if(reqParams != undefined){
+			reqParams.forEach((value, key) => {
+				params = params.set(key, value);
+			});
+		}
+
+		let options = {};
+		if(respose){
+			options = { params: params, observe: 'response', headers: headers};
+		} else {
+			options = { params: params, observe: 'body', headers: headers};
+		}
+
+		return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service], options).map((response) => {
+			return response;
+		});
+	}*/
+
+	//TODO: Comentar esto para trabajar en local
+	getBackend(service: string, reqParams?: Map<string,string>, respose: boolean = false): Observable<any> {
+
+		let params = new HttpParams();
+		if(reqParams != undefined){
+			reqParams.forEach((value, key) => {
+				params = params.set(key, value);
+			});
+		}
+
+		let options = {};
+		if(respose){
+			options = { params: params, observe: 'response'};
+		} else {
+			options = { params: params, observe: 'body'};
+		}
+
+		return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service], options).map((response) => {
+			return response;
+		});
+	}
+
+	/** HTTP ***/
 
 	get(service: string): Observable<any> {
 		return this.http.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
@@ -788,12 +825,6 @@ export class SigaServices {
 
 	getParam(service: string, body: any): Observable<any> {
 		return this.http.get(environment.newSigaUrl + this.endpoints[service] + body).map((response) => {
-			return response;
-		});
-	}
-
-	getBackend(service: string): Observable<any> {
-		return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
 			return response;
 		});
 	}
@@ -809,31 +840,6 @@ export class SigaServices {
 	getServucePath(service: string) {
 		return this.endpoints[service];
 	}
-
-	getPerfil(service: string, institucion: string): Observable<any> {
-		return this.httpbackend
-			.get(environment.newSigaUrl + this.endpoints[service] + '?institucion=' + institucion)
-			.map((response) => {
-				return response;
-			});
-	}
-
-	postBackend(service: string, body: any): Observable<any> {
-		let headers = new HttpHeaders({
-			'Content-Type': 'application/json'
-		});
-		return this.httpbackend
-			.post(environment.newSigaUrl + this.endpoints[service], body, {
-				headers: headers,
-				observe: 'response',
-				responseType: 'text'
-			})
-			.map((response) => {
-				return response;
-			});
-	}
-
-
 
 	post(service: string, body: any): Observable<any> {
 		let headers = new HttpHeaders({
@@ -1338,6 +1344,34 @@ export class SigaServices {
 			.map((response) => {
 				return response;
 			});
+	}
+
+	postSendFilesFichaPlantillas(service: string, files: FileAux[], fichaPlantillaDocument: FichaPlantillasDocument[]): Observable<any> {
+		let formData: FormData = new FormData();
+
+		// Agregar archivos
+		if (files != undefined) {
+			files.forEach((fileAuxItem) => {
+				formData.append('uploadFile_'+fileAuxItem.idIdioma, fileAuxItem.file, fileAuxItem.file.name);
+			});
+		}
+	
+		// Agregar datos adicionales
+		if (fichaPlantillaDocument !== undefined) {
+			formData.append('fichaPlantillaDocument', JSON.stringify(fichaPlantillaDocument));
+		}
+	
+		// No necesitas establecer el Content-Type para FormData
+		// Angular lo hará automáticamente con el tipo correcto y el boundary
+		let headers = new HttpHeaders();
+		//headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+	
+		return this.http.post(environment.newSigaUrl + this.endpoints[service], formData, {
+			headers: headers
+		}).map((response) => {
+			return response;
+		});
 	}
 
 	postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {

@@ -242,13 +242,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
               //Se asociado el nuevo EJG creado a la designación de origen
               this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
                 m => {
-                  this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            
                   //Se copia la informacion de la designacion de origen al nuevo EJG creado
                   this.sigaServices.post("gestionJusticiables_copyDesigna2Ejg", request).subscribe(
                     x => {
-                      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                      this.guardadoSend.emit(this.datos);
+                      this.refrescarDatosEJG();
                     },
                     err => {
                       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
@@ -304,9 +301,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
             
                   let error = JSON.parse(n.body).error;
                   sessionStorage.removeItem("radioTajertaValue");
-            
-                  //recargamos la ficha del ejg
-                  this.guardadoSend.emit(this.datos);
+                  
+                  //recargamos la ficha del ejg con los datos de defensa juridica
+                  this.refrescarDatosEJG();
             
                   if (error != null && error.description != null) {
                     this.showMessage("error", "Error al asociar el EJG con la Asistencia", error.description);
@@ -587,5 +584,26 @@ export class DatosGeneralesEjgComponent implements OnInit {
         });
       }
     }
+  }
+
+  refrescarDatosEJG(){
+    // actualiza la información del ejg con la BBDD porque se añaden información asistencia al relacionar EJG con designa
+    this.progressSpinner =true;
+    let itemFilter: EJGItem = new EJGItem();
+    itemFilter.annio = this.datos.annio;
+    itemFilter.tipoEJG = this.datos.tipoEJG;
+    itemFilter.numero = this.datos.numero;
+    itemFilter.idInstitucion = this.datos.idInstitucion;
+    this.sigaServices.post("gestionejg_datosEJG", itemFilter).subscribe(
+      n =>{
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.datos = JSON.parse(n.body).ejgItems[0];
+        this.guardadoSend.emit(this.datos);
+        this.progressSpinner = false
+      }, err => {
+        this.progressSpinner = false
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error obtener los datos del EJG actualizados");
+      }
+    );
   }
 }

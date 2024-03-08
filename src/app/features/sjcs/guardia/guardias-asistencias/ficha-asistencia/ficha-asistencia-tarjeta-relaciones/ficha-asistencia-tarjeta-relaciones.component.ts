@@ -167,14 +167,14 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
       this.progressSpinner = true;
       let ejgItem = new EJGItem();
       ejgItem.annio = relacion.anio;
-      ejgItem.numero = relacion.codigo;
+      ejgItem.numero = relacion.numero;
       ejgItem.idInstitucion = relacion.idinstitucion;
       ejgItem.tipoEJG = relacion.idtipo;
 
       let result;
       // al no poder obtener todos los datos del EJG necesarios para obtener su informacion
       //se hace una llamada a al base de datos pasando las claves primarias y obteniendo los datos necesarios
-      this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
+      this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
         n => {
           result = JSON.parse(n.body).ejgItems;
           sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
