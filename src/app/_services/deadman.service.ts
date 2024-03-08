@@ -6,7 +6,7 @@ import * as jwt_decode from "jwt-decode";
 export class DeadmanService {
 
   private timer: any;
-  private readonly timeoutDuration: number = 30000; // Tiempo en milisegundos
+  private readonly timeoutDuration: number = 600000; // Tiempo en milisegundos
 
   constructor(private router: Router) {}
 
