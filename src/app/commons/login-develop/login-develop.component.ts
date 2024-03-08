@@ -3,9 +3,6 @@ import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { SigaServices } from "../../_services/siga.service";
 import { Router } from "@angular/router";
-import { LoginCombo } from "./login-develop.combo";
-import { ListboxModule } from "primeng/listbox";
-import { ButtonModule } from "primeng/button";
 import { SigaStorageService } from "../../siga-storage.service";
 
 export enum KEY_CODE {
@@ -43,8 +40,6 @@ export class LoginDevelopComponent implements OnInit {
 		private localStorageService: SigaStorageService
 
 	) { }
-
-	onSubmit() { }
 
 	ngOnInit() {
 		this.sigaServices.getBackend("environmentInfo").subscribe(n => {
@@ -113,8 +108,7 @@ export class LoginDevelopComponent implements OnInit {
 		this.sigaServices.getBackend('instituciones').subscribe((n) => {
 			this.instituciones = n.combooItems;
 
-			/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-para poder filtrar el dato con o sin estos caracteres*/
+			/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, para poder filtrar el dato con o sin estos caracteres*/
 			this.instituciones.map((e) => {
 				let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
 				let accentsOut = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
@@ -141,7 +135,6 @@ para poder filtrar el dato con o sin estos caracteres*/
 			letrado: new FormControl('N'),
 			location: new FormControl('2000'),
 			profile: new FormControl('ADG'),
-
 			posMenu: new FormControl(0)
 		});
 		//this.onChange(this.form.controls['tmpLoginInstitucion'].value);
@@ -189,7 +182,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 		var ir = null;
 		this.form.controls['location'].setValue(newValue.value);
 		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
-		this.sigaServices.getPerfil('perfiles', newValue.value).subscribe((n) => {
+		const reqParams = new Map();
+		reqParams.set('institucion', newValue.value);
+		this.sigaServices.getBackend('perfiles', reqParams).subscribe((n) => {
 			this.perfiles = n.combooItems;
 		});
 		// this.tmpLoginPerfil = "Administrador General";
