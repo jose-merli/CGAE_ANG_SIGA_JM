@@ -439,7 +439,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     );
   }
 
-  getComboSufijos() { 
+  getComboSufijos() {
     this.sigaServices.get("plantillasDoc_combo_sufijos").subscribe(
       n => {
         this.sufijos = n.sufijos;

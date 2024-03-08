@@ -1,4 +1,4 @@
-import { Component,EventEmitter, Output, OnInit, Input } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ControlAccesoDto } from "../../../../../models/ControlAccesoDto";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
@@ -16,7 +16,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
   styleUrls: ["./datos-generales-ficha.component.scss"]
 })
 export class DatosGeneralesFichaComponent implements OnInit {
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   permisoEscritura;
   activacionEditar: boolean = true;
   derechoAcceso: any;
@@ -40,9 +40,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
   progressSpinner: boolean = false;
   resaltadoDatos: boolean = false;
   informeUnico: boolean = false;
-  @Input() esNuevoRegistro: boolean = false;
-  @Output() cambioDatoGeneral = new EventEmitter<DatosGeneralesFicha>();
-  
   fichasPosibles = [
     {
       key: "generales",
@@ -55,18 +52,9 @@ export class DatosGeneralesFichaComponent implements OnInit {
     {
       key: "comunicacion",
       activa: false
-    },
-    {
-      key: "consultas",
-      activa: false
-    },
-    {
-      key: "plantillaDocumentos",
-      activa: true
     }
   ];
 
-  
   constructor(
     private router: Router,
     private translateService: TranslateService,
@@ -75,7 +63,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(this.esNuevoRegistro) this.openFicha = true;
     this.resaltadoDatos=true;
     
     this.preseleccionar = [
@@ -117,7 +104,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     }else{
       this.selectedClaseCom = false;
     }
-    if(this.esNuevoRegistro) this.openFicha = true;
+
   }
 
   abreCierraFicha() {
@@ -224,7 +211,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
                     );
                     sessionStorage.removeItem("crearNuevoModelo");
                     this.sigaServices.notifyRefreshPerfiles();
-                    this.cambioDatoGeneral.emit(this.body)
                   },
                   err => {
                     //console.log(err);

@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { CommonsService } from "../../../../_services/commons.service";
-import { DatosGeneralesFicha } from "../../../../models/DatosGeneralesFichaItem";
 
 @Component({
   selector: "app-ficha-modelo-comunicaciones",
@@ -13,17 +12,11 @@ export class FichaModeloComunicacionesComponent implements OnInit {
   idModelo: string;
   fichasPosibles: any[];
   filtrosModelos;
-  botonActivo = false;
-  getInforme = false;
-  datoGeneral: DatosGeneralesFicha;
-  esNuevoRegistro : boolean = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private commonsService: CommonsService
   ) { }
-
-  
 
   ngOnInit() {
     this.idModelo = this.activatedRoute.snapshot.params["id"];
@@ -32,11 +25,6 @@ export class FichaModeloComunicacionesComponent implements OnInit {
       this.filtrosModelos = JSON.parse(sessionStorage.getItem("filtrosModelos"));
       sessionStorage.setItem("filtrosModelosModelos", JSON.stringify(this.filtrosModelos));
       sessionStorage.removeItem("filtrosModelos");
-    }
-
-    if(sessionStorage.getItem("crearNuevoModelo")){
-      this.esNuevoRegistro = true;
-      sessionStorage.removeItem("crearNuevoModelo");
     }
 
     this.fichasPosibles = [
@@ -51,20 +39,12 @@ export class FichaModeloComunicacionesComponent implements OnInit {
       {
         key: "informes",
         activa: false
-      },
+      }/*
       {
-        key: "plantillaDocumentos",
-        active: false
-      },
-      {
-        key: "consultas",
-        activa: true
-      }
+        key: "comunicacion",
+        activa: false
+      }*/
     ];
-  }
-
-  controlCambioDG(event:DatosGeneralesFicha){
-    this.datoGeneral = event;
   }
 
   backTo() {
@@ -73,13 +53,4 @@ export class FichaModeloComunicacionesComponent implements OnInit {
     sessionStorage.removeItem("filtrosModelosModelos");
     this.location.back();
   }
-
-  activarBoton() {
-    this.botonActivo = true;
-  }
-
-  getInformesInfo(){
-    this.getInforme=  !this.getInforme;
-  }
-
 }
