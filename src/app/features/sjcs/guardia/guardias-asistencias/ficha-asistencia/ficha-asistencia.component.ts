@@ -1226,16 +1226,18 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   backTo() {
-    if (sessionStorage.getItem("vieneDeFichaDesigna")){
-      sessionStorage.removeItem("vieneDeFichaDesigna"); 
-      this.location.back();
-    }
+    /*
     if(sessionStorage.getItem("vieneDeFichaJusticiable")){
       sessionStorage.removeItem("vieneDeFichaJusticiable"); 
       this.router.navigate(['/gestionJusticiables']);
     }
-
-    if (this.preasistencia) {
+    */
+    if (sessionStorage.getItem("vieneDeFichaDesigna")){
+      sessionStorage.removeItem("vieneDeFichaDesigna"); 
+      this.location.back();
+    } else if(sessionStorage.getItem("justiciable")){ 
+      this.router.navigate(['/gestionJusticiables']);
+    } else if (this.preasistencia) {
       this.router.navigate(['/fichaPreasistencia']);
     } else {
       sessionStorage.setItem("volver", "true");

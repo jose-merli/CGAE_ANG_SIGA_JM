@@ -177,7 +177,6 @@ export class RelacionesComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       this.persistenceService.setDatosEJG(this.datos);
-      sessionStorage.setItem("EJG", JSON.stringify(this.datos));
       sessionStorage.setItem("radioTajertaValue", 'asi');
       this.router.navigate(["/busquedaAsuntos"]);
     }
@@ -188,7 +187,6 @@ export class RelacionesComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       this.persistenceService.setDatosEJG(this.datos);
-      sessionStorage.setItem("EJG", JSON.stringify(this.datos));
       sessionStorage.setItem("radioTajertaValue", 'soj');
       this.router.navigate(["/busquedaAsuntos"]);
     }
@@ -200,7 +198,6 @@ export class RelacionesComponent implements OnInit {
     } else {
       this.persistenceService.setDatosEJG(this.datos);
       sessionStorage.setItem("radioTajertaValue", 'des');
-      sessionStorage.setItem("EJG", JSON.stringify(this.datos));
       this.router.navigate(["/busquedaAsuntos"]);
     }
   }
@@ -212,7 +209,6 @@ export class RelacionesComponent implements OnInit {
 
       this.persistenceService.setDatosEJG(this.datos);
       sessionStorage.setItem("nuevaDesigna", "true");
-      sessionStorage.setItem("EJG", JSON.stringify(this.datos));
       sessionStorage.setItem("nombreInteresado", this.datos.nombreApeSolicitante);
       if (this.art27) {
         sessionStorage.setItem("Art27", "true");

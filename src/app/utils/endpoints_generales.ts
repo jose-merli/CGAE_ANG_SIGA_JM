@@ -59,6 +59,8 @@ export let endpoints_generales: any = {
     gestionJusticiables_copyAsis2Ejg: 'gestionJusticiables/copyAsis2Ejg',
     gestionJusticiables_copyAsis2Designa: 'gestionJusticiables/copyAsis2Designa',
 
+    componenteGeneralJG_tipoTurno:  'componenteGeneralJG/getTipoTurno',
+
     
    
 }

@@ -62,6 +62,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<String>();
+  @Output() bodyChange = new EventEmitter<JusticiableItem>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -120,12 +121,13 @@ export class AsuntosComponent implements OnInit, OnChanges {
   crearDesignacion() {
     this.progressSpinner = true;
     //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
-    this.body = this.persistenceService.getDatos();
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    //this.body = this.persistenceService.getDatos();
+    //this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
+    //sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     let nombreApellidos =  this.body.apellidos + " " + this.body.nombre
     sessionStorage.setItem("nombreInteresado", nombreApellidos);
-    sessionStorage.setItem("justiciable", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     sessionStorage.setItem("deJusticiableANuevaDesigna", 'true');
     sessionStorage.setItem("nuevaDesigna", "true");
     this.progressSpinner = false;
@@ -144,12 +146,9 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
   // Asociar Designacion
   asociarDesignacion() {
-    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("radioTajertaValue", 'des');
-    let justiciableDes = JSON.stringify(this.body);
-    sessionStorage.setItem("justiciable", justiciableDes);
+    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     this.router.navigate(["/busquedaAsuntos"]);
-
   }
 
   // Permisos para crear EJG
@@ -190,10 +189,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     sessionStorage.setItem("radioTajertaValue", 'ejg');
     this.router.navigate(["/busquedaAsuntos"]);
-
   }
-
-
 
   // Permiso para crear Asistencia
   checkPermisosCrearAsistencia() {
@@ -222,7 +218,6 @@ export class AsuntosComponent implements OnInit, OnChanges {
     } else {
       this.asociarAsistencia();
     }
-
   }
 
   // Asociar Asistencia

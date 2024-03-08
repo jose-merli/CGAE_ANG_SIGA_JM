@@ -93,19 +93,19 @@
   </div>
 </div>
 </div>
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardarDet" width="425"
-  #confirmGuardarDet>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardar" width="425"
+  #confirmGuardar>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardarDet.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardarDet.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmGuardar.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmGuardar.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmAnularDet" width="425"
-  #confirmAnularDet>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmAnular" width="425"
+  #confirmAnular>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmAnularDet.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="confirmAnularDet.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmAnular.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmAnular.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 

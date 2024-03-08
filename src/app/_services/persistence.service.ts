@@ -26,6 +26,9 @@ export class PersistenceService {
     private fromDesignacionesName: string = "fromDesignaciones";
     private designaItemName: string = "designaItem";
     private designaItemLinkName: string = "designaItemLink";
+    private ejgCopyName: string = "EJGcopy";
+    private asistenciaItemName: string = "asistenciaItem";
+    private asistenciaCopyName: string = "asistenciaCopy";
 
     constructor() { }
 
@@ -280,7 +283,29 @@ export class PersistenceService {
         sessionStorage.removeItem(this.designaItemLinkName);
     }
 
+    clearEJGCopy(){
+        sessionStorage.removeItem(this.ejgCopyName);
+    }
 
+    clearAsistenciaItem(){
+        sessionStorage.removeItem(this.asistenciaItemName);
+    }
+
+    clearAsistenciaCopy(){
+        sessionStorage.removeItem(this.asistenciaCopyName);
+    }
+
+    clearRelacionesEjgDesignaAsistencia(){
+        this.clearDatosEJG();
+        this.clearEJGCopy();
+        this.clearAsistencia();
+        this.clearAsistenciaItem();
+        this.clearDesignacion();
+        this.clearDesignaItem();
+        this.clearDesignaItemLink();
+        this.clearFromDesignaciones();
+        this.clearAsistenciaCopy();
+    }
 
     clearPersistence() {
         this.clearFiltros();

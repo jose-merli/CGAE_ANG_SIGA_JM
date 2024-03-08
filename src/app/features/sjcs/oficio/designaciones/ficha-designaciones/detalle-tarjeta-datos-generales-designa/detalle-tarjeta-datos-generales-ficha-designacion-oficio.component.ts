@@ -310,7 +310,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.selectores[1].value = "";
     }
 
-	 if (sessionStorage.getItem("salto") == 'true') {
+	  if (sessionStorage.getItem("salto") == 'true') {
       this.salto = true;
       sessionStorage.removeItem("salto");
     }else{
@@ -332,10 +332,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       let fechaNoHora = moment(this.datosAsistencia.fechaAsistencia.substr(0, 10), 'DD/MM/YYYY').toDate();
       //this.fechaGenerales = fechaNoHora;
       this.searchRelacionesAs.emit(true);
-    }else if (sessionStorage.getItem("EJG")) { //Se comprueba si se procede de la pantalla de gestion de EJG
-      this.datosEJG = JSON.parse(sessionStorage.getItem("EJG"));
-      sessionStorage.removeItem("EJG");
-      sessionStorage.setItem("EJGcopy", JSON.stringify(this.datosEJG));
+    }else if (this.persistenceService.getDatosEJG()) { //Se comprueba si se procede de la pantalla de gestion de EJG
+      this.datosEJG = this.persistenceService.getDatosEJG();
       this.vieneDeEJG = true;
       //Datos de la tarjeta datos generales
       //Comprobar art 27.
@@ -374,10 +372,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     } else if (sessionStorage.getItem("asistenciaCopy")) {
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistenciaCopy"));
       sessionStorage.removeItem("asistenciaCopy");
-    } else if (sessionStorage.getItem("EJGcopy")) {
-      this.datosEJG = JSON.parse(sessionStorage.getItem("EJGcopy"));
-      sessionStorage.removeItem("EJGcopy");
-    }
+    } 
     if (sessionStorage.getItem("asistenciaUnica")) {
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistenciaUnica"));
       sessionStorage.removeItem("asistenciaUnica");
@@ -443,6 +438,17 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           if(this.datosAsistencia.idTurno){
             this.selectores[0].value = this.datosAsistencia.idTurno;
           }
+        }else if(this.vieneDeEJG && this.datosEJG.idTurno){
+          // si viene de un EJG asignamos el mismo turno del EJG, si el tipo turno es 2 (Designación) o null
+            this.sigaServices.getParam("componenteGeneralJG_tipoTurno", "?idTurno=" + this.datosEJG.idTurno).subscribe(
+              n => {
+                if (n == null || n == 2){
+                  this.selectores[0].value = this.datosEJG.idTurno;
+                  if ( this.selectores[0].nombre == 'Turno'){
+                    this.comprobarLetradoColaTurno(this.datosEJG.idTurno);
+                  }
+                }
+              });
         }
         //Condicion pensada para que se aplique cuandose crea una designacion desde EJG
         /*if (this.datosEJG != undefined && this.datosEJG != null) {
@@ -567,14 +573,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                       this.showMsg("info", "Error al asociar la Designacion con la Asistencia", error.description);
                     } else {
                       this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
-                      //this.router.navigate(["/fichaDesignaciones"]);
                       this.progressSpinner = false;
-                      //this.location.back();
                       this.busquedaDesignaciones(newDesignaRfresh);
                     }
                   },
                   err => {
-                    //console.log(err);
                     this.progressSpinner = false;
                   }, () => {
                     this.progressSpinner = false;
@@ -591,7 +594,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     //Se debe añadir a la BBDD estos mensajes (etiquetas)
                     if (JSON.parse(m.body).error.code == 200) this.msgs = [{ severity: "success", summary: "Asociación con EJG realizada correctamente", detail: this.translateService.instant(JSON.parse(m.body).error.description) }];
                     else this.msgs = [{ severity: "error", summary: "Asociación con EJG fallida", detail: this.translateService.instant(JSON.parse(m.body).error.description) }];
-                    // sessionStorage.removeItem("EJG");
 
                     //Una vez se han asociado el ejg y la designa, procedemos a traer los posibles datos de pre-designacion
                     this.sigaServices.post("gestionejg_getEjgDesigna", this.datosEJG).subscribe(
@@ -602,27 +604,17 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                             if (y.statusText == "OK") this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                             else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
                             this.progressSpinner = false;
-                            this.location.back();
                           }
                         );
                       },
                       err => {
                         this.progressSpinner = false;
-                        this.location.back();
                       }
                     );
-
                   },
                   err => {
-                    severity = "error";
-                    summary = "No se ha asociado el EJG correctamente";
-                    this.msgs.push({
-                      severity,
-                      summary,
-                      detail
-                    });
+                    this.showMessage("error", "No se ha asociado el EJG correctamente", err);
                     this.progressSpinner = false;
-                    this.location.back();
                   }
                 );
               } else if (this.datosJusticiables) {//Introducimos aqui la asocion con Justiciables en el caso que venga de una ficha Justiciable
@@ -646,22 +638,15 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     }
                     sessionStorage.removeItem("justiciables");
                     this.progressSpinner = false;
-                    this.location.back();
                   },
                   err => {
-                    //console.log(err);
                     this.progressSpinner = false;
-                    this.location.back();
                   }
                 );
               }
 
               this.busquedaDesignaciones(newDesignaRfresh);
-              
-              this.showMessage("success",
-                        this.translateService.instant("messages.inserted.success"),
-                        'Se ha guardado correctamente');
-              //console.log(n);
+              this.showMessage("success", this.translateService.instant("messages.inserted.success"), 'Se ha guardado correctamente');
               this.progressSpinner = false;
             },
             err => {
@@ -669,14 +654,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               summary = "No se han podido modificar los datos";
               if (err.status == 406) {
                 summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
-                //var errorJson = JSON.parse(err["error"]);
                 var errorJson = JSON.parse(err.error);
                 detail = detail = this.translateService.instant(errorJson.error.description);
               }
               //Añadido control de errores cuando no encuentra letrado en la cola
               if (err.status == 404) {
                 summary =this.translateService.instant('justiciaGratuita.oficio.designa.errorNoExisteLetrado');
-                //var errorJson = JSON.parse(err["error"]);
                 var errorJson = JSON.parse(err.error);
                 detail = detail = this.translateService.instant(errorJson.error.description);
               }

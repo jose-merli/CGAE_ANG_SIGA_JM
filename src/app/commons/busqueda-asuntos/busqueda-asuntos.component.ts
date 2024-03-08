@@ -105,10 +105,9 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       //this.location.back();
     }
     //asociar desde EJG
-    if (sessionStorage.getItem('EJG')) {
-      this.datos = JSON.parse(sessionStorage.getItem('EJG'));
+    if (this.persistenceService.getDatosEJG()) {
+      this.datos = this.persistenceService.getDatosEJG();
       this.fromEJG = true;
-      sessionStorage.removeItem('EJG');
     }
 
     //asociar desde SOJ

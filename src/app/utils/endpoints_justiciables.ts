@@ -11,6 +11,7 @@ export let endpoints_justiciables: any = {
     gestionJusticiables_comboTipoVias2: "justiciables/gestionJusticiables/comboTipoVias2",
     gestionJusticiables_createJusticiable: "justiciables/gestionJusticiables/createJusticiable",
     gestionJusticiables_updateJusticiable: "justiciables/gestionJusticiables/updateJusticiable",
+    gestionJusticiables_updateJusticiableDatosPersonales: "justiciables/gestionJusticiables/updateJusticiable/datos/personales",
     gestionJusticiables_updateDatosSolicitudJusticiable: "justiciables/gestionJusticiables/updateDatosSolicitudJusticiable",
     gestionJusticiables_createDatosSolicitudJusticiable: "justiciables/gestionJusticiables/createDatosSolicitudJusticiable",
     gestionJusticiables_searchAsuntosJusticiable: "justiciables/gestionJusticiables/searchAsuntosJusticiable",

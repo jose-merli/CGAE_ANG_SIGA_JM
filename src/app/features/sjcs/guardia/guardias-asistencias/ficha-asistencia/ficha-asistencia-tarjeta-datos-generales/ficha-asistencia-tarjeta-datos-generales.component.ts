@@ -709,14 +709,12 @@ comprobarFechaHora(){
           //Se debe añadir a la BBDD estos mensajes (etiquetas)
           if (JSON.parse(m.body).error.code == 200) {
             this.progressSpinner = false;
-            this.location.back();
+            //this.location.back();
           }
         },
         err => {
           this.progressSpinner = false;
-          this.location.back();
-        },
-        () => {
+          //this.location.back();
         }
       );
     }

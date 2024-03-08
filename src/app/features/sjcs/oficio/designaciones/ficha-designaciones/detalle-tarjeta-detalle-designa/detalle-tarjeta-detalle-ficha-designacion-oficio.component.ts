@@ -428,7 +428,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       designaUpdate.fechaEstado = new Date();
       let mess = "Está seguro de querer Anular la designación. Las actuaciones asociadas también serán anuladas de forma automática.¿Desea continuar?";
       let icon = "fa fa-question-circle";
-      let keyConfirmation = "confirmAnularDet";
+      let keyConfirmation = "confirmAnular";
       this.confirmationService.confirm({
         key: keyConfirmation,
         message: mess,
@@ -1121,7 +1121,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           if (n.body.split(',').length > 0 && n.body != '0') {
             let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado (" + n.body +  "), ¿Desea continuar?";
             let icon = "fa fa-question-circle";
-            let keyConfirmation = "confirmGuardarDet";
+            let keyConfirmation = "confirmGuardar";
             this.confirmationService.confirm({
               key: keyConfirmation,
               message: mess,

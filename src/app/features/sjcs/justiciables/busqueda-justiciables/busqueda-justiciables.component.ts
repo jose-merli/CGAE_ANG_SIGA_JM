@@ -6,8 +6,6 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { TranslateService } from '../../../../commons/translate';
 import { Router, ActivatedRoute } from '@angular/router';
-import { procesos_maestros } from '../../../../permisos/procesos_maestros';
-import { JusticiableBusquedaItem } from '../../../../models/sjcs/JusticiableBusquedaItem';
 import { Location } from '@angular/common';
 import { procesos_justiciables } from '../../../../permisos/procesos_justiciables';
 
@@ -213,8 +211,10 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
   }
 
   backTo() {
-    this.location.back();
-
-  }
-
+    if(this.persistenceService.getDatosEJG()){
+      this.router.navigate(["/gestionEjg"]);
+    } else {
+      this.location.back();
+    }
+  } 
 }

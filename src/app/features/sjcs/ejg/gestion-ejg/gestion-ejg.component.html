@@ -14,7 +14,8 @@
         <app-datos-generales-ejg [checkPermission]="permisos.datosGenerales" id="tarjetaDatosGenerales"
             (guardadoSend)="guardadoSend($event)" (crearDesignacion)="crearDesignacion()"
             [permisoEscritura]="isPermisoTarjeta('tarjetaDatosGenerales')" [haveDesignacion]="haveDesignacion"
-            [datos]="body" [modoEdicion]="modoEdicion" [nuevo]="nuevo" [openTarjetaDatosGenerales]="isOpenTarjeta('tarjetaDatosGenerales')">
+            [datos]="body" [modoEdicion]="modoEdicion" [nuevo]="nuevo" 
+            [tipo]="tipoRelacion" [tipoObject]="tipoObject" [openTarjetaDatosGenerales]="isOpenTarjeta('tarjetaDatosGenerales')">
         </app-datos-generales-ejg>
 
         <app-unidad-familiar [checkPermission]="permisos.unidadFamiliar" *ngIf="modoEdicion" id="tarjetaUnidadFamiliar"

@@ -1,15 +1,13 @@
 import { Location } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit, SimpleChanges, ViewChild, OnChanges, Input, DoCheck } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JusticiableBusquedaItem } from '../../../../models/sjcs/JusticiableBusquedaItem';
 import { JusticiableItem } from '../../../../models/sjcs/JusticiableItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
-// import { TablaMateriasComponent } from "./gestion-materias/tabla-materias.component";
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { DatosRepresentanteComponent } from './datos-representante/datos-representante.component';
-import { AsuntosComponent } from './asuntos/asuntos.component';
 import { AuthenticationService } from '../../../../_services/authentication.service';
 import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
 import { EJGItem } from "../../../../models/sjcs/EJGItem";
@@ -59,6 +57,8 @@ export class GestionJusticiablesComponent implements OnInit {
   tarjetaDatosAbogado: boolean = false;
   tarjetaDatosProcurador: boolean = false;
   tarjetaDatosUnidadFamiliar: boolean = false;
+  updateDatosPersonale: boolean = false
+  
 
   @ViewChild("topScroll") outlet;
   @ViewChild(DatosRepresentanteComponent) datosRepresentante;
@@ -374,8 +374,6 @@ export class GestionJusticiablesComponent implements OnInit {
       }
     }
 
-
-
     await this.checkAcceso();
 
     //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del justiciable que se quiere mostrar
@@ -676,7 +674,7 @@ export class GestionJusticiablesComponent implements OnInit {
   }
   //Servicio para extraer el solicitante principal de esa unidad familiar
   searchSolicitante() {
-    let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+    let ejg: EJGItem = this.persistenceService.getDatosEJG();
     this.sigaServices.post("gestionJusticiables_getSolicitante", ejg).subscribe(
       n => {
         let solicitante = JSON.parse(n.body).unidadFamiliarItems;
@@ -726,10 +724,8 @@ export class GestionJusticiablesComponent implements OnInit {
   }
   
   actualizaAsunto(event){
-    
     this.body = event;
     this.updateTarjResumen();
-    //this.actualizaAsuntos.getCols();
   }
 
   newJusticiable(event) {
@@ -755,10 +751,8 @@ export class GestionJusticiablesComponent implements OnInit {
                   sessionStorage.removeItem("Nuevo");
                   this.router.navigate(["/fichaAsistencia"]);
                 }
-
               },
               err => {
-                //console.log(err);
                 this.progressSpinner = false;
               },
               () => {
@@ -811,7 +805,7 @@ export class GestionJusticiablesComponent implements OnInit {
       justiciableBusqueda.idpersona = justiciableBusqueda1[0].idpersonajg;
     }else{
       justiciableBusqueda.idinstitucion = justiciableBusqueda1.idinstitucion;
-    justiciableBusqueda.idpersona = justiciableBusqueda1.idpersona;
+      justiciableBusqueda.idpersona = justiciableBusqueda1.idpersona;
     }
 
     sessionStorage.setItem("justiciableDatosPersonalesSearch", JSON.stringify(justiciableBusqueda));
@@ -951,8 +945,14 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   backTo() {
-    if(sessionStorage.getItem("vieneDeFichaJusticiable") == "true" || sessionStorage.getItem("nuevoJusticiable") == "true"){
+    if(this.persistenceService.getDatosEJG() && !sessionStorage.getItem("nuevoJusticiable")){
+      let ejg: EJGItem = this.persistenceService.getDatosEJG();
+      ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
+      this.persistenceService.setDatosEJG(ejg);
+      this.router.navigate(["/gestionEjg"]);
+    }else if(sessionStorage.getItem("vieneDeFichaJusticiable") == "true" || sessionStorage.getItem("nuevoJusticiable") == "true"){
       this.router.navigate(["/justiciables"]);
+      sessionStorage.removeItem("nuevoJusticiable");
     }else{
       //Revisar. Actualmente se produce un bucle si se accede a la ficha para la creacion de un justiciable desde la pantalla de busqueda.
       //Para solucionarlo se recomienda que se eliminen los else if.
@@ -986,11 +986,7 @@ export class GestionJusticiablesComponent implements OnInit {
           sessionStorage.setItem('tarjeta', 'unidadFamiliar');
           sessionStorage.setItem("origin", "UnidadFamiliar");
         } 
-        if(sessionStorage.getItem("EJGItem")){
-          let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-          ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
-          sessionStorage.setItem("fichaEJG", JSON.stringify(ejg));
-        }    
+
         
         if(this.fromNuevoJusticiable){
           this.router.navigate(["/justiciables"]);
@@ -1265,6 +1261,28 @@ export class GestionJusticiablesComponent implements OnInit {
       }
     }, 5)
     this.progressSpinner = false;
+  }
+
+  datosGeneralesChange(body: JusticiableItem){
+    this.body = {... body};
+  }
+
+  datosPersonalesChange(body: JusticiableItem){
+    this.body.idtipovia = body.idtipovia;
+    this.body.direccion = body.direccion;
+    this.body.numerodir = body.numerodir;
+    this.body.escaleradir = body.escaleradir;
+    this.body.pisodir = body.pisodir;
+    this.body.puertadir = body.puertadir;
+    this.body.idpaisdir1 = body.idpaisdir1;
+    this.body.codigopostal = body.codigopostal;
+    this.body.idprovincia = body.idprovincia;
+    this.body.idpoblacion = body.idpoblacion;
+    this.body.correoelectronico = body.correoelectronico;
+    this.body.fax = body.fax;
+    if (this.body.telefonos != null && this.body.telefonos.length > 0) {
+      this.body.telefonos = body.telefonos;
+    }  
   }
 
 }

@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableTelefonoItem';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -32,8 +32,9 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   comboProvincia;
   comboPoblacion;
 
-  @Input() body: JusticiableItem;
   @Input() showTarjeta;
+  @Input() body: JusticiableItem;
+  @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<String>();
 
@@ -74,7 +75,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.callServiceSearch();
   }
 
-  ngOnChanges() {    
+  ngOnChanges(changes: SimpleChanges) {   
     if (this.body != undefined && this.body.idpersona != undefined) {
       if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
         this.addTelefono();
@@ -161,7 +162,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.hasChange = true;
   }
 
-  onChangeInput(){
+  onChangeInput(event){
     this.hasChange = true;
   }
 
@@ -210,7 +211,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       if (!this.modoEdicion) {
         this.callSaveService("gestionJusticiables_createJusticiable");
       } else {
-        this.callSaveService("gestionJusticiables_updateJusticiable");
+        this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
       }
     }
   }
@@ -259,6 +260,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
         this.rellenarDireccionPostal();
         this.hasChange = false;
+        this.bodyChange.emit(this.body);
         this.progressSpinner = false;
       },
       err => {
@@ -302,15 +304,11 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       this.validateForm = true;
     }
     if(this.body.telefonos != null && this.body.telefonos.length > 0){
-      let i = 1;
-      while (i < this.body.telefonos.length) {
-        if(this.body.telefonos[i-1].nombreTelefono === undefined || this.body.telefonos[i-1].numeroTelefono === undefined || 
-           this.body.telefonos[i-1].nombreTelefono === "" || this.body.telefonos[i-1].numeroTelefono === ""){
-            this.deleteTelefono(i-1);
-        } else {
-            i++;
+      for (let i = 0; i < this.body.telefonos.length; i++){
+        if(this.body.telefonos[i].numeroTelefono === undefined || this.body.telefonos[i].numeroTelefono === ""){
+          this.deleteTelefono(i);
         }
-    }
+      }
     }
     return this.validateForm;
   }
@@ -358,9 +356,6 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     } else {
       this.body.telefonos.splice(index, 1);
     }
-    // if (this.body.telefonos.length == 0) {
-    //   this.body.telefonos.push(new JusticiableTelefonoItem());
-    // }
     this.hasChange = true;
   }
 

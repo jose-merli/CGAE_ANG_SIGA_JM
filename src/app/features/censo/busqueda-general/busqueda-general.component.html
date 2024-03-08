@@ -102,7 +102,7 @@
                         <p-multiSelect #someDropdown *ngIf="!colegioDisabled" [defaultLabel]="textFilter"
                             filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios_rol"
                             optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="10"
-                            styleClass="widthAll" [panelStyle]="{width:'100%'}" [disabled]="!addDestinatarioIndv || disableInput"
+                            styleClass="widthAll" [panelStyle]="{width:'100%'}" [disabled]="(addDestinatarioIndv || disableInput)"
                             (onPanelShow)="focusInputField()" optionDisabled="disableInput"></p-multiSelect>
                         <input [disabled]="true" *ngIf="colegioDisabled" type="text" class="form-control" pInputText
                             [(ngModel)]='labelRemitente' [disabled]="disableInput">
@@ -142,7 +142,7 @@
                         <p-multiSelect #someDropdown2 *ngIf="!colegioDisabled" filterBy="label" [options]="colegios_rol"
                             optionLabel="label" [defaultLabel]="textFilter" styleClass="widthAll"
                             [(ngModel)]='colegios_seleccionados' [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="10" [panelStyle]="{width:'100%'}" [disabled]="!addDestinatarioIndv || disableInput"
+                            maxSelectedLabels="10" [panelStyle]="{width:'100%'}" [disabled]="(addDestinatarioIndv || disableInput)"
                             (onPanelShow)="focusInputField2()" optionDisabled="disableInput"></p-multiSelect>
                         <input [disabled]="true" *ngIf="colegioDisabled" type="text" class="form-control" pInputText
                             [(ngModel)]='labelRemitente'>
