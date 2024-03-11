@@ -433,6 +433,7 @@
                                 <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select' && !estaValidada(row)">
                                     <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value"
                                         [options]="cell.combo" showClear="true" styleClass="widthAll"
+                                        filterBy="label,labelSinTilde" [filter]="true"
                                         (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, false, i)"
                                         [disabled]="cell.disabled">
                                     </p-dropdown>
