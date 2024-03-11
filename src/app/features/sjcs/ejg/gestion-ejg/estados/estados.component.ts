@@ -86,6 +86,12 @@ export class EstadosComponent implements OnInit {
     this.sigaServices.post("gestionejg_getEstados", selected).subscribe(
       n => {
         this.estados = JSON.parse(n.body).estadoEjgItems;
+
+        if(this.datos.estadoEJG != this.estados[0].descripcion){
+          this.datos.estadoEJG = this.estados[0].descripcion;
+          this.guardadoSend.emit(this.datos);
+        }
+
         this.datosEstados = this.estados;
         this.checkEstados = JSON.parse(JSON.stringify(this.estados));
       }
@@ -151,6 +157,7 @@ export class EstadosComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
+
   onChangeSelectAll() {
     if (this.permisoEscritura) {
       if (!this.historico) {
@@ -178,6 +185,7 @@ export class EstadosComponent implements OnInit {
       }
     }
   }
+
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
@@ -195,39 +203,24 @@ export class EstadosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
   confirmDelete() {
-    let mess = this.translateService.instant(
-      "justiciaGratuita.ejg.message.eliminarEstado"
-    );
-    let icon = "fa fa-edit";
     this.confirmationService.confirm({
       key: 'delEstado',
-      message: mess,
-      icon: icon,
+      message: this.translateService.instant("justiciaGratuita.ejg.message.eliminarEstado"),
+      icon: "fa fa-edit",
       accept: () => {
         this.delete();
-
       },
       reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancelar",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
+        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
         this.activarRestablecerEstados();
       }
     });
   }
 
-
   delete() {
     this.progressSpinner = true;
-
-
     for (let i = 0; this.selectedDatos.length > i; i++) {
       if (this.selectedDatos[i].automatico != "0") {
         this.progressSpinner = false;
@@ -308,28 +301,19 @@ export class EstadosComponent implements OnInit {
       } else {
         mess = this.translateService.instant("general.message.aceptar");
       }
-      let icon = "fa fa-edit";
-
       this.confirmationService.confirm({
         key: 'addEstado',
         message: mess,
-        icon: icon,
+        icon: "fa fa-edit",
         accept: () => {
           this.anadirEstado();
-
         },
         reject: () => {
-          this.msgs = [{
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant("general.message.accion.cancelada")
-          }];
+          this.showMessage("info", "Cancel", this.translateService.instant("general.message.accion.cancelada"));
           this.activarRestablecerEstados();
-
         }
       });
     }
-
   }
 
   async anadirEstado() {
@@ -362,20 +346,13 @@ export class EstadosComponent implements OnInit {
           this.observacionesEstado = "";
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.getEstados(this.datos);
-
-          if (this.esColegioZonaComun && estadoNew.idEstadoejg === "7") {
-            this.guardadoSend.emit(this.datos);
-          }
         },
         err => {
-          //console.log(err);
           this.progressSpinner = false;
-          //this.busqueda.emit(false);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
 
-      //this.creaEstado = false;
     } else {
 
       this.progressSpinner = true;
@@ -409,23 +386,16 @@ export class EstadosComponent implements OnInit {
   }
 
   confirmacionEnviarCAJGCambiarEstado(): Promise<boolean> {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmEnviarDoc");
-    let icon = "fa fa-edit";
-
     return new Promise((accept1, reject1) => {
       this.confirmationService.confirm({
         key: "confirmCAJG",
-        message: mess,
-        icon: icon,
+        message: this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmEnviarDoc"),
+        icon: "fa fa-edit",
         accept: () => {
           accept1(true);
         },
         reject: () => {
-          this.msgs = [{
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant("general.message.accion.cancelada")
-          }];
+          this.showMessage("info", "Cancel", this.translateService.instant("general.message.accion.cancelada"));
           this.activarRestablecerEstados();
           accept1(false);
         }
@@ -453,7 +423,6 @@ export class EstadosComponent implements OnInit {
 
   checkPermisosDelete() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -464,6 +433,7 @@ export class EstadosComponent implements OnInit {
       }
     }
   }
+
   checkPermisosActivate() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -478,8 +448,7 @@ export class EstadosComponent implements OnInit {
       if ((evento == null || evento == undefined || evento == "") && resaltado == "estados" && this.resaltadoDatosGenerales) {
         return "camposObligatorios";
       }
-    }
-    else {
+    }else {
       if (this.resaltadoDatosGenerales && (evento == undefined || evento == null || evento == "")) {
         return this.commonsServices.styleObligatorio(evento);
       }
@@ -490,21 +459,22 @@ export class EstadosComponent implements OnInit {
     const pattern = 'yyyy-MM-dd';
     return this.datepipe.transform(date, pattern);
   }
+
   formatDate3(date) {
-    //const pattern = 'dd-MM-yyyy';
     let year = date.substring(6, 10)
     let month = date.substring(3, 5)
     let day = date.substring(0, 2)
     let date2 = day + '-' + month + '-' + year;
-    return date2; //this.datepipe.transform(date, pattern);
+    return date2;
   }
+  
   formatDate4(date) {
     date = date.split("-");
     var newDate = new Date(date[2], date[1] - 1, date[0]);
     return newDate.getTime();
   }
+
   changeDateFormat(date1) {
-    //console.log('date1: ', date1)
     let year = date1.substring(0, 4)
     let month = date1.substring(5, 7)
     let day = date1.substring(8, 10)
@@ -526,7 +496,6 @@ export class EstadosComponent implements OnInit {
       for (let j = 0; j < this.datosEstados.length; j++) {
         if (j == indice) {
           this.datosEstados[indice].isMod = true;
-          //this.getComboEstado();
         } else {
           this.datosEstados[j].isMod = false;
         }
