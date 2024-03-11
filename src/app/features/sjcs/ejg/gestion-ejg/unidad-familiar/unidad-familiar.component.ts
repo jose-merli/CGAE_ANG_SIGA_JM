@@ -191,11 +191,13 @@ export class UnidadFamiliarComponent implements OnInit {
       let datosSeleccionados = [];
       let rutaClaseComunicacion = "/unidadFamiliar";
   
+      this.progressSpinner = true;
       this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
         data => {
           let idClaseComunicacion = JSON.parse(data["body"]).clasesComunicaciones[0].idClaseComunicacion;
           this.sigaServices.post("dialogo_keys", idClaseComunicacion).subscribe(
-            data => {
+            data => { 
+              this.progressSpinner = false
               let keys = JSON.parse(data["body"]).keysItem;
               let keysValues = [];
               keys.forEach(key => {
@@ -218,9 +220,15 @@ export class UnidadFamiliarComponent implements OnInit {
               this.persistenceService.setDatosEJG(this.datos);
               sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
               this.router.navigate(["/dialogoComunicaciones"]);
-            }
+            }, error =>{
+              this.progressSpinner = false
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            } 
           );
-        }
+        }, error =>{
+          this.progressSpinner = false
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        } 
       );   
     }
   }
