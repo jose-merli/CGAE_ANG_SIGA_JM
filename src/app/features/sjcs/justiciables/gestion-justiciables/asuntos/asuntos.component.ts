@@ -166,10 +166,10 @@ export class AsuntosComponent implements OnInit, OnChanges {
   crearEJG() {
     if (sessionStorage.getItem("EJGItem")) {
       sessionStorage.removeItem("EJGItem");
-    }
-    this.persistenceService.clearDatosEJG();
-    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+    }  
+    this.persistenceService.clearRelacionesEjgDesignaAsistencia();
     this.persistenceService.clearDatos();
+    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);
   }

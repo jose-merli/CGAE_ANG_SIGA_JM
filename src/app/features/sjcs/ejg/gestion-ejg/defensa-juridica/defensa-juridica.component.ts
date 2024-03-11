@@ -202,8 +202,8 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   private getComboJuzgado() {
-    if (this.datos.juzgado == null || this.datos.juzgado == undefined) {
-      this.datos.juzgado = '0';
+    if (this.datos.juzgado == undefined) {
+      this.datos.juzgado = null;
     }
     this.sigaServices.post("combo_comboJuzgadoDesignaciones", this.datos.juzgado).subscribe(
       n => {
