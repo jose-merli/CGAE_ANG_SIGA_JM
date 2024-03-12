@@ -870,9 +870,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
               let asistenciasDTO = JSON.parse(n["body"]);
               if(asistenciasDTO.error && asistenciasDTO.error.code != 200){
                 this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
-              }else if(asistenciasDTO.tarjetaAsistenciaItems.length === 0){
-                this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
-              }else{
+              } else{
                 if(asistenciasDTO.error && asistenciasDTO.error.code == 200){ //Todo ha ido bien pero la consulta ha excedido los registros maximos
                   this.showMsg('info', 'Info', asistenciasDTO.error.description);
                 }

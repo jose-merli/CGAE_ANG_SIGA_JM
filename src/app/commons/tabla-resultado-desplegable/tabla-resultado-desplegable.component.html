@@ -576,6 +576,10 @@
             </div>
         </div>
     </div>
+    
+    <div *ngIf="rowGroups == undefined || rowGroups.length == 0" class="table-row-group">
+        <span class="p-2 mw80">{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}</span>
+    </div>
 
     <div *ngIf="pantalla == 'JE' && permisoEscritura" class="right col-lg-12 col-md-6 ajustar marginButtons">
         <div class="inline-block text-right main-button setPosition">
