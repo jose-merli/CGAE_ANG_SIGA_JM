@@ -403,7 +403,8 @@
                                 <label>{{ 'justiciaGratuita.oficio.justificacionExpres.anioDesignacion' | translate
                                     }}</label>
                                 <input [disabled]="" type="number" class="form-control"
-                                    [(ngModel)]='filtroJustificacion.anioDesignacion' maxLength="4" pInputText>
+                                    [(ngModel)]='filtroJustificacion.anioDesignacion' maxLength="4" 
+                                    (ngModelChange)="onAnioDesignacionChange($event)" pInputText>
                             </div>
                             <div class="form-group-interlineado col-lg-6 col-md-6">
                                 <label>{{ 'justiciaGratuita.oficio.justificacionExpres.numDesignacion' | translate
