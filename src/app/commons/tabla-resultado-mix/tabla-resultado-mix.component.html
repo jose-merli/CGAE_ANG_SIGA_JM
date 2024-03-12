@@ -22,6 +22,11 @@
           </div>
         </div>
       </div>
+
+      <div *ngIf="rowGroups == undefined || rowGroups.length == 0" class="table-row-group">
+        <span class="p-2 mw80">{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}</span>
+      </div>
+
       <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
         <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
           [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
