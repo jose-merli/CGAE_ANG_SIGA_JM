@@ -592,8 +592,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
                   m => {
                     //Se debe añadir a la BBDD estos mensajes (etiquetas)
-                    if (JSON.parse(m.body).error.code == 200) this.msgs = [{ severity: "success", summary: "Asociación con EJG realizada correctamente", detail: this.translateService.instant(JSON.parse(m.body).error.description) }];
-                    else this.msgs = [{ severity: "error", summary: "Asociación con EJG fallida", detail: this.translateService.instant(JSON.parse(m.body).error.description) }];
+                    if (JSON.parse(m.body).error.code == 200 && JSON.parse(m.body).status == 'OK')
+                      this.showMessage("success", "Asociación con EJG realizada correctamente", this.translateService.instant(JSON.parse(m.body).error.description));
+                    else
+                      this.showMessage("error", "Asociación con EJG fallida", this.translateService.instant(JSON.parse(m.body).error.description));
 
                     //Una vez se han asociado el ejg y la designa, procedemos a traer los posibles datos de pre-designacion
                     this.sigaServices.post("gestionejg_getEjgDesigna", this.datosEJG).subscribe(
@@ -790,7 +792,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   showMessage(severity, summary, msg) {
-    this.msgs = [];
+    //this.msgs = [];
     this.msgs.push({
       severity: severity,
       summary: summary,
