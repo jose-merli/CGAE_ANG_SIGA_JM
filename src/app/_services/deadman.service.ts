@@ -4,7 +4,6 @@ import * as jwt_decode from "jwt-decode";
 
 @Injectable()
 export class DeadmanService {
-
   private timer: any;
   private readonly timeoutDuration: number = 600000; // Tiempo en milisegundos
 
@@ -22,14 +21,14 @@ export class DeadmanService {
   }
 
   private handleDeadman(): void {
-    const authorization :string = sessionStorage.getItem("Authorization");
-    if(authorization != null){
-        const token: string = authorization.replace("Bearer ", "");
-        if(this.isTokenExpired(token)){
-            clearInterval(this.timer);
-            sessionStorage.setItem("tokenExpirado", "true");
-            this.router.navigate(['/home']);
-        }
+    const authorization: string = sessionStorage.getItem("Authorization");
+    if (authorization != null) {
+      const token: string = authorization.replace("Bearer ", "");
+      if (this.isTokenExpired(token)) {
+        clearInterval(this.timer);
+        sessionStorage.setItem("tokenExpirado", "true");
+        this.router.navigate(["/home"]);
+      }
     }
   }
 
