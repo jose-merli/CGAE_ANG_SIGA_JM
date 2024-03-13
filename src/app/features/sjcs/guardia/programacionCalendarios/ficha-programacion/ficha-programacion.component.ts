@@ -1050,7 +1050,7 @@ export class FichaProgramacionComponent implements OnInit {
     this.sigaServices.post("guardiaCalendario_buscar", datosEntrada).subscribe(
       data => {
         let error = JSON.parse(data.body).error;
-        let datos = JSON.parse(data.body);
+        let datos = JSON.parse(data.body).datos;
 
         // this.comboGuardiasIncompatibles = [];
 

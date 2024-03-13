@@ -287,7 +287,7 @@ let datosEntrada =
       "guardiaCalendario_buscar", datosEntrada).subscribe(
         data => {
           let error = JSON.parse(data.body).error;
-          this.datos = JSON.parse(data.body);
+          this.datos = JSON.parse(data.body).datos;
 
           this.respuestaCalendario = [];
          // this.comboGuardiasIncompatibles = [];
