@@ -39,7 +39,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
 
  
   @Input('nuevaInscripcion') nuevaInscripcion;
-
+  @Input('nuevaInscripcionGuardia') nuevaInscripcionGuardia;
   @Output() buscar = new EventEmitter<boolean>();
 
   constructor(private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService) { }
