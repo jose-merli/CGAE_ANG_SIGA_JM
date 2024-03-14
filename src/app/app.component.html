@@ -17,6 +17,9 @@
     <button pButton type="button " label="{{'general.boton.submit' | translate}}" (click)='onHideCookies()'></button>
 </div>
 
+<p-confirmDialog styleClass="msgExpired" #cdExpired key="cdExpired" [closeOnEscape]="false" [closable]="false">
+</p-confirmDialog>
+
 <!--<div class="siga-app-container">
     <app-header></app-header>
     <div class="wrapper-menu-sidebar">
