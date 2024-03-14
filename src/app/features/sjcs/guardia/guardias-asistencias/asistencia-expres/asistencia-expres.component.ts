@@ -169,6 +169,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       sessionStorage.removeItem("volver");
     }
     if(this.searchAsistenciaAgain){
+      this.searchAsistenciaAgain = false;
       this.searchAsistencias();
     }
   }
