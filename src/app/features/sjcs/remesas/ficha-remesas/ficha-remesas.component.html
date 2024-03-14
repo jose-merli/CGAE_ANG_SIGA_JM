@@ -22,7 +22,7 @@
       <button (click)="descargarLogErrores()" pButton type="button" icon="fa fa-download" iconPos="left"
       [hidden] = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)"
        label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate}}"></button>
-      <button (click)="checkPermisosDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [hidden]  = "!guardado"
+      <button *ngIf="this.remesaTabla.idEstado == 0 || this.remesaTabla.idEstado == null" (click)="checkPermisosDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [hidden]  = "!guardado"
         label="{{ 'general.boton.eliminarRemesa' | translate}}" [disabled]="deshabilitarEliminarRemesa"></button>
       <button (click)="openTab()" pButton type="button"  icon="fa fa-plus" [disabled]="deshabilitarAniadirExpedientes"
        iconPos="left"  label="{{ 'general.boton.aniadirExpedientes' | translate}}" [hidden]  = "!guardado || !estado"></button>

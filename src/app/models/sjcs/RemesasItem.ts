@@ -1,6 +1,7 @@
 export class RemesasItem { 
     descripcion?: string;
     estado?: string;
+    idEstado?: number;
     fechaEnvio?: string;
     fechaGeneracion?: string;
     fechaRecepcion?: string;
