@@ -9,7 +9,7 @@
             <app-buscador-asistencia-expres (buscarAE)="buscarAE()" (clearAE)="clearAE()" (search)="search()"></app-buscador-asistencia-expres><!--[modoBusqueda]="modoBusqueda"-->
         </div>
         <div *ngIf="!searchExpres">
-            <app-buscador-asistencias (searchAgain)="searchAsistenciasEvent($event)"></app-buscador-asistencias> <!--[modoBusqueda]="modoBusqueda"-->
+            <app-buscador-asistencias (searchAgain)="searchAgainAsistenciasEvent($event)"></app-buscador-asistencias> <!--[modoBusqueda]="modoBusqueda"-->
         </div>
     </div>
     <div *ngIf="searchExpres" class="card-footer">

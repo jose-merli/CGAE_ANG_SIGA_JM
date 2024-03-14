@@ -931,6 +931,17 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     this.router.navigate(["/fichaAsistencia"]);
   }
 
+  searchAgainAsistenciasEvent(event){
+    if(event){
+      if (this.filtro == null){
+        // el filtro aun no se ha iniciado, se vuelve a hacer la busqueda ngAfterContentInit
+        this.searchAsistenciaAgain = true;
+      }else{
+        this.searchAsistencias();
+      }
+    }
+  }
+
   searchAsistenciasEvent(event){
     if(event){
       this.searchAsistencias();
@@ -938,12 +949,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
 
   checkFilters(){
-    if (this.filtro == null){
-      // el filtro aun no se ha iniciado, se vuelve a hacer la busqueda ngAfterContentInit
-      this.searchAsistenciaAgain = true;
-      return false;
-    }
-    else if ((this.filtro.filtro.idTurno == null || this.filtro.filtro.idTurno == undefined || this.filtro.filtro.idTurno.length == 0) &&
+    if ((this.filtro.filtro.idTurno == null || this.filtro.filtro.idTurno == undefined || this.filtro.filtro.idTurno.length == 0) &&
         (this.filtro.filtro.fechaAsistenciaDesde == null || this.filtro.filtro.fechaAsistenciaDesde == undefined || this.filtro.filtro.fechaAsistenciaDesde.trim() == "" )&&
         (this.filtro.filtro.fechaAsistenciaHasta == null || this.filtro.filtro.fechaAsistenciaHasta == undefined || this.filtro.filtro.fechaAsistenciaHasta.trim() == "" )&&    
         (this.filtro.filtro.idGuardia == null || this.filtro.filtro.idGuardia == undefined || this.filtro.filtro.idGuardia.length == 0) &&
