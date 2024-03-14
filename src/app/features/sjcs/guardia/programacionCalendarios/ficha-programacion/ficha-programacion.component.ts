@@ -262,7 +262,10 @@ export class FichaProgramacionComponent implements OnInit {
 
 
   ngOnDestroy() {
-    this.suscription.unsubscribe();
+    if(this.suscription)
+    {
+      this.suscription.unsubscribe();
+    }
   }
   ngOnChanges(changes: SimpleChanges) {
     setTimeout(() => {
