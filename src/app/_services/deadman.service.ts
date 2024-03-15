@@ -6,7 +6,7 @@ import { ConfirmationService } from "primeng/primeng";
 @Injectable()
 export class DeadmanService {
   private timer: any;
-  private readonly timeoutExpirationCheck: number = 600000; // Tiempo en milisegundos
+  private readonly timeoutExpirationCheck: number = 120000; // Tiempo en milisegundos
   private readonly timeoutExpirationWarning: number = 600000; // Tiempo en milisegundos
   private showExpirde: boolean = false;
   private showWarning: boolean = false;
