@@ -48,6 +48,7 @@ export class TablaRemesasComponent implements OnInit {
   @Input() remesaInformacionEconomica;
 
   @ViewChild("tabla") tabla;
+  borrarRemesa: boolean = false;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -140,6 +141,7 @@ export class TablaRemesasComponent implements OnInit {
   }
 
   selectedRow(selectedDatos) {
+    this.borrarRemesa = false;
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
     }
@@ -150,6 +152,11 @@ export class TablaRemesasComponent implements OnInit {
       } else {
         this.selectMultiple = true;
       }
+      this.selectedDatos.forEach(it => {
+        if (it.estado == null || it.estado === 'Iniciada') {
+          this.borrarRemesa = true;
+        }
+      });
     }
   }
 

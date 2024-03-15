@@ -339,6 +339,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let obj1 = {};
     let validada;
     let finalizada;
+    let anulada = false;
     let numEJGAux;
     let idTipoEJGAux;
     //console.log('this.datosJustificacion: ', this.datosJustificacion)
@@ -384,7 +385,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
         validada = false
       }
       
-      
+      if (estadoDesignacion == 'A'){
+        anulada = true; // anulada
+      }
 
       if ( estadoDesignacion == 'V'){
         finalizada = false;
@@ -1080,10 +1083,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
       
     }
 
-    if ((!this.isLetrado || designacion.letradoActuaciones == "1") && !finalizada) {
+    if ((!this.isLetrado || designacion.letradoActuaciones == "1") && !finalizada && !anulada &&
+     designacion.actuaciones.length != 0 && designacion.actuaciones != undefined && designacion.actuaciones != null) {
 
-      // Si se ha superado el 100% de acreditación y el modulo de la designación está marcado como complemento, se muestra el botón Nuevo
-      if (!this.noInsertarMasActuaciones || designacion.complemento != '0') {
         let numProcType2 = 'input';
         if(this.isLetrado){
           numProcType2 = 'text';
@@ -1130,14 +1132,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
       ];
   
        let lastNum = designacion.actuaciones.length + 2;
-      //  this.totalActuaciones = this.totalActuaciones + 1;
        let lastKey = letra + lastNum;
        let objnew =  { [lastKey] : this.arrNuevo, position: 'collapse'};
-       //console.log('objnew: ', objnew)
        arr2.push(Object.assign({},objnew));
        objnew = null;
-     // }
-      }
   }
 
 
