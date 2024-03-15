@@ -95,7 +95,7 @@
     <div class="text-right main-button">
 
       <button pButton
-        [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || !permisos"
+        [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || !permisos || !borrarRemesa"
         (click)="checkPermisosDelete()" type="button" icon="fa fa-trash-alt" iconPos="left"
         label="{{ 'general.boton.eliminar' | translate}}"></button>
 
