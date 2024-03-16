@@ -57,6 +57,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   textoJuzActivo: string = 'Com / [Juz]';
   parametroNProc: any;
   vieneDeUnaAE: boolean = false;
+  searchAsistenciaAgain: boolean = false;
   @ViewChild(BuscadorAsistenciaExpresComponent) filtrosAE: BuscadorAsistenciaExpresComponent;
   @ViewChild(ResultadoAsistenciaExpresComponent) resultadoAE: ResultadoAsistenciaExpresComponent;
   @ViewChild(BuscadorAsistenciasComponent) filtro : BuscadorAsistenciasComponent;
@@ -166,6 +167,10 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       sessionStorage.removeItem("modoBusqueda");
       sessionStorage.removeItem("filtroAsistencia");
       sessionStorage.removeItem("volver");
+    }
+    if(this.searchAsistenciaAgain){
+      this.searchAsistenciaAgain = false;
+      this.searchAsistencias();
     }
   }
   
@@ -870,9 +875,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
               let asistenciasDTO = JSON.parse(n["body"]);
               if(asistenciasDTO.error && asistenciasDTO.error.code != 200){
                 this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
-              }else if(asistenciasDTO.tarjetaAsistenciaItems.length === 0){
-                this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
-              }else{
+              } else{
                 if(asistenciasDTO.error && asistenciasDTO.error.code == 200){ //Todo ha ido bien pero la consulta ha excedido los registros maximos
                   this.showMsg('info', 'Info', asistenciasDTO.error.description);
                 }
@@ -927,6 +930,17 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     sessionStorage.setItem("nuevaAsistencia","true");
     sessionStorage.setItem("filtroAsistencia",JSON.stringify(this.filtro.filtro));
     this.router.navigate(["/fichaAsistencia"]);
+  }
+
+  searchAgainAsistenciasEvent(event){
+    if(event){
+      if (this.filtro == null){
+        // el filtro aun no se ha iniciado, se vuelve a hacer la busqueda ngAfterContentInit
+        this.searchAsistenciaAgain = true;
+      }else{
+        this.searchAsistencias();
+      }
+    }
   }
 
   searchAsistenciasEvent(event){

@@ -1,0 +1,9 @@
+/src/assets/*
+dist
+*.ico
+*.png
+*.map
+*.html
+
+package.json
+package-lock.json

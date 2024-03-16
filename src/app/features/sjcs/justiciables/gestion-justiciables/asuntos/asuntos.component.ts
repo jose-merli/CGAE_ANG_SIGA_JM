@@ -166,10 +166,10 @@ export class AsuntosComponent implements OnInit, OnChanges {
   crearEJG() {
     if (sessionStorage.getItem("EJGItem")) {
       sessionStorage.removeItem("EJGItem");
-    }
-    this.persistenceService.clearDatosEJG();
-    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+    }  
+    this.persistenceService.clearRelacionesEjgDesignaAsistencia();
     this.persistenceService.clearDatos();
+    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);
   }
@@ -457,14 +457,14 @@ export class AsuntosComponent implements OnInit, OnChanges {
         let ejgItem = new EJGItem();
         ejgItem.annio = dato.anio;
         // ejgItem.numero = dato.numero;
-        ejgItem.numero = dato.asunto.substring(dato.asunto.indexOf('/')+1);
+        ejgItem.numero = dato.numero;
         ejgItem.idInstitucion = dato.idinstitucion;
         ejgItem.tipoEJG = dato.clave;
 
         let result;
         // al no poder obtener todos los datos del EJG necesarios para obtener su informacion
         //se hace una llamada a al base de datos pasando las claves primarias y obteniendo los datos necesarios
-        this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
+        this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
           n => {
             result = JSON.parse(n.body).ejgItems;
             this.persistenceService.setDatosEJG(result[0]);

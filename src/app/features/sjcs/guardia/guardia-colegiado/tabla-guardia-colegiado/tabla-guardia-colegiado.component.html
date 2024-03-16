@@ -60,7 +60,7 @@
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="emptymessage " let-columns>
+      <ng-template pTemplate="emptymessage" let-columns>
         <tr *ngIf="datos.length == 0 || datos == undefined || datos == null">
           <td [attr.colspan]="columns.length ">
             {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}

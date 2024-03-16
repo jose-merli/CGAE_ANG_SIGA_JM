@@ -202,10 +202,11 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   private getComboJuzgado() {
-    if (this.datos.juzgado == null || this.datos.juzgado == undefined) {
-      this.datos.juzgado = '0';
+    let idjuzgado = '0';
+    if (this.datos.juzgado) {
+      idjuzgado = this.datos.juzgado;
     }
-    this.sigaServices.post("combo_comboJuzgadoDesignaciones", this.datos.juzgado).subscribe(
+    this.sigaServices.post("combo_comboJuzgadoDesignaciones", idjuzgado).subscribe(
       n => {
         this.comboJuzgado = JSON.parse(n.body).combooItems;
         this.commonsServices.arregloTildesCombo(this.comboJuzgado);

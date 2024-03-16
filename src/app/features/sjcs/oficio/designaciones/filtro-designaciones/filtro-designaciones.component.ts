@@ -1157,9 +1157,17 @@ export class FiltroDesignacionesComponent implements OnInit {
     } else {
       //es la busqueda de justificacion
       if (this.showJustificacionExpress) {
-        this.guardarFiltrosJustificacion();
 
-        if (this.compruebaFiltroJustificacion()) {
+      if (!this.filtroJustificacion.anioDesignacion) {
+        // Si el campo del año está vacío, asegúrate de limpiar cualquier valor guardado en sessionStorage
+        let filtros = sessionStorage.getItem("filtroJustificacionExpres") ? JSON.parse(sessionStorage.getItem("filtroJustificacionExpres")) : {};
+        delete filtros.anioDesignacion; // Eliminar el valor del año o establecer a null o ''
+        sessionStorage.setItem("filtroJustificacionExpres", JSON.stringify(filtros));
+        this.filtroJustificacion.anioDesignacion = null; // O establecer a una cadena vacía si eso funciona mejor con tu lógica
+      }
+      this.guardarFiltrosJustificacion();
+
+      if (this.compruebaFiltroJustificacion()) {
           this.showTablaJustificacionExpres.emit(false); //Si se marca como true llama a tabla-justificacion-express.component.ts pero no lleva datosJustificacion relleno y falla
           this.busquedaJustificacionExpres.emit(true);
         }
@@ -1403,6 +1411,12 @@ export class FiltroDesignacionesComponent implements OnInit {
     var ret = objRegExp.test(numAnio);
     if (!ret){
       this.body.anoProcedimiento = null;
+    }
+  }
+
+  onAnioDesignacionChange(value: string): void {
+    if (!value) { // Si el valor es una cadena vacía o null
+      this.filtroJustificacion.anioDesignacion = null; // Asegúrate de que el modelo se actualice a null
     }
   }
 

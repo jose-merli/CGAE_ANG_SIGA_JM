@@ -433,6 +433,7 @@
                                 <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select' && !estaValidada(row)">
                                     <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value"
                                         [options]="cell.combo" showClear="true" styleClass="widthAll"
+                                        filterBy="label,labelSinTilde" [filter]="true"
                                         (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, false, i)"
                                         [disabled]="cell.disabled">
                                     </p-dropdown>
@@ -574,6 +575,10 @@
                 </div>
             </div>
         </div>
+    </div>
+    
+    <div *ngIf="rowGroups == undefined || rowGroups.length == 0" class="table-row-group">
+        <span class="p-2 mw80">{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}</span>
     </div>
 
     <div *ngIf="pantalla == 'JE' && permisoEscritura" class="right col-lg-12 col-md-6 ajustar marginButtons">

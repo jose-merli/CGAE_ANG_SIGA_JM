@@ -134,7 +134,7 @@ export class RelacionesComponent implements OnInit {
           desItem.idTurno = dato.idturno;
           desItem.codigo = dato.codigo;
           desItem.descripcionTipoDesigna = dato.destipo
-          desItem.fechaEntradaInicio = dato.fechaasunto;
+          desItem.fechaEntradaInicio = new Date (dato.fechaasunto).toLocaleDateString(undefined,{ day: '2-digit', month: '2-digit', year: 'numeric'});
           desItem.nombreTurno = dato.descturno;
           desItem.nombreProcedimiento = dato.dilnigproc.split('-')[2];
           desItem.nombreColegiado = dato.letrado;

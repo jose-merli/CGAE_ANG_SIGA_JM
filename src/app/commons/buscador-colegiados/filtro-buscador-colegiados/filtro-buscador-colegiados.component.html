@@ -3,7 +3,8 @@
     <mat-expansion-panel class="my-1 padding-interior" [expanded]="expanded">
       <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
         <div class="w100 font-weight-bold">
-          <p class="w100">Búsqueda de colegiados</p>
+          <p class="w100" *ngIf="!nuevaInscripcion && !nuevaInscripcionGuardia">{{ "censo.busquedaClientes.Colegiados.titulo" | translate }}</p>
+          <p class="w100" *ngIf="nuevaInscripcion || nuevaInscripcionGuardia">{{ "censo.busquedaClientes.colegiadosEjercientes.titulo" | translate }}</p>
         </div>
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
@@ -49,14 +50,14 @@
               selectionLimit="10" defaultLabel="{{ 'general.boton.seleccionar' | translate}}" styleClass="widthAll">
             </p-multiSelect>
           </div>
-          <div class="form-group col-lg-3 col-md-2">
+          <div class="form-group col-lg-3 col-md-2" *ngIf="!nuevaInscripcion && !nuevaInscripcionGuardia">
             <label>{{ 'menu.justiciaGratuita.componentes.estadoColegial' | translate }}</label>
             <p-dropdown #estado class="select-form" [(ngModel)]='filtro.idEstado' [disabled]="disabledEstado"
               placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboEstadoColegial" [filter]="true"
               filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
-          <div class="form-group col-lg-3 col-md-2">
-            <label>Fecha Estado</label>
+          <div class="form-group col-lg-3 col-md-2" *ngIf="!nuevaInscripcion && !nuevaInscripcionGuardia">
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado' | translate }}</label>
             <app-fecha [(value)]="filtro.fechaestado" (valueChangeSelected)="fillFechaEstado($event)"
               (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
           </div>

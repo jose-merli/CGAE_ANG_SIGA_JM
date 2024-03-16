@@ -123,7 +123,6 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
         }
         this.getComboGuardia();
         this.search();
-        sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
       }
 
       if (this.persistenceService.getHistorico() != undefined) {

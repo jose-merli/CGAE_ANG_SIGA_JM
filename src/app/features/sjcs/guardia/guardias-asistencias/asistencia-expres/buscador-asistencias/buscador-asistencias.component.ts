@@ -129,10 +129,16 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     this.checkLastRoute();
     if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('buscadorColegiados')) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
-
+      // cargamos los datos del colegiado que se obtiene del bucador colegiados
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
+      // actualizamos valor del filtro de asistencia con el num colegiado
       this.filtro.numColegiado = nColegiado;
+      if (sessionStorage.getItem("filtroAsistencia")){
+        let filtroAsistencia : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
+        filtroAsistencia.numColegiado = nColegiado;
+        sessionStorage.setItem("filtroAsistencia", JSON.stringify(filtroAsistencia));
+      }
     }
 
     if(this.sigaStorageService.idPersona

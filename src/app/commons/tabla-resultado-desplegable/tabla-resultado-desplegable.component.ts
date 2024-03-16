@@ -2689,8 +2689,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     let datosSeleccionados = [];
     sessionStorage.setItem("datosComunicar",JSON.stringify(datosSeleccionados));
     sessionStorage.setItem("queryImprimir",JSON.stringify(this.queryImprimir));
-    this.router.navigate(["/dialogoComunicaciones"]);
     sessionStorage.setItem("vienedeJE","true");
+    this.router.navigate(["/dialogoComunicaciones"]);
   }
 
   navigateComunicar() {
@@ -2763,6 +2763,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   JSON.stringify(datosSeleccionados)
                 );
                 sessionStorage.setItem("queryImprimir",JSON.stringify(this.queryImprimir));// A eliminar
+                if(this.pantalla == 'JE'){
+                  sessionStorage.setItem("vieneDeJE","true");
+                }
                 this.router.navigate(["/dialogoComunicaciones"]); 
               },
               err => {
@@ -2817,6 +2820,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   "datosComunicar",
                   JSON.stringify(datosSeleccionados)
                 );
+                if(this.pantalla == 'JE'){
+                  sessionStorage.setItem("vieneDeJE","true");
+                }
                 sessionStorage.setItem("queryImprimir",JSON.stringify(this.queryImprimir));// A eliminar
                 this.router.navigate(["/dialogoComunicaciones"]);
 
@@ -3140,8 +3146,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                         "datosComunicar",
                         JSON.stringify(datosSeleccionados)
                       );
-
-                        this.router.navigate(["/dialogoComunicaciones"]);                      
+                      sessionStorage.setItem("vieneDeJE","true");
+                      
+                      this.router.navigate(["/dialogoComunicaciones"]);                      
                     });
                 });
               });
