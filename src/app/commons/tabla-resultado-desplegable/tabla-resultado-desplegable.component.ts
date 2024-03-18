@@ -2868,32 +2868,32 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             datosActuacion.idActuacion = "-1";
           }
           
-          if (this.selectedArray.indexOf(idRowGroupDesignacion) == -1) {
-
-            this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesignaJustificacionExpres", datosActuacion).subscribe(
-              data => {
-                if (data.size != 0) {
-                  let blob = null;
-                  let idDesignacion = designacion.id.substring(0, designacion.id.indexOf("\n"));
-        
-                  blob = new Blob([data], { type: "application/zip" });
-                  saveAs(blob, "documentosDesigna_D" + idDesignacion.split("/")[0] + "_" + idDesignacion.split("/")[1] + "_" + datosActuacion.idActuacion + ".zip");
+          this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesignaJustificacionExpres", datosActuacion).subscribe(
+            data => {
+              if (data.size != 0) {
+                let blob = null;
+                let idDesignacion = designacion.id.substring(0, designacion.id.indexOf("\n"));
       
-                  descargados++;
-                }
-              },
-              err => {
+                blob = new Blob([data], { type: "application/zip" });
+                saveAs(blob, "documentosDesigna_D" + idDesignacion.split("/")[0] + "_" + idDesignacion.split("/")[1] + "_" + datosActuacion.idActuacion + ".zip");
     
-              },
-              () => {
-                if (descargados != 0) {
-                  this.showMsg('info', this.translateService.instant("general.accion.descargaDocumentacion"), '');
-                } else {
-                  this.showMsg('info', this.translateService.instant("general.accion.noSeHadescargadoDocumentacion"), '');
-                }
+                descargados++;
               }
-            );
-          }
+            },
+            err => {
+  
+            },
+            () => {
+              if (descargados != 0) {
+                this.showMsg('info', this.translateService.instant("general.accion.descargaDocumentacion"), '');
+              } else {
+                this.showMsg('info', this.translateService.instant("general.accion.noSeHadescargadoDocumentacion"), '');
+              }
+            }
+          );
+          
+
+          
         }
     
         // Eliminamos las actuaciones del array de seleccionados, por lo que sólo quedarán las designas a procesar
@@ -2909,6 +2909,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         datosJustificacion.anioDesignacion = designacion.rows[0].cells[10].value;
         datosJustificacion.numDesignacion = designacion.rows[0].cells[19].value;
         datosJustificacion.idTurno = designacion.rows[0].cells[17].value;
+        
 
         this.sigaServices.postDownloadFiles("designacion_descargarDocumentosDesignaJustificacionExpres", datosJustificacion).subscribe(
           data => {
