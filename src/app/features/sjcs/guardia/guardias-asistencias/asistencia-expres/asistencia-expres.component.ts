@@ -784,6 +784,17 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       if(valid){
 
         asistencia.actuaciones.forEach(actuacion =>{
+          // la fecha actuación no puede ser menor a la fecha de la asistencia
+          if (actuacion.fechaActuacion && asistencia.fechaAsistencia && actuacion.fechaActuacion.length > 0 && asistencia.fechaAsistencia.length > 0){
+            let fechaActuacion: Date = moment(actuacion.fechaActuacion, 'DD/MM/YYYY').toDate();
+            let fechaAsistencia: Date = moment(asistencia.fechaAsistencia, 'DD/MM/YYYY').toDate();
+            if (fechaActuacion < fechaAsistencia){
+
+              this.showMsg('error',this.translateService.instant("formacion.mensaje.general.mensaje.error"), this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.actuacion.fecha.menor"));
+              this.progressSpinner = false;
+              valid = false;
+            }
+          }         
           //La fecha actuacion es obligatoria
           if(!actuacion.fechaActuacion && valid){
             this.showMsg('error',this.translateService.instant("formacion.mensaje.general.mensaje.error"),this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.fechaactuacionobl"));
