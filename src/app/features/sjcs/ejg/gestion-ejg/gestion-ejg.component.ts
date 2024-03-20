@@ -12,6 +12,8 @@ import { ResolucionEJGItem } from '../../../../models/sjcs/ResolucionEJGItem';
 import { RelacionesComponent } from './relaciones/relaciones.component';
 import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
 import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
+import { UnidadFamiliarComponent } from './unidad-familiar/unidad-familiar.component';
+import { ExpedientesEconomicosComponent } from './expedientes-economicos/expedientes-economicos.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -39,6 +41,7 @@ export class GestionEjgComponent implements OnInit {
   @ViewChild(RelacionesComponent) relacionesComponent: RelacionesComponent;
   @ViewChild(ListaIntercambiosAltaEjgComponent) listaIntercambiosAltaEjg: ListaIntercambiosAltaEjgComponent;
   @ViewChild(ListaIntercambiosDocumentacionEjgComponent) listaIntercambiosDocumentacionEjg: ListaIntercambiosDocumentacionEjgComponent;
+  @ViewChild(ExpedientesEconomicosComponent) expedientesEconomicosComponent: ExpedientesEconomicosComponent;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -134,6 +137,10 @@ export class GestionEjgComponent implements OnInit {
   ngAfterViewInit(){
     // Ejecutamos esto depues de iniciar la vista para que obtenga id de los campos del html
     this.updateTarjResumen();
+  }
+
+  actualizarDatosExpedientes(){
+    this.expedientesEconomicosComponent.ngOnInit();
   }
 
   guardadoSend(event) {

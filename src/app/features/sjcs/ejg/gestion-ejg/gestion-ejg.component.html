@@ -19,7 +19,7 @@
         </app-datos-generales-ejg>
 
         <app-unidad-familiar [checkPermission]="permisos.unidadFamiliar" *ngIf="modoEdicion" id="tarjetaUnidadFamiliar"
-            (guardadoSend)="guardadoSend($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaUnidadFamiliar')"
+            (guardadoSend)="guardadoSend($event)" [permisoEscritura]="isPermisoTarjeta('tarjetaUnidadFamiliar')" (actualizarExpedientes) = "actualizarDatosExpedientes()"
             [datos]="body" [modoEdicion]="modoEdicion" [openTarjetaUnidadFamiliar]="isOpenTarjeta('tarjetaUnidadFamiliar')">
         </app-unidad-familiar>
         
