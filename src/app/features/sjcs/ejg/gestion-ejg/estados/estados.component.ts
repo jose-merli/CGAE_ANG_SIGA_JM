@@ -363,7 +363,6 @@ export class EstadosComponent implements OnInit {
         let fechaAux: number = this.formatDate4(this.formatDate3(this.selectedDatos[0].fechaInicio));
         this.selectedDatos[0].fechaInicio = fechaAux;
         this.selectedDatos[0].idEstadoejg = this.valueComboEstado;
-        this.selectedDatos[0].observaciones = this.observacionesEstado;
 
         this.sigaServices.post("gestionejg_editarEstado", this.selectedDatos[0]).subscribe(
           n => {
@@ -460,11 +459,21 @@ export class EstadosComponent implements OnInit {
     return this.datepipe.transform(date, pattern);
   }
 
+  formatDate5(date) {
+    const pattern = 'dd-MM-yyyy';
+    return this.datepipe.transform(date, pattern);
+  }
+
   formatDate3(date) {
-    let year = date.substring(6, 10)
-    let month = date.substring(3, 5)
-    let day = date.substring(0, 2)
+    if (typeof date !== 'string') {
+      date = this.formatDate5(new Date(date));
+    }
+
+    let year = date.substring(6, 10);
+    let month = date.substring(3, 5);
+    let day = date.substring(0, 2);
     let date2 = day + '-' + month + '-' + year;
+    
     return date2;
   }
   
