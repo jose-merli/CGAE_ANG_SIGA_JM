@@ -305,26 +305,39 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           ];
           this.sigaServices.post("gestionejg_asociarDesignacion", datos).subscribe(
             m => {
-              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-              sessionStorage.removeItem("radioTajertaValue");
 
-              if (!copy) {
+              let respose = JSON.parse(m["body"]);
+              if(respose.error){
+                if (respose.error.code == 200){
+                  this.showMesg("info", this.translateService.instant("general.message.incorrect"), this.translateService.instant(respose.error.description));
+              
+                }else{
+                  this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(respose.error.description));
+              
+                }
                 this.progressSpinner = false;
-                this.location.back();
-              }
-              else {
-                this.sigaServices.post("gestionJusticiables_copyEjg2Designa", datos).subscribe(
-                  x => {
-                    this.progressSpinner = false;
-                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                    this.location.back();
-                  },
-                  err => {
-                    //Crear etiqueta en la BBDD
-                    this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos del EJG a la designacion seleccionada");
-                    this.location.back();
-                  }
-                );
+              }else{
+                this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                sessionStorage.removeItem("radioTajertaValue");
+
+                if (!copy) {
+                  this.progressSpinner = false;
+                  this.location.back();
+                }
+                else {
+                  this.sigaServices.post("gestionJusticiables_copyEjg2Designa", datos).subscribe(
+                    x => {
+                      this.progressSpinner = false;
+                      this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                      this.location.back();
+                    },
+                    err => {
+                      //Crear etiqueta en la BBDD
+                      this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos del EJG a la designacion seleccionada");
+                      this.location.back();
+                    }
+                  );
+                }
               }
             },
             err => {
@@ -597,26 +610,39 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
           this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
             m => {
-
-              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-              sessionStorage.removeItem("radioTajertaValue");
-              if (!copy) {
+              let respose = JSON.parse(m["body"]);
+              if(respose.error){
+                if (respose.error.code == 200){
+                  this.showMesg("info", this.translateService.instant("general.message.incorrect"), this.translateService.instant(respose.error.description));
+              
+                }else{
+                  this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(respose.error.description));
+              
+                }
                 this.progressSpinner = false;
-                this.location.back();
-              }
-              else {
-                this.sigaServices.post("gestionJusticiables_copyDesigna2Ejg", request).subscribe(
-                  x => {
-                    this.progressSpinner = false;
-                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                    this.location.back();
-                  },
-                  err => {
-                    //Crear etiqueta en la BBDD
-                    this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
-                    this.location.back();
-                  }
-                );
+              }else{
+
+                this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                sessionStorage.removeItem("radioTajertaValue");
+              
+                if (!copy) {
+                  this.progressSpinner = false;
+                  this.location.back();
+                }
+                else {
+                  this.sigaServices.post("gestionJusticiables_copyDesigna2Ejg", request).subscribe(
+                    x => {
+                      this.progressSpinner = false;
+                      this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                      this.location.back();
+                    },
+                    err => {
+                      //Crear etiqueta en la BBDD
+                      this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
+                      this.location.back();
+                    }
+                  );
+                }
               }
             },
             err => {

@@ -261,8 +261,12 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     this.asociarEJG();
   }
   asociarEJG() {
+    // boramos los datos del EJG para que en la busquedaAsuntos no piense que llega desde un EJG
+    this.persistenceService.clearDatosEJG();
+    this.persistenceService.clearAsistencia();
     sessionStorage.setItem("radioTajertaValue", 'ejg');
     sessionStorage.setItem("Designacion", JSON.stringify(this.body));
+    
     this.router.navigate(["/busquedaAsuntos"]);
 
   }
