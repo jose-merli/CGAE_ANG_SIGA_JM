@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import * as jwt_decode from "jwt-decode";
 import { ConfirmationService } from "primeng/primeng";
+import { SigaServices } from "./siga.service";
 
 @Injectable()
 export class DeadmanService {
@@ -10,8 +11,9 @@ export class DeadmanService {
   private readonly timeoutExpirationWarning: number = 359000; // Tiempo en milisegundos
   private showExpirde: boolean = false;
   private showWarning: boolean = false;
+  private httpExit: string;
 
-  constructor(private router: Router, private confirmationService: ConfirmationService) {}
+  constructor(private router: Router, private confirmationService: ConfirmationService, private sigaServices: SigaServices) {}
 
   startDeadmanTimer(): void {
     this.timer = setInterval(() => {
@@ -36,7 +38,28 @@ export class DeadmanService {
         rejectVisible: false,
         acceptLabel: "Salir",
         accept: () => {
-          this.router.navigate(["/logout"]);
+          sessionStorage.removeItem("authenticated");
+
+          if (sessionStorage.getItem('loginDevelop') === 'true') {
+            sessionStorage.setItem('loginDevelop', '0');
+          }
+          
+          this.sigaServices.get("eliminaCookie").subscribe(response => {
+              let responseStatus = response[0].status;
+              if (responseStatus == 200) {
+                //console.log("Cookies eliminadas para cerrar la sesión");
+              }
+            });
+          this.sigaServices.get("usuario_logeado").subscribe(n => {
+              let menuUser: any = [];
+              menuUser = n.usuarioLogeadoItem;
+              if(menuUser != null && menuUser != undefined && menuUser.length > 0){
+                this.httpExit = menuUser[0].rutaLogoutCAS;
+                window.location.href = this.httpExit;
+              }else{
+                this.router.navigate(["/logout"]);    
+              }
+          });
         },
       });
     }
