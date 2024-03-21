@@ -104,7 +104,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         id: 'juzgado',
         nombre: "Juzgado (*)",
         opciones: [],
-        value: '',
+        value: null,
         disabled: false,
         obligatorio: true
       },
@@ -112,7 +112,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         id: 'procedimiento',
         nombre: "Procedimiento",
         opciones: [],
-        value: '',
+        value: null,
         disabled: false,
         obligatorio: false
       },
@@ -120,7 +120,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         id: 'motivoCambio',
         nombre: "Motivo del cambio",
         opciones: [],
-        value: '',
+        value: null,
         disabled: false,
         obligatorio: false
       },
@@ -128,7 +128,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         id: 'modulo',
         nombre: "Módulo (*)",
         opciones: [],
-        value: '',
+        value: null,
         disabled: false,
         obligatorio: true
       },
@@ -136,7 +136,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         id: 'acreditacion',
         nombre: "Acreditación (*)",
         opciones: [],
-        value: '',
+        value: null,
         disabled: false,
         obligatorio: true
       },
@@ -144,7 +144,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         id: 'prision',
         nombre: "Prisión",
         opciones: [],
-        value: '',
+        value: null,
         disabled: false,
         obligatorio: false
       },
@@ -235,10 +235,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
           if (this.datos.selectores[1].value != undefined && this.datos.selectores[1].value != null && this.datos.selectores[1].value != '') {
             this.getComboModulosConProcedimientos(this.datos.selectores[1].value);
           } else {
-            this.datos.selectores[3].value = '';
+            this.datos.selectores[3].value = null;
           }
         } else {
-          this.datos.selectores[1].value = '';
+          this.datos.selectores[1].value = null;
         }
       }
 
@@ -250,10 +250,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
           if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null && this.datos.selectores[3].value != '') {
             this.getComboProcedimientosConModulo(this.datos.selectores[3].value);
           } else {
-            this.datos.selectores[1].value = '';
+            this.datos.selectores[1].value = null;
           }
         } else {
-          this.datos.selectores[3].value = '';
+          this.datos.selectores[3].value = null;
         }
       }
 
@@ -262,7 +262,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
           this.getComboModulosPorJuzgado(this.datos.selectores[0].value);
         } else {
-          this.datos.selectores[3].value = '';
+          this.datos.selectores[3].value = null;
         }
 
         this.getComboProcedimientos();
@@ -273,7 +273,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
           this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
         } else {
-          this.datos.selectores[1].value = '';
+          this.datos.selectores[1].value = null;
         }
 
         this.getComboModulos();
@@ -335,7 +335,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
         this.datos.selectores[0].opciones = this.comboJuzgados;
         if (this.comboJuzgados != undefined && this.comboJuzgados != null && this.comboJuzgados.find(el => el.value == this.datos.selectores.find(el => el.id == 'juzgado').value) == undefined) {
-          this.datos.selectores.find(el => el.id == 'juzgado').value = '';
+          this.datos.selectores.find(el => el.id == 'juzgado').value = null;
         }
       }
     );
@@ -648,7 +648,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         });
         this.datos.selectores[4].opciones = this.comboAcreditaciones;
         if (this.comboAcreditaciones != undefined && this.comboAcreditaciones != null && this.comboAcreditaciones.find(el => el.value == this.datos.selectores.find(el => el.id == 'acreditacion').value) == undefined) {
-          this.datos.selectores.find(el => el.id == 'acreditacion').value = '';
+          this.datos.selectores.find(el => el.id == 'acreditacion').value = null;
         }
 
         let comboAcre = this.datos.selectores.find(el => el.id == 'acreditacion');
@@ -691,7 +691,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
         this.datos.selectores[5].opciones = this.comboPrisiones;
         if (this.comboPrisiones != undefined && this.comboPrisiones != null && this.comboPrisiones.find(el => el.value == this.datos.selectores.find(el => el.id == 'prision').value) == undefined) {
-          this.datos.selectores.find(el => el.id == 'prision').value = '';
+          this.datos.selectores.find(el => el.id == 'prision').value = null;
         }
       }
     );
@@ -717,7 +717,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
         this.datos.selectores[2].opciones = this.comboMotivosCambio;
         if (this.comboMotivosCambio != undefined && this.comboMotivosCambio != null && this.comboMotivosCambio.find(el => el.value == this.datos.selectores.find(el => el.id == 'motivoCambio').value) == undefined) {
-          this.datos.selectores.find(el => el.id == 'motivoCambio').value = '';
+          this.datos.selectores.find(el => el.id == 'motivoCambio').value = null;
         }
       }
     );
@@ -770,6 +770,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.datos.selectores[4].value = this.actuacionDesigna.actuacion.idAcreditacion;
     this.datos.selectores[5].value = this.actuacionDesigna.actuacion.idPrision;
     this.datos.textarea.value = this.actuacionDesigna.actuacion.observaciones;
+    this.getLetradoActuacion();
   }
 
   guardarAction() {
