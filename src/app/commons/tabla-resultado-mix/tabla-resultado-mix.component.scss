@@ -10,6 +10,10 @@ overflow-wrap: break-word;}
   margin: 0;
 }
 
+.invisible {
+  display: none !important;
+}
+
 /*::ng-deep .mat-sort-header-arrow {
   opacity: 1 !important;
 }*/
