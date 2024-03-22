@@ -276,20 +276,17 @@ comprobarValidados(){
     this.clickPermuta = true;
     this.selectedDatos = [];
   
-    // Obtén la información del turno por el cual estás realizando la búsqueda
-    const tipoTurnoInfo = this.body.tipoTurno;
-  
-    // Encuentra el índice en el array comboTurnos donde el nombre coincide con el tipoTurnoInfo
+    // Obtén la información del turno/guardia por el cual estás realizando la búsqueda
+    const guardiaTurno = this.body.tipoTurno + " / " + this.body.tipoGuardia;
+
+    // Encuentra el índice en el array comboTurnos donde el nombre coincide con el guardiaTurno
    // const indiceTurnoSeleccionado = this.comboTurnos.findIndex(turnoGuardia => turnoGuardia.label === tipoTurnoInfo);
    this.comboTurnos.forEach((turnoGuardia)=>{
-    if(turnoGuardia.label.includes(tipoTurnoInfo)){
+    if(turnoGuardia.label.includes(guardiaTurno)){
       this.valueComboTurno = turnoGuardia.value;
       this.onChangeTurnos();
     }
-  });
-  
-    console.log("Tipo de Turno Info:", tipoTurnoInfo);
-    
+  });    
   
     // if (indiceTurnoSeleccionado !== -1) {
     //   // Establece el valor predefinido del turno/guardia utilizando el índice encontrado
