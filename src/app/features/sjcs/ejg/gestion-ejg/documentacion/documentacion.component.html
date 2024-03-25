@@ -59,9 +59,12 @@
               <div *ngIf="col.field == 'labelDocumento'">
                 <span [ngClass]="{'eliminado': dato.fechaBaja != null, 'enlace': dato.fechaBaja == null}" (click)="editDocumento(dato)">{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="col.field == 'nombreFichero'">
-                <span [ngClass]="{'eliminado': dato.fechaBaja != null, 'enlace': dato.fechaBaja == null}" (click)="editDocumento(dato)">{{dato[col.field]}}</span>
-                <i (click)="openFileSelector(rowIndex)" class="fas fa-upload d-flex align-self-center ml-auto"></i>
+              <div *ngIf="col.field == 'nombreFichero'" class="main-button col-lg-12 col-md-12">
+                <div [ngClass]="{'justify-content-center': dato.nombreFichero == null}" class="d-flex align-items-center row flex-nowrap">
+                  <span [ngClass]="{'eliminado': dato.fechaBaja != null, 'enlace': dato.fechaBaja == null, 'w-75': dato.nombreFichero != null}" class="text-break" (click)="editDocumento(dato)">{{dato[col.field]}}</span>
+                  <button *ngIf="dato.nombreFichero != null" type="button" pButton pTooltip="{{ 'general.boton.examinar' | translate }}" tooltipPosition="top" class="w-25 ml-2" icon="fa fa-upload" iconPos="left" (click)="openFileSelector(rowIndex)"></button>
+                  <button *ngIf="dato.nombreFichero == null" class="ml-2" (click)="openFileSelector(rowIndex)" pButton type="button" icon="fa fa-upload" iconPos="left" label="{{ 'general.boton.examinar' | translate }}"></button>  
+                </div>
                 <input hidden type="file" [id]="'input-file-' + rowIndex" #fileInput (change)="onFileSelected($event, dato)" />
               </div>
               <div *ngIf="col.field == 'regEntradaSalida'">
