@@ -50,9 +50,9 @@ export class TablaBuscadorColegiadosComponent implements OnInit {
       { field: "apellidos", header: "gratuita.mantenimientoTablasMaestra.literal.apellidos" },
       { field: "abreviatura", header: "censo.busquedaClientesAvanzada.literal.colegio" },
       { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
-      { field: "tieneGuardia", header: "gratuita.busquedaSJCS.tipoFiltro.inscritosGuardia" },
-      { field: "tieneTurno", header: "gratuita.busquedaSJCS.tipoFiltro.inscritosTurno" },
-      { field: "guardiasPendientes", header: "gratuita.busquedaSJCS.literal.guardiasPendientes" }
+      { field: "tieneTurno", header: "gratuita.busquedaSJCS.tipoFiltro.inscritosTurno.abreviado" },
+      { field: "tieneGuardia", header: "gratuita.busquedaSJCS.tipoFiltro.inscritosGuardia.abreviado" },
+      { field: "guardiasPendientes", header: "gratuita.busquedaSJCS.literal.guardiasPendientes.abreviado" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
