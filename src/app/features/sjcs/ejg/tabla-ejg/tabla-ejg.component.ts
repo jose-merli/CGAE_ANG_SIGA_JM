@@ -10,6 +10,7 @@ import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
 import { Location } from '@angular/common';
+import { FiltrosEjgComponent } from '../filtros-busqueda-ejg/filtros-ejg.component';
 //import moment = require('moment');
 
 @Component({
@@ -57,6 +58,7 @@ export class TablaEjgComponent implements OnInit {
   @Input() totalRegistrosBusquedaEJG;
   @Input() remesa;
   @Input() comboEstadoEJG;
+  @Input() filtrosEJG: EJGItem;
 
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -121,6 +123,7 @@ export class TablaEjgComponent implements OnInit {
 
   datosEJG(selected) {
     this.progressSpinner = true;
+    this.persistenceService.setFiltrosEJG(this.filtrosEJG);
 
     this.sigaServices.post("gestionejg_datosEJG", selected).subscribe(
       n => {
@@ -637,6 +640,7 @@ export class TablaEjgComponent implements OnInit {
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de SJCS es 10
     sessionStorage.setItem("idModulo", '10');
+    this.persistenceService.setFiltrosEJG(this.filtrosEJG);
     
     this.getDatosComunicar();
   }

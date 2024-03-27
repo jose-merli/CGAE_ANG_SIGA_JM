@@ -194,6 +194,7 @@ export class GestionEjgComponent implements OnInit {
     } else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null){
       this.persistenceService.clearDatosEJG();
       this.persistenceService.setVolverEJG();
+      sessionStorage.setItem('back', 'true');
       this.router.navigate(["/ejg"]);
     }else{
       this.location.back();
