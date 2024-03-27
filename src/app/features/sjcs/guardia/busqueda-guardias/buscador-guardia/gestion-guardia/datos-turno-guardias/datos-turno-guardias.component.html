@@ -22,7 +22,15 @@
               <strong> {{body.zona}}</strong>
             </label>
             <label>{{'agenda.fichaEvento.tarjetaGenerales.partidoJudicial' | translate}}:
-              <strong> {{body.partidoJudicial}}</strong>
+
+
+              <span>
+                <strong> {{ body.partidosJudiciales[0] }} </strong>
+                <span *ngIf="body.partidosJudiciales.length > 1">(Total: {{ body.partidosJudiciales.length }})</span>
+                <i *ngIf="body.partidosJudiciales.length > 1" class="fas fa-info-circle" pTooltip="{{ body.partidosJudiciales.toString() }}"
+                tooltipPosition="right"></i>
+              </span>
+
             </label>
             <label>Número de inscripciones:
               <strong> {{body.numeroInscritos}}</strong>
