@@ -34,7 +34,9 @@
           <label>{{ "oficio.cargasMasivas.adjuntar" | translate }}</label>
           <br>
           <p-fileUpload #pUploadFile icon="fa fa-plus" iconPos="left" chooseLabel="{{ 'oficio.cargasMasivas.seleccionarArchivo' | translate}}" name="file"
-            mode="basic" accept=".xls"  class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)" auto="true"></p-fileUpload>
+            mode="basic" accept=".xls"  class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)" auto="true" 
+            customUpload="true"  (uploadHandler)="uploadHandler($event)">
+          </p-fileUpload>
         </div>
       </div>
     </div>

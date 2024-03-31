@@ -21,6 +21,7 @@ export class UnidadFamiliarComponent implements OnInit {
   @Input() openTarjetaUnidadFamiliar;
   @Input() permisoEscritura: boolean = false;
   @Output() guardadoSend = new EventEmitter<any>();
+  @Output() actualizarExpedientes = new EventEmitter<void>();
 
   progressSpinner: boolean = false;
   historico: boolean = false;
@@ -171,6 +172,7 @@ export class UnidadFamiliarComponent implements OnInit {
           this.selectedDatos = [];
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.consultaUnidadFamiliar();
+          this.actualizarExpedientes.emit();
         },
         err => {
           this.selectedDatos = [];

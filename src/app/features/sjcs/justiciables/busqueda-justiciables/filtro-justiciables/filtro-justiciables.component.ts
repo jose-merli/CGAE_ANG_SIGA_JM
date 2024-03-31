@@ -82,6 +82,11 @@ export class FiltroJusticiablesComponent implements OnInit {
     if (sessionStorage.getItem("vieneDeFichaJusticiable") && sessionStorage.getItem("filtrosBusquedaJusticiable")) {
 
       this.filtros = JSON.parse(sessionStorage.getItem("filtrosBusquedaJusticiable"));
+
+      // Añadimos la poblacion, para ello necesitamos obtener el combo de poblaciones
+      let poblacion = this.filtros.idPoblacion;
+      this.onChangeProvincia();
+      this.filtros.idPoblacion = poblacion;
     }
 
     sessionStorage.removeItem("vieneDeFichaJusticiable");

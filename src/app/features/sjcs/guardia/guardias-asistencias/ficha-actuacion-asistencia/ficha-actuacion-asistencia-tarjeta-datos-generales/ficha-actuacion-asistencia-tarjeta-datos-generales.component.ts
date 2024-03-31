@@ -431,7 +431,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
       }else{
         if(this.datosGeneralesActuacion.controlCheckDiaDespues)this.datosGeneralesActuacion.diaDespues = false;
         if(new Date(event) < fechaAsistenciaDate){
-          this.showMsg('error','Error','La fecha de la Actuacion debe ser mayor a la fecha de la Asistencia');
+          this.showMsg('error','Error',this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.actuacion.fecha.menor"));
           this.fActuacionvalida = false;
         }
       }

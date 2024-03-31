@@ -4,6 +4,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatosColegiadosItem } from '../../models/DatosColegiadosItem';
 import { SigaServices } from '../../_services/siga.service';
+import { TranslateService } from '../translate';
 
 @Component({
   selector: 'app-tarjeta',
@@ -25,9 +26,10 @@ export class TarjetaComponent implements OnInit {
   @Output() isOpen = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
+  msgs: any[];
 
 
-  constructor(private sigaServices: SigaServices, private router: Router) { }
+  constructor(private sigaServices: SigaServices, private router: Router, private translateService: TranslateService,) { }
 
   ngOnInit() {
   }
@@ -55,6 +57,11 @@ export class TarjetaComponent implements OnInit {
 
   //Meter los datos del letrado en session
   irFichaColegial(){
+    if (this.enlaceCardClosed != undefined && this.enlaceCardClosed.type != undefined &&
+      this.enlaceCardClosed.type == 'designasCambioLetrado') {
+        this.showMessage("info", "", this.translateService.instant("justiciaGratuita.oficio.designas.letrados.redirigiendoFichaColegial"));
+    }
+
     //console.log("DATOS LETRADO", this.datosLetrado);
     let bodyColegiado: DatosColegiadosItem = new DatosColegiadosItem();
     bodyColegiado.nif = this.datosLetrado.nif;
@@ -146,6 +153,19 @@ export class TarjetaComponent implements OnInit {
     let day = f.substring(8, 10);
 
     return day + '/' + month + '/' + year;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

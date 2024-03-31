@@ -36,7 +36,7 @@ export class DeadmanService {
         rejectVisible: false,
         acceptLabel: "Salir",
         accept: () => {
-          this.router.navigate(["/logout"]);
+          this.router.navigate(["/login"]);
         },
       });
     }

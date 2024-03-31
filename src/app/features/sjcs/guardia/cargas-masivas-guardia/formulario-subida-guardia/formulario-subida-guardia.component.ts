@@ -317,4 +317,10 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
     this.fechaHasta = event;
   }
 
+  uploadHandler(event){
+    // este método evita que se haga el post a la url definida en el p-fileupload (customUpload="true" )
+    // limpiamos el p-fileupload para que se pueda seleccionar otro fichero, pero dejamo la misma label para que se vea el ultimo documento seleccionado
+    this.pUploadFile.clear();
+  }
+
 }

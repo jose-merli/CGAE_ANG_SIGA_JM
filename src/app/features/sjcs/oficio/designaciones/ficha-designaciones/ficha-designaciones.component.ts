@@ -1968,7 +1968,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
                           "value": this.letrados[0].apellidosNombre
                         }
                       ]
-                      tarj.enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
+                      tarj.enlaceCardClosed = { title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
                       tarj.letrado = datos[0];
                     }
 
@@ -2043,7 +2043,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
                   "value": this.letrados[0].apellidosNombre
                 }
               ]
-              tarj.enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
+              tarj.enlaceCardClosed = { click: '', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial'), type: 'designasCambioLetrado' };
               tarj.letrado = datos[0];
             }
 

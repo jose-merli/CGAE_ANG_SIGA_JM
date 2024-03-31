@@ -12,6 +12,8 @@ import { ResolucionEJGItem } from '../../../../models/sjcs/ResolucionEJGItem';
 import { RelacionesComponent } from './relaciones/relaciones.component';
 import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
 import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
+import { UnidadFamiliarComponent } from './unidad-familiar/unidad-familiar.component';
+import { ExpedientesEconomicosComponent } from './expedientes-economicos/expedientes-economicos.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -39,6 +41,7 @@ export class GestionEjgComponent implements OnInit {
   @ViewChild(RelacionesComponent) relacionesComponent: RelacionesComponent;
   @ViewChild(ListaIntercambiosAltaEjgComponent) listaIntercambiosAltaEjg: ListaIntercambiosAltaEjgComponent;
   @ViewChild(ListaIntercambiosDocumentacionEjgComponent) listaIntercambiosDocumentacionEjg: ListaIntercambiosDocumentacionEjgComponent;
+  @ViewChild(ExpedientesEconomicosComponent) expedientesEconomicosComponent: ExpedientesEconomicosComponent;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -114,8 +117,16 @@ export class GestionEjgComponent implements OnInit {
       this.sigaServices.get("institucionActual").subscribe(n => {
         this.body.idInstitucion = n.value;
       });
-      let parametro = { valor: "TIPO_EJG_COLEGIO"};
-      this.sigaServices.post("busquedaPerJuridica_parametroColegio", parametro).subscribe(
+      let paramTipoEJGColegio = { valor: "TIPO_EJG_COLEGIO"};
+      this.sigaServices.post("busquedaPerJuridica_parametroColegio", paramTipoEJGColegio).subscribe(
+        data => {
+          if (data != null && data != undefined) {
+            this.body.tipoEJGColegio = JSON.parse(data.body).parametro;
+          }
+        }
+      );
+      let paramTipoEJG = { valor: "codigo.general.scstipoejg.ordinarios"};
+      this.sigaServices.post("busquedaPerJuridica_property", paramTipoEJG).subscribe(
         data => {
           if (data != null && data != undefined) {
             this.body.tipoEJG = JSON.parse(data.body).parametro;
@@ -134,6 +145,10 @@ export class GestionEjgComponent implements OnInit {
   ngAfterViewInit(){
     // Ejecutamos esto depues de iniciar la vista para que obtenga id de los campos del html
     this.updateTarjResumen();
+  }
+
+  actualizarDatosExpedientes(){
+    this.expedientesEconomicosComponent.ngOnInit();
   }
 
   guardadoSend(event) {
@@ -179,6 +194,7 @@ export class GestionEjgComponent implements OnInit {
     } else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null){
       this.persistenceService.clearDatosEJG();
       this.persistenceService.setVolverEJG();
+      sessionStorage.setItem('back', 'true');
       this.router.navigate(["/ejg"]);
     }else{
       this.location.back();

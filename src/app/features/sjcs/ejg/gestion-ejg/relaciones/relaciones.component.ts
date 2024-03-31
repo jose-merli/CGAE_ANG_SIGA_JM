@@ -196,6 +196,8 @@ export class RelacionesComponent implements OnInit {
     if (!this.permisoEscritura) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
+      this.persistenceService.clearAsistencia();
+      this.persistenceService.clearDesignacion();
       this.persistenceService.setDatosEJG(this.datos);
       sessionStorage.setItem("radioTajertaValue", 'des');
       this.router.navigate(["/busquedaAsuntos"]);

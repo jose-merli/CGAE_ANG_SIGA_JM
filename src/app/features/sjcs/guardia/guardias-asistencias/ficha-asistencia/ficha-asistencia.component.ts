@@ -1235,7 +1235,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     if (sessionStorage.getItem("vieneDeFichaDesigna")){
       sessionStorage.removeItem("vieneDeFichaDesigna"); 
       this.location.back();
-    } else if(sessionStorage.getItem("justiciable")){ 
+    } else if(sessionStorage.getItem("vieneDeFichaJusticiable")){
       this.router.navigate(['/gestionJusticiables']);
     } else if (this.preasistencia) {
       this.router.navigate(['/fichaPreasistencia']);

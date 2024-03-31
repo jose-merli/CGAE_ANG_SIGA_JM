@@ -112,6 +112,7 @@ export class SigaServices {
     busquedaPerJuridica_delete: "busquedaPerJuridica/delete",
     busquedaPerJuridica_history: "busquedaPerJuridica/searchHistoric",
     busquedaPerJuridica_parametroColegio: "busquedaPerJuridica/parametroColegio",
+    busquedaPerJuridica_property: "busquedaPerJuridica/property",
     datosGenerales_update: "personaJuridica/update",
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
