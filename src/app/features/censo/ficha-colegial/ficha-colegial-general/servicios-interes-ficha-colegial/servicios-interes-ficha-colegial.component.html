@@ -19,22 +19,49 @@
                   <span class="enlace">{{ "gratuita.personaJG.literal.masInfo" | translate }}</span>
                 </a>
               </label>
-              <!-- <label [checkPermission]="'620F'">
-                <a (click)="cartasFacturacion()">
-                  <span class="enlace">{{ "facturacionSJCS.facturacionesYPagos.cartaFacturacion" | translate }}</span>
+              <label [checkPermission]="permisosGuardia.guardias_colegiado">
+                <a (click)="guardiasColegiado()">
+                  <span class="enlace">{{"justiciaGratuita.guardia.guardiasColegiado" | translate }}</span>
                 </a>
               </label>
-              <label [checkPermission]="'620P'">
-                <a (click)="cartasPago()">
-                  <span class="enlace">{{ "facturacionSJCS.facturacionesYPagos.cartaPago" | translate }}</span>
-                </a>
-              </label>
-             <label [checkPermission]="'SOLCE'">
+              <label [checkPermission]="permisosGuardia.solicitudes_centralita">
                 <a (click)="preAsistencia()">
                   <span class="enlace">{{ "menu.sjcs.solicitudesAceptadasCentralita" | translate }}</span>
                 </a>
               </label>
-              <label [checkPermission]="'220'">
+              <label [checkPermission]="permisosGuardia.asistencias">
+                <a (click)="asistencias()">
+                  <span class="enlace">{{"menu.justiciaGratuita.asistencia" | translate }}</span>
+                </a>
+              </label>
+              <label [checkPermission]="permisosOficio.inscripciones">
+                <a (click)="turnoInscrito()">
+                  <span class="enlace">{{"justiciaGratuita.oficio.designas.turnoInscrito" | translate }}</span>
+                </a>
+              </label>
+              <label [checkPermission]="permisosOficio.designa">
+                <a (click)="designas()">
+                  <span class="enlace">{{"menu.justiciaGratuita.designas" | translate }}</span>
+                </a>
+              </label>
+              <!--
+              <label [checkPermission]="permisosOficio.inscripciones">
+                <a (click)="turnoInscrito()">
+                  <span class="enlace">{{"justiciaGratuita.oficio.designas.proximasDesignaciones" | translate }}</span>
+                </a>
+              </label>
+              <label [checkPermission]="permisosFacturacion.cartasFacturacionPago">
+                <a (click)="cartasFacturacion()">
+                  <span class="enlace">{{ "facturacionSJCS.facturacionesYPagos.cartaFacturacion" | translate }}</span>
+                </a>
+              </label>
+              <label [checkPermission]="permisosFacturacion.cartasFacturacionPago">
+                <a (click)="cartasPago()">
+                  <span class="enlace">{{ "facturacionSJCS.facturacionesYPagos.cartaPago" | translate }}</span>
+                </a>
+              </label>
+
+              <label [checkPermission]="permisosGuardia.solicitudes_centralita">
                 <a (click)="facturas()">
                   <span class="enlace">{{ "menu.facturacion.facturas" | translate }}</span>
                 </a>
@@ -54,28 +81,15 @@
                   <span class="enlace">{{ "menu.facturacion.compraProductos" | translate }} </span>
                 </a>
               </label>
-              <label [checkPermission]="'GUCOL'">
-                <a (click)="guardiasColegiado()">
-                  <span class="enlace">{{"justiciaGratuita.guardia.guardiasColegiado" | translate }}</span>
-                </a>
-              </label> -->
+               -->
               <i class="float-right"></i>
             </div>
 
             <!-- <div class="d-flex justify-content-between">
-              <label [checkPermission]="'GUCOL'">
-                <a (click)="asistencias()">
-                  <span class="enlace">{{"menu.justiciaGratuita.asistencia" | translate }}</span>
-                </a>
-              </label>
+
               <label [checkPermission]="'60A'">
                 <a (click)="abonosSJCS()">
                   <span class="enlace">{{"menu.facturacionSJCS.abonosSJCS" | translate }}</span>
-                </a>
-              </label>
-              <label [checkPermission]="'INTBU'">
-                <a (click)="turnoInscrito()">
-                  <span class="enlace">{{"justiciaGratuita.oficio.designas.turnoInscrito" | translate }}</span>
                 </a>
               </label>
               <label [checkPermission]="'INGBU'">
@@ -86,11 +100,6 @@
               <label [checkPermission]="'DESBU'">
                 <a (click)="designas()">
                   <span class="enlace">{{"menu.justiciaGratuita.designas" | translate }}</span>
-                </a>
-              </label>
-              <label [checkPermission]="'INTBU'">
-                <a (click)="turnoInscrito()">
-                  <span class="enlace">{{"justiciaGratuita.oficio.designas.proximasDesignaciones" | translate }}</span>
                 </a>
               </label>
               <label [checkPermission]="'BATMP'">
