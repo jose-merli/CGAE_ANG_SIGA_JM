@@ -146,8 +146,8 @@ export class FiltrosEjgComponent implements OnInit {
       this.permisos = this.persistenceService.getPermisos();
     }
 
-    if(this.persistenceService.getVolverEJG() != undefined){
-      this.persistenceService.clearVolverEJG();
+    if(sessionStorage.getItem('back')){
+      sessionStorage.removeItem('back');
       this.volverDesdeEJG = true;
     }
 

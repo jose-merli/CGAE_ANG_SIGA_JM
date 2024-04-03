@@ -4,6 +4,7 @@ import { TurnosItems } from '../../../../../../../models/sjcs/TurnosItems';
 import { TranslateService } from '../../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
+import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 
 @Component({
   selector: 'app-datos-turno-guardias',
@@ -15,9 +16,13 @@ export class DatosTurnoGuardiasComponent implements OnInit {
   body: TurnosItems = new TurnosItems();
   progressSpinner: boolean = false;
   datos: any;
+  partidasJudiciales: any[] = [];
+  comboPJ
+  partidoJudicial: string;
 
   @Input() modoEdicion: boolean = false;
   @Input() tarjetaTurno: string;
+  filtros = new GuardiaItem();
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,

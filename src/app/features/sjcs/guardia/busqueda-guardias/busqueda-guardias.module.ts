@@ -36,6 +36,7 @@ import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-
 import { DatosTurnoGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-turno-guardias/datos-turno-guardias.component';
 import { TablaResultadoOrderModule } from '../../../../commons/tabla-resultado-order/tabla-resultado-order.module';
 import {DialogModule} from 'primeng/dialog';
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import {DialogModule} from 'primeng/dialog';
     TablaDinamicaColaGuardiaModule,
     ConfirmDialogModule,
     FechaModule,
-    TablaResultadoOrderModule
+    TablaResultadoOrderModule,
+    TooltipModule
 
 
   ],

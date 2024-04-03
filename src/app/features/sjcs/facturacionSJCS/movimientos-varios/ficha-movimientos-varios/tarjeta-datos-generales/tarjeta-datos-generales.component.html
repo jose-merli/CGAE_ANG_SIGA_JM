@@ -17,18 +17,21 @@
             </label>
             <i *ngIf="!showFichaDatosGen" class="fa fa-angle-down float-right" (click)="onHideDatosGen()"></i>
           </div>
-          <div class="d-flex justify-content-between">
-            <label>{{ "administracion.parametrosGenerales.literal.descripcion" | translate }}:
+          <div class="d-flex flex-wrap">
+            <label class="mr-2">{{ "administracion.parametrosGenerales.literal.descripcion" | translate }}:
               <span>{{ datos.descripcion }}</span>
             </label>
-            <label>{{ "censo.datosHistorico.literal.motivo" | translate }}:
+            <label class="mr-2">{{ "censo.datosHistorico.literal.motivo" | translate }}:
               <span>{{ datos.motivo }}</span>
             </label>
-            <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }}:
+            <label class="mr-2">{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }}:
               <span>{{ datos.tipo }} </span>
             </label>
-            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion" | translate }}:
+            <label class="mr-2">{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion" | translate }}:
               <span> {{ datos.nombrefacturacion }}</span>
+            </label>
+            <label class="mr-2">{{ "formacion.fichaCurso.tarjetaPrecios.importe" | translate }}:
+              <span> {{ datos.cantidad }} €</span>
             </label>
           </div>
         </div>    
@@ -44,68 +47,45 @@
     </div>
 
     <div *ngIf="showFichaDatosGen" class="card-body card-body-ficha"> 
-        <div class="form-row">
-
-        <div class="bloque col-lg-6 col-md-6">
-
-          <div class="form-row">
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{ "administracion.parametrosGenerales.literal.descripcion" | translate }} (*)
-              </label>
-                <input [disabled]="isLetrado" [(ngModel)]="datos.descripcion" type="text" class="form-control" [maxLength]="100" [ngClass]="{'camposObligatorios': marcarObligatorio('input', datos.descripcion)}"
-                pInputText >
-            </div>
-
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{ "formacion.fichaCurso.tarjetaPrecios.importe" | translate }} (*)
-              </label>
-              <input  [disabled]="isLetrado" [ngModel]="datos.cantidad | currency: 'EUR' " (ngModelChange)="datos.cantidad=$event" type="text" class="form-control"
-              [ngClass]="{'camposObligatorios': marcarObligatorio('input', datos.cantidad)}" (blur)="comprobarCantidad($event.target.value)" pInputText >
-            </div>
-
-            <div class="form-group col-lg-6 col-md-6">
-               <label>
-                {{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }}
-              </label>
-            
-              <p-dropdown  [disabled]="isLetrado" [(ngModel)]="datos.tipo"  [options]="tipos" class="select-form"   placeholder="{{'general.boton.seleccionar' | translate}}">
-            </p-dropdown>  
-            </div>
-
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-               {{ "facturacionSJCS.movimientosVarios.facturacionOrigen" | translate }}
-             </label>
-             <input  [disabled]="isLetrado" disabled [(ngModel)]="datos.nombrefacturacion" type="text" class="form-control" pInputText > 
-           </div>
-
-            </div>
-        </div>
-
+      <div class="form-row">
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{"administracion.auditoriaUsuarios.literal.motivo" | translate}}
-              </label>
-              <textarea  [disabled]="isLetrado" [(ngModel)]="datos.motivo" name="observaciones" class="form-control form-control-motivo" pInputTextarea autoResize="autoResize"
-              [maxLength]="225"></textarea>
+              <label>{{ "administracion.parametrosGenerales.literal.descripcion" | translate }} (*)</label>
+              <input [disabled]="isLetrado" [(ngModel)]="datos.descripcion" type="text" class="form-control" [maxLength]="100" [ngClass]="{'camposObligatorios': marcarObligatorio('input', datos.descripcion)}" pInputText>
             </div>
-
             <div class="form-group col-lg-6 col-md-6">
-              <label>
-               {{ "menu.sjcs.ecom.certificacion" | translate}}
-             </label>
-             <p-dropdown [(ngModel)]="datos.certificacion"  [options]="certificaciones" [disabled]="isLetrado" class="select-form"   placeholder="{{'general.boton.seleccionar' | translate}}">
-           </p-dropdown>  
-           </div>
+              <label>{{ "formacion.fichaCurso.tarjetaPrecios.importe" | translate }} (*)</label>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">€</div>
+                </div>
+                <input [disabled]="isLetrado" [ngModel]="datos.cantidad"  (ngModelChange)="datos.cantidad=$event" type="text" class="form-control" (blur)="comprobarCantidad()" pInputText pKeyFilter="num"/>
+              </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }}</label>
+              <p-dropdown class="select-form" [disabled]="isLetrado" [(ngModel)]="datos.tipo" [options]="tipos" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>  
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "facturacionSJCS.movimientosVarios.facturacionOrigen" | translate }}</label>
+              <input [disabled]="isLetrado" disabled [(ngModel)]="datos.nombrefacturacion" type="text" class="form-control" pInputText > 
             </div>
           </div>
         </div>
-      <br>
-
+        <div class="bloque col-lg-6 col-md-6">
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"administracion.auditoriaUsuarios.literal.motivo" | translate}}</label>
+              <textarea  [disabled]="isLetrado" [(ngModel)]="datos.motivo" name="observaciones" class="form-control form-control-motivo" pInputTextarea autoResize="autoResize" [maxLength]="225"></textarea>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "menu.sjcs.ecom.certificacion" | translate}}</label>
+              <p-dropdown [(ngModel)]="datos.certificacion"  [options]="certificaciones" [disabled]="isLetrado" class="select-form"   placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="card-footer" *ngIf="showFichaDatosGen">
