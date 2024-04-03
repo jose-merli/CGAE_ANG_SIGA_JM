@@ -8,7 +8,8 @@ import { DatosColegiadosObject } from "../../../../../models/DatosColegiadosObje
 import { FichaColegialCertificadosObject } from "../../../../../models/FichaColegialCertificadosObject";
 import { FichaColegialColegialesItem } from "../../../../../models/FichaColegialColegialesItem";
 import { FichaColegialGeneralesItem } from "../../../../../models/FichaColegialGeneralesItem";
-import { procesos_facturacionSJCS } from "../../../../../permisos/procesos_facturacionSJCS";
+//import { procesos_facturacionSJCS } from "../../../../../permisos/procesos_facturacionSJCS";
+import { procesos_facturacionSJCS } from "../../../../../permisos/procesos_facturacion";
 import { procesos_guardia } from "../../../../../permisos/procesos_guarida";
 import { procesos_oficio } from "../../../../../permisos/procesos_oficio";
 

@@ -1,205 +1,199 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Message } from 'primeng/api';
-import { TranslateService } from "../translate";
-import { SigaServices } from "./../../_services/siga.service";
+import { Message } from "primeng/api";
 import { CommonsService } from "../../_services/commons.service";
 import { ComboItem } from "../../models/ComboItem";
 import { SigaStorageService } from "../../siga-storage.service";
-import { ColegiadoItem } from "../../models/ColegiadoItem";
+import { TranslateService } from "../translate";
+import { SigaServices } from "./../../_services/siga.service";
 
 @Component({
   selector: "app-buscador-colegiados-express",
   templateUrl: "./buscador-colegiados-express.component.html",
-  styleUrls: ["./buscador-colegiados-express.component.scss"]
+  styleUrls: ["./buscador-colegiados-express.component.scss"],
 })
 export class BuscadorColegiadosExpressComponent implements OnInit {
+  msgs: Message[] = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
 
-	msgs: Message[] = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
- 
-	comboColegios : ComboItem[] = [];
+  comboColegios: ComboItem[] = [];
 
-	clientForm = new FormGroup({
-		colegioCliente: new FormControl(''),
-		numeroColegiadoCliente: new FormControl(''),
-		nifCifCliente: new FormControl(''),
-		nombreApellidosCliente: new FormControl('')
-	});
+  clientForm = new FormGroup({
+    colegioCliente: new FormControl(""),
+    numeroColegiadoCliente: new FormControl(""),
+    nifCifCliente: new FormControl(""),
+    nombreApellidosCliente: new FormControl(""),
+  });
 
-	numeroColegiado: string;
-	nifCif: string;
-	idColegioCliente: string;
-	idPersona: string = '';
+  numeroColegiado: string;
+  nifCif: string;
+  idColegioCliente: string;
+  idPersona: string = "";
 
-	disableNumeroColegiado: boolean = false;
-	disableNombreApellidos: boolean = true;
-	isLetrado: boolean = false;
+  disableNumeroColegiado: boolean = false;
+  disableNombreApellidos: boolean = true;
+  isLetrado: boolean = false;
 
-	constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private sigaStorageService: SigaStorageService) {}
+  constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private sigaStorageService: SigaStorageService) {}
 
-	ngOnInit() {
-	
-		this.sigaServices.get("institucionActual").subscribe(n => {
-			this.idColegioCliente = n.value;
-			this.getColegios(n.value);
+  ngOnInit() {
+    this.sigaServices.get("institucionActual").subscribe((n) => {
+      this.idColegioCliente = n.value;
+      this.getColegios(n.value);
 
-			if(this.sigaStorageService.isLetrado){
-				this.isLetrado = true;
-				this.sigaServices.get("usuario_logeado").subscribe(async n => {
-					const usuario = n.usuarioLogeadoItem;
-					this.searchClient(usuario[0].dni, false);
-				});
-			} else if (sessionStorage.getItem('abogado')) {
-				let data = JSON.parse(sessionStorage.getItem('abogado'));
-				if (data != undefined) {
-					let nombre = '';
-					let numeroColegiado = '';
-					if(Array.isArray(data)){
-						data = data[0];
-						nombre = data.numeroColegiado;
-						numeroColegiado = data.apellidos + " " + data.nombre;
-					} else{
-						nombre = data.numColegiado;
-						numeroColegiado = data.nombre;
-					}
-					this.clientForm.get("numeroColegiadoCliente").setValue(numeroColegiado);
-					this.clientForm.get("nombreApellidosCliente").setValue(nombre);
-					this.clientForm.get("nifCifCliente").setValue(data.nif);
-					this.idPersona = data.idPersona;
-					this.nifCif = data.nif;
-					this.numeroColegiado = numeroColegiado;
-				}
-				sessionStorage.removeItem("abogado");
-			}
-		});
-	}
+      if (this.sigaStorageService.isLetrado) {
+        this.isLetrado = true;
+        this.sigaServices.get("usuario_logeado").subscribe(async (n) => {
+          const usuario = n.usuarioLogeadoItem;
+          this.searchClient(usuario[0].dni, false);
+        });
+      } else if (sessionStorage.getItem("abogado")) {
+        let data = JSON.parse(sessionStorage.getItem("abogado"));
+        if (data != undefined) {
+          let nombre = "";
+          let numeroColegiado = "";
+          if (Array.isArray(data)) {
+            data = data[0];
+            nombre = data.numeroColegiado;
+            numeroColegiado = data.apellidos + " " + data.nombre;
+          } else {
+            nombre = data.numColegiado;
+            numeroColegiado = data.nombre;
+          }
+          this.clientForm.get("numeroColegiadoCliente").setValue(numeroColegiado);
+          this.clientForm.get("nombreApellidosCliente").setValue(nombre);
+          this.clientForm.get("nifCifCliente").setValue(data.nif);
+          this.idPersona = data.idPersona;
+          this.nifCif = data.nif;
+          this.numeroColegiado = numeroColegiado;
+        }
+        sessionStorage.removeItem("abogado");
+      }
+    });
+  }
 
-	searchPersona(){
-		if(!this.isLetrado){
-			sessionStorage.setItem("origin", "newCliente");
-			this.router.navigate(['/busquedaGeneral']);
-		}
-	}
-	
-	limpiarCliente(isCleanColegio: boolean) {
-		if(!this.isLetrado){
-			if(isCleanColegio){
-				this.clientForm.get("colegioCliente").setValue(this.idColegioCliente);
-			}
-			this.clientForm.get("numeroColegiadoCliente").setValue('');
-			this.clientForm.get("nifCifCliente").setValue('');
-			this.clientForm.get("nombreApellidosCliente").setValue('');
-			this.idPersona = '';
-		}
-	}
+  searchPersona() {
+    if (!this.isLetrado) {
+      sessionStorage.setItem("origin", "newCliente");
+      this.router.navigate(["/busquedaGeneral"]);
+    }
+  }
 
-	onChangeColegio(colegio: ComboItem) {
-		if(this.isLetrado){
-			this.clientForm.get("colegioCliente").setValue(this.idColegioCliente);
-		}else{
-			if(colegio.value != null){
-				this.disableNumeroColegiado = false;
-			}else{
-				this.disableNumeroColegiado = true;
-				this.clientForm.get("numeroColegiadoCliente").setValue('');
-			}
-		}
-	}
+  limpiarCliente(isCleanColegio: boolean) {
+    if (!this.isLetrado) {
+      if (isCleanColegio) {
+        this.clientForm.get("colegioCliente").setValue(this.idColegioCliente);
+      }
+      this.clientForm.get("numeroColegiadoCliente").setValue("");
+      this.clientForm.get("nifCifCliente").setValue("");
+      this.clientForm.get("nombreApellidosCliente").setValue("");
+      this.idPersona = "";
+    }
+  }
 
-	onBlurNumeroColegiado(){
-		if(!this.isLetrado){
-			if(this.numeroColegiado != this.clientForm.get('numeroColegiadoCliente').value){
-				this.searchClient(this.clientForm.get('numeroColegiadoCliente').value, true);
-			}
-		}
-	}
-	
-	onBlurNifCif(){
-		if(!this.isLetrado){
-			if(this.nifCif != this.clientForm.get('nifCifCliente').value){
-				this.searchClient(this.clientForm.get('nifCifCliente').value, false);
-			}
-		}
-	}
+  onChangeColegio(colegio: ComboItem) {
+    if (this.isLetrado) {
+      this.clientForm.get("colegioCliente").setValue(this.idColegioCliente);
+    } else {
+      if (colegio.value != null) {
+        this.disableNumeroColegiado = false;
+      } else {
+        this.disableNumeroColegiado = true;
+        this.clientForm.get("numeroColegiadoCliente").setValue("");
+      }
+    }
+  }
 
-	setClienteSession(cliente: any){
-		if(cliente != null && cliente != undefined){
-			this.clientForm.get("colegioCliente").setValue(cliente.numeroInstitucion);
-			this.clientForm.get("numeroColegiadoCliente").setValue(cliente.nColegiado);
-			this.clientForm.get("nifCifCliente").setValue(cliente.nifcif);
-			this.clientForm.get("nombreApellidosCliente").setValue(cliente.nombre);
-			this.idPersona = cliente.idPersona;
-		}
-	}
+  onBlurNumeroColegiado() {
+    if (!this.isLetrado) {
+      if (this.numeroColegiado != this.clientForm.get("numeroColegiadoCliente").value) {
+        this.searchClient(this.clientForm.get("numeroColegiadoCliente").value, true);
+      }
+    }
+  }
 
-	private getColegios(institucion: string) {
-		this.sigaServices.getParam("busquedaCol_colegio", "?idInstitucion=2000").subscribe(
-			n => {
-				this.comboColegios = n.combooItems;
-				this.commonsService.arregloTildesCombo(this.comboColegios);
-				this.clientForm.get("colegioCliente").setValue(institucion);
-			},
-			err => {
-				this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-			}
-		);
-	}
-	
-	private showMessage(severity, summary, msg) {
-		this.msgs = [];
-		this.msgs.push({
-			severity: severity,
-			summary: summary,
-			detail: msg
-		});
-	}
+  onBlurNifCif() {
+    if (!this.isLetrado) {
+      if (this.nifCif != this.clientForm.get("nifCifCliente").value) {
+        this.searchClient(this.clientForm.get("nifCifCliente").value, false);
+      }
+    }
+  }
 
-	private searchClient(idclient: string, isNumColegiado: boolean) {
+  setClienteSession(cliente: any) {
+    if (cliente != null && cliente != undefined) {
+      this.clientForm.get("colegioCliente").setValue(cliente.numeroInstitucion);
+      this.clientForm.get("numeroColegiadoCliente").setValue(cliente.nColegiado);
+      this.clientForm.get("nifCifCliente").setValue(cliente.nifcif);
+      this.clientForm.get("nombreApellidosCliente").setValue(cliente.nombre);
+      this.idPersona = cliente.idPersona;
+    }
+  }
 
-		if(idclient != ''){		
+  private getColegios(institucion: string) {
+    this.sigaServices.getParam("busquedaCol_colegio", "?idInstitucion=2000").subscribe(
+      (n) => {
+        this.comboColegios = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboColegios);
+        this.clientForm.get("colegioCliente").setValue(institucion);
+      },
+      (err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      },
+    );
+  }
 
-			let body = {};
-			if(isNumColegiado){
-				body = {
-					idInstitucion: this.clientForm.get('colegioCliente').value,
-					nColegiado: idclient
-				};
-			} else {
-				body = {
-					idInstitucion: this.clientForm.get('colegioCliente').value,
-					nifcif: idclient
-				};
-			}
+  private showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg,
+    });
+  }
 
-			this.limpiarCliente(false);
+  private searchClient(idclient: string, isNumColegiado: boolean) {
+    if (idclient != "") {
+      let body = {};
+      if (isNumColegiado) {
+        body = {
+          idInstitucion: this.clientForm.get("colegioCliente").value,
+          nColegiado: idclient,
+        };
+      } else {
+        body = {
+          idInstitucion: this.clientForm.get("colegioCliente").value,
+          nifcif: idclient,
+        };
+      }
 
-			this.sigaServices.post('busquedaColegiados_busquedaColegiadoExpress', body).subscribe(
-				data => {
-					let colegiados = JSON.parse(data.body);
-					if (colegiados.colegiadoJGItem.length == 1) {
-						this.clientForm.get("numeroColegiadoCliente").setValue(colegiados.colegiadoJGItem[0].nColegiado);
-						this.clientForm.get("nifCifCliente").setValue(colegiados.colegiadoJGItem[0].nifcif);
-						this.clientForm.get("nombreApellidosCliente").setValue(colegiados.colegiadoJGItem[0].nombre);
-						this.idPersona = colegiados.colegiadoJGItem[0].idPersona;
+      this.limpiarCliente(false);
 
-						this.nifCif = colegiados.colegiadoJGItem[0].nifcif;
-						this.numeroColegiado = colegiados.colegiadoJGItem[0].nColegiado;
+      this.sigaServices.post("busquedaColegiados_busquedaColegiadoExpress", body).subscribe(
+        (data) => {
+          let colegiados = JSON.parse(data.body);
+          if (colegiados.colegiadoJGItem.length >= 1) {
+            this.clientForm.get("numeroColegiadoCliente").setValue(colegiados.colegiadoJGItem[0].nColegiado);
+            this.clientForm.get("nifCifCliente").setValue(colegiados.colegiadoJGItem[0].nifcif);
+            this.clientForm.get("nombreApellidosCliente").setValue(colegiados.colegiadoJGItem[0].nombre);
+            this.idPersona = colegiados.colegiadoJGItem[0].idPersona;
 
-					} else {
-						this.showMessage("warn", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.justificacionExpres.colegiadoNoEncontrado"));
-					}
-				},
-				error => {
-					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-				}
-			);
-		} else {
-			this.limpiarCliente(false);
-		}
-	}
+            this.nifCif = colegiados.colegiadoJGItem[0].nifcif;
+            this.numeroColegiado = colegiados.colegiadoJGItem[0].nColegiado;
+          } else {
+            this.showMessage("warn", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.justificacionExpres.colegiadoNoEncontrado"));
+          }
+        },
+        (error) => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        },
+      );
+    } else {
+      this.limpiarCliente(false);
+    }
+  }
 
-	clear() {
-		this.msgs = [];
-	}
+  clear() {
+    this.msgs = [];
+  }
 }
