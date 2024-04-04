@@ -67,6 +67,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
   fechaDesigna: Date = new Date();
   datepipe: any;
+  mismoProcurador: boolean = false; 
 
   constructor(
     private renderer: Renderer2,
@@ -351,8 +352,14 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
         this.mostrarDatos();
       },
       err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        this.progressSpinner = false;
+        if (err.status == "406"){
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.mismoProcurador"));
+          this.progressSpinner = false;
+          this.mismoProcurador = true;
+        }else{
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.progressSpinner = false;
+        }
       }
     );
   }
@@ -404,8 +411,11 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
     this.sigaServices.post("designaciones_guardarProcuradorEJG", procuradorPeticion).subscribe(
       data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
+        if(!this.mismoProcurador){
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        }   
+        this.mismoProcurador = false;     
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
