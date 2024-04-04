@@ -63,7 +63,7 @@ export class CompensacionFacturaComponent implements OnInit, AfterViewInit {
       this.getCols();
 
       if (this.modoEdicion && this.idEstadoPago == '20') {
-        this.getCompensacionFacturas(this.paramDeducirCobroAutom != undefined ? this.paramDeducirCobroAutom.valor.toString() : undefined);
+        this.getCompensacionFacturas(this.paramDeducirCobroAutom != undefined ? this.paramDeducirCobroAutom.toString() : undefined);
       }
 
     }).catch(error => console.error(error));
