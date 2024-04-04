@@ -6,11 +6,11 @@
       <div class="form-row">
         <div class="col-4">
           <p-radioButton name="filtroBusquedaFacturacion" value="facturacion"
-            label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate}}"
-            [(ngModel)]="selectedValue" (click)="cambiaFiltro()"></p-radioButton>
-          <p-radioButton name="filtroBusquedaPagos" (click)="cambiaFiltro()" value="pagos"
-            label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago' | translate}}"
-            [(ngModel)]="selectedValue"></p-radioButton>
+              label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate}}"
+              [(ngModel)]="selectedValue" (ngModelChange)="cambiaFiltro()"></p-radioButton>
+          <p-radioButton name="filtroBusquedaPagos" value="pagos"
+              label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago' | translate}}"
+              [(ngModel)]="selectedValue" (ngModelChange)="cambiaFiltro()"></p-radioButton>
         </div>
       </div>
       <p class="title-module" (click)="onHideDatosGenerales()">
