@@ -1042,7 +1042,7 @@ updateIndicesToUpdate1(rowId, rowGroup, index) {
         this.refreshData.emit(true);
       }
     } else {
-      this.rowIdsToUpdate.push(rowId);
+      this.updateRowIdsToUpdate1(rowId);
     }
 
     this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
