@@ -1,15 +1,15 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { TranslateService } from '../../../../../commons/translate';
-import { Location, DatePipe } from '@angular/common';
-import { Colegiado, TarjetaColegiadoComponent } from './tarjeta-colegiado/tarjeta-colegiado.component';
-import { TarjetaDatosRetencionComponent } from './tarjeta-datos-retencion/tarjeta-datos-retencion.component';
-import { TarjetaAplicacionEnPagosComponent } from './tarjeta-aplicacion-en-pagos/tarjeta-aplicacion-en-pagos.component';
-import { SigaStorageService } from '../../../../../siga-storage.service';
-import { RetencionesService } from '../retenciones.service';
-import { RetencionItem } from '../../../../../models/sjcs/RetencionItem';
-import { CommonsService } from '../../../../../_services/commons.service';
-import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
-import { Router } from '@angular/router';
+import { DatePipe, Location } from "@angular/common";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import { CommonsService } from "../../../../../_services/commons.service";
+import { TranslateService } from "../../../../../commons/translate";
+import { RetencionItem } from "../../../../../models/sjcs/RetencionItem";
+import { procesos_facturacionSJCS } from "../../../../../permisos/procesos_facturacionSJCS";
+import { SigaStorageService } from "../../../../../siga-storage.service";
+import { RetencionesService } from "../retenciones.service";
+import { TarjetaAplicacionEnPagosComponent } from "./tarjeta-aplicacion-en-pagos/tarjeta-aplicacion-en-pagos.component";
+import { Colegiado, TarjetaColegiadoComponent } from "./tarjeta-colegiado/tarjeta-colegiado.component";
+import { TarjetaDatosRetencionComponent } from "./tarjeta-datos-retencion/tarjeta-datos-retencion.component";
 
 export interface Enlace {
   id: string;
@@ -17,54 +17,52 @@ export interface Enlace {
 }
 
 @Component({
-  selector: 'app-ficha-retencion-judicial',
-  templateUrl: './ficha-retencion-judicial.component.html',
-  styleUrls: ['./ficha-retencion-judicial.component.scss']
+  selector: "app-ficha-retencion-judicial",
+  templateUrl: "./ficha-retencion-judicial.component.html",
+  styleUrls: ["./ficha-retencion-judicial.component.scss"],
 })
 export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
-
   tarjetaFija = {
-    nombre: 'facturacionSJCS.facturacionesYPagos.inforesumen',
-    icono: 'fas fa-clipboard',
-    imagen: '',
+    nombre: "facturacionSJCS.facturacionesYPagos.inforesumen",
+    icono: "fas fa-clipboard",
+    imagen: "",
     detalle: false,
     fixed: true,
     campos: [
       {
-        "key": this.translateService.instant('facturacionSJCS.retenciones.nColegiado'),
-        "value": ""
+        key: this.translateService.instant("facturacionSJCS.retenciones.nColegiado"),
+        value: "",
       },
       {
-        "key": this.translateService.instant('facturacionSJCS.retenciones.nombreCol'),
-        "value": ""
+        key: this.translateService.instant("facturacionSJCS.retenciones.nombreCol"),
+        value: "",
       },
       {
-        "key": this.translateService.instant('facturacionSJCS.retenciones.tipo'),
-        "value": ""
+        key: this.translateService.instant("facturacionSJCS.retenciones.tipo"),
+        value: "",
       },
       {
-        "key": this.translateService.instant('facturacionSJCS.retenciones.importe'),
-        "value": ""
+        key: this.translateService.instant("facturacionSJCS.retenciones.importe"),
+        value: "",
       },
       {
-        //"key": this.translateService.instant('facturacionSJCS.retenciones.importe'),
-        "key": 'estado',
-        "value": ""
+        key: this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado"),
+        value: "",
       },
       {
-        "key": this.translateService.instant('facturacionSJCS.retenciones.fechaNoti'),
-        "value": ""
+        key: this.translateService.instant("facturacionSJCS.retenciones.fechaNoti"),
+        value: "",
       },
       {
-        "key": this.translateService.instant('facturacionSJCS.retenciones.destinatario'),
-        "value": ""
-      }
+        key: this.translateService.instant("facturacionSJCS.retenciones.destinatario"),
+        value: "",
+      },
     ],
     enlaces: [
-      { id: 'facSJCSFichaRetCol', nombre: this.translateService.instant('facturacionSJCS.retenciones.ficha.colegiado'), ref: null },
-      { id: 'facSJCSFichaRetDatRetJud', nombre: this.translateService.instant('facturacionSJCS.retenciones.ficha.datRetJud'), ref: null },
-      { id: 'facSJCSFichaRetAplEnPag', nombre: this.translateService.instant('facturacionSJCS.retenciones.opcion.aplicacion'), ref: null }
-    ]
+      { id: "facSJCSFichaRetCol", nombre: this.translateService.instant("facturacionSJCS.retenciones.ficha.colegiado"), ref: null },
+      { id: "facSJCSFichaRetDatRetJud", nombre: this.translateService.instant("facturacionSJCS.retenciones.ficha.datRetJud"), ref: null },
+      { id: "facSJCSFichaRetAplEnPag", nombre: this.translateService.instant("facturacionSJCS.retenciones.opcion.aplicacion"), ref: null },
+    ],
   };
   isLetrado: boolean = false;
   msgs;
@@ -77,64 +75,48 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
   @ViewChild(TarjetaAplicacionEnPagosComponent) tarjetaAplEnPag: TarjetaAplicacionEnPagosComponent;
   retencionDesdeTabla: boolean = false;
 
-  constructor(private translateService: TranslateService,
-    private location: Location,
-    private sigaStorageService: SigaStorageService,
-    private retencionesService: RetencionesService,
-    private datePipe: DatePipe,
-    private commonsService: CommonsService,
-    private router: Router) { }
+  constructor(private translateService: TranslateService, private location: Location, private sigaStorageService: SigaStorageService, private retencionesService: RetencionesService, private datePipe: DatePipe, private commonsService: CommonsService, private router: Router) {}
 
   ngOnInit() {
-    if(sessionStorage.getItem("retencionSinLetrado")){
+    if (sessionStorage.getItem("retencionSinLetrado")) {
       this.retencionSinLetrado = true;
       sessionStorage.removeItem("retencionSinLetrado");
     }
-    if(sessionStorage.getItem("retencionDesdeTabla")){
+    if (sessionStorage.getItem("retencionDesdeTabla")) {
       this.retencionDesdeTabla = true;
       sessionStorage.removeItem("retencionDesdeTabla");
     }
-    this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaRetenciones).then(respuesta => {
+    this.commonsService
+      .checkAcceso(procesos_facturacionSJCS.busquedaRetenciones)
+      .then((respuesta) => {
+        const permisoEscritura = respuesta;
+        this.permisoEscrituraDatosRetencion = permisoEscritura;
 
-      const permisoEscritura = respuesta;
-      this.permisoEscrituraDatosRetencion = permisoEscritura;
+        if (permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
+        }
 
-      if (permisoEscritura == undefined) {
-        sessionStorage.setItem("codError", "403");
-        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
-        this.router.navigate(["/errorAcceso"]);
-      }
-
-      this.isLetrado = this.sigaStorageService.isLetrado;
-
-    }).catch(error => console.error(error));
-    // this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaDatosRetencion).then(respuesta => {
-
-    //   this.permisoEscrituraDatosRetencion = respuesta;
-
-    // }).catch(error => console.error(error));
-    //console.log(this.retencionesService.permisoEscrituraDatosRetencion);
-    
+        this.isLetrado = this.sigaStorageService.isLetrado;
+      })
+      .catch((error) => console.error(error));
   }
 
   isOpenReceive(event) {
-
     if (this.retencionesService.modoEdicion) {
-
       switch (event) {
-        case 'facSJCSFichaRetCol':
+        case "facSJCSFichaRetCol":
           this.tarjetaColegiado.showTarjeta = true;
           break;
-        case 'facSJCSFichaRetDatRetJud':
+        case "facSJCSFichaRetDatRetJud":
           this.tarjetaDatosRetJud.showTarjeta = true;
           break;
-        case 'facSJCSFichaRetAplEnPag':
+        case "facSJCSFichaRetAplEnPag":
           this.tarjetaAplEnPag.showTarjeta = true;
           break;
       }
-
     }
-
   }
 
   ngAfterViewInit() {
@@ -154,7 +136,7 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
   }
 
   addEnlace(enlace: Enlace) {
-    this.tarjetaFija.enlaces.find(el => el.id == enlace.id).ref = enlace.ref;
+    this.tarjetaFija.enlaces.find((el) => el.id == enlace.id).ref = enlace.ref;
   }
 
   showMessage(event) {
@@ -162,7 +144,7 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
     this.msgs.push({
       severity: event.severity,
       summary: event.summary,
-      detail: event.detail
+      detail: event.detail,
     });
   }
 
@@ -180,7 +162,7 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
     this.tarjetaFija.campos[2].value = event.tipoRetencion;
     this.tarjetaFija.campos[3].value = event.importe;
     this.tarjetaFija.campos[4].value = event.estado;
-    this.tarjetaFija.campos[5].value = this.datePipe.transform(event.fechainicio, 'dd/mm/yyyy');
+    this.tarjetaFija.campos[5].value = this.datePipe.transform(event.fechainicio, "dd/MM/yyyy");
     this.tarjetaFija.campos[6].value = event.idDestinatario;
     this.activarDesactivarBtn(event.estado);
   }
@@ -194,5 +176,4 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
       this.desactivarBotonesColegiado = false;
     }
   }
-
 }

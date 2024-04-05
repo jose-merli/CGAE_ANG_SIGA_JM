@@ -1,27 +1,26 @@
-import { Component, OnInit, Output, EventEmitter, AfterViewInit, Input } from '@angular/core';
-import { Enlace } from '../ficha-retencion-judicial.component'
-import { SigaServices } from '../../../../../../_services/siga.service';
-import { RetencionesService } from '../../retenciones.service';
-import { RetencionObject } from '../../../../../../models/sjcs/RetencionObject';
-import { TranslateService } from '../../../../../../commons/translate/translation.service';
-import { RetencionItem } from '../../../../../../models/sjcs/RetencionItem';
-import { SelectItem } from 'primeng/primeng';
-import { CommonsService } from '../../../../../../_services/commons.service';
-import { Colegiado } from '../tarjeta-colegiado/tarjeta-colegiado.component';
-import { DatePipe } from '@angular/common';
-import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
-import { Router } from '@angular/router';
-import { SigaStorageService } from '../../../../../../siga-storage.service';
-import { FcsRetencionesJudicialesItem } from '../../../../../../models/sjcs/FcsRetencionesJudicialesItem';
-import { RetencionesRequestDto } from '../../../../../../models/sjcs/RetencionesRequestDTO';
+import { CurrencyPipe, DatePipe } from "@angular/common";
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Router } from "@angular/router";
+import { SelectItem } from "primeng/primeng";
+import { CommonsService } from "../../../../../../_services/commons.service";
+import { SigaServices } from "../../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../../commons/translate/translation.service";
+import { FcsRetencionesJudicialesItem } from "../../../../../../models/sjcs/FcsRetencionesJudicialesItem";
+import { RetencionItem } from "../../../../../../models/sjcs/RetencionItem";
+import { RetencionObject } from "../../../../../../models/sjcs/RetencionObject";
+import { RetencionesRequestDto } from "../../../../../../models/sjcs/RetencionesRequestDTO";
+import { procesos_facturacionSJCS } from "../../../../../../permisos/procesos_facturacionSJCS";
+import { SigaStorageService } from "../../../../../../siga-storage.service";
+import { RetencionesService } from "../../retenciones.service";
+import { Enlace } from "../ficha-retencion-judicial.component";
+import { Colegiado } from "../tarjeta-colegiado/tarjeta-colegiado.component";
 
 @Component({
-  selector: 'app-tarjeta-datos-retencion',
-  templateUrl: './tarjeta-datos-retencion.component.html',
-  styleUrls: ['./tarjeta-datos-retencion.component.scss']
+  selector: "app-tarjeta-datos-retencion",
+  templateUrl: "./tarjeta-datos-retencion.component.html",
+  styleUrls: ["./tarjeta-datos-retencion.component.scss"],
 })
 export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
-
   showTarjeta: boolean = false;
   comboTiposRetencion: SelectItem[] = [];
   comboDestinatarios: SelectItem[] = [];
@@ -31,13 +30,13 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   expRegImporte: RegExp = /^\d{1,10}(\.\d{1,2})?$/;
   expRegPorcentaje: RegExp = /^\d{1,2}(\.\d{1,2})?$/;
   disabledImporte: boolean = true;
-  disableEliminar:boolean = false;
+  disableEliminar: boolean = false;
   disablePorEstado: boolean = false;
   minDate: Date;
   permisoEscritura: boolean;
 
   @Input() colegiado: Colegiado;
-  
+
   @Input() permisoEscrituraDatosRetencion: boolean;
 
   @Output() addEnlace = new EventEmitter<Enlace>();
@@ -46,30 +45,24 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
 
   isLetrado: boolean = false;
   nuevaRetencionSinLetrado: boolean;
-  constructor(private sigaServices: SigaServices,
-    private retencionesService: RetencionesService,
-    private translateService: TranslateService,
-    private commonsService: CommonsService,
-    private datePipe: DatePipe,
-    private router: Router,
-    private sigaStorageService: SigaStorageService) { }
+  constructor(private sigaServices: SigaServices, private retencionesService: RetencionesService, private translateService: TranslateService, private commonsService: CommonsService, private datePipe: DatePipe, private router: Router, private sigaStorageService: SigaStorageService, private currencyPipe: CurrencyPipe) {}
 
   ngOnInit() {
+    this.commonsService
+      .checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaDatosRetencion)
+      .then((respuesta) => {
+        this.permisoEscritura = respuesta;
 
-    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaDatosRetencion).then(respuesta => {
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
+        }
 
-      this.permisoEscritura = respuesta;
-
-      if (this.permisoEscritura == undefined) {
-         sessionStorage.setItem("codError", "403");
-         sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
-         this.router.navigate(["/errorAcceso"]);
-       }
-
-       this.getComboTiposRetencion();
-       this.getComboDestinatarios();
-
-    }).catch(error => console.error(error));
+        this.getComboTiposRetencion();
+        this.getComboDestinatarios();
+      })
+      .catch((error) => console.error(error));
     /*
     this.permisoEscritura = this.permisoEscrituraDatosRetencion;
     if (this.permisoEscrituraDatosRetencion == undefined) {
@@ -79,7 +72,7 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
     }
     */
     this.isLetrado = this.sigaStorageService.isLetrado;
-    if(sessionStorage.getItem("nuevaRetencionSinLetrado")){
+    if (sessionStorage.getItem("nuevaRetencionSinLetrado")) {
       this.nuevaRetencionSinLetrado = true;
       sessionStorage.removeItem("nuevaRetencionSinLetrado");
     }
@@ -94,10 +87,9 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-
     const enlace: Enlace = {
-      id: 'facSJCSFichaRetDatRetJud',
-      ref: document.getElementById('facSJCSFichaRetDatRetJud')
+      id: "facSJCSFichaRetDatRetJud",
+      ref: document.getElementById("facSJCSFichaRetDatRetJud"),
     };
 
     this.addEnlace.emit(enlace);
@@ -115,14 +107,14 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
     const retencionesRequestDto: RetencionesRequestDto = new RetencionesRequestDto();
     retencionesRequestDto.idRetenciones = idRetencion;
     this.sigaServices.post("retenciones_buscarRetencion", retencionesRequestDto).subscribe(
-      data => {
+      (data) => {
         const res: RetencionObject = JSON.parse(data.body);
 
         if (res.error && null != res.error && null != res.error.description) {
           this.showMessage.emit({
             severity: "error",
             summary: this.translateService.instant("general.message.incorrect"),
-            detail: this.translateService.instant(res.error.description.toString())
+            detail: this.translateService.instant(res.error.description.toString()),
           });
         } else {
           Object.assign(this.body, res.retencion);
@@ -154,21 +146,20 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
             this.disabledImporte = true;
           }
 
-          if(this.body.fechaFin && (Date.now() >= Number(this.body.fechaFin))) {
+          if (this.body.fechaFin && Date.now() >= Number(this.body.fechaFin)) {
             this.disableEliminar = true;
           }
 
           if (estadoRetencion == "Aplicado parcialmente" || estadoRetencion == "Aplicado totalmente") {
             this.disablePorEstado = true;
           } else {
-            this.disablePorEstado = false
+            this.disablePorEstado = false;
           }
-
         }
       },
-      err => {
+      (err) => {
         console.log(err);
-      }
+      },
     );
   }
 
@@ -176,30 +167,29 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
     this.comboTiposRetencion = [
       {
         label: this.translateService.instant("facturacionSJCS.retenciones.porcentual"),
-        value: 'P'
+        value: "P",
       },
       {
         label: this.translateService.instant("facturacionSJCS.retenciones.importeFijo"),
-        value: 'F'
+        value: "F",
       },
       {
         label: this.translateService.instant("facturacionSJCS.retenciones.tramosLEC"),
-        value: 'L'
-      }
+        value: "L",
+      },
     ];
   }
 
   getComboDestinatarios() {
-
     this.progressSpinner = true;
 
     this.sigaServices.get("retenciones_comboDestinatarios").subscribe(
-      data => {
+      (data) => {
         if (data.error != null && data.error.description != null) {
           this.showMessage.emit({
             severity: "error",
             summary: this.translateService.instant("general.message.incorrect"),
-            detail: this.translateService.instant(data.error.description.toString())
+            detail: this.translateService.instant(data.error.description.toString()),
           });
         } else {
           this.comboDestinatarios = data.combooItems;
@@ -207,14 +197,13 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
         }
         this.progressSpinner = false;
       },
-      err => {
+      (err) => {
         this.progressSpinner = false;
       },
       () => {
         this.getDataInicial();
-      }
+      },
     );
-
   }
 
   fillFechaNoti(event) {
@@ -231,11 +220,11 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   isDisabledRestablecer() {
-    if(this.isLetrado){
+    if (this.isLetrado) {
       return true;
-    }else if(this.permisoEscritura){
+    } else if (this.permisoEscritura) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
@@ -249,101 +238,89 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   compruebaCamposObligatorios() {
-      if ((this.body.tipoRetencion && this.body.tipoRetencion.trim().length == 1) &&
-      (this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0) &&
-      (this.body.fechainicio && this.body.fechainicio != null) &&
-      (this.body.idDestinatario && this.body.idDestinatario.toString().trim().length > 0) &&
-      (this.colegiado && this.colegiado != null)) {
+    if (this.body.tipoRetencion && this.body.tipoRetencion.trim().length == 1 && this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0 && this.body.fechainicio && this.body.fechainicio != null && this.body.idDestinatario && this.body.idDestinatario.toString().trim().length > 0 && this.colegiado && this.colegiado != null) {
       return true;
-      } else if(this.nuevaRetencionSinLetrado && (this.body.tipoRetencion && this.body.tipoRetencion.trim().length == 1) &&
-      (this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0) &&
-      (this.body.fechainicio && this.body.fechainicio != null) &&
-      (this.body.idDestinatario && this.body.idDestinatario.toString().trim().length > 0)){
-        return true;
-      } 
-    
-      this.showMessage.emit({
-        severity: "error",
-        summary: this.translateService.instant("general.message.incorrect"),
-        detail: this.translateService.instant("general.message.camposObligatorios")
-      });
-      return false;
+    } else if (this.nuevaRetencionSinLetrado && this.body.tipoRetencion && this.body.tipoRetencion.trim().length == 1 && this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0 && this.body.fechainicio && this.body.fechainicio != null && this.body.idDestinatario && this.body.idDestinatario.toString().trim().length > 0) {
+      return true;
+    }
+
+    this.showMessage.emit({
+      severity: "error",
+      summary: this.translateService.instant("general.message.incorrect"),
+      detail: this.translateService.instant("general.message.camposObligatorios"),
+    });
+    return false;
   }
 
-  parseToObjectRest(event:RetencionItem){
-    let item:FcsRetencionesJudicialesItem = new FcsRetencionesJudicialesItem();
+  parseToObjectRest(event: RetencionItem) {
+    let item: FcsRetencionesJudicialesItem = new FcsRetencionesJudicialesItem();
     item.idretencion = event.idRetencion;
-    item.idpersona = event.idPersona
-    item.iddestinatario = event.idDestinatario
+    item.idpersona = event.idPersona;
+    item.iddestinatario = event.idDestinatario;
     item.fechaalta = event.fechaAlta;
-    item.fechainicio = event.fechainicio
-    item.fechafin = event.fechaFin
+    item.fechainicio = event.fechainicio;
+    item.fechafin = event.fechaFin;
     item.tiporetencion = event.tipoRetencion;
-    item.importe = parseFloat(event.importe)
-    item.observaciones = event.observaciones
-    item.descdestinatario = event.descDestinatario
+    item.importe = parseFloat(event.importe);
+    item.observaciones = event.observaciones;
+    item.descdestinatario = event.descDestinatario;
 
     return item;
   }
 
   guardar() {
-
     if (this.permisoEscritura && this.compruebaCamposObligatorios()) {
-      if(this.colegiado?.idPersona){
+      if (this.colegiado?.idPersona) {
         this.body.idPersona = this.colegiado.idPersona;
       }
-      
 
       this.progressSpinner = true;
-      let objectoRest:FcsRetencionesJudicialesItem = this.parseToObjectRest(this.body);
+      let objectoRest: FcsRetencionesJudicialesItem = this.parseToObjectRest(this.body);
 
-      this.sigaServices.post("retenciones_saveOrUpdateRetencion", objectoRest).subscribe(
-        data => {
-          const res = JSON.parse(data.body);
+      this.sigaServices.post("retenciones_saveOrUpdateRetencion", objectoRest).subscribe((data) => {
+        const res = JSON.parse(data.body);
 
-          if (res.status == 'KO' && res.error != null && res.error.description != null) {
-            this.showMessage.emit({
-              severity: "error",
-              summary: this.translateService.instant("general.message.incorrect"),
-              detail: this.translateService.instant(res.error.description.toString())
-            });
+        if (res.status == "KO" && res.error != null && res.error.description != null) {
+          this.showMessage.emit({
+            severity: "error",
+            summary: this.translateService.instant("general.message.incorrect"),
+            detail: this.translateService.instant(res.error.description.toString()),
+          });
+        } else {
+          if (this.retencionesService.modoEdicion) {
+            this.getRetencion(this.body.idRetencion);
           } else {
-            if (this.retencionesService.modoEdicion) {
-              this.getRetencion(this.body.idRetencion);
-            } else {
-              this.getRetencion(res.id);
-              this.retencionesService.modoEdicion = true;
-            }
-            this.showMessage.emit({
-              severity: "success",
-              summary: this.translateService.instant("general.message.correct"),
-              detail: this.translateService.instant("general.message.accion.realizada")
-            });
+            this.getRetencion(res.id);
+            this.retencionesService.modoEdicion = true;
           }
-
-          Object.assign(this.bodyAux, this.body);
-          this.progressSpinner = false;
+          this.showMessage.emit({
+            severity: "success",
+            summary: this.translateService.instant("general.message.correct"),
+            detail: this.translateService.instant("general.message.accion.realizada"),
+          });
         }
-      );
-    }
 
+        Object.assign(this.bodyAux, this.body);
+        this.progressSpinner = false;
+      });
+    }
   }
   marcarObligatorio(tipoCampo: string, valor) {
     let resp = false;
 
-    if (tipoCampo == 'inputNumber' && (valor == undefined || valor == null || valor.toString().length == 0)) {
+    if (tipoCampo == "inputNumber" && (valor == undefined || valor == null || valor.toString().length == 0)) {
       resp = true;
     }
 
-    if (tipoCampo == 'input' && (valor == undefined || valor == null || valor.trim().length == 0)) {
+    if (tipoCampo == "input" && (valor == undefined || valor == null || valor.trim().length == 0)) {
       resp = true;
     }
 
-    if (tipoCampo == 'select' && (valor == undefined || valor == null)) {
+    if (tipoCampo == "select" && (valor == undefined || valor == null)) {
       resp = true;
     }
 
-    if (tipoCampo == 'datePicker' && (valor == undefined || valor == null || valor == '')) {
+    if (tipoCampo == "datePicker" && (valor == undefined || valor == null || valor == "")) {
       resp = true;
     }
 
@@ -351,7 +328,7 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   onChangeTipoDeReten() {
-    this.body.importe = '';
+    this.body.importe = "";
     if (this.body.tipoRetencion && this.body.tipoRetencion.length == 1) {
       this.disabledImporte = false;
     } else {
@@ -361,58 +338,57 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
 
   compruebaImporte(valid: boolean) {
     if (!valid) {
-      this.body.importe = '';
+      this.body.importe = "";
     }
   }
 
   getTextoTipoRetencion() {
-    let cadena = '';
+    let cadena = "";
 
     if (this.body.tipoRetencion && this.body.tipoRetencion.toString().length == 1) {
-      cadena = this.comboTiposRetencion.find(el => el.value == this.body.tipoRetencion).label;
+      cadena = this.comboTiposRetencion.find((el) => el.value == this.body.tipoRetencion).label;
     }
 
     return cadena;
   }
 
   getTextoImporte() {
-    let cadena = '';
+    let cadena = "";
 
     if (this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0) {
-      if (this.body.tipoRetencion == 'F' || this.body.tipoRetencion == 'L') {
-        cadena = `${this.body.importe.toString()} €`;
-      } else if (this.body.tipoRetencion == 'P') {
-        cadena = `${this.body.importe.toString()} %`;
+      if (this.body.tipoRetencion == "F" || this.body.tipoRetencion == "L") {
+        cadena = this.currencyPipe.transform(this.body.importe, "EUR");
+      } else if (this.body.tipoRetencion == "P") {
+        cadena = this.body.importe + "%";
       }
     }
     return cadena;
   }
 
   getTextoFechaDeNoti() {
-    let cadena = '';
+    let cadena = "";
 
     if (this.body.fechainicio && this.body.fechainicio != null) {
-      cadena = this.datePipe.transform(this.body.fechainicio, 'dd/MM/yyyy');
+      cadena = this.datePipe.transform(this.body.fechainicio, "dd/MM/yyyy");
     }
 
     return cadena;
   }
 
   getTextoFechaFin() {
-    let cadena = '';
+    let cadena = "";
 
     if (this.body.fechaFin && this.body.fechaFin != null) {
-      cadena = this.datePipe.transform(this.body.fechaFin, 'dd/MM/yyyy');
+      cadena = this.datePipe.transform(this.body.fechaFin, "dd/MM/yyyy");
     }
 
     return cadena;
   }
 
   getTextoDestinatario() {
-    let cadena = '';
-    if (this.comboDestinatarios && this.comboDestinatarios.length > 0 && this.body.idDestinatario && this.body.idDestinatario != null
-      && this.body.idDestinatario.toString().length > 0) {
-      cadena = this.comboDestinatarios.find(el => el.value == this.body.idDestinatario).label;
+    let cadena = "";
+    if (this.comboDestinatarios && this.comboDestinatarios.length > 0 && this.body.idDestinatario && this.body.idDestinatario != null && this.body.idDestinatario.toString().length > 0) {
+      cadena = this.comboDestinatarios.find((el) => el.value == this.body.idDestinatario).label;
     }
     return cadena;
   }
@@ -424,11 +400,10 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
       estado = "Sin aplicar";
     } else if (restante > importe) {
       estado = "Aplicado parcialmente";
-    } else if (restante == '0'){
+    } else if (restante == "0") {
       estado = "Aplicado totalmente";
     }
 
     return estado;
   }
-
 }

@@ -33,7 +33,7 @@
             </div>
 
             <div *ngIf="(col.field == 'importe' || col.field == 'restante')">
-              <span [ngClass]="{'italic': isHistorico(dato)}">{{ dato[col.field] != '-'  ? ((this.numberParse(dato[col.field]) | number:'1.2-2':'es-ES' ) + ' €') : dato[col.field] }} </span>
+              <span [ngClass]="{'italic': isHistorico(dato)}">{{ dato[col.field] | currency: 'EUR' }}</span>
             </div>
 
             <div *ngIf="col.field == 'idRetencion'">

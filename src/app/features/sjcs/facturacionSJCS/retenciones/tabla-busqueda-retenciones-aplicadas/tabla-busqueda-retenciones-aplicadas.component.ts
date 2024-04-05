@@ -128,15 +128,6 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
     return item.fechaFin && (null != item.fechaFin || Date.now() >= item.fechaFin.getTime());
   }
 
-  numberParse(event: string) {
-    let number: number = 0;
-    if (event != null) {
-      let aux = event.replace(",", ".");
-      number = parseFloat(aux);
-    }
-    return number;
-  }
-
   getAplicacionesRetenciones(item: RetencionesAplicadasItem, event: any) {
     this.selectedDatos = [];
     this.selectedDatos.push(event.data);

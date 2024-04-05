@@ -20,7 +20,12 @@
     <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-          <span> {{dato[col.field]}}</span>
+          <div *ngIf="col.field == 'nombrePago' || col.field == 'anioMes'">
+            <span>{{dato[col.field]}}</span>
+          </div>
+          <div *ngIf="col.field != 'nombrePago' && col.field != 'anioMes'">
+            <span>{{ dato[col.field] | currency: 'EUR' }}</span>
+          </div>
         </td>
       </tr>
     </ng-template>
