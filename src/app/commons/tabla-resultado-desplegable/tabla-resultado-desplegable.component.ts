@@ -863,32 +863,21 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '');
           this.refreshData.emit(true);
         } else {
-          if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
-            this.rowIdsToUpdate.push(rowId);
-          }
-          if (cell != undefined) {
-            cell.value[0] = event;
-          }
+          this.updateRowIdsToUpdate(rowId, event);
         }
       } else {
-        if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
-          this.rowIdsToUpdate.push(rowId);
-        }
-        if (cell != undefined) {
-          cell.value[0] = event;
-        }
+        this.updateRowIdsToUpdate(rowId, event);
+      }
+  
+      if (cell != undefined) {
+        cell.value[0] = event;
       }
     } else {
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if ((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)) {
         if (row.cells[8].value != true) {
-          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
-            this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
-          }
-          if (cell != undefined) {
-            cell.value[0] = event;
-          }
+          this.updateIndicesToUpdate(rowId, rowGroup, index, event);
         } else {
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
@@ -906,132 +895,113 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.lastChange = "checkBoxChange";
   }
 
-  checkBoxChange2(event, rowId, cell, row, rowGroup, padre, index) {
-    if (cell.value == false && row != undefined && row.cells[35] != undefined && row.cells[35].value == "1") {
-      cell.value = !cell.value;
-      this.showMsg('error', "No puede desvalidar actuaciones facturadas", '')
-    } else {
-      this.rowValidadas = [];
-      if (row == undefined) {
-        //designacion
-        if (this.isLetrado) {
-          if (this.justActivarDesigLetrado != "1") {
-            cell.value = !cell.value;
-            this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
-          } else {
-            if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
-              this.rowIdsToUpdate.push(rowId);
-            }
-          }
-        } else {
-          if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
-            this.rowIdsToUpdate.push(rowId);
-          }
-        }
-      } else {
-        //actuacion
-        this.turnoAllow = rowGroup.rows[0].cells[39].value;
-        const newAllow = rowGroup.rows[0].cells[40].value;
-        if ((this.isLetrado && newAllow == "1" && this.turnoAllow != "1") || (!this.isLetrado)) {
-          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
-            this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
-            this.rowIdsToUpdate.push(rowId);
-          }
-          /*}else{
-            this.rowValidadas.push(row);
-            cell.value = !cell.value;
-            this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
-          }*/
-        } else {
-          cell.value = !cell.value;
-          this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
-          this.refreshData.emit(true);
-        }
-      }
-
-      this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
-      this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
-
-      sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
-      this.lastChange = "checkBoxChange2";
-
-      if (cell.value == true) {
-        if (row != undefined) {
-
-          if (row.cells[6].type == 'checkboxDate') {
-            row.cells[6].value = true;
-          } else if (row.cells[6].value == undefined) {
-            row.cells[6].type = 'text';
-            row.cells[5].type = 'text';
-            row.cells[6].value = this.fechaFiltro;
-          } else {
-            row.cells[6].type = 'text';
-            row.cells[5].type = 'text';
-          }
-
-        }
-
-      } else {
-        if (row != undefined) {
-          if (row.cells[6].type == 'checkboxDate') {
-            row.cells[6].value = true;
-          } else {
-            row.cells[6].type = 'datePicker';
-            row.cells[5].type = 'datePicker';
-          }
-        }
-      }
+  updateRowIdsToUpdate(rowId, event) {
+    const index = this.rowIdsToUpdate.indexOf(rowId);
+    if (event && index === -1) {
+      this.rowIdsToUpdate.push(rowId);
+    } else if (!event && index !== -1) {
+      this.rowIdsToUpdate.splice(index, 1);
     }
   }
-  changeSelect(event, cell, rowId, row, rowGroup, padre, index) {
-    if (this.pantalla == 'AE' && row == undefined) {
-      //designacion
-      if (this.isLetrado) {
-        if (this.justActivarDesigLetrado != "1") {
-          this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
-          this.refreshData.emit(true);
-        } else {
-          if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
-            this.rowIdsToUpdate.push(rowId);
-          }
-        }
-      } else {
-        if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
-          this.rowIdsToUpdate.push(rowId);
-        }
-      }
-    } else if (this.pantalla == 'JE' && row != undefined) {
-      //actuacion
-      if (row.cells[8].value != true) {
-        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
-          this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
-        }
+  
+  updateIndicesToUpdate(rowId, rowGroup, index, event) {
+    const foundIndex = this.indicesToUpdate.findIndex(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value);
+    if (event && foundIndex === -1) {
+      this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
+    } else if (!event && foundIndex !== -1) {
+      this.indicesToUpdate.splice(foundIndex, 1);
+    }
+  }
 
-        this.rowIdsToUpdate.push(rowId);
-      } else {
-        this.rowValidadas.push(row);
-        this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+  checkBoxChange2(event, rowId, cell, row, rowGroup, padre, index) {
+       // Verificar condiciones para la actuación, como antes
+       if (row && row.cells[35] && row.cells[35].value === "1" && !event) {
+        this.showMsg('error', "No puede desvalidar actuaciones facturadas", '');
+        return;
+    }
+
+    if (row && row.cells[8].value && !event) {
+      this.showMsg('error', "No se pueden actualizar actuaciones validadas", '');
+      return;
+  }
+  cell.value = event;  // Actualiza el estado del checkbox
+
+    if (row) {
+        this.updateIndicesToUpdate2(rowId, rowGroup, index, event);
+        this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+    }
+
+    sessionStorage.setItem("indicesToUpdate", JSON.stringify(this.indicesToUpdate));
+    this.lastChange = "checkBoxChange2";
+
+
+  }
+
+  updateIndicesToUpdate2(rowId, rowGroup, index, add) {
+    const foundIndex = this.indicesToUpdate.findIndex(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value);
+    if (add && foundIndex === -1) {
+        this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
+    } else if (!add && foundIndex !== -1) {
+        this.indicesToUpdate.splice(foundIndex, 1);
+  }
+}
+
+changeSelect(event, cell, rowId, row, rowGroup, padre, index) {
+  if (this.pantalla == 'AE' && row == undefined) {
+    // Designación
+    if (this.isLetrado) {
+      if (this.justActivarDesigLetrado != "1") {
+        this.showMsg('error', "No tiene permiso para actualizar designaciones", '');
         this.refreshData.emit(true);
+      } else {
+        this.updateRowIdsToUpdate1(rowId);
       }
-      if(cell.value==row.cells[4].value && row.cells[7].type=='multiselect3'){//si la celda que nos pasan es igual a la celda cuarta de la row que nos pasan y la celda 7 es multiselect3
+    } else {
+      this.updateRowIdsToUpdate1(rowId);
+    }
+  } else if (this.pantalla == 'JE' && row != undefined) {
+    // Actuación
+    if (row.cells[8].value != true) {
+      this.updateIndicesToUpdate1(rowId, rowGroup, index);
+      this.updateRowIdsToUpdate1(rowId);
+    } else {
+      this.rowValidadas.push(row);
+      this.showMsg('error', "No se pueden actualizar actuaciones validadas", '');
+      this.refreshData.emit(true);
+    }
+
+    if (cell.value == row.cells[4].value && row.cells[7].type == 'multiselect3') {
       let modulo = row.cells[4].value;
       let arrData=[];
       arrData.push(modulo);
       this.cargaAcreditacionesPorModulo(arrData, 'designa', rowGroup);
-      }
-    } else {
-      if (this.pantalla == 'JE' && rowGroup.rows != undefined) {
-        rowGroup.rows[0].cells[4].value = cell.value;
-      }
-      this.rowIdsToUpdate.push(rowId);
+
     }
-
-    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
-    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
-
-    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
-    this.lastChange = "changeSelect";
+  } else {
+    if (this.pantalla == 'JE' && rowGroup.rows != undefined) {
+      rowGroup.rows[0].cells[4].value = cell.value;
+    }
+    this.updateRowIdsToUpdate1(rowId);
   }
+  
+  this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+  this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+
+  sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
+  this.lastChange = "changeSelect";
+}
+
+updateRowIdsToUpdate1(rowId) {
+  if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
+    this.rowIdsToUpdate.push(rowId);
+  }
+}
+
+updateIndicesToUpdate1(rowId, rowGroup, index) {
+  if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index + 1].cells[19].value)) {
+    this.indicesToUpdate.push([rowId, rowGroup.rows[index + 1].cells[19].value]);
+  }
+}
 
   inputChange(event, rowId, row, rowGroup, padre, index) {
 
