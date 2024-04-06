@@ -101,7 +101,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 				if ((undefined != this.filtrosFacturacion.idEstado) || (undefined != this.filtrosFacturacion.fechaDesde) || (undefined != this.filtrosFacturacion.fechaHasta) ||
 					(undefined != this.filtrosFacturacion.idConcepto) || (undefined != this.filtrosFacturacion.idFacturacion) || (undefined != this.filtrosFacturacion.idPartidaPresupuestaria) ||
 					(undefined != this.filtrosFacturacion.nombre && this.filtrosFacturacion.nombre.trim() != "")) {
-					this.isBuscar();
+				//	this.isBuscar();
 				}
 			} else if (this.selectedValue == "pagos") {
 				this.filtrosPagos = datos;
@@ -117,7 +117,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 				if ((undefined != this.filtrosPagos.idEstado) || (undefined != this.filtrosPagos.fechaDesde) || (undefined != this.filtrosPagos.fechaHasta) ||
 					(undefined != this.filtrosPagos.idConcepto) || (undefined != this.filtrosPagos.idFacturacion) || (undefined != this.filtrosPagos.idPartidaPresupuestaria) ||
 					(undefined != this.filtrosPagos.nombre && this.filtrosPagos.nombre.trim() != "")) {
-					this.isBuscar();
+				//	this.isBuscar();
 				}
 			}
 		} else {
@@ -125,7 +125,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			this.filtrosFacturacion = new FacturacionItem();
 			this.filtrosPagos = new PagosjgItem();
 		}
-		this.isBuscar();
+		//this.isBuscar();
 	}
 	nuevo() {
 		let datos;
@@ -197,7 +197,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			this.filtrosPagos.idConcepto = this.filtrosFacturacion.idConcepto;
 		}
 		this.cambiaBuscar.emit(false);
-		this.isBuscar()
+		//this.isBuscar()
 
 		/* this.persistenceService.clearFiltros();
 		this.persistenceService.clearFiltrosAux(); */
@@ -378,22 +378,26 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
 	isBuscar() {
-		//if (this.checkFilters()) {
+		if (this.checkFilters()) {
 			let filtros;
-
+	
 			if (this.selectedValue == "facturacion") {
 				filtros = this.filtrosFacturacion;
 			} else if (this.selectedValue == "pagos") {
 				filtros = this.filtrosPagos;
+			} else {
+				return; // Detener si no es ninguno de los casos anteriores
 			}
+	
 			filtros.selectedValue = this.selectedValue;
-
+	
 			this.persistenceService.setFiltrosAux(filtros);
 			this.persistenceService.setFiltros(filtros);
-
+	
 			this.busqueda.emit(this.selectedValue);
-		//}
+		}
 	}
+	
 
 	checkFilters() {
 		if (this.selectedValue == "facturacion") {

@@ -1,21 +1,20 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { TranslateService } from '../../../../../../commons/translate';
-import { BusquedaFisicaItem } from '../../../../../../models/BusquedaFisicaItem';
-import { ColegiadosSJCSItem } from '../../../../../../models/ColegiadosSJCSItem';
-import { SigaStorageService } from '../../../../../../siga-storage.service';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { SigaServices } from '../../../../../../_services/siga.service';
-import { MovimientosVariosService } from '../../movimientos-varios.service';
-import { MovimientosVariosFacturacionItem } from '../../MovimientosVariosFacturacionItem';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from "@angular/core";
+import { Router } from "@angular/router";
+import { PersistenceService } from "../../../../../../_services/persistence.service";
+import { SigaServices } from "../../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../../commons/translate";
+import { BusquedaFisicaItem } from "../../../../../../models/BusquedaFisicaItem";
+import { ColegiadosSJCSItem } from "../../../../../../models/ColegiadosSJCSItem";
+import { SigaStorageService } from "../../../../../../siga-storage.service";
+import { MovimientosVariosFacturacionItem } from "../../MovimientosVariosFacturacionItem";
+import { MovimientosVariosService } from "../../movimientos-varios.service";
 
 @Component({
-  selector: 'app-tarjeta-datos-cliente',
-  templateUrl: './tarjeta-datos-cliente.component.html',
-  styleUrls: ['./tarjeta-datos-cliente.component.scss']
+  selector: "app-tarjeta-datos-cliente",
+  templateUrl: "./tarjeta-datos-cliente.component.html",
+  styleUrls: ["./tarjeta-datos-cliente.component.scss"],
 })
 export class TarjetaDatosClienteComponent implements OnInit {
-
   showFichaDatosClientes: boolean = false;
   @Input() openDatosCliente;
 
@@ -60,8 +59,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
   nuevo: boolean = false;
   idPersona: any;
 
-  constructor(private router: Router,
-    private sigaStorageService: SigaStorageService, private sigaService: SigaServices, private translateService: TranslateService, private persistenceService: PersistenceService, private movimientosVariosService: MovimientosVariosService) { }
+  constructor(private router: Router, private sigaStorageService: SigaStorageService, private sigaService: SigaServices, private translateService: TranslateService, private persistenceService: PersistenceService, private movimientosVariosService: MovimientosVariosService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.openDatosCliente == true) {
@@ -71,9 +69,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
     }
   }
 
-
   ngOnInit() {
-
     if (this.showCards) {
       this.showFichaDatosClientes = true;
     }
@@ -82,9 +78,8 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
     this.datosFicha = new MovimientosVariosFacturacionItem();
 
-
-    if (sessionStorage.getItem('datosPersonaFisica') != null && sessionStorage.getItem('datosPersonaFisica') != undefined && sessionStorage.getItem('datosPersonaFisica') != "") {
-      this.bodyFisica = JSON.parse(sessionStorage.getItem('datosPersonaFisica'))[0];
+    if (sessionStorage.getItem("datosPersonaFisica") != null && sessionStorage.getItem("datosPersonaFisica") != undefined && sessionStorage.getItem("datosPersonaFisica") != "") {
+      this.bodyFisica = JSON.parse(sessionStorage.getItem("datosPersonaFisica"))[0];
       this.bodyFisicaAux = JSON.parse(JSON.stringify(this.bodyFisica));
       this.nif = this.bodyFisica.nif;
       this.apellido1 = this.bodyFisica.primerApellido.toString();
@@ -93,23 +88,22 @@ export class TarjetaDatosClienteComponent implements OnInit {
       this.ncolegiado = this.bodyFisica.numeroColegiado.toString();
       this.idpersona = this.bodyFisica.idPersona;
       this.bodyFisicaEmit.emit(this.bodyFisica);
-      sessionStorage.removeItem('datosPersonaFisica');
+      sessionStorage.removeItem("datosPersonaFisica");
       this.showFichaDatosClientes = true;
     }
-
 
     if (sessionStorage.getItem("datosColegiado") != null && sessionStorage.getItem("datosColegiado") != undefined && sessionStorage.getItem("datosColegiado") != "") {
       this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
       this.movimientosVariosService.datosColegiadoAux = JSON.parse(sessionStorage.getItem("datosColegiado"));
       this.nif = this.datosColegiado.nif;
-      let apellidos = this.datosColegiado.apellidos.split(' ');
+      let apellidos = this.datosColegiado.apellidos.split(" ");
       this.apellido1 = apellidos[0];
       this.apellido2 = apellidos[1];
       this.nombre = this.datosColegiado.nombre;
       this.ncolegiado = this.datosColegiado.nColegiado;
       this.idpersona = this.datosColegiado.idPersona;
       this.datosColegiadoEmit.emit(this.datosColegiado);
-      sessionStorage.removeItem('datosColegiado');
+      sessionStorage.removeItem("datosColegiado");
       this.showFichaDatosClientes = true;
     }
 
@@ -133,13 +127,12 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
     if (this.modoEdicion) {
       this.datosFicha = this.datos;
-      
+
       if (this.bodyFisica != null && this.bodyFisica != undefined) {
         this.recogerDatosBúsqueda(this.bodyFisica);
       } else {
         this.recogerDatos(this.datosFicha);
       }
-
     } else {
       if (this.bodyFisica != null && this.bodyFisica != undefined) {
         this.mandarDatos(this.bodyFisica);
@@ -149,7 +142,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
     }
 
     this.actualizarTarjetaResumen();
-
   }
   recogerDatosBúsqueda(datos) {
     this.nif = datos.nif;
@@ -169,8 +161,8 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
     this.datosClienteEmit.emit(this.datosCliente);
   }
-  actualizarTarjetaResumen() {
 
+  actualizarTarjetaResumen() {
     if (this.datosFicha == null || this.datosFicha == undefined) {
       this.descripcion = "";
       this.cantidad = "";
@@ -180,33 +172,17 @@ export class TarjetaDatosClienteComponent implements OnInit {
     }
 
     this.datosTarjetaResumen = [
-      {
-        label: "Nº Colegiado",
-        value: this.ncolegiado
-      },
-      {
-        label: "Nombre",
-        value: this.nombre + " " + this.apellido1 + " " + this.apellido2
-      },
-      {
-        label: "Descripción",
-        value: this.descripcion
-      },
-      {
-        label: "Importe",
-        value: this.cantidad
-      }
-    ]
+      { label: "Nº Colegiado", value: this.ncolegiado },
+      { label: "Nombre", value: this.nombre + " " + this.apellido1 + " " + this.apellido2 },
+      { label: "Descripción", value: this.descripcion },
+      { label: "Importe", value: this.cantidad + " €" },
+    ];
 
     this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
-
-
   }
 
   rehacerTarjetaDatosCliente(movimiento: any) {
-
     this.progressSpinner = true;
-
 
     this.datos[0] = { label: "Identificación: ", value: movimiento.nif };
     this.datos[1] = { label: "Nombre: ", value: movimiento.nombre };
@@ -214,8 +190,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
     this.datos[3] = { label: "Nº Colegiado: ", value: movimiento.numeroColegiado };
 
     this.progressSpinner = false;
-
-
   }
 
   recogerDatos(datos) {
@@ -226,20 +200,16 @@ export class TarjetaDatosClienteComponent implements OnInit {
     this.ncolegiado = datos.ncolegiado;
     this.idPersona = datos.idPersona;
 
-
     this.datosClienteEmit.emit(datos);
-
   }
 
   onHideDatosClientes() {
-
     let key = "tarjetaDatosCliente";
 
     this.showFichaDatosClientes = !this.showFichaDatosClientes;
 
     this.opened.emit(this.showFichaDatosClientes);
     this.idOpened.emit(key);
-
   }
 
   showMessage(severity, summary, msg) {
@@ -247,7 +217,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
   }
 
@@ -262,7 +232,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
   }
 
   restablecer() {
-
     if (this.bodyFisica != null && this.bodyFisica != undefined) {
       this.nif = this.datosFicha.nif.toString();
       this.nombre = this.datosFicha.nombre.toString();
@@ -270,7 +239,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
       this.apellido2 = this.datosFicha.apellido2.toString();
       this.ncolegiado = this.datosFicha.ncolegiado.toString();
       this.idPersona = this.datosFicha.idPersona.toString();
-
     }
 
     this.actualizarTarjetaResumen();
@@ -279,7 +247,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
   marcarObligatorio(tipoCampo: string, valor) {
     let resp = false;
 
-    if (tipoCampo == 'input' && (valor == undefined || valor == null || valor.trim().length == 0)) {
+    if (tipoCampo == "input" && (valor == undefined || valor == null || valor.trim().length == 0)) {
       resp = true;
     }
 
@@ -287,12 +255,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
   }
 
   guardar() {
-
-    if ((this.nif == null || this.nif == undefined || this.nif == "") &&
-      (this.nombre == null || this.nombre == undefined || this.nombre == "") &&
-      (this.apellido1 == null || this.apellido1 == undefined || this.apellido1 == "") &&
-      (this.apellido2 == null || this.apellido2 == undefined || this.apellido2 == "")) {
-
+    if ((this.nif == null || this.nif == undefined || this.nif == "") && (this.nombre == null || this.nombre == undefined || this.nombre == "") && (this.apellido1 == null || this.apellido1 == undefined || this.apellido1 == "") && (this.apellido2 == null || this.apellido2 == undefined || this.apellido2 == "")) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     } else {
       let url;
@@ -315,7 +278,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
     this.datosCliente.ncolegiado = this.ncolegiado;
     this.datosCliente.idPersona = this.idPersona;
 
-
     if (this.datosCliente.idMovimiento == null || this.datosCliente.idMovimiento == undefined) {
       this.datosCliente.idMovimiento = null;
     } else {
@@ -330,7 +292,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
       this.datosCliente.cantidad = null;
       this.datosCliente.nombrefacturacion = null;
       this.datosCliente.nombretipo = null;
-      this.datosCliente.idAplicadoEnPago = null
+      this.datosCliente.idAplicadoEnPago = null;
       this.datosCliente.fechaApDesde = null;
       this.datosCliente.fechaApHasta = null;
       this.datosCliente.idConcepto = null;
@@ -352,41 +314,29 @@ export class TarjetaDatosClienteComponent implements OnInit {
       this.datosCliente.motivo = null;
     }
 
-
     this.sigaService.post(url, this.datosCliente).subscribe(
-      data => {
-
+      (data) => {
         this.movimientosVariosService.datosColegiadoAux = JSON.parse(JSON.stringify(this.datosColegiado));
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.modoEdicion = true;
-
       },
-      err => {
+      (err) => {
         this.progressSpinner = false;
 
-        if (err.status == '403' || err.status == 403) {
+        if (err.status == "403" || err.status == 403) {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
           this.router.navigate(["/errorAcceso"]);
         } else {
-
           if (null != err.error && JSON.parse(err.error).error.description != "") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
-
         }
       },
-      () => {
-        this.progressSpinner = false;
-      }
     );
   }
-
 }

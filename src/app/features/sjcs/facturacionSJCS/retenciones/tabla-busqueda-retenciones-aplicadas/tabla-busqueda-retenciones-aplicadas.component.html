@@ -17,6 +17,7 @@
           <col *ngFor="let col of cols" [style.width]="col.width">
         </colgroup>
       </ng-template>
+
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
@@ -27,90 +28,63 @@
           </th>
         </tr>
       </ng-template>
+
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-
           <td class="text-center" *ngFor="let col of columns">
-
             <div *ngIf="col.field == 'numColegiado'">
               <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
             </div>
-
             <div *ngIf="col.field == 'aplicaciones'" class="align-middle text-center">
-              <i class="fas fa-address-card" (click)="getAplicacionesRetenciones(dato, $event)"
-                style="font-size: 2em;"></i>
+              <i class="fas fa-address-card" style="font-size: 2em;" (click)="getAplicacionesRetenciones(dato, $event)"></i>
             </div>
-
             <div *ngIf="col.field == 'fechaInicio'">
               <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
-
             <div *ngIf="(col.field == 'importeRetenido' || col.field == 'importePago')">
-              <span [ngClass]="{'italic': isHistorico(dato)}">{{ dato[col.field] != '-'  ? ((this.numberParse(dato[col.field]) | number:'1.2-2':'es-ES' ) + ' €') : dato[col.field] }} </span>
+              <span [ngClass]="{'italic': isHistorico(dato)}">{{ dato[col.field] | currency: 'EUR' }}</span>
             </div>
-
-
             <div *ngIf="col.field != 'fechaInicio' && col.field != 'aplicaciones' && col.field != 'numColegiado' && col.field != 'importeRetenido' && col.field != 'importePago' ">
               <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
             </div>
-
           </td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>
-          <td [attr.colspan]="columns.length">
-            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
-          </td>
+          <td [attr.colspan]="columns.length">{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}</td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
-            translate }}{{table.first + 1}}
-            al {{table.first
-            + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-            {{table.totalRecords}}</label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length >= 0">{{
-            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
-            {{selectedDatos.length}}
-          </label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length == undefined">{{
-            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
-            1
-          </label>
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length >= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length == undefined">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 1</label>
           <label>{{"general.message.mostrar" | translate}}</label>
-          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
-          </p-dropdown>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
-            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
           </div>
         </div>
       </ng-template>
-
     </p-table>
-
   </div>
 
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura"
-        type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
-
-      <button *ngIf="!historico" (click)="mostrarHistorico()" pButton type="button" icon="fa fa-history " iconPos="left"
-        label="{{'general.message.mostrarHistorico' | translate}}"></button>
-
-      <button *ngIf="historico" (click)="ocultarHistorico()" pButton type="button" icon="fa fa-history " iconPos="left"
-        label="{{'general.message.ocultarHistorico' | translate}}"></button>
-
+      <button pButton [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+      <button *ngIf="!historico" (click)="mostrarHistorico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+      <button *ngIf="historico" (click)="ocultarHistorico()" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
     </div>
   </div>
 </div>
 
-<p-overlayPanel class="overlayApliReten" [dismissable]="true" [showCloseIcon]="true" #op>
+<p-dialog [(visible)]="showApplication" responsive="true" [draggable]="true" modal="modal" resizable="false" [minWidth]="500">
+  <p-header class="title">
+    <label>{{"facturacionSJCS.retenciones.aplicaciones" | translate}}</label>
+  </p-header>
   <app-tabla-aplicacion-retenciones [datos]="datosAplicacionRetencion"></app-tabla-aplicacion-retenciones>
-</p-overlayPanel>
+</p-dialog>

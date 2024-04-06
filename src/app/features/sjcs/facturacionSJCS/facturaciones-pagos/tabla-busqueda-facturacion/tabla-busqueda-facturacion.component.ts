@@ -63,7 +63,10 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
       this.selectedItem = paginacion.selectedItem;
     }
 
-    this.mostrarOcultar();
+    if (this.filtroSeleccionado == "facturacion") {
+      this.mostrarOcultar();
+    }
+    
     this.btnArchivar = this.translateService.instant("general.boton.archivar");
     this.getCols();
 

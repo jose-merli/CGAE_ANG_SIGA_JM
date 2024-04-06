@@ -1,23 +1,21 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { OverlayPanel } from 'primeng/components/overlaypanel/overlaypanel';
-import { Table } from 'primeng/table';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
-import { AplicacionRetencionItem } from '../../../../../models/sjcs/AplicacionRetencionItem';
-import { AplicacionRetencionObject } from '../../../../../models/sjcs/AplicacionRetencionObject';
-import { AplicacionRetencionRequestDTO } from '../../../../../models/sjcs/AplicacionRetencionRequestDTO';
-import { RetencionesAplicadasItem } from '../../../../../models/sjcs/RetencionesAplicadasItem';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { RetencionesService } from '../retenciones.service';
-import { Router } from '@angular/router';
-import { RetencionesItem } from '../../../../../models/sjcs/RetencionesItem';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import { Table } from "primeng/table";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { AplicacionRetencionItem } from "../../../../../models/sjcs/AplicacionRetencionItem";
+import { AplicacionRetencionObject } from "../../../../../models/sjcs/AplicacionRetencionObject";
+import { AplicacionRetencionRequestDTO } from "../../../../../models/sjcs/AplicacionRetencionRequestDTO";
+import { RetencionesAplicadasItem } from "../../../../../models/sjcs/RetencionesAplicadasItem";
+import { RetencionesItem } from "../../../../../models/sjcs/RetencionesItem";
+import { RetencionesService } from "../retenciones.service";
 
 @Component({
-  selector: 'app-tabla-busqueda-retenciones-aplicadas',
-  templateUrl: './tabla-busqueda-retenciones-aplicadas.component.html',
-  styleUrls: ['./tabla-busqueda-retenciones-aplicadas.component.scss']
+  selector: "app-tabla-busqueda-retenciones-aplicadas",
+  templateUrl: "./tabla-busqueda-retenciones-aplicadas.component.html",
+  styleUrls: ["./tabla-busqueda-retenciones-aplicadas.component.scss"],
 })
 export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
-
   @Input() permisoEscritura: boolean;
   @Input() datos: RetencionesAplicadasItem[] = [];
 
@@ -25,7 +23,7 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
 
   @ViewChild("table") tabla: Table;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
-  @ViewChild("op") op: OverlayPanel;
+  //@ViewChild("op") op: OverlayPanel;
 
   modoSeleccion = "multiple";
   selectedItem: number = 10;
@@ -37,20 +35,16 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
   msgs = [];
   progressSpinner: boolean = false;
   historico: boolean = false;
+  showApplication: boolean = false;
   datosAplicacionRetencion: AplicacionRetencionItem[] = [];
 
-  constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private retencionesService: RetencionesService,
-    private router: Router) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private translateService: TranslateService, private retencionesService: RetencionesService, private router: Router) {}
 
   ngOnInit() {
     this.getCols();
   }
 
   getCols() {
-
     this.cols = [
       { field: "numColegiado", header: "facturacionSJCS.retenciones.nColegiado", width: "8%" },
       { field: "nombre", header: "facturacionSJCS.retenciones.nombre", width: "16%" },
@@ -61,42 +55,26 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
       { field: "fechaDesde", header: "facturacionSJCS.retenciones.fechaPago", width: "10%" },
       { field: "importePago", header: "facturacionSJCS.retenciones.impPago", width: "8%" },
       { field: "pagoRelacionado", header: "facturacionSJCS.retenciones.pago", width: "16%" },
-      { field: "aplicaciones", header: "facturacionSJCS.retenciones.aplicaciones", width: "16%" }
+      { field: "aplicaciones", header: "facturacionSJCS.retenciones.aplicaciones", width: "16%" },
     ];
 
-
     this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
+      { label: 10, value: 10 },
+      { label: 20, value: 20 },
+      { label: 30, value: 30 },
+      { label: 40, value: 40 },
     ];
   }
 
   onChangeSelectAll() {
-
     if (this.selectAll === true) {
-
       if (this.historico) {
-        this.selectedDatos = this.datos.filter(el => !this.isHistorico(el));
+        this.selectedDatos = this.datos.filter((el) => !this.isHistorico(el));
       } else {
         this.selectedDatos = this.datos;
       }
 
       this.numSelected = this.datos.length;
-
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -118,7 +96,7 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
   }
 
@@ -127,7 +105,6 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
   }
 
   actualizaSeleccionados(event) {
-
     if (this.historico && this.isHistorico(event.data)) {
       this.selectedDatos.pop();
     }
@@ -148,20 +125,13 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
   }
 
   isHistorico(item: RetencionesAplicadasItem) {
-    return (item.fechaFin && (null != item.fechaFin || Date.now() >= item.fechaFin.getTime()));
+    return item.fechaFin && (null != item.fechaFin || Date.now() >= item.fechaFin.getTime());
   }
-
-  numberParse(event:string){
-    let number:number = 0;
-    if(event != null){
-      let aux = event.replace(",",".")
-      number= parseFloat(aux)
-    }
-    return number;
-  }
-
 
   getAplicacionesRetenciones(item: RetencionesAplicadasItem, event: any) {
+    this.selectedDatos = [];
+    this.selectedDatos.push(event.data);
+    this.numSelected = 1;
 
     const payload: AplicacionRetencionRequestDTO = new AplicacionRetencionRequestDTO();
     payload.idPersona = item.idPersona;
@@ -171,26 +141,23 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
     this.progressSpinner = true;
 
     this.sigaServices.post("retenciones_buscarAplicacionesRetenciones", payload).subscribe(
-      data => {
+      (data) => {
         const res: AplicacionRetencionObject = JSON.parse(data.body);
 
         if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "500") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
         } else {
           this.datosAplicacionRetencion = res.aplicacionRetencionItemList;
-          this.op.toggle(event);
+          this.showApplication = true;
+          //this.op.toggle(event);
         }
 
         this.progressSpinner = false;
       },
-      err => {
+      (err) => {
         this.progressSpinner = false;
       },
-      () => {
-        this.progressSpinner = false;
-      }
     );
-
   }
 
   openFicha(dato: RetencionesAplicadasItem) {
@@ -203,5 +170,4 @@ export class TablaBusquedaRetencionesAplicadasComponent implements OnInit {
 
     this.router.navigate(["/fichaRetencionJudicial"]);
   }
-
 }

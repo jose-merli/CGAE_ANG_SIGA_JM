@@ -69,15 +69,15 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
 
             <td class="text-center" *ngFor="let col of columns">
-
               <div *ngIf="col.field == 'fechaInicio'">
                 <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
               </div>
-
-              <div *ngIf="col.field != 'fechaInicio'">
+              <div *ngIf="col.field == 'importeRetenido' || col.field == 'importePago'">
+                <span [ngClass]="{'italic': isHistorico(dato)}">{{ dato[col.field] | currency: 'EUR' }}</span>
+              </div>
+              <div *ngIf="col.field != 'fechaInicio' && col.field != 'importeRetenido' && col.field != 'importePago'">
                 <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
               </div>
-
             </td>
           </tr>
         </ng-template>
