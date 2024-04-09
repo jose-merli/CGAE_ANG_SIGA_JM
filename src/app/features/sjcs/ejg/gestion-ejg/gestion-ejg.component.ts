@@ -145,6 +145,15 @@ export class GestionEjgComponent implements OnInit {
   ngAfterViewInit(){
     // Ejecutamos esto depues de iniciar la vista para que obtenga id de los campos del html
     this.updateTarjResumen();
+
+    // Si previamente ha entrado en un registro de una tarjeta, al volver a la ficha quedará esa tarjeta desplegada
+    /* Tarjeta Unidad Familiar */
+    if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
+      this.openTarjeta('tarjetaUnidadFamiliar');
+    }
+
+    // Eliminamos el objeto para asegurar el flujo navegación de la aplicación
+    sessionStorage.removeItem("origin");
   }
 
   actualizarDatosExpedientes(){
