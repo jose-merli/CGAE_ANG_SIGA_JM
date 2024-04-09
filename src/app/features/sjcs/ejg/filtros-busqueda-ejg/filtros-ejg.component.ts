@@ -153,6 +153,7 @@ export class FiltrosEjgComponent implements OnInit {
 
     if (this.persistenceService.getFiltrosEJG() != undefined && this.volverDesdeEJG) {
         this.body = this.persistenceService.getFiltrosEJG();
+        this.recuperaEstados();
         if (this.body.dictamen != undefined && this.body.dictamen != null && this.body.dictamen != "") this.bodyDictamen = Array.from(this.body.dictamen);
     
           this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
@@ -202,6 +203,16 @@ export class FiltrosEjgComponent implements OnInit {
       this.inputNumero.nativeElement.focus();
     }, 300);
     this.progressSpinner = false;
+  }
+  recuperaEstados() {
+    if (this.body.estadoEJG != null) {
+      this.selectedEstados = [];
+      let arrayEstados = this.body.estadoEJG.split(',');
+
+      arrayEstados.forEach(item => {
+        this.selectedEstados.push(item.trim());
+      });
+    }
   }
 
   getCombos() {
