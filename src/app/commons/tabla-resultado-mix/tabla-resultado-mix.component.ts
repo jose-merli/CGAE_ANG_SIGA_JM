@@ -148,9 +148,9 @@ export class TablaResultadoMixComponent implements OnInit {
     this.fechaActual = new Date();
       if(this.rowGroups != undefined){
          this.rowGroups.forEach((row, i) => {
-          //selecteCombo = {label: ?, value: row.cells[7].value}
+          //selecteCombo = {label: ?, value: row.cells[8].value}
           //>>no está igual if (row.cells)
-          values.push(row.cells[6].value);
+          values.push(row.cells[7].value);
         });
         this.totalRegistros = this.rowGroups.length;
       }
@@ -259,17 +259,17 @@ export class TablaResultadoMixComponent implements OnInit {
   onChangeTurno(event, row : Row, cell){
     if(event){
       this.getComboGuardias(row, event.value);
-      row.cells[8].value = event.value;
+      row.cells[9].value = event.value;
     }else{
       row.cells[1].combo = [];
-      row.cells[8].value = '';
+      row.cells[9].value = '';
     }
   }
   onChangeGuardia(event, row : Row, cell){
     if(event){
-      row.cells[7].value = event.value;
+      row.cells[8].value = event.value;
     }else{
-      row.cells[7].value = '';
+      row.cells[8].value = '';
     }
   }
   getComboGuardias(row : Row, idTurno){
@@ -662,14 +662,14 @@ export class TablaResultadoMixComponent implements OnInit {
       'tabla': [],
       'turno':row.cells[0].value,
       'nombre': row.cells[1].value,
-      'generado': row.cells[8].value,
-      'listaGuarias': row.cells[5].value,
+      'generado': row.cells[9].value,
+      'listaGuarias': row.cells[6].value,
       'fechaDesde': row.cells[2].value,
       'fechaHasta': row.cells[3].value,
-      'fechaProgramacion': row.cells[4].value.value,
+      'fechaProgramacion': row.cells[5].value.value,
       'estado': row.cells[19].value,
-      'observaciones': row.cells[6].value,
-      'idCalendarioProgramado': row.cells[9].value,
+      'observaciones': row.cells[7].value,
+      'idCalendarioProgramado': row.cells[4].value,
       'idTurno': row.cells[10].value,
       'idGuardia': row.cells[11].value,
       'filtrosBusqueda' : this.filtrosValues,
@@ -707,7 +707,7 @@ export class TablaResultadoMixComponent implements OnInit {
     /* if (this.persistenceService.getPermisos() != undefined) {
        this.permisoEscritura = this.persistenceService.getPermisos();
      }*/
-     //console.log('se envia fecha: ', row.cells[4].value.value)
+     //console.log('se envia fecha: ', row.cells[5].value.value)
      //console.log("ROW:",row);
      let dataToSend = {
       // 'duplicar': false,
@@ -715,11 +715,11 @@ export class TablaResultadoMixComponent implements OnInit {
       'nombreturno':row.cells[25].value,
        'nombre_turno':row.cells[25].value,
        'nombre_guardia': row.cells[26].value,
-       'fechasolicitud': row.cells[4].value,
-       'fechavalidacion': row.cells[5].value,
-       'estadonombre': row.cells[8].value,
+       'fechasolicitud': row.cells[5].value,
+       'fechavalidacion': row.cells[6].value,
+       'estadonombre': row.cells[9].value,
        'idpersona': row.cells[21].value,
-       'idinstitucion': row.cells[9].value,
+       'idinstitucion': row.cells[4].value,
        'ncolegiado': row.cells[0].value,
        'cifnif': null,
        'abreviatura': row.cells[27].value,
@@ -731,12 +731,12 @@ export class TablaResultadoMixComponent implements OnInit {
        'descripcion_tipo_guardia':null,
        'estado':row.cells[24].value,
        'fechaActual': new Date(),
-       'fechabaja':row.cells[7].value,
+       'fechabaja':row.cells[8].value,
        'fechadenegacion':row.cells[17].value,
        'fechadesde':null,
        'fechahasta':null,
        'fechamodificacion':null,
-       'fechasolicitudbaja':row.cells[6].value,
+       'fechasolicitudbaja':row.cells[7].value,
        'fechatabla':null,
        'fechavaloralta':row.cells[30].value,
        'fechavalorbaja':row.cells[31].value,
@@ -912,7 +912,7 @@ export class TablaResultadoMixComponent implements OnInit {
   guardar(){
     let anyEmptyArr = [];
     this.rowGroups.forEach(row =>{
-      if(row.cells[0].value == '' ||  row.cells[0].value == null || row.cells[1].value == '' ||  row.cells[1].value == null || row.cells[2].value == '' ||  row.cells[2].value == null || row.cells[4].value == '' ||  row.cells[4].value == null){
+      if(row.cells[0].value == '' ||  row.cells[0].value == null || row.cells[1].value == '' ||  row.cells[1].value == null || row.cells[2].value == '' ||  row.cells[2].value == null || row.cells[5].value == '' ||  row.cells[5].value == null){
         anyEmptyArr.push(true);
         return ;
       } else{
