@@ -91,6 +91,8 @@ export class ResolucionComponent implements OnInit {
           this.resolucion.turnadoRatificacion = false;
           this.resolucionInicial.requiereNotificarProc = false;
           this.resolucionInicial.turnadoRatificacion = false;
+          this.resolucion.annioActa = null;
+          this.resolucion.idActa = null;
         }
         if (this.resolucion.fechaPresentacionPonente != undefined)
           this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
@@ -130,15 +132,12 @@ export class ResolucionComponent implements OnInit {
   }
 
   getComboActaAnnio() {
-
-    if(this.resolucion.annioActa != undefined && this.resolucion.idActa != undefined){
       this.sigaServices.getParam("gestionejg_comboActaAnnio", `?anioacta=${this.resolucion.annioActa}&idacta=${this.resolucion.idActa}`).subscribe(
         n => {
           this.comboActaAnnio = n.combooItems;
           this.commonsServices.arregloTildesCombo(this.comboActaAnnio);
         }
       );
-    }
   }
 
   getHabilitarActasComision() {
