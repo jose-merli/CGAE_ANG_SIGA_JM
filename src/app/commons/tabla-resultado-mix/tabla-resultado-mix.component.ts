@@ -707,7 +707,7 @@ export class TablaResultadoMixComponent implements OnInit {
     /* if (this.persistenceService.getPermisos() != undefined) {
        this.permisoEscritura = this.persistenceService.getPermisos();
      }*/
-     //console.log('se envia fecha: ', row.cells[5].value.value)
+     //console.log('se envia fecha: ', row.cells[4].value.value)
      //console.log("ROW:",row);
      let dataToSend = {
       // 'duplicar': false,
@@ -715,11 +715,11 @@ export class TablaResultadoMixComponent implements OnInit {
       'nombreturno':row.cells[25].value,
        'nombre_turno':row.cells[25].value,
        'nombre_guardia': row.cells[26].value,
-       'fechasolicitud': row.cells[5].value,
-       'fechavalidacion': row.cells[6].value,
-       'estadonombre': row.cells[9].value,
+       'fechasolicitud': row.cells[4].value,
+       'fechavalidacion': row.cells[5].value,
+       'estadonombre': row.cells[8].value,
        'idpersona': row.cells[21].value,
-       'idinstitucion': row.cells[4].value,
+       'idinstitucion': row.cells[9].value,
        'ncolegiado': row.cells[0].value,
        'cifnif': null,
        'abreviatura': row.cells[27].value,
@@ -731,12 +731,12 @@ export class TablaResultadoMixComponent implements OnInit {
        'descripcion_tipo_guardia':null,
        'estado':row.cells[24].value,
        'fechaActual': new Date(),
-       'fechabaja':row.cells[8].value,
+       'fechabaja':row.cells[7].value,
        'fechadenegacion':row.cells[17].value,
        'fechadesde':null,
        'fechahasta':null,
        'fechamodificacion':null,
-       'fechasolicitudbaja':row.cells[7].value,
+       'fechasolicitudbaja':row.cells[6].value,
        'fechatabla':null,
        'fechavaloralta':row.cells[30].value,
        'fechavalorbaja':row.cells[31].value,
