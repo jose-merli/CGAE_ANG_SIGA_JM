@@ -574,14 +574,14 @@ export class TablaResultadoMixComponent implements OnInit {
           'tabla': this.rowGroups,
           'turno':selectedRowValue.cells[0].value,
           'nombre': selectedRowValue.cells[1].value,
-          'generado': selectedRowValue.cells[8].value,
-          'listaGuarias': selectedRowValue.cells[5].value,
+          'generado': selectedRowValue.cells[9].value,
+          'listaGuarias': selectedRowValue.cells[6].value,
           'fechaDesde':  selectedRowValue.cells[2].value,
           'fechaHasta':  selectedRowValue.cells[3].value,
-          'fechaProgramacion': selectedRowValue.cells[4].value.label,
+          'fechaProgramacion': selectedRowValue.cells[5].value.label,
           'estado': selectedRowValue.cells[19].value,
-          'observaciones': selectedRowValue.cells[6].value,
-          'idCalendarioProgramado': selectedRowValue.cells[9].value,
+          'observaciones': selectedRowValue.cells[7].value,
+          'idCalendarioProgramado': selectedRowValue.cells[4].value,
           'idTurno': selectedRowValue.cells[10].value,
           'idGuardia': selectedRowValue.cells[11].value,
           'filtrosBusqueda' : this.filtrosValues,
@@ -604,14 +604,14 @@ export class TablaResultadoMixComponent implements OnInit {
         'tabla': this.rowGroups,
         'turno':this.selectedRowValue[0].value,
         'nombre': this.selectedRowValue[1].value,
-        'generado': this.selectedRowValue[8].value,
-        'listaGuarias': this.selectedRowValue[5].value,
+        'generado': this.selectedRowValue[9].value,
+        'listaGuarias': this.selectedRowValue[6].value,
         'fechaDesde':  this.selectedRowValue[2].value,
         'fechaHasta':  this.selectedRowValue[3].value,
-        'fechaProgramacion': this.selectedRowValue[4].value.label,
+        'fechaProgramacion': this.selectedRowValue[5].value.label,
         'estado': this.selectedRowValue[19].value,
-        'observaciones': this.selectedRowValue[6].value,
-        'idCalendarioProgramado': this.selectedRowValue[9].value,
+        'observaciones': this.selectedRowValue[7].value,
+        'idCalendarioProgramado': this.selectedRowValue[4].value,
         'idTurno': this.selectedRowValue[10].value,
         'idGuardia': this.selectedRowValue[11].value,
         'filtrosBusqueda' : this.filtrosValues
@@ -1439,7 +1439,7 @@ export class TablaResultadoMixComponent implements OnInit {
                   this.selectedArray.forEach(index =>{
                      let keysValues = [];
                      this.rowGroups[index].cells[21]
-                     keysValues.push( this.rowGroups[index].cells[9].value.toString());
+                     keysValues.push( this.rowGroups[index].cells[4].value.toString());
                      keysValues.push( this.rowGroups[index].cells[21].value);
                      keysValues.push( this.rowGroups[index].cells[10].value);
                      datosSeleccionados.push(keysValues);
