@@ -148,7 +148,10 @@ export class GestionEjgComponent implements OnInit {
 
     // Si previamente ha entrado en un registro de una tarjeta, al volver a la ficha quedará esa tarjeta desplegada
     /* Tarjeta Unidad Familiar */
-    if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
+    if (sessionStorage.getItem("origin") == "ComunicarDatosGenerales") {
+      this.openTarjeta('tarjetaDatosGenerales');
+    }
+    if (sessionStorage.getItem("origin") == "ComunicarUnidadFamiliar") {
       this.openTarjeta('tarjetaUnidadFamiliar');
     }
 

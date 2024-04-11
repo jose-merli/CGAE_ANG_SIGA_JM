@@ -187,6 +187,7 @@ export class UnidadFamiliarComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("rutaComunicacion", "/unidadFamiliar");
+      sessionStorage.setItem("origin", "ComunicarUnidadFamiliar");
       //IDMODULO de SJCS es 10
       sessionStorage.setItem("idModulo", '10');
     
