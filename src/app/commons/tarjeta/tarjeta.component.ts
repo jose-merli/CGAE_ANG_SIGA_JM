@@ -60,6 +60,8 @@ export class TarjetaComponent implements OnInit {
     if (this.enlaceCardClosed != undefined && this.enlaceCardClosed.type != undefined &&
       this.enlaceCardClosed.type == 'designasCambioLetrado') {
         this.showMessage("info", "", this.translateService.instant("justiciaGratuita.oficio.designas.letrados.redirigiendoFichaColegial"));
+        sessionStorage.setItem("vieneDeDesignas", "true");
+        sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
     }
 
     //console.log("DATOS LETRADO", this.datosLetrado);
