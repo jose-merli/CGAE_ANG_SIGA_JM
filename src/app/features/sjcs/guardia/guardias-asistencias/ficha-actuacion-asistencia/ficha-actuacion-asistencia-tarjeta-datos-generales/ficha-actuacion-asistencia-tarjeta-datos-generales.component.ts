@@ -168,20 +168,30 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   }
 
   compruebaCamposObligatorios() {
-
     let error = false;
-
-    if ((this.datosGeneralesActuacion.nig != null && !error && !this.validarNig(this.datosGeneralesActuacion.nig))) {
-      this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
-      error = true;
-    }
-
-    if(this.asistencia.numProcedimiento && !this.asistencia.numDiligencia){
-      if ((this.datosGeneralesActuacion.numAsunto != null && !error && !this.validarNProcedimiento(this.datosGeneralesActuacion.numAsunto))) {
-        this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido"));
+  
+    console.log("Comprobando campos obligatorios...");
+  
+    if (this.datosGeneralesActuacion.nig != null) {
+      console.log("NIG no es null, valor actual:", this.datosGeneralesActuacion.nig);
+      if (!error && !this.validarNig(this.datosGeneralesActuacion.nig)) {
+        console.log("Validación de NIG fallida");
+        this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
         error = true;
       }
     }
+  
+    if (this.datosGeneralesActuacion.numAsunto != null) {
+      console.log("Número de Asunto no es null, valor actual:", this.datosGeneralesActuacion.numAsunto);
+      if (!error && !this.validarNProcedimiento(this.datosGeneralesActuacion.numAsunto)) {
+        console.log("Validación de Número de Procedimiento fallida");
+        this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.numAsuntoNoValido"), '');
+        error = true;
+      }
+    }
+  
+    console.log("Resultado final de la comprobación:", error ? "Hay errores" : "No hay errores");
+    
     return error;
   }
 
@@ -202,30 +212,30 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   validarNProcedimiento(nProcedimiento) {
     let ret = false;
     
-    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
-      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
-          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
-          if (nProcedimiento != '') {
-            if(valorParametroNProc.test(nProcedimiento)){
-              ret = true;
-            }else{
-              let severity = "error";
-                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
-                      let detail = "";
-                      this.msgs.push({
-                        severity,
-                        summary,
-                        detail
-                      });
+    console.log("Iniciando validación de Número de Procedimiento:", nProcedimiento);
+    console.log("Parámetro de configuración para validación:", this.parametroNProc ? this.parametroNProc.parametro : "No definido");
 
-              ret = false
-            }
-          }
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined && this.parametroNProc.parametro != "") {
+        let valorParametroNProc = new RegExp(this.parametroNProc.parametro);
+        console.log("Expresión regular usada:", valorParametroNProc);
+
+        if (valorParametroNProc.test(nProcedimiento)) {
+            console.log("Número de Procedimiento válido");
+            ret = true;
+        } else {
+            console.log("Número de Procedimiento no válido");
+            let severity = "error";
+            let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numAsuntoNoValido");
+            let detail = "";
+            this.msgs.push({ severity, summary, detail });
+            ret = false;
         }
+    } else {
+        console.log("Datos no proporcionados o parámetros de configuración no definidos correctamente");
     }
 
     return ret;
-  }
+}
 
   /*
   validarNProcedimiento(nProcedimiento:string) {
@@ -252,21 +262,31 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   }
   */
 
-  validarNig(nig) {
+ validarNig(nig) {
     let ret = false;
     
-    if (nig != null && nig != '' && this.parametroNIG != undefined) {
-        if (this.parametroNIG != null && this.parametroNIG.parametro != "") {
-            let valorParametroNIG: RegExp = new RegExp(this.parametroNIG.parametro);
-          if (nig != '') {
+    console.log("Iniciando validación de NIG:", nig);
+    
+    if (nig != null && nig != '') {
+        console.log("NIG no es null ni vacío");
+        if (this.parametroNIG != undefined && this.parametroNIG.parametro != "") {
+            console.log("Parámetro de configuración NIG está definido:", this.parametroNIG.parametro);
+            let valorParametroNIG = new RegExp(this.parametroNIG.parametro);
+            console.log("Expresión regular utilizada para la validación:", valorParametroNIG);
+
             ret = valorParametroNIG.test(nig);
-          }
+            console.log("Resultado de la validación del NIG:", ret ? "Válido" : "No válido");
+        } else {
+            console.log("Parámetro de configuración NIG no está definido o es vacío");
         }
-      //this.progressSpinner = false;
+    } else {
+        console.log("NIG es null o vacío");
     }
 
+    //this.progressSpinner = false;
     return ret;
-  }
+}
+
 
   getNigValidador(){
     let parametro = {
