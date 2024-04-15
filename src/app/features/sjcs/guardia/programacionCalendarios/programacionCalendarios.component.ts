@@ -715,7 +715,6 @@ rowToDelete.cells.forEach((c, index) => {
     let noGenerado = false;
     let dataToZipArr = [];
     eventArr.forEach((event) => {
-      if (event.estado == "3") {
         let dataToZip = {
           turno: event.turno,
           guardia: event.nombre,
@@ -734,15 +733,8 @@ rowToDelete.cells.forEach((c, index) => {
           idCalendarioGuardias: event.idCalendarioGuardias,
         };
         dataToZipArr.push(dataToZip);
-      } else {
-        noGenerado = true;
-      }
     });
-    if (noGenerado) {
-      this.showMessage({ severity: "info", summary: "No puede descargar el log porque no se ha comenzado la generación del calendario", msg: "No puede descargar el log porque no se ha comenzado la generación del calendario" });
-    } else {
-      this.descargarZipLogGenerados(dataToZipArr);
-    }
+    this.descargarZipLogGenerados(dataToZipArr);
   }
 
   /*descargarZipLogGenerados(datos){
@@ -764,25 +756,44 @@ rowToDelete.cells.forEach((c, index) => {
       header: null,
     };
     this.progressSpinner = true;
-    let descarga = this.sigaServices.getDownloadFiles("guardiaCalendario_zipLog", datos);
-    descarga.subscribe(
-      (resp) => {
-        this.progressSpinner = false;
-        resHead.response = resp.body;
-        resHead.header = resp.headers;
-        let contentDispositionHeader = resHead.header.get("Content-Disposition");
-        let fileName = contentDispositionHeader.split(";")[1].trim().split("=")[1];
 
-        let blob = new Blob([resHead.response], { type: "application/zip" });
-        saveAs(blob, fileName);
-        this.showMessage({ severity: "success", summary: "LOG descargado correctamente", msg: "LOG descargado correctamente" });
+    let listaIdCalendariosUnicos = [];
+    let listaCalendariosUnicos = [];
+
+    // Como aparece un calendario por turno al seleccionar, nos quedamos con cada calendario 
+    for (let dato of datos) {
+      if (!listaIdCalendariosUnicos.includes(dato.idCalendarioProgramado)) {
+        listaIdCalendariosUnicos.push(dato.idCalendarioProgramado);
+        listaCalendariosUnicos.push(dato);
+      }
+    }
+
+    // Inicia la descarga
+    let descarga = this.sigaServices.getDownloadFiles("guardiaCalendario_zipLog", listaCalendariosUnicos);
+    descarga.subscribe(response => {
+      this.progressSpinner = false;
+      const file = new Blob([response.body], { type: response.headers.get("Content-Type") });
+      let recursos: String = response.headers.get("Content-Disposition");
+      let filename: String = recursos.split(';')[1].split('filename')[1].split('=')[1].trim();
+      let mensaje = null;
+      
+      // Dependiendo del número de ficheros descargados, aparece diferentes mensajes
+      if (listaCalendariosUnicos.length > 1 && recursos.split(";").length == 4) {
+        mensaje = "Se ha descargado " + recursos.split(";")[2].trim() + " de " + recursos.split(";")[3].trim() + " LOGs";
+      } else if (listaCalendariosUnicos.length > 1 && recursos.split(";").length < 4) {
+        mensaje = "Se ha descargado 1 de " + listaCalendariosUnicos.length + " LOGs";
+      } else {
+        mensaje = this.translateService.instant("general.mensaje.log.descargado");
+      }
+
+      saveAs(file, filename);
+      this.showMessage({severity: 'success', summary: this.translateService.instant("general.message.correct"), msg: mensaje});
       },
       (err) => {
         this.progressSpinner = false;
         //console.log(err);
-        this.showMessage({ severity: "error", summary: "El LOG no pudo descargarse", msg: "El LOG no pudo descargarse" });
-      },
-    );
+        this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("messages.general.error.ficheroNoExiste") });
+      });
   }
   formatDate2(date) {
     const pattern = "dd/MM/yyyy";
