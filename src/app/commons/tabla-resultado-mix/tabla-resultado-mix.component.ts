@@ -587,13 +587,7 @@ export class TablaResultadoMixComponent implements OnInit {
           'filtrosBusqueda' : this.filtrosValues,
          // 'idCalendarioGuardia': selectedRowValue.cells[16].value,
         }
-          if( dataToSend.estado == "3"){
-            dataToSendArr.push(dataToSend);
-            
-          }
-          else{
-             this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
-            }
+        dataToSendArr.push(dataToSend);
       })
       //if(dataToSendArr.length>0) this.descargaLOG.emit(dataToSendArr);
 
@@ -616,11 +610,7 @@ export class TablaResultadoMixComponent implements OnInit {
         'idGuardia': this.selectedRowValue[11].value,
         'filtrosBusqueda' : this.filtrosValues
       }
-       if( dataToSend.estado == "3"){
         dataToSendArr.push(dataToSend);
-       }else{
-        this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
-       }
     }else{
       this.showMsg('error', 'Error. Debe seleccionar uno o más registros para poder descargar sus LOGs' ,'')
     }
