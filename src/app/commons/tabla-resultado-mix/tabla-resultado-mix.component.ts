@@ -384,6 +384,9 @@ export class TablaResultadoMixComponent implements OnInit {
                     return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
                 } else if (a.cells[i].type == 'dateTime' && b.cells[i].type == 'dateTime') {
                     return compareDateAndTime(a.cells[i].value.label, b.cells[i].value.label, isAsc);
+                  //this.inscripciones: indica componente padre GuardiasInscripcionesComponent ya que this.cabecera[0].id (en este caso, 'numeroLetrado') depende de varios componentes padre
+                } else if (a.cells[i].type == 'link' && b.cells[i].type == 'link' && this.inscripciones && sort.active === this.cabeceras[0].id) {
+                    return compare(Number(a.cells[i].value), Number(b.cells[i].value), isAsc);
                 }
                 let valorA = Array.isArray(a.cells[i].value) ? a.cells[i].value[0] : a.cells[i].value;
                 let valorB = Array.isArray(b.cells[i].value) ? b.cells[i].value[0] : b.cells[i].value;
