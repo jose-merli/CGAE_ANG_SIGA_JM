@@ -101,7 +101,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 				if ((undefined != this.filtrosFacturacion.idEstado) || (undefined != this.filtrosFacturacion.fechaDesde) || (undefined != this.filtrosFacturacion.fechaHasta) ||
 					(undefined != this.filtrosFacturacion.idConcepto) || (undefined != this.filtrosFacturacion.idFacturacion) || (undefined != this.filtrosFacturacion.idPartidaPresupuestaria) ||
 					(undefined != this.filtrosFacturacion.nombre && this.filtrosFacturacion.nombre.trim() != "")) {
-				//	this.isBuscar();
+					//this.isBuscar();
 				}
 			} else if (this.selectedValue == "pagos") {
 				this.filtrosPagos = datos;
@@ -117,7 +117,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 				if ((undefined != this.filtrosPagos.idEstado) || (undefined != this.filtrosPagos.fechaDesde) || (undefined != this.filtrosPagos.fechaHasta) ||
 					(undefined != this.filtrosPagos.idConcepto) || (undefined != this.filtrosPagos.idFacturacion) || (undefined != this.filtrosPagos.idPartidaPresupuestaria) ||
 					(undefined != this.filtrosPagos.nombre && this.filtrosPagos.nombre.trim() != "")) {
-				//	this.isBuscar();
+					//this.isBuscar();
 				}
 			}
 		} else {
@@ -172,35 +172,8 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
 	cambiaFiltro() {
-		/* this.filtrosFacturacion = new FacturacionItem();
-		this.filtrosPagos = new PagosjgItem(); */
-		if(this.selectedValue == "pagos"){
-			this.filtrosPagos.fechaDesde = this.filtrosFacturacion.fechaDesde;
-			this.filtrosPagos.fechaHasta = this.filtrosFacturacion.fechaHasta;
-			this.filtrosPagos.idFacturacion = this.filtrosFacturacion.idFacturacion
-			this.filtrosPagos.idConcepto = this.filtrosFacturacion.idConcepto
-			this.filtrosPagos.idPartidaPresupuestaria = this.filtrosFacturacion.idPartidaPresupuestaria
-			// Filtro para pagos que tienen tambien en facturas.
-			this.filtrosPagos.idEstado = this.filtrosFacturacion.idEstado;
-			this.filtrosPagos.nombre = this.filtrosFacturacion.nombre;
-			this.filtrosPagos.idConcepto = this.filtrosFacturacion.idConcepto;
-			
-		}else if(this.selectedValue == "facturacion"){
-			this.filtrosFacturacion.fechaDesde = this.filtrosPagos.fechaDesde;
-			this.filtrosFacturacion.fechaHasta = this.filtrosPagos.fechaHasta;
-			this.filtrosFacturacion.idFacturacion = this.filtrosPagos.idFacturacion
-			this.filtrosFacturacion.idConcepto = this.filtrosPagos.idConcepto
-			this.filtrosFacturacion.idPartidaPresupuestaria = this.filtrosPagos.idPartidaPresupuestaria
-			// Filtro para pagos que tienen tambien en facturas.
-			this.filtrosFacturacion.idEstado = this.filtrosPagos.idEstado;
-			this.filtrosPagos.nombre = this.filtrosFacturacion.nombre;
-			this.filtrosPagos.idConcepto = this.filtrosFacturacion.idConcepto;
-		}
+		this.restablecer();
 		this.cambiaBuscar.emit(false);
-		//this.isBuscar()
-
-		/* this.persistenceService.clearFiltros();
-		this.persistenceService.clearFiltrosAux(); */
 	}
 
 	comboFactEstados() {
@@ -451,6 +424,8 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	restablecer() {
 		this.filtrosFacturacion = new FacturacionItem();
 		this.filtrosPagos = new PagosjgItem();
+		this.persistenceService.clearFiltros();
+		this.persistenceService.clearFiltrosAux();
 	}
 
 	clear() {
