@@ -25,6 +25,7 @@ export class LetradoEntranteComponent implements OnInit {
   isLetrado: boolean;
   // minDateDesigna: any;
   @Input() entrante;
+  @Input() saliente;
   @Output() fillEntrante = new EventEmitter<boolean>();
 
   constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) { }
@@ -54,10 +55,17 @@ export class LetradoEntranteComponent implements OnInit {
     // Busqueda por Colegiados sin Art 27-38
     }else if(sessionStorage.getItem("buscadorColegiados")) {
       let data = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-      this.body.numColegiado = data.nColegiado;
-      this.body.nombre = data.nombre;
-      this.body.apellidos = data.apellidos;
-      this.body.idPersona = data.idPersona;
+      // Se comprueba si se a elegido el mismo letrado saliente
+      // Si es el mismo, saldrá un mensaje de error y no se seleccionará
+      if (data.nColegiado == this.saliente.body.numColegiado) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designaciones.mensaje.error.mismoLetradoDesignado"));
+      } else {
+        this.body.numColegiado = data.nColegiado;
+        this.body.nombre = data.nombre;
+        this.body.apellidos = data.apellidos;
+        this.body.idPersona = data.idPersona;
+      }
+
       sessionStorage.removeItem("buscadorColegiados");
     }
 
@@ -73,7 +81,7 @@ export class LetradoEntranteComponent implements OnInit {
     } else {
       this.body.art27 = false;
       if(sessionStorage.getItem("entranteFechaDesignacion") != null && sessionStorage.getItem("entranteFechaDesignacion") != undefined){
-          this.body.fechaDesignacion = new Date(sessionStorage.getItem("entranteFechaDesignacion"));
+          this.body.fechaDesignacion = new Date (sessionStorage.getItem("entranteFechaDesignacion"));
           sessionStorage.removeItem("entranteFechaDesignacion");
       }else{
         this.body.fechaDesignacion = null;
@@ -158,7 +166,7 @@ export class LetradoEntranteComponent implements OnInit {
     sessionStorage.setItem("Oldletrado", JSON.stringify(this.entrante));
     sessionStorage.setItem("Newletrado", JSON.stringify(this.body));
     if(this.body.fechaDesignacion != null || this.body.fechaDesignacion != undefined){
-      sessionStorage.setItem("entranteFechaDesignacion", this.body.fechaDesignacion.getUTCMilliseconds.toString());
+      sessionStorage.setItem("entranteFechaDesignacion", this.body.fechaDesignacion.toJSON());
     }
     if (this.body.art27) {//BUSQUEDA GENERAL
       this.router.navigate(["/busquedaGeneral"]);
