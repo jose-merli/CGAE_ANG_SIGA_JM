@@ -11,6 +11,7 @@ import { FacturacionItem } from '../../../../models/sjcs/FacturacionItem';
 import { ErrorItem } from '../../../../models/ErrorItem';
 import { FacturacionDeleteDTO } from '../../../../models/sjcs/FacturacionDeleteDTO';
 import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-facturaciones-pagos',
@@ -38,11 +39,17 @@ export class FacturacionesYPagosComponent implements OnInit, OnDestroy {
 		private commonsService: CommonsService,
 		private persistenceService: PersistenceService,
 		private router: Router) {
-		this.rutaMenu = this.sigaServices.rutaMenu$.subscribe(
+		this.rutaMenu = this.sigaServices.rutaMenu$.pipe(
+			first()
+		  ).subscribe(
 			ruta => {
-				if (ruta && ruta.length > 0 && ruta != 'fichaFacturacion' && ruta != 'fichaPagos') {
+				if (ruta != 'fichaFacturacion' && ruta != 'fichaPagos') {
 					this.persistenceService.clearFiltros();
 					this.persistenceService.clearFiltrosAux();
+				} else {
+					const filtros = this.persistenceService.getFiltrosAux();
+					this.busqueda(filtros.selectedValue);
+					this.sigaServices.setRutaMenu("");
 				}
 			}
 		);
