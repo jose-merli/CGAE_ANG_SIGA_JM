@@ -901,8 +901,10 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       this.router.navigate(['/gestionEjg']);
     } else if (sessionStorage.getItem("idAsistencia")) {
       this.router.navigate(['/fichaAsistencia']);
+    } else {
+      this.router.navigate(['/designaciones']);
     }
-    this.location.back();
+    // this.location.back();
   }
 
   transformaFecha(fecha) {
