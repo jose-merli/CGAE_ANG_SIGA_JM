@@ -31,6 +31,7 @@ export class DocumentacionComponent implements OnInit {
   comboPresentador: any [];
   comboTipoDocumentacion: any [];
   comboDocumentos: any [];
+  item: EJGItem;
   
   cols;
   msgs;
@@ -45,6 +46,10 @@ export class DocumentacionComponent implements OnInit {
   documento: DocumentacionEjgItem = new DocumentacionEjgItem();
   documentoInicial: DocumentacionEjgItem;
 
+  idClasesComunicacionArray: string[] = [];
+	idClaseComunicacion: String;
+	keys: any[] = [];
+
   constructor(private sigaServices: SigaServices, private persistenceService: PersistenceService,
     private translateService: TranslateService, private confirmationService: ConfirmationService,
     private commonsServices: CommonsService, private router: Router, private datepipe: DatePipe) {
@@ -52,6 +57,11 @@ export class DocumentacionComponent implements OnInit {
 
   async ngOnInit() {
     this.progressSpinner = true;
+    if (this.persistenceService.getDatosEJG()) {
+      this.item = this.persistenceService.getDatosEJG();
+    } else {
+      this.item = new EJGItem();
+    }
     this.getCols();
     await this.getComboPresentador();
     this.getComboTipoDocumentacion();
@@ -124,12 +134,56 @@ export class DocumentacionComponent implements OnInit {
   }
 
   print() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
-    } else {
-      //this.print();
-    }
+    sessionStorage.setItem("rutaComunicacion", "/documentacionEjg");
+		//IDMODULO de SJCS es 10
+		sessionStorage.setItem("idModulo", '10');
+	
+    let datosSeleccionados = [];
+		let rutaClaseComunicacion = "/documentacionEjg";
+
+		this.sigaServices
+		.post("dialogo_claseComunicacion", rutaClaseComunicacion)
+		.subscribe(
+			data => {
+			this.idClaseComunicacion = JSON.parse(
+				data["body"]
+			).clasesComunicaciones[0].idClaseComunicacion;
+			this.sigaServices
+				.post("dialogo_keys", this.idClaseComunicacion)
+				.subscribe(
+				data => {
+					this.keys = JSON.parse(data["body"]).keysItem;
+					//    this.actuacionesSeleccionadas.forEach(element => {
+            let keysValues = [];
+            this.keys.forEach(key => {
+               if (this.item[key.nombre] != undefined) {
+                keysValues.push(this.item[key.nombre]);
+              } else if (key.nombre == "num" && this.item["numEjg"] != undefined) {
+                keysValues.push(this.item["numEjg"]);
+              } else if (key.nombre == "anio" && this.item["annio"] != undefined) {
+                keysValues.push(this.item["annio"]);
+              } else if (key.nombre == "idtipoejg" && this.item["tipoEJG"] != undefined) {
+                keysValues.push(this.item["tipoEJG"]);
+              } 
+            });
+            datosSeleccionados.push(keysValues);
+					sessionStorage.setItem(
+						"datosComunicar",
+						JSON.stringify(datosSeleccionados)
+						);
+					//datosSeleccionados.push(keysValues);
+					
+					this.router.navigate(["/dialogoComunicaciones"]);
+				},
+				err => {
+				//console.log(err);
+				}
+			);
+		},
+		err => {
+			//console.log(err);
+		}
+		);
   }
 
   deleteDocumentacion() {
