@@ -201,10 +201,8 @@ import { DatosGeneralesFichaComponent } from "./features/informes-comunicaciones
 import { FichaModeloComunicacionesComponent } from "./features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component";
 import { PerfilesFichaComponent } from "./features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/perfiles-ficha/perfiles-ficha.component";
 import { TarjetaComunicacionesComponent } from "./features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-comunicaciones/tarjeta-comunicaciones.component";
-import { TarjetaConsultasComponent } from "./features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-consultas/tarjeta-consultas.component";
 import { PlantillaDocumentoComponent } from "./features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/plantilla-documento/plantilla-documento.component";
 import { TarjetaInformesComponent } from "./features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/tarjeta-informes.component";
-import { TarjetaPlantillasDocumentosComponent } from "./features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-plantillas-documentos/tarjeta-plantillas-documentos.component";
 import { ModelosComunicacionesComponent } from "./features/informes-comunicaciones/modelos-comunicaciones/modelos-comunicaciones.component";
 import { ConsultasPlantillasComponent } from "./features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/consultas-plantillas/consultas-plantillas.component";
 import { DatosGeneralesPlantillaComponent } from "./features/informes-comunicaciones/plantillas-envio/detalle-plantilla-envio/datos-generales-plantilla/datos-generales-plantilla.component";
@@ -1371,8 +1369,6 @@ enableRipple(true);
     TarjetaListaMonederosComponent,
     TarjetaMovimientosVariosAplicadosComponent,
     TarjetaMovimientosVariosAsociadosComponent,
-    TarjetaConsultasComponent,
-    TarjetaPlantillasDocumentosComponent,
     TarjetaProductosCompraSuscripcionComponent,
     TarjetaRelFichaActComponent,
     TarjetaRemesasEnvioComponent,
