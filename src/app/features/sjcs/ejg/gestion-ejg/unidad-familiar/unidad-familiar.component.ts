@@ -48,6 +48,10 @@ export class UnidadFamiliarComponent implements OnInit {
   estados = new Map();
   datosFamiliares = null;
   unidadFamiliarPrincipal = null;
+  //Comprueba si la unidad familiar se activa o elimina
+  activarPulsado: Boolean;
+  //Almacena las unidades familiares seleccionadas para activar o eliminar
+  solicitantesSeleccionados = []; 
 
   constructor(private sigaServices: SigaServices, private datepipe: DatePipe, private translateService: TranslateService,
     private persistenceService: PersistenceService, private router: Router, private confirmationService: ConfirmationService) { }
@@ -187,6 +191,7 @@ export class UnidadFamiliarComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("rutaComunicacion", "/unidadFamiliar");
+      sessionStorage.setItem("origin", "ComunicarUnidadFamiliar");
       //IDMODULO de SJCS es 10
       sessionStorage.setItem("idModulo", '10');
     
@@ -244,6 +249,7 @@ export class UnidadFamiliarComponent implements OnInit {
         message: activar ? this.translateService.instant("facturacion.maestros.tiposproductosservicios.reactivarconfirm") : this.translateService.instant("justiciaGratuita.ejg.message.eliminarFamiliar"),
         icon: "fa fa-edit",
         accept: () => {
+          this.activarPulsado = activar;
           this.delete();
         },
         reject: () => {
@@ -265,6 +271,7 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   private delete() {
+    this.solicitantesSeleccionados = this.selectedDatos;
     this.progressSpinner = true;
     this.sigaServices.post("gestionejg_borrarFamiliar", this.selectedDatos).subscribe(
       n => {
@@ -345,6 +352,16 @@ export class UnidadFamiliarComponent implements OnInit {
             this.unidadFamiliarPrincipal = {...element};
           }
 
+          /*
+           * Si unidad familiar coincide con las seleccionadas para eliminacion, se actualiza fecha de baja. 
+           * Si unidad familiar coincide con las seleccionadas para reactivacion y tiene fecha de baja, se elimina dicha fecha.
+           */
+          if(this.comprobarSeleccionados(element.pjg_nombrecompleto) && !this.activarPulsado){
+            element.fechaBaja = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
+          }else if(this.comprobarSeleccionados(element.pjg_nombrecompleto) && this.activarPulsado && element.fechaBaja){
+            element.fechaBaja = null;
+          }
+
           let addUnidad = true;
           if(!this.historico && element.fechaBaja != null){
             addUnidad = false;
@@ -352,7 +369,10 @@ export class UnidadFamiliarComponent implements OnInit {
 
           if(addUnidad){
             this.datosUnidadFamiliar.push(element);
-            countFamiliares++;
+            //No se contabilizan los usuarios eliminados (con fecha de baja) en la unidad familiar
+            if(!element.fechaBaja){
+              countFamiliares++;
+            }
             if (element.representante != undefined && element.representante != null) {
               let representante = new UnidadFamiliarEJGItem();
               representante.pjg_nombrecompleto = element.representante;
@@ -396,8 +416,8 @@ export class UnidadFamiliarComponent implements OnInit {
       if (this.unidadFamiliarPrincipal.expedienteEconom != null && this.unidadFamiliarPrincipal.expedienteEconom != undefined) {
         this.resumen.estadoEEJG = this.unidadFamiliarPrincipal.expedienteEconom;
       }
-      this.resumen.nExpedientes = count;
     }
+    this.resumen.nExpedientes = count;
   }
 
   private expedienteEconomDisponible(dato): boolean {
@@ -411,5 +431,21 @@ export class UnidadFamiliarComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  /**
+   * Comprueba si el nombre coincide con los de las unidades familiares seleccionadas para eliminar o activar. 
+   * @param nombreUfActual - nombre de la unidad familiar a comparar 
+   * @returns {boolean}
+   */
+  private comprobarSeleccionados(nombreUfActual: string): boolean {
+    let coincide = false;
+    for(let i = 0; i < this.solicitantesSeleccionados.length; i++){
+      if(nombreUfActual === this.solicitantesSeleccionados[i].pjg_nombrecompleto){
+        coincide = true;
+        break;
+      }
+    }
+    return coincide;
   }
 }

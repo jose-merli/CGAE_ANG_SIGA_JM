@@ -57,7 +57,9 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
+    this.resaltadoDatos = false;
     this.emptyFilters = true;
+    this.filtros = new CalendarioProgramadoItem();
     this.checkFilters();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -185,7 +187,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     this.filtros.idGuardia = "";
     this.comboGuardia = [];
     this.checkFilters();
-    if (this.filtros.idTurno.length == 0) {
+    if (this.filtros.idTurno != null && this.filtros.idTurno.length == 0) {
       this.comboGuardia = []
       //this.getComboListaGuardia();
     } else {

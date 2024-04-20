@@ -393,6 +393,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   disabledTarjetaResumen:Boolean = false;
   manuallyOpened:Boolean;
   idManuallyOpened: any;
+  vieneDeDesignas: boolean = false;
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -467,6 +468,10 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.desactivarVolver = false;
     } else if (sessionStorage.getItem("fichaColegialByMenu")) {
       this.desactivarVolver = true;
+    } else if (sessionStorage.getItem("vieneDeDesignas")) {
+      sessionStorage.removeItem("vieneDeDesignas");
+      this.desactivarVolver = false;
+      this.vieneDeDesignas = true;
     } else if (sessionStorage.getItem("abonosSJCSItem")) {
       this.desactivarVolver = false;
     }else if (sessionStorage.getItem("destinatarioCom") != null) {
@@ -662,9 +667,11 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
          sessionStorage.removeItem("fromTarjetaLetradoInscripciones");
          this.router.navigate(["/fichaInscripcionesGuardia"]);
 
-    }else if(this.vieneDeFactura){
+    } else if (this.vieneDeFactura) {
       this.router.navigate(["/facturas"]);
-    }else{
+    } else if (this.vieneDeDesignas) {
+      this.router.navigate(["/fichaDesignaciones"]);
+    } else {
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("situacionGlobal");
     sessionStorage.removeItem("esNuevoNoColegiado");

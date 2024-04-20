@@ -427,6 +427,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
             sessionStorage.setItem("idModulo", '10'); //IDMODULO de SJCS es 10
             sessionStorage.setItem("rutaComunicacion", rutaClaseComunicacion);
             sessionStorage.setItem("datosComunicar", JSON.stringify(keysValues));
+            sessionStorage.setItem("origin", "ComunicarDatosGenerales");
             this.router.navigate(["/dialogoComunicaciones"]);
           }
         );

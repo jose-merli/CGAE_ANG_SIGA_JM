@@ -148,9 +148,9 @@ export class TablaResultadoMixComponent implements OnInit {
     this.fechaActual = new Date();
       if(this.rowGroups != undefined){
          this.rowGroups.forEach((row, i) => {
-          //selecteCombo = {label: ?, value: row.cells[7].value}
+          //selecteCombo = {label: ?, value: row.cells[8].value}
           //>>no está igual if (row.cells)
-          values.push(row.cells[6].value);
+          values.push(row.cells[7].value);
         });
         this.totalRegistros = this.rowGroups.length;
       }
@@ -259,17 +259,17 @@ export class TablaResultadoMixComponent implements OnInit {
   onChangeTurno(event, row : Row, cell){
     if(event){
       this.getComboGuardias(row, event.value);
-      row.cells[8].value = event.value;
+      row.cells[9].value = event.value;
     }else{
       row.cells[1].combo = [];
-      row.cells[8].value = '';
+      row.cells[9].value = '';
     }
   }
   onChangeGuardia(event, row : Row, cell){
     if(event){
-      row.cells[7].value = event.value;
+      row.cells[8].value = event.value;
     }else{
-      row.cells[7].value = '';
+      row.cells[8].value = '';
     }
   }
   getComboGuardias(row : Row, idTurno){
@@ -384,6 +384,9 @@ export class TablaResultadoMixComponent implements OnInit {
                     return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
                 } else if (a.cells[i].type == 'dateTime' && b.cells[i].type == 'dateTime') {
                     return compareDateAndTime(a.cells[i].value.label, b.cells[i].value.label, isAsc);
+                  //this.inscripciones: indica componente padre GuardiasInscripcionesComponent ya que this.cabecera[0].id (en este caso, 'numeroLetrado') depende de varios componentes padre
+                } else if (a.cells[i].type == 'link' && b.cells[i].type == 'link' && this.inscripciones && sort.active === this.cabeceras[0].id) {
+                    return compare(Number(a.cells[i].value), Number(b.cells[i].value), isAsc);
                 }
                 let valorA = Array.isArray(a.cells[i].value) ? a.cells[i].value[0] : a.cells[i].value;
                 let valorB = Array.isArray(b.cells[i].value) ? b.cells[i].value[0] : b.cells[i].value;
@@ -574,26 +577,20 @@ export class TablaResultadoMixComponent implements OnInit {
           'tabla': this.rowGroups,
           'turno':selectedRowValue.cells[0].value,
           'nombre': selectedRowValue.cells[1].value,
-          'generado': selectedRowValue.cells[8].value,
-          'listaGuarias': selectedRowValue.cells[5].value,
+          'generado': selectedRowValue.cells[9].value,
+          'listaGuarias': selectedRowValue.cells[6].value,
           'fechaDesde':  selectedRowValue.cells[2].value,
           'fechaHasta':  selectedRowValue.cells[3].value,
-          'fechaProgramacion': selectedRowValue.cells[4].value.label,
+          'fechaProgramacion': selectedRowValue.cells[5].value.label,
           'estado': selectedRowValue.cells[19].value,
-          'observaciones': selectedRowValue.cells[6].value,
-          'idCalendarioProgramado': selectedRowValue.cells[9].value,
+          'observaciones': selectedRowValue.cells[7].value,
+          'idCalendarioProgramado': selectedRowValue.cells[4].value,
           'idTurno': selectedRowValue.cells[10].value,
           'idGuardia': selectedRowValue.cells[11].value,
           'filtrosBusqueda' : this.filtrosValues,
          // 'idCalendarioGuardia': selectedRowValue.cells[16].value,
         }
-          if( dataToSend.estado == "3"){
-            dataToSendArr.push(dataToSend);
-            
-          }
-          else{
-             this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
-            }
+        dataToSendArr.push(dataToSend);
       })
       //if(dataToSendArr.length>0) this.descargaLOG.emit(dataToSendArr);
 
@@ -604,23 +601,19 @@ export class TablaResultadoMixComponent implements OnInit {
         'tabla': this.rowGroups,
         'turno':this.selectedRowValue[0].value,
         'nombre': this.selectedRowValue[1].value,
-        'generado': this.selectedRowValue[8].value,
-        'listaGuarias': this.selectedRowValue[5].value,
+        'generado': this.selectedRowValue[9].value,
+        'listaGuarias': this.selectedRowValue[6].value,
         'fechaDesde':  this.selectedRowValue[2].value,
         'fechaHasta':  this.selectedRowValue[3].value,
-        'fechaProgramacion': this.selectedRowValue[4].value.label,
+        'fechaProgramacion': this.selectedRowValue[5].value.label,
         'estado': this.selectedRowValue[19].value,
-        'observaciones': this.selectedRowValue[6].value,
-        'idCalendarioProgramado': this.selectedRowValue[9].value,
+        'observaciones': this.selectedRowValue[7].value,
+        'idCalendarioProgramado': this.selectedRowValue[4].value,
         'idTurno': this.selectedRowValue[10].value,
         'idGuardia': this.selectedRowValue[11].value,
         'filtrosBusqueda' : this.filtrosValues
       }
-       if( dataToSend.estado == "3"){
         dataToSendArr.push(dataToSend);
-       }else{
-        this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
-       }
     }else{
       this.showMsg('error', 'Error. Debe seleccionar uno o más registros para poder descargar sus LOGs' ,'')
     }
@@ -662,14 +655,14 @@ export class TablaResultadoMixComponent implements OnInit {
       'tabla': [],
       'turno':row.cells[0].value,
       'nombre': row.cells[1].value,
-      'generado': row.cells[8].value,
-      'listaGuarias': row.cells[5].value,
+      'generado': row.cells[9].value,
+      'listaGuarias': row.cells[6].value,
       'fechaDesde': row.cells[2].value,
       'fechaHasta': row.cells[3].value,
-      'fechaProgramacion': row.cells[4].value.value,
+      'fechaProgramacion': row.cells[5].value.value,
       'estado': row.cells[19].value,
-      'observaciones': row.cells[6].value,
-      'idCalendarioProgramado': row.cells[9].value,
+      'observaciones': row.cells[7].value,
+      'idCalendarioProgramado': row.cells[4].value,
       'idTurno': row.cells[10].value,
       'idGuardia': row.cells[11].value,
       'filtrosBusqueda' : this.filtrosValues,
@@ -912,7 +905,7 @@ export class TablaResultadoMixComponent implements OnInit {
   guardar(){
     let anyEmptyArr = [];
     this.rowGroups.forEach(row =>{
-      if(row.cells[0].value == '' ||  row.cells[0].value == null || row.cells[1].value == '' ||  row.cells[1].value == null || row.cells[2].value == '' ||  row.cells[2].value == null || row.cells[4].value == '' ||  row.cells[4].value == null){
+      if(row.cells[0].value == '' ||  row.cells[0].value == null || row.cells[1].value == '' ||  row.cells[1].value == null || row.cells[2].value == '' ||  row.cells[2].value == null || row.cells[5].value == '' ||  row.cells[5].value == null){
         anyEmptyArr.push(true);
         return ;
       } else{
@@ -1439,7 +1432,7 @@ export class TablaResultadoMixComponent implements OnInit {
                   this.selectedArray.forEach(index =>{
                      let keysValues = [];
                      this.rowGroups[index].cells[21]
-                     keysValues.push( this.rowGroups[index].cells[9].value.toString());
+                     keysValues.push( this.rowGroups[index].cells[4].value.toString());
                      keysValues.push( this.rowGroups[index].cells[21].value);
                      keysValues.push( this.rowGroups[index].cells[10].value);
                      datosSeleccionados.push(keysValues);

@@ -60,8 +60,13 @@
             <div class="form-group col-lg-2 col-md-2">
               <label>{{ "justiciaGratuita.oficio.designaciones.fechaDesignacion" | translate}} (*)</label>
               <app-fecha [inputStyleClass]="(body.fechaDesignacion == null) ? 'camposObligatorios': ''" [(value)]="body.fechaDesignacion"
+               (valueChangeSelected)="fillFechaDesignacion($event)" [disabled]="disableFechaDesignacion">
+              </app-fecha>
+              <!--
+              <app-fecha [inputStyleClass]="(body.fechaDesignacion == null) ? 'camposObligatorios': ''" [(value)]="body.fechaDesignacion"
                (valueChangeSelected)="fillFechaDesignacion($event)" (valueBlur)="setFechaDesignacion($event)" [disabled]="disableFechaDesignacion">
               </app-fecha>
+              -->
             </div>
             <!--  (valueChangeInput)="fillFechaDesignacion($event)" [utc]="false" -->
             <div *ngIf="!disableCheck" class="form-group col-lg-2 col-md-2">

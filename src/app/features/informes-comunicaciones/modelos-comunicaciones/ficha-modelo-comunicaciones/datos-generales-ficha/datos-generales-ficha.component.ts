@@ -40,6 +40,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   progressSpinner: boolean = false;
   resaltadoDatos: boolean = false;
   informeUnico: boolean = false;
+  
   fichasPosibles = [
     {
       key: "generales",

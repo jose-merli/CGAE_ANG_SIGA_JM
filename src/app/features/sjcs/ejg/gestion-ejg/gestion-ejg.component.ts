@@ -145,6 +145,25 @@ export class GestionEjgComponent implements OnInit {
   ngAfterViewInit(){
     // Ejecutamos esto depues de iniciar la vista para que obtenga id de los campos del html
     this.updateTarjResumen();
+
+    // Si previamente ha entrado en un registro de una tarjeta, al volver a la ficha quedará esa tarjeta desplegada
+    /* Tarjeta Unidad Familiar */
+    if (sessionStorage.getItem("origin") == "ComunicarDatosGenerales") {
+      this.openTarjeta('tarjetaDatosGenerales');
+    }
+    if (sessionStorage.getItem("origin") == "ComunicarUnidadFamiliar") {
+      this.openTarjeta('tarjetaUnidadFamiliar');
+    }
+    if (sessionStorage.getItem("origin") == "ImprimirDocEJG") {
+      this.openTarjeta('tarjetaDocumentacion');
+    }
+
+    // Eliminamos el objeto para asegurar el flujo navegación de la aplicación
+    sessionStorage.removeItem("origin");
+  }
+
+  actualizarDatosExpedientes(){
+    this.expedientesEconomicosComponent.ngOnInit();
   }
 
   actualizarDatosExpedientes(){
@@ -159,8 +178,14 @@ export class GestionEjgComponent implements OnInit {
   }
 
   guardadoResolucion(event: ResolucionEJGItem){
-    this.body.numCAJG = event.numeroCAJG.toString();
-    this.body.annioCAJG = event.anioCAJG.toString();
+    if(event != null && event != undefined){
+      if(event.numeroCAJG != null && event.numeroCAJG != undefined){
+        this.body.numCAJG = event.numeroCAJG.toString();
+      }
+      if(event.anioCAJG != null && event.anioCAJG != undefined){
+        this.body.annioCAJG = event.anioCAJG.toString();
+      }
+    }
     this.updateTarjResumen();
   }
 
