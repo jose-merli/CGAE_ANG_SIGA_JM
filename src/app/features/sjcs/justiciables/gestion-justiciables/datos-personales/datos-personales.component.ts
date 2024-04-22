@@ -208,6 +208,9 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     } else {
       this.progressSpinner = true;
       this.deleteSpacing();
+      if(this.body.telefonos != null && this.body.telefonos.length > 0){
+        this.body.telefonos = this.body.telefonos.filter(t => t.numeroTelefono && t.numeroTelefono.trim() !== '');
+      }
       if (!this.modoEdicion) {
         this.callSaveService("gestionJusticiables_createJusticiable");
       } else {
