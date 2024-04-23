@@ -95,8 +95,8 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
     this.getDatos();
     this.cols = [
-      { field: 'nombreDocumento', header: this.translateService.instant("informesycomunicaciones.comunicaciones.documento.nombre") },
-      { field: 'pathDocumento', header: this.translateService.instant("informesycomunicaciones.comunicaciones.documento.path") }
+      { field: 'nombreDocumento', header: "informesycomunicaciones.comunicaciones.documento.nombre" },
+      { field: 'pathDocumento', header: "informesycomunicaciones.comunicaciones.documento.path" }
     ]
 
     this.sigaServices.habilitarDocs$.subscribe(() => {

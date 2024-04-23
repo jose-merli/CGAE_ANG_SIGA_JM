@@ -226,15 +226,19 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     if (!this.validate()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Campos obligatorios no se han rellando");
     } else {
-      this.progressSpinner = true;
-      this.deleteSpacing();
-      if (this.body.telefonos != null && this.body.telefonos.length > 0) {
-        this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
-      }
-      if (!this.modoEdicion) {
-        this.callSaveService("gestionJusticiables_createJusticiable");
+      if (this.validateEmail()) {
+        this.progressSpinner = true;
+        this.deleteSpacing();
+        if (this.body.telefonos != null && this.body.telefonos.length > 0) {
+          this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
+        }
+        if (!this.modoEdicion) {
+          this.callSaveService("gestionJusticiables_createJusticiable");
+        } else {
+          this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
+        }
       } else {
-        this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
       }
     }
   }
@@ -321,13 +325,36 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Valida el email cuando su campo no está vacío
+   */
+  private validateEmail() {
+    let pattern: RegExp = /^[a-zA-Z0-9\+\._-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)?\.[a-zA-Z]+$/;
+    //Email vacio no se valida. En caso contrario, si
+    return !this.body.correoelectronico || pattern.test(this.body.correoelectronico);
+  }
+
+  /**
+   * Valida los campos obligatorios
+   */
+  private validateRequiredFields() {
+    return this.body.idtipovia && this.body.direccion && this.body.codigopostal && this.body.idprovincia && this.body.idpoblacion;
+  }
+
   private validate() {
-    this.validateForm = false;
+    this.validateForm = true;
     this.telefonoValido = true;
 
-    if (this.body.idtipovia != undefined && this.body.idtipovia != "" && this.body.direccion != undefined && this.body.direccion != "" && this.body.codigopostal != undefined && this.body.codigopostal != "" && this.body.idprovincia != undefined && this.body.idprovincia != "" && this.body.idpoblacion != undefined && this.body.idpoblacion != "") {
-      this.validateForm = true;
+    if (!this.body.idtipovia || this.body.idtipovia.trim() === "" || !this.body.codigopostal || this.body.codigopostal.trim() === "" || !this.body.idprovincia || this.body.idprovincia.trim() === "" || !this.body.idpoblacion || this.body.idpoblacion.trim() === "") {
+      this.validateForm = false;
     }
+
+    if (!this.body.direccionNoInformada) {
+      if (!this.body.direccion || this.body.direccion.trim() === "") {
+        this.validateForm = false;
+      }
+    }
+
     if (this.body.telefonos != null && this.body.telefonos.length > 0) {
       for (let i = 0; i < this.body.telefonos.length; i++) {
         if (this.body.telefonos[i].numeroTelefono === undefined || this.body.telefonos[i].numeroTelefono === "") {
@@ -341,6 +368,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         }
       }
     }
+
     return this.validateForm;
   }
 
