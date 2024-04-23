@@ -55,7 +55,8 @@
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.consultaDirecciones.literal.direccion" | translate}} *</label>
-            <input [(ngModel)]="body.direccion" type="text" class="form-control" [maxLength]="95" [disabled]="!permisoEscritura" pInputText  [ngClass]="styleObligatorio(body.direccion)" (keydown)="onChangeInput($event)">
+            <input [(ngModel)]="body.direccion" type="text" class="form-control" [maxLength]="95" [disabled]="body.direccionNoInformada" pInputText [ngClass]="styleObligatorio(body.direccion)" (keydown)="onChangeInput($event)">
+            <p-checkbox label="No informada" class="p-checkbox"[(ngModel)]="body.direccionNoInformada" binary="true"></p-checkbox>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"gratuita.busquedaAsistencias.literal.numero" | translate}}</label>
