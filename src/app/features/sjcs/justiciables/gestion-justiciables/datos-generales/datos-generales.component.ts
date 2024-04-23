@@ -1103,11 +1103,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     }
   }
 
-  search() {
-    this.persistenceService.clearBody();
-    this.router.navigate(["/justiciables"], { queryParams: { rp: "2" } });
-  }
-
   clear() {
     this.msgs = [];
   }
