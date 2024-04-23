@@ -316,21 +316,30 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   }
 
   private validate() {
+    let isValid = true;
 
-    this.validateForm = false;
-
-    if (this.validateRequiredFields()) {
-      this.validateForm = true;
-    }
-    if(this.body.telefonos != null && this.body.telefonos.length > 0){
-      for (let i = 0; i < this.body.telefonos.length; i++){
-        if(this.body.telefonos[i].numeroTelefono === undefined || this.body.telefonos[i].numeroTelefono === ""){
-          this.deleteTelefono(i);
-        }
+    // Solo validar la dirección si 'No Informada' no está marcado.
+    if (!this.body.direccionNoInformada) {
+      if (!this.body.direccion || this.body.direccion.trim() === "") {
+        console.log('Falla validación de dirección');
+        isValid = false;
       }
     }
+  
+    // Estos campos deben ser validados independientemente del estado de 'No Informada'
+    if (!this.body.idtipovia || this.body.idtipovia.trim() === "" ||
+        !this.body.codigopostal || this.body.codigopostal.trim() === "" ||
+        !this.body.idprovincia || this.body.idprovincia.trim() === "" ||
+        !this.body.idpoblacion || this.body.idpoblacion.trim() === "") {
+      console.log('Falla validación de otros campos necesarios');
+      isValid = false;
+    }
+  
+    console.log('Validación final:', isValid);
+    this.validateForm = isValid;
     return this.validateForm;
-  }
+}
+
   
   buscarPoblacion(e) {
     if (e.target.value && e.target.value !== null && e.target.value !== "") {

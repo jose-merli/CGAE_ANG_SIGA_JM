@@ -60,7 +60,7 @@ export class JusticiableItem {
   asistidosolicitajg: string;
   asistidoautorizaeejg: string;
   autorizaavisotelematico: string;
-
+  direccionNoInformada: boolean = false;
   numeroAsuntos: string;
   ultimoAsunto: string;
 
