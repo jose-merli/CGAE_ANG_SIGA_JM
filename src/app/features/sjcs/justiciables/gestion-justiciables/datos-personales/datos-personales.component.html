@@ -104,7 +104,10 @@
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.datosDireccion.literal.correo" | translate}}</label>
-            <input type="text" class="form-control"  [maxLength]="99" [(ngModel)]="body.correoelectronico" [disabled]="!permisoEscritura" pInputText (keydown)="onChangeInput($event)">
+            <input type="text" class="form-control" [class.border-error]="!validateEmail()"  [maxLength]="99" [(ngModel)]="body.correoelectronico" [disabled]="!permisoEscritura" pInputText (keydown)="onChangeInput($event)">
+            <div *ngIf="!validateEmail()">
+              <small class="input-error">{{ 'censo.datosDireccion.validacion.correo' | translate }}</small>
+            </div>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.ws.literal.fax" | translate}}</label>
