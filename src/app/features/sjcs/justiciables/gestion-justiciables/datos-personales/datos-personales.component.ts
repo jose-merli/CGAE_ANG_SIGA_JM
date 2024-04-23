@@ -206,15 +206,19 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     if (!this.validate()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Campos obligatorios no se han rellando");
     } else {
-      this.progressSpinner = true;
-      this.deleteSpacing();
-      if(this.body.telefonos != null && this.body.telefonos.length > 0){
-        this.body.telefonos = this.body.telefonos.filter(t => t.numeroTelefono && t.numeroTelefono.trim() !== '');
-      }
-      if (!this.modoEdicion) {
-        this.callSaveService("gestionJusticiables_createJusticiable");
+      if (this.validateEmail()) {
+        this.progressSpinner = true;
+        this.deleteSpacing();
+        if(this.body.telefonos != null && this.body.telefonos.length > 0){
+          this.body.telefonos = this.body.telefonos.filter(t => t.numeroTelefono && t.numeroTelefono.trim() !== '');
+        }
+        if (!this.modoEdicion) {
+          this.callSaveService("gestionJusticiables_createJusticiable");
+        } else {
+          this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
+        }
       } else {
-        this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
       }
     }
   }
@@ -295,15 +299,27 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Valida el email cuando su campo no está vacío
+   */
+  private validateEmail() {
+    let pattern: RegExp  = /^[a-zA-Z0-9\+\._-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)?\.[a-zA-Z]+$/;
+    //Email vacio no se valida. En caso contrario, si
+    return (!this.body.correoelectronico || pattern.test(this.body.correoelectronico));
+  }
+
+  /**
+   * Valida los campos obligatorios 
+   */
+  private validateRequiredFields() {
+    return this.body.idtipovia && this.body.direccion && this.body.codigopostal && this.body.idprovincia && this.body.idpoblacion;
+  }
+
   private validate() {
 
     this.validateForm = false;
 
-    if (this.body.idtipovia != undefined && this.body.idtipovia != "" &&
-    this.body.direccion != undefined && this.body.direccion != "" && 
-    this.body.codigopostal != undefined && this.body.codigopostal != "" &&
-    this.body.idprovincia != undefined && this.body.idprovincia != "" &&
-    this.body.idpoblacion != undefined && this.body.idpoblacion != "" ) {
+    if (this.validateRequiredFields()) {
       this.validateForm = true;
     }
     if(this.body.telefonos != null && this.body.telefonos.length > 0){
