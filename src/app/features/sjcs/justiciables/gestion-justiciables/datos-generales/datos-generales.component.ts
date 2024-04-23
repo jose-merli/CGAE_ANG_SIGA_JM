@@ -1103,11 +1103,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     }
   }
 
-  search() {
-    this.persistenceService.clearBody();
-    this.router.navigate(["/justiciables"], { queryParams: { rp: "2" } });
-  }
-
   clear() {
     this.msgs = [];
   }
@@ -1124,7 +1119,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   disabledSave() {
     if (this.body.nombre != undefined && this.body.nombre.trim() != "" &&
       this.body.apellido1 != undefined && this.body.apellido1.trim() != "" &&
-      this.body.tipopersonajg != undefined && this.body.tipopersonajg != "") {
+      this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" && 
+      this.body.sexo != undefined && this.body.sexo != "") {
 
       if(this.body.telefonos != null && this.body.telefonos.length > 0){
         for (let i = 0; i < this.body.telefonos.length; i++){
