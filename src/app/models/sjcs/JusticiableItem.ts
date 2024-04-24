@@ -1,7 +1,5 @@
-import { JusticiableTelefonoObject } from './JusticiableTelefonoObject';
-import { JusticiableTelefonoItem } from './JusticiableTelefonoItem';
+import { JusticiableTelefonoItem } from "./JusticiableTelefonoItem";
 export class JusticiableItem {
-
   idpersona: string;
   idinstitucion: string;
   nif: string;
@@ -73,5 +71,5 @@ export class JusticiableItem {
   datosAsuntos: any[];
   validacionRepeticion: boolean;
   asociarRepresentante: boolean;
-  constructor() { }
+  constructor() {}
 }
