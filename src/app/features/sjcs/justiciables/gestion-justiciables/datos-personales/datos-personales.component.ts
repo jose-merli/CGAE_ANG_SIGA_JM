@@ -164,6 +164,31 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.hasChange = true;
   }
 
+  /**
+   * Permite numeros, +, espacio, borrar, suprimir, flecha izda/drcha, 
+   * tabulacion, inicio/fin y parentesis en inputs
+   */
+  numberOnly(event) {
+    const key = event.key;
+    if(key == 'Dead') return false
+    return (
+      (key >= '0' && key <= '9') || key === '+' || key === ' ' || 
+      key === 'Backspace' || key === 'Delete' || 
+      key === 'ArrowLeft' || key === 'ArrowRight' || 
+      key === 'Tab' || key === 'Home' || key === 'End' ||  
+      key === '(' || key === ')' 
+    );
+  }
+
+  /**
+   * Aplica los metodos numberOnly y onChangeInput ya que (keydown) no ejecuta ambos
+   */
+  onChangeInputAndNumberOnly(event){
+    this.onChangeInput(event);
+    //Sin return no se aplica evento de teclado, permitiendo caracteres alfabeticos
+    return this.numberOnly(event);
+  }  
+
   onChangeSms(telefono: JusticiableTelefonoItem, event) {
     if (event) {
       for (let i = 0; i < this.body.telefonos.length; i++) {
@@ -226,19 +251,21 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     if (!this.validate()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Campos obligatorios no se han rellando");
     } else {
-      if (this.validateEmail()) {
+      if (!this.validateEmail()) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
+      } else if (!this.validateFax()) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El fax no tiene un formato válido");
+      } else { 
         this.progressSpinner = true;
         this.deleteSpacing();
-        if (this.body.telefonos != null && this.body.telefonos.length > 0) {
-          this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
+        if(this.body.telefonos != null && this.body.telefonos.length > 0){
+          this.body.telefonos = this.body.telefonos.filter(t => t.numeroTelefono && t.numeroTelefono.trim() !== '');
         }
         if (!this.modoEdicion) {
           this.callSaveService("gestionJusticiables_createJusticiable");
         } else {
           this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
         }
-      } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
       }
     }
   }
@@ -332,6 +359,14 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     let pattern: RegExp = /^[a-zA-Z0-9\+\._-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)?\.[a-zA-Z]+$/;
     //Email vacio no se valida. En caso contrario, si
     return !this.body.correoelectronico || pattern.test(this.body.correoelectronico);
+  }
+
+  /**
+   * Valida el fax cuando su campo no está vacío
+   */
+  validateFax() {
+    let pattern: RegExp = /^(\(\+[0-9]{2}\)|[0-9]{4})?[ ]?[0-9]{9}$/;
+    return (!this.body.fax || pattern.test(this.body.fax));
   }
 
   /**
