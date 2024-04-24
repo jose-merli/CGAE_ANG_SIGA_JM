@@ -56,6 +56,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     }
   ];
 
+  
   constructor(
     private router: Router,
     private translateService: TranslateService,
