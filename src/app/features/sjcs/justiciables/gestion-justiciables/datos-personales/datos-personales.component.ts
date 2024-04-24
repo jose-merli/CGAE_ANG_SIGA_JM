@@ -339,7 +339,11 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         if (element.value == this.body.idtipovia) this.direccionPostal = element.label;
       });
       this.direccionPostal = this.direccionPostal + " " + this.body.direccion;
-      this.direccionPostal = this.direccionPostal + ", " + this.body.codigopostal;
+      
+      if (this.body.codigopostal) {
+        this.direccionPostal += ", " + this.body.codigopostal;
+      }
+
       if (this.comboPoblacion != undefined) {
         this.comboPoblacion.forEach((element) => {
           if (element.value == this.body.idpoblacion) this.direccionPostal = this.direccionPostal + ", " + element.label;
