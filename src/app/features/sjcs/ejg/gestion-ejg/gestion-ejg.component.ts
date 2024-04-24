@@ -166,10 +166,6 @@ export class GestionEjgComponent implements OnInit {
     this.expedientesEconomicosComponent.ngOnInit();
   }
 
-  actualizarDatosExpedientes(){
-    this.expedientesEconomicosComponent.ngOnInit();
-  }
-
   guardadoSend(event) {
     this.body = event;
     this.nuevo = false;
