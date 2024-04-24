@@ -7,10 +7,12 @@
     </p>
   </div>
   <div>
+    
     <app-tarjeta-resumen-fija class="pb-50" [chincheta]="true" [datos]="datos" 
-            [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen"
-            (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+          [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen"
+          (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
     </app-tarjeta-resumen-fija>
+
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->

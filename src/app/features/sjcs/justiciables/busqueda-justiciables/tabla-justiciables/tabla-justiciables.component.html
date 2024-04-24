@@ -24,7 +24,7 @@
           <td class="text-center" *ngFor="let col of columns">
 
             <div *ngIf="col.field == 'nif' || col.field == 'nombre'">
-              <a *ngIf="showLink" class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span>dddddddddddddd</a>
+              <a *ngIf="showLink" class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
               <span *ngIf="!showLink">{{dato[col.field]}}</span>
             </div>
             <div *ngIf="col.field == 'fechaModificacion'">

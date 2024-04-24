@@ -1,4 +1,5 @@
 import { JusticiableTelefonoItem } from "./JusticiableTelefonoItem";
+
 export class JusticiableItem {
   idpersona: string;
   idinstitucion: string;
