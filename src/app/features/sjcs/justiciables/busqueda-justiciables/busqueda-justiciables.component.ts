@@ -1,70 +1,40 @@
-import { Component, OnInit, ViewChild, SimpleChanges, OnChanges } from '@angular/core';
-import { FiltroJusticiablesComponent } from './filtro-justiciables/filtro-justiciables.component';
-import { TablaJusticiablesComponent } from './tabla-justiciables/tabla-justiciables.component';
-import { PersistenceService } from '../../../../_services/persistence.service';
-import { SigaServices } from '../../../../_services/siga.service';
-import { CommonsService } from '../../../../_services/commons.service';
-import { TranslateService } from '../../../../commons/translate';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-import { procesos_justiciables } from '../../../../permisos/procesos_justiciables';
+import { Location } from "@angular/common";
+import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { CommonsService } from "../../../../_services/commons.service";
+import { PersistenceService } from "../../../../_services/persistence.service";
+import { SigaServices } from "../../../../_services/siga.service";
+import { TranslateService } from "../../../../commons/translate";
+import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
+import { FiltroJusticiablesComponent } from "./filtro-justiciables/filtro-justiciables.component";
+import { TablaJusticiablesComponent } from "./tabla-justiciables/tabla-justiciables.component";
 
 @Component({
-  selector: 'app-busqueda-justiciables',
-  templateUrl: './busqueda-justiciables.component.html',
-  styleUrls: ['./busqueda-justiciables.component.scss']
+  selector: "app-busqueda-justiciables",
+  templateUrl: "./busqueda-justiciables.component.html",
+  styleUrls: ["./busqueda-justiciables.component.scss"],
 })
 export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
-  ngOnChanges(changes: SimpleChanges): void {
-    throw new Error("Method not implemented.");
-  }
+  datos;
+  msgs;
+  breadcrumbs = [];
 
   buscar: boolean = false;
-  datos;
-
   progressSpinner: boolean = false;
 
   @ViewChild(FiltroJusticiablesComponent) filtros;
   @ViewChild(TablaJusticiablesComponent) tabla;
 
-  msgs;
-
   fichasPosibles = [
-    {
-      key: "generales",
-      activa: false
-    },
-    {
-      key: "personales",
-      activa: false
-    },
-    {
-      origen: "justiciables",
-      activa: false
-    },
-    {
-      key: "solicitud",
-      activa: false
-    },
-    {
-      key: "representante",
-      activa: false
-    },
-    {
-      key: "asuntos",
-      activa: false
-    },
-    {
-      key: "abogado",
-      activa: false
-    },
-    {
-      key: "procurador",
-      activa: false
-    }
-
+    { key: "generales", activa: false },
+    { key: "personales", activa: false },
+    { origen: "justiciables", activa: false },
+    { key: "solicitud", activa: false },
+    { key: "representante", activa: false },
+    { key: "asuntos", activa: false },
+    { key: "abogado", activa: false },
+    { key: "procurador", activa: false },
   ];
-
 
   permisoEscritura;
   modoRepresentante: boolean = false;
@@ -77,94 +47,86 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
   nuevoContrarioEJG: boolean = false;
   nuevoSoj: boolean = false;
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsService: CommonsService, private translateService: TranslateService, private router: Router,
-    private activatedRoute: ActivatedRoute, private location: Location) { }
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private activatedRoute: ActivatedRoute, private location: Location) {}
 
   ngOnInit() {
-    if(sessionStorage.getItem("creaInsertaJusticiableDesigna")){
+    if (sessionStorage.getItem("creaInsertaJusticiableDesigna")) {
       sessionStorage.removeItem("creaInsertaJusticiableDesigna");
       this.location.back();
     }
-    this.activatedRoute.queryParams.subscribe(params => {
-
+    this.activatedRoute.queryParams.subscribe((params) => {
       if (params.rp == "1") {
         this.modoRepresentante = true;
       } else if (params.rp == "2") {
         this.searchJusticiable = true;
       }
-
     });
+
+    this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
 
     if (sessionStorage.getItem("origin") == "newInteresado") {
       this.nuevoInteresado = true;
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.designaciones"), this.translateService.instant("justiciaGratuita.designaciones.interesados"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     }
-
     if (sessionStorage.getItem("origin") == "newContrario") {
-
       this.nuevoContrario = true;
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.designaciones"), this.translateService.instant("justiciaGratuita.designaciones.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     }
-
     if (sessionStorage.getItem("origin") == "newAsistido") {
       this.nuevoAsistido = true;
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia"), this.translateService.instant("justiciaGratuita.guardia.asistido"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     }
-
     if (sessionStorage.getItem("origin") == "newContrarioAsistencia") {
       this.nuevoContrarioAsistencia = true;
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia"), this.translateService.instant("justiciaGratuita.guardia.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     }
     if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
       this.nuevaUniFamiliar = true;
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.ejg"), this.translateService.instant("justiciaGratuita.ejg.unidadfamiliar"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     }
-
     if (sessionStorage.getItem("origin") == "newContrarioEJG") {
       this.nuevoContrarioEJG = true;
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.ejg"), this.translateService.instant("justiciaGratuita.ejg.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     }
-
     if (sessionStorage.getItem("origin") == "newSoj") {
       this.nuevoSoj = true;
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.soj"), this.translateService.instant("justiciaGratuita.soj.solicitante"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     }
 
-    
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
-    
 
-
-    this.commonsService.checkAcceso(procesos_justiciables.justiciables)
-      .then(respuesta => {
-
+    this.commonsService
+      .checkAcceso(procesos_justiciables.justiciables)
+      .then((respuesta) => {
         this.permisoEscritura = respuesta;
 
         this.persistenceService.setPermisos(this.permisoEscritura);
 
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
           this.router.navigate(["/errorAcceso"]);
         }
-      }
-      ).catch(error => console.error(error));
-
+      })
+      .catch((error) => console.error(error));
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    throw new Error("Method not implemented.");
+  }
 
   isOpenReceive(event) {
     this.progressSpinner = true;
     this.search(event);
   }
 
-
   search(event) {
-
     if (!this.modoRepresentante) {
-      this.filtros.filtros = this.persistenceService.getFiltros()
+      this.filtros.filtros = this.persistenceService.getFiltros();
     }
 
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", this.filtros.filtros).subscribe(
-      n => {
-
+      (n) => {
         this.datos = JSON.parse(n.body).justiciableBusquedaItems;
         let error = JSON.parse(n.body).error;
         this.buscar = true;
@@ -172,18 +134,19 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
 
         if (this.tabla != undefined) {
           this.tabla.tabla.sortOrder = 0;
-          this.tabla.tabla.sortField = '';
+          this.tabla.tabla.sortField = "";
           this.tabla.tabla.reset();
-          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+          this.tabla.buscadores = this.tabla.buscadores.map((it) => (it = ""));
         }
         if (error != null && error.description != null) {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
       },
-      err => {
+      (err) => {
         this.progressSpinner = false;
         //console.log(err);
-      });
+      },
+    );
   }
 
   showMessage(severity, summary, msg) {
@@ -191,7 +154,7 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
   }
 
@@ -200,10 +163,10 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
   }
 
   backTo() {
-    if(this.persistenceService.getDatosEJG()){
+    if (this.persistenceService.getDatosEJG()) {
       this.router.navigate(["/gestionEjg"]);
     } else {
       this.location.back();
     }
-  } 
+  }
 }

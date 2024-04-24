@@ -8,8 +8,6 @@ export class JusticiableTelefonoItem {
   fechaModificacion: string;
   preferenteSms: string;
   preferenteSmsCheck: boolean;
-  count: number;
-  nuevo: boolean;
-  tlfValido: boolean;
-  constructor() { }
+
+  constructor() {}
 }

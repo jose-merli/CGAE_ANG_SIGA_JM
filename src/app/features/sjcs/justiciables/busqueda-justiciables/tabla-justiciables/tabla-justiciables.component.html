@@ -13,11 +13,9 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-            {{ col.header | translate }}
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">{{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
-                table.filter($event.target.value, col.field, 'contains')" [(ngModel)]="buscadores[i]" />
+            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)=" table.filter($event.target.value, col.field, 'contains')" [(ngModel)]="buscadores[i]" />
           </th>
         </tr>
       </ng-template>
@@ -26,18 +24,15 @@
           <td class="text-center" *ngFor="let col of columns">
 
             <div *ngIf="col.field == 'nif' || col.field == 'nombre'">
-              <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+              <a *ngIf="showLink" class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span>dddddddddddddd</a>
+              <span *ngIf="!showLink">{{dato[col.field]}}</span>
             </div>
-
             <div *ngIf="col.field == 'fechaModificacion'">
-              <div>
-                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
-              </div>
+              <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
             <div *ngIf="col.field != 'nif' && col.field != 'nombre' && col.field != 'fechaModificacion'">
               <span>{{dato[col.field]}}</span>
             </div>
-
           </td>
 
         </tr>

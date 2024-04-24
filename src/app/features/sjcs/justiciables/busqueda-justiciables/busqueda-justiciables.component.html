@@ -2,9 +2,7 @@
 
 <div class="header-title">
   <i class="fa fa-square"></i>
-  <p>SJCS
-    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.justiciables' | translate }}
-  </p>
+  <p><span *ngFor="let bread of breadcrumbs; let i = index"><i *ngIf="i != 0" class="fa fa-angle-right"></i> {{bread}} </span></p>
 </div>
 
 <div class="busqueda-container">
