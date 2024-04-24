@@ -328,7 +328,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   /**
    * Valida el email cuando su campo no está vacío
    */
-  private validateEmail() {
+  validateEmail() {
     let pattern: RegExp = /^[a-zA-Z0-9\+\._-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)?\.[a-zA-Z]+$/;
     //Email vacio no se valida. En caso contrario, si
     return !this.body.correoelectronico || pattern.test(this.body.correoelectronico);
@@ -337,11 +337,11 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   /**
    * Valida los campos obligatorios
    */
-  private validateRequiredFields() {
+  validateRequiredFields() {
     return this.body.idtipovia && this.body.direccion && this.body.codigopostal && this.body.idprovincia && this.body.idpoblacion;
   }
 
-  private validate() {
+  validate() {
     this.validateForm = true;
     this.telefonoValido = true;
 
