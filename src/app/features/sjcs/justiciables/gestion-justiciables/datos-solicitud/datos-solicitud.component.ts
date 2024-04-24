@@ -233,8 +233,8 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 				if (this.body.autorizaavisotelematico == '1') {
 					this.changeDetectorRef.detectChanges();
 					this.showMessage(
-						'info',
-						this.translateService.instant('general.message.informacion'),
+						'error',
+						this.translateService.instant('general.message.incorrect'),
 						this.translateService.instant(
 							'justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones'
 						)
