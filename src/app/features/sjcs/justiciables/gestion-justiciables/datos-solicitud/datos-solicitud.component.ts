@@ -222,6 +222,9 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 	}
 
 	save() {
+		if (this.body != undefined && this.body.idpersona != undefined) {
+			this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+		}
 		if (!this.permisoEscritura) {
 			this.showMessage(
 				'error',
