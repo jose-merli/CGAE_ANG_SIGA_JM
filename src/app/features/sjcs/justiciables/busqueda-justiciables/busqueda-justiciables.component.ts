@@ -50,6 +50,8 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private activatedRoute: ActivatedRoute, private location: Location) {}
 
   ngOnInit() {
+    this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
+
     if (sessionStorage.getItem("creaInsertaJusticiableDesigna")) {
       sessionStorage.removeItem("creaInsertaJusticiableDesigna");
       this.location.back();
@@ -57,12 +59,11 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params.rp == "1") {
         this.modoRepresentante = true;
+        this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("justiciaGratuita.justiciable.seleccion.representante")];
       } else if (params.rp == "2") {
         this.searchJusticiable = true;
       }
     });
-
-    this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
 
     if (sessionStorage.getItem("origin") == "newInteresado") {
       this.nuevoInteresado = true;
