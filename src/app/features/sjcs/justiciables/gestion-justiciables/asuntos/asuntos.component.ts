@@ -372,6 +372,11 @@ export class AsuntosComponent implements OnInit, OnChanges {
         n => {
 
           this.datos = JSON.parse(n.body).asuntosJusticiableItems;
+          //Actualiza 'ultimo asunto' y 'numero total de asuntos', mostrados en tarjeta 'Asuntos' cerrada (tanto en la carga inicial de la pantalla como al añadir asuntos)
+          if(this.datos && this.datos.length){
+            this.body.ultimoAsunto = this.datos[0].asunto;
+            this.body.numeroAsuntos = this.datos.length.toString();
+          }
           this.progressSpinner = false;
 
         },
