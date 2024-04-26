@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { Component, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CommonsService } from "../../../../_services/commons.service";
 import { PersistenceService } from "../../../../_services/persistence.service";
@@ -14,7 +14,7 @@ import { TablaJusticiablesComponent } from "./tabla-justiciables/tabla-justiciab
   templateUrl: "./busqueda-justiciables.component.html",
   styleUrls: ["./busqueda-justiciables.component.scss"],
 })
-export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
+export class BusquedaJusticiablesComponent implements OnInit {
   datos;
   msgs;
   breadcrumbs = [];
@@ -56,42 +56,42 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       sessionStorage.removeItem("creaInsertaJusticiableDesigna");
       this.location.back();
     }
+
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params.rp == "1") {
         this.modoRepresentante = true;
-        this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("justiciaGratuita.justiciable.seleccion.representante")];
       } else if (params.rp == "2") {
         this.searchJusticiable = true;
       }
     });
 
+    this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
+
     if (sessionStorage.getItem("origin") == "newInteresado") {
       this.nuevoInteresado = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.designaciones"), this.translateService.instant("justiciaGratuita.designaciones.interesados"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    }
-    if (sessionStorage.getItem("origin") == "newContrario") {
+    } else if (sessionStorage.getItem("origin") == "newContrario") {
       this.nuevoContrario = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.designaciones"), this.translateService.instant("justiciaGratuita.designaciones.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    }
-    if (sessionStorage.getItem("origin") == "newAsistido") {
+    } else if (sessionStorage.getItem("origin") == "newAsistido") {
       this.nuevoAsistido = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia"), this.translateService.instant("justiciaGratuita.guardia.asistido"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    }
-    if (sessionStorage.getItem("origin") == "newContrarioAsistencia") {
+    } else if (sessionStorage.getItem("origin") == "newContrarioAsistencia") {
       this.nuevoContrarioAsistencia = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia"), this.translateService.instant("justiciaGratuita.guardia.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    }
-    if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
+    } else if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
       this.nuevaUniFamiliar = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.ejg"), this.translateService.instant("justiciaGratuita.ejg.unidadfamiliar"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    }
-    if (sessionStorage.getItem("origin") == "newContrarioEJG") {
+    } else if (sessionStorage.getItem("origin") == "newContrarioEJG") {
       this.nuevoContrarioEJG = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.ejg"), this.translateService.instant("justiciaGratuita.ejg.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    }
-    if (sessionStorage.getItem("origin") == "newSoj") {
+    } else if (sessionStorage.getItem("origin") == "newSoj") {
       this.nuevoSoj = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.soj"), this.translateService.instant("justiciaGratuita.soj.solicitante"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
+    } else if (sessionStorage.getItem("origin") == "newRepresentante") {
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("menu.justiciaGratuita.justiciables.gestionjusticiables"), "Tarjeta Representante", this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
+    } else {
+      this.persistenceService.clearDatosEJG();
     }
 
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
@@ -100,9 +100,7 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       .checkAcceso(procesos_justiciables.justiciables)
       .then((respuesta) => {
         this.permisoEscritura = respuesta;
-
         this.persistenceService.setPermisos(this.permisoEscritura);
-
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
@@ -110,10 +108,6 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
         }
       })
       .catch((error) => console.error(error));
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    throw new Error("Method not implemented.");
   }
 
   isOpenReceive(event) {
@@ -145,12 +139,11 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       },
       (err) => {
         this.progressSpinner = false;
-        //console.log(err);
       },
     );
   }
 
-  showMessage(severity, summary, msg) {
+  private showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
       severity: severity,

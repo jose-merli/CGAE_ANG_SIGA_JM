@@ -165,29 +165,23 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Permite numeros, +, espacio, borrar, suprimir, flecha izda/drcha, 
+   * Permite numeros, +, espacio, borrar, suprimir, flecha izda/drcha,
    * tabulacion, inicio/fin y parentesis en inputs
    */
   numberOnly(event) {
     const key = event.key;
-    if(key == 'Dead') return false
-    return (
-      (key >= '0' && key <= '9') || key === '+' || key === ' ' || 
-      key === 'Backspace' || key === 'Delete' || 
-      key === 'ArrowLeft' || key === 'ArrowRight' || 
-      key === 'Tab' || key === 'Home' || key === 'End' ||  
-      key === '(' || key === ')' 
-    );
+    if (key == "Dead") return false;
+    return (key >= "0" && key <= "9") || key === "+" || key === " " || key === "Backspace" || key === "Delete" || key === "ArrowLeft" || key === "ArrowRight" || key === "Tab" || key === "Home" || key === "End" || key === "(" || key === ")";
   }
 
   /**
    * Aplica los metodos numberOnly y onChangeInput ya que (keydown) no ejecuta ambos
    */
-  onChangeInputAndNumberOnly(event){
+  onChangeInputAndNumberOnly(event) {
     this.onChangeInput(event);
     //Sin return no se aplica evento de teclado, permitiendo caracteres alfabeticos
     return this.numberOnly(event);
-  }  
+  }
 
   onChangeSms(telefono: JusticiableTelefonoItem, event) {
     if (event) {
@@ -204,7 +198,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
 
   validateNumero(event) {
     let NUMBER_REGEX = /^(\(\+[0-9]{2}\)|[0-9]{4})?[ ]?[0-9]{9}$/;
-    if (event == "" || NUMBER_REGEX.test(event)) {
+    if (event == undefined || event == "" || NUMBER_REGEX.test(event)) {
       return "";
     } else {
       return "camposObligatorios";
@@ -255,11 +249,11 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
       } else if (!this.validateFax()) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El fax no tiene un formato válido");
-      } else { 
+      } else {
         this.progressSpinner = true;
         this.deleteSpacing();
-        if(this.body.telefonos != null && this.body.telefonos.length > 0){
-          this.body.telefonos = this.body.telefonos.filter(t => t.numeroTelefono && t.numeroTelefono.trim() !== '');
+        if (this.body.telefonos != null && this.body.telefonos.length > 0) {
+          this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
         }
         if (!this.modoEdicion) {
           this.callSaveService("gestionJusticiables_createJusticiable");
@@ -339,7 +333,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         if (element.value == this.body.idtipovia) this.direccionPostal = element.label;
       });
       this.direccionPostal = this.direccionPostal + " " + this.body.direccion;
-      
+
       if (this.body.codigopostal) {
         this.direccionPostal += ", " + this.body.codigopostal;
       }
@@ -370,7 +364,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
    */
   validateFax() {
     let pattern: RegExp = /^(\(\+[0-9]{2}\)|[0-9]{4})?[ ]?[0-9]{9}$/;
-    return (!this.body.fax || pattern.test(this.body.fax));
+    return !this.body.fax || pattern.test(this.body.fax);
   }
 
   /**

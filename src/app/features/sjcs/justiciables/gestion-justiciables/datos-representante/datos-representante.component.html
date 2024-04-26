@@ -1,5 +1,9 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="ficha-container" id="DivRepresentantes">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
@@ -123,48 +127,36 @@
   </div>
 </div>
 
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdCreateRepresentante"
-  #cdCreateRepresentante>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdCreateRepresentante" #cdCreateRepresentante>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdCreateRepresentante.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdRepresentanteDisassociate"
-  #cdRepresentanteDisassociate>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdRepresentanteDisassociate.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="rejectDisassociate()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-<p-dialog [(visible)]="showConfirmacion" responsive="true" [draggable]="false"  resizable="false" width="550">
-  <p-header>
-    <label>{{'general.gestionJusticiables.confirmacion' | translate}}</label>
-  </p-header>
+<p-dialog [(visible)]="showDialogRepre" responsive="true" [draggable]="false" [closable]="false" resizable="false" width="550">
+  <p-header><label>{{'general.gestionJusticiables.confirmacion' | translate}}</label></p-header>
   <div class="row">
     <div class="form-group col-lg-8 col-md-8">
-      <label>{{'general.gestionJusticiables.textoConfirmacionUp' | translate}}</label>
+      <label *ngIf="dialogAssociate">Associacón de Respresentante</label>
+      <label *ngIf="!dialogAssociate">Desassociacón de respresentante</label>
     </div>
-  </div>
-  <div class="field-radiobutton">
-    <p-radioButton class="radio-style"  name="sustituir" value="s" label="{{'general.gestionJusticiables.confirmacionSustituir' | translate}}" [(ngModel)]='guardaOpcion'></p-radioButton>
   </div>
 
   <div class="field-radiobutton">
-    <p-radioButton class="radio-style" name="nuevo" value="n" label="{{'general.gestionJusticiables.confirmacionNuevo' | translate}}" [(ngModel)]='guardaOpcion'></p-radioButton>
+    <p-radioButton class="radio-style"  name="sustituir" value="s" label="{{'general.gestionJusticiables.confirmacionSustituir' | translate}}" [(ngModel)]='dialogRepreOpcion'></p-radioButton>
+  </div>
+
+  <div class="field-radiobutton">
+    <p-radioButton class="radio-style" name="nuevo" value="n" label="{{'general.gestionJusticiables.confirmacionNuevo' | translate}}" [(ngModel)]='dialogRepreOpcion'></p-radioButton>
   </div>
 
   <label>{{'general.gestionJusticiables.textoConfirmacionDown' | translate}}</label>
+
   <p-footer>
     <div class="text-right main-button ">
-      <button (click)="guardar()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
-      <button (click)="cancelar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+      <button (click)="guardarDialog()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
+      <button (click)="cerrarDialog()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
     </div>
   </p-footer>
 </p-dialog>

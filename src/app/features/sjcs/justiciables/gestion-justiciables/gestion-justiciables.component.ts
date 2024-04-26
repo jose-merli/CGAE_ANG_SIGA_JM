@@ -106,42 +106,15 @@ export class GestionJusticiablesComponent implements OnInit {
         this.fromInteresado = true;
 
         let fichasPosiblesInteresados = [
-          {
-            origen: "justiciables",
-            activa: false,
-          },
-          {
-            key: "generales",
-            activa: false,
-          },
-          {
-            key: "personales",
-            activa: false,
-          },
-          {
-            key: "solicitud",
-            activa: false,
-          },
-          {
-            key: "representante",
-            activa: false,
-          },
-          {
-            key: "asuntos",
-            activa: false,
-          },
-          {
-            key: "abogado",
-            activa: false,
-          },
-          {
-            key: "procurador",
-            activa: false,
-          },
-          {
-            key: "unidadFamiliar",
-            activa: false,
-          },
+          { origen: "justiciables", activa: false },
+          { key: "generales", activa: false },
+          { key: "personales", activa: false },
+          { key: "solicitud", activa: false },
+          { key: "representante", activa: false },
+          { key: "asuntos", activa: false },
+          { key: "abogado", activa: false },
+          { key: "procurador", activa: false },
+          { key: "unidadFamiliar", activa: false },
         ];
 
         this.persistenceService.setFichasPosibles(fichasPosiblesInteresados);
@@ -151,42 +124,15 @@ export class GestionJusticiablesComponent implements OnInit {
         this.fromContrario = true;
 
         let fichasPosiblesContrarios = [
-          {
-            origen: "justiciables",
-            activa: false,
-          },
-          {
-            key: "generales",
-            activa: false,
-          },
-          {
-            key: "personales",
-            activa: false,
-          },
-          {
-            key: "solicitud",
-            activa: false,
-          },
-          {
-            key: "representante",
-            activa: false,
-          },
-          {
-            key: "asuntos",
-            activa: false,
-          },
-          {
-            key: "abogado",
-            activa: false,
-          },
-          {
-            key: "procurador",
-            activa: false,
-          },
-          {
-            key: "unidadFamiliar",
-            activa: false,
-          },
+          { origen: "justiciables", activa: false },
+          { key: "generales", activa: false },
+          { key: "personales", activa: false },
+          { key: "solicitud", activa: false },
+          { key: "representante", activa: false },
+          { key: "asuntos", activa: false },
+          { key: "abogado", activa: false },
+          { key: "procurador", activa: false },
+          { key: "unidadFamiliar", activa: false },
         ];
 
         this.persistenceService.setFichasPosibles(fichasPosiblesContrarios);
@@ -196,42 +142,15 @@ export class GestionJusticiablesComponent implements OnInit {
         //sessionStorage.removeItem('origin');
         this.fromContrarioEJG = true;
         let fichasPosiblesContrariosEJG = [
-          {
-            origen: "justiciables",
-            activa: false,
-          },
-          {
-            key: "generales",
-            activa: false,
-          },
-          {
-            key: "personales",
-            activa: false,
-          },
-          {
-            key: "solicitud",
-            activa: false,
-          },
-          {
-            key: "representante",
-            activa: false,
-          },
-          {
-            key: "asuntos",
-            activa: false,
-          },
-          {
-            key: "abogado",
-            activa: false,
-          },
-          {
-            key: "procurador",
-            activa: false,
-          },
-          {
-            key: "unidadFamiliar",
-            activa: false,
-          },
+          { origen: "justiciables", activa: false },
+          { key: "generales", activa: false },
+          { key: "personales", activa: false },
+          { key: "solicitud", activa: false },
+          { key: "representante", activa: false },
+          { key: "asuntos", activa: false },
+          { key: "abogado", activa: false },
+          { key: "procurador", activa: false },
+          { key: "unidadFamiliar", activa: false },
         ];
         this.persistenceService.setFichasPosibles(fichasPosiblesContrariosEJG);
       }
@@ -240,42 +159,15 @@ export class GestionJusticiablesComponent implements OnInit {
         //sessionStorage.removeItem('origin');
         this.fromUniFamiliar = true;
         let fichasPosiblesUniFami = [
-          {
-            origen: "justiciables",
-            activa: false,
-          },
-          {
-            key: "generales",
-            activa: false,
-          },
-          {
-            key: "unidadFamiliar",
-            activa: false,
-          },
-          {
-            key: "personales",
-            activa: false,
-          },
-          {
-            key: "solicitud",
-            activa: false,
-          },
-          {
-            key: "representante",
-            activa: false,
-          },
-          {
-            key: "asuntos",
-            activa: false,
-          },
-          {
-            key: "abogado",
-            activa: false,
-          },
-          {
-            key: "procurador",
-            activa: false,
-          },
+          { origen: "justiciables", activa: false },
+          { key: "generales", activa: false },
+          { key: "personales", activa: false },
+          { key: "solicitud", activa: false },
+          { key: "representante", activa: false },
+          { key: "asuntos", activa: false },
+          { key: "abogado", activa: false },
+          { key: "procurador", activa: false },
+          { key: "unidadFamiliar", activa: false },
         ];
         this.persistenceService.setFichasPosibles(fichasPosiblesUniFami);
       }
@@ -283,38 +175,14 @@ export class GestionJusticiablesComponent implements OnInit {
       if (sessionStorage.getItem("origin") == "newAsistido") {
         this.fromAsistenciaAsistido = true;
         let fichasPosiblesNewAsistido = [
-          {
-            origen: "justiciables",
-            activa: false,
-          },
-          {
-            key: "generales",
-            activa: false,
-          },
-          {
-            key: "personales",
-            activa: false,
-          },
-          {
-            key: "solicitud",
-            activa: false,
-          },
-          {
-            key: "representante",
-            activa: false,
-          },
-          {
-            key: "asuntos",
-            activa: false,
-          },
-          {
-            key: "abogado",
-            activa: false,
-          },
-          {
-            key: "procurador",
-            activa: false,
-          },
+          { origen: "justiciables", activa: false },
+          { key: "generales", activa: false },
+          { key: "personales", activa: false },
+          { key: "solicitud", activa: false },
+          { key: "representante", activa: false },
+          { key: "asuntos", activa: false },
+          { key: "abogado", activa: false },
+          { key: "procurador", activa: false },
         ];
         this.persistenceService.setFichasPosibles(fichasPosiblesNewAsistido);
       }
@@ -322,38 +190,14 @@ export class GestionJusticiablesComponent implements OnInit {
         sessionStorage.removeItem("origin");
         this.fromNuevoJusticiable = true;
         let fichasPosiblesNewJusticiable = [
-          {
-            origen: "justiciables",
-            activa: false,
-          },
-          {
-            key: "generales",
-            activa: true,
-          },
-          {
-            key: "personales",
-            activa: false,
-          },
-          {
-            key: "solicitud",
-            activa: false,
-          },
-          {
-            key: "representante",
-            activa: false,
-          },
-          {
-            key: "asuntos",
-            activa: false,
-          },
-          {
-            key: "abogado",
-            activa: false,
-          },
-          {
-            key: "procurador",
-            activa: false,
-          },
+          { origen: "justiciables", activa: false },
+          { key: "generales", activa: true },
+          { key: "personales", activa: false },
+          { key: "solicitud", activa: false },
+          { key: "representante", activa: false },
+          { key: "asuntos", activa: false },
+          { key: "abogado", activa: false },
+          { key: "procurador", activa: false },
         ];
         this.persistenceService.setFichasPosibles(fichasPosiblesNewJusticiable);
       }
