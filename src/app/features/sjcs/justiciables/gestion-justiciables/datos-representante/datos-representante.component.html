@@ -96,16 +96,12 @@
           </div>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
-              </label>
-              <input [(ngModel)]="generalBody.apellidos" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
-                pInputText/>
+              <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}</label>
+              <input [(ngModel)]="generalBody.apellidos" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura" pInputText/>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-              </label>
-              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
-                pInputText />
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}</label>
+              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura" pInputText />
             </div>
           </div>
         </div>
@@ -114,14 +110,10 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="checkPermisosRest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"
-          [disabled]="!permisoEscritura"></button>
-        <button pButton (click)="checkPermisosDisassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
-          [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
-        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"
-          [disabled]="!permisoEscritura"></button>
-        <button pButton (click)="checkPermisosAssociate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-          [disabled]="!permisoEscritura || disabledSave()"></button>
+        <button pButton (click)="checkPermisosRest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}" [disabled]="!permisoEscritura"></button>
+        <button pButton (click)="checkPermisosDisassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}" [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
+        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}" [disabled]="!permisoEscritura"></button>
+        <button pButton (click)="checkPermisosAssociate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoEscritura || disabledSave()"></button>
       </div>
     </div>
   </div>

@@ -683,6 +683,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
         );
       }
       this.showDialogRepre = false;
+      this.dialogRepreOpcion = "";
     }
   }
 
