@@ -163,7 +163,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       }
 
       if (this.fromJust) {
-        this.confirmCopiarJust(this.datosAsociar);
+        this.asociarJust(this.datosAsociar, true);
       }
 
     } 
@@ -237,23 +237,6 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             )
           }
         ];
-      }
-    });
-  }
-
-  confirmCopiarJust(data) {
-    //Introducir etiqueta en la BBDD
-    let mess = "¿Desea copiar los datos de la justiciable en el asunto seleccionado?";
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      key: "copy",
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.asociarJust(data, true);
-      },
-      reject: () => {
-        this.showMesg("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
       }
     });
   }
