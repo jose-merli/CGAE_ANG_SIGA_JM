@@ -633,9 +633,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                   m => {
                     //Se debe añadir a la BBDD estos mensajes (etiquetas)
                     if (JSON.parse(m.body).error.code == 200) {
-                      this.showMessage("success",
-                        this.translateService.instant("messages.inserted.success"),
-                        this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
+                      
                     } else {
                       this.showMessage("error",
                         this.translateService.instant("general.message.error.realiza.accion"),
