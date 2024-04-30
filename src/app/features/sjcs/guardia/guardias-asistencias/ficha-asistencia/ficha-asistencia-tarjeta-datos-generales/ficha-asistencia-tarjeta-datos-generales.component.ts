@@ -672,7 +672,6 @@ comprobarFechaHora(){
               this.asistencia.idLetradoManual = undefined;
               this.asistencia.filtro = undefined;
               this.refuerzoSustitucionNoSeleccionado = true;
-              this.refreshDatosGenerales.emit(result.id);
             }
 
           },
@@ -689,6 +688,10 @@ comprobarFechaHora(){
           () => {
             if (sessionStorage.getItem("justiciable")) {
               this.asociarJusticiable();
+            }
+            else
+            {
+              this.refreshDatosGenerales.emit(this.asistencia.anioNumero);
             }
             this.progressSpinner = false;
           }
@@ -709,6 +712,7 @@ comprobarFechaHora(){
           //Se debe añadir a la BBDD estos mensajes (etiquetas)
           if (JSON.parse(m.body).error.code == 200) {
             this.progressSpinner = false;
+            this.refreshDatosGenerales.emit(this.asistencia.anioNumero);
             //this.location.back();
           }
         },
