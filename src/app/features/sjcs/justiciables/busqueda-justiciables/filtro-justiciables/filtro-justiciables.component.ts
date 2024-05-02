@@ -256,7 +256,7 @@ export class FiltroJusticiablesComponent implements OnInit {
       (this.filtros.codigoPostal == null || this.filtros.codigoPostal.trim() == "" || this.filtros.codigoPostal.length < 3) &&
       (this.filtros.nif == null || this.filtros.nif.trim() == "" || this.filtros.nif.length < 3) &&
       (this.filtros.anioDesde == null || this.filtros.anioDesde == undefined) &&
-      (this.filtros.anioHasta == null || this.filtros.anioDesde == undefined) &&
+      (this.filtros.anioHasta == null || this.filtros.anioHasta == undefined) &&
       (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
       (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "") &&
       (this.filtros.idRol == null || this.filtros.idRol == "")) {
