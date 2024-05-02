@@ -24,6 +24,7 @@ export class GestionJusticiablesComponent implements OnInit {
   modoEdicion: boolean;
   body: JusticiableItem;
   bodyRep: JusticiableItem;
+  justiciable: string = "";
   solicitante: JusticiableItem;
   justiciableBusquedaItem: JusticiableBusquedaItem;
   representanteBusquedaItem: JusticiableBusquedaItem;
@@ -231,6 +232,12 @@ export class GestionJusticiablesComponent implements OnInit {
       this.justiciableBusquedaItem = JSON.parse(sessionStorage.getItem("solicitanteSOJ"));
       sessionStorage.removeItem("solicitanteSOJ");
       this.callServiceSearch(this.justiciableBusquedaItem);
+    } else if (sessionStorage.getItem("representante")) {
+      let representante = JSON.parse(sessionStorage.getItem("representante"));
+      sessionStorage.removeItem("representante");
+      this.justiciable = sessionStorage.getItem("justiciable");
+      sessionStorage.removeItem("justiciable");
+      this.callServiceSearch(representante);
     } else {
       //Creacion de una nueva unidad familiar
       if (this.fromUniFamiliar && sessionStorage.getItem("Nuevo")) {
@@ -732,17 +739,6 @@ export class GestionJusticiablesComponent implements OnInit {
     this.modoRepresentante = true;
   }
 
-  viewRepresentante(event) {
-    this.commonsService.scrollTop();
-    this.checkedViewRepresentante = true;
-    this.representanteBusquedaItem = new JusticiableBusquedaItem();
-    this.representanteBusquedaItem.idpersona = event.idpersona;
-    this.representanteBusquedaItem.idinstitucion = event.idinstitucion;
-    this.representanteBusquedaItem.nif = event.nif;
-    this.navigateToJusticiable = true;
-    this.search();
-  }
-
   //BUSQUEDA POR NIF DESDE LA TARJETA DATOS GENERALES
   searchJusticiableByNif(bodyBusqueda) {
     this.progressSpinner = true;
@@ -783,7 +779,10 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   backTo() {
-    if (this.persistenceService.getDatosEJG() && !sessionStorage.getItem("nuevoJusticiable")) {
+    if (this.justiciable != "") {
+      sessionStorage.setItem("fichaJusticiable", this.justiciable);
+      this.router.navigate(["/gestionJusticiables"]);
+    } else if (this.persistenceService.getDatosEJG() && !sessionStorage.getItem("nuevoJusticiable")) {
       let ejg: EJGItem = this.persistenceService.getDatosEJG();
       ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
       this.persistenceService.setDatosEJG(ejg);

@@ -62,7 +62,7 @@
       <div *ngIf="showDatosRepresentantes != undefined">
         <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa" [(body)]="body" [generalBody]="bodyRep" [modoEdicion]="modoEdicion"
           (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosRepresentante]="tarjetaDatosRepresentante"
-          [checkedViewRepresentante]="checkedViewRepresentante" (newRepresentante)="newRepresentante($event)" (viewRepresentante)="viewRepresentante($event)"
+          [checkedViewRepresentante]="checkedViewRepresentante" (newRepresentante)="newRepresentante($event)"
           (createJusticiableByUpdateRepresentante)="createJusticiableByUpdateRepresentante($event)" [navigateToJusticiable]="navigateToJusticiable" 
           [fromContrario]="fromContrario" [fromInteresado]="fromInteresado" [fromContrarioEJG]="fromContrarioEJG" [fromUniFamiliar]="fromUniFamiliar">
         </app-datos-representante>

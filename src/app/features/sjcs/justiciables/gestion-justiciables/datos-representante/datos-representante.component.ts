@@ -36,7 +36,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   @Input() tarjetaDatosRepresentante;
 
   searchRepresentanteGeneral: boolean = false;
-  showEnlaceRepresentante: boolean = false;
   esMenorEdad: boolean = false;
   idPersona;
   permisoEscritura: boolean = true;
@@ -51,7 +50,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   dialogRepreOpcion: String = "";
 
   @Output() newRepresentante = new EventEmitter<JusticiableItem>();
-  @Output() viewRepresentante = new EventEmitter<JusticiableItem>();
   @Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<String>();
@@ -85,8 +83,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
     this.getTiposIdentificacion();
     this.persistenceService.clearFiltrosAux();
-
-    this.validateShowEnlaceepresentante();
 
     this.progressSpinner = false;
 
@@ -167,29 +163,17 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       }
     }
 
-    this.validateShowEnlaceepresentante();
-
     this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
       this.body = data;
       this.modoEdicion = true;
-      this.validateShowEnlaceepresentante();
     });
 
     this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
       this.body = data;
       this.modoEdicion = true;
-      this.validateShowEnlaceepresentante();
     });
 
     if (this.tarjetaDatosRepresentante == true) this.showTarjeta = this.tarjetaDatosRepresentante;
-  }
-
-  validateShowEnlaceepresentante() {
-    if (this.body != undefined && this.body.idrepresentantejg != undefined && this.body.idrepresentantejg != null) {
-      this.showEnlaceRepresentante = true;
-    } else {
-      this.showEnlaceRepresentante = false;
-    }
   }
 
   onHideTarjeta() {
@@ -515,7 +499,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
           this.bodyChange.emit(this.body);
           this.progressSpinner = false;
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.showEnlaceRepresentante = true;
           this.persistenceService.setBody(this.generalBody);
         },
         (err) => {
@@ -583,9 +566,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
           this.nifRepresentante = undefined;
           this.persistenceService.setBody(this.generalBody);
           this.body.idrepresentantejg = undefined;
-          this.showEnlaceRepresentante = false;
           this.progressSpinner = false;
-          this.showEnlaceRepresentante = false;
         },
         (err) => {
           this.progressSpinner = false;
@@ -596,10 +577,10 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   navigateToRepresentante() {
-    if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona != "") {
-      this.commonsService.scrollTop();
-      this.idPersona = this.generalBody.idpersona;
-      this.viewRepresentante.emit(this.generalBody);
+    if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona != "" && !this.navigateToJusticiable) {
+      sessionStorage.setItem("representante", JSON.stringify(this.generalBody));
+      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      this.router.navigate(["/gestionJusticiables"]);
     }
   }
 
@@ -671,11 +652,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
             this.body.idpersona = idJusticiable;
             this.createJusticiableByUpdateRepresentante.emit(this.body);
             this.progressSpinner = false;
-			this.showMessage(
-				'success',
-				this.translateService.instant('general.message.correct'),
-				this.translateService.instant('general.message.accion.realizada')
-			);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           },
           (err) => {
             if (JSON.parse(err.error).error.description != "") {
