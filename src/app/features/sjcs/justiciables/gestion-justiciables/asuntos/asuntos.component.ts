@@ -130,6 +130,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     sessionStorage.setItem("deJusticiableANuevaDesigna", 'true');
     sessionStorage.setItem("nuevaDesigna", "true");
+    sessionStorage.setItem("vieneDeFichaJusticiable", "true");
     this.progressSpinner = false;
     this.router.navigate(["/fichaDesignaciones"]);
   }
