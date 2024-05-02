@@ -1,4 +1,4 @@
-<div class="ficha-comunicacion-container" id="mainContainer">
+<div class="ficha-comunicacion-container" id="top">
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.justiciaGratuita' | translate}}
@@ -35,7 +35,7 @@
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
       <!-- createJusticiableByUpdateSolicitud: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable al cambiar los datos de solicitud y no querer actualizar el justiciable propio-->
       <div *ngIf="showDatosPersonales != undefined">
-        <app-datos-personales *ngSwitchCase="'personales'" [body]="body" (bodyChange)="datosPersonalesChange($event)"  [showTarjeta]="ficha.activa"  
+        <app-datos-personales *ngSwitchCase="'personales'" [body]="body" (bodyChange)="datosPersonalesChange($event)"  [showTarjeta]="ficha.activa" [tarjetaDatosPersonales]="tarjetaDatosPersonales" 
           (opened)="manuallyOpened = $event" 
           (idOpened)="isCloseReceive($event)"></app-datos-personales>
       </div>
@@ -105,7 +105,7 @@
     </div>
   </div>
 </div>
-<div class="mt-3 text-right main-button ">
+<div class="mt-3 text-right main-button" id="down">
   <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
 </div>
 

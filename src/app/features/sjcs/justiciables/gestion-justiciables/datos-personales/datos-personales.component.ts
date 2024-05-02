@@ -32,6 +32,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   comboPoblacion;
 
   @Input() showTarjeta;
+  @Input() tarjetaDatosPersonales;
   @Input() body: JusticiableItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() opened = new EventEmitter<Boolean>();
@@ -94,6 +95,8 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
         this.modoEdicion = true;
       }
     }
+    
+    if (this.tarjetaDatosPersonales == true) this.showTarjeta = this.tarjetaDatosPersonales;
   }
 
   private async getCombos() {
