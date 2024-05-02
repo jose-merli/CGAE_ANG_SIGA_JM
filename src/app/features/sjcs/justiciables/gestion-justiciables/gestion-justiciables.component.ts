@@ -967,6 +967,20 @@ export class GestionJusticiablesComponent implements OnInit {
         movil = this.body.telefonos[0].numeroTelefono;
       }
 
+      let direccionCompleta: String = "";
+
+      if (this.body.direccion != null) {
+        if (this.body.codigopostal != null) {
+          direccionCompleta = this.body.direccion + ", " + this.body.codigopostal;
+        } else {
+          direccionCompleta = this.body.direccion;
+        }
+      } else {
+        if (this.body.codigopostal != null) {
+          direccionCompleta = this.body.codigopostal;
+        }
+      }
+
       this.datos = [
         {
           label: this.translateService.instant("censo.usuario.DNI"),
@@ -986,7 +1000,7 @@ export class GestionJusticiablesComponent implements OnInit {
         },
         {
           label: this.translateService.instant("censo.consultaDirecciones.literal.direccion"),
-          value: (this.body.direccion != null ? this.body.direccion + ", " : "") + this.body.codigopostal,
+          value: direccionCompleta,
         },
       ];
     }
