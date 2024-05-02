@@ -15,6 +15,7 @@ export class JusticiableBusquedaItem {
   codigoPostal: string;
   numeroAsuntos: string;
   ultimoAsunto: string;
+  tipopersonajg: string;
   constructor() { }
 }
 

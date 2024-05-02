@@ -671,6 +671,11 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
             this.body.idpersona = idJusticiable;
             this.createJusticiableByUpdateRepresentante.emit(this.body);
             this.progressSpinner = false;
+			this.showMessage(
+				'success',
+				this.translateService.instant('general.message.correct'),
+				this.translateService.instant('general.message.accion.realizada')
+			);
           },
           (err) => {
             if (JSON.parse(err.error).error.description != "") {
