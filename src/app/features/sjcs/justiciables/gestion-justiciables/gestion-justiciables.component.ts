@@ -118,8 +118,7 @@ export class GestionJusticiablesComponent implements OnInit {
         ];
 
         this.persistenceService.setFichasPosibles(fichasPosiblesInteresados);
-      }
-      if (sessionStorage.getItem("origin") == "Contrario") {
+      } else if (sessionStorage.getItem("origin") == "Contrario") {
         //sessionStorage.removeItem('origin');
         this.fromContrario = true;
 
@@ -136,9 +135,7 @@ export class GestionJusticiablesComponent implements OnInit {
         ];
 
         this.persistenceService.setFichasPosibles(fichasPosiblesContrarios);
-      }
-
-      if (sessionStorage.getItem("origin") == "ContrarioEJG") {
+      } else if (sessionStorage.getItem("origin") == "ContrarioEJG") {
         //sessionStorage.removeItem('origin');
         this.fromContrarioEJG = true;
         let fichasPosiblesContrariosEJG = [
@@ -153,9 +150,7 @@ export class GestionJusticiablesComponent implements OnInit {
           { key: "unidadFamiliar", activa: false },
         ];
         this.persistenceService.setFichasPosibles(fichasPosiblesContrariosEJG);
-      }
-
-      if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
+      } else if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
         //sessionStorage.removeItem('origin');
         this.fromUniFamiliar = true;
         let fichasPosiblesUniFami = [
@@ -170,9 +165,7 @@ export class GestionJusticiablesComponent implements OnInit {
           { key: "unidadFamiliar", activa: false },
         ];
         this.persistenceService.setFichasPosibles(fichasPosiblesUniFami);
-      }
-
-      if (sessionStorage.getItem("origin") == "newAsistido") {
+      } else if (sessionStorage.getItem("origin") == "newAsistido") {
         this.fromAsistenciaAsistido = true;
         let fichasPosiblesNewAsistido = [
           { origen: "justiciables", activa: false },
@@ -185,8 +178,7 @@ export class GestionJusticiablesComponent implements OnInit {
           { key: "procurador", activa: false },
         ];
         this.persistenceService.setFichasPosibles(fichasPosiblesNewAsistido);
-      }
-      if (sessionStorage.getItem("origin") == "Nuevo") {
+      } else if (sessionStorage.getItem("origin") == "Nuevo") {
         sessionStorage.removeItem("origin");
         this.fromNuevoJusticiable = true;
         let fichasPosiblesNewJusticiable = [
@@ -200,6 +192,14 @@ export class GestionJusticiablesComponent implements OnInit {
           { key: "procurador", activa: false },
         ];
         this.persistenceService.setFichasPosibles(fichasPosiblesNewJusticiable);
+      } else {
+        // En caso de que no venga de ninguno de los orígenes anteriores, se muestran todas las tarjetas cerradas.
+        let fichasAux = this.persistenceService.getFichasPosibles();
+        fichasAux = fichasAux.map(obj => {
+          if('key' in obj) return {...obj, activa: false}
+          return obj;
+        });
+        this.persistenceService.setFichasPosibles(fichasAux);
       }
     }
 
@@ -225,6 +225,7 @@ export class GestionJusticiablesComponent implements OnInit {
     if (this.persistenceService.getFichasPosibles() != null && this.persistenceService.getFichasPosibles() != undefined) {
       this.fichasPosibles = this.persistenceService.getFichasPosibles();
       this.fromJusticiable = this.fichasPosibles[0].activa;
+
     }
 
     if (sessionStorage.getItem("solicitanteSOJ")) {
@@ -901,6 +902,7 @@ export class GestionJusticiablesComponent implements OnInit {
       switch (event) {
         case "datosGenerales":
           this.tarjetaDatosGenerales = true;
+          this.fichasPosibles
           break;
         case "unidadFamiliar":
           this.tarjetaDatosUnidadFamiliar = true;
@@ -1037,7 +1039,7 @@ export class GestionJusticiablesComponent implements OnInit {
         if (this.showDatosPersonales == true) {
           // Comprobar si esta activada la Tarjeta
           pruebaTarjeta = {
-            label: "formacion.fichaInscripcion.datosPersonales.cabecera",
+            label: "formacion.fichaInscripcion.datosContacto.cabecera",
             value: document.getElementById("DivDatosPersonales"),
             nombre: "Personales",
           };
