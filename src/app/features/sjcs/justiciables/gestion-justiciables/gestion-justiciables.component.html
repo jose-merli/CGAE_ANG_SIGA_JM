@@ -24,7 +24,7 @@
       [showTarjeta]="isOpenTarjeta('tarjetaSolicitud')" (bodyChange)="updateBody($event)"></app-datos-solicitud>
 
     <app-datos-representante *ngIf="modoEdicion" id="tarjetaRepresentante" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaRepresentante')" 
-    [showTarjeta]="isOpenTarjeta('tarjetaRepresentante')" [body]="body" (bodyChange)="updateBody($event)"></app-datos-representante>
+    [showTarjeta]="isOpenTarjeta('tarjetaRepresentante')" [body]="body" [origen]="origen" (bodyChange)="updateBody($event)"></app-datos-representante>
     
     <app-asuntos *ngIf="modoEdicion" id="tarjetaAsunto" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaAsunto')" 
     [showTarjeta]="isOpenTarjeta('tarjetaAsunto')" [body]="body" (bodyChange)="updateBody($event)"></app-asuntos>

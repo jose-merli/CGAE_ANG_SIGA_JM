@@ -16,7 +16,7 @@ import { procesos_justiciables } from "../../../../permisos/procesos_justiciable
 })
 export class GestionJusticiablesComponent implements OnInit {
   body: JusticiableItem = new JusticiableItem();
-  justiciable: JusticiableItem;
+  justiciable: any;
   tarjetas = new Map();
   datosResumen = [];
   enlacesResumen = [];
@@ -40,7 +40,7 @@ export class GestionJusticiablesComponent implements OnInit {
       this.persistenceService.clearDatos();
       if (sessionStorage.getItem("justiciable")) {
         this.justiciable = JSON.parse(sessionStorage.getItem("justiciable"));
-        sessionStorage.removeItemItem("justiciable");
+        sessionStorage.removeItem("justiciable");
       }
       await this.searchRepresentanteById(justiciable.idpersona, justiciable.idinstitucion);
     } else {
@@ -64,8 +64,7 @@ export class GestionJusticiablesComponent implements OnInit {
   backTo() {
     if (this.origen == "representante") {
       this.persistenceService.setDatos(this.justiciable);
-      //sessionStorage.setItem("origin", this.origen);
-      //body
+      this.router.navigate(["/gestionJusticiables"]);
     } else {
       sessionStorage.setItem("origin", this.origen);
       this.router.navigate(["/justiciables"]);

@@ -1,15 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { EJGItem } from '../../../../../models/sjcs/EJGItem';
-import { ListaIntercambiosEjgItem } from '../../../../../models/sjcs/ListaIntercambiosEjgItem';
-import { SigaServices } from '../../../../../_services/siga.service';
+import { Component, Input, OnInit } from "@angular/core";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { EJGItem } from "../../../../../models/sjcs/EJGItem";
+import { ListaIntercambiosEjgItem } from "../../../../../models/sjcs/ListaIntercambiosEjgItem";
 
 @Component({
-  selector: 'app-lista-intercambios-alta-ejg',
-  templateUrl: './lista-intercambios-alta-ejg.component.html',
-  styleUrls: ['./lista-intercambios-alta-ejg.component.scss']
+  selector: "app-lista-intercambios-alta-ejg",
+  templateUrl: "./lista-intercambios-alta-ejg.component.html",
+  styleUrls: ["./lista-intercambios-alta-ejg.component.scss"],
 })
 export class ListaIntercambiosAltaEjgComponent implements OnInit {
-
   @Input() body: EJGItem;
   @Input() permisoEscritura: boolean = false;
   @Input() openTarjetaListaIntercambiosAltaEjg: Boolean;
@@ -22,16 +21,12 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit {
   rowsPerPage: any = [];
   datos: ListaIntercambiosEjgItem[] = [];
 
-  constructor(private sigaServices: SigaServices) { }
+  constructor(private sigaServices: SigaServices) {}
 
   ngOnInit() {
     this.progressSpinner = true;
     this.getCols();
     this.getListaIntercambios();
-  }
-
-  onChangeRowsPerPages() {
-    //ARR: Terminar
   }
 
   abreCierraFicha() {
@@ -45,15 +40,15 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit {
   getListaIntercambios() {
     const request = { idInstitucion: this.body.idInstitucion, annio: this.body.annio, tipoEJG: this.body.tipoEJG, numero: this.body.numero };
     return this.sigaServices.post("gestionejg_getListaIntercambiosAltaEjg", request).subscribe(
-      n => {
+      (n) => {
         this.progressSpinner = false;
         const body = JSON.parse(n.body);
         this.datos = body.ejgListaIntercambiosItems;
       },
-      err => {
+      (err) => {
         this.progressSpinner = false;
         this.datos = [];
-      }
+      },
     );
   }
 
@@ -63,14 +58,14 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit {
       { field: "fechaEnvio", header: "justiciaGratuita.ejg.listaIntercambios.fechaEnvio", width: "10%" },
       { field: "estadoRespuesta", header: "enviosMasivos.literal.estado", width: "10%" },
       { field: "fechaRespuesta", header: "justiciaGratuita.ejg.listaIntercambios.fechaRespuesta", width: "10%" },
-      { field: "respuesta", header: "justiciaGratuita.ejg.listaIntercambios.respuesta", width: "50%" }
+      { field: "respuesta", header: "justiciaGratuita.ejg.listaIntercambios.respuesta", width: "50%" },
     ];
 
     this.rowsPerPage = [
       { label: 10, value: 10 },
       { label: 20, value: 20 },
       { label: 30, value: 30 },
-      { label: 40, value: 40 }
+      { label: 40, value: 40 },
     ];
   }
 }
