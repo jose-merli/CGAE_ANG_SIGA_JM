@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { CommonsService } from "../../../../../_services/commons.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
-import { JusticiableBusquedaItem } from "../../../../../models/sjcs/JusticiableBusquedaItem";
 import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
 import { JusticiableTelefonoItem } from "../../../../../models/sjcs/JusticiableTelefonoItem";
 
@@ -11,17 +10,22 @@ import { JusticiableTelefonoItem } from "../../../../../models/sjcs/JusticiableT
   templateUrl: "./datos-personales.component.html",
   styleUrls: ["./datos-personales.component.scss"],
 })
-export class DatosPersonalesComponent implements OnInit, OnChanges {
+export class DatosPersonalesComponent implements OnInit {
+  @Input() modoEdicion;
+  @Input() showTarjeta: boolean = false;
+  @Input() permisoEscritura: boolean = true;
+  @Input() body: JusticiableItem;
+  @Output() bodyChange = new EventEmitter<JusticiableItem>();
+
   msgs = [];
   bodyInicial;
   bodyInicialTelefonos;
   direccionPostal: String = "";
   resultadosPoblaciones: String = "";
+
   progressSpinner: boolean = true;
-  permisoEscritura: boolean = true;
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
-  modoEdicion: boolean = false;
   validateForm: boolean = true;
   hasChange: boolean = false;
   telefonoValido: boolean = true;
@@ -31,23 +35,16 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   comboProvincia;
   comboPoblacion;
 
-  @Input() showTarjeta;
-  @Input() body: JusticiableItem;
-  @Output() bodyChange = new EventEmitter<JusticiableItem>();
-  @Output() opened = new EventEmitter<Boolean>();
-  @Output() idOpened = new EventEmitter<String>();
-
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) {}
 
-  async ngOnInit() {
+  ngOnInit() {
     this.progressSpinner = true;
-    this.modoEdicion = false;
-    this.body = new JusticiableItem();
-    this.body.idpaisdir1 = "191";
-    await this.getCombos();
+    this.getCombos();
+    //await this.callServiceSearch();
   }
 
-  async callServiceSearch() {
+  /*
+  private async callServiceSearch() {
     if (sessionStorage.getItem("justiciableDatosPersonalesSearch")) {
       this.progressSpinner = true;
       let justiciableBusqueda: JusticiableBusquedaItem = JSON.parse(sessionStorage.getItem("justiciableDatosPersonalesSearch"));
@@ -67,7 +64,6 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
           }
           this.bodyInicial = { ...this.body };
           this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
-          this.modoEdicion = true;
           this.progressSpinner = false;
         },
         (err) => {
@@ -76,11 +72,9 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       );
     }
   }
+  */
 
-  ngAfterViewInit() {
-    this.callServiceSearch();
-  }
-
+  /*
   ngOnChanges(changes: SimpleChanges) {
     if (this.body != undefined && this.body.idpersona != undefined) {
       if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
@@ -95,52 +89,7 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
       }
     }
   }
-
-  private async getCombos() {
-    await this.getComboPais();
-    await this.getComboTipoVia();
-    await this.getComboProvincia();
-  }
-
-  private getComboTipoVia() {
-    this.sigaServices.getParam("gestionJusticiables_comboTipoVias2", "?idTipoViaJusticiable=" + this.body.idtipovia).subscribe((n) => {
-      this.comboTipoVia = n.combooItems;
-      this.commonsService.arregloTildesCombo(this.comboTipoVia);
-    });
-  }
-
-  private getComboPais() {
-    this.sigaServices.get("direcciones_comboPais").subscribe((n) => {
-      this.comboPais = n.combooItems;
-      this.comboPais.push({ label: "DESCONOCIDO", value: "D" });
-      this.commonsService.arregloTildesCombo(this.comboPais);
-    });
-  }
-
-  private getComboProvincia() {
-    this.sigaServices.get("integrantes_provincias").subscribe((n) => {
-      this.comboProvincia = n.combooItems;
-      this.commonsService.arregloTildesCombo(this.comboProvincia);
-      if (this.body.idprovincia != undefined && this.body.idprovincia != null && this.body.idprovincia != "") {
-        this.getComboPoblacion("-1");
-        this.isDisabledPoblacion = false;
-      } else {
-        this.rellenarDireccionPostal();
-        this.progressSpinner = false;
-      }
-    });
-  }
-
-  private getComboPoblacion(filtro: string) {
-    this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + this.body.idprovincia + "&filtro=" + filtro).subscribe((n) => {
-      this.comboPoblacion = n.combooItems;
-      this.commonsService.arregloTildesCombo(this.comboPoblacion);
-      this.rellenarDireccionPostal();
-      this.progressSpinner = false;
-    });
-  }
-
-  /**** CHANGES ****/
+  */
 
   onChangeCodigoPostal() {
     if (this.commonsService.validateCodigoPostal(this.body.codigopostal) && this.body.codigopostal.length == 5) {
@@ -429,8 +378,6 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
   /***** TARJETA *******/
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta; // Funcionalidad para mostrar contenido de la Tarjeta pulsando a la misma.
-    this.opened.emit(this.showTarjeta); // Emit donde pasamos el valor de la Tarjeta Personales.
-    this.idOpened.emit("Personales"); // Constante para abrir la Tarjeta de Personales.
   }
 
   /**** TELEFONO ****/
@@ -456,12 +403,56 @@ export class DatosPersonalesComponent implements OnInit, OnChanges {
     this.msgs = [];
   }
 
-  showMessage(severity, summary, msg) {
+  private showMessage(severity, summary, msg) {
     //this.msgs = [];
     this.msgs.push({
       severity: severity,
       summary: summary,
       detail: msg,
+    });
+  }
+
+  private async getCombos() {
+    this.getComboPais();
+    this.getComboTipoVia();
+    this.getComboProvincia();
+  }
+
+  private getComboTipoVia() {
+    this.sigaServices.getParam("gestionJusticiables_comboTipoVias2", "?idTipoViaJusticiable=" + this.body.idtipovia).subscribe((n) => {
+      this.comboTipoVia = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboTipoVia);
+    });
+  }
+
+  private getComboPais() {
+    this.sigaServices.get("direcciones_comboPais").subscribe((n) => {
+      this.comboPais = n.combooItems;
+      this.comboPais.push({ label: "DESCONOCIDO", value: "D" });
+      this.commonsService.arregloTildesCombo(this.comboPais);
+    });
+  }
+
+  private getComboProvincia() {
+    this.sigaServices.get("integrantes_provincias").subscribe((n) => {
+      this.comboProvincia = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboProvincia);
+      if (this.body.idprovincia != undefined && this.body.idprovincia != null && this.body.idprovincia != "") {
+        this.getComboPoblacion("-1");
+        this.isDisabledPoblacion = false;
+      } else {
+        this.rellenarDireccionPostal();
+        this.progressSpinner = false;
+      }
+    });
+  }
+
+  private getComboPoblacion(filtro: string) {
+    this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + this.body.idprovincia + "&filtro=" + filtro).subscribe((n) => {
+      this.comboPoblacion = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboPoblacion);
+      this.rellenarDireccionPostal();
+      this.progressSpinner = false;
     });
   }
 }

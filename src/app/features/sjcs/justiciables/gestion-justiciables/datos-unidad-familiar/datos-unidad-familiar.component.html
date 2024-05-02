@@ -1,5 +1,9 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="ficha-container" id="unidadFamiliar">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
@@ -11,14 +15,6 @@
         </div>
         <label class="title-ficha">{{ 'gratuita.personaJG.literal.unidadFamiliar' | translate }}</label>
         <div class="d-flex justify-content-start mb-1 ml-auto">
-          <!-- <label *ngIf="showEnlaceAbogado" class="mr-3">
-            <i (click)="navigateToAbogado();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
-            <a (click)="navigateToAbogado();$event.stopPropagation();">
-              <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{
-                'informesycomunicaciones.comunicaciones.fichaColegial' | translate }}
-              </span>
-            </a>
-          </label> -->
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
@@ -30,29 +26,20 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'gratuita.personaJG.literal.unidadFamiliar' | translate }}
-            </label>
+            <label class="mr-auto title-ficha">{{ 'gratuita.personaJG.literal.unidadFamiliar' | translate }}</label>
           </div>
           <div class="row ">
             <div class="col-2">
-              <label>{{ "administracion.usuarios.literal.rol" | translate }}:
-                <span>{{ generalBody.labelEnCalidad }}</span>
-              </label>
+              <label>{{ "administracion.usuarios.literal.rol" | translate }}: <span>{{ generalBody.labelEnCalidad }}</span></label>
             </div>
             <div class="col-2">
-              <label>{{ "informes.solicitudAsistencia.parentesco" | translate }}:
-                <span>{{ parentescoCabecera }}</span>
-              </label>
+              <label>{{ "informes.solicitudAsistencia.parentesco" | translate }}: <span>{{ parentescoCabecera }}</span></label>
             </div>
             <div class="col-2">
-              <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.grupoLaboral" | translate }}:
-                <span>{{ nombreGrupoLab }}</span>
-              </label>
+              <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.grupoLaboral" | translate }}: <span>{{ nombreGrupoLab }}</span></label>
             </div>
             <div class="col-2">
-              <label>{{ "facturacion.facturas.importeTotal" | translate }}:
-                <span>{{ impTotal }} €</span>
-              </label>
+              <label>{{ "facturacion.facturas.importeTotal" | translate }}: <span>{{ impTotal }} €</span></label>
             </div>
             <div class="col-4 d-flex justify-content-end">
               <i class="fa fa-angle-down float-right"></i>
@@ -66,70 +53,55 @@
         <div class="form-group row col-lg-4 col-md-4 border-right hiddenBorder">
           <!-- info identificacion -->
           <div class="form-group col-lg-12 col-md-12 input-ayuda">
-            <label style="font-weight: bold;">{{ 'justiciaGratuita.justiciables.unidadFamiliar.datosFinancieros' |
-              translate }}</label>
+            <label style="font-weight: bold;">{{ 'justiciaGratuita.justiciables.unidadFamiliar.datosFinancieros' | translate }}</label>
           </div>
           <div class="form-group col-12">
-            <label>{{ "administracion.usuarios.literal.rol" | translate }}/{{
-              "justiciaGratuita.justiciables.rol.solicitante" | translate }} (*)</label>
-            <p-dropdown class="select-form" [(ngModel)]='generalBody.uf_enCalidad' placeholder="Seleccionar"
-              [options]="comboRol" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"
-              [ngClass]="styleObligatorio(generalBody.uf_enCalidad)">
-            </p-dropdown>
+            <label>{{ "administracion.usuarios.literal.rol" | translate }}/{{"justiciaGratuita.justiciables.rol.solicitante" | translate }} (*)</label>
+            <p-dropdown class="select-form" [(ngModel)]='generalBody.uf_enCalidad' placeholder="Seleccionar" [options]="comboRol" [filter]="true" 
+            filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio(generalBody.uf_enCalidad)"></p-dropdown>
           </div>
           <div class="form-group col-12">
             <label>{{ "informes.solicitudAsistencia.parentesco" | translate }} (*)</label>
-            <p-dropdown class="select-form" [(ngModel)]='generalBody.idParentesco' placeholder="Seleccionar"
-              [options]="comboParentesco" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"
-              [ngClass]="styleObligatorio(generalBody.idParentesco)">
-            </p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]='generalBody.idParentesco' placeholder="Seleccionar" [options]="comboParentesco" [filter]="true" 
+            filterBy="label,labelSinTilde" [showClear]="true" [ngClass]="styleObligatorio(generalBody.idParentesco)"></p-dropdown>
           </div>
           <div class="form-group col-12 d-flex ">
-            <p-checkbox [(ngModel)]="incapacitadoBox" [disabled]="!permisoEscritura" binary="true" class="ml-0">
-            </p-checkbox>
+            <p-checkbox [(ngModel)]="incapacitadoBox" [disabled]="!permisoEscritura" binary="true" class="ml-0"></p-checkbox>
             <label class="ml-2">{{ "justiciaGratuita.justiciables.unidadFamiliar.incapacitado" | translate }}</label>
           </div>
           <div class="form-group col-12 d-flex ml-0">
-            <p-checkbox [(ngModel)]="incapacitadoBox" [disabled]="!permisoEscritura" binary="true" class="ml-0">
-            </p-checkbox>
-            <label class="ml-2">{{ "justiciaGratuita.justiciables.unidadFamiliar.circunstanciasExcepcionales" |
-              translate }}</label>
+            <p-checkbox [(ngModel)]="incapacitadoBox" [disabled]="!permisoEscritura" binary="true" class="ml-0"></p-checkbox>
+            <label class="ml-2">{{ "justiciaGratuita.justiciables.unidadFamiliar.circunstanciasExcepcionales" | translate }}</label>
           </div>
           <div class="form-group col-12">
             <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.grupoLaboral" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='generalBody.idTipoGrupoLab' placeholder="Seleccionar"
-              [options]="comboGrupoLaboral" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-            </p-dropdown>
+              [options]="comboGrupoLaboral" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
         </div>
         <div class="form-group row col-lg-4 col-md-4">
           <!-- Datos Financieros -->
           <div class="col-12 form-group">
-            <label style="font-weight: bold">{{
-              "justiciaGratuita.justiciables.unidadFamiliar.datosFinancieros" | translate }}</label>
+            <label style="font-weight: bold">{{"justiciaGratuita.justiciables.unidadFamiliar.datosFinancieros" | translate }}</label>
           </div>
           <div class="form-group col-12">
             <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.tipoIngresos" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='generalBody.idTipoIngreso' placeholder="Seleccionar"
-              [options]="comboTipoIng" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-            </p-dropdown>
+              [options]="comboTipoIng" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <!-- Ingresos Texto -->
           <div class="form-group col-12">
             <div class="d-flex">
               <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.ingresos" | translate }}</label>
-              <label style="color: gray;" class="ml-1">({{ "busquedaSanciones.detalleSancion.texto.literal" | translate
-                }})</label>
+              <label style="color: gray;" class="ml-1">({{ "busquedaSanciones.detalleSancion.texto.literal" | translate }})</label>
             </div>
-            <input type="text" [(ngModel)]="generalBody.descrIngrAnuales" [maxLength]="60" class="form-control"
-              pInputText>
+            <input type="text" [(ngModel)]="generalBody.descrIngrAnuales" [maxLength]="60" class="form-control" pInputText>
           </div>
           <!-- Bienes Texto -->
           <div class="form-group col-12">
             <div class="d-flex">
               <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.bienesInmuebles" | translate }}</label>
-              <label style="color: gray;" class="ml-1">({{ "busquedaSanciones.detalleSancion.texto.literal" | translate
-                }})</label>
+              <label style="color: gray;" class="ml-1">({{ "busquedaSanciones.detalleSancion.texto.literal" | translate }})</label>
             </div>
             <input type="text" [(ngModel)]="generalBody.bienesInmu" [maxLength]="60" class="form-control" pInputText>
           </div>
@@ -137,8 +109,7 @@
           <div class="form-group col-12">
             <div class="d-flex">
               <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.ingresos" | translate }}</label>
-              <label style="color: gray;" class="ml-1">({{ "busquedaSanciones.detalleSancion.texto.literal" | translate
-                }})</label>
+              <label style="color: gray;" class="ml-1">({{ "busquedaSanciones.detalleSancion.texto.literal" | translate }})</label>
             </div>
             <input type="text" [(ngModel)]="generalBody.bienesMu" [maxLength]="60" class="form-control" pInputText>
           </div>
@@ -146,19 +117,15 @@
           <div class="form-group col-12">
             <div class="d-flex">
               <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.otrosBienes" | translate }}</label>
-              <label style="color: gray;" class="ml-1">({{ "busquedaSanciones.detalleSancion.texto.literal" | translate
-                }})</label>
+              <label style="color: gray;" class="ml-1">({{ "busquedaSanciones.detalleSancion.texto.literal" | translate }})</label>
             </div>
             <input type="text" [(ngModel)]="generalBody.otrosBienes" [maxLength]="60" class="form-control" pInputText>
           </div>
-
-
         </div>
         <div class="form-group row col-lg-4 col-md-4">
           <!-- Datos Financieros -->
           <div class="col-12 form-group">
-            <label style="font-weight: bold;visibility:hidden">{{
-              "justiciaGratuita.justiciables.unidadFamiliar.datosFinancieros" | translate }}</label>
+            <label style="font-weight: bold;visibility:hidden">{{ "justiciaGratuita.justiciables.unidadFamiliar.datosFinancieros" | translate }}</label>
           </div>
           <div class="form-group col-12">
             <label>{{ "justiciaGratuita.Calendarios.Observaciones" | translate }}</label>
@@ -168,8 +135,7 @@
           <div class="form-group col-12">
             <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.ingresos" | translate }}</label>
             <div class="d-flex">
-              <input type='number' [(ngModel)]="generalBody.impIngrAnuales" [maxLength]="10" class="form-control"
-                (keypress)="numberOnly($event)" pInputText>
+              <input type='number' [(ngModel)]="generalBody.impIngrAnuales" [maxLength]="10" class="form-control" (keypress)="numberOnly($event)" pInputText>
               <span class="m-auto pl-2">€</span>
             </div>
           </div>
@@ -177,8 +143,7 @@
           <div class="form-group col-12">
             <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.bienesInmuebles" | translate }}</label>
             <div class="d-flex">
-              <input type='number' [(ngModel)]="generalBody.impBienesInmu" [maxLength]="10" class="form-control"
-                (keypress)="numberOnly($event)" pInputText>
+              <input type='number' [(ngModel)]="generalBody.impBienesInmu" [maxLength]="10" class="form-control" (keypress)="numberOnly($event)" pInputText>
               <span class="m-auto pl-2">€</span>
             </div>
           </div>
@@ -186,8 +151,7 @@
           <div class="form-group col-12">
             <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.bienesMobiliarios" | translate }}</label>
             <div class="d-flex">
-              <input type='number' [(ngModel)]="generalBody.impBienesMu" [maxLength]="10" class="form-control"
-                (keypress)="numberOnly($event)" pInputText>
+              <input type='number' [(ngModel)]="generalBody.impBienesMu" [maxLength]="10" class="form-control" (keypress)="numberOnly($event)" pInputText>
               <span class="m-auto pl-2">€</span>
             </div>
           </div>
@@ -195,8 +159,7 @@
           <div class="form-group col-12">
             <label>{{ "justiciaGratuita.justiciables.unidadFamiliar.otrosBienes" | translate }}</label>
             <div class="d-flex">
-              <input type='number' [(ngModel)]="generalBody.impOtrosBienes" [maxLength]="10" class="form-control"
-                (keypress)="numberOnly($event)" pInputText>
+              <input type='number' [(ngModel)]="generalBody.impOtrosBienes" [maxLength]="10" class="form-control" (keypress)="numberOnly($event)" pInputText>
               <span class="m-auto pl-2">€</span>
             </div>
           </div>
@@ -206,15 +169,8 @@
   </div>
   <div [hidden]="!showTarjeta" class="card-footer">
     <div class="text-right main-button">
-      <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
-        label="{{ 'general.boton.restablecer' | translate}}"></button>
-
-      <button (click)="checkSave()" pButton type="button" icon="fa fa-save" iconPos="left"
-        label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+      <button (click)="checkSave()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
     </div>
   </div>
-</div>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
 </div>

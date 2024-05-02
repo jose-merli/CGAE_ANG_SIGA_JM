@@ -77,19 +77,25 @@ export class TablaJusticiablesComponent implements OnInit {
 
   openTab(evento) {
     //Si hemos accedido desde algún asunto no accedemos a la ficha del justiciable
-    if (!this.nuevoInteresado && !this.nuevoContrario && !this.nuevoSOJ && !this.nuevoAsistido && !this.nuevoContrarioAsistencia && !this.nuevoContrarioEJG && !this.nuevaUniFamiliar && !this.nuevoRepresentante) {
-      //Si hemos accedido desde el menú de justiciables accedemos a la ficha
-      if (!this.modoRepresentante) {
-        this.persistenceService.clearDatos();
-        this.persistenceService.setDatos(evento);
-        this.persistenceService.clearBody();
-      } else {
-        this.persistenceService.clearBody();
-        this.persistenceService.setBody(evento);
-      }
-      sessionStorage.setItem("vieneDeFichaJusticiable", "true");
-      this.router.navigate(["/gestionJusticiables"]);
+    //if (!this.nuevoInteresado && !this.nuevoContrario && !this.nuevoSOJ && !this.nuevoAsistido && !this.nuevoContrarioAsistencia && !this.nuevoContrarioEJG && !this.nuevaUniFamiliar && !this.nuevoRepresentante) {
+    //Si hemos accedido desde el menú de justiciables accedemos a la ficha
+    /*
+    if (!this.modoRepresentante) {
+      this.persistenceService.clearDatos();
+      this.persistenceService.setDatos(evento);
+      this.persistenceService.clearBody();
+    } else {
+      this.persistenceService.clearBody();
+      this.persistenceService.setBody(evento);
     }
+    */
+    //sessionStorage.setItem("vieneDeFichaJusticiable", "true");
+
+    this.persistenceService.clearDatos();
+    this.persistenceService.setDatos(evento);
+    this.router.navigate(["/gestionJusticiables"]);
+
+    //}
   }
 
   checkInteresado(justiciable) {
@@ -472,13 +478,14 @@ export class TablaJusticiablesComponent implements OnInit {
     else if (this.nuevoRepresentante) {
       this.persistenceService.clearBody();
       this.persistenceService.setBody(selectedDatos);
+      this.router.navigate(["/gestionJusticiables"]);
       //sessionStorage.setItem("newRepresentante",JSON.stringify(evento));
-      //this.router.navigate(["/gestionJusticiables"]);
-      if (sessionStorage.getItem("fichaJust") != null) {
-        sessionStorage.setItem("origin", sessionStorage.getItem("fichaJust"));
-        sessionStorage.removeItem("fichaJust");
-      }
-      this.location.back();
+      //
+      //if (sessionStorage.getItem("fichaJust") != null) {
+      //  sessionStorage.setItem("origin", sessionStorage.getItem("fichaJust"));
+      //  sessionStorage.removeItem("fichaJust");
+      //}
+      //this.location.back();
     } else {
       let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
       if (filtros.idRol == "2") {

@@ -1,22 +1,125 @@
-import { Component, EventEmitter, Input, OnChanges, Output, OnInit, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
-import { TranslateService } from '../../../../../commons/translate';
-import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
-import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
-import { CommonsService } from '../../../../../_services/commons.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { Message } from 'primeng/components/common/api';
-import { EJGItem } from '../../../../../models/sjcs/EJGItem';
-import { datos_combos } from '../../../../../utils/datos_combos';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Router } from "@angular/router";
+import { CommonsService } from "../../../../../_services/commons.service";
+import { PersistenceService } from "../../../../../_services/persistence.service";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate";
+import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
+import { UnidadFamiliarEJGItem } from "../../../../../models/sjcs/UnidadFamiliarEJGItem";
 
 @Component({
-  selector: 'app-datos-unidad-familiar',
-  templateUrl: './datos-unidad-familiar.component.html',
-  styleUrls: ['./datos-unidad-familiar.component.scss']
+  selector: "app-datos-unidad-familiar",
+  templateUrl: "./datos-unidad-familiar.component.html",
+  styleUrls: ["./datos-unidad-familiar.component.scss"],
 })
-export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
+export class DatosUnidadFamiliarComponent implements OnInit {
+  @Input() modoEdicion;
+  @Input() permisoEscritura: boolean = true;
+  @Input() showTarjeta: boolean = false;
+  @Input() body: JusticiableItem;
+  @Output() bodyChange = new EventEmitter<JusticiableItem>();
 
+  progressSpinner: boolean = false;
+
+  msgs = [];
+  impTotal: String = "";
+  unidadFamiliar: UnidadFamiliarEJGItem;
+  initialUnidadFamiliar: UnidadFamiliarEJGItem;
+
+  comboGrupoLaboral: any = [];
+  comboParentesco: any = [];
+  comboTipoIng: any = [];
+  comboRol: any[];
+
+  constructor(private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private commonsService: CommonsService, private translateService: TranslateService) {}
+
+  ngOnInit() {
+    this.progressSpinner = true;
+    this.combos();
+  }
+
+  styleObligatorio(evento) {
+    if (evento == undefined || evento == null || evento == "") {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  onHideTarjeta() {
+    this.showTarjeta = !this.showTarjeta;
+  }
+
+  rest() {
+    this.unidadFamiliar = JSON.parse(JSON.stringify(this.initialUnidadFamiliar));
+    //this.fillBoxes();
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  sumarImpTotal() {
+    // Importe Total de Valores
+    if (this.unidadFamiliar.impOtrosBienes != null || this.unidadFamiliar.impOtrosBienes != undefined || this.unidadFamiliar.impIngrAnuales != null || this.unidadFamiliar.impOtrosBienes != undefined || this.unidadFamiliar.impBienesMu != null || this.unidadFamiliar.impOtrosBienes != undefined || this.unidadFamiliar.impBienesInmu != null || this.unidadFamiliar.impOtrosBienes != undefined) {
+      let importe = this.unidadFamiliar.impOtrosBienes + this.unidadFamiliar.impIngrAnuales + this.unidadFamiliar.impBienesMu + this.unidadFamiliar.impBienesInmu;
+      this.impTotal = importe.toString();
+    } else {
+      this.impTotal = "";
+    }
+  }
+
+  private showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg,
+    });
+  }
+
+  private combos() {
+    this.getComboRol();
+    this.getComboGruposLaborales();
+    this.getComboParentesco();
+    this.getComboTiposIngresos();
+  }
+
+  private getComboRol() {
+    this.comboRol = [
+      { label: this.translateService.instant("justiciaGratuita.justiciables.rol.unidadFamiliar"), value: "1" },
+      { label: this.translateService.instant("justiciaGratuita.justiciables.rol.solicitante"), value: "2" },
+      { label: this.translateService.instant("justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal"), value: "3" },
+    ];
+  }
+
+  private getComboGruposLaborales() {
+    this.sigaServices.get("gestionJusticiables_comboGruposLaborales").subscribe((n) => {
+      this.comboGrupoLaboral = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboGrupoLaboral);
+    });
+  }
+
+  private getComboParentesco() {
+    this.progressSpinner = true;
+    this.sigaServices.get("gestionJusticiables_comboParentesco").subscribe((n) => {
+      this.comboParentesco = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboParentesco);
+    });
+  }
+
+  private getComboTiposIngresos() {
+    this.sigaServices.get("gestionJusticiables_comboTiposIngresos").subscribe(
+      (n) => {
+        this.comboTipoIng = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTipoIng);
+        this.progressSpinner = false;
+      },
+      (err) => {
+        this.progressSpinner = false;
+      },
+    );
+  }
+
+  /*
   solicitanteCabecera: String = "";
   parentescoCabecera: String = "";
   nombreGrupoLab: String = "";
@@ -28,20 +131,12 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
 
   disableSol: boolean = false;
 
-  comboGrupoLaboral: any = [];
-  comboParentesco: any = [];
-  comboTipoIng: any = [];
-  comboRol: any[] = [
-    { label: this.translateService.instant('justiciaGratuita.justiciables.rol.unidadFamiliar'), value: "1" },
-    { label: this.translateService.instant('justiciaGratuita.justiciables.rol.solicitante'), value: "2" },
-    { label: this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal'), value: "3" },
-  ];
+
 
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
   msgs: Message[] = [];
-  generalBody: UnidadFamiliarEJGItem;
-  initialBody: UnidadFamiliarEJGItem;
+
 
   showTarjeta: boolean = false;
   resaltadoDatos: boolean = false;
@@ -72,9 +167,6 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
     this.getComboParentesco();
     this.getComboTiposIngresos();
 
-
-
-    /* Proviene de un EJG */
     if (this.fromUniFamiliar) {
       this.permisoEscritura = true;
     }
@@ -132,12 +224,6 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
     if (this.tarjetaDatosUnidadFamiliar == true) this.showTarjeta = this.tarjetaDatosUnidadFamiliar;
   }
 
-  onHideTarjeta() {
-    this.showTarjeta = !this.showTarjeta;
-    this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta unidadFamiliar.
-    this.idOpened.emit('unidadFamiliar'); // Constante para abrir la Tarjeta de unidadFamiliar.
-  }
-
   checkSave() {
     let pass = true;
     //En el caso que no se haya rellenado el campo de parentesco
@@ -159,25 +245,6 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
       this.muestraCamposObligatorios();
       pass = false;
     }
-    //Se comprueba el campo de rol y si ya hay un solicitante principal si se introduce dicho valor
-    // if(this.generalBody.uf_enCalidad=="3"){
-    //   let ejg: EJGItem = new EJGItem();
-    //   //Comprobamos el solicitante principal asociado
-    //   //Si estamos en la creacion de una nueva unidad familiar 
-    //   if(sessionStorage.getItem("EJGItem")){
-    //     ejg = JSON.parse(sessionStorage.getItem("EJGItem"));
-    //   }
-    //   //Si se esta editando una unidad familiar desde su tarjeta en ejg
-    //   else if(this.persistenceService.getDatos()){
-    //     ejg = this.persistenceService.getDatos();
-    //   }
-    //   //Si la persona que selecciona el rol de solicitante principal es diferente a una ya designada, salta un error
-    //   if(ejg.idPersonajg != this.generalBody.uf_idPersona && ejg.idPersonajg != null){
-    //     this.showMessage("error", this.translateService.instant('general.message.incorrect'),
-    //     this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.errorSolPrinc'));
-    //     pass=false;
-    //   }
-    // }
     if (pass) this.save();
   }
 
@@ -187,9 +254,6 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
     //Introducimos los valores que tienen los checkbox al objeto.
     // if (this.solicitanteBox) this.generalBody.uf_solicitante = "1";
     // else this.generalBody.uf_solicitante = "0";
-
-
-
     //Valor de la casilla "Incapacitado"
     if (this.incapacitadoBox) this.generalBody.incapacitado = 1;
     else this.generalBody.incapacitado = 0;
@@ -287,23 +351,6 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
     )
   }
 
-  rest() {
-    //Se realiza la asignacion de esta manera para evitar que la variable cambie los valores
-    //igual que la variable generalBody.
-    this.generalBody = JSON.parse(JSON.stringify(this.initialBody));
-    this.fillBoxes();
-
-  }
-
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
-  }
-
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
 
@@ -338,88 +385,13 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
     else this.incapacitadoBox = false;
   }
 
-  getComboGruposLaborales() {
-    this.progressSpinner = true;
-    this.sigaServices.get("gestionJusticiables_comboGruposLaborales").subscribe(
-      n => {
-        this.comboGrupoLaboral = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboGrupoLaboral);
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    );
-  }
 
-  getComboParentesco() {
-    this.progressSpinner = true;
-    this.sigaServices.get("gestionJusticiables_comboParentesco").subscribe(
-      n => {
-        this.comboParentesco = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboParentesco);
-        this.progressSpinner = false;
-
-        //Se asigna el valor de parentesco de la cabecera cuando se incia la tarjeta
-        if (this.generalBody.idParentesco != null && this.generalBody.idParentesco != undefined) {
-          this.comboParentesco.forEach(element => {
-            if (element.value == this.generalBody.idParentesco) this.parentescoCabecera = element.label;
-          });
-        }
-        //Si no tiene idParentesco, se le asigna el valor por defecto "No informado". 
-        //Actualmente, el combo no devuelve ningún elemento con esa etiqueta.
-        //Se escoge la etiqueta añadida de "No informado" con valor -1.
-        //else this.generalBody.idParentesco = -1;
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  getComboTiposIngresos() {
-    this.progressSpinner = false;
-    this.sigaServices.get("gestionJusticiables_comboTiposIngresos").subscribe(
-      n => {
-        this.comboTipoIng = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboTipoIng);
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  styleObligatorio(evento) {
-    if ((evento == undefined || evento == null || evento == "")) {
-      return this.commonsService.styleObligatorio(evento);
-    }
-  }
 
   muestraCamposObligatorios() {
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatos = true;
   }
 
-  clear() {
-    this.msgs = [];
-  }
 
-  sumarImpTotal() {
-    // Importe Total de Valores
-    if (this.generalBody.impOtrosBienes != null || this.generalBody.impOtrosBienes != undefined ||
-      this.generalBody.impIngrAnuales != null || this.generalBody.impOtrosBienes != undefined ||
-      this.generalBody.impBienesMu != null || this.generalBody.impOtrosBienes != undefined ||
-      this.generalBody.impBienesInmu != null || this.generalBody.impOtrosBienes != undefined) {
-      let importe = this.generalBody.impOtrosBienes +
-        this.generalBody.impIngrAnuales +
-        this.generalBody.impBienesMu +
-        this.generalBody.impBienesInmu;
-      this.impTotal = importe.toString();
-    } else {
-      this.impTotal = "";
-    }
-  }
-
+  */
 }

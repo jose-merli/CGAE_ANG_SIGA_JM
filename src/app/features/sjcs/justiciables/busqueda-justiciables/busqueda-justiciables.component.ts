@@ -57,16 +57,6 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.location.back();
     }
 
-    this.activatedRoute.queryParams.subscribe((params) => {
-      if (params.rp == "1") {
-        this.modoRepresentante = true;
-      } else if (params.rp == "2") {
-        this.searchJusticiable = true;
-      }
-    });
-
-    this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
-
     if (sessionStorage.getItem("origin") == "newInteresado") {
       this.nuevoInteresado = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.designaciones"), this.translateService.instant("justiciaGratuita.designaciones.interesados"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
@@ -89,25 +79,27 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.nuevoSoj = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.soj"), this.translateService.instant("justiciaGratuita.soj.solicitante"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     } else if (sessionStorage.getItem("origin") == "newRepresentante") {
+      this.modoRepresentante = true;
+      this.filtros.filtros = this.persistenceService.getFiltrosAux();
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("menu.justiciaGratuita.justiciables.gestionjusticiables"), "Tarjeta Representante", this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     } else {
+      this.searchJusticiable = true;
       this.persistenceService.clearDatosEJG();
+      this.filtros.filtros = this.persistenceService.getFiltros();
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
     }
 
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
 
-    this.commonsService
-      .checkAcceso(procesos_justiciables.justiciables)
-      .then((respuesta) => {
-        this.permisoEscritura = respuesta;
-        this.persistenceService.setPermisos(this.permisoEscritura);
-        if (this.permisoEscritura == undefined) {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
-          this.router.navigate(["/errorAcceso"]);
-        }
-      })
-      .catch((error) => console.error(error));
+    this.commonsService.checkAcceso(procesos_justiciables.justiciables).then((respuesta) => {
+      this.permisoEscritura = respuesta;
+      this.persistenceService.setPermisos(this.permisoEscritura);
+      if (this.permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+    });
   }
 
   isOpenReceive(event) {
@@ -116,10 +108,6 @@ export class BusquedaJusticiablesComponent implements OnInit {
   }
 
   search(event) {
-    if (!this.modoRepresentante) {
-      this.filtros.filtros = this.persistenceService.getFiltros();
-    }
-
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", this.filtros.filtros).subscribe(
       (n) => {
         this.datos = JSON.parse(n.body).justiciableBusquedaItems;

@@ -1,20 +1,19 @@
-import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
-import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
-import { Router } from '@angular/router';
-import { TranslateService } from '../../../../../commons/translate';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
-import { CommonsService } from '../../../../../_services/commons.service';
-import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
-import { DatePipe, Location } from '@angular/common';
+import { Location } from "@angular/common";
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from "@angular/core";
+import { Router } from "@angular/router";
+import { CommonsService } from "../../../../../_services/commons.service";
+import { PersistenceService } from "../../../../../_services/persistence.service";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate";
+import { JusticiableBusquedaItem } from "../../../../../models/sjcs/JusticiableBusquedaItem";
+import { KEY_CODE } from "../../../../administracion/parametros/parametros-generales/parametros-generales.component";
 
 @Component({
-  selector: 'app-filtro-justiciables',
-  templateUrl: './filtro-justiciables.component.html',
-  styleUrls: ['./filtro-justiciables.component.scss']
+  selector: "app-filtro-justiciables",
+  templateUrl: "./filtro-justiciables.component.html",
+  styleUrls: ["./filtro-justiciables.component.scss"],
 })
 export class FiltroJusticiablesComponent implements OnInit {
-
   showDatosGenerales: boolean = true;
   showDatosDirecciones: boolean = false;
   showAsuntos: boolean = false;
@@ -22,8 +21,7 @@ export class FiltroJusticiablesComponent implements OnInit {
   checkOrigenAsuntos: boolean = false;
 
   filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
-  filtroAux: JusticiableBusquedaItem = new JusticiableBusquedaItem();
-
+  //filtroAux: JusticiableBusquedaItem = new JusticiableBusquedaItem();
 
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones: any;
@@ -41,46 +39,30 @@ export class FiltroJusticiablesComponent implements OnInit {
   fichasPosiblesNew = [
     {
       key: "generales",
-      activa: true
-    }
-
+      activa: true,
+    },
   ];
 
-  constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) { }
+  constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) {}
 
   ngOnInit() {
     this.getComboProvincias();
     this.getComboRoles();
 
-    if (this.modoRepresentante) {
-      if (this.persistenceService.getFiltrosAux() != undefined) {
-        this.filtros = this.persistenceService.getFiltrosAux();
-        //this.isOpen.emit(false)
-        this.configuracionFiltros();
-      } else {
-        this.filtros = new JusticiableBusquedaItem();
-      }
+    if (this.filtros != undefined) {
+      this.configuracionFiltros();
     } else {
-      if (this.persistenceService.getFiltros() != undefined) {
-        this.filtros = this.persistenceService.getFiltros();
-        //this.isOpen.emit(false)
-        this.configuracionFiltros();
-      } else {
-        this.filtros = new JusticiableBusquedaItem();
-      }
+      this.filtros = new JusticiableBusquedaItem();
     }
 
     // Comprobar botón ATRAS en caso de Asociar Justiciable con EJG. Designas..
-    if (sessionStorage.getItem("contrariosEJG") || sessionStorage.getItem("asistenciaAsistido") || sessionStorage.getItem("contrarios")
-      || sessionStorage.getItem("datosFamiliares") || sessionStorage.getItem("interesados")) {
+    if (sessionStorage.getItem("contrariosEJG") || sessionStorage.getItem("asistenciaAsistido") || sessionStorage.getItem("contrarios") || sessionStorage.getItem("datosFamiliares") || sessionStorage.getItem("interesados")) {
       this.checkOrigenAsuntos = true;
     }
     this.clearFilters();
 
     // Mantenemos los filtros de la búsqueda anterior
     if (sessionStorage.getItem("vieneDeFichaJusticiable") && sessionStorage.getItem("filtrosBusquedaJusticiable")) {
-
       this.filtros = JSON.parse(sessionStorage.getItem("filtrosBusquedaJusticiable"));
 
       // Añadimos la poblacion, para ello necesitamos obtener el combo de poblaciones
@@ -93,16 +75,11 @@ export class FiltroJusticiablesComponent implements OnInit {
     sessionStorage.removeItem("filtrosBusquedaJusticiable");
   }
 
-  configuracionFiltros() {
-    if ((this.filtros.idProvincia != undefined && this.filtros.idProvincia != null) ||
-      (this.filtros.idPoblacion != undefined && this.filtros.idPoblacion != null) ||
-      (this.filtros.codigoPostal != undefined && this.filtros.codigoPostal != null)) {
+  private configuracionFiltros() {
+    if ((this.filtros.idProvincia != undefined && this.filtros.idProvincia != null) || (this.filtros.idPoblacion != undefined && this.filtros.idPoblacion != null) || (this.filtros.codigoPostal != undefined && this.filtros.codigoPostal != null)) {
       this.showDatosDirecciones = true;
     }
-
-    if ((this.filtros.anioDesde != undefined && this.filtros.anioDesde != null) ||
-      (this.filtros.anioHasta != undefined && this.filtros.anioHasta != null) ||
-      (this.filtros.idRol != undefined && this.filtros.idRol != null)) {
+    if ((this.filtros.anioDesde != undefined && this.filtros.anioDesde != null) || (this.filtros.anioHasta != undefined && this.filtros.anioHasta != null) || (this.filtros.idRol != undefined && this.filtros.idRol != null)) {
       this.showAsuntos = true;
     }
   }
@@ -113,7 +90,7 @@ export class FiltroJusticiablesComponent implements OnInit {
       sessionStorage.removeItem("itemDesignas");
     }
     sessionStorage.removeItem("fichaJust");
-    if(this.persistenceService.getDatosEJG()){
+    if (this.persistenceService.getDatosEJG()) {
       this.router.navigate(["/gestionEjg"]);
     } else {
       this.location.back();
@@ -121,24 +98,17 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   getComboRoles() {
-    this.sigaServices.get("busquedaJusticiables_comboRoles").subscribe(
-      n => {
-        this.comboRoles = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboRoles);
-      }
-    );
+    this.sigaServices.get("busquedaJusticiables_comboRoles").subscribe((n) => {
+      this.comboRoles = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboRoles);
+    });
   }
 
   getComboProvincias() {
-    this.sigaServices.get("busquedaJuzgados_provinces").subscribe(
-      n => {
-        this.comboProvincias = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboProvincias);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
+    this.sigaServices.get("busquedaJuzgados_provinces").subscribe((n) => {
+      this.comboProvincias = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboProvincias);
+    });
   }
 
   onChangeProvincia() {
@@ -168,20 +138,11 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   getComboPoblacion(dataFilter) {
-    this.sigaServices
-      .getParam(
-        "busquedaJuzgados_population",
-        "?idProvincia=" + this.filtros.idProvincia + "&dataFilter=" + dataFilter
-      )
-      .subscribe(
-        n => {
-          this.isDisabledPoblacion = false;
-          this.comboPoblacion = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboPoblacion);
-        },
-        error => { },
-        () => { }
-      );
+    this.sigaServices.getParam("busquedaJuzgados_population", "?idProvincia=" + this.filtros.idProvincia + "&dataFilter=" + dataFilter).subscribe((n) => {
+      this.isDisabledPoblacion = false;
+      this.comboPoblacion = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboPoblacion);
+    });
   }
 
   onHideDatosGenerales() {
@@ -204,16 +165,16 @@ export class FiltroJusticiablesComponent implements OnInit {
     // if (sessionStorage.getItem("itemAsistencia")) {
     //   sessionStorage.removeItem("itemAsistencia");
     // }
-     if (sessionStorage.getItem("itemDesignas")) {
-       sessionStorage.removeItem("itemDesignas");
-     }
+    if (sessionStorage.getItem("itemDesignas")) {
+      sessionStorage.removeItem("itemDesignas");
+    }
     if (this.checkFilters()) {
       if (this.modoRepresentante) {
         this.persistenceService.setFiltrosAux(this.filtros);
-        this.isOpen.emit(false)
+        this.isOpen.emit(false);
       } else {
         this.persistenceService.setFiltros(this.filtros);
-        this.isOpen.emit(false)
+        this.isOpen.emit(false);
       }
     }
 
@@ -231,19 +192,22 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   nuevo() {
-    this.modoRepresentante = true;
+    //this.modoRepresentante = true;
     sessionStorage.setItem("nuevoJusticiable", "true");
     sessionStorage.setItem("Nuevo", "true");
     sessionStorage.setItem("nuevoJusticiableTarjetas", "true");
+    //sessionStorage.setItem("origin", "Nuevo");
+    //sessionStorage.setItem("fichaJusticiable");
+
     this.persistenceService.setFichasPosibles(this.fichasPosiblesNew);
+
     if (this.modoRepresentante) {
-      this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });
+      this.router.navigate(["/gestionJusticiables"]);
     } else {
       this.persistenceService.clearDatos();
       this.persistenceService.clearBody();
       if (this.nuevaUniFamiliar) {
         sessionStorage.setItem("origin", "UnidadFamiliar");
-        sessionStorage.setItem("Nuevo", "true");
       }
       this.router.navigate(["/gestionJusticiables"]);
     }
@@ -259,14 +223,15 @@ export class FiltroJusticiablesComponent implements OnInit {
       (this.filtros.anioHasta == null || this.filtros.anioDesde == undefined) &&
       (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
       (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "") &&
-      (this.filtros.idRol == null || this.filtros.idRol == "")) {
+      (this.filtros.idRol == null || this.filtros.idRol == "")
+    ) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
-    } else if(this.filtros != null && this.filtros.codigoPostal != null && this.filtros.codigoPostal.length != 5){
+    } else if (this.filtros != null && this.filtros.codigoPostal != null && this.filtros.codigoPostal.length != 5) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.cp"));
-      console.log("error cp")
+      console.log("error cp");
       return false;
-    }else {
+    } else {
       // quita espacios vacios antes de buscar
       if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
         this.filtros.nombre = this.filtros.nombre.trim();
@@ -302,13 +267,11 @@ export class FiltroJusticiablesComponent implements OnInit {
         this.filtros.codigoPostal = event.currentTarget.value.slice(0, 5);
       }
     } else {
-
       if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
         this.filtros.codigoPostal = event.currentTarget.value.slice(0, 5);
       } else {
         event.currentTarget.value = "";
       }
-
     }
   }
 
@@ -320,12 +283,12 @@ export class FiltroJusticiablesComponent implements OnInit {
     this.msgs = [];
   }
 
-  showMessage(severity, summary, msg) {
+  private showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
   }
 
@@ -336,5 +299,4 @@ export class FiltroJusticiablesComponent implements OnInit {
       this.search();
     }
   }
-
 }
