@@ -783,11 +783,17 @@ export class GestionJusticiablesComponent implements OnInit {
     if (this.justiciable != "") {
       sessionStorage.setItem("fichaJusticiable", this.justiciable);
       this.router.navigate(["/gestionJusticiables"]);
+    } else if (sessionStorage.getItem("sojItemLink") != null) {
+      this.router.navigate(["/detalle-soj"]);
     } else if (this.persistenceService.getDatosEJG() && !sessionStorage.getItem("nuevoJusticiable")) {
       let ejg: EJGItem = this.persistenceService.getDatosEJG();
       ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
       this.persistenceService.setDatosEJG(ejg);
       this.router.navigate(["/gestionEjg"]);
+    } else if (sessionStorage.getItem("asistenciaAsistido") != null || sessionStorage.getItem("idAsistencia") != null) {
+      this.router.navigate(["/fichaAsistencia"]);
+    } else if (sessionStorage.getItem("designaItemLink") != null) {
+      this.router.navigate(["/fichaDesignaciones"]);
     } else if (sessionStorage.getItem("vieneDeFichaJusticiable") == "true" || sessionStorage.getItem("nuevoJusticiable") == "true") {
       this.router.navigate(["/justiciables"]);
       sessionStorage.removeItem("nuevoJusticiable");

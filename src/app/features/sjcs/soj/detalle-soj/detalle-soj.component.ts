@@ -11,6 +11,7 @@ import { FichaSojItem } from '../../../../models/sjcs/FichaSojItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { procesos_soj } from '../../../../permisos/procesos_soj';
 import { removeInfiniteRows } from '@syncfusion/ej2-angular-grids';
+import { PersistenceService } from '../../../../_services/persistence.service';
 
 
 @Component({
@@ -86,7 +87,8 @@ export class DetalleSOJComponent implements OnInit {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private commonsService: CommonsService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private persistenceService: PersistenceService
   ) { }
 
   /**
@@ -362,8 +364,14 @@ export class DetalleSOJComponent implements OnInit {
   }
 
   backTo() {
+    sessionStorage.removeItem("sojItemLink");
+    
+    if (this.persistenceService.getDatosEJG() != null) {
+      this.router.navigate(["/gestionEjg"]);
+    } else {
+      this.location.back();
+    }
     //this.router.navigate(['/gestion-ejg']);
-    this.location.back();
   }
 
   testPermisos() {

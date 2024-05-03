@@ -256,8 +256,10 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         sessionStorage.removeItem('origin');
         sessionStorage.setItem('tarjeta', 'sjcsDesigInt');
+        sessionStorage.setItem('origin', 'Nuevo');
         sessionStorage.setItem("creaInsertaJusticiableDesigna", "true");
-        this.location.back();
+        this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "2" } });
+        //this.location.back();
       },
       err => {
         this.progressSpinner = false;
@@ -312,7 +314,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         sessionStorage.removeItem('origin');
         sessionStorage.setItem('tarjeta', 'sjcsDesigContra');
-        this.router.navigate(["/fichaDesignaciones"]);
+        sessionStorage.setItem('origin', 'Nuevo');
+        this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "2" } });
+        //this.router.navigate(["/fichaDesignaciones"]);
       },
       err => {
         this.progressSpinner = false;
@@ -337,7 +341,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
             this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
-            this.router.navigate(["/fichaAsistencia"]);
+            sessionStorage.setItem('origin', 'Nuevo');
+            this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "2" } });
+            //this.router.navigate(["/fichaAsistencia"]);
           }
         },
         err => {
@@ -394,8 +400,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
               this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
             } else {
               this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
-
-              this.router.navigate(["/fichaAsistencia"]);
+              sessionStorage.setItem('origin', 'Nuevo');
+              this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "2" } });
+              //this.router.navigate(["/fichaAsistencia"]);
             }
           },
           err => {
@@ -447,7 +454,10 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         sessionStorage.removeItem('origin');
         sessionStorage.setItem('tarjeta', 'contrariosPreDesigna');
-        this.router.navigate(["/gestionEjg"]);
+        sessionStorage.setItem("origin", "Nuevo");
+        this.persistenceService.setDatosEJG(ejg);
+        this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "2" } });
+        //this.router.navigate(["/gestionEjg"]);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -490,9 +500,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         //Para que se abra la tarjeta de unidad familiar y se haga scroll a ella
         sessionStorage.removeItem('origin');
         sessionStorage.setItem('tarjeta', 'unidadFamiliar');
+        sessionStorage.setItem("origin", "Nuevo");
         ejg.nombreApeSolicitante = this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre;
         this.persistenceService.setDatosEJG(ejg);
-        this.router.navigate(["/gestionEjg"]);
+        this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "2" } });
+        //this.router.navigate(["/gestionEjg"]);
       },
       err => {
         this.progressSpinner = false;
@@ -685,7 +697,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
             this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
-            this.router.navigate(["/detalle-soj"]);
+            sessionStorage.setItem('origin', 'Nuevo');
+            this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "2" } });
+            //this.router.navigate(["/detalle-soj"]);
           }
         },
         err => {
@@ -846,7 +860,10 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   preAsociarJusticiable() {
     // Asociar solo si viene de EJG, Asistencia o Designa
-    if (this.persistenceService.getDatosEJG() || sessionStorage.getItem("itemAsistencia") || sessionStorage.getItem("itemDesignas")) {
+    // Hay que comprobar primero si viene desde SOJ antes de mirar los demás
+    if (this.nuevoSoj) {
+      this.asociarSOJ(this.body);
+    } else if (this.persistenceService.getDatosEJG() || sessionStorage.getItem("itemAsistencia") || sessionStorage.getItem("itemDesignas")) {
       this.asociarJusticiable();
       if (sessionStorage.getItem("itemAsistencia")) {
         sessionStorage.removeItem("itemAsistencia");
@@ -854,8 +871,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       if (sessionStorage.getItem("itemDesignas")) {
         sessionStorage.removeItem("itemDesignas");
       }
-    }else if(this.nuevoSoj){
-      this.asociarSOJ(this.body);
     }
   }
 
