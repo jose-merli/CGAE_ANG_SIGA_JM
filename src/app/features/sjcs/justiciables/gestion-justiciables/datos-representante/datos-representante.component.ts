@@ -28,6 +28,7 @@ export class DatosRepresentanteComponent implements OnInit {
   disassociate: boolean = true;
   showDialogRepre: boolean = false;
   dialogAssociate: boolean = true;
+  navigateToJusticiable: boolean = true;
 
   msgs = [];
   tipoIdentificacion = [];
@@ -40,6 +41,9 @@ export class DatosRepresentanteComponent implements OnInit {
     this.progressSpinner = false;
     this.representante = new JusticiableItem();
     this.getTiposIdentificacion();
+    if (this.origen == "representante") {
+      this.navigateToJusticiable = false;
+    }
     if (this.body != undefined) {
       if (this.persistenceService.getBody()) {
         let bodyRepresentante = this.persistenceService.getBody();

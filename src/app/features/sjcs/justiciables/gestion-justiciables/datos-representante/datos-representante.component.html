@@ -13,7 +13,7 @@
         <div class="d-flex justify-content-start mb-1 ml-auto">
           <label *ngIf="this.body.idrepresentantejg" class="mr-3" (click)="navigateToRepresentante()">
             <i class="fas fa-external-link-alt mr-2"></i>
-            <span style="color: blue; text-decoration: underline; cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}</span>
+            <span [ngClass]="{enlaceRepresentanteLess: !navigateToJusticiable, enlaceRepresentante: navigateToJusticiable}"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}</span>
           </label>
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
@@ -36,7 +36,7 @@
             <div class="col-3">
               <label *ngIf="this.body.idrepresentantejg" class="mr-3" (click)="navigateToRepresentante()">
                 <i class="fas fa-external-link-alt mr-2"></i>
-                <span style="color: blue; text-decoration: underline; cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}</span>
+                <span [ngClass]="{enlaceRepresentanteLess: !navigateToJusticiable, enlaceRepresentante: navigateToJusticiable}"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}</span>
               </label>
             </div>
             <div class="col-2">

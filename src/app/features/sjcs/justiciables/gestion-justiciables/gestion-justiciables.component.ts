@@ -6,6 +6,7 @@ import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
 import { JusticiableBusquedaItem } from "../../../../models/sjcs/JusticiableBusquedaItem";
 import { JusticiableItem } from "../../../../models/sjcs/JusticiableItem";
+import { UnidadFamiliarEJGItem } from "../../../../models/sjcs/UnidadFamiliarEJGItem";
 import { procesos_ejg } from "../../../../permisos/procesos_ejg";
 import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
 
@@ -16,6 +17,7 @@ import { procesos_justiciables } from "../../../../permisos/procesos_justiciable
 })
 export class GestionJusticiablesComponent implements OnInit {
   body: JusticiableItem = new JusticiableItem();
+  unidadFamiliar: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem();
   justiciable: any;
   tarjetas = new Map();
   datosResumen = [];
@@ -43,6 +45,10 @@ export class GestionJusticiablesComponent implements OnInit {
         sessionStorage.removeItem("justiciable");
       }
       await this.searchRepresentanteById(justiciable.idpersona, justiciable.idinstitucion);
+    } else if (sessionStorage.getItem("familiar")) {
+      this.unidadFamiliar = JSON.parse(sessionStorage.getItem("familiar"));
+      sessionStorage.removeItem("familiar");
+      await this.searchRepresentanteById(this.unidadFamiliar.uf_idPersona, this.unidadFamiliar.uf_idInstitucion);
     } else {
       this.updateTarjResumen();
     }
@@ -65,6 +71,10 @@ export class GestionJusticiablesComponent implements OnInit {
     if (this.origen == "representante") {
       this.persistenceService.setDatos(this.justiciable);
       this.router.navigate(["/gestionJusticiables"]);
+    } else if (this.origen == "UnidadFamiliar" || this.origen == "ContrarioEJG") {
+      this.router.navigate(["/gestionEjg"]);
+    } else if (this.origen == "Contrario") {
+      this.router.navigate(["/fichaDesignaciones"]);
     } else {
       sessionStorage.setItem("origin", this.origen);
       this.router.navigate(["/justiciables"]);
@@ -83,6 +93,9 @@ export class GestionJusticiablesComponent implements OnInit {
     this.tarjetas.set("tarjetaSolicitud", { visibility: false, permission: false });
     this.tarjetas.set("tarjetaRepresentante", { visibility: false, permission: false });
     this.tarjetas.set("tarjetaAsunto", { visibility: false, permission: false });
+    this.tarjetas.set("tarjetaUnidadFamiliar", { visibility: false, permission: false });
+    this.tarjetas.set("tarjetaAbogado", { visibility: false, permission: false });
+    this.tarjetas.set("tarjetaProcurador", { visibility: false, permission: false });
   }
 
   private updateTarjResumen() {
@@ -152,7 +165,7 @@ export class GestionJusticiablesComponent implements OnInit {
           sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
           this.router.navigate(["/errorAcceso"]);
         }
-      } else if (this.origen == "ContrarioEJG") {
+      } else if (this.origen == "ContrarioEJG" || this.origen == "Contrario") {
         if (this.getPermiso(procesos_justiciables.detalleContrarios)) {
           if (this.getPermiso(procesos_ejg.datosGeneralesContrarios)) {
             this.enlacesResumen.push({ label: "general.message.datos.generales", value: document.getElementById("tarjetaGenerales"), nombre: "tarjetaGenerales" });

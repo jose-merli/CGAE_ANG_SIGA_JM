@@ -1,5 +1,9 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="ficha-container" id="DivIdAbogado">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
@@ -14,46 +18,22 @@
       </div>
       <div *ngIf="!showTarjeta" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fa fa-gavel icon-ficha"></i>
-          </div>
+          <div class="img-colegiado"><i class="fa fa-gavel icon-ficha"></i></div>
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.abogado' | translate }}
-            </label>
+            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.abogado' | translate }}</label>
           </div>
           <div class="row">
             <div class="col-3">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}:
-                 <span>{{ generalBody.nombreColegio }}</span> 
-              </label>
+              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}: <span>{{ abogado.nombreColegio }}</span></label>
             </div>
             <div class="col-3">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}:
-                <span>{{ generalBody.numColegiado }}</span>
-              </label>
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}: <span>{{ abogado.numColegiado }}</span></label>
             </div>
             <div class="col-3">
-              <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate }}:
-                <span>{{ generalBody.estadoColegial }}</span>
-              </label>
+              <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate }}: <span>{{ abogado.estadoColegial }}</span></label>
             </div>
-            <!-- <div *ngIf="!showEnlaceAbogado" class="col-3"></div>
-            <div *ngIf="showEnlaceAbogado" class="col-3">
-              <label *ngIf="!navigateToColegiado">
-                <i (click)="navigateToAbogado();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
-                <a (click)="navigateToAbogado();$event.stopPropagation();">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'informesycomunicaciones.comunicaciones.fichaColegial' | translate }}
-                  </span>
-                </a>
-              </label>
-              <label *ngIf="navigateToColegiado">
-                <i class="fas fa-external-link-alt mr-2"></i>
-                <span style="color: gray; text-decoration: underline;cursor:pointer;"> {{ 'informesycomunicaciones.comunicaciones.fichaColegial' | translate }}
-                </span>
-              </label>
-            </div> -->
             <div class="col-3">
               <i class="fa fa-angle-down float-right"></i>
             </div>
@@ -64,43 +44,31 @@
     <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-2 col-md-2 col-sm-2 p-2">
-          <div class="positionUpload img-colegiado text-center my-0 mx-auto">
-            <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
-          </div>
+          <div class="positionUpload img-colegiado text-center my-0 mx-auto"><i class="fa fa-user" style="font-size:6.5rem;color:grey"></i></div>
         </div>
         <div class="bloque col-lg-10 col-md-10 col-sm-10">
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} (*)
-              </label>
-              <input [(ngModel)]="generalBody.nombreColegio" type="text" class="form-control" maxlength="20" pInputText
-              disabled />
+              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} (*)</label>
+              <input [(ngModel)]="abogado.nombreColegio" type="text" class="form-control" maxlength="20" pInputText disabled />
             </div>
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }} (*)
-              </label>
-              <input [(ngModel)]="generalBody.numColegiado" disabled type="text" class="form-control" maxlength="20" pInputText
-                 />
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }} (*)</label>
+              <input [(ngModel)]="abogado.numColegiado" disabled type="text" class="form-control" maxlength="20" pInputText />
             </div>
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate }} (*)
-              </label>
-              <input [(ngModel)]="generalBody.estadoColegial" type="text" disabled class="form-control" maxlength="20" pInputText
-                 />
+              <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.estado" | translate }} (*)</label>
+              <input [(ngModel)]="abogado.estadoColegial" type="text" disabled class="form-control" maxlength="20" pInputText />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}
-              </label>
-              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control"
-                [maxLength]="100"  pInputText />
+              <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}</label>
+              <input [(ngModel)]="abogado.nombre" type="text" disabled class="form-control" [maxLength]="100"  pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
-              </label>
-              <input [(ngModel)]="generalBody.nif" type="text" disabled class="form-control" [maxLength]="100"
-                 pInputText />
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}</label>
+              <input [(ngModel)]="abogado.nif" type="text" disabled class="form-control" [maxLength]="100" pInputText />
             </div>
           </div>
         </div>
@@ -109,42 +77,9 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="Disassociate()" type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
-          [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
-        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate}}"></button>
-        <!-- <button pButton (click)="Associate()" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoEscritura || disabledSave()"></button> -->
+        <button pButton (click)="disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}" [disabled]="!permisoEscritura ||  abogado.numColegiado == ''"></button>
+        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
       </div>
     </div>
   </div>
 </div>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdCreateAbogado" #cdCreateAbogado>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdCreateAbogado.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdAbogadoAssociate" #cdAbogadoAssociate>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdAbogadoAssociate.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="rejectAssociate()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425"
-  key="cdAbogadoDisassociate" #cdAbogadoDisassociate>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdAbogadoDisassociate.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="rejectDisassociate()"></button>
-  </p-footer>
-</p-confirmDialog>

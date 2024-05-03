@@ -17,13 +17,15 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   @Input() permisoEscritura: boolean = true;
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
+  @Input() unidadFamiliar: UnidadFamiliarEJGItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
 
   progressSpinner: boolean = false;
 
   msgs = [];
   impTotal: String = "";
-  unidadFamiliar: UnidadFamiliarEJGItem;
+  parentescoCabecera: String = "";
+  nombreGrupoLab: String = "";
   initialUnidadFamiliar: UnidadFamiliarEJGItem;
 
   comboGrupoLaboral: any = [];
@@ -36,6 +38,7 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     this.combos();
+    this.updateResumen();
   }
 
   styleObligatorio(evento) {
@@ -50,21 +53,98 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
   rest() {
     this.unidadFamiliar = JSON.parse(JSON.stringify(this.initialUnidadFamiliar));
-    //this.fillBoxes();
   }
 
   clear() {
     this.msgs = [];
   }
 
-  sumarImpTotal() {
-    // Importe Total de Valores
+  save() {
+    if (this.validateCampos()) {
+      this.progressSpinner = true;
+
+      this.sigaServices.post("gestionJusticiables_updateUnidadFamiliar", this.unidadFamiliar).subscribe(
+        (n) => {
+          this.progressSpinner = false;
+
+          if (JSON.parse(n.body).error.code == 200) {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+            //Se realiza la asignacion de esta manera para evitar que la variable cambie los valores igual que la variable generalBody.
+            this.initialUnidadFamiliar = JSON.parse(JSON.stringify(this.unidadFamiliar));
+
+            //Si se selecciona el valor "Unidad Familiar" en el desplegable "Rol/Solicitante"
+            if (this.unidadFamiliar.uf_enCalidad == "1") {
+              this.unidadFamiliar.uf_solicitante = "0";
+            }
+            //Si se selecciona el valor "Solicitante" o "Solicitante principal" en el desplegable "Rol/Solicitante"
+            if (this.unidadFamiliar.uf_enCalidad == "2" || this.unidadFamiliar.uf_enCalidad == "3") {
+              this.unidadFamiliar.uf_solicitante = "1";
+            }
+
+            this.updateResumen();
+
+            this.bodyChange.emit(this.body);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        },
+        (err) => {
+          this.progressSpinner = false;
+          if (JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        },
+      );
+    }
+  }
+
+  private validateCampos() {
+    let valid = true;
+    //En el caso que no se haya rellenado el campo de parentesco
+    if (this.unidadFamiliar.idParentesco == null || this.unidadFamiliar.uf_enCalidad == null) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      valid = false;
+    } else if (this.unidadFamiliar.idParentesco == 3) {
+      //Parentesco hija
+      if (this.body.fechanacimiento == null) {
+        //Si no tiene fecha determinada, no se continua con el guardado.
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.unidadFamiliar.errorHijo"));
+        valid = false;
+      }
+    }
+    return valid;
+  }
+
+  private updateResumen() {
+    //Se comprueba si se debe cambiar el valor de parentesco de la cabecera
+    if (this.unidadFamiliar.idParentesco != null && this.unidadFamiliar.idParentesco != undefined) {
+      this.comboParentesco.forEach((element) => {
+        if (element.value == this.unidadFamiliar.idParentesco) this.parentescoCabecera = element.label;
+      });
+    } else {
+      this.parentescoCabecera = "";
+    }
+
+    //Se comprueba si se debe cambiar el valor de parentesco de la cabecera
+    if (this.unidadFamiliar.idTipoGrupoLab != null && this.unidadFamiliar.idTipoGrupoLab != undefined) {
+      this.comboGrupoLaboral.forEach((element) => {
+        if (element.value == this.unidadFamiliar.idTipoGrupoLab) this.nombreGrupoLab = element.label;
+      });
+    } else {
+      this.nombreGrupoLab = "";
+    }
+
     if (this.unidadFamiliar.impOtrosBienes != null || this.unidadFamiliar.impOtrosBienes != undefined || this.unidadFamiliar.impIngrAnuales != null || this.unidadFamiliar.impOtrosBienes != undefined || this.unidadFamiliar.impBienesMu != null || this.unidadFamiliar.impOtrosBienes != undefined || this.unidadFamiliar.impBienesInmu != null || this.unidadFamiliar.impOtrosBienes != undefined) {
       let importe = this.unidadFamiliar.impOtrosBienes + this.unidadFamiliar.impIngrAnuales + this.unidadFamiliar.impBienesMu + this.unidadFamiliar.impBienesInmu;
       this.impTotal = importe.toString();
     } else {
       this.impTotal = "";
     }
+
+    this.progressSpinner = false;
   }
 
   private showMessage(severity, summary, msg) {
@@ -364,34 +444,6 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   }
 
 
-  fillBoxes() {
-    if (this.initialBody.uf_enCalidad == "3") {
-      this.solicitanteCabecera = "SI";
-      //this.solicitanteBox = true;
-    }
-    else {
-      this.solicitanteCabecera = "NO";
-      //this.solicitanteBox = false;
-    }
-
-    if (this.initialBody.circunsExcep == 1) {
-      this.cirExcepBox = true;
-    }
-    else this.cirExcepBox = false;
-
-    if (this.initialBody.incapacitado == 1) {
-      this.incapacitadoBox = true;
-    }
-    else this.incapacitadoBox = false;
-  }
-
-
-
-  muestraCamposObligatorios() {
-    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
-    this.resaltadoDatos = true;
-  }
-
-
+  
   */
 }

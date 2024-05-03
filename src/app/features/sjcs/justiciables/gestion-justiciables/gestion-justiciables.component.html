@@ -20,6 +20,9 @@
     <app-datos-personales *ngIf="modoEdicion" id="tarjetaPersonales" [body]="body" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaPersonales')" 
       [showTarjeta]="isOpenTarjeta('tarjetaPersonales')" (bodyChange)="updateBody($event)"></app-datos-personales>
 
+    <app-datos-unidad-familiar *ngIf="modoEdicion && origen == 'UnidadFamiliar'" id="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaUnidadFamiliar')" 
+      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [unidadFamiliar]="unidadFamiliar"></app-datos-unidad-familiar>
+
     <app-datos-solicitud *ngIf="modoEdicion" id="tarjetaSolicitud" [body]="body" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaSolicitud')" 
       [showTarjeta]="isOpenTarjeta('tarjetaSolicitud')" (bodyChange)="updateBody($event)"></app-datos-solicitud>
 
@@ -29,38 +32,11 @@
     <app-asuntos *ngIf="modoEdicion" id="tarjetaAsunto" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaAsunto')" 
     [showTarjeta]="isOpenTarjeta('tarjetaAsunto')" [body]="body" (bodyChange)="updateBody($event)"></app-asuntos>
 
-    <!-- 
-    <app-datos-abogado-contrario *ngIf="modoEdicion && origen == 'ContrarioEJG'" id="tarjetaAbogado" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaAbogado')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaAbogado')" [body]="body" 
-    
-      [tarjetaDatosAbogado]="tarjetaDatosAbogado"
-      [fromContrario]="fromContrario" 
-      [fromContrarioEJG]="fromContrarioEJG"
+    <app-datos-abogado-contrario *ngIf="modoEdicion && (origen == 'ContrarioEJG' || origen == 'Contrario')" id="tarjetaAbogado" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaAbogado')" 
+      [showTarjeta]="isOpenTarjeta('tarjetaAbogado')" [body]="body" [origen]="origen"></app-datos-abogado-contrario> 
 
-      (contrario)="contrario($event)" 
-      (contrarioEJG)="contrarioEJG($event)"></app-datos-abogado-contrario> 
-    -->
-
-    <!-- 
-    <app-datos-procurador-contrario *ngIf="modoEdicion && origen == 'ContrarioEJG'" id="tarjetaProcurador" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaProcurador')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" 
-      
-      [fromContrario]="fromContrario" 
-      [fromContrarioEJG]="fromContrarioEJG"
-      [tarjetaDatosProcurador]="tarjetaDatosProcurador"
-
-      (contrario)="contrario($event)"
-      (contrarioEJG)="contrarioEJG($event)"></app-datos-procurador-contrario> 
-    -->
-
-    <!--
-    <app-datos-unidad-familiar *ngIf="modoEdicion && origen == 'UnidadFamiliar'" id="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaUnidadFamiliar')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body"
-      
-      [solicitante]="solicitante" 
-      [tarjetaDatosUnidadFamiliar]="tarjetaDatosUnidadFamiliar"
-      [fromUniFamiliar]="fromUniFamiliar"></app-datos-unidad-familiar> 
-    -->
+    <app-datos-procurador-contrario *ngIf="modoEdicion && (origen == 'ContrarioEJG' || origen == 'Contrario')" id="tarjetaProcurador" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaProcurador')" 
+      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [origen]="origen"></app-datos-procurador-contrario>
 
   </div>
 </div>
