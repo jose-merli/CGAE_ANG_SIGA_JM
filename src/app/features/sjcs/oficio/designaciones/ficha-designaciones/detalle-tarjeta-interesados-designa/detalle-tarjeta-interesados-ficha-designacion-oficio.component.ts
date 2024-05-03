@@ -166,11 +166,20 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
     this.router.navigate(["/justiciables"]);
   }
 
-  openTab(evento) {
+  openTab(evento, field) {
+
     let interesado = new JusticiableBusquedaItem();
     let datos;
-    interesado.idpersona = evento.idPersona;
-    sessionStorage.setItem("personaDesigna", evento.idPersona);
+
+    //Diferenciamos representante de interesado
+    if(field == 'representante'){
+      interesado.idpersona = evento.idPersonaRepresentante;
+      interesado.isRepresentante = true;
+      sessionStorage.setItem("personaDesigna", evento.idPersonaRepresentante);
+    } else {
+      interesado.idpersona = evento.idPersona;
+      sessionStorage.setItem("personaDesigna", evento.idPersona);
+    }
 
     //Asignamos los objetos itemDesignas e interesados para la edicion
     if(sessionStorage.getItem("itemDesignas") == null || sessionStorage.getItem("itemDesignas") == undefined) {
@@ -196,7 +205,8 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
         sessionStorage.setItem("designa", JSON.stringify(this.interesados));
         this.persistenceService.clearBody();
 
-        if (evento.representante != "" && evento.representante != null && evento.representante == null) {
+        //Si es representante, no se ejecuta
+        if (!interesado.isRepresentante && evento.representante) {
           let representante = new JusticiableBusquedaItem();
           let nombre = evento.representante.split(",");
           representante.apellidos = nombre[0];

@@ -16,6 +16,7 @@ export class JusticiableBusquedaItem {
   numeroAsuntos: string;
   ultimoAsunto: string;
   tipopersonajg: string;
+  isRepresentante!: boolean;
   constructor() { }
 }
 

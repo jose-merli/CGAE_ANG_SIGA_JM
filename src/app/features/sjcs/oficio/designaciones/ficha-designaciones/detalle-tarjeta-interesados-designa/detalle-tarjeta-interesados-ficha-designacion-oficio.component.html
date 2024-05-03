@@ -24,10 +24,10 @@
     <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-          <div *ngIf="col.field == 'nif' || col.field == 'apellidosnombre'">
-            <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+          <div *ngIf="col.field == 'nif' || col.field == 'apellidosnombre' || col.field == 'representante'">
+            <a class="enlace" (click)="openTab(dato, col.field)"><span>{{dato[col.field]}}</span></a>
           </div>
-          <div *ngIf="col.field != 'nif' && col.field != 'apellidosnombre'">
+          <div *ngIf="col.field != 'nif' && col.field != 'apellidosnombre' && col.field != 'representante'">
             <span>{{dato[col.field]}}</span>
           </div>
           <!-- <div *ngIf="isEliminado(dato)">
