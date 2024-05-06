@@ -6,7 +6,6 @@ import { OldSigaServices } from "../../../../../_services/oldSiga.service";
 import { PersistenceService } from "../../../../../_services/persistence.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
-import { DesignaItem } from "../../../../../models/sjcs/DesignaItem";
 import { EJGItem } from "../../../../../models/sjcs/EJGItem";
 import { FichaSojItem } from "../../../../../models/sjcs/FichaSojItem";
 import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
@@ -28,6 +27,7 @@ export class AsuntosComponent implements OnInit {
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
+  @Output() notificacion = new EventEmitter<any>();
 
   selectMultiple: boolean = false;
   seleccion: boolean = false;
@@ -38,7 +38,6 @@ export class AsuntosComponent implements OnInit {
   permisoEJG: boolean = false;
 
   datos = [];
-  msgs = [];
   cols = [];
   rowsPerPage: any = [];
   selectedItem: number = 10;
@@ -59,10 +58,6 @@ export class AsuntosComponent implements OnInit {
     this.showTarjeta = !this.showTarjeta;
   }
 
-  clear() {
-    this.msgs = [];
-  }
-
   // Crear EJG
   crearEJG() {
     if (!this.permisoEscritura) {
@@ -73,39 +68,16 @@ export class AsuntosComponent implements OnInit {
     }
   }
 
-  // Asociar EJG
-  asociarEJG() {
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
-    } else {
-      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
-      sessionStorage.setItem("radioTajertaValue", "ejg");
-      this.router.navigate(["/busquedaAsuntos"]);
-    }
-  }
-
   // Crear una nueva designación.
   crearDesignacion() {
     if (!this.permisoEscritura) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
-      let nombreApellidos = this.body.apellidos + " " + this.body.nombre;
-      sessionStorage.setItem("nombreInteresado", nombreApellidos);
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("nombreInteresado", this.body.apellidos + " " + this.body.nombre);
       sessionStorage.setItem("deJusticiableANuevaDesigna", "true");
       sessionStorage.setItem("nuevaDesigna", "true");
       this.router.navigate(["/fichaDesignaciones"]);
-    }
-  }
-
-  // Asociar Designacion
-  asociarDesignacion() {
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
-    } else {
-      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
-      sessionStorage.setItem("radioTajertaValue", "des");
-      this.router.navigate(["/busquedaAsuntos"]);
     }
   }
 
@@ -115,33 +87,9 @@ export class AsuntosComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
-      let nombreApellidos = this.body.apellidos + " " + this.body.nombre;
-      sessionStorage.setItem("nombreInteresado", nombreApellidos);
+      sessionStorage.setItem("nombreInteresado", this.body.apellidos + " " + this.body.nombre);
       sessionStorage.setItem("nuevaAsistencia", "true");
       this.router.navigate(["/fichaAsistencia"]);
-    }
-  }
-
-  // Asociar Asistencia
-  asociarAsistencia() {
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
-    } else {
-      sessionStorage.setItem("radioTajertaValue", "asi");
-      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
-      this.router.navigate(["/busquedaAsuntos"]);
-    }
-  }
-
-  // Asociar SOJ
-  asociarSOJ() {
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
-    } else {
-      sessionStorage.setItem("radioTajertaValue", "soj");
-      let justiciable = JSON.stringify(this.body);
-      sessionStorage.setItem("justiciable", justiciable);
-      this.router.navigate(["/busquedaAsuntos"]);
     }
   }
 
@@ -157,38 +105,74 @@ export class AsuntosComponent implements OnInit {
     }
   }
 
+  // Asociar EJG
+  asociarEJG() {
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("radioTajertaValue", "ejg");
+      this.router.navigate(["/busquedaAsuntos"]);
+    }
+  }
+
+  // Asociar Designacion
+  asociarDesignacion() {
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("radioTajertaValue", "des");
+      this.router.navigate(["/busquedaAsuntos"]);
+    }
+  }
+
+  // Asociar Asistencia
+  asociarAsistencia() {
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("radioTajertaValue", "asi");
+      this.router.navigate(["/busquedaAsuntos"]);
+    }
+  }
+
+  // Asociar SOJ
+  asociarSOJ() {
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("radioTajertaValue", "soj");
+      this.router.navigate(["/busquedaAsuntos"]);
+    }
+  }
+
   openTab(dato) {
+    this.progressSpinner = true;
     let identificador = dato.tipo;
     switch (identificador) {
       case "A":
         sessionStorage.setItem("idAsistencia", dato.anio + "/" + dato.numero);
-        sessionStorage.setItem("vieneDeFichaJusticiable", "true");
+        sessionStorage.setItem("justiciable", JSON.stringify(this.body));
         this.router.navigate(["/fichaAsistencia"]);
         break;
       case "D":
-        let desItem: any = new DesignaItem();
-        desItem.ano = dato.anio;
-        desItem.numero = dato.numero;
-        desItem.codigo = dato.codigo;
-        desItem.idTurno = dato.clave;
-        desItem.ano = "D" + desItem.ano + "/" + desItem.codigo;
-        let request = [desItem.ano, desItem.idTurno, desItem.numero];
+        let ano = "D" + dato.anio + "/" + dato.codigo;
+        let request = [ano, dato.clave, dato.numero];
         this.sigaServices.post("designaciones_busquedaDesignacionActual", request).subscribe((data) => {
-          let datos = JSON.parse(data.body);
-          //Se cambia el valor del campo ano para que se procese de forma adecuada
-          //En la ficha en las distintas tarjetas para obtener sus valores
-          desItem = datos;
-          desItem.anio = desItem.ano;
-          desItem.fechaEntradaInicio = this.datepipe.transform(new Date(datos.fechaEntradaInicio), "dd/MM/yyyy");
-          desItem.ano = "D" + desItem.anio + "/" + desItem.codigo;
-          sessionStorage.setItem("vieneDeFichaJusticiable", "true");
-          sessionStorage.setItem("designaItemLink", JSON.stringify(desItem));
+          let designacion = JSON.parse(data.body);
+          designacion.anio = designacion.ano;
+          designacion.fechaEntradaInicio = this.datepipe.transform(new Date(designacion.fechaEntradaInicio), "dd/MM/yyyy");
+          designacion.ano = "D" + designacion.anio + "/" + designacion.codigo;
+          sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+          sessionStorage.setItem("designaItemLink", JSON.stringify(designacion));
           sessionStorage.setItem("nuevaDesigna", "false");
           this.router.navigate(["/fichaDesignaciones"]);
         });
         break;
       case "E":
-        this.progressSpinner = true;
         let ejgItem = new EJGItem();
         ejgItem.annio = dato.anio;
         ejgItem.numero = dato.numero;
@@ -200,12 +184,13 @@ export class AsuntosComponent implements OnInit {
         this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
           (n) => {
             this.progressSpinner = false;
-            let result = JSON.parse(n.body).ejgItems;
-            this.persistenceService.setDatosEJG(result[0]);
             let error = JSON.parse(n.body).error;
             if (error != null && error.description != null) {
               this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
             } else {
+              sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+              let result = JSON.parse(n.body).ejgItems;
+              this.persistenceService.setDatosEJG(result[0]);
               this.router.navigate(["/gestionEjg"]);
             }
           },
@@ -215,13 +200,8 @@ export class AsuntosComponent implements OnInit {
         );
         break;
       case "S":
-        let us = this.oldSigaServices.getOldSigaUrl("detalleSOJ");
-
-        us += "?idInstitucion=" + dato.idinstitucion + "&anio=" + dato.anio + "&numero=" + dato.numero + "&idTipoSoj=" + dato.clave;
-
-        us = encodeURI(us);
-
-        sessionStorage.setItem("url", JSON.stringify(us));
+        let us = this.oldSigaServices.getOldSigaUrl("detalleSOJ") + "?idInstitucion=" + dato.idinstitucion + "&anio=" + dato.anio + "&numero=" + dato.numero + "&idTipoSoj=" + dato.clave;
+        sessionStorage.setItem("url", encodeURI(us));
         sessionStorage.removeItem("reload");
         sessionStorage.setItem("reload", "si");
         let detalleSOJ: any = new FichaSojItem();
@@ -232,6 +212,7 @@ export class AsuntosComponent implements OnInit {
         detalleSOJ.idTurno = dato.idturno;
         detalleSOJ.idPersona = dato.idpersonajg;
         detalleSOJ.idGuardia = dato.idGuardia;
+        sessionStorage.setItem("justiciable", JSON.stringify(this.body));
         sessionStorage.setItem("sojItemLink", JSON.stringify(detalleSOJ));
         this.router.navigate(["/detalle-soj"]);
         break;
@@ -297,8 +278,7 @@ export class AsuntosComponent implements OnInit {
   }
 
   private showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
+    this.notificacion.emit({
       severity: severity,
       summary: summary,
       detail: msg,

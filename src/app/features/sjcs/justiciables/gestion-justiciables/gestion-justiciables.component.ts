@@ -22,6 +22,7 @@ export class GestionJusticiablesComponent implements OnInit {
   tarjetas = new Map();
   datosResumen = [];
   enlacesResumen = [];
+  msgs = [];
   origen: string = "";
 
   modoEdicion: boolean = false;
@@ -36,7 +37,6 @@ export class GestionJusticiablesComponent implements OnInit {
       this.origen = sessionStorage.getItem("origin");
       sessionStorage.removeItem("origin");
     }
-    this.checkAccesoTarjetas();
     if (this.persistenceService.getDatos() != undefined) {
       let justiciable = this.persistenceService.getDatos();
       this.persistenceService.clearDatos();
@@ -44,18 +44,26 @@ export class GestionJusticiablesComponent implements OnInit {
         this.justiciable = JSON.parse(sessionStorage.getItem("justiciable"));
         sessionStorage.removeItem("justiciable");
       }
+      if (sessionStorage.getItem("asociado")) {
+        this.showMessage("success", this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
+        sessionStorage.removeItem("asociado");
+      }
       await this.searchRepresentanteById(justiciable.idpersona, justiciable.idinstitucion);
     } else if (sessionStorage.getItem("familiar")) {
       this.unidadFamiliar = JSON.parse(sessionStorage.getItem("familiar"));
       sessionStorage.removeItem("familiar");
       await this.searchRepresentanteById(this.unidadFamiliar.uf_idPersona, this.unidadFamiliar.uf_idInstitucion);
     } else {
+      this.checkAccesoTarjetas();
       this.updateTarjResumen();
     }
   }
 
   updateBody(justiciable: JusticiableItem) {
     this.body = justiciable;
+    if (this.body.idpersona != null) {
+      this.modoEdicion = true;
+    }
     this.updateTarjResumen();
   }
 
@@ -81,10 +89,18 @@ export class GestionJusticiablesComponent implements OnInit {
     }
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
   openTarjeta(event: string) {
     let data = this.tarjetas.get(event);
     data.visibility = true;
     this.tarjetas.set(event, data);
+  }
+
+  notificacion(mensaje: any) {
+    this.showMessage(mensaje.severity, mensaje.summary, mensaje.msg);
   }
 
   private getTarjetas() {
@@ -238,11 +254,20 @@ export class GestionJusticiablesComponent implements OnInit {
       (n) => {
         this.body = JSON.parse(n.body).justiciable;
         this.modoEdicion = true;
+        this.checkAccesoTarjetas();
         this.updateTarjResumen();
       },
       (err) => {
         this.progressSpinner = false;
       },
     );
+  }
+
+  private showMessage(severity, summary, msg) {
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg,
+    });
   }
 }

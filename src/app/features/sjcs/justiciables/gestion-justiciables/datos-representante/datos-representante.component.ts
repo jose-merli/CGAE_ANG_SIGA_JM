@@ -22,6 +22,7 @@ export class DatosRepresentanteComponent implements OnInit {
   @Input() body: JusticiableItem;
   @Input() origen: string = "";
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
+  @Output() notificacion = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
   associate: boolean = true;
@@ -30,7 +31,6 @@ export class DatosRepresentanteComponent implements OnInit {
   dialogAssociate: boolean = true;
   navigateToJusticiable: boolean = true;
 
-  msgs = [];
   tipoIdentificacion = [];
   dialogRepreOpcion: String = "";
   representante: JusticiableItem = new JusticiableItem();
@@ -53,10 +53,6 @@ export class DatosRepresentanteComponent implements OnInit {
         this.searchRepresentanteById(this.body.idrepresentantejg.toString(), this.body.idinstitucion);
       }
     }
-  }
-
-  clear() {
-    this.msgs = [];
   }
 
   onHideTarjeta() {
@@ -429,8 +425,7 @@ export class DatosRepresentanteComponent implements OnInit {
   }
 
   private showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
+    this.notificacion.emit({
       severity: severity,
       summary: summary,
       detail: msg,

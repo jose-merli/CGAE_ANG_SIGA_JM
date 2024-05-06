@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
@@ -17,16 +17,18 @@ export class DatosProcuradorContrarioComponent implements OnInit {
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
   @Input() origen: string = "";
+  @Output() notificacion = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
 
-  msgs = [];
   procurador: ProcuradorItem = new ProcuradorItem();
 
   constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("datosProcurador")) {
+      this.procurador = JSON.parse(sessionStorage.getItem("datosProcurador"))[0];
+      sessionStorage.removeItem("datosProcurador");
       this.associate();
     } else {
       if (sessionStorage.getItem("contrarioEJG")) {
@@ -38,7 +40,6 @@ export class DatosProcuradorContrarioComponent implements OnInit {
           this.procurador.idProcurador = data.idprocurador;
           this.procurador.idInstitucion = data.idInstitucionProc;
         }
-        //this.contrarioEJG.emit(true);
       } else if (sessionStorage.getItem("contrarioDesigna")) {
         //Procede de gicha designacion
         let data = JSON.parse(sessionStorage.getItem("contrarioDesigna"));
@@ -48,7 +49,6 @@ export class DatosProcuradorContrarioComponent implements OnInit {
           this.procurador.idProcurador = data.idprocurador;
           this.procurador.idInstitucion = data.idInstitucionProc;
         }
-        //this.contrario.emit(true);
       }
     }
 
@@ -59,6 +59,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
     if (!this.permisoEscritura) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
+      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("nuevoProcurador", "true");
       sessionStorage.setItem("origin", this.origen);
       this.router.navigate(["/busquedaGeneral"]);
@@ -68,7 +69,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
   disassociate() {
     if (!sessionStorage.getItem("EJGItem")) {
       let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-      let request: string[] = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.numero, designa.idTurno, null, null];
+      let request: string[] = [designa.idInstitucion, this.body.idpersona, designa.ano, designa.numero, designa.idTurno, null, null];
       this.sigaServices.post("designaciones_updateProcuradorContrario", request).subscribe(
         (n) => {
           this.progressSpinner = false;
@@ -82,7 +83,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
       );
     } else {
       let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-      let request: string[] = [ejg.idInstitucion, sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, null, null];
+      let request: string[] = [ejg.idInstitucion, this.body.idpersona, ejg.annio, ejg.numero, ejg.tipoEJG, null, null];
       this.sigaServices.post("gestionejg_updateProcuradorContrarioEJG", request).subscribe(
         (n) => {
           this.progressSpinner = false;
@@ -97,33 +98,18 @@ export class DatosProcuradorContrarioComponent implements OnInit {
     }
   }
 
-  clear() {
-    this.msgs = [];
-  }
-
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
   }
 
   private associate() {
-    let data = JSON.parse(sessionStorage.getItem("datosProcurador"))[0];
-    sessionStorage.removeItem("datosProcurador");
-
     if (!sessionStorage.getItem("EJGItem")) {
       let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-      let request: string[] = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.numero, designa.idTurno, data.idProcurador, data.idInstitucion];
+      let request: string[] = [designa.idInstitucion, this.body.idpersona, designa.ano, designa.numero, designa.idTurno, this.procurador.idProcurador, this.procurador.idInstitucion];
       this.sigaServices.post("designaciones_updateProcuradorContrario", request).subscribe(
         (n) => {
           this.progressSpinner = false;
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.procurador = new ProcuradorItem();
-          this.procurador.idProcurador = data.idProcurador;
-          this.procurador.nColegiado = data.nColegiado;
-          this.procurador.nombre = data.nombreApe;
-          this.procurador.idInstitucion = data.idInstitucion;
-
-          //let procurador: string = this.generalBody.nColegiado + "," + this.generalBody.nombreApe;
-          //sessionStorage.setItem("procuradorFicha", procurador);
         },
         (err) => {
           this.progressSpinner = false;
@@ -132,19 +118,11 @@ export class DatosProcuradorContrarioComponent implements OnInit {
       );
     } else {
       let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-      let request: string[] = [ejg.idInstitucion, sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, data.idProcurador, data.idInstitucion];
+      let request: string[] = [ejg.idInstitucion, this.body.idpersona, ejg.annio, ejg.numero, ejg.tipoEJG, this.procurador.idProcurador, this.procurador.idInstitucion];
       this.sigaServices.post("gestionejg_updateProcuradorContrarioEJG", request).subscribe(
         (n) => {
           this.progressSpinner = false;
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.procurador = new ProcuradorItem();
-          this.procurador.idProcurador = data.idProcurador;
-          this.procurador.nColegiado = data.nColegiado;
-          this.procurador.nombre = data.nombreApe;
-          this.procurador.idInstitucion = data.idInstitucion;
-
-          //let procurador: string = this.generalBody.nColegiado + "," + this.generalBody.nombreApe;
-          //sessionStorage.setItem("procuradorFicha", procurador);
         },
         (err) => {
           this.progressSpinner = false;
@@ -155,8 +133,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
   }
 
   private showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
+    this.notificacion.emit({
       severity: severity,
       summary: summary,
       detail: msg,

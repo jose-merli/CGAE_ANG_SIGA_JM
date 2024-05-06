@@ -16,8 +16,8 @@ export class DatosPersonalesComponent implements OnInit {
   @Input() permisoEscritura: boolean = true;
   @Input() body: JusticiableItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
+  @Output() notificacion = new EventEmitter<any>();
 
-  msgs = [];
   bodyInicial;
   bodyInicialTelefonos;
   direccionPostal: String = "";
@@ -399,13 +399,9 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   /**** MSGS  *****/
-  clear() {
-    this.msgs = [];
-  }
 
   private showMessage(severity, summary, msg) {
-    //this.msgs = [];
-    this.msgs.push({
+    this.notificacion.emit({
       severity: severity,
       summary: summary,
       detail: msg,

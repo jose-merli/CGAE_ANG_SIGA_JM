@@ -1,44 +1,33 @@
-import { Location } from '@angular/common';
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation
-} from "@angular/core";
-import { ConfirmationService } from 'primeng/api';
+import { Location } from "@angular/common";
+import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Router } from "@angular/router";
+import { ConfirmationService } from "primeng/api";
 import { DataTable } from "primeng/datatable";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from "../../../../node_modules/@angular/forms";
-import { PersistenceService } from '../../_services/persistence.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from "../../../../node_modules/@angular/forms";
+import { CommonsService } from "../../_services/commons.service";
+import { PersistenceService } from "../../_services/persistence.service";
 import { TarjetaAsistenciaItem } from "../../models/guardia/TarjetaAsistenciaItem";
 import { AsuntosJusticiableItem } from "../../models/sjcs/AsuntosJusticiableItem";
 import { DesignaItem } from "../../models/sjcs/DesignaItem";
 import { EJGItem } from "../../models/sjcs/EJGItem";
-import { ScsDefendidosDesignasItem } from '../../models/sjcs/ScsDefendidosDesignasItem';
+import { ScsDefendidosDesignasItem } from "../../models/sjcs/ScsDefendidosDesignasItem";
 import { USER_VALIDATIONS } from "../../properties/val-properties";
 import { SigaWrapper } from "../../wrapper/wrapper.class";
-import { TranslateService } from '../translate';
+import { TranslateService } from "../translate";
 import { SigaServices } from "./../../_services/siga.service";
 import { esCalendar } from "./../../utils/calendar";
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
 import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
-import { request } from 'http';
-import { Router } from '@angular/router';
-import { CommonsService } from '../../_services/commons.service';
 
 export enum KEY_CODE {
-  ENTER = 13
+  ENTER = 13,
 }
 
 @Component({
   selector: "app-busqueda-asuntos",
   templateUrl: "./busqueda-asuntos.component.html",
   styleUrls: ["./busqueda-asuntos.component.scss"],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   showDatosGenerales: boolean = true;
@@ -75,22 +64,13 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   @ViewChild(TablaBusquedaAsuntosComponent) tabla;
 
   //Diálogo de comunicación
-  constructor(
-    private sigaServices: SigaServices,
-    private formBuilder: FormBuilder,
-    private persistenceService: PersistenceService,
-    private location: Location,
-    private translateService: TranslateService,
-    private confirmationService: ConfirmationService,
-    private router: Router,
-    private commonServices: CommonsService
-  ) {
+  constructor(private sigaServices: SigaServices, private formBuilder: FormBuilder, private persistenceService: PersistenceService, private location: Location, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router, private commonServices: CommonsService) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
       nif: new FormControl(null, Validators.minLength(3)),
       nombre: new FormControl(null, Validators.minLength(3)),
       apellidos: new FormControl(null, Validators.minLength(3)),
-      numeroColegiado: new FormControl(null, Validators.minLength(3))
+      numeroColegiado: new FormControl(null, Validators.minLength(3)),
     });
   }
 
@@ -100,7 +80,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   datos;
 
   ngOnInit() {
-    if(sessionStorage.getItem("vengoDesdeEJGRecienAsociado")){
+    if (sessionStorage.getItem("vengoDesdeEJGRecienAsociado")) {
       sessionStorage.removeItem("vengoDesdeEJGRecienAsociado");
       //this.location.back();
     }
@@ -111,44 +91,37 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     }
 
     //asociar desde SOJ
-    if (sessionStorage.getItem('SOJ')) {
-      this.datos = JSON.parse(sessionStorage.getItem('SOJ'));
+    if (sessionStorage.getItem("SOJ")) {
+      this.datos = JSON.parse(sessionStorage.getItem("SOJ"));
       this.fromSOJ = true;
-      sessionStorage.removeItem('SOJ');
+      sessionStorage.removeItem("SOJ");
     }
 
     //Asociar desde designacion
-    if (sessionStorage.getItem('Designacion')) {
-      this.datosDesigna = JSON.parse(sessionStorage.getItem('Designacion'));
+    if (sessionStorage.getItem("Designacion")) {
+      this.datosDesigna = JSON.parse(sessionStorage.getItem("Designacion"));
       this.fromDES = true;
-      sessionStorage.removeItem('Designacion');
+      sessionStorage.removeItem("Designacion");
     }
 
-    if (sessionStorage.getItem('Asistencia')) {
-      this.datosAsistencia = JSON.parse(sessionStorage.getItem('Asistencia'));
+    if (sessionStorage.getItem("Asistencia")) {
+      this.datosAsistencia = JSON.parse(sessionStorage.getItem("Asistencia"));
       this.fromASI = true;
-      sessionStorage.removeItem('Asistencia');
+      sessionStorage.removeItem("Asistencia");
     }
 
     if (sessionStorage.getItem("justiciable") && !this.fromSOJ) {
-      this.datosJusticiable = JSON.parse(sessionStorage.getItem('justiciable'));
+      this.datosJusticiable = JSON.parse(sessionStorage.getItem("justiciable"));
       this.fromJust = true;
-      sessionStorage.removeItem('justiciable');
+      sessionStorage.removeItem("justiciable");
     }
-
-
   }
 
   asociarElement(event) {
     if (!(event == null || event == undefined)) {
       this.datosAsociar = event;
 
-      //if (this.fromEJG) {
-      //  this.confirmCopiarEJG(this.datosAsociar);
-      //} else if (this.fromDES) {
-      //  this.confirmCopiarDES(this.datosAsociar);
-      //} else
-       if (this.fromASI) {
+      if (this.fromASI) {
         this.confirmCopiarASI(this.datosAsociar);
       }
 
@@ -159,14 +132,13 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       if (this.fromEJG) {
         this.confirmAsociarEJG(this.datosAsociar);
       } else if (this.fromDES) {
-        this.confirmAsociarDES(this.datosAsociar)
+        this.confirmAsociarDES(this.datosAsociar);
       }
 
       if (this.fromJust) {
         this.confirmCopiarJust(this.datosAsociar);
       }
-
-    } 
+    }
   }
 
   searchEvent(event) {
@@ -180,19 +152,22 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   }
 
   searchHistorico(event) {
-    this.search(event)
+    this.search(event);
   }
 
   backTo() {
-    sessionStorage.removeItem("radioTajertaValue");
-    this.location.back();
+    if (this.datosJusticiable != undefined) {
+      this.persistenceService.setDatos(this.datosJusticiable);
+      this.router.navigate(["/gestionJusticiables"]);
+    } else {
+      sessionStorage.removeItem("radioTajertaValue");
+      this.location.back();
+    }
   }
 
   //confirmAsociarSOJ
   confirmAsociarSOJ(data) {
-    let mess = this.translateService.instant(
-      "justiciaGratuita.soj.busquedaAsuntos.confirmacionAsociarSoj"
-    );
+    let mess = this.translateService.instant("justiciaGratuita.soj.busquedaAsuntos.confirmacionAsociarSoj");
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       key: "asoc",
@@ -206,19 +181,15 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           {
             severity: "info",
             summary: "Cancelar",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
+            detail: this.translateService.instant("general.message.accion.cancelada"),
+          },
         ];
-      }
+      },
     });
   }
 
   confirmAsociarEJG(data) {
-    let mess = this.translateService.instant(
-      "justiciaGratuita.ejg.busquedaAsuntos.confirmacionAsociarEjg"
-    );
+    let mess = this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmacionAsociarEjg");
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       key: "asoc",
@@ -232,12 +203,10 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           {
             severity: "info",
             summary: "Cancelar",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
+            detail: this.translateService.instant("general.message.accion.cancelada"),
+          },
         ];
-      }
+      },
     });
   }
 
@@ -250,11 +219,11 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        this.asociarJust(data, true);
+        this.asociarJust(data);
       },
       reject: () => {
         this.showMesg("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
-      }
+      },
     });
   }
 
@@ -271,7 +240,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       },
       reject: () => {
         this.asociarEJG(data, false);
-      }
+      },
     });
   }
 
@@ -288,182 +257,153 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       },
       reject: () => {
         this.asociarDES(data, false);
-      }
+      },
     });
   }
-
 
   asociarEJG(data, copy) {
     if (this.datos != null) {
       this.progressSpinner = true;
       let radioValue = sessionStorage.getItem("radioTajertaValue");
       switch (radioValue) {
-        case 'des':
+        case "des":
           let numeroDesigna: string = data.asunto;
-          let datos = [data.idinstitucion, data.anio, numeroDesigna.substring(6),
-          data.idTipoDesigna, this.datos.tipoEJG, this.datos.annio, this.datos.numero, data.turnoGuardia
-          ];
+          let datos = [data.idinstitucion, data.anio, numeroDesigna.substring(6), data.idTipoDesigna, this.datos.tipoEJG, this.datos.annio, this.datos.numero, data.turnoGuardia];
           this.sigaServices.post("gestionejg_asociarDesignacion", datos).subscribe(
-            m => {
-
+            (m) => {
               let respose = JSON.parse(m["body"]);
-              if(respose.error){
-                if (respose.error.code == 200){
+              if (respose.error) {
+                if (respose.error.code == 200) {
                   this.showMesg("info", this.translateService.instant("general.message.incorrect"), this.translateService.instant(respose.error.description));
-              
-                }else{
+                } else {
                   this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(respose.error.description));
-              
                 }
                 this.progressSpinner = false;
-              }else{
+              } else {
                 this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                 sessionStorage.removeItem("radioTajertaValue");
 
                 if (!copy) {
                   this.progressSpinner = false;
                   this.location.back();
-                }
-                else {
+                } else {
                   this.sigaServices.post("gestionJusticiables_copyEjg2Designa", datos).subscribe(
-                    x => {
+                    (x) => {
                       this.progressSpinner = false;
                       this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                       this.location.back();
                     },
-                    err => {
+                    (err) => {
                       //Crear etiqueta en la BBDD
                       this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos del EJG a la designacion seleccionada");
                       this.location.back();
-                    }
+                    },
                   );
                 }
               }
             },
-            err => {
+            (err) => {
               this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
               // this.location.back();
               this.progressSpinner = false;
-            }
+            },
           );
 
-
           break;
-        case 'asi':
-
-          let requestAsistencia = [data.idinstitucion, data.anio, data.numero, this.datos.tipoEJG, this.datos.annio, this.datos.numero
-
-          ];
+        case "asi":
+          let requestAsistencia = [data.idinstitucion, data.anio, data.numero, this.datos.tipoEJG, this.datos.annio, this.datos.numero];
 
           this.sigaServices.post("gestionejg_asociarAsistencia", requestAsistencia).subscribe(
-            m => {
+            (m) => {
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
 
               if (!copy) {
                 this.progressSpinner = false;
                 this.location.back();
-              }
-              else {
+              } else {
                 this.sigaServices.post("gestionJusticiables_copyEjg2Asis", requestAsistencia).subscribe(
-                  x => {
+                  (x) => {
                     this.progressSpinner = false;
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                     this.location.back();
                   },
-                  err => {
+                  (err) => {
                     //Crear etiqueta en la BBDD
                     this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos del EJG a la asistencia seleccionada");
                     this.location.back();
-                  }
+                  },
                 );
               }
             },
-            err => {
+            (err) => {
               this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
               //this.location.back();
               this.progressSpinner = false;
-            }
+            },
           );
 
-
           break;
-        case 'soj':
-
-          let requestSoj = [
-            data.idinstitucion, data.anio, data.numero,
-            data.idTipoSoj, this.datos.tipoEJG, this.datos.annio, this.datos.numero
-
-          ];
+        case "soj":
+          let requestSoj = [data.idinstitucion, data.anio, data.numero, data.idTipoSoj, this.datos.tipoEJG, this.datos.annio, this.datos.numero];
 
           this.sigaServices.post("gestionejg_asociarSOJ", requestSoj).subscribe(
-            m => {
-
+            (m) => {
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
 
               if (!copy) {
                 this.progressSpinner = false;
                 this.location.back();
-              }
-              else {
+              } else {
                 this.sigaServices.post("gestionJusticiables_copyEjg2Soj", requestSoj).subscribe(
-                  x => {
+                  (x) => {
                     this.progressSpinner = false;
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                     this.location.back();
                   },
-                  err => {
+                  (err) => {
                     //Crear etiqueta en la BBDD
                     this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos del EJG al SOJ seleccionado");
                     this.location.back();
-                  }
+                  },
                 );
               }
             },
-            err => {
+            (err) => {
               this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
               // this.location.back();
               this.progressSpinner = false;
-            }
+            },
           );
           break;
       }
     }
-
   }
 
-  asociarEJGaSOJ(data){
-          let requestSoj = [
-            this.datos.idinstitucion, this.datos.anio, this.datos.numero,
-            this.datos.idTipoSoj, data.idTipoEjg, data.anio, data.numeroAsoc
-
-          ];
-          /*let requestSoj = [
+  asociarEJGaSOJ(data) {
+    let requestSoj = [this.datos.idinstitucion, this.datos.anio, this.datos.numero, this.datos.idTipoSoj, data.idTipoEjg, data.anio, data.numeroAsoc];
+    /*let requestSoj = [
             data.anio, data.numero, data.idTipoEjg, //Datos del EJG
             this.datos.anio, this.datos.idTipoSoj, this.datos.numSoj, this.datos.numero
           ];*/
-          this.sigaServices.post("soj_asociarEJGaSOJ", requestSoj).subscribe(
-            m => {
-
-              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-              sessionStorage.removeItem("radioTajertaValue");
-              sessionStorage.setItem("sojItemLink", JSON.stringify(this.datos));
-              this.location.back();
-                  
-            },
-            err => {
-              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-              // this.location.back();
-              this.progressSpinner = false;
-            }
-          );
+    this.sigaServices.post("soj_asociarEJGaSOJ", requestSoj).subscribe(
+      (m) => {
+        this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        sessionStorage.removeItem("radioTajertaValue");
+        sessionStorage.setItem("sojItemLink", JSON.stringify(this.datos));
+        this.location.back();
+      },
+      (err) => {
+        this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        // this.location.back();
+        this.progressSpinner = false;
+      },
+    );
   }
 
   confirmAsociarDES(data) {
-    let mess = this.translateService.instant(
-      "justiciaGratuita.ejg.busquedaAsuntos.confirmacionAsociarDes"
-    );
+    let mess = this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmacionAsociarDes");
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       message: mess,
@@ -472,129 +412,112 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       accept: () => {
         this.confirmCopiarDES(this.datosAsociar);
         //this.asociarDES(data, false);
-
       },
       reject: () => {
         this.msgs = [
           {
             severity: "info",
             summary: "Cancelar",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
+            detail: this.translateService.instant("general.message.accion.cancelada"),
+          },
         ];
-      }
+      },
     });
   }
 
-  asociarJust(data, copy) {
+  asociarJust(data) {
     if (this.datosJusticiable != null) {
       this.progressSpinner = true;
       let radioValue = sessionStorage.getItem("radioTajertaValue");
       switch (radioValue) {
-        case 'des':
-          let datosJusDesignas = new ScsDefendidosDesignasItem;
+        case "des":
+          let datosJusDesignas = new ScsDefendidosDesignasItem();
           datosJusDesignas.idturno = data.idTurno;
           datosJusDesignas.anio = data.anio;
           datosJusDesignas.numero = data.numero;
           datosJusDesignas.idpersona = this.datosJusticiable.idpersona;
           // Objeto Asocicación de Justiciables y Designas.
           this.sigaServices.post("gestionJusticiables_asociarJusticiableDesgina", datosJusDesignas).subscribe(
-            m => {
+            (m) => {
               //Se debe añadir a la BBDD estos mensajes (etiquetas)
+              this.progressSpinner = false;
               if (JSON.parse(m.body).error.code == 200) {
-                this.progressSpinner = false;
-                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
-                this.location.back();
+                this.persistenceService.setDatos(this.datosJusticiable);
+                sessionStorage.setItem("asociado", "true");
+                this.router.navigate(["/gestionJusticiables"]);
+              } else {
+                this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
               }
             },
-            err => {
+            (err) => {
               this.progressSpinner = false;
               this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
-              //this.location.back();
-            }
+            },
           );
           break;
-        case 'asi':
+        case "asi":
           let requestAsi = [data.anio, data.numero, this.datosJusticiable.idpersona];
           // Objeto Asociación de Justiciables y Asistencia.
           this.sigaServices.post("gestionJusticiables_asociarJusticiableAsistencia", requestAsi).subscribe(
-            m => {
+            (m) => {
               //Se debe añadir a la BBDD estos mensajes (etiquetas)
+              this.progressSpinner = false;
               if (JSON.parse(m.body).error.code == 200) {
-                this.progressSpinner = false;
-                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
-                this.location.back();
+                this.persistenceService.setDatos(this.datosJusticiable);
+                sessionStorage.setItem("asociado", "true");
+                this.router.navigate(["/gestionJusticiables"]);
+              } else {
+                this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
               }
             },
-            err => {
+            (err) => {
               this.progressSpinner = false;
               this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
-              //this.location.back();
-            }
+            },
           );
           break;
-        case 'ejg':
+        case "ejg":
           let requestEjg = [data.anio, data.numeroAsoc, this.datosAsociar.idTipoEjg, this.datosJusticiable.idpersona];
           // Objeto Asocicación de Justiciables y EJG.
           this.sigaServices.post("gestionJusticiables_asociarJusticiableEjg", requestEjg).subscribe(
-            m => {
+            (m) => {
               //Se debe añadir a la BBDD estos mensajes (etiquetas)
+              this.progressSpinner = false;
               if (JSON.parse(m.body).error.code == 200) {
-                this.progressSpinner = false;
-                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
-                this.location.back();
+                this.persistenceService.setDatos(this.datosJusticiable);
+                sessionStorage.setItem("asociado", "true");
+                this.router.navigate(["/gestionJusticiables"]);
+              } else {
+                this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
               }
             },
-            err => {
+            (err) => {
               this.progressSpinner = false;
               this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
-              //this.location.back();
-            }
+            },
           );
           break;
-        case 'soj':
+        case "soj":
           let requestSoj = [data.anio, data.numero, data.idTipoSoj, this.datosJusticiable.idpersona];
           this.sigaServices.post("gestionJusticiables_asociarJusticiableSOJ", requestSoj).subscribe(
-            m => {
-
-              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-              sessionStorage.removeItem("radioTajertaValue");
-
-              if (!copy) {
-                this.progressSpinner = false;
-                this.location.back();
-              }
-              else {
-                this.sigaServices.post("gestionJusticiables_copyEjg2Soj", requestSoj).subscribe(
-                  x => {
-                    this.progressSpinner = false;
-                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                    this.location.back();
-                  },
-                  err => {
-                    //Crear etiqueta en la BBDD
-                    this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos del EJG al SOJ seleccionado");
-                    this.location.back();
-                  }
-                );
-              }
-            },
-            err => {
-              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-              // this.location.back();
+            (m) => {
               this.progressSpinner = false;
-            }
+              sessionStorage.removeItem("radioTajertaValue");
+              this.persistenceService.setDatos(this.datosJusticiable);
+              sessionStorage.setItem("asociado", "true");
+              this.router.navigate(["/gestionJusticiables"]);
+            },
+            (err) => {
+              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+              this.progressSpinner = false;
+            },
           );
           break;
       }
     }
   }
 
-
   asociarDES(data, copy) {
-
     let asunto = this.datosDesigna.ano.split("/");
 
     let anoDesigna = this.datosDesigna.anio;
@@ -604,93 +527,83 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     if (this.datosDesigna != null) {
       let radioValue = sessionStorage.getItem("radioTajertaValue");
       switch (radioValue) {
-
-        case 'ejg':
+        case "ejg":
           let request = [anoDesigna, data.anio, data.idTipoEjg, turno, asunto[1], data.numeroAsoc];
 
           this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
-            m => {
+            (m) => {
               let respose = JSON.parse(m["body"]);
-              if(respose.error){
-                if (respose.error.code == 200){
+              if (respose.error) {
+                if (respose.error.code == 200) {
                   this.showMesg("info", this.translateService.instant("general.message.incorrect"), this.translateService.instant(respose.error.description));
-              
-                }else{
+                } else {
                   this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(respose.error.description));
-              
                 }
                 this.progressSpinner = false;
-              }else{
-
+              } else {
                 this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                 sessionStorage.removeItem("radioTajertaValue");
-              
+
                 if (!copy) {
                   this.progressSpinner = false;
                   this.location.back();
-                }
-                else {
+                } else {
                   this.sigaServices.post("gestionJusticiables_copyDesigna2Ejg", request).subscribe(
-                    x => {
+                    (x) => {
                       this.progressSpinner = false;
                       this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                       this.location.back();
                     },
-                    err => {
+                    (err) => {
                       //Crear etiqueta en la BBDD
                       this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
                       this.location.back();
-                    }
+                    },
                   );
                 }
               }
             },
-            err => {
+            (err) => {
               this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
               this.progressSpinner = false;
-            }
+            },
           );
 
-
           break;
-        case 'asi':
-
+        case "asi":
           let requestAsistencia = [anoDesigna, this.datosDesigna.idTurno, this.datosDesigna.numero, data.idinstitucion, data.anio, data.numero];
 
           this.sigaServices.post("designacion_asociarAsistenciaDesigna", requestAsistencia).subscribe(
-            m => {
+            (m) => {
               this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.removeItem("radioTajertaValue");
               if (!copy) {
                 this.progressSpinner = false;
                 this.location.back();
-              }
-              else {
+              } else {
                 this.sigaServices.post("gestionJusticiables_copyDesigna2Asis", requestAsistencia).subscribe(
-                  x => {
+                  (x) => {
                     this.progressSpinner = false;
                     this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                     this.location.back();
                   },
-                  err => {
+                  (err) => {
                     //Crear etiqueta en la BBDD
                     this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos de la designacion al EJG seleccionado");
                     this.location.back();
-                  }
+                  },
                 );
               }
             },
-            err => {
+            (err) => {
               this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
               //this.location.back();
               this.progressSpinner = false;
-            }
+            },
           );
 
-
           break;
-        case 'soj':
-
+        case "soj":
           /*  let requestSoj = [
              data.idinstitucion,data.anio,data.numero,
              data.idTipoSoj,this.datos.tipoEJG,this.datos.annio,this.datos.numero
@@ -731,7 +644,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
            }
          ); */
 
-          break; 3
+          break;
+          3;
       }
     }
   }
@@ -748,28 +662,24 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       },
       reject: () => {
         this.asociarASI(data, false);
-      }
+      },
     });
   }
 
   asociarASI(data: AsuntosJusticiableItem, copiarDatos: boolean) {
-
     if (this.datosAsistencia) {
-
       let anioNumeroASI = this.datosAsistencia.anioNumero;
-      let copyData = copiarDatos ? 'S' : 'N';
+      let copyData = copiarDatos ? "S" : "N";
       let radioValue = sessionStorage.getItem("radioTajertaValue");
       switch (radioValue) {
-
-        case 'ejg':
+        case "ejg":
           let ejgItem: EJGItem = new EJGItem();
           ejgItem.annio = String(data.anio);
           ejgItem.numero = String(data.numeroAsoc);
           ejgItem.tipoEJG = String(data.idTipoEjg);
 
           this.sigaServices.postPaginado("busquedaGuardias_asociarEjg", "?anioNumero=" + anioNumeroASI + "&copiarDatos=" + copyData, ejgItem).subscribe(
-            n => {
-
+            (n) => {
               let error = JSON.parse(n.body).error;
               this.progressSpinner = false;
 
@@ -779,49 +689,48 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
                 sessionStorage.removeItem("Asistencia");
               } else {
                 sessionStorage.setItem("EJGRecienAsociado", "true");
-                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado el EJG con la Asistencia correctamente');
+                this.showMesg("success", this.translateService.instant("general.message.accion.realizada"), "Se ha asociado el EJG con la Asistencia correctamente");
                 sessionStorage.removeItem("radioTajertaValue");
                 ejgItem.numero = String(data.numeroAsoc);
                 this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
-                  n => {
+                  (n) => {
                     this.persistenceService.setDatosEJG(JSON.parse(n.body).ejgItems[0]);
                     //this.ngOnInit();
                     //this.consultaUnidadFamiliar(selected);
                     if (sessionStorage.getItem("EJGItem")) {
                       sessionStorage.removeItem("EJGItem");
                     }
-            
-                    this.router.navigate(['/gestionEjg']);
+
+                    this.router.navigate(["/gestionEjg"]);
                     this.progressSpinner = false;
                     sessionStorage.removeItem("Asistencia");
                     this.commonServices.scrollTop();
                   },
-                  err => {
+                  (err) => {
                     this.commonServices.scrollTop();
-                  }
+                  },
                 );
               }
             },
-            err => {
+            (err) => {
               //console.log(err);
               this.progressSpinner = false;
-            }, () => {
+            },
+            () => {
               this.progressSpinner = false;
               sessionStorage.removeItem("Asistencia");
-              
-            }
+            },
           );
 
           break;
-        case 'des':
+        case "des":
           let designaItem: DesignaItem = new DesignaItem();
           designaItem.ano = Number(data.anio);
           designaItem.codigo = data.numero;
           designaItem.nombreTurno = data.turnoGuardia;
 
           this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna", "?anioNumero=" + anioNumeroASI + "&copiarDatos=" + copyData, designaItem).subscribe(
-            n => {
-
+            (n) => {
               let error = JSON.parse(n.body).error;
               this.progressSpinner = false;
               sessionStorage.removeItem("radioTajertaValue");
@@ -829,26 +738,22 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               if (error != null && error.description != null) {
                 this.showMesg("error", "Error al asociar la Designacion con la Asistencia", error.description);
               } else {
-                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
+                this.showMesg("success", this.translateService.instant("general.message.accion.realizada"), "Se ha asociado la Designacion con la Asistencia correctamente");
               }
             },
-            err => {
-              //console.log(err);
+            (err) => {
               this.progressSpinner = false;
-            }, () => {
+            },
+            () => {
               this.progressSpinner = false;
               sessionStorage.removeItem("Asistencia");
               this.location.back();
-            }
+            },
           );
 
           break;
-
       }
-
-
     }
-
   }
 
   search(event) {
@@ -860,104 +765,84 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.radioTarjeta = event;
 
     if (event == "ejg") {
-      this.sigaServices
-        .post(
-          "gestionJusticiables_busquedaClaveAsuntosEJG",
-          this.filtros.filtros
-        )
-        .subscribe(
-          data => {
-            this.body = JSON.parse(data.body).asuntosJusticiableItems;
-            let error = JSON.parse(data.body).error;
-            this.buscar = true;
-            this.progressSpinner = false;
-            if (error != null && error.description != null) {
-              this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
-            }
-          },
-          err => {
-            //console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
+      this.sigaServices.post("gestionJusticiables_busquedaClaveAsuntosEJG", this.filtros.filtros).subscribe(
+        (data) => {
+          this.body = JSON.parse(data.body).asuntosJusticiableItems;
+          let error = JSON.parse(data.body).error;
+          this.buscar = true;
+          this.progressSpinner = false;
+          if (error != null && error.description != null) {
+            this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
           }
-        );
+        },
+        (err) => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        },
+      );
     }
 
     if (event == "des") {
-      this.sigaServices
-        .post(
-          "gestionJusticiables_busquedaClaveAsuntosDesignaciones",
-          this.filtros.filtros
-        )
-        .subscribe(
-          data => {
-            this.body = JSON.parse(data.body).asuntosJusticiableItems;
-            let error = JSON.parse(data.body).error;
-            this.buscar = true;
-            this.progressSpinner = false;
-            if (error != null && error.description != null) {
-              this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
-            }
-          },
-          err => {
-            //console.log(err);
-            this.progressSpinner = false;
+      this.sigaServices.post("gestionJusticiables_busquedaClaveAsuntosDesignaciones", this.filtros.filtros).subscribe(
+        (data) => {
+          this.body = JSON.parse(data.body).asuntosJusticiableItems;
+          let error = JSON.parse(data.body).error;
+          this.buscar = true;
+          this.progressSpinner = false;
+          if (error != null && error.description != null) {
+            this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
           }
-        );
+        },
+        (err) => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+      );
     }
 
     if (event == "soj") {
-      this.sigaServices
-        .post(
-          "gestionJusticiables_busquedaClaveAsuntosSOJ",
-          this.filtros.filtros
-        )
-        .subscribe(
-          data => {
-            this.body = JSON.parse(data.body).asuntosJusticiableItems;
-            let error = JSON.parse(data.body).error;
-            this.buscar = true;
-            this.progressSpinner = false;
-            if (error != null && error.description != null) {
-              this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
-            }
-          },
-          err => {
-            //console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
+      this.sigaServices.post("gestionJusticiables_busquedaClaveAsuntosSOJ", this.filtros.filtros).subscribe(
+        (data) => {
+          this.body = JSON.parse(data.body).asuntosJusticiableItems;
+          let error = JSON.parse(data.body).error;
+          this.buscar = true;
+          this.progressSpinner = false;
+          if (error != null && error.description != null) {
+            this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
           }
-        );
+        },
+        (err) => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        },
+      );
     }
 
     if (event == "asi") {
-      this.sigaServices
-        .post(
-          "gestionJusticiables_busquedaClaveAsuntosAsistencias",
-          this.filtros.filtros
-        )
-        .subscribe(
-          data => {
-            this.body = JSON.parse(data.body).asuntosJusticiableItems;
-            let error = JSON.parse(data.body).error;
-            this.buscar = true;
-            this.progressSpinner = false;
-            if (error != null && error.description != null) {
-              this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
-            }
-          },
-          err => {
-            //console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
+      this.sigaServices.post("gestionJusticiables_busquedaClaveAsuntosAsistencias", this.filtros.filtros).subscribe(
+        (data) => {
+          this.body = JSON.parse(data.body).asuntosJusticiableItems;
+          let error = JSON.parse(data.body).error;
+          this.buscar = true;
+          this.progressSpinner = false;
+          if (error != null && error.description != null) {
+            this.showMesg("info", this.translateService.instant("general.message.informacion"), error.description);
           }
-        );
+        },
+        (err) => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        },
+      );
     }
     this.goToView();
   }
@@ -967,7 +852,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: event.severity,
       summary: event.summary,
-      detail: event.msg
+      detail: event.msg,
     });
   }
 
@@ -976,7 +861,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
   }
   goToView() {

@@ -1,5 +1,3 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
@@ -97,8 +95,8 @@
         <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoDesigna " (click)="asociarDesignacion()" type="button" iconPos="left" label="{{'general.boton.AsociarDesignacion' | translate}}"></button>
         <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoAsistencia " (click)="crearAsistencia()" type="button" iconPos="left" label="{{ 'general.boton.crearAsistencia' | translate }}"></button>
         <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoAsistencia " (click)="asociarAsistencia()" type="button" iconPos="left" label="{{'general.boton.AsociarAsistencia' | translate}}"></button>
-        <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoSOJ " (click)="checkPermisosCrearSOJ()" type="button" iconPos="left" label="{{ 'general.boton.crearSOJ' | translate }}"></button>
-        <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoSOJ " (click)="checkPermisosAsociarSOJ()" type="button" iconPos="left" label="{{ 'general.boton.asociarSOJ' | translate }}"></button>
+        <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoSOJ " (click)="crearSOJ()" type="button" iconPos="left" label="{{ 'general.boton.crearSOJ' | translate }}"></button>
+        <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoSOJ " (click)="asociarSOJ()" type="button" iconPos="left" label="{{ 'general.boton.asociarSOJ' | translate }}"></button>
       </div>
     </div>
   </div>

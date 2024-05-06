@@ -99,10 +99,9 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     contrario.idpersona = evento.idPersona;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", contrario).subscribe(
       (n) => {
+        this.progressSpinner = false;
         let justiciable = JSON.parse(n.body).justiciableBusquedaItems[0];
         let error = JSON.parse(n.body).error;
-        this.progressSpinner = false;
-
         if (error != null && error.description != null) {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
@@ -111,25 +110,9 @@ export class ContrariosPreDesignacionComponent implements OnInit {
         sessionStorage.setItem("itemEJG", JSON.stringify(true));
         sessionStorage.setItem("origin", "ContrarioEJG");
         this.persistenceService.setDatos(justiciable);
-        //sessionStorage.setItem("itemJusticiable", JSON.stringify(justiciable[0]));
-        //sessionStorage.setItem("contrarioEJG", JSON.stringify(evento));
         if (evento.abogado != "" && evento.abogado != null) {
           sessionStorage.setItem("idabogadoFicha", evento.idabogadocontrario);
         }
-
-        /*
-        if (evento.representante != "" && evento.representante != null) {
-          let representante = new JusticiableBusquedaItem();
-          representante.idpersona = evento.representante;
-          this.sigaServices.post("busquedaJusticiables_searchJusticiables", representante).subscribe((justi) => {
-            this.persistenceService.setBody(JSON.parse(justi.body).justiciableBusquedaItems[0]);
-            this.progressSpinner = false;
-            this.router.navigate(["/gestionJusticiables"]);
-          });
-        } else {
-        }
-        */
-        this.progressSpinner = false;
         this.router.navigate(["/gestionJusticiables"]);
       },
       (err) => {

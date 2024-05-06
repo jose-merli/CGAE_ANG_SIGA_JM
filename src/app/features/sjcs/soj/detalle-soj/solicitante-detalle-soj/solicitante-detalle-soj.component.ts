@@ -1,19 +1,19 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { ConfirmationService, Message } from 'primeng/primeng';
-import { TranslateService } from '../../../../../commons/translate';
-import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
-import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
-import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
-import { JusticiableObject } from '../../../../../models/sjcs/JusticiableObject';
-import { CommonsService } from '../../../../../_services/commons.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
-import { SigaServices } from '../../../../../_services/siga.service';
+import { Component, Input, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { ConfirmationService, Message } from "primeng/primeng";
+import { CommonsService } from "../../../../../_services/commons.service";
+import { PersistenceService } from "../../../../../_services/persistence.service";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate";
+import { FichaSojItem } from "../../../../../models/sjcs/FichaSojItem";
+import { JusticiableBusquedaItem } from "../../../../../models/sjcs/JusticiableBusquedaItem";
+import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
+import { JusticiableObject } from "../../../../../models/sjcs/JusticiableObject";
 
 @Component({
-  selector: 'app-solicitante-detalle-soj',
-  templateUrl: './solicitante-detalle-soj.component.html',
-  styleUrls: ['./solicitante-detalle-soj.component.scss']
+  selector: "app-solicitante-detalle-soj",
+  templateUrl: "./solicitante-detalle-soj.component.html",
+  styleUrls: ["./solicitante-detalle-soj.component.scss"],
 })
 export class SolicitanteDetalleSojComponent implements OnInit {
   modoLectura: boolean = false;
@@ -30,47 +30,39 @@ export class SolicitanteDetalleSojComponent implements OnInit {
   fichasPosibles = [
     {
       key: "generales",
-      activa: false
+      activa: false,
     },
     {
       key: "personales",
-      activa: false
+      activa: false,
     },
     {
       origen: "justiciables",
-      activa: false
+      activa: false,
     },
     {
       key: "solicitud",
-      activa: false
+      activa: false,
     },
     {
       key: "representante",
-      activa: false
+      activa: false,
     },
     {
       key: "asuntos",
-      activa: false
+      activa: false,
     },
     {
       key: "abogado",
-      activa: false
+      activa: false,
     },
     {
       key: "procurador",
-      activa: false
-    }
-
+      activa: false,
+    },
   ];
 
-  constructor(
-    private sigaServices: SigaServices,
-    private commonServices: CommonsService,
-    private persistenceService: PersistenceService,
-    private translate: TranslateService,
-    private confirmationService: ConfirmationService,
-    private router: Router
-  ) { }
+  constructor(private sigaServices: SigaServices, private commonServices: CommonsService, private persistenceService: PersistenceService, private translate: TranslateService, private confirmationService: ConfirmationService, private router: Router) {}
 
   @Input() bodyInicial;
   @Input() permisoEscritura: boolean;
@@ -92,7 +84,7 @@ export class SolicitanteDetalleSojComponent implements OnInit {
 
   getAsistidoData() {
     this.progressSpinner = true;
-    this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', this.asistido).subscribe(
+    this.sigaServices.post("gestionJusticiables_getJusticiableByIdPersona", this.asistido).subscribe(
       (n) => {
         this.asistido = JSON.parse(n.body).justiciable;
         this.progressSpinner = false;
@@ -103,18 +95,17 @@ export class SolicitanteDetalleSojComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
-      }
+      },
     );
   }
 
   setAsistidoPersistenceData() {
-
     let datos;
     let asistidoBusqueda = new JusticiableBusquedaItem();
     asistidoBusqueda.idpersona = this.idPersonaAsistido;
     this.progressSpinner = true;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", asistidoBusqueda).subscribe(
-      n => {
+      (n) => {
         datos = JSON.parse(n.body).justiciableBusquedaItems;
         let error = JSON.parse(n.body).error;
         this.progressSpinner = false;
@@ -127,36 +118,27 @@ export class SolicitanteDetalleSojComponent implements OnInit {
         sessionStorage.setItem("idAsistencia", this.idAsistencia);
         //this.persistenceService.clearBody();
       },
-      err => {
+      (err) => {
         this.progressSpinner = false;
         //console.log(err);
       },
       () => {
         this.progressSpinner = false;
-      });
-
-
-
+      },
+    );
   }
 
   onClickSearch() {
-
     if (this.asistido.nif) {
-
-      if (this.commonServices.isValidDNI(this.asistido.nif)
-        || this.commonServices.isValidCIF(this.asistido.nif)
-        || this.commonServices.isValidNIE(this.asistido.nif)
-        || this.commonServices.isValidPassport(this.asistido.nif)) {
-
+      if (this.commonServices.isValidDNI(this.asistido.nif) || this.commonServices.isValidCIF(this.asistido.nif) || this.commonServices.isValidNIE(this.asistido.nif) || this.commonServices.isValidPassport(this.asistido.nif)) {
         let justiciableItem: JusticiableBusquedaItem = new JusticiableBusquedaItem();
         justiciableItem.nif = this.asistido.nif;
 
         this.sigaServices.post("gestionJusticiables_getJusticiableByNif", justiciableItem).subscribe(
-          n => {
+          (n) => {
             let justiciableDTO: JusticiableObject = JSON.parse(n["body"]);
             let justiciableItem: JusticiableItem = justiciableDTO.justiciable;
             if (justiciableItem.idpersona) {
-
               this.asistido.nif = justiciableItem.nif;
               this.asistido.nombre = justiciableItem.nombre;
               this.asistido.apellido1 = justiciableItem.apellido1;
@@ -164,14 +146,15 @@ export class SolicitanteDetalleSojComponent implements OnInit {
               this.asistido.idpersona = justiciableItem.idpersona;
               this.asistido.idinstitucion = justiciableItem.idinstitucion;
               this.asistido.tipopersonajg = justiciableItem.tipopersonajg;
-
-            } else { // si no se encuentra por busqueda rapida ofrecemos crear uno nuevo
+            } else {
+              // si no se encuentra por busqueda rapida ofrecemos crear uno nuevo
 
               this.confirmationService.confirm({
                 key: "confirmNewJusticiable",
-                message: 'No se ha encontrado ningún justiciable con dicho número de identificación, ¿desea crear un nuevo justiciable?',
+                message: "No se ha encontrado ningún justiciable con dicho número de identificación, ¿desea crear un nuevo justiciable?",
                 icon: "fa fa-question-circle",
                 accept: () => {
+                  //ARR: Revisar
                   sessionStorage.setItem("origin", "newAsistido");
                   sessionStorage.setItem("nif", this.asistido.nif);
                   sessionStorage.setItem("Nuevo", "true");
@@ -179,37 +162,33 @@ export class SolicitanteDetalleSojComponent implements OnInit {
                   this.persistenceService.clearDatos();
                   this.router.navigate(["/gestionJusticiables"]);
                 },
-                reject: () => { this.showMsg('info', "Cancel", this.translate.instant("general.message.accion.cancelada")); }
+                reject: () => {
+                  this.showMsg("info", "Cancel", this.translate.instant("general.message.accion.cancelada"));
+                },
               });
-
             }
           },
-          err => {
+          (err) => {
             //console.log(err);
           },
           () => {
             this.progressSpinner = false;
-          }
+          },
         );
-
       } else {
-        this.showMsg('error', 'Error', 'Introduzca un documento de identificación válido')
+        this.showMsg("error", "Error", "Introduzca un documento de identificación válido");
       }
-
     } else {
-      this.showMsg('error', 'Error', 'Introduzca un documento de identificación');
+      this.showMsg("error", "Error", "Introduzca un documento de identificación");
     }
-
   }
 
   getComboTipoPersona() {
     this.comboTipoPersona = [
       { label: "Física", value: "F" },
-      { label: "Jurídica", value: "J" }
-
+      { label: "Jurídica", value: "J" },
     ];
     this.commonServices.arregloTildesCombo(this.comboTipoPersona);
-
   }
 
   clear() {
@@ -221,18 +200,16 @@ export class SolicitanteDetalleSojComponent implements OnInit {
     this.msgs.push({
       severity: severityParam,
       summary: summaryParam,
-      detail: detailParam
+      detail: detailParam,
     });
   }
 
   guardarJusticiable() {
-
     if (this.checkDatosObligatorios()) {
       this.showJusticiableDialog = true;
     } else {
-      this.showMsg('error', this.translate.instant('general.message.error.realiza.accion'), this.translate.instant('general.message.camposObligatorios'));
+      this.showMsg("error", this.translate.instant("general.message.error.realiza.accion"), this.translate.instant("general.message.camposObligatorios"));
     }
-
   }
 
   asociarJusticiable(actualiza: boolean) {
@@ -247,59 +224,54 @@ export class SolicitanteDetalleSojComponent implements OnInit {
     itemSojJusticiable.idTipoSoj = this.bodyInicial.idTipoSoj;
     itemSojJusticiable.numero = this.bodyInicial.numero;
     // Actualizar Datos.
-    itemSojJusticiable.actualizaDatos = actualiza ? 'S' : 'N'; // Modificar = S ||  Nuevo = N 
+    itemSojJusticiable.actualizaDatos = actualiza ? "S" : "N"; // Modificar = S ||  Nuevo = N
     // Quitar Dialogo.
     this.showJusticiableDialog = false;
     this.progressSpinner = true;
     // Asociar SOJ
-    this.sigaServices
-      .post("gestionSoj_asociarSOJ", itemSojJusticiable)
-      .subscribe(
-        data => {
-          let result = JSON.parse(data["body"]);
-          if (result.error) {
-            this.showMsg('error', this.translate.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-          } else {
-            this.showMsg('success', this.translate.instant("general.message.accion.realizada"), '');
-          }
-
-          this.progressSpinner = false;
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
+    this.sigaServices.post("gestionSoj_asociarSOJ", itemSojJusticiable).subscribe(
+      (data) => {
+        let result = JSON.parse(data["body"]);
+        if (result.error) {
+          this.showMsg("error", this.translate.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+        } else {
+          this.showMsg("success", this.translate.instant("general.message.accion.realizada"), "");
         }
-      );
+
+        this.progressSpinner = false;
+      },
+      (err) => {
+        //console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      },
+    );
   }
 
   desasociarJusticiable() {
     this.progressSpinner = true;
 
-    this.sigaServices
-      .post("gestionSoj_desasociarSOJ", this.bodyInicial)
-      .subscribe(
-        data => {
-          let result = JSON.parse(data["body"]);
-          if (result.error) {
-            this.showMsg('error', this.translate.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-          } else {
-            this.asistido = new JusticiableItem();
-            this.showMsg('success', this.translate.instant("general.message.accion.realizada"), '');
-          }
-          this.progressSpinner = false;
-
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
+    this.sigaServices.post("gestionSoj_desasociarSOJ", this.bodyInicial).subscribe(
+      (data) => {
+        let result = JSON.parse(data["body"]);
+        if (result.error) {
+          this.showMsg("error", this.translate.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+        } else {
+          this.asistido = new JusticiableItem();
+          this.showMsg("success", this.translate.instant("general.message.accion.realizada"), "");
         }
-      );
+        this.progressSpinner = false;
+      },
+      (err) => {
+        //console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      },
+    );
   }
 
   searchJusticiable() {
@@ -312,11 +284,9 @@ export class SolicitanteDetalleSojComponent implements OnInit {
   }
 
   checkDatosObligatorios() {
-
     let ok: boolean = false;
 
-    if (this.asistido.nif
-      && this.asistido.tipopersonajg) {
+    if (this.asistido.nif && this.asistido.tipopersonajg) {
       ok = true;
     }
 
@@ -324,20 +294,17 @@ export class SolicitanteDetalleSojComponent implements OnInit {
   }
 
   styleObligatorio(evento) {
-    if ((evento == undefined || evento == null || evento == "")) {
+    if (evento == undefined || evento == null || evento == "") {
       return this.commonServices.styleObligatorio(evento);
     }
   }
 
   goToCard() {
+    //ARR: Revisar
     // SessionStorage
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
-    sessionStorage.setItem("solicitanteSOJ",JSON.stringify(this.asistido));
+    sessionStorage.setItem("solicitanteSOJ", JSON.stringify(this.asistido));
     // Enviar para la gestion de la tarjeta.
     this.router.navigate(["/gestionJusticiables"]);
   }
-
-
-
 }
-

@@ -15,12 +15,12 @@ export class DatosSolicitudComponent implements OnInit {
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
+  @Output() notificacion = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
   permisoSave: boolean = false;
   showDialogSolicitud: boolean = false;
 
-  msgs = [];
   bodyInicial: JusticiableItem;
   selectedAutorizaavisotel: string = "";
   selectedAsistidosolicitajg: string = "";
@@ -37,10 +37,6 @@ export class DatosSolicitudComponent implements OnInit {
     this.getCombos();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     this.tratamientoDescripcionesTarjeta();
-  }
-
-  clear() {
-    this.msgs = [];
   }
 
   onHideTarjeta() {
@@ -142,8 +138,7 @@ export class DatosSolicitudComponent implements OnInit {
   }
 
   private showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
+    this.notificacion.emit({
       severity: severity,
       summary: summary,
       detail: msg,

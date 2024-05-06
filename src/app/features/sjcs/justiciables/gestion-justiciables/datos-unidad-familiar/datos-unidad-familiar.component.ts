@@ -19,10 +19,10 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   @Input() body: JusticiableItem;
   @Input() unidadFamiliar: UnidadFamiliarEJGItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
+  @Output() notificacion = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
 
-  msgs = [];
   impTotal: String = "";
   parentescoCabecera: String = "";
   nombreGrupoLab: String = "";
@@ -53,10 +53,6 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
   rest() {
     this.unidadFamiliar = JSON.parse(JSON.stringify(this.initialUnidadFamiliar));
-  }
-
-  clear() {
-    this.msgs = [];
   }
 
   save() {
@@ -148,8 +144,7 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   }
 
   private showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
+    this.notificacion.emit({
       severity: severity,
       summary: summary,
       detail: msg,

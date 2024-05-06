@@ -54,6 +54,12 @@ export class GestionEjgComponent implements OnInit {
     if (this.persistenceService.getDatosEJG()) {
       this.body = this.persistenceService.getDatosEJG();
       this.persistenceService.clearDatosEJG();
+
+      if (sessionStorage.getItem("justiciable")) {
+        this.tipoObject = JSON.parse(sessionStorage.getItem("justiciable"));
+        this.tipoRelacion = "justiciable";
+        sessionStorage.removeItem("justiciable");
+      }
     } else if (sessionStorage.getItem("EJGItem") != null && sessionStorage.getItem("EJGItem") != undefined) {
       this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
       sessionStorage.removeItem("EJGItem");
@@ -196,6 +202,7 @@ export class GestionEjgComponent implements OnInit {
     } else if (this.tipoRelacion === "asistencia") {
       this.router.navigate(["/fichaAsistencia"]);
     } else if (this.tipoRelacion === "justiciable") {
+      this.persistenceService.setDatos(this.tipoObject);
       this.router.navigate(["/gestionJusticiables"]);
     } else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null) {
       this.persistenceService.clearDatosEJG();

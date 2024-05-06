@@ -209,6 +209,8 @@ export class FiltroJusticiablesComponent implements OnInit {
       if (this.nuevaUniFamiliar) {
         sessionStorage.setItem("origin", "UnidadFamiliar");
       }
+
+      //ARR: Revisar
       this.router.navigate(["/gestionJusticiables"]);
     }
   }

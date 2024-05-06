@@ -17,12 +17,12 @@ export class DatosGeneralesComponent implements OnInit {
   @Input() body: JusticiableItem;
   @Input() origen: string;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
+  @Output() notificacion = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
   permisoSave: boolean = false;
   showDialog: boolean = false;
 
-  msgs = [];
   edadAdulta: number = 18;
   bodyInicial: JusticiableItem;
   dialogOpcion: String = "";
@@ -65,25 +65,12 @@ export class DatosGeneralesComponent implements OnInit {
     }
   }
 
-  clear() {
-    this.msgs = [];
-  }
-
   fillFechaNacimiento(event) {
     if (event != null && event != undefined) {
       this.body.fechanacimiento = event;
       this.calculateAge();
     } else {
       this.body.edad = undefined;
-    }
-  }
-
-  checkPermisosRest() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.rest();
     }
   }
 
@@ -170,33 +157,14 @@ export class DatosGeneralesComponent implements OnInit {
       (data) => {
         this.progressSpinner = false;
 
-        //this.bodyChange.emit();
-
         //Si se manda un mensaje igual a C significa que el nif del justiciable introducido esta repetido
         if (JSON.parse(data.body).error.message != "C") {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           if (!this.modoEdicion) {
             this.modoEdicion = true;
             let idJusticiable = JSON.parse(data.body).id;
             this.body.idpersona = idJusticiable;
             this.body.idinstitucion = this.authenticationService.getInstitucionSession();
-
-            /*
-            if (!this.modoRepresentante) {
-              //Si estamos en la creacion de Datos Generales
-              if (sessionStorage.getItem("EJGItem")) {
-                let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-                sessionStorage.setItem("EJGItem", JSON.stringify(ejg));
-                this.persistenceService.setDatos(ejg);
-              }
-              //Si se esta editando Datos Generales desde su tarjeta en ejg
-              else if (this.persistenceService.getDatos()) {
-                let ejg: EJGItem = this.persistenceService.getDatos();
-                this.persistenceService.setDatos(ejg);
-              }
-
-              this.newJusticiable.emit(this.body);
-            }
-            */
           } else {
             /*
             if (this.modoRepresentante) {
@@ -208,6 +176,8 @@ export class DatosGeneralesComponent implements OnInit {
             }
             */
           }
+          this.asociarJusticiable();
+          this.bodyChange.emit(this.body);
 
           /*
           if (this.modoRepresentante && !this.checkedViewRepresentante) {
@@ -222,14 +192,13 @@ export class DatosGeneralesComponent implements OnInit {
           */
 
           //if (!this.menorEdadJusticiable) {
-          //  this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          //
           //}
           //this.preAsociarJusticiable();
         } else {
-          //this.callConfirmationSave(JSON.parse(data.body).id);
-          // this.personaRepetida = true;
+          this.callConfirmationSave(JSON.parse(data.body).id);
         }
-        //this.bodyChange.emit(this.body);
+        //;
       },
       (err) => {
         this.progressSpinner = false;
@@ -253,6 +222,7 @@ export class DatosGeneralesComponent implements OnInit {
         //  this.router.navigate(["/gestionJusticiables"]);
         // ARR: , { queryParams: { rp: "2" } }
         //}
+        //ARR: Revisar
       },
     );
   }
@@ -305,8 +275,7 @@ export class DatosGeneralesComponent implements OnInit {
   }
 
   private showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
+    this.notificacion.emit({
       severity: severity,
       summary: summary,
       detail: msg,
