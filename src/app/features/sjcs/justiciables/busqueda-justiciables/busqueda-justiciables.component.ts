@@ -5,6 +5,7 @@ import { CommonsService } from "../../../../_services/commons.service";
 import { PersistenceService } from "../../../../_services/persistence.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
+import { JusticiableItem } from "../../../../models/sjcs/JusticiableItem";
 import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
 import { FiltroJusticiablesComponent } from "./filtro-justiciables/filtro-justiciables.component";
 import { TablaJusticiablesComponent } from "./tabla-justiciables/tabla-justiciables.component";
@@ -19,23 +20,13 @@ export class BusquedaJusticiablesComponent implements OnInit {
   msgs;
   breadcrumbs = [];
   origen: string = "";
+  justiciable: any;
 
   buscar: boolean = false;
   progressSpinner: boolean = false;
 
   @ViewChild(FiltroJusticiablesComponent) filtros;
   @ViewChild(TablaJusticiablesComponent) tabla;
-
-  fichasPosibles = [
-    { key: "generales", activa: false },
-    { key: "personales", activa: false },
-    { origen: "justiciables", activa: false },
-    { key: "solicitud", activa: false },
-    { key: "representante", activa: false },
-    { key: "asuntos", activa: false },
-    { key: "abogado", activa: false },
-    { key: "procurador", activa: false },
-  ];
 
   permisoEscritura;
   modoRepresentante: boolean = false;
@@ -47,6 +38,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
   nuevaUniFamiliar: boolean = false;
   nuevoContrarioEJG: boolean = false;
   nuevoSoj: boolean = false;
+  nuevoRepresentante: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private activatedRoute: ActivatedRoute, private location: Location) {}
 
@@ -86,6 +78,9 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.soj"), this.translateService.instant("justiciaGratuita.soj.solicitante"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     } else if (this.origen == "newRepresentante") {
       this.modoRepresentante = true;
+      this.nuevoRepresentante = true;
+      this.justiciable = JSON.parse(sessionStorage.getItem("justiciable"));
+      sessionStorage.removeItem("justiciable");
       this.filtros.filtros = this.persistenceService.getFiltrosAux();
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("menu.justiciaGratuita.justiciables.gestionjusticiables"), "Tarjeta Representante", this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     } else {
@@ -94,8 +89,6 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.filtros.filtros = this.persistenceService.getFiltros();
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
     }
-
-    this.persistenceService.setFichasPosibles(this.fichasPosibles);
 
     this.commonsService.checkAcceso(procesos_justiciables.justiciables).then((respuesta) => {
       this.permisoEscritura = respuesta;
@@ -137,6 +130,14 @@ export class BusquedaJusticiablesComponent implements OnInit {
     );
   }
 
+  insertRepresentante(event: JusticiableItem) {
+    // Asociar para Nuevo Representante
+    this.persistenceService.clearBody();
+    this.persistenceService.setBody(event);
+    this.persistenceService.setDatos(this.justiciable);
+    this.router.navigate(["/gestionJusticiables"]);
+  }
+
   private showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -160,6 +161,8 @@ export class BusquedaJusticiablesComponent implements OnInit {
     } else if (this.origen == "newSoj") {
       this.router.navigate(["/detalle-soj"]);
     } else if (this.origen == "newRepresentante") {
+      this.persistenceService.setDatos(this.justiciable);
+      this.router.navigate(["/gestionJusticiables"]);
     } else {
       this.location.back();
     }

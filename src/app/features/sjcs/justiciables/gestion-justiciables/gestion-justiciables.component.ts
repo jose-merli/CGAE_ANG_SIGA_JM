@@ -29,6 +29,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
   modoEdicion: boolean = false;
   progressSpinner: boolean = false;
+  newRepresentante: boolean = false;
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private persistenceService: PersistenceService) {}
 
@@ -39,13 +40,15 @@ export class GestionJusticiablesComponent implements OnInit {
       this.origen = sessionStorage.getItem("origin");
       sessionStorage.removeItem("origin");
     }
+
+    if (sessionStorage.getItem("justiciable")) {
+      this.justiciable = JSON.parse(sessionStorage.getItem("justiciable"));
+      sessionStorage.removeItem("justiciable");
+    }
+
     if (this.persistenceService.getDatos() != undefined) {
       let justiciable = this.persistenceService.getDatos();
       this.persistenceService.clearDatos();
-      if (sessionStorage.getItem("justiciable")) {
-        this.justiciable = JSON.parse(sessionStorage.getItem("justiciable"));
-        sessionStorage.removeItem("justiciable");
-      }
       if (sessionStorage.getItem("asociado")) {
         this.showMessage("success", this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
         sessionStorage.removeItem("asociado");
@@ -56,6 +59,13 @@ export class GestionJusticiablesComponent implements OnInit {
       sessionStorage.removeItem("familiar");
       await this.searchRepresentanteById(this.unidadFamiliar.uf_idPersona, this.unidadFamiliar.uf_idInstitucion);
     } else {
+      this.body = new JusticiableItem();
+      if (sessionStorage.getItem("representante")) {
+        let representante = JSON.parse(sessionStorage.getItem("representante"));
+        sessionStorage.removeItem("representante");
+        this.body.nif = representante.nif;
+        this.newRepresentante = true;
+      }
       this.checkAccesoTarjetas();
       this.updateTarjResumen();
     }
@@ -78,7 +88,7 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   backTo() {
-    if (this.origen == "representante") {
+    if (this.origen == "representante" || this.newRepresentante) {
       this.persistenceService.setDatos(this.justiciable);
       this.router.navigate(["/gestionJusticiables"]);
     } else if (this.origen == "UnidadFamiliar" || this.origen == "ContrarioEJG") {
@@ -88,6 +98,9 @@ export class GestionJusticiablesComponent implements OnInit {
     } else if (this.origen == "Asistencia") {
       this.router.navigate(["/fichaAsistencia"]);
     } else {
+      if (this.justiciable != null) {
+        sessionStorage.setItem("justiciable", JSON.stringify(this.justiciable));
+      }
       sessionStorage.setItem("origin", this.origen);
       this.router.navigate(["/justiciables"]);
     }

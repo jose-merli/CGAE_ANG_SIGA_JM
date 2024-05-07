@@ -25,7 +25,6 @@ export class TablaJusticiablesComponent implements OnInit {
   selectedDatos = [];
   numSelected = 0;
   historico: boolean = false;
-  nuevoRepresentante: boolean = false;
   seleccion: boolean = false;
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
@@ -44,20 +43,17 @@ export class TablaJusticiablesComponent implements OnInit {
   @Input() nuevaUniFamiliar;
   @Input() nuevoContrarioEJG;
   @Input() nuevoSOJ;
+  @Input() nuevoRepresentante;
   //searchServiciosTransaccion: boolean = false;
 
   @ViewChild("table") tabla: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
+  @Output() insertRepresentante = new EventEmitter<JusticiableItem>();
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private location: Location) {}
 
   ngOnInit() {
-    //TODO:
-    //if (sessionStorage.getItem("origin") == "newRepresentante") {
-    //this.nuevoRepresentante = true;
-    //}
-
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
@@ -413,60 +409,47 @@ export class TablaJusticiablesComponent implements OnInit {
     this.persistenceService.setPaginacion(paginacion);
     // Asociar para Interesados.
     if (this.nuevoInteresado) {
+      // Asociar para Contrarios.
       if (this.checkInteresado(selectedDatos)) {
         this.insertInteresado(selectedDatos);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.interesados.existente"));
       }
-      // Asociar para Contrarios.
     } else if (this.nuevoContrario) {
+      // Asociar para SOJ
       if (this.checkContrario(selectedDatos)) {
         this.insertContrario(selectedDatos);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
       }
-      // Asociar para SOJ
     } else if (this.nuevoSOJ) {
-      this.asociarSOJ(selectedDatos);
       // Asociar para Asistido
+      this.asociarSOJ(selectedDatos);
     } else if (this.nuevoAsistido) {
       this.asociarAsistido(selectedDatos);
-      // Asociar para Nuevo Contrario Asistencia
     } else if (this.nuevoContrarioAsistencia) {
+      // Asociar para Nuevo Contrario Asistencia
       if (this.checkContrario(selectedDatos)) {
         this.asociarContrarioAsistencia(selectedDatos);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
       }
-      // Asociar para Nuevo Contrario EJG
     } else if (this.nuevoContrarioEJG) {
+      // Asociar para Nuevo Contrario EJG
       if (this.checkContrarioEJG(selectedDatos)) {
         this.insertContrarioEJG(selectedDatos);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
       }
-    }
-    // Asociar para Nueva Unidad Familiar
-    else if (this.nuevaUniFamiliar) {
+    } else if (this.nuevaUniFamiliar) {
+      // Asociar para Nueva Unidad Familiar
       if (this.checkUniFamiliar(selectedDatos)) {
         this.insertUniFamiliar(selectedDatos);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"));
       }
-    }
-    // Asociar para Nuevo Representante
-    else if (this.nuevoRepresentante) {
-      //ARR: Revisar
-      this.persistenceService.clearBody();
-      this.persistenceService.setBody(selectedDatos);
-      this.router.navigate(["/gestionJusticiables"]);
-      //sessionStorage.setItem("newRepresentante",JSON.stringify(evento));
-      //
-      //if (sessionStorage.getItem("fichaJust") != null) {
-      //  sessionStorage.setItem("origin", sessionStorage.getItem("fichaJust"));
-      //  sessionStorage.removeItem("fichaJust");
-      //}
-      //this.location.back();
+    } else if (this.nuevoRepresentante) {
+      this.insertRepresentante.emit(selectedDatos);
     } else {
       let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
       if (filtros.idRol == "2") {

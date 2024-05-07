@@ -142,7 +142,7 @@ export class DatosRepresentanteComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("origin", "newRepresentante");
-      this.persistenceService.setDatos(this.body);
+      sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       this.router.navigate(["/justiciables"]);
     }
   }
@@ -368,7 +368,10 @@ export class DatosRepresentanteComponent implements OnInit {
       message: this.translateService.instant("justiciaGratuita.justiciables.message.crearNuevoRepresentante"),
       icon: "fa fa-search ",
       accept: () => {
-        //this.newRepresentante.emit(JSON.parse(JSON.stringify(this.representante)));
+        sessionStorage.setItem("origin", "newRepresentante");
+        sessionStorage.setItem("representante", JSON.stringify(this.representante));
+        sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+        this.router.navigate(["/gestionJusticiables"]);
       },
       reject: () => {
         this.showMessage("info", "info", this.translateService.instant("general.message.accion.cancelada"));

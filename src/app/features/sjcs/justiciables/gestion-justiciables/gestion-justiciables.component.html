@@ -17,7 +17,7 @@
     <app-tarjeta-resumen-fija class="pb-50" [chincheta]="true" [datos]="datosResumen" [icono]="'clipboard'" [enlaces]="enlacesResumen" (isOpen)="openTarjeta($event)"></app-tarjeta-resumen-fija>
 
     <app-datos-generales id="tarjetaGenerales" [body]="body" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaGenerales')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaGenerales')" [origen]="origen" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-datos-generales>
+      [showTarjeta]="isOpenTarjeta('tarjetaGenerales')" [origen]="origen" [justiciable]="justiciable" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-datos-generales>
 
     <app-datos-personales *ngIf="modoEdicion" id="tarjetaPersonales" [body]="body" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaPersonales')" 
       [showTarjeta]="isOpenTarjeta('tarjetaPersonales')" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-datos-personales>

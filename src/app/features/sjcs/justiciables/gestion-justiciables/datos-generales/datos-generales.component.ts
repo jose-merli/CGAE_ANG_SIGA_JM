@@ -21,6 +21,7 @@ export class DatosGeneralesComponent implements OnInit {
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
   @Input() origen: string;
+  @Input() justiciable: any;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() notificacion = new EventEmitter<any>();
 
@@ -105,15 +106,12 @@ export class DatosGeneralesComponent implements OnInit {
         menorEdadSinRepresentante = false;
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+        //Si es menor no se guarda la fecha nacimiento hasta que no se le asocie un representante
+        this.body.fechanacimiento = undefined;
+        this.body.edad = undefined;
       }
 
       if (!this.modoEdicion) {
-        //Si es menor no se guarda la fecha nacimiento hasta que no se le asocie un representante
-        if (menorEdadSinRepresentante) {
-          this.body.fechanacimiento = undefined;
-          this.body.edad = undefined;
-        }
-
         this.callSaveService("gestionJusticiables_createJusticiable", false);
       } else {
         if (!menorEdadSinRepresentante) {
@@ -248,26 +246,32 @@ export class DatosGeneralesComponent implements OnInit {
 
   private asociarJusticiable() {
     if (this.origen == "UnidadFamiliar") {
-      // Asociar para Nueva Unidad Familiar
+      // Asociar Nueva Unidad Familiar
       this.insertUniFamiliar();
     } else if (this.origen == "newInteresado") {
-      // Asociar para Interesados.
+      // Asociar Nuevo Interesados.
       this.insertInteresado();
     } else if (this.origen == "newAsistido") {
-      // Asociar para Asistido
+      // Asociar Nuevo Asistido
       this.insertAsistido();
     } else if (this.origen == "newContrarioEJG") {
-      // Asociar para Nuevo Contrario EJG
+      // Asociar Nuevo Contrario EJG
       this.insertContrarioEJG();
     } else if (this.origen == "newContrario") {
-      // Asociar para Nuevo Contrario
+      // Asociar Nuevo Contrario
       this.insertContrario();
     } else if (this.origen == "newContrarioAsistencia") {
-      // Asociar para Nuevo Contrario Asistencia
+      // Asociar Nuevo Contrario Asistencia
       this.insertContrarioAsistencia();
     } else if (this.origen == "newSoj") {
-      // Asociar para nuevo SOJ
+      // Asociar Nuevo SOJ
       this.insertSOJ();
+    } else if (this.origen == "newRepresentante") {
+      // Asociar Nuevo Representante
+      this.persistenceService.clearBody();
+      this.persistenceService.setBody(this.body);
+      this.persistenceService.setDatos(this.justiciable);
+      this.router.navigate(["/gestionJusticiables"]);
     } else {
       this.progressSpinner = false;
     }

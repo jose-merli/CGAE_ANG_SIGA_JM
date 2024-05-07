@@ -31,6 +31,7 @@ export class FiltroJusticiablesComponent implements OnInit {
   @Input() nuevaUniFamiliar;
   @Input() nuevoContrarioEJG;
   @Input() origen: string = "";
+  @Input() justiciable: any;
   @Output() isOpen = new EventEmitter<boolean>();
 
   comboProvincias = [];
@@ -186,17 +187,16 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   nuevo() {
-    //this.modoRepresentante = true;
     sessionStorage.setItem("nuevoJusticiable", "true");
     sessionStorage.setItem("Nuevo", "true");
     sessionStorage.setItem("nuevoJusticiableTarjetas", "true");
     sessionStorage.setItem("origin", this.origen);
-
     if (!this.modoRepresentante) {
       this.persistenceService.clearDatos();
       this.persistenceService.clearBody();
+    } else {
+      sessionStorage.setItem("justiciable", JSON.stringify(this.justiciable));
     }
-
     this.router.navigate(["/gestionJusticiables"]);
   }
 
@@ -214,7 +214,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     ) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
-    } else if(this.filtros != null && this.filtros.codigoPostal != null && this.filtros.codigoPostal.trim() != "" && this.filtros.codigoPostal.length != 5){
+    } else if (this.filtros != null && this.filtros.codigoPostal != null && this.filtros.codigoPostal.trim() != "" && this.filtros.codigoPostal.length != 5) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.cp"));
       console.log("error cp");
       return false;
