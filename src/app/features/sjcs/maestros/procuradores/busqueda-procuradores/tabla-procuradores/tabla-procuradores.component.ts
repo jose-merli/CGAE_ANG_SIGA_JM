@@ -120,7 +120,6 @@ export class TablaProcuradoresComponent implements OnInit {
     //Si proviene de una ficha de contrario
     if (this.fromProcuradorContrario) {
       sessionStorage.setItem("procurador", JSON.stringify(evento));
-      //ARR: Revisar
       this.router.navigate(["/gestionJusticiables"]);
     }
 

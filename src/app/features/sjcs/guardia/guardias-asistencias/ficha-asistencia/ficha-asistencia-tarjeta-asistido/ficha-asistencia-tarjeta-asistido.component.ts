@@ -151,7 +151,6 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
                   sessionStorage.setItem("Nuevo", "true");
                   sessionStorage.setItem("idAsistencia", this.idAsistencia);
                   this.router.navigate(["/gestionJusticiables"]);
-                  //ARR: Revisar
                 },
                 reject: () => {
                   this.showMsg("info", "Cancel", this.translateService.instant("general.message.accion.cancelada"));

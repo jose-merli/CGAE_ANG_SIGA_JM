@@ -35,10 +35,10 @@
       [showTarjeta]="isOpenTarjeta('tarjetaAsunto')" [body]="body" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-asuntos>
 
     <app-datos-abogado-contrario *ngIf="modoEdicion && (origen == 'ContrarioEJG' || origen == 'Contrario')" id="tarjetaAbogado" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaAbogado')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaAbogado')" [body]="body" [origen]="origen" (notificacion)="notificacion($event)"></app-datos-abogado-contrario> 
+      [showTarjeta]="isOpenTarjeta('tarjetaAbogado')" [body]="body" [origen]="origen" [contrario]="contrario" (notificacion)="notificacion($event)"></app-datos-abogado-contrario> 
 
     <app-datos-procurador-contrario *ngIf="modoEdicion && (origen == 'ContrarioEJG' || origen == 'Contrario')" id="tarjetaProcurador" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaProcurador')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [origen]="origen" (notificacion)="notificacion($event)"></app-datos-procurador-contrario>
+      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [origen]="origen" [contrario]="contrario" (notificacion)="notificacion($event)"></app-datos-procurador-contrario>
 
   </div>
 </div>

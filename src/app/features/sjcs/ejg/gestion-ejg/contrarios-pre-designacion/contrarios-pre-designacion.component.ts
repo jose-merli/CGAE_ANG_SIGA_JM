@@ -110,10 +110,10 @@ export class ContrariosPreDesignacionComponent implements OnInit {
         sessionStorage.setItem("itemEJG", JSON.stringify(true));
         sessionStorage.setItem("origin", "ContrarioEJG");
         this.persistenceService.setDatos(justiciable);
-        if (evento.abogado != "" && evento.abogado != null) {
-          sessionStorage.setItem("idabogadoFicha", evento.idabogadocontrario);
-        }
         this.router.navigate(["/gestionJusticiables"]);
+        //if (evento.abogado != "" && evento.abogado != null) {
+        //  sessionStorage.setItem("idabogadoFicha", evento.idabogadocontrario);
+        //}
       },
       (err) => {
         this.progressSpinner = false;

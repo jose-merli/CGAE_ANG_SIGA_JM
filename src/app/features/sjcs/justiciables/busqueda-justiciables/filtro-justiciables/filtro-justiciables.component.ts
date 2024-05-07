@@ -27,21 +27,15 @@ export class FiltroJusticiablesComponent implements OnInit {
   resultadosPoblaciones: any;
 
   @Input() permisoEscritura;
-  @Output() isOpen = new EventEmitter<boolean>();
   @Input() modoRepresentante;
   @Input() nuevaUniFamiliar;
   @Input() nuevoContrarioEJG;
+  @Input() origen: string = "";
+  @Output() isOpen = new EventEmitter<boolean>();
 
   comboProvincias = [];
   comboPoblacion = [];
   comboRoles = [];
-
-  fichasPosiblesNew = [
-    {
-      key: "generales",
-      activa: true,
-    },
-  ];
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) {}
 
@@ -196,23 +190,14 @@ export class FiltroJusticiablesComponent implements OnInit {
     sessionStorage.setItem("nuevoJusticiable", "true");
     sessionStorage.setItem("Nuevo", "true");
     sessionStorage.setItem("nuevoJusticiableTarjetas", "true");
-    //sessionStorage.setItem("origin", "Nuevo");
-    //sessionStorage.setItem("fichaJusticiable");
+    sessionStorage.setItem("origin", this.origen);
 
-    this.persistenceService.setFichasPosibles(this.fichasPosiblesNew);
-
-    if (this.modoRepresentante) {
-      this.router.navigate(["/gestionJusticiables"]);
-    } else {
+    if (!this.modoRepresentante) {
       this.persistenceService.clearDatos();
       this.persistenceService.clearBody();
-      if (this.nuevaUniFamiliar) {
-        sessionStorage.setItem("origin", "UnidadFamiliar");
-      }
-
-      //ARR: Revisar
-      this.router.navigate(["/gestionJusticiables"]);
     }
+
+    this.router.navigate(["/gestionJusticiables"]);
   }
 
   checkFilters() {

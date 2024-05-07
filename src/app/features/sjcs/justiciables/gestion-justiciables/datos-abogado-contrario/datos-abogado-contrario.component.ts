@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
@@ -11,12 +11,13 @@ import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
   templateUrl: "./datos-abogado-contrario.component.html",
   styleUrls: ["./datos-abogado-contrario.component.scss"],
 })
-export class DatosAbogadoContrarioComponent implements OnInit {
+export class DatosAbogadoContrarioComponent implements OnInit, OnChanges {
   @Input() modoEdicion;
   @Input() permisoEscritura: boolean = true;
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
   @Input() origen: string = "";
+  @Input() contrario: any;
   @Output() notificacion = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
@@ -27,7 +28,12 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
-    this.iniciarAbogado();
+  }
+
+  ngOnChanges() {
+    if (this.progressSpinner) {
+      this.iniciarAbogado();
+    }
   }
 
   onHideTarjeta() {
@@ -79,26 +85,32 @@ export class DatosAbogadoContrarioComponent implements OnInit {
   private iniciarAbogado() {
     if (sessionStorage.getItem("abogado")) {
       this.associate();
-    } else if (sessionStorage.getItem("idabogadoFicha")) {
-      let idabogado = sessionStorage.getItem("idabogadoFicha");
-      this.sigaServices.post("designaciones_searchAbogadoByIdPersona", idabogado).subscribe(
-        (n) => {
-          let data = JSON.parse(n.body).colegiadoItem;
-          this.abogado.nombreColegio = data.colegioResultado;
-          this.abogado.numColegiado = data.numColegiado;
-          this.abogado.estadoColegial = data.estadoColegial;
-          this.abogado.nombre = data.nombre;
-          this.abogado.nif = data.nif;
-          this.abogado.idPersona = data.idPersona;
+    } else {
+      if (this.contrario != undefined) {
+        if (this.contrario.idabogadocontrario != undefined && this.contrario.idabogadocontrario != null) {
+          this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.contrario.idabogadocontrario).subscribe(
+            (n) => {
+              this.progressSpinner = false;
+              let data = JSON.parse(n.body).colegiadoItem;
+              this.abogado.nombreColegio = data.colegioResultado;
+              this.abogado.numColegiado = data.numColegiado;
+              this.abogado.estadoColegial = data.estadoColegial;
+              this.abogado.nombre = data.nombre;
+              this.abogado.nif = data.nif;
+              this.abogado.idPersona = data.idPersona;
+            },
+            (err) => {
+              this.progressSpinner = false;
+            },
+          );
 
           this.progressSpinner = false;
-        },
-        (err) => {
+        } else {
           this.progressSpinner = false;
-        },
-      );
-    } else {
-      this.progressSpinner = false;
+        }
+      } else {
+        this.progressSpinner = false;
+      }
     }
   }
 

@@ -53,9 +53,10 @@ export class TablaJusticiablesComponent implements OnInit {
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private location: Location) {}
 
   ngOnInit() {
-    if (sessionStorage.getItem("origin") == "newRepresentante") {
-      this.nuevoRepresentante = true;
-    }
+    //TODO:
+    //if (sessionStorage.getItem("origin") == "newRepresentante") {
+    //this.nuevoRepresentante = true;
+    //}
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -111,7 +112,6 @@ export class TablaJusticiablesComponent implements OnInit {
     let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero];
     this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
       (data) => {
-        sessionStorage.removeItem("origin");
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         //this.router.navigate(["/fichaDesignaciones"]);
@@ -153,7 +153,6 @@ export class TablaJusticiablesComponent implements OnInit {
     let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero];
     this.sigaServices.post("gestionejg_insertFamiliarEJG", request).subscribe(
       (data) => {
-        sessionStorage.removeItem("origin");
         //Para que se abra la tarjeta de unidad familiar y se haga scroll a ella
         sessionStorage.setItem("tarjeta", "unidadFamiliar");
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -198,7 +197,6 @@ export class TablaJusticiablesComponent implements OnInit {
     let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero];
     this.sigaServices.post("designaciones_insertContrario", request).subscribe(
       (data) => {
-        sessionStorage.removeItem("origin");
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         //this.router.navigate(["/fichaDesignaciones"]);
@@ -328,7 +326,6 @@ export class TablaJusticiablesComponent implements OnInit {
     let request = [justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero];
     this.sigaServices.post("gestionejg_insertContrarioEJG", request).subscribe(
       (data) => {
-        sessionStorage.removeItem("origin");
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         //this.router.navigate(["/fichaDesignaciones"]);

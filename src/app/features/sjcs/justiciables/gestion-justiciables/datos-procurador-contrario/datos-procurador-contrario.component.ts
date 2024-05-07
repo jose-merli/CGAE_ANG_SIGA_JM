@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
@@ -11,12 +11,13 @@ import { ProcuradorItem } from "../../../../../models/sjcs/ProcuradorItem";
   templateUrl: "./datos-procurador-contrario.component.html",
   styleUrls: ["./datos-procurador-contrario.component.scss"],
 })
-export class DatosProcuradorContrarioComponent implements OnInit {
+export class DatosProcuradorContrarioComponent implements OnInit, OnChanges {
   @Input() modoEdicion;
   @Input() permisoEscritura: boolean = true;
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
   @Input() origen: string = "";
+  @Input() contrario: any;
   @Output() notificacion = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
@@ -26,33 +27,13 @@ export class DatosProcuradorContrarioComponent implements OnInit {
   constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) {}
 
   ngOnInit() {
-    if (sessionStorage.getItem("datosProcurador")) {
-      this.procurador = JSON.parse(sessionStorage.getItem("datosProcurador"))[0];
-      sessionStorage.removeItem("datosProcurador");
-      this.associate();
-    } else {
-      if (sessionStorage.getItem("contrarioEJG")) {
-        /* Procede de ficha pre-designacion */
-        let data = JSON.parse(sessionStorage.getItem("contrarioEJG"));
-        if (data.idprocurador != null) {
-          this.procurador.nColegiado = data.procurador.split(",")[0];
-          this.procurador.nombre = data.procurador.split(",")[1].concat(",", data.procurador.split(",")[2]);
-          this.procurador.idProcurador = data.idprocurador;
-          this.procurador.idInstitucion = data.idInstitucionProc;
-        }
-      } else if (sessionStorage.getItem("contrarioDesigna")) {
-        //Procede de gicha designacion
-        let data = JSON.parse(sessionStorage.getItem("contrarioDesigna"));
-        if (data.idprocurador != null) {
-          this.procurador.nColegiado = data.procurador.split(",")[0];
-          this.procurador.nombre = data.procurador.split(",")[1].concat(",", data.procurador.split(",")[2]);
-          this.procurador.idProcurador = data.idprocurador;
-          this.procurador.idInstitucion = data.idInstitucionProc;
-        }
-      }
-    }
+    this.progressSpinner = true;
+  }
 
-    this.progressSpinner = false;
+  ngOnChanges() {
+    if (this.progressSpinner) {
+      this.iniciarProcurador();
+    }
   }
 
   search() {
@@ -100,6 +81,37 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
+  }
+
+  private iniciarProcurador() {
+    if (sessionStorage.getItem("datosProcurador")) {
+      this.procurador = JSON.parse(sessionStorage.getItem("datosProcurador"))[0];
+      sessionStorage.removeItem("datosProcurador");
+      this.associate();
+    } else {
+      if (this.contrario != undefined) {
+        if (this.contrario.idprocurador != undefined && this.contrario.idprocurador != null) {
+          let procuradorItem: ProcuradorItem = new ProcuradorItem();
+          procuradorItem.idProcurador = this.contrario.idprocurador;
+          this.sigaServices.post("busquedaProcuradores_searchProcuradores", procuradorItem).subscribe(
+            (n) => {
+              this.progressSpinner = false;
+              let procuradores = JSON.parse(n.body).procuradorItems;
+              if (procuradores.length > 0) {
+                this.procurador = procuradores[0];
+              }
+            },
+            (err) => {
+              this.progressSpinner = false;
+            },
+          );
+        } else {
+          this.progressSpinner = false;
+        }
+      } else {
+        this.progressSpinner = false;
+      }
+    }
   }
 
   private associate() {

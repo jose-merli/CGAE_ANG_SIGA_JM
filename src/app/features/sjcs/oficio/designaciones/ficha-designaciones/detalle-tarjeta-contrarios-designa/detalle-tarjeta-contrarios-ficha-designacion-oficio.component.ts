@@ -161,10 +161,9 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
         this.persistenceService.clearBody();
         this.persistenceService.setDatos(justiciable);
         sessionStorage.setItem("origin", "Contrario");
-        sessionStorage.setItem("contrarioDesigna", JSON.stringify(evento));
-        if (evento.abogado != "" && evento.abogado != null) {
-          sessionStorage.setItem("idabogadoFicha", evento.idabogadocontrario);
-        }
+        //if (evento.abogado != "" && evento.abogado != null) {
+        //sessionStorage.setItem("idabogadoFicha", evento.idabogadocontrario);
+        //}
         this.router.navigate(["/gestionJusticiables"]);
       },
       (err) => {

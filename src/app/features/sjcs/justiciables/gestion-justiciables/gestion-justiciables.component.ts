@@ -4,6 +4,7 @@ import { CommonsService } from "../../../../_services/commons.service";
 import { PersistenceService } from "../../../../_services/persistence.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
+import { EJGItem } from "../../../../models/sjcs/EJGItem";
 import { JusticiableBusquedaItem } from "../../../../models/sjcs/JusticiableBusquedaItem";
 import { JusticiableItem } from "../../../../models/sjcs/JusticiableItem";
 import { UnidadFamiliarEJGItem } from "../../../../models/sjcs/UnidadFamiliarEJGItem";
@@ -24,6 +25,7 @@ export class GestionJusticiablesComponent implements OnInit {
   enlacesResumen = [];
   msgs = [];
   origen: string = "";
+  contrario: any;
 
   modoEdicion: boolean = false;
   progressSpinner: boolean = false;
@@ -81,8 +83,10 @@ export class GestionJusticiablesComponent implements OnInit {
       this.router.navigate(["/gestionJusticiables"]);
     } else if (this.origen == "UnidadFamiliar" || this.origen == "ContrarioEJG") {
       this.router.navigate(["/gestionEjg"]);
-    } else if (this.origen == "Contrario") {
+    } else if (this.origen == "Interesado" || this.origen == "Contrario") {
       this.router.navigate(["/fichaDesignaciones"]);
+    } else if (this.origen == "Asistencia") {
+      this.router.navigate(["/fichaAsistencia"]);
     } else {
       sessionStorage.setItem("origin", this.origen);
       this.router.navigate(["/justiciables"]);
@@ -100,7 +104,7 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   notificacion(mensaje: any) {
-    this.showMessage(mensaje.severity, mensaje.summary, mensaje.msg);
+    this.showMessage(mensaje.severity, mensaje.summary, mensaje.detail);
   }
 
   private getTarjetas() {
@@ -249,11 +253,11 @@ export class GestionJusticiablesComponent implements OnInit {
     let bodyBusqueda = new JusticiableBusquedaItem();
     bodyBusqueda.idpersona = idpersona;
     bodyBusqueda.idinstitucion = idinstitucion;
-
     await this.sigaServices.post("gestionJusticiables_searchJusticiable", bodyBusqueda).subscribe(
       (n) => {
         this.body = JSON.parse(n.body).justiciable;
         this.modoEdicion = true;
+        this.searchContrarios();
         this.checkAccesoTarjetas();
         this.updateTarjResumen();
       },
@@ -263,11 +267,31 @@ export class GestionJusticiablesComponent implements OnInit {
     );
   }
 
-  private showMessage(severity, summary, msg) {
+  private searchContrarios() {
+    if (this.origen == "ContrarioEJG") {
+      let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+      let item = [ejg.numero.toString(), ejg.annio, ejg.tipoEJG, false, this.body.idpersona];
+      this.sigaServices.post("gestionejg_busquedaListaContrariosEJG", item).subscribe((n) => {
+        if (n.ok) {
+          this.contrario = JSON.parse(n.body)[0];
+        }
+      });
+    } else if (this.origen == "Contrario") {
+      let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+      let item = [designa.idTurno.toString(), designa.nombreTurno, designa.numero.toString(), designa.ano, false, this.body.idpersona];
+      this.sigaServices.post("designaciones_listaContrarios", item).subscribe((n) => {
+        if (n.ok) {
+          this.contrario = JSON.parse(n.body)[0];
+        }
+      });
+    }
+  }
+
+  private showMessage(severity, summary, detail) {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg,
+      detail: detail,
     });
   }
 }

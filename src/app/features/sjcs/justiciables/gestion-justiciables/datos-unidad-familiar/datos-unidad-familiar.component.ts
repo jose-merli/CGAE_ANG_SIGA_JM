@@ -97,6 +97,15 @@ export class DatosUnidadFamiliarComponent implements OnInit {
     }
   }
 
+  numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   private validateCampos() {
     let valid = true;
     //En el caso que no se haya rellenado el campo de parentesco

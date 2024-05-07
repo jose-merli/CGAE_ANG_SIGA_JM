@@ -154,7 +154,6 @@ export class SolicitanteDetalleSojComponent implements OnInit {
                 message: "No se ha encontrado ningún justiciable con dicho número de identificación, ¿desea crear un nuevo justiciable?",
                 icon: "fa fa-question-circle",
                 accept: () => {
-                  //ARR: Revisar
                   sessionStorage.setItem("origin", "newAsistido");
                   sessionStorage.setItem("nif", this.asistido.nif);
                   sessionStorage.setItem("Nuevo", "true");
@@ -300,7 +299,6 @@ export class SolicitanteDetalleSojComponent implements OnInit {
   }
 
   goToCard() {
-    //ARR: Revisar
     // SessionStorage
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
     sessionStorage.setItem("solicitanteSOJ", JSON.stringify(this.asistido));

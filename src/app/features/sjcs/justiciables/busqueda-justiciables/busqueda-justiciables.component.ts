@@ -18,6 +18,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
   datos;
   msgs;
   breadcrumbs = [];
+  origen: string = "";
 
   buscar: boolean = false;
   progressSpinner: boolean = false;
@@ -38,7 +39,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
 
   permisoEscritura;
   modoRepresentante: boolean = false;
-  searchJusticiable: boolean = false;
+  searchJusticiable: boolean = true;
   nuevoInteresado: boolean = false;
   nuevoContrario: boolean = false;
   nuevoAsistido: boolean = false;
@@ -57,33 +58,38 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.location.back();
     }
 
-    if (sessionStorage.getItem("origin") == "newInteresado") {
+    if (sessionStorage.getItem("origin")) {
+      this.origen = sessionStorage.getItem("origin");
+      sessionStorage.removeItem("origin");
+    }
+
+    if (this.origen == "newInteresado") {
       this.nuevoInteresado = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.designaciones"), this.translateService.instant("justiciaGratuita.designaciones.interesados"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    } else if (sessionStorage.getItem("origin") == "newContrario") {
+    } else if (this.origen == "newContrario") {
       this.nuevoContrario = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.designaciones"), this.translateService.instant("justiciaGratuita.designaciones.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    } else if (sessionStorage.getItem("origin") == "newAsistido") {
+    } else if (this.origen == "newAsistido") {
       this.nuevoAsistido = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia"), this.translateService.instant("justiciaGratuita.guardia.asistido"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    } else if (sessionStorage.getItem("origin") == "newContrarioAsistencia") {
+    } else if (this.origen == "newContrarioAsistencia") {
       this.nuevoContrarioAsistencia = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia"), this.translateService.instant("justiciaGratuita.guardia.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    } else if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
+    } else if (this.origen == "UnidadFamiliar") {
       this.nuevaUniFamiliar = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.ejg"), this.translateService.instant("justiciaGratuita.ejg.unidadfamiliar"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    } else if (sessionStorage.getItem("origin") == "newContrarioEJG") {
+    } else if (this.origen == "newContrarioEJG") {
       this.nuevoContrarioEJG = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.ejg"), this.translateService.instant("justiciaGratuita.ejg.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    } else if (sessionStorage.getItem("origin") == "newSoj") {
+    } else if (this.origen == "newSoj") {
       this.nuevoSoj = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.soj"), this.translateService.instant("justiciaGratuita.soj.solicitante"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    } else if (sessionStorage.getItem("origin") == "newRepresentante") {
+    } else if (this.origen == "newRepresentante") {
       this.modoRepresentante = true;
       this.filtros.filtros = this.persistenceService.getFiltrosAux();
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("menu.justiciaGratuita.justiciables.gestionjusticiables"), "Tarjeta Representante", this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     } else {
-      this.searchJusticiable = true;
+      this.searchJusticiable = false;
       this.persistenceService.clearDatosEJG();
       this.filtros.filtros = this.persistenceService.getFiltros();
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
@@ -145,8 +151,15 @@ export class BusquedaJusticiablesComponent implements OnInit {
   }
 
   backTo() {
-    if (this.persistenceService.getDatosEJG()) {
+    if (this.origen == "newInteresado" || this.origen == "newContrario") {
+      this.router.navigate(["fichaDesignaciones"]);
+    } else if (this.origen == "newAsistido" || this.origen == "newContrarioAsistencia") {
+      this.router.navigate(["/fichaAsistencia"]);
+    } else if (this.origen == "UnidadFamiliar" || this.origen == "newContrarioEJG") {
       this.router.navigate(["/gestionEjg"]);
+    } else if (this.origen == "newSoj") {
+      this.router.navigate(["/detalle-soj"]);
+    } else if (this.origen == "newRepresentante") {
     } else {
       this.location.back();
     }
