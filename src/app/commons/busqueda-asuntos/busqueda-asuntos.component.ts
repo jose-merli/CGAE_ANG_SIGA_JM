@@ -136,7 +136,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       }
 
       if (this.fromJust) {
-        this.asociarJust(this.datosAsociar, true);
+        this.asociarJust(this.datosAsociar);
       }
     }
   }
