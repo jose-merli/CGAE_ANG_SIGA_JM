@@ -205,6 +205,8 @@ export class GestionEjgComponent implements OnInit {
     } else if (this.tipoRelacion === "asistencia") {
       this.router.navigate(["/fichaAsistencia"]);
     } else if (this.tipoRelacion === "justiciable") {
+      //Indicamos que al volver a justiciables queremos abrir la tarjetaAsunto
+      sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
       this.persistenceService.setDatos(this.tipoObject);
       this.router.navigate(["/gestionJusticiables"]);
     } else if (this.persistenceService.getFiltrosEJG() != undefined && this.persistenceService.getFiltrosEJG() != null) {
