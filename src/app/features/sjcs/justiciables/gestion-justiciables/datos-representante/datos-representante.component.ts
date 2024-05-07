@@ -246,7 +246,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       this.persistenceService.clearBody();
-      sessionStorage.setItem("origin", "newRepresentante");
+     // sessionStorage.setItem("origin", "newRepresentante");
       if (this.fromUniFamiliar) sessionStorage.setItem("fichaJust", "UnidadFamiliar");
       // if(this.fromInteresado)sessionStorage.setItem("fichaJust", "Interesado");
       // if(this.fromContrario)sessionStorage.setItem("fichaJust", "Contrario");
@@ -404,19 +404,18 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   private associate() {
-    if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
-      this.dialogAssociate = true;
-      this.showDialogRepre = true;
-    } else {
-      if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona.trim() != "") {
-        if (this.generalBody.nif != undefined && this.generalBody.nif != "" && this.generalBody.nif != null && this.body != undefined && this.generalBody.nif == this.body.nif) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
-          this.representanteValido = false;
-        } else {
-          this.body.idrepresentantejg = Number(this.generalBody.idpersona);
-          this.callServiceAssociate();
-        }
+    if (this.generalBody.idpersona && this.generalBody.idpersona.trim() !== "") {
+      if (this.generalBody.nif && this.generalBody.nif !== "" && this.generalBody.nif !== this.body.nif) {
+        this.body.idrepresentantejg = Number(this.generalBody.idpersona);
+        this.callServiceAssociate();
+      } else {
+        // Mostrar mensaje de error si hay un problema con el NIF
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El representante no puede ser el propio justiciable");
+        this.representanteValido = false;
       }
+    } else {
+      // Mostrar mensaje de error si faltan datos
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Faltan datos del representante");
     }
   }
 
@@ -446,68 +445,30 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   private callServiceAssociate() {
-    this.progressSpinner = true;
-
-    if (this.fromInteresado) {
-      let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-      let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",", this.generalBody.nombre)];
-      this.sigaServices.post("designaciones_updateRepresentanteInteresado", request).subscribe(
-        (n) => {
-          this.bodyChange.emit(this.body);
-          this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.persistenceService.setBody(this.generalBody);
-        },
-        (err) => {
-          this.progressSpinner = false;
-          this.translateService.instant("general.message.error.realiza.accion");
-        },
-      );
-    } else if (this.fromContrario) {
-      let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-      let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.apellidos.concat(",", this.generalBody.nombre)];
-      this.sigaServices.post("designaciones_updateRepresentanteContrario", request).subscribe(
-        (n) => {
-          this.bodyChange.emit(this.body);
-          this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.persistenceService.setBody(this.generalBody);
-        },
-        (err) => {
-          this.progressSpinner = false;
-          this.translateService.instant("general.message.error.realiza.accion");
-        },
-      );
-    } else if (this.fromContrarioEJG) {
-      let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-      let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.apellidos.concat(",", this.generalBody.nombre), this.generalBody.idpersona];
-      this.sigaServices.post("gestionejg_updateRepresentanteContrarioEJG", request).subscribe(
-        (n) => {
-          this.bodyChange.emit(this.body);
-          this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.persistenceService.setBody(this.generalBody);
-        },
-        (err) => {
-          this.progressSpinner = false;
-          this.translateService.instant("general.message.error.realiza.accion");
-        },
-      );
-    } else {
-      this.sigaServices.post("gestionJusticiables_associateRepresentante", this.body).subscribe(
-        (n) => {
-          this.bodyChange.emit(this.body);
-          this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.persistenceService.setBody(this.generalBody);
-        },
-        (err) => {
-          this.progressSpinner = false;
-          this.translateService.instant("general.message.error.realiza.accion");
-        },
-      );
+    // Verificar que `idrepresentantejg` sea válido
+    if (!this.body.idrepresentantejg) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Falta el identificador del representante.");
+      return;
     }
-  }
+  
+    this.progressSpinner = true;
+  
+    // Enviar solicitud al backend
+    this.sigaServices.post("gestionJusticiables_associateRepresentante", this.body).subscribe(
+      (n) => {
+        console.log('Respuesta recibida en gestionJusticiables_associateRepresentante:', n);
+        this.bodyChange.emit(this.body);
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.persistenceService.setBody(this.generalBody);
+      },
+      (err) => {
+        console.error('Error en gestionJusticiables_associateRepresentante:', err);
+        this.progressSpinner = false;
+        this.translateService.instant("general.message.error.realiza.accion");
+      },
+    );
+  }  
 
   private callServiceDisassociate() {
     this.progressSpinner = true;
