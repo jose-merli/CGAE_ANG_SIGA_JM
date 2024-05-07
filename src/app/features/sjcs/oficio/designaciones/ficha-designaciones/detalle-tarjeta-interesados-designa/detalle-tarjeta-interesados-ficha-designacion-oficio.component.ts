@@ -153,11 +153,20 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
     this.router.navigate(["/justiciables"]);
   }
 
-  openTab(evento) {
+  openTab(evento, field) {
+
     let interesado = new JusticiableBusquedaItem();
     let datos;
-    interesado.idpersona = evento.idPersona;
-    sessionStorage.setItem("personaDesigna", evento.idPersona);
+
+    //Diferenciamos representante de interesado
+    if(field == 'representante'){
+      interesado.idpersona = evento.idPersonaRepresentante;
+      interesado.isRepresentante = true;
+      sessionStorage.setItem("personaDesigna", evento.idPersonaRepresentante);
+    } else {
+      interesado.idpersona = evento.idPersona;
+      sessionStorage.setItem("personaDesigna", evento.idPersona);
+    }
 
     //Asignamos los objetos itemDesignas e interesados para la edicion
     if (sessionStorage.getItem("itemDesignas") == null || sessionStorage.getItem("itemDesignas") == undefined) {

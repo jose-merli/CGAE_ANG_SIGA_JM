@@ -40,56 +40,7 @@ export class DatosPersonalesComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     this.getCombos();
-    //await this.callServiceSearch();
   }
-
-  /*
-  private async callServiceSearch() {
-    if (sessionStorage.getItem("justiciableDatosPersonalesSearch")) {
-      this.progressSpinner = true;
-      let justiciableBusqueda: JusticiableBusquedaItem = JSON.parse(sessionStorage.getItem("justiciableDatosPersonalesSearch"));
-      sessionStorage.removeItem("justiciableDatosPersonalesSearch");
-
-      await this.sigaServices.post("gestionJusticiables_searchJusticiable", justiciableBusqueda).subscribe(
-        (n) => {
-          this.body = JSON.parse(n.body).justiciable;
-          if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
-            this.addTelefono();
-          } else {
-            for (let i = 0; i < this.body.telefonos.length; i++) {
-              if (this.body.telefonos[i].preferenteSms == "1") {
-                this.body.telefonos[i].preferenteSmsCheck = true;
-              }
-            }
-          }
-          this.bodyInicial = { ...this.body };
-          this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
-          this.progressSpinner = false;
-        },
-        (err) => {
-          this.progressSpinner = false;
-        },
-      );
-    }
-  }
-  */
-
-  /*
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.body != undefined && this.body.idpersona != undefined) {
-      if (this.body.telefonos == null || (this.body.telefonos != null && this.body.telefonos.length == 0)) {
-        this.addTelefono();
-      }
-
-      this.bodyInicial = { ...this.body };
-      this.bodyInicialTelefonos = JSON.parse(JSON.stringify(this.body.telefonos));
-
-      if (this.body.idpersona != undefined) {
-        this.modoEdicion = true;
-      }
-    }
-  }
-  */
 
   onChangeCodigoPostal() {
     if (this.commonsService.validateCodigoPostal(this.body.codigopostal) && this.body.codigopostal.length == 5) {
@@ -191,6 +142,16 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   save() {
+    this.deleteSpacing();  
+    if (this.body.telefonos != null && this.body.telefonos.length > 1) {
+      let telefonosFiltrados = this.body.telefonos.filter(t => t.numeroTelefono && t.numeroTelefono.trim() !== '');
+      if (telefonosFiltrados.length === 0 && this.body.telefonos.length > 1) {
+        this.body.telefonos = [new JusticiableTelefonoItem()];
+      } else {
+        this.body.telefonos = telefonosFiltrados;
+      }
+    }
+  
     if (!this.validate()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Campos obligatorios no se han rellando");
     } else {
@@ -198,11 +159,11 @@ export class DatosPersonalesComponent implements OnInit {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
       } else if (!this.validateFax()) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El fax no tiene un formato válido");
-      } else {
+      } else { 
         this.progressSpinner = true;
         this.deleteSpacing();
-        if (this.body.telefonos != null && this.body.telefonos.length > 0) {
-          this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
+        if(this.body.telefonos != null && this.body.telefonos.length > 0){
+          this.body.telefonos = this.body.telefonos.filter(t => t.numeroTelefono && t.numeroTelefono.trim() !== '');
         }
         if (!this.modoEdicion) {
           this.callSaveService("gestionJusticiables_createJusticiable");

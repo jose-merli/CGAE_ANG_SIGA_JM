@@ -116,7 +116,10 @@ export class GestionEjgComponent implements OnInit {
       let paramTipoEJGColegio = { valor: "TIPO_EJG_COLEGIO" };
       this.sigaServices.post("busquedaPerJuridica_parametroColegio", paramTipoEJGColegio).subscribe((data) => {
         if (data != null && data != undefined) {
-          this.body.tipoEJGColegio = JSON.parse(data.body).parametro;
+          const defaultTipoEJGColegio = JSON.parse(data.body).parametro;
+          if (defaultTipoEJGColegio != undefined && defaultTipoEJGColegio.trim().length > 0 && !isNaN(defaultTipoEJGColegio) && Number(defaultTipoEJGColegio) > 0){
+            this.body.tipoEJGColegio = JSON.parse(data.body).parametro;
+          } 
         }
       });
       let paramTipoEJG = { valor: "codigo.general.scstipoejg.ordinarios" };
