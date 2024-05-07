@@ -888,6 +888,8 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
   backTo() {
     sessionStorage.setItem("volver", "true");
     if (this.datosJusticiables != undefined) {
+      //Indicamos que al volver a justiciables queremos abrir la tarjetaAsunto
+      sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
       this.persistenceService.setDatos(this.datosJusticiables);
       this.router.navigate(["/gestionJusticiables"]);
     } else if (this.persistenceService.getDatosEJG()) {

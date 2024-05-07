@@ -158,6 +158,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   backTo() {
     if (this.datosJusticiable != undefined) {
       this.persistenceService.setDatos(this.datosJusticiable);
+      //Indicamos que al volver a justiciables queremos abrir la tarjetaAsunto
+      sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
       this.router.navigate(["/gestionJusticiables"]);
     } else {
       sessionStorage.removeItem("radioTajertaValue");
@@ -444,6 +446,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               if (JSON.parse(m.body).error.code == 200) {
                 this.persistenceService.setDatos(this.datosJusticiable);
                 sessionStorage.setItem("asociado", "true");
+                sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
                 this.router.navigate(["/gestionJusticiables"]);
               } else {
                 this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
@@ -465,6 +468,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               if (JSON.parse(m.body).error.code == 200) {
                 this.persistenceService.setDatos(this.datosJusticiable);
                 sessionStorage.setItem("asociado", "true");
+                sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
                 this.router.navigate(["/gestionJusticiables"]);
               } else {
                 this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
@@ -486,6 +490,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               if (JSON.parse(m.body).error.code == 200) {
                 this.persistenceService.setDatos(this.datosJusticiable);
                 sessionStorage.setItem("asociado", "true");
+                sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
                 this.router.navigate(["/gestionJusticiables"]);
               } else {
                 this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
@@ -505,6 +510,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               sessionStorage.removeItem("radioTajertaValue");
               this.persistenceService.setDatos(this.datosJusticiable);
               sessionStorage.setItem("asociado", "true");
+              sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
               this.router.navigate(["/gestionJusticiables"]);
             },
             (err) => {

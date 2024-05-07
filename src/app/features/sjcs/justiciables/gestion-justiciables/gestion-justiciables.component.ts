@@ -167,6 +167,13 @@ export class GestionJusticiablesComponent implements OnInit {
         this.tarjetas.set("tarjetaGenerales", { visibility: true, permission: true });
       }
     } else {
+      //Consultamos si se debe abrir alguna tarjeta
+      let abrirTarjeta = ''
+      if(sessionStorage.getItem("abrirTarjetaJusticiable")) {
+        abrirTarjeta = sessionStorage.getItem("abrirTarjetaJusticiable");
+        sessionStorage.removeItem("abrirTarjetaJusticiable");
+      }
+
       if (this.origen == "UnidadFamiliar") {
         if (this.getPermiso(procesos_justiciables.detalleUF)) {
           if (this.getPermiso(procesos_ejg.datosGeneralesUF)) {
@@ -187,7 +194,7 @@ export class GestionJusticiablesComponent implements OnInit {
           }
           if (this.getPermiso(procesos_ejg.asuntosUF)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.justiciables.literal.asuntos", value: document.getElementById("tarjetaAsunto"), nombre: "tarjetaAsunto" });
-            this.tarjetas.set("tarjetaAsunto", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaAsunto", { visibility: abrirTarjeta == 'tarjetaAsunto', permission: true });
           }
           if (this.getPermiso(procesos_ejg.datosAdicionalesUF)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.justiciables.rol.unidadFamiliar", value: document.getElementById("tarjetaUnidadFamiliar"), nombre: "tarjetaUnidadFamiliar" });
@@ -218,7 +225,7 @@ export class GestionJusticiablesComponent implements OnInit {
           }
           if (this.getPermiso(procesos_ejg.asuntosContrarios)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.justiciables.literal.asuntos", value: document.getElementById("tarjetaAsunto"), nombre: "tarjetaAsunto" });
-            this.tarjetas.set("tarjetaAsunto", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaAsunto", { visibility: abrirTarjeta == 'tarjetaAsunto', permission: true });
           }
           if (this.getPermiso(procesos_ejg.datosAbogadoContrario)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.oficio.designas.contrarios.abogado", value: document.getElementById("tarjetaAbogado"), nombre: "tarjetaAbogado" });
@@ -251,7 +258,7 @@ export class GestionJusticiablesComponent implements OnInit {
           }
           if (this.getPermiso(procesos_justiciables.tarjetaAsuntos)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.justiciables.literal.asuntos", value: document.getElementById("tarjetaAsunto"), nombre: "tarjetaAsunto" });
-            this.tarjetas.set("tarjetaAsunto", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaAsunto", { visibility: abrirTarjeta == 'tarjetaAsunto', permission: true });
           }
         } else {
           sessionStorage.setItem("codError", "403");
