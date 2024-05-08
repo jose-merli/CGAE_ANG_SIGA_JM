@@ -142,16 +142,16 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   save() {
-    this.deleteSpacing();  
+    this.deleteSpacing();
     if (this.body.telefonos != null && this.body.telefonos.length > 1) {
-      let telefonosFiltrados = this.body.telefonos.filter(t => t.numeroTelefono && t.numeroTelefono.trim() !== '');
+      let telefonosFiltrados = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
       if (telefonosFiltrados.length === 0 && this.body.telefonos.length > 1) {
         this.body.telefonos = [new JusticiableTelefonoItem()];
       } else {
         this.body.telefonos = telefonosFiltrados;
       }
     }
-  
+
     if (!this.validate()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Campos obligatorios no se han rellando");
     } else {
@@ -159,11 +159,11 @@ export class DatosPersonalesComponent implements OnInit {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
       } else if (!this.validateFax()) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El fax no tiene un formato válido");
-      } else { 
+      } else {
         this.progressSpinner = true;
         this.deleteSpacing();
-        if(this.body.telefonos != null && this.body.telefonos.length > 0){
-          this.body.telefonos = this.body.telefonos.filter(t => t.numeroTelefono && t.numeroTelefono.trim() !== '');
+        if (this.body.telefonos != null && this.body.telefonos.length > 0) {
+          this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
         }
         if (!this.modoEdicion) {
           this.callSaveService("gestionJusticiables_createJusticiable");
@@ -358,8 +358,6 @@ export class DatosPersonalesComponent implements OnInit {
     }
     this.hasChange = true;
   }
-
-  /**** MSGS  *****/
 
   private showMessage(severity, summary, msg) {
     this.notificacion.emit({

@@ -20,7 +20,7 @@ export class DatosGeneralesComponent implements OnInit {
   @Input() permisoEscritura: boolean = true;
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
-  @Input() origen: string;
+  @Input() origen: string = "";
   @Input() justiciable: any;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() notificacion = new EventEmitter<any>();
@@ -121,9 +121,8 @@ export class DatosGeneralesComponent implements OnInit {
               this.progressSpinner = false;
               this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
             } else {
-              if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1) {
+              if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
                 this.progressSpinner = false;
-                //&& !this.vieneDeJusticiable && this.body.nif != null
                 this.callConfirmationUpdate();
               } else {
                 this.callSaveService("gestionJusticiables_updateJusticiable", true);
@@ -131,9 +130,8 @@ export class DatosGeneralesComponent implements OnInit {
             }
           } else {
             //Si tiene mas de un asunto preguntamos el dialog de guardar en todos o como nuevo
-            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1) {
+            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
               this.progressSpinner = false;
-              //&& !this.vieneDeJusticiable && this.body.nif != null
               this.callConfirmationUpdate();
             } else {
               //Si no tiene mas asuntos directamente guardamos sin preguntar
@@ -197,12 +195,8 @@ export class DatosGeneralesComponent implements OnInit {
       this.callSaveService("gestionJusticiables_updateJusticiable", true);
     } else if (this.dialogOpcion == "n") {
       //Ya esta validada la repeticion y puede crear al justiciable
-      this.body.validacionRepeticion = true;
       this.body.asociarRepresentante = true;
-
-      //Indicamos que venimos como nuevo Justiciable editando
-      //this.creaNuevoJusticiable = true;
-      //this.callSaveService("gestionJusticiables_createJusticiable", false);
+      this.callSaveService("gestionJusticiables_createJusticiable", false);
     }
     this.showDialog = false;
   }
@@ -397,7 +391,6 @@ export class DatosGeneralesComponent implements OnInit {
 
   private insertContrario() {
     let designa: any = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    //let datosInteresado = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
     let request = [designa.idInstitucion, this.body.idpersona, designa.ano, designa.idTurno, designa.numero, false, ""];
     this.sigaServices.post("designaciones_insertContrario", request).subscribe(
       (data) => {

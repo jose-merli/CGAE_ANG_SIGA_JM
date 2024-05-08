@@ -26,7 +26,7 @@
       [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [unidadFamiliar]="unidadFamiliar" (notificacion)="notificacion($event)"></app-datos-unidad-familiar>
 
     <app-datos-solicitud *ngIf="modoEdicion" id="tarjetaSolicitud" [body]="body" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaSolicitud')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaSolicitud')" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-datos-solicitud>
+      [showTarjeta]="isOpenTarjeta('tarjetaSolicitud')" [origen]="origen" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-datos-solicitud>
 
     <app-datos-representante *ngIf="modoEdicion" id="tarjetaRepresentante" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaRepresentante')" 
       [showTarjeta]="isOpenTarjeta('tarjetaRepresentante')" [body]="body" [origen]="origen" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-datos-representante>

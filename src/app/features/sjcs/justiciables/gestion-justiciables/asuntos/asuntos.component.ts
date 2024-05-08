@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { CommonsService } from "../../../../../_services/commons.service";
 import { OldSigaServices } from "../../../../../_services/oldSiga.service";
@@ -13,7 +13,6 @@ import { procesos_ejg } from "../../../../../permisos/procesos_ejg";
 import { procesos_guardia } from "../../../../../permisos/procesos_guarida";
 import { procesos_oficio } from "../../../../../permisos/procesos_oficio";
 import { procesos_soj } from "../../../../../permisos/procesos_soj";
-import { SigaStorageService } from "../../../../../siga-storage.service";
 
 @Component({
   selector: "app-asuntos",
@@ -45,7 +44,7 @@ export class AsuntosComponent implements OnInit {
   selectedDatos = [];
   numSelected = 0;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private sigaStorageService: SigaStorageService, private persistenceService: PersistenceService, private router: Router, private datepipe: DatePipe, public oldSigaServices: OldSigaServices) {}
+  constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private persistenceService: PersistenceService, private router: Router, private datepipe: DatePipe, public oldSigaServices: OldSigaServices) {}
 
   ngOnInit() {
     this.progressSpinner = true;

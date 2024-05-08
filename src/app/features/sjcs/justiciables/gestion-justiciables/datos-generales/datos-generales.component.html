@@ -158,22 +158,6 @@
   </p-footer>
 </p-confirmDialog>
 
-<!--
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdGeneralesUpdate" #cdGeneralesUpdate>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdGeneralesUpdate.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdAsociarJusticiable" #cdAsociarJusticiable>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdAsociarJusticiable.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="cdAsociarJusticiable.reject()"></button>
-  </p-footer>
-</p-confirmDialog>
--->
-
 <p-dialog [(visible)]="showDialog" responsive="true" [draggable]="false"  resizable="false" width="550">
   <p-header><label>{{'general.gestionJusticiables.confirmacion' | translate}}</label></p-header>
   <div class="row">

@@ -14,6 +14,7 @@ export class DatosSolicitudComponent implements OnInit {
   @Input() permisoEscritura: boolean = true;
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
+  @Input() origen: string = "";
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() notificacion = new EventEmitter<any>();
 
@@ -60,14 +61,14 @@ export class DatosSolicitudComponent implements OnInit {
         if (this.body.autorizaavisotelematico == "1") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
         } else {
-          if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1) {
+          if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
             this.showDialog();
           } else {
             this.callServiceSave();
           }
         }
       } else {
-        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1) {
+        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
           this.showDialog();
         } else {
           this.callServiceSave();
@@ -98,7 +99,7 @@ export class DatosSolicitudComponent implements OnInit {
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           this.cerrarDialog();
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          //this.createJusticiableByUpdateSolicitud.emit(this.body);
+          //ARR: this.createJusticiableByUpdateSolicitud.emit(this.body);
         },
         (err) => {
           this.progressSpinner = false;

@@ -123,7 +123,7 @@ export class DatosRepresentanteComponent implements OnInit {
       if (this.disassociate) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
       } else {
-        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1) {
+        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
           this.dialogAssociate = false;
           this.showDialogRepre = true;
         } else {
@@ -154,7 +154,7 @@ export class DatosRepresentanteComponent implements OnInit {
       if (this.associate) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
       } else {
-        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1) {
+        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
           this.dialogAssociate = true;
           this.showDialogRepre = true;
         } else {
