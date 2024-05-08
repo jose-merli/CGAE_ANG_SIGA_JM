@@ -168,7 +168,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
           this.persistenceService.clearBody();
           this.persistenceService.setDatos(datos[0]);
           this.persistenceService.setFichasPosibles(this.fichasPosibles);
-          sessionStorage.setItem("origin", "Asistencia");
+          sessionStorage.setItem("origin", "ContrarioAsistencia");
           sessionStorage.setItem("idAsistencia", this.idAsistencia);
           this.router.navigate(["/gestionJusticiables"]);
         }

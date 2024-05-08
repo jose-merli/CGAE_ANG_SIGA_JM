@@ -108,8 +108,10 @@ export class GestionJusticiablesComponent implements OnInit {
       this.router.navigate(["/gestionEjg"]);
     } else if (this.origen == "Interesado" || this.origen == "Contrario") {
       this.router.navigate(["/fichaDesignaciones"]);
-    } else if (this.origen == "Asistencia") {
+    } else if (this.origen == "Asistencia" || this.origen == "ContrarioAsistencia") {
       this.router.navigate(["/fichaAsistencia"]);
+    } else if (this.origen == "Soj") {
+      this.router.navigate(["/detalle-soj"]);
     } else {
       if (this.justiciable != null) {
         sessionStorage.setItem("justiciable", JSON.stringify(this.justiciable));

@@ -156,7 +156,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.router.navigate(["fichaDesignaciones"]);
     } else if (this.origen == "newAsistido" || this.origen == "newContrarioAsistencia") {
       this.router.navigate(["/fichaAsistencia"]);
-    } else if (this.origen == "UnidadFamiliar" || this.origen == "newContrarioEJG") {
+    } else if (this.origen == "newUnidadFamiliar" || this.origen == "newContrarioEJG") {
       this.router.navigate(["/gestionEjg"]);
     } else if (this.origen == "newSoj") {
       this.router.navigate(["/detalle-soj"]);
