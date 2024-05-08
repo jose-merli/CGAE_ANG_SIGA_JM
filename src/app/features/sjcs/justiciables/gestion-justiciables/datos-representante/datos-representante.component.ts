@@ -23,13 +23,13 @@ export class DatosRepresentanteComponent implements OnInit {
   @Input() origen: string = "";
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() notificacion = new EventEmitter<any>();
+  @Output() showDialog = new EventEmitter<string>();
 
   progressSpinner: boolean = false;
   associate: boolean = true;
   disassociate: boolean = true;
-  showDialogRepre: boolean = false;
-  dialogAssociate: boolean = true;
   navigateToJusticiable: boolean = true;
+  dialogAssociate: boolean = true;
 
   tipoIdentificacion = [];
   dialogRepreOpcion: String = "";
@@ -125,7 +125,7 @@ export class DatosRepresentanteComponent implements OnInit {
       } else {
         if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
           this.dialogAssociate = false;
-          this.showDialogRepre = true;
+          this.showDialog.emit("tarjetaRepresentante");
         } else {
           if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
             this.callServiceDisassociate();
@@ -156,7 +156,7 @@ export class DatosRepresentanteComponent implements OnInit {
       } else {
         if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
           this.dialogAssociate = true;
-          this.showDialogRepre = true;
+          this.showDialog.emit("tarjetaRepresentante");
         } else {
           if (this.representante.idpersona != undefined && this.representante.idpersona != null && this.representante.idpersona.trim() != "") {
             if (this.representante.nif != undefined && this.representante.nif != "" && this.representante.nif != null && this.body != undefined && this.representante.nif == this.body.nif) {
@@ -173,55 +173,26 @@ export class DatosRepresentanteComponent implements OnInit {
     }
   }
 
-  guardarDialog() {
-    if (this.dialogRepreOpcion == undefined || this.dialogRepreOpcion == "") {
-      this.showMessage("info", "info", "Debes seleccionar una opción");
+  guardarDialog(nuevo: boolean) {
+    if (nuevo) {
+      this.body.idrepresentantejg = this.dialogAssociate ? Number(this.representante.idpersona) : undefined;
     } else {
-      if (this.dialogRepreOpcion == "s") {
-        if (this.dialogAssociate) {
-          if (this.representante.idpersona != undefined && this.representante.idpersona != null && this.representante.idpersona.trim() != "") {
-            if (this.representante.nif != undefined && this.representante.nif != "" && this.representante.nif != null && this.body != undefined && this.representante.nif == this.body.nif) {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
-            } else {
-              this.callServiceAssociate();
-            }
-          }
-        } else {
-          if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
-            this.callServiceDisassociate();
+      if (this.dialogAssociate) {
+        if (this.representante.idpersona != undefined && this.representante.idpersona != null && this.representante.idpersona.trim() != "") {
+          if (this.representante.nif != undefined && this.representante.nif != "" && this.representante.nif != null && this.body != undefined && this.representante.nif == this.body.nif) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+            this.callServiceAssociate();
           }
         }
-      } else if (this.dialogRepreOpcion == "n") {
-        this.progressSpinner = true;
-        this.body.idrepresentantejg = this.dialogAssociate ? Number(this.representante.idpersona) : undefined;
-        this.body.validacionRepeticion = true;
-        this.body.asociarRepresentante = true;
-        this.sigaServices.post("gestionJusticiables_createJusticiable", this.body).subscribe(
-          (data) => {
-            this.progressSpinner = false;
-            this.body.idpersona = JSON.parse(data.body).id;
-            this.bodyChange.emit(this.body);
-          },
-          (err) => {
-            if (JSON.parse(err.error).error.description != "") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-            } else {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            }
-            this.progressSpinner = false;
-          },
-        );
+      } else {
+        if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
+          this.callServiceDisassociate();
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+        }
       }
-      this.showDialogRepre = false;
-      this.dialogRepreOpcion = "";
     }
-  }
-
-  cerrarDialog() {
-    this.showDialogRepre = false;
-    this.dialogRepreOpcion = "";
   }
 
   navigateToRepresentante() {

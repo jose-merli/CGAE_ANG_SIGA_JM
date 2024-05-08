@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { CommonsService } from "../../../../_services/commons.service";
 import { PersistenceService } from "../../../../_services/persistence.service";
@@ -10,6 +10,9 @@ import { JusticiableItem } from "../../../../models/sjcs/JusticiableItem";
 import { UnidadFamiliarEJGItem } from "../../../../models/sjcs/UnidadFamiliarEJGItem";
 import { procesos_ejg } from "../../../../permisos/procesos_ejg";
 import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
+import { DatosGeneralesComponent } from "./datos-generales/datos-generales.component";
+import { DatosRepresentanteComponent } from "./datos-representante/datos-representante.component";
+import { DatosSolicitudComponent } from "./datos-solicitud/datos-solicitud.component";
 
 @Component({
   selector: "app-gestion-justiciables",
@@ -26,10 +29,17 @@ export class GestionJusticiablesComponent implements OnInit {
   msgs = [];
   origen: string = "";
   contrario: any;
+  dialogOpcion: String = "";
+  dialogTarjeta: String = "";
 
   modoEdicion: boolean = false;
   progressSpinner: boolean = false;
   newRepresentante: boolean = false;
+  showDialog: boolean = false;
+
+  @ViewChild(DatosGeneralesComponent) datosGenerales;
+  @ViewChild(DatosSolicitudComponent) datosSolicitud;
+  @ViewChild(DatosRepresentanteComponent) datosRepresentante;
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private persistenceService: PersistenceService) {}
 
@@ -74,9 +84,11 @@ export class GestionJusticiablesComponent implements OnInit {
   updateBody(justiciable: JusticiableItem) {
     this.body = justiciable;
     if (this.body.idpersona != null) {
+      if (!this.modoEdicion) {
+        this.checkAccesoTarjetas();
+      }
       this.modoEdicion = true;
     }
-    this.checkAccesoTarjetas();
     this.updateTarjResumen();
   }
 
@@ -119,6 +131,43 @@ export class GestionJusticiablesComponent implements OnInit {
 
   notificacion(mensaje: any) {
     this.showMessage(mensaje.severity, mensaje.summary, mensaje.detail);
+  }
+
+  abrirDialog(event: string) {
+    this.showDialog = true;
+    this.dialogOpcion = "";
+    this.dialogTarjeta = event;
+  }
+
+  cerrarDialog() {
+    this.showDialog = false;
+  }
+
+  guardarDialog() {
+    if (this.dialogOpcion == undefined || this.dialogOpcion == "") {
+      this.showMessage("info", "info", "Debes seleccionar una opción");
+    } else {
+      if (this.dialogOpcion == "s") {
+        if (this.dialogTarjeta == "tarjetaGenerales") {
+          this.datosGenerales.guardarDialog(false);
+        } else if (this.dialogTarjeta == "tarjetaSolicitud") {
+          this.datosSolicitud.guardarDialog(false);
+        } else if (this.dialogTarjeta == "tarjetaRepresentante") {
+          this.datosRepresentante.guardarDialog(false);
+        }
+      } else if (this.dialogOpcion == "n") {
+        if (this.dialogTarjeta == "tarjetaGenerales") {
+          this.datosGenerales.guardarDialog(true);
+        } else if (this.dialogTarjeta == "tarjetaSolicitud") {
+          this.datosSolicitud.guardarDialog(true);
+          this.datosGenerales.guardarDialog(true);
+        } else if (this.dialogTarjeta == "tarjetaRepresentante") {
+          this.datosRepresentante.guardarDialog(true);
+          this.datosGenerales.guardarDialog(true);
+        }
+      }
+      this.cerrarDialog();
+    }
   }
 
   private getTarjetas() {
