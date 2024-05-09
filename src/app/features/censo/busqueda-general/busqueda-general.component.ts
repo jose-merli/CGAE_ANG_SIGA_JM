@@ -1389,6 +1389,14 @@ export class BusquedaGeneralComponent implements OnDestroy {
         sessionStorage.setItem("origin", this.origen);
       }
       this.persistenceService.setDatos(this.datosJusticiable);
+      
+      //Indicamos que al volver a justiciables queremos abrir la tarjetaRepresentante
+      if(this.origen == 'ContrarioEJG') {
+        sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaProcurador'); 
+      } else if(this.origen == "AbogadoContrarioEJG") {
+        sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAbogado'); 
+      }
+
       this.router.navigate(["/gestionJusticiables"]);
     } else {
       this.location.back();

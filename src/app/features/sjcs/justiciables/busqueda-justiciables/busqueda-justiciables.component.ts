@@ -162,6 +162,8 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.router.navigate(["/detalle-soj"]);
     } else if (this.origen == "newRepresentante") {
       this.persistenceService.setDatos(this.justiciable);
+      //Indicamos que al volver a justiciables queremos abrir la tarjetaRepresentante
+      sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaRepresentante');
       this.router.navigate(["/gestionJusticiables"]);
     } else {
       this.location.back();
