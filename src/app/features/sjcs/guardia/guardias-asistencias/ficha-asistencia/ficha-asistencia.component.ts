@@ -268,8 +268,18 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
 
     this.tarjetaFija.campos = camposResumen;
 
-    if (this.datosJusticiables != undefined) {
-      this.tarjetaFija.campos[3].value = this.datosJusticiables.apellidos + ", " + this.datosJusticiables.nombre;
+    if (this.datosJusticiables !== undefined) {
+
+      let nombre = this.datosJusticiables.nombre;
+
+      let apellido1 = this.datosJusticiables.apellido1 || '';
+
+      let apellidos = apellido1;
+      if (this.datosJusticiables.apellido2) {
+        apellidos += ' ' + this.datosJusticiables.apellido2;
+      }
+
+      this.tarjetaFija.campos[3].value = apellidos + ", " + nombre;
     }
 
     //TARJETA DATOS GENERALES
