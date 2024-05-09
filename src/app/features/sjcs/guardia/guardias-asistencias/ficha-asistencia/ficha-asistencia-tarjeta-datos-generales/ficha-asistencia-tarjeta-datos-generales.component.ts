@@ -578,86 +578,66 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   }
 
   saveAsistencia() {
-    //console.log("+++++++++++ VALUE OF fechaHoraSelectedButton = " + this.fechaHoraSelectedButton);
     let isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     if (this.checkDatosObligatorios()) {
-      this.progressSpinner = true;
-      let idAsistencia = this.idAsistenciaCopy ? this.idAsistenciaCopy : "";
-      this.comprobarFechaHora();
-      let asistencias: TarjetaAsistenciaItem[] = [this.asistencia];
-      this.sigaServices.postPaginado("busquedaGuardias_guardarAsistenciasDatosGenerales", "?idAsistenciaCopy=" + idAsistencia + "&isLetrado=" + isLetrado + "&isTodaySelected=" + this.fechaHoraSelectedButton, asistencias).subscribe(
-        (n) => {
-          let result = JSON.parse(n["body"]);
-          if (result.error) {
-            if (result.error.description.includes("Unparseable date")) {
-              this.showMsg("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar.fechaHora"), "");
-            } else {
-              this.showMsg("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+        this.progressSpinner = true;
+        let idAsistencia = this.idAsistenciaCopy ? this.idAsistenciaCopy : "";
+        this.comprobarFechaHora();
+        let asistencias = [this.asistencia];
+        this.sigaServices.postPaginado(
+            "busquedaGuardias_guardarAsistenciasDatosGenerales",
+            "?idAsistenciaCopy=" + idAsistencia + "&isLetrado=" + isLetrado + "&isTodaySelected=" + this.fechaHoraSelectedButton,
+            asistencias
+        ).subscribe(
+            (n) => {
+                let result = JSON.parse(n["body"]);
+                if (result.error) {
+                    this.showMsg("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+                } else {
+                    this.showMsg("success", this.translateService.instant("general.message.accion.realizada"), "");
+                    this.asistenciaAux = Object.assign({}, this.asistencia);
+                    this.asistencia.anioNumero = result.id;
+                    this.asistencia.anio = result.id.split("/")[0];
+                    this.asistencia.numero = result.id.split("/")[1];
+                    this.onChangeGuardia();
+                }
+                this.progressSpinner = false;
+            },
+            (err) => {
+                this.showMsg("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), "");
+                this.progressSpinner = false;
+            },
+            () => {
+                if (this.datosJusticiables !== undefined) {
+                    this.asociarJusticiable();
+                } else {
+                    this.refreshDatosGenerales.emit(this.asistencia.anioNumero);
+                }
+                this.progressSpinner = false;
             }
-          } else {
-            this.showMsg("success", this.translateService.instant("general.message.accion.realizada"), "");
-            if (this.preasistencia) {
-              sessionStorage.setItem("creadaFromPreasistencia", "true");
-              this.anulable = true;
-              this.finalizable = true;
-              this.reactivable = false;
-            }
-            this.checkEstado();
-            this.disableDataForEdit = true;
-            this.duplicarAsistencia = false;
-            this.asistenciaAux = Object.assign({}, this.asistencia);
-            this.asistencia.anioNumero = result.id;
-            this.asistencia.anio = result.id.split("/")[0];
-            this.asistencia.numero = result.id.split("/")[1];
-            this.onChangeGuardia();
-            this.asistencia.idLetradoManual = undefined;
-            this.asistencia.filtro = undefined;
-            this.refuerzoSustitucionNoSeleccionado = true;
-          }
-        },
-        (err) => {
-          if ((err.status = "409")) {
-            this.showMsg("error", "El usuario es colegiado y no existe una guardia para la fecha seleccionada. No puede continuar", "");
-          } else {
-            this.showMsg("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), "");
-          }
-          //console.log(err);
-
-          this.progressSpinner = false;
-        },
-        () => {
-          if (this.datosJusticiables != undefined) {
-            this.asociarJusticiable();
-          } else {
-            this.refreshDatosGenerales.emit(this.asistencia.anioNumero);
-          }
-          this.progressSpinner = false;
-        },
-      );
+        );
     } else {
-      this.showMsg("error", this.translateService.instant("general.message.camposObligatorios"), "");
+        this.showMsg("error", this.translateService.instant("general.message.camposObligatorios"), "");
     }
-  }
+}
 
-  asociarJusticiable() {
-    // ASociar Justiciable (Asistido)
-    let requestAsi = [this.asistencia.anio, this.asistencia.numero, this.datosJusticiables.idpersona];
-    // Objeto Asociación de Justiciables y Asistencia.
-    this.sigaServices.post("gestionJusticiables_asociarJusticiableAsistencia", requestAsi).subscribe(
+asociarJusticiable() {
+  let requestAsi = [this.asistencia.anio, this.asistencia.numero, this.datosJusticiables.idpersona];
+  this.sigaServices.post("gestionJusticiables_asociarJusticiableAsistencia", requestAsi).subscribe(
       (m) => {
-        //Se debe añadir a la BBDD estos mensajes (etiquetas)
-        if (JSON.parse(m.body).error.code == 200) {
+          let body = JSON.parse(m.body);
+          if (body.error && body.error.code !== 200) {
+          } else {
+              this.refreshDatosGenerales.emit(this.asistencia.anioNumero);
+          }
           this.progressSpinner = false;
-          this.refreshDatosGenerales.emit(this.asistencia.anioNumero);
-          //this.location.back();
-        }
       },
       (err) => {
-        this.progressSpinner = false;
-        //this.location.back();
-      },
-    );
-  }
+          this.progressSpinner = false;
+      }
+  );
+}
+
 
   checkDatosObligatorios() {
     let ok: boolean = true;
