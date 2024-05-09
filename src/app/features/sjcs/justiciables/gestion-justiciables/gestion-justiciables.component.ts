@@ -108,8 +108,10 @@ export class GestionJusticiablesComponent implements OnInit {
       this.router.navigate(["/gestionEjg"]);
     } else if (this.origen == "Interesado" || this.origen == "Contrario") {
       this.router.navigate(["/fichaDesignaciones"]);
-    } else if (this.origen == "Asistencia") {
+    } else if (this.origen == "Asistencia" || this.origen == "ContrarioAsistencia") {
       this.router.navigate(["/fichaAsistencia"]);
+    } else if (this.origen == "Soj") {
+      this.router.navigate(["/detalle-soj"]);
     } else {
       if (this.justiciable != null) {
         sessionStorage.setItem("justiciable", JSON.stringify(this.justiciable));
@@ -188,12 +190,26 @@ export class GestionJusticiablesComponent implements OnInit {
         movil = this.body.telefonos[0].numeroTelefono;
       }
 
+      let direccionCompleta: String = "";
+
+      if (this.body.direccion != null) {
+        if (this.body.codigopostal != null) {
+          direccionCompleta = this.body.direccion + ", " + this.body.codigopostal;
+        } else {
+          direccionCompleta = this.body.direccion;
+        }
+      } else {
+        if (this.body.codigopostal != null) {
+          direccionCompleta = this.body.codigopostal;
+        }
+      }
+
       this.datosResumen = [
         { label: this.translateService.instant("censo.usuario.DNI"), value: this.body.nif },
         { label: this.translateService.instant("facturacionSJCS.retenciones.nombre"), value: this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre },
         { label: this.translateService.instant("censo.datosDireccion.literal.correo"), value: this.body.correoelectronico },
         { label: this.translateService.instant("censo.datosDireccion.literal.telefonoMovil"), value: movil },
-        { label: this.translateService.instant("censo.consultaDirecciones.literal.direccion"), value: (this.body.direccion != null ? this.body.direccion + ", " : "") + this.body.codigopostal },
+        { label: this.translateService.instant("censo.consultaDirecciones.literal.direccion"), value: direccionCompleta },
       ];
     }
     this.progressSpinner = false;

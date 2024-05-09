@@ -260,7 +260,7 @@ export class UnidadFamiliarComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       this.persistenceService.setDatosEJG(this.datos);
-      sessionStorage.setItem("origin", "UnidadFamiliar");
+      sessionStorage.setItem("origin", "newUnidadFamiliar");
       sessionStorage.setItem("datosFamiliares", JSON.stringify(this.datosFamiliares));
       this.router.navigate(["/justiciables"]);
     }

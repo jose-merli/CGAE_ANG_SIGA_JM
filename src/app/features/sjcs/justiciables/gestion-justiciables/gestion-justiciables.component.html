@@ -32,7 +32,7 @@
       [showTarjeta]="isOpenTarjeta('tarjetaRepresentante')" [body]="body" [origen]="origen" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)" (showDialog)="abrirDialog($event)"></app-datos-representante>
     
     <app-asuntos *ngIf="modoEdicion" id="tarjetaAsunto" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaAsunto')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaAsunto')" [body]="body" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-asuntos>
+      [showTarjeta]="isOpenTarjeta('tarjetaAsunto')" [body]="body" [origen]="origen" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-asuntos>
 
     <app-datos-abogado-contrario *ngIf="modoEdicion && (origen == 'ContrarioEJG' || origen == 'Contrario')" id="tarjetaAbogado" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaAbogado')" 
       [showTarjeta]="isOpenTarjeta('tarjetaAbogado')" [body]="body" [origen]="origen" [contrario]="contrario" (notificacion)="notificacion($event)"></app-datos-abogado-contrario> 
