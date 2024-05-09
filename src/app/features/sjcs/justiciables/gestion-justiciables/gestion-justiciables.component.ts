@@ -189,17 +189,17 @@ export class GestionJusticiablesComponent implements OnInit {
       if (this.body.telefonos != null && this.body.telefonos.length > 0) {
         movil = this.body.telefonos[0].numeroTelefono;
       }
-
+ 
       let nombre = "";
       if (this.body.nombre != undefined && this.body.apellido1 != undefined) {
         nombre = this.body.apellido1 + (this.body.apellido2 != undefined ? " " + this.body.apellido2 : "") + ", " + this.body.nombre;
       }
-
+ 
       let direccion = "";
       if (this.body.codigopostal != undefined && this.body.codigopostal != "") {
         direccion = (this.body.direccion != null ? this.body.direccion + ", " : "") + this.body.codigopostal;
       }
-
+ 
       this.datosResumen = [
         { label: this.translateService.instant("censo.usuario.DNI"), value: this.body.nif },
         { label: this.translateService.instant("facturacionSJCS.retenciones.nombre"), value: nombre },
@@ -252,7 +252,7 @@ export class GestionJusticiablesComponent implements OnInit {
           }
           if (this.getPermiso(procesos_ejg.datosRepresentanteLegalUF)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.oficio.designas.interesados.abogado", value: document.getElementById("tarjetaRepresentante"), nombre: "tarjetaRepresentante" });
-            this.tarjetas.set("tarjetaRepresentante", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaRepresentante", { visibility: abrirTarjeta == "tarjetaRepresentante", permission: true });
           }
           if (this.getPermiso(procesos_ejg.asuntosUF)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.justiciables.literal.asuntos", value: document.getElementById("tarjetaAsunto"), nombre: "tarjetaAsunto" });
@@ -271,19 +271,19 @@ export class GestionJusticiablesComponent implements OnInit {
         if (this.getPermiso(procesos_justiciables.detalleContrarios)) {
           if (this.getPermiso(procesos_ejg.datosGeneralesContrarios)) {
             this.enlacesResumen.push({ label: "general.message.datos.generales", value: document.getElementById("tarjetaGenerales"), nombre: "tarjetaGenerales" });
-            this.tarjetas.set("tarjetaGenerales", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaGenerales", { visibility: abrirTarjeta == "tarjetaGenerales", permission: true });
           }
           if (this.getPermiso(procesos_ejg.datosDireccionContactoContrarios)) {
             this.enlacesResumen.push({ label: "formacion.fichaInscripcion.datosPersonales.cabecera", value: document.getElementById("tarjetaPersonales"), nombre: "tarjetaPersonales" });
-            this.tarjetas.set("tarjetaPersonales", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaPersonales", { visibility: abrirTarjeta == "tarjetaPersonales", permission: true });
           }
           if (this.getPermiso(procesos_ejg.datosSolicitudesContrarios)) {
             this.enlacesResumen.push({ label: "censo.nuevaSolicitud.headerSolicitud", value: document.getElementById("tarjetaSolicitud"), nombre: "tarjetaSolicitud" });
-            this.tarjetas.set("tarjetaSolicitud", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaSolicitud", { visibility: abrirTarjeta == "tarjetaSolicitud", permission: true });
           }
           if (this.getPermiso(procesos_ejg.datosRepresentantesLegal)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.oficio.designas.interesados.abogado", value: document.getElementById("tarjetaRepresentante"), nombre: "tarjetaRepresentante" });
-            this.tarjetas.set("tarjetaRepresentante", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaRepresentante", { visibility: abrirTarjeta == "tarjetaRepresentante", permission: true });
           }
           if (this.getPermiso(procesos_ejg.asuntosContrarios)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.justiciables.literal.asuntos", value: document.getElementById("tarjetaAsunto"), nombre: "tarjetaAsunto" });
@@ -291,11 +291,11 @@ export class GestionJusticiablesComponent implements OnInit {
           }
           if (this.getPermiso(procesos_ejg.datosAbogadoContrario)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.oficio.designas.contrarios.abogado", value: document.getElementById("tarjetaAbogado"), nombre: "tarjetaAbogado" });
-            this.tarjetas.set("tarjetaAbogado", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaAbogado", { visibility: abrirTarjeta == "tarjetaAbogado", permission: true });
           }
           if (this.getPermiso(procesos_ejg.datosProcuradorContrario)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.oficio.designas.contrarios.procurador", value: document.getElementById("tarjetaProcurador"), nombre: "tarjetaProcurador" });
-            this.tarjetas.set("tarjetaProcurador", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaProcurador", { visibility: abrirTarjeta == "tarjetaProcurador", permission: true });
           }
         } else {
           sessionStorage.setItem("codError", "403");
@@ -307,16 +307,16 @@ export class GestionJusticiablesComponent implements OnInit {
           if (this.getPermiso(procesos_justiciables.tarjetaDatosGenerales)) {
             this.enlacesResumen.push({ label: "general.message.datos.generales", value: document.getElementById("tarjetaGenerales"), nombre: "tarjetaGenerales" });
             this.enlacesResumen.push({ label: "formacion.fichaInscripcion.datosPersonales.cabecera", value: document.getElementById("tarjetaPersonales"), nombre: "tarjetaPersonales" });
-            this.tarjetas.set("tarjetaGenerales", { visibility: false, permission: true });
-            this.tarjetas.set("tarjetaPersonales", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaGenerales", { visibility: abrirTarjeta == "tarjetaGenerales", permission: true });
+            this.tarjetas.set("tarjetaPersonales", { visibility: abrirTarjeta == "tarjetaPersonales", permission: true });
           }
           if (this.getPermiso(procesos_justiciables.tarjetaDatosSolicitud)) {
             this.enlacesResumen.push({ label: "censo.nuevaSolicitud.headerSolicitud", value: document.getElementById("tarjetaSolicitud"), nombre: "tarjetaSolicitud" });
-            this.tarjetas.set("tarjetaSolicitud", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaSolicitud", { visibility: abrirTarjeta == "tarjetaSolicitud", permission: true });
           }
           if (this.getPermiso(procesos_justiciables.tarjetaDatosRepresentante)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.oficio.designas.interesados.abogado", value: document.getElementById("tarjetaRepresentante"), nombre: "tarjetaRepresentante" });
-            this.tarjetas.set("tarjetaRepresentante", { visibility: false, permission: true });
+            this.tarjetas.set("tarjetaRepresentante", { visibility: abrirTarjeta == "tarjetaRepresentante", permission: true });
           }
           if (this.getPermiso(procesos_justiciables.tarjetaAsuntos)) {
             this.enlacesResumen.push({ label: "justiciaGratuita.justiciables.literal.asuntos", value: document.getElementById("tarjetaAsunto"), nombre: "tarjetaAsunto" });
