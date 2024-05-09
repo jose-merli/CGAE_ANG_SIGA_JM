@@ -774,21 +774,19 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
       this.progressSpinner = false;
       // Rellenar Nombre de Justiciable Tarjeta Resumen.
-      if (sessionStorage.getItem("justiciable")) {
-        this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
-        if (this.datosJusticiables) {
-          let tarjInteresados = this.listaTarjetas.find((tarjInteresados) => tarjInteresados.id === "sjcsDesigInt");
+      this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
+      if (this.datosJusticiables) {
+          let nombreCompleto = `${this.datosJusticiables.nombre} ${this.datosJusticiables.apellidos}`.trim();
+          let tarjInteresados = this.listaTarjetas.find(tarjInteresados => tarjInteresados.id === 'sjcsDesigInt');
           if (tarjInteresados != undefined) {
-            tarjInteresados.campos = [
-              {
-                key: null,
-                value: this.datosJusticiables.nombre,
-              },
-            ];
+              tarjInteresados.campos = [{
+                  "key": null,
+                  "value": nombreCompleto
+              }];
           }
-          this.tarjetaFija.campos[3].value = this.datosJusticiables.nombre;
-          this.nombreInteresado = this.datosJusticiables.nombre;
-        }
+          this.tarjetaFija.campos[3].value = nombreCompleto;
+          this.nombreInteresado = nombreCompleto;
+          console.log("Nombre al completo:", this.nombreInteresado);
       }
     }
 
