@@ -5,9 +5,10 @@
 
 export const environment = {
   production: true,
-  protocol: '',
-  env: '',
-  baseHref: '/siga-ang/',
-  oldSigaUrl: '/SIGA/',
-  newSigaUrl: '/siga-web/'
+  protocol: "",
+  env: "",
+  baseHref: "/siga-ang/",
+  oldSigaUrl: "/SIGA/",
+  newSigaUrl: "/siga-web/",
+  diccionario: true,
 };

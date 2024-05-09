@@ -4,10 +4,11 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-    production: false,
-    protocol: '',
-    env: '',
-    baseHref: '/siga-ang-testing/',
-    oldSigaUrl: '/SIGA/',
-    newSigaUrl: '/siga-web-testing/' 
+  production: false,
+  protocol: "",
+  env: "",
+  baseHref: "/siga-ang-testing/",
+  oldSigaUrl: "/SIGA/",
+  newSigaUrl: "/siga-web-testing/",
+  diccionario: true,
 };
