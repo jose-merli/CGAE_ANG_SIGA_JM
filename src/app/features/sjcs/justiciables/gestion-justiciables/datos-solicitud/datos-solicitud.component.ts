@@ -17,16 +17,15 @@ export class DatosSolicitudComponent implements OnInit {
   @Input() origen: string = "";
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() notificacion = new EventEmitter<any>();
+  @Output() showDialog = new EventEmitter<string>();
 
   progressSpinner: boolean = false;
   permisoSave: boolean = false;
-  showDialogSolicitud: boolean = false;
 
   bodyInicial: JusticiableItem;
   selectedAutorizaavisotel: string = "";
   selectedAsistidosolicitajg: string = "";
   selectedAsistidoautorizaeejg: string = "";
-  dialogSolicitudOpcion: String = "";
 
   comboAutorizaEjg = [];
   comboAutorizaAvisotel = [];
@@ -61,15 +60,15 @@ export class DatosSolicitudComponent implements OnInit {
         if (this.body.autorizaavisotelematico == "1") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
         } else {
-          if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
-            this.showDialog();
+          if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+            this.showDialog.emit("tarjetaSolicitud");
           } else {
             this.callServiceSave();
           }
         }
       } else {
-        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
-          this.showDialog();
+        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+          this.showDialog.emit("tarjetaSolicitud");
         } else {
           this.callServiceSave();
         }
@@ -77,45 +76,10 @@ export class DatosSolicitudComponent implements OnInit {
     }
   }
 
-  cerrarDialog() {
-    this.showDialogSolicitud = false;
-    this.dialogSolicitudOpcion = "";
-  }
-
-  guardar() {
-    if (this.dialogSolicitudOpcion == "s") {
+  guardarDialog(nuevo: boolean) {
+    if (!nuevo) {
       this.callServiceSave();
-    } else if (this.dialogSolicitudOpcion == "n") {
-      this.progressSpinner = false;
-      //Ya estavalidada la repeticion y puede crear al justiciable
-      this.body.validacionRepeticion = true;
-      this.body.asociarRepresentante = true;
-      this.sigaServices.post("gestionJusticiables_createJusticiable", this.body).subscribe(
-        (data) => {
-          this.progressSpinner = false;
-          let idJusticiable = JSON.parse(data.body).id;
-          this.body.idpersona = idJusticiable;
-          this.bodyChange.emit(this.body);
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-          this.cerrarDialog();
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          //ARR: this.createJusticiableByUpdateSolicitud.emit(this.body);
-        },
-        (err) => {
-          this.progressSpinner = false;
-          if (JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-        },
-      );
     }
-  }
-
-  private showDialog() {
-    this.showDialogSolicitud = false;
-    this.dialogSolicitudOpcion = "";
   }
 
   private callServiceSave() {

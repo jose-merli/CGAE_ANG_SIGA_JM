@@ -27,40 +27,6 @@ export class SolicitanteDetalleSojComponent implements OnInit {
   progressSpinner: boolean = false;
   showJusticiableDialog: boolean = false;
   camposSoliDisabled: boolean = true;
-  fichasPosibles = [
-    {
-      key: "generales",
-      activa: false,
-    },
-    {
-      key: "personales",
-      activa: false,
-    },
-    {
-      origen: "justiciables",
-      activa: false,
-    },
-    {
-      key: "solicitud",
-      activa: false,
-    },
-    {
-      key: "representante",
-      activa: false,
-    },
-    {
-      key: "asuntos",
-      activa: false,
-    },
-    {
-      key: "abogado",
-      activa: false,
-    },
-    {
-      key: "procurador",
-      activa: false,
-    },
-  ];
 
   constructor(private sigaServices: SigaServices, private commonServices: CommonsService, private persistenceService: PersistenceService, private translate: TranslateService, private confirmationService: ConfirmationService, private router: Router) {}
 
@@ -114,7 +80,6 @@ export class SolicitanteDetalleSojComponent implements OnInit {
           this.showMsg("info", this.translate.instant("general.message.informacion"), error.description);
         }
         //this.persistenceService.setDatos(datos[0]);
-        sessionStorage.setItem("origin", "Asistencia");
         sessionStorage.setItem("idAsistencia", this.idAsistencia);
         //this.persistenceService.clearBody();
       },
@@ -154,7 +119,7 @@ export class SolicitanteDetalleSojComponent implements OnInit {
                 message: "No se ha encontrado ningún justiciable con dicho número de identificación, ¿desea crear un nuevo justiciable?",
                 icon: "fa fa-question-circle",
                 accept: () => {
-                  sessionStorage.setItem("origin", "newAsistido");
+                  sessionStorage.setItem("origin", "newSoj");
                   sessionStorage.setItem("nif", this.asistido.nif);
                   sessionStorage.setItem("Nuevo", "true");
                   sessionStorage.setItem("idAsistencia", this.idAsistencia);
@@ -299,10 +264,10 @@ export class SolicitanteDetalleSojComponent implements OnInit {
   }
 
   goToCard() {
-    // SessionStorage
-    this.persistenceService.setFichasPosibles(this.fichasPosibles);
-    sessionStorage.setItem("solicitanteSOJ", JSON.stringify(this.asistido));
     // Enviar para la gestion de la tarjeta.
+    this.persistenceService.setDatos(this.asistido);
+    sessionStorage.setItem("origin", "Soj");
+    sessionStorage.setItem("sojAsistido", JSON.stringify(this.bodyInicial));
     this.router.navigate(["/gestionJusticiables"]);
   }
 }

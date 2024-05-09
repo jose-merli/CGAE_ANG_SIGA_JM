@@ -25,6 +25,7 @@ export class AsuntosComponent implements OnInit {
   @Input() permisoEscritura: boolean = true;
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
+  @Input() origen: string;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() notificacion = new EventEmitter<any>();
 
@@ -63,6 +64,7 @@ export class AsuntosComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("origin", this.origen);
       this.router.navigate(["/gestionEjg"]);
     }
   }
@@ -73,6 +75,7 @@ export class AsuntosComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("origin", this.origen);
       sessionStorage.setItem("nombreInteresado", this.body.apellidos + " " + this.body.nombre);
       sessionStorage.setItem("deJusticiableANuevaDesigna", "true");
       sessionStorage.setItem("nuevaDesigna", "true");
@@ -86,6 +89,7 @@ export class AsuntosComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("origin", this.origen);
       sessionStorage.setItem("nombreInteresado", this.body.apellidos + " " + this.body.nombre);
       sessionStorage.setItem("nuevaAsistencia", "true");
       this.router.navigate(["/fichaAsistencia"]);
@@ -99,6 +103,7 @@ export class AsuntosComponent implements OnInit {
     } else {
       let justiciable = JSON.stringify(this.body);
       sessionStorage.setItem("justiciable", justiciable);
+      sessionStorage.setItem("origin", this.origen);
       sessionStorage.setItem("nuevoSOJ", "true");
       this.router.navigate(["/detalle-soj"]);
     }
@@ -110,6 +115,7 @@ export class AsuntosComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("origin", this.origen);
       sessionStorage.setItem("radioTajertaValue", "ejg");
       this.router.navigate(["/busquedaAsuntos"]);
     }
@@ -121,6 +127,7 @@ export class AsuntosComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("origin", this.origen);
       sessionStorage.setItem("radioTajertaValue", "des");
       this.router.navigate(["/busquedaAsuntos"]);
     }
@@ -132,6 +139,7 @@ export class AsuntosComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("origin", this.origen);
       sessionStorage.setItem("radioTajertaValue", "asi");
       this.router.navigate(["/busquedaAsuntos"]);
     }
@@ -143,6 +151,7 @@ export class AsuntosComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("origin", this.origen);
       sessionStorage.setItem("radioTajertaValue", "soj");
       this.router.navigate(["/busquedaAsuntos"]);
     }

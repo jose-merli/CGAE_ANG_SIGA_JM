@@ -45,7 +45,7 @@
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent>
                                   <div *ngIf="(tarj.id == 'datosgenerales') && tarj.visible != undefined" id="datosgeneralesTemplate">
-                                    <app-ficha-asistencia-tarjeta-datos-generales [asistencia]="asistencia" (refreshDatosGenerales)="refreshDatosGenerales($event);" (eventoAnular)="eventoAnular($event)">
+                                    <app-ficha-asistencia-tarjeta-datos-generales [asistencia]="asistencia" [datosJusticiables]="datosJusticiables" (refreshDatosGenerales)="refreshDatosGenerales($event);" (eventoAnular)="eventoAnular($event)">
                                     </app-ficha-asistencia-tarjeta-datos-generales>
                                   </div>
                                   <div *ngIf="(tarj.id == 'asistido' ) && tarj.visible != undefined" id="asistidoTemplate">
