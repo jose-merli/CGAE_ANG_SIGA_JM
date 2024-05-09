@@ -67,7 +67,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
     } else if (this.origen == "newContrarioAsistencia") {
       this.nuevoContrarioAsistencia = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia"), this.translateService.instant("justiciaGratuita.guardia.contrarios"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
-    } else if (this.origen == "UnidadFamiliar") {
+    } else if (this.origen == "newUnidadFamiliar") {
       this.nuevaUniFamiliar = true;
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.ejg"), this.translateService.instant("justiciaGratuita.ejg.unidadfamiliar"), this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     } else if (this.origen == "newContrarioEJG") {
@@ -163,7 +163,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
     } else if (this.origen == "newRepresentante") {
       this.persistenceService.setDatos(this.justiciable);
       //Indicamos que al volver a justiciables queremos abrir la tarjetaRepresentante
-      sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaRepresentante');
+      sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaRepresentante");
       this.router.navigate(["/gestionJusticiables"]);
     } else {
       this.location.back();
