@@ -159,7 +159,6 @@ export class DatosGeneralesComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           if (!this.modoEdicion) {
             let idJusticiable = nuevo ? this.body.idpersona : "";
-            this.modoEdicion = true;
             this.body.idpersona = JSON.parse(data.body).id;
             this.body.idinstitucion = this.authenticationService.getInstitucionSession();
             this.asociarJusticiable(nuevo, idJusticiable);

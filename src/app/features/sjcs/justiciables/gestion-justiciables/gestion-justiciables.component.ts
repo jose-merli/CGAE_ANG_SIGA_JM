@@ -85,9 +85,9 @@ export class GestionJusticiablesComponent implements OnInit {
     this.body = justiciable;
     if (this.body.idpersona != null) {
       if (!this.modoEdicion) {
+        this.modoEdicion = true;
         this.checkAccesoTarjetas();
       }
-      this.modoEdicion = true;
     }
     this.updateTarjResumen();
   }
@@ -190,12 +190,22 @@ export class GestionJusticiablesComponent implements OnInit {
         movil = this.body.telefonos[0].numeroTelefono;
       }
 
+      let nombre = "";
+      if (this.body.nombre != undefined && this.body.apellido1 != undefined) {
+        nombre = this.body.apellido1 + (this.body.apellido2 != undefined ? " " + this.body.apellido2 : "") + ", " + this.body.nombre;
+      }
+
+      let direccion = "";
+      if (this.body.codigopostal != undefined && this.body.codigopostal != "") {
+        direccion = (this.body.direccion != null ? this.body.direccion + ", " : "") + this.body.codigopostal;
+      }
+
       this.datosResumen = [
         { label: this.translateService.instant("censo.usuario.DNI"), value: this.body.nif },
-        { label: this.translateService.instant("facturacionSJCS.retenciones.nombre"), value: this.body.apellido1 + " " + this.body.apellido2 + ", " + this.body.nombre },
+        { label: this.translateService.instant("facturacionSJCS.retenciones.nombre"), value: nombre },
         { label: this.translateService.instant("censo.datosDireccion.literal.correo"), value: this.body.correoelectronico },
         { label: this.translateService.instant("censo.datosDireccion.literal.telefonoMovil"), value: movil },
-        { label: this.translateService.instant("censo.consultaDirecciones.literal.direccion"), value: (this.body.direccion != null ? this.body.direccion + ", " : "") + this.body.codigopostal },
+        { label: this.translateService.instant("censo.consultaDirecciones.literal.direccion"), value: direccion },
       ];
     }
     this.progressSpinner = false;
