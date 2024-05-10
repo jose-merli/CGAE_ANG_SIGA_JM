@@ -187,9 +187,6 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   nuevo() {
-    sessionStorage.setItem("nuevoJusticiable", "true");
-    sessionStorage.setItem("Nuevo", "true");
-    sessionStorage.setItem("nuevoJusticiableTarjetas", "true");
     sessionStorage.setItem("origin", this.origen);
     if (!this.modoRepresentante) {
       this.persistenceService.clearDatos();

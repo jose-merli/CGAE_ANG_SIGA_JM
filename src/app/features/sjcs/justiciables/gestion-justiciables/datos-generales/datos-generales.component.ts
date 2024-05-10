@@ -143,7 +143,7 @@ export class DatosGeneralesComponent implements OnInit {
     }
   }
 
-  private callSaveService(url: string, validate: boolean, nuevo: boolean) {
+  private callSaveService(url: string, validate: boolean, clonar: boolean) {
     this.comprobarCampos();
 
     if (!(this.body.fechanacimiento instanceof Date)) {
@@ -158,10 +158,10 @@ export class DatosGeneralesComponent implements OnInit {
         if (JSON.parse(data.body).error.message != "C") {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           if (!this.modoEdicion) {
-            let idJusticiable = nuevo ? this.body.idpersona : "";
+            let idJusticiable = clonar ? this.body.idpersona : "";
             this.body.idpersona = JSON.parse(data.body).id;
             this.body.idinstitucion = this.authenticationService.getInstitucionSession();
-            this.asociarJusticiable(nuevo, idJusticiable);
+            this.asociarJusticiable(clonar, idJusticiable);
           } else {
             this.progressSpinner = false;
           }
@@ -186,9 +186,9 @@ export class DatosGeneralesComponent implements OnInit {
     );
   }
 
-  guardarDialog(nuevo: boolean) {
+  guardarDialog(clonar: boolean) {
     this.progressSpinner = true;
-    if (nuevo) {
+    if (clonar) {
       this.crearJusticiable();
     } else {
       this.callSaveService("gestionJusticiables_updateJusticiable", true, false);
@@ -233,29 +233,29 @@ export class DatosGeneralesComponent implements OnInit {
     });
   }
 
-  private asociarJusticiable(nuevo: boolean, idJusticiable: string) {
+  private asociarJusticiable(clonar: boolean, idJusticiable: string) {
     if (this.origen == "newUnidadFamiliar" || this.origen == "UnidadFamiliar") {
       // Asociar Nueva Unidad Familiar
-      this.insertUniFamiliar(nuevo, idJusticiable);
+      this.insertUniFamiliar(clonar, idJusticiable);
     } else if (this.origen == "newInteresado" || this.origen == "Interesado") {
       // Asociar Nuevo Interesados.
-      this.insertInteresado(nuevo, idJusticiable);
-    } else if (this.origen == "newAsistido") {
+      this.insertInteresado(clonar, idJusticiable);
+    } else if (this.origen == "newAsistido" ||this.origen == "Asistido") {
       // Asociar Nuevo Asistido
       this.insertAsistido();
     } else if (this.origen == "newContrarioEJG" || this.origen == "ContrarioEJG") {
       // Asociar Nuevo Contrario EJG
-      this.insertContrarioEJG(nuevo, idJusticiable);
+      this.insertContrarioEJG(clonar, idJusticiable);
     } else if (this.origen == "newContrario" || this.origen == "Contrario") {
       // Asociar Nuevo Contrario
-      this.insertContrario(nuevo, idJusticiable);
+      this.insertContrario(clonar, idJusticiable);
     } else if (this.origen == "newContrarioAsistencia" || this.origen == "ContrarioAsistencia") {
       // Asociar Nuevo Contrario Asistencia
-      this.insertContrarioAsistencia(nuevo, idJusticiable);
-    } else if (this.origen == "newSoj") {
+      this.insertContrarioAsistencia(clonar, idJusticiable);
+    } else if (this.origen == "newSoj" || this.origen == "Soj") {
       // Asociar Nuevo SOJ
-      this.insertSOJ(nuevo, idJusticiable); //ARR: revisar
-    } else if (this.origen == "newRepresentante") {
+      this.insertSOJ();
+    } else if (this.origen == "newRepresentante" || this.origen == "Representante") {
       // Asociar Nuevo Representante
       this.persistenceService.clearBody();
       this.persistenceService.setBody(this.body);
@@ -266,16 +266,13 @@ export class DatosGeneralesComponent implements OnInit {
     }
   }
 
-  private insertUniFamiliar(nuevo: boolean, idJusticiable: string) {
+  private insertUniFamiliar(clonar: boolean, idJusticiable: string) {
     let ejg: EJGItem = this.persistenceService.getDatosEJG();
-    let request = [ejg.idInstitucion, this.body.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, nuevo, idJusticiable];
+    let request = [ejg.idInstitucion, this.body.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, clonar, idJusticiable];
     this.sigaServices.post("gestionejg_insertFamiliarEJG", request).subscribe(
       (data) => {
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        //Para que se abra la tarjeta de unidad familiar y se haga scroll a ella
-        sessionStorage.setItem("tarjeta", "unidadFamiliar");
-        this.router.navigate(["/gestionEjg"]);
       },
       (err) => {
         this.progressSpinner = false;
@@ -288,17 +285,13 @@ export class DatosGeneralesComponent implements OnInit {
     );
   }
 
-  private insertInteresado(nuevo: boolean, idJusticiable: string) {
+  private insertInteresado(clonar: boolean, idJusticiable: string) {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    let request = [designa.idInstitucion, this.body.idpersona, designa.ano, designa.idTurno, designa.numero, nuevo, idJusticiable];
+    let request = [designa.idInstitucion, this.body.idpersona, designa.ano, designa.idTurno, designa.numero, clonar, idJusticiable];
     this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
       (data) => {
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        sessionStorage.removeItem("origin");
-        sessionStorage.setItem("tarjeta", "sjcsDesigInt");
-        sessionStorage.setItem("creaInsertaJusticiableDesigna", "true");
-        this.router.navigate(["/fichaDesignaciones"]);
       },
       (err) => {
         this.progressSpinner = false;
@@ -322,7 +315,6 @@ export class DatosGeneralesComponent implements OnInit {
             this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.router.navigate(["/fichaAsistencia"]);
           }
         },
         (err) => {
@@ -332,7 +324,7 @@ export class DatosGeneralesComponent implements OnInit {
     }
   }
 
-  private insertSOJ(nuevo: boolean, idJusticiable: string) {
+  private insertSOJ() {
     let itemSojJusticiable = new FichaSojItem();
     if (sessionStorage.getItem("sojAsistido")) {
       let itemSoj = JSON.parse(sessionStorage.getItem("sojAsistido"));
@@ -351,7 +343,6 @@ export class DatosGeneralesComponent implements OnInit {
             this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.router.navigate(["/detalle-soj"]);
           }
         },
         (err) => {
@@ -362,16 +353,13 @@ export class DatosGeneralesComponent implements OnInit {
     }
   }
 
-  private insertContrarioEJG(nuevo: boolean, idJusticiable: string) {
+  private insertContrarioEJG(clonar: boolean, idJusticiable: string) {
     let ejg: EJGItem = this.persistenceService.getDatosEJG();
-    let request = [this.body.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, nuevo, idJusticiable];
+    let request = [this.body.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, clonar, idJusticiable];
     this.sigaServices.post("gestionejg_insertContrarioEJG", request).subscribe(
       (data) => {
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        sessionStorage.removeItem("origin");
-        sessionStorage.setItem("tarjeta", "contrariosPreDesigna");
-        this.router.navigate(["/gestionEjg"]);
       },
       (err) => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -384,16 +372,13 @@ export class DatosGeneralesComponent implements OnInit {
     );
   }
 
-  private insertContrario(nuevo: boolean, idJusticiable: string) {
+  private insertContrario(clonar: boolean, idJusticiable: string) {
     let designa: any = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    let request = [designa.idInstitucion, this.body.idpersona, designa.ano, designa.idTurno, designa.numero, nuevo, idJusticiable];
+    let request = [designa.idInstitucion, this.body.idpersona, designa.ano, designa.idTurno, designa.numero, clonar, idJusticiable];
     this.sigaServices.post("designaciones_insertContrario", request).subscribe(
       (data) => {
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        sessionStorage.removeItem("origin");
-        sessionStorage.setItem("tarjeta", "sjcsDesigContra");
-        this.router.navigate(["/fichaDesignaciones"]);
       },
       (err) => {
         this.progressSpinner = false;
@@ -406,10 +391,10 @@ export class DatosGeneralesComponent implements OnInit {
     );
   }
 
-  private insertContrarioAsistencia(nuevo: boolean, idJusticiable: string) {
+  private insertContrarioAsistencia(clonar: boolean, idJusticiable: string) {
     let idAsistencia = sessionStorage.getItem("idAsistencia");
     if (idAsistencia) {
-      if (nuevo) {
+      if (clonar) {
         //Si estamos editando un justiciable como nuevo
         let request = [idAsistencia, this.body.idpersona, idJusticiable];
         this.sigaServices.post("busquedaGuardias_actualizarContrario", request).subscribe(
@@ -440,8 +425,6 @@ export class DatosGeneralesComponent implements OnInit {
               this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
             } else {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-              sessionStorage.setItem("tarjeta", "idAsistenciaContrarios");
-              this.router.navigate(["/fichaAsistencia"]);
             }
           },
           (err) => {
