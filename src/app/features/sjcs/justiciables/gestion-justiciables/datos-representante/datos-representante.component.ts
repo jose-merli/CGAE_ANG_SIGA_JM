@@ -143,6 +143,7 @@ export class DatosRepresentanteComponent implements OnInit {
     } else {
       sessionStorage.setItem("origin", "newRepresentante");
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+      sessionStorage.setItem("originjusticiable", this.origen);
       this.router.navigate(["/justiciables"]);
     }
   }

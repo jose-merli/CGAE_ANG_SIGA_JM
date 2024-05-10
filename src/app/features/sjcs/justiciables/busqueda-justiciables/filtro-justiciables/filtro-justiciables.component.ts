@@ -261,6 +261,8 @@ export class FiltroJusticiablesComponent implements OnInit {
 
   clearFilters() {
     this.filtros = new JusticiableBusquedaItem();
+    this.comboPoblacion = [];
+    this.isDisabledPoblacion = true;
   }
 
   clear() {

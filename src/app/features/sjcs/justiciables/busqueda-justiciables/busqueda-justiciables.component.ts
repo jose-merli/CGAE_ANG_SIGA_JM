@@ -20,6 +20,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
   msgs;
   breadcrumbs = [];
   origen: string = "";
+  originjusticiable: string = "";
   justiciable: any;
 
   buscar: boolean = false;
@@ -81,6 +82,8 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.nuevoRepresentante = true;
       this.justiciable = JSON.parse(sessionStorage.getItem("justiciable"));
       sessionStorage.removeItem("justiciable");
+      this.originjusticiable = sessionStorage.getItem("originjusticiable");
+      sessionStorage.removeItem("originjusticiable");
       this.filtros.filtros = this.persistenceService.getFiltrosAux();
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("menu.justiciaGratuita.justiciables.gestionjusticiables"), "Tarjeta Representante", this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
     } else {
@@ -135,6 +138,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
     this.persistenceService.clearBody();
     this.persistenceService.setBody(event);
     this.persistenceService.setDatos(this.justiciable);
+    sessionStorage.setItem("origin", this.originjusticiable);
     this.router.navigate(["/gestionJusticiables"]);
   }
 
@@ -162,7 +166,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.router.navigate(["/detalle-soj"]);
     } else if (this.origen == "newRepresentante") {
       this.persistenceService.setDatos(this.justiciable);
-      //Indicamos que al volver a justiciables queremos abrir la tarjetaRepresentante
+      sessionStorage.setItem("origin", this.originjusticiable);
       sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaRepresentante");
       this.router.navigate(["/gestionJusticiables"]);
     } else {
