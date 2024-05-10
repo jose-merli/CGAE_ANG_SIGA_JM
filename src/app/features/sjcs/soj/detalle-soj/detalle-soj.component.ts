@@ -355,8 +355,9 @@ export class DetalleSOJComponent implements OnInit {
       sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaAsunto");
       this.persistenceService.setDatos(this.datosJusticiables);
       this.router.navigate(["/gestionJusticiables"]);
+    } else if (this.persistenceService.getDatosEJG()) {
+      this.router.navigate(["/gestionEjg"]);
     } else {
-      //this.router.navigate(['/gestion-ejg']);
       this.location.back();
     }
   }

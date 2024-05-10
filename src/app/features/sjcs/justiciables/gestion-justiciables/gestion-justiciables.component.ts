@@ -104,13 +104,13 @@ export class GestionJusticiablesComponent implements OnInit {
     if (this.origen == "representante" || this.newRepresentante) {
       this.persistenceService.setDatos(this.justiciable);
       this.router.navigate(["/gestionJusticiables"]);
-    } else if (this.origen == "UnidadFamiliar" || this.origen == "ContrarioEJG") {
+    } else if (this.origen == "UnidadFamiliar" || this.origen == "ContrarioEJG" || this.origen == "newUnidadFamiliar" || this.origen == "newContrarioEJG") {
       this.router.navigate(["/gestionEjg"]);
-    } else if (this.origen == "Interesado" || this.origen == "Contrario") {
+    } else if (this.origen == "Interesado" || this.origen == "Contrario" || this.origen == "newInteresado" || this.origen == "newContrario") {
       this.router.navigate(["/fichaDesignaciones"]);
-    } else if (this.origen == "Asistencia" || this.origen == "ContrarioAsistencia") {
+    } else if (this.origen == "Asistencia" || this.origen == "ContrarioAsistencia" || this.origen == "newAsistido" || this.origen == "newContrarioAsistencia") {
       this.router.navigate(["/fichaAsistencia"]);
-    } else if (this.origen == "Soj") {
+    } else if (this.origen == "Soj" || this.origen == "newSoj") {
       this.router.navigate(["/detalle-soj"]);
     } else {
       if (this.justiciable != null) {
