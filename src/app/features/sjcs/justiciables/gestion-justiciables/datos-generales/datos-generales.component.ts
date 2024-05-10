@@ -20,7 +20,6 @@ export class DatosGeneralesComponent implements OnInit {
   @Input() permisoEscritura: boolean = true;
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
-  @Input() bodyInicial: JusticiableItem;
   @Input() origen: string = "";
   @Input() justiciable: any;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
@@ -29,6 +28,8 @@ export class DatosGeneralesComponent implements OnInit {
 
   progressSpinner: boolean = false;
   permisoSave: boolean = false;
+
+  bodyInicial: JusticiableItem;
 
   comboTipoPersona;
   comboTipoIdentificacion;
@@ -54,6 +55,7 @@ export class DatosGeneralesComponent implements OnInit {
       this.body.tipopersonajg = "F";
       this.body.fechaalta = new Date();
     }
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
   }
 
   onHideTarjeta() {
@@ -238,7 +240,7 @@ export class DatosGeneralesComponent implements OnInit {
     } else if (this.origen == "newInteresado" || this.origen == "Interesado") {
       // Asociar Nuevo Interesados.
       this.insertInteresado(clonar, idJusticiable);
-    } else if (this.origen == "newAsistido" || this.origen == "Asistido") {
+    } else if (this.origen == "newAsistido" ||this.origen == "Asistido") {
       // Asociar Nuevo Asistido
       this.insertAsistido();
     } else if (this.origen == "newContrarioEJG" || this.origen == "ContrarioEJG") {
