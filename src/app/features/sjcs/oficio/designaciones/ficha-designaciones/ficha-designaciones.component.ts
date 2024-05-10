@@ -239,14 +239,25 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.checkTengoPermiso();
+    
+    let storedNombreInteresado = sessionStorage.getItem("nombreInteresado");
+    console.log("nombreInteresado desde sessionStorage antes de asignar:", storedNombreInteresado);
 
-    if (sessionStorage.getItem("nombreInteresado") && sessionStorage.getItem("nombreInteresado") != "null") {
-      this.nombreInteresado = sessionStorage.getItem("nombreInteresado");
+    if (storedNombreInteresado && storedNombreInteresado !== "null") {
+      let partes = storedNombreInteresado.split(' ');
+      let nombre = partes[0];
+      let apellido = partes[1] || ''; // Si no hay apellido, asigna una cadena vacía
+      this.nombreInteresado = `${nombre} ${apellido}`.trim();
+      console.log("nombreInteresado asignado:", this.nombreInteresado); // Verificar valor asignado
+
       sessionStorage.removeItem("nombreInteresado");
     }
+    console.log("designaItem desde sessionStorage:", sessionStorage.getItem("designaItemLink"));
 
-    if (sessionStorage.getItem("designaItemLink") != null && sessionStorage.getItem("designaItemLink") != undefined && sessionStorage.getItem("designaItemLink") != "undefined") {
+    if (sessionStorage.getItem("designaItemLink")) {
       this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+      console.log("designaItem parseado:", this.designaItem); // Verificar el objeto parseado
+
     }
     this.progressSpinner = true;
     this.getDataLoggedUser();
@@ -255,14 +266,17 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;
     this.numColegiadoLogado = this.localStorageService.numColegiado;
-    if (this.isLetrado == undefined) {
+    if (this.isLetrado === undefined) {
       this.commonsService.getLetrado().then((respuesta) => {
         this.isLetrado = respuesta;
+        console.log("isLetrado después de getLetrado:", this.isLetrado); // Verificar estado de isLetrado
+
         if (this.isLetrado) {
           this.getDataLoggedUser();
         }
       });
     }
+    
 
     this.msjEliminarDesignacion = this.translateService.instant("justiciaGratuita.oficio.designaciones.eliminarDesignacion");
     this.msjGuardarProcurador = this.translateService.instant("justiciaGratuita.oficio.designaciones.guardarProcurador");
@@ -534,6 +548,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
           value: designaItem.validada,
         },
       ];
+      console.log("camposResumen para Interesado:", camposResumen[0].value); // Verificar qué se muestra como Interesado
 
       let camposGenerales = [
         {
@@ -776,9 +791,12 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       // Rellenar Nombre de Justiciable Tarjeta Resumen.
       this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
       if (this.datosJusticiables) {
-          let nombreCompleto = `${this.datosJusticiables.nombre} ${this.datosJusticiables.apellidos}`.trim();
+          let nombre = this.datosJusticiables.nombre || '';  // Asegura que el nombre no es undefined
+          let apellido = this.datosJusticiables.apellido1 || '';  // Asegura que el apellido no es undefined
+          let nombreCompleto = `${nombre} ${apellido}`.trim();
+
           let tarjInteresados = this.listaTarjetas.find(tarjInteresados => tarjInteresados.id === 'sjcsDesigInt');
-          if (tarjInteresados != undefined) {
+          if (tarjInteresados) {
               tarjInteresados.campos = [{
                   "key": null,
                   "value": nombreCompleto
