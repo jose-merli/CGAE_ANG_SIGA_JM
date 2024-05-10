@@ -14,6 +14,7 @@ export class DatosSolicitudComponent implements OnInit {
   @Input() permisoEscritura: boolean = true;
   @Input() showTarjeta: boolean = false;
   @Input() body: JusticiableItem;
+  @Input() bodyInicial: JusticiableItem;
   @Input() origen: string = "";
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() notificacion = new EventEmitter<any>();
@@ -22,7 +23,6 @@ export class DatosSolicitudComponent implements OnInit {
   progressSpinner: boolean = false;
   permisoSave: boolean = false;
 
-  bodyInicial: JusticiableItem;
   selectedAutorizaavisotel: string = "";
   selectedAsistidosolicitajg: string = "";
   selectedAsistidoautorizaeejg: string = "";
@@ -56,7 +56,7 @@ export class DatosSolicitudComponent implements OnInit {
     if (!this.permisoEscritura) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
-      if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
+      if (!(this.bodyInicial.correoelectronico != undefined && this.bodyInicial.correoelectronico != "")) {
         if (this.body.autorizaavisotelematico == "1") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
         } else {

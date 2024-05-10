@@ -9,15 +9,16 @@ export const environment = {
   env: "",
   baseHref: "/ang/",
 
+  //oldSigaUrl: "https://sigaint.redabogacia.org/SIGA/",
   //oldSigaUrl: "http://vmcgaeap002.cloud.es.deloitte.com:7001/SIGA/",
-  oldSigaUrl: "https://sigaint.redabogacia.org/SIGA/",
   //newSigaUrl: "http://localhost:8280/siga-web-1.1.0-SNAPSHOT/"
   //newSigaUrl: "http://localhost:7001/siga-web/"
 
-  // oldSigaUrl: '/SIGA/',
-  newSigaUrl: "http://localhost:8280/siga-web-1.1.0-SNAPSHOT/"
+  //newSigaUrl: "http://localhost:8080/siga-web-1.1.0-SNAPSHOT/"
   //newSigaUrl: "https://localhost/siga-web/"
+  oldSigaUrl: "/SIGA/",
+  newSigaUrl: "/siga-web/",
 
-  // newSigaUrl: '/siga-web/'
-  
+  //Si se indica a "true" el diccionario se tiene que actualizar de forma manual src\app\commons\translate\diccionario.js
+  diccionario: true,
 };

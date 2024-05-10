@@ -16,16 +16,16 @@
     
     <app-tarjeta-resumen-fija class="pb-50" [chincheta]="true" [datos]="datosResumen" [icono]="'clipboard'" [enlaces]="enlacesResumen" (isOpen)="openTarjeta($event)"></app-tarjeta-resumen-fija>
 
-    <app-datos-generales id="tarjetaGenerales" [body]="body" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaGenerales')" 
+    <app-datos-generales id="tarjetaGenerales" [body]="body" [bodyInicial]="bodyInicial" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaGenerales')" 
       [showTarjeta]="isOpenTarjeta('tarjetaGenerales')" [origen]="origen" [justiciable]="justiciable" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)" (showDialog)="abrirDialog($event)"></app-datos-generales>
 
-    <app-datos-personales *ngIf="modoEdicion" id="tarjetaPersonales" [body]="body" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaPersonales')" 
+    <app-datos-personales *ngIf="modoEdicion" id="tarjetaPersonales" [body]="body" [bodyInicial]="bodyInicial" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaPersonales')" 
       [showTarjeta]="isOpenTarjeta('tarjetaPersonales')" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-datos-personales>
 
     <app-datos-unidad-familiar *ngIf="modoEdicion && origen == 'UnidadFamiliar'" id="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaUnidadFamiliar')" 
       [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [unidadFamiliar]="unidadFamiliar" (notificacion)="notificacion($event)"></app-datos-unidad-familiar>
 
-    <app-datos-solicitud *ngIf="modoEdicion" id="tarjetaSolicitud" [body]="body" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaSolicitud')" 
+    <app-datos-solicitud *ngIf="modoEdicion" id="tarjetaSolicitud" [bodyInicial]="bodyInicial" [body]="body" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaSolicitud')" 
       [showTarjeta]="isOpenTarjeta('tarjetaSolicitud')" [origen]="origen" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)" (showDialog)="abrirDialog($event)"></app-datos-solicitud>
 
     <app-datos-representante *ngIf="modoEdicion" id="tarjetaRepresentante" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaRepresentante')" 
