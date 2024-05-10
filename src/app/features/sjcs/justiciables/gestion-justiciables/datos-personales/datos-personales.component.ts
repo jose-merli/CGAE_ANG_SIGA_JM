@@ -15,10 +15,10 @@ export class DatosPersonalesComponent implements OnInit {
   @Input() showTarjeta: boolean = false;
   @Input() permisoEscritura: boolean = true;
   @Input() body: JusticiableItem;
+  @Input() bodyInicial: JusticiableItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
   @Output() notificacion = new EventEmitter<any>();
 
-  bodyInicial;
   bodyInicialTelefonos;
   direccionPostal: String = "";
   resultadosPoblaciones: String = "";
@@ -157,11 +157,12 @@ export class DatosPersonalesComponent implements OnInit {
     } else {
       if (!this.validateEmail()) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
+      } else if (!this.validateEmailTelematico()) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El aviso telematico esta autorizado, debe termer un correo electrónico");
       } else if (!this.validateFax()) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El fax no tiene un formato válido");
       } else {
         this.progressSpinner = true;
-        this.deleteSpacing();
         if (this.body.telefonos != null && this.body.telefonos.length > 0) {
           this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
         }
@@ -267,6 +268,13 @@ export class DatosPersonalesComponent implements OnInit {
     let pattern: RegExp = /^[a-zA-Z0-9\+\._-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)?\.[a-zA-Z]+$/;
     //Email vacio no se valida. En caso contrario, si
     return !this.body.correoelectronico || pattern.test(this.body.correoelectronico);
+  }
+
+  /**
+   * Valida el email cuando esta activo el aviso telematico
+   */
+  private validateEmailTelematico() {
+    return !((this.body.correoelectronico == undefined || this.body.correoelectronico == "") && this.bodyInicial.autorizaavisotelematico == "1");
   }
 
   /**

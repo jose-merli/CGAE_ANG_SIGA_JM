@@ -21,6 +21,7 @@ import { DatosSolicitudComponent } from "./datos-solicitud/datos-solicitud.compo
 })
 export class GestionJusticiablesComponent implements OnInit {
   body: JusticiableItem = new JusticiableItem();
+  bodyInicial: JusticiableItem = new JusticiableItem();
   unidadFamiliar: UnidadFamiliarEJGItem = new UnidadFamiliarEJGItem();
   justiciable: any;
   tarjetas = new Map();
@@ -89,6 +90,7 @@ export class GestionJusticiablesComponent implements OnInit {
         this.checkAccesoTarjetas();
       }
     }
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     this.updateTarjResumen();
   }
 
@@ -189,17 +191,17 @@ export class GestionJusticiablesComponent implements OnInit {
       if (this.body.telefonos != null && this.body.telefonos.length > 0) {
         movil = this.body.telefonos[0].numeroTelefono;
       }
- 
+
       let nombre = "";
       if (this.body.nombre != undefined && this.body.apellido1 != undefined) {
         nombre = this.body.apellido1 + (this.body.apellido2 != undefined ? " " + this.body.apellido2 : "") + ", " + this.body.nombre;
       }
- 
+
       let direccion = "";
       if (this.body.codigopostal != undefined && this.body.codigopostal != "") {
         direccion = (this.body.direccion != null ? this.body.direccion + ", " : "") + this.body.codigopostal;
       }
- 
+
       this.datosResumen = [
         { label: this.translateService.instant("censo.usuario.DNI"), value: this.body.nif },
         { label: this.translateService.instant("facturacionSJCS.retenciones.nombre"), value: nombre },
@@ -338,6 +340,7 @@ export class GestionJusticiablesComponent implements OnInit {
     await this.sigaServices.post("gestionJusticiables_searchJusticiable", bodyBusqueda).subscribe(
       (n) => {
         this.body = JSON.parse(n.body).justiciable;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.modoEdicion = true;
         this.searchContrarios();
         this.checkAccesoTarjetas();
