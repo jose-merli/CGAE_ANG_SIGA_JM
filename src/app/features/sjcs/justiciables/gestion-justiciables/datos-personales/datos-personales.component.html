@@ -19,7 +19,8 @@
           <div class="row">
             <div class="col-6">
               <label>{{ "censo.consultaDirecciones.literal.direccion" | translate }}:
-                <span>{{ direccionPostal }}</span>
+                <span *ngIf="!body.direccionNoInformada && body.direccion; else noDireccion">{{ direccionPostal }}</span>
+                <ng-template #noDireccion><span>No Informada</span></ng-template>
               </label>
             </div>
             <div class="col-6">
@@ -42,8 +43,15 @@
       <div class="form-row d-flex justify-content-around">
         <div class="form-group row col-lg-6 col-md-6 border-right hiddenBorder">
           <!-- Datos Personales -->
-          <div class="form-group col-lg-12 input-ayuda">
-            <label style="font-weight: bold;">{{ 'formacion.fichaInscripcion.datosContacto.direccionPostal' | translate}}</label>
+          <div class="form-group col-lg-12">
+            <div class="form-row align-items-center">
+              <div class="col-md-6">
+                <label style="font-weight: bold;">{{ 'formacion.fichaInscripcion.datosContacto.direccionPostal' | translate}}</label>
+              </div>
+              <div class="col-md-6">
+                <p-checkbox label="No informada" class="p-checkbox" [(ngModel)]="body.direccionNoInformada" binary="true" (onChange)="onDireccionNoInformadaChange()"></p-checkbox>
+              </div>
+            </div>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ 'justiciaGratuita.justiciables.literal.tipoVia' | translate }} *</label>
@@ -54,7 +62,6 @@
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.consultaDirecciones.literal.direccion" | translate}} *</label>
             <input [(ngModel)]="body.direccion" type="text" class="form-control" [maxLength]="95" [disabled]="body.direccionNoInformada" pInputText [ngClass]="styleObligatorio(body.direccion)" (keydown)="onChangeInput($event)">
-            <p-checkbox label="No informada" class="p-checkbox"[(ngModel)]="body.direccionNoInformada" binary="true"></p-checkbox>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"gratuita.busquedaAsistencias.literal.numero" | translate}}</label>
