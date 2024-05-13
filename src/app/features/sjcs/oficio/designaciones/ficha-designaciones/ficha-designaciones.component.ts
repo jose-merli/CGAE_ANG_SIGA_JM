@@ -259,6 +259,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       console.log("designaItem parseado:", this.designaItem); // Verificar el objeto parseado
 
     }
+
     this.progressSpinner = true;
     this.getDataLoggedUser();
     sessionStorage.setItem("fromDesignaciones", "true");
@@ -793,7 +794,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       if (this.datosJusticiables) {
           let nombre = this.datosJusticiables.nombre || '';  // Asegura que el nombre no es undefined
           let apellido = this.datosJusticiables.apellido1 || '';  // Asegura que el apellido no es undefined
-          let nombreCompleto = `${nombre} ${apellido}`.trim();
+          let nombreCompleto = `${apellido}, ${nombre}`.trim();
 
           let tarjInteresados = this.listaTarjetas.find(tarjInteresados => tarjInteresados.id === 'sjcsDesigInt');
           if (tarjInteresados) {
