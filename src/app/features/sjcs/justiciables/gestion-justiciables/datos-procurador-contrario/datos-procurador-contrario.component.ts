@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
+import { Component, Input, OnChanges, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { NotificationService } from "../../../../../_services/notification.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
 import { EJGItem } from "../../../../../models/sjcs/EJGItem";
@@ -18,13 +19,12 @@ export class DatosProcuradorContrarioComponent implements OnInit, OnChanges {
   @Input() body: JusticiableItem;
   @Input() origen: string = "";
   @Input() contrario: any;
-  @Output() notificacion = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
 
   procurador: ProcuradorItem = new ProcuradorItem();
 
-  constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) {}
+  constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService, private notificationService: NotificationService) {}
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -38,7 +38,7 @@ export class DatosProcuradorContrarioComponent implements OnInit, OnChanges {
 
   search() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("nuevoProcurador", "true");
@@ -54,12 +54,12 @@ export class DatosProcuradorContrarioComponent implements OnInit, OnChanges {
       this.sigaServices.post("designaciones_updateProcuradorContrario", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.procurador = new ProcuradorItem();
         },
         (err) => {
           this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.error"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.error"), this.translateService.instant("general.message.error.realiza.accion"));
         },
       );
     } else {
@@ -68,12 +68,12 @@ export class DatosProcuradorContrarioComponent implements OnInit, OnChanges {
       this.sigaServices.post("gestionejg_updateProcuradorContrarioEJG", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.procurador = new ProcuradorItem();
         },
         (err) => {
           this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.error"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.error"), this.translateService.instant("general.message.error.realiza.accion"));
         },
       );
     }
@@ -121,11 +121,11 @@ export class DatosProcuradorContrarioComponent implements OnInit, OnChanges {
       this.sigaServices.post("designaciones_updateProcuradorContrario", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         },
         (err) => {
           this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.error"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.error"), this.translateService.instant("general.message.error.realiza.accion"));
         },
       );
     } else {
@@ -134,21 +134,13 @@ export class DatosProcuradorContrarioComponent implements OnInit, OnChanges {
       this.sigaServices.post("gestionejg_updateProcuradorContrarioEJG", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         },
         (err) => {
           this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.error"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.error"), this.translateService.instant("general.message.error.realiza.accion"));
         },
       );
     }
-  }
-
-  private showMessage(severity, summary, msg) {
-    this.notificacion.emit({
-      severity: severity,
-      summary: summary,
-      detail: msg,
-    });
   }
 }

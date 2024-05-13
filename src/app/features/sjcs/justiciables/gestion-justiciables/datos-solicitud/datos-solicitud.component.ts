@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { CommonsService } from "../../../../../_services/commons.service";
+import { NotificationService } from "../../../../../_services/notification.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
 import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
@@ -17,7 +18,6 @@ export class DatosSolicitudComponent implements OnInit {
   @Input() bodyInicial: JusticiableItem;
   @Input() origen: string = "";
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
-  @Output() notificacion = new EventEmitter<any>();
   @Output() showDialog = new EventEmitter<string>();
 
   progressSpinner: boolean = false;
@@ -31,7 +31,7 @@ export class DatosSolicitudComponent implements OnInit {
   comboAutorizaAvisotel = [];
   comboSolicitajg = [];
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService) {}
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService, private notificationService: NotificationService) {}
 
   ngOnInit() {
     this.getCombos();
@@ -45,7 +45,7 @@ export class DatosSolicitudComponent implements OnInit {
 
   rest() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
       this.tratamientoDescripcionesTarjeta();
@@ -54,11 +54,11 @@ export class DatosSolicitudComponent implements OnInit {
 
   save() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       if (!(this.bodyInicial.correoelectronico != undefined && this.bodyInicial.correoelectronico != "")) {
         if (this.body.autorizaavisotelematico == "1") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
         } else {
           if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
             this.showDialog.emit("tarjetaSolicitud");
@@ -87,27 +87,19 @@ export class DatosSolicitudComponent implements OnInit {
     this.sigaServices.post("gestionJusticiables_updateDatosSolicitudJusticiable", this.body).subscribe(
       (data) => {
         this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.bodyChange.emit(this.body);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       },
       (err) => {
         this.progressSpinner = false;
         if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
       },
     );
-  }
-
-  private showMessage(severity, summary, msg) {
-    this.notificacion.emit({
-      severity: severity,
-      summary: summary,
-      detail: msg,
-    });
   }
 
   private tratamientoDescripcionesTarjeta() {

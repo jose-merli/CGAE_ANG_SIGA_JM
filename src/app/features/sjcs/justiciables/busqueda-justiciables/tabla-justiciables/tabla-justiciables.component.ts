@@ -2,6 +2,7 @@ import { Location } from "@angular/common";
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/primeng";
+import { NotificationService } from "../../../../../_services/notification.service";
 import { PersistenceService } from "../../../../../_services/persistence.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
@@ -18,7 +19,6 @@ import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
 export class TablaJusticiablesComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
-  msgs;
   initDatos;
 
   selectedItem: number = 10;
@@ -51,7 +51,7 @@ export class TablaJusticiablesComponent implements OnInit {
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
   @Output() insertRepresentante = new EventEmitter<JusticiableItem>();
 
-  constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private location: Location) {}
+  constructor(private translateService: TranslateService, private notificationService: NotificationService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private location: Location) {}
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined) {
@@ -108,16 +108,16 @@ export class TablaJusticiablesComponent implements OnInit {
     let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero];
     this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
       (data) => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         //this.router.navigate(["/fichaDesignaciones"]);
         this.location.back();
       },
       (err) => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
       },
@@ -151,15 +151,15 @@ export class TablaJusticiablesComponent implements OnInit {
       (data) => {
         //Para que se abra la tarjeta de unidad familiar y se haga scroll a ella
         sessionStorage.setItem("tarjeta", "unidadFamiliar");
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.router.navigate(["/gestionEjg"]);
       },
       (err) => {
         if (err != undefined && JSON.parse(err.error).error != null) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
       },
@@ -193,16 +193,16 @@ export class TablaJusticiablesComponent implements OnInit {
     let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero];
     this.sigaServices.post("designaciones_insertContrario", request).subscribe(
       (data) => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         //this.router.navigate(["/fichaDesignaciones"]);
         this.location.back();
       },
       (err) => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
       },
@@ -228,15 +228,15 @@ export class TablaJusticiablesComponent implements OnInit {
         (data) => {
           let result = JSON.parse(data["body"]);
           if (result.error) {
-            this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            this.notificationService.showError(this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
-            this.showMessage("success", this.translateService.instant("general.message.accion.realizada"), "");
+            this.notificationService.showSuccess(this.translateService.instant("general.message.accion.realizada"), "");
             //this.router.navigate(["/fichaAsistencia"]);
             this.location.back();
           }
         },
         (err) => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           this.progressSpinner = false;
         },
         () => {
@@ -253,9 +253,9 @@ export class TablaJusticiablesComponent implements OnInit {
         (data) => {
           let result = JSON.parse(data["body"]);
           if (result.error) {
-            this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            this.notificationService.showError(this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
-            this.showMessage("success", this.translateService.instant("general.message.accion.realizada"), "");
+            this.notificationService.showSuccess(this.translateService.instant("general.message.accion.realizada"), "");
             //this.router.navigate(["/fichaAsistencia"]);
             this.location.back();
           }
@@ -280,9 +280,9 @@ export class TablaJusticiablesComponent implements OnInit {
         (data) => {
           let result = JSON.parse(data["body"]);
           if (result.error) {
-            this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            this.notificationService.showError(this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
-            this.showMessage("success", this.translateService.instant("general.message.accion.realizada"), "");
+            this.notificationService.showSuccess(this.translateService.instant("general.message.accion.realizada"), "");
             this.location.back();
             //this.router.navigate(["/fichaAsistencia"]);
           }
@@ -322,16 +322,16 @@ export class TablaJusticiablesComponent implements OnInit {
     let request = [justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero];
     this.sigaServices.post("gestionejg_insertContrarioEJG", request).subscribe(
       (data) => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         //this.router.navigate(["/fichaDesignaciones"]);
         this.location.back();
       },
       (err) => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
       },
@@ -379,19 +379,6 @@ export class TablaJusticiablesComponent implements OnInit {
     this.tabla.reset();
   }
 
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg,
-    });
-  }
-
-  clear() {
-    this.msgs = [];
-  }
-
   // Quitar seleccion de Fila.
   actualizaSeleccionados(selectedDatos) {
     if (selectedDatos != null && selectedDatos != undefined) {
@@ -413,14 +400,14 @@ export class TablaJusticiablesComponent implements OnInit {
       if (this.checkInteresado(selectedDatos)) {
         this.insertInteresado(selectedDatos);
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.interesados.existente"));
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.interesados.existente"));
       }
     } else if (this.nuevoContrario) {
       // Asociar para SOJ
       if (this.checkContrario(selectedDatos)) {
         this.insertContrario(selectedDatos);
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
       }
     } else if (this.nuevoSOJ) {
       // Asociar para Asistido
@@ -432,21 +419,21 @@ export class TablaJusticiablesComponent implements OnInit {
       if (this.checkContrario(selectedDatos)) {
         this.asociarContrarioAsistencia(selectedDatos);
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
       }
     } else if (this.nuevoContrarioEJG) {
       // Asociar para Nuevo Contrario EJG
       if (this.checkContrarioEJG(selectedDatos)) {
         this.insertContrarioEJG(selectedDatos);
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
       }
     } else if (this.nuevaUniFamiliar) {
       // Asociar para Nueva Unidad Familiar
       if (this.checkUniFamiliar(selectedDatos)) {
         this.insertUniFamiliar(selectedDatos);
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"));
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"));
       }
     } else if (this.nuevoRepresentante) {
       this.insertRepresentante.emit(selectedDatos);

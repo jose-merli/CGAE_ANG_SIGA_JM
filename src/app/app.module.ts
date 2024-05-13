@@ -9,6 +9,7 @@ import { ValidationModule } from "./commons/validation/validation.module";
 
 import { AuthGuard } from "./_guards/auth.guards";
 import { cardService } from "./_services/cardSearch.service";
+import { NotificationService } from "./_services/notification.service";
 import { OldSigaServices } from "./_services/oldSiga.service";
 import { SigaServices } from "./_services/siga.service";
 import { routing } from "./app.routing";
@@ -26,7 +27,6 @@ import { MenuComponent } from "./commons/menu/menu.component";
 import { MyIframeComponent } from "./commons/my-iframe/my-iframe.component";
 import { HomeComponent } from "./features/home/home.component";
 
-import { MessageService } from "primeng/components/common/messageservice";
 import { TreeModule } from "primeng/tree";
 import { BusquedaColegiadoExpressModule } from "./commons/busqueda-colegiado-express/busqueda-colegiado-express.module";
 
@@ -38,6 +38,7 @@ import { ButtonModule } from "primeng/button";
 import { CalendarModule } from "primeng/calendar";
 import { CheckboxModule } from "primeng/checkbox";
 import { ChipsModule } from "primeng/chips";
+import { MessageService } from "primeng/components/common/messageservice";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DataTableModule } from "primeng/datatable";
 import { DialogModule } from "primeng/dialog";
@@ -1496,6 +1497,7 @@ enableRipple(true);
     ImagePipe,
     MessageService,
     MovimientosVariosService,
+    NotificationService,
     OldSigaServices,
     PersistenceService,
     RetencionesService,

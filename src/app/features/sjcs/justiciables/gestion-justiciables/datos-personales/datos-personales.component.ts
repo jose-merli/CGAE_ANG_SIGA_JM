@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { CommonsService } from "../../../../../_services/commons.service";
+import { NotificationService } from "../../../../../_services/notification.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
 import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
@@ -17,7 +18,6 @@ export class DatosPersonalesComponent implements OnInit {
   @Input() body: JusticiableItem;
   @Input() bodyInicial: JusticiableItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
-  @Output() notificacion = new EventEmitter<any>();
 
   bodyInicialTelefonos;
   direccionPostal: String = "";
@@ -35,7 +35,7 @@ export class DatosPersonalesComponent implements OnInit {
   comboProvincia;
   comboPoblacion;
 
-  constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) {}
+  constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private notificationService: NotificationService) {}
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -153,14 +153,14 @@ export class DatosPersonalesComponent implements OnInit {
     }
 
     if (!this.validate()) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Campos obligatorios no se han rellando");
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "Campos obligatorios no se han rellando");
     } else {
       if (!this.validateEmail()) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
       } else if (!this.validateEmailTelematico()) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El aviso telemático está autorizado, debe tener un correo electrónico");
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "El aviso telemático está autorizado, debe tener un correo electrónico");
       } else if (!this.validateFax()) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El fax no tiene un formato válido");
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "El fax no tiene un formato válido");
       } else {
         this.progressSpinner = true;
         if (this.body.telefonos != null && this.body.telefonos.length > 0) {
@@ -213,7 +213,7 @@ export class DatosPersonalesComponent implements OnInit {
             this.modoEdicion = true;
             this.body.idpersona = dataJusticiable.id;
           }
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }
         this.bodyInicial = { ...this.body };
         this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
@@ -226,12 +226,12 @@ export class DatosPersonalesComponent implements OnInit {
         let dataJusticiable = JSON.parse(err.error);
         if (dataJusticiable.error.description != "") {
           if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), dataJusticiable.error.description);
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), dataJusticiable.error.description);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(dataJusticiable.error.description));
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(dataJusticiable.error.description));
           }
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
       },
@@ -365,14 +365,6 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.telefonos.splice(index, 1);
     }
     this.hasChange = true;
-  }
-
-  private showMessage(severity, summary, msg) {
-    this.notificacion.emit({
-      severity: severity,
-      summary: summary,
-      detail: msg,
-    });
   }
 
   private async getCombos() {

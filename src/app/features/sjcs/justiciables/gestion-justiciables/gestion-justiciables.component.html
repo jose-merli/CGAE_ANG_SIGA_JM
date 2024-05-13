@@ -1,5 +1,3 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
@@ -17,28 +15,28 @@
     <app-tarjeta-resumen-fija class="pb-50" [chincheta]="true" [datos]="datosResumen" [icono]="'clipboard'" [enlaces]="enlacesResumen" (isOpen)="openTarjeta($event)"></app-tarjeta-resumen-fija>
 
     <app-datos-generales id="tarjetaGenerales" [body]="body" [bodyInicial]="bodyInicial" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaGenerales')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaGenerales')" [origen]="origen" [justiciable]="justiciable" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)" (showDialog)="abrirDialog($event)"></app-datos-generales>
+      [showTarjeta]="isOpenTarjeta('tarjetaGenerales')" [origen]="origen" [justiciable]="justiciable" (bodyChange)="updateBody($event)" (showDialog)="abrirDialog($event)"></app-datos-generales>
 
     <app-datos-personales *ngIf="modoEdicion" id="tarjetaPersonales" [body]="body" [bodyInicial]="bodyInicial" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaPersonales')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaPersonales')" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-datos-personales>
+      [showTarjeta]="isOpenTarjeta('tarjetaPersonales')" (bodyChange)="updateBody($event)"></app-datos-personales>
 
     <app-datos-unidad-familiar *ngIf="modoEdicion && origen == 'UnidadFamiliar'" id="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaUnidadFamiliar')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [unidadFamiliar]="unidadFamiliar" (notificacion)="notificacion($event)"></app-datos-unidad-familiar>
+      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [unidadFamiliar]="unidadFamiliar"></app-datos-unidad-familiar>
 
     <app-datos-solicitud *ngIf="modoEdicion" id="tarjetaSolicitud" [body]="body" [bodyInicial]="bodyInicial" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaSolicitud')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaSolicitud')" [origen]="origen" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)" (showDialog)="abrirDialog($event)"></app-datos-solicitud>
+      [showTarjeta]="isOpenTarjeta('tarjetaSolicitud')" [origen]="origen" (bodyChange)="updateBody($event)" (showDialog)="abrirDialog($event)"></app-datos-solicitud>
 
     <app-datos-representante *ngIf="modoEdicion" id="tarjetaRepresentante" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaRepresentante')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaRepresentante')" [body]="body" [origen]="origen" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)" (showDialog)="abrirDialog($event)"></app-datos-representante>
+      [showTarjeta]="isOpenTarjeta('tarjetaRepresentante')" [body]="body" [origen]="origen" (bodyChange)="updateBody($event)" (showDialog)="abrirDialog($event)"></app-datos-representante>
     
     <app-asuntos *ngIf="modoEdicion" id="tarjetaAsunto" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaAsunto')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaAsunto')" [body]="body" [origen]="origen" (bodyChange)="updateBody($event)" (notificacion)="notificacion($event)"></app-asuntos>
+      [showTarjeta]="isOpenTarjeta('tarjetaAsunto')" [body]="body" [origen]="origen" (bodyChange)="updateBody($event)"></app-asuntos>
 
     <app-datos-abogado-contrario *ngIf="modoEdicion && (origen == 'ContrarioEJG' || origen == 'Contrario')" id="tarjetaAbogado" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaAbogado')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaAbogado')" [body]="body" [origen]="origen" [contrario]="contrario" (notificacion)="notificacion($event)"></app-datos-abogado-contrario> 
+      [showTarjeta]="isOpenTarjeta('tarjetaAbogado')" [body]="body" [origen]="origen" [contrario]="contrario"></app-datos-abogado-contrario> 
 
     <app-datos-procurador-contrario *ngIf="modoEdicion && (origen == 'ContrarioEJG' || origen == 'Contrario')" id="tarjetaProcurador" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaProcurador')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [origen]="origen" [contrario]="contrario" (notificacion)="notificacion($event)"></app-datos-procurador-contrario>
+      [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [origen]="origen" [contrario]="contrario"></app-datos-procurador-contrario>
 
   </div>
 </div>

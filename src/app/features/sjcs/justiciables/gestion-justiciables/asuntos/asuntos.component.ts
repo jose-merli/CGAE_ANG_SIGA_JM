@@ -2,6 +2,7 @@ import { DatePipe } from "@angular/common";
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { CommonsService } from "../../../../../_services/commons.service";
+import { NotificationService } from "../../../../../_services/notification.service";
 import { OldSigaServices } from "../../../../../_services/oldSiga.service";
 import { PersistenceService } from "../../../../../_services/persistence.service";
 import { SigaServices } from "../../../../../_services/siga.service";
@@ -27,7 +28,6 @@ export class AsuntosComponent implements OnInit {
   @Input() body: JusticiableItem;
   @Input() origen: string;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
-  @Output() notificacion = new EventEmitter<any>();
 
   selectMultiple: boolean = false;
   seleccion: boolean = false;
@@ -45,7 +45,7 @@ export class AsuntosComponent implements OnInit {
   selectedDatos = [];
   numSelected = 0;
 
-  constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private persistenceService: PersistenceService, private router: Router, private datepipe: DatePipe, public oldSigaServices: OldSigaServices) {}
+  constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private persistenceService: PersistenceService, private router: Router, private datepipe: DatePipe, public oldSigaServices: OldSigaServices, private notificationService: NotificationService) {}
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -61,7 +61,7 @@ export class AsuntosComponent implements OnInit {
   // Crear EJG
   crearEJG() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("origin", this.origen);
@@ -72,7 +72,7 @@ export class AsuntosComponent implements OnInit {
   // Crear una nueva designación.
   crearDesignacion() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("origin", this.origen);
@@ -86,7 +86,7 @@ export class AsuntosComponent implements OnInit {
   // Crear Asistencia
   crearAsistencia() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("origin", this.origen);
@@ -99,7 +99,7 @@ export class AsuntosComponent implements OnInit {
   // Crear SOJ
   crearSOJ() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       let justiciable = JSON.stringify(this.body);
       sessionStorage.setItem("justiciable", justiciable);
@@ -112,7 +112,7 @@ export class AsuntosComponent implements OnInit {
   // Asociar EJG
   asociarEJG() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("origin", this.origen);
@@ -124,7 +124,7 @@ export class AsuntosComponent implements OnInit {
   // Asociar Designacion
   asociarDesignacion() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("origin", this.origen);
@@ -136,7 +136,7 @@ export class AsuntosComponent implements OnInit {
   // Asociar Asistencia
   asociarAsistencia() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("origin", this.origen);
@@ -148,7 +148,7 @@ export class AsuntosComponent implements OnInit {
   // Asociar SOJ
   asociarSOJ() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("origin", this.origen);
@@ -194,7 +194,7 @@ export class AsuntosComponent implements OnInit {
             this.progressSpinner = false;
             let error = JSON.parse(n.body).error;
             if (error != null && error.description != null) {
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+              this.notificationService.showInfo(this.translateService.instant("general.message.informacion"), error.description);
             } else {
               sessionStorage.setItem("justiciable", JSON.stringify(this.body));
               let result = JSON.parse(n.body).ejgItems;
@@ -226,7 +226,7 @@ export class AsuntosComponent implements OnInit {
         break;
       default:
         //Introducir en la BBDD
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se puede abrir el Tipo de Asunto, es incorrecto.");
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No se puede abrir el Tipo de Asunto, es incorrecto.");
         break;
     }
   }
@@ -283,14 +283,6 @@ export class AsuntosComponent implements OnInit {
         },
       );
     }
-  }
-
-  private showMessage(severity, summary, msg) {
-    this.notificacion.emit({
-      severity: severity,
-      summary: summary,
-      detail: msg,
-    });
   }
 
   private getCols() {

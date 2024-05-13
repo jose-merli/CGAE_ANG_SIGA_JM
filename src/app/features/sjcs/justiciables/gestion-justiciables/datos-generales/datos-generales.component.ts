@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/primeng";
 import { AuthenticationService } from "../../../../../_services/authentication.service";
 import { CommonsService } from "../../../../../_services/commons.service";
+import { NotificationService } from "../../../../../_services/notification.service";
 import { PersistenceService } from "../../../../../_services/persistence.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
@@ -24,7 +25,6 @@ export class DatosGeneralesComponent implements OnInit {
   @Input() origen: string = "";
   @Input() justiciable: any;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
-  @Output() notificacion = new EventEmitter<any>();
   @Output() showDialog = new EventEmitter<string>();
 
   progressSpinner: boolean = false;
@@ -40,7 +40,7 @@ export class DatosGeneralesComponent implements OnInit {
   comboProfesion;
   comboMinusvalia;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router, private confirmationService: ConfirmationService, private commonsService: CommonsService, private authenticationService: AuthenticationService, private persistenceService: PersistenceService) {}
+  constructor(private sigaServices: SigaServices, private notificationService: NotificationService, private translateService: TranslateService, private router: Router, private confirmationService: ConfirmationService, private commonsService: CommonsService, private authenticationService: AuthenticationService, private persistenceService: PersistenceService) {}
 
   ngOnInit() {
     this.getCombos();
@@ -78,7 +78,7 @@ export class DatosGeneralesComponent implements OnInit {
 
   rest() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
       if (this.body.fechanacimiento != undefined && this.body.fechanacimiento != null) {
@@ -92,16 +92,16 @@ export class DatosGeneralesComponent implements OnInit {
 
   save() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else if (!this.permisoSave) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
     } else {
       this.progressSpinner = true;
       let menorEdadSinRepresentante = true;
       if ((this.body.edad != undefined && JSON.parse(this.body.edad) < SigaConstants.EDAD_ADULTA && this.body.idrepresentantejg != undefined) || this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) >= SigaConstants.EDAD_ADULTA)) {
         menorEdadSinRepresentante = false;
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
         //Si es menor no se guarda la fecha nacimiento hasta que no se le asocie un representante
         this.body.fechanacimiento = undefined;
         this.body.edad = undefined;
@@ -115,7 +115,7 @@ export class DatosGeneralesComponent implements OnInit {
           if (this.body.autorizaavisotelematico == "1") {
             if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
               this.progressSpinner = false;
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+              this.notificationService.showInfo(this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
             } else {
               if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
                 this.progressSpinner = false;
@@ -154,7 +154,7 @@ export class DatosGeneralesComponent implements OnInit {
       (data) => {
         //Si se manda un mensaje igual a C significa que el nif del justiciable introducido esta repetido
         if (JSON.parse(data.body).error.message != "C") {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           if (!this.modoEdicion) {
             let idJusticiable = clonar ? this.body.idpersona : "";
             this.body.idpersona = JSON.parse(data.body).id;
@@ -173,12 +173,12 @@ export class DatosGeneralesComponent implements OnInit {
         this.progressSpinner = false;
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
           if (JSON.parse(err.error).error.code == "600") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           }
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
       },
     );
@@ -270,14 +270,14 @@ export class DatosGeneralesComponent implements OnInit {
     this.sigaServices.post("gestionejg_insertFamiliarEJG", request).subscribe(
       (data) => {
         this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       (err) => {
         this.progressSpinner = false;
         if (err != undefined && JSON.parse(err.error).error != null) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
       },
     );
@@ -289,14 +289,14 @@ export class DatosGeneralesComponent implements OnInit {
     this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
       (data) => {
         this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       (err) => {
         this.progressSpinner = false;
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
       },
     );
@@ -310,9 +310,9 @@ export class DatosGeneralesComponent implements OnInit {
           this.progressSpinner = false;
           let result = JSON.parse(data["body"]);
           if (result.error) {
-            this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            this.notificationService.showError(this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
         },
         (err) => {
@@ -338,13 +338,13 @@ export class DatosGeneralesComponent implements OnInit {
           this.progressSpinner = false;
           let result = JSON.parse(data["body"]);
           if (result.error) {
-            this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            this.notificationService.showError(this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
         },
         (err) => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           this.progressSpinner = false;
         },
       );
@@ -357,13 +357,13 @@ export class DatosGeneralesComponent implements OnInit {
     this.sigaServices.post("gestionejg_insertContrarioEJG", request).subscribe(
       (data) => {
         this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       (err) => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
       },
@@ -376,14 +376,14 @@ export class DatosGeneralesComponent implements OnInit {
     this.sigaServices.post("designaciones_insertContrario", request).subscribe(
       (data) => {
         this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       (err) => {
         this.progressSpinner = false;
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
       },
     );
@@ -400,9 +400,9 @@ export class DatosGeneralesComponent implements OnInit {
             this.progressSpinner = false;
             let result = JSON.parse(data["body"]);
             if (result.error) {
-              this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+              this.notificationService.showError(this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
             } else {
-              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               sessionStorage.setItem("tarjeta", "idAsistenciaContrarios");
               this.router.navigate(["/fichaAsistencia"]);
             }
@@ -420,9 +420,9 @@ export class DatosGeneralesComponent implements OnInit {
             this.progressSpinner = false;
             let result = JSON.parse(data["body"]);
             if (result.error) {
-              this.showMessage("error", this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+              this.notificationService.showError(this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
             } else {
-              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             }
           },
           (err) => {
@@ -453,14 +453,6 @@ export class DatosGeneralesComponent implements OnInit {
     if (this.body.nombre != undefined && this.body.nombre.trim() != "" && this.body.apellido1 != undefined && this.body.apellido1.trim() != "" && this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" && this.body.sexo != undefined && this.body.sexo != "") {
       this.permisoSave = true;
     }
-  }
-
-  private showMessage(severity, summary, msg) {
-    this.notificacion.emit({
-      severity: severity,
-      summary: summary,
-      detail: msg,
-    });
   }
 
   private calculateAge() {

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { Router } from "@angular/router";
 import { CommonsService } from "../../../../../_services/commons.service";
-import { PersistenceService } from "../../../../../_services/persistence.service";
+import { NotificationService } from "../../../../../_services/notification.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
 import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
@@ -19,7 +18,6 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   @Input() body: JusticiableItem;
   @Input() unidadFamiliar: UnidadFamiliarEJGItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
-  @Output() notificacion = new EventEmitter<any>();
 
   progressSpinner: boolean = false;
 
@@ -33,7 +31,7 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   comboTipoIng: any = [];
   comboRol: any[];
 
-  constructor(private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private commonsService: CommonsService, private translateService: TranslateService) {}
+  constructor(private sigaServices: SigaServices, private notificationService: NotificationService, private commonsService: CommonsService, private translateService: TranslateService) {}
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -64,7 +62,7 @@ export class DatosUnidadFamiliarComponent implements OnInit {
           this.progressSpinner = false;
 
           if (JSON.parse(n.body).error.code == 200) {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
             //Se realiza la asignacion de esta manera para evitar que la variable cambie los valores igual que la variable generalBody.
             this.initialUnidadFamiliar = JSON.parse(JSON.stringify(this.unidadFamiliar));
@@ -82,15 +80,15 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
             this.bodyChange.emit(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
         },
         (err) => {
           this.progressSpinner = false;
           if (JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
         },
       );
@@ -110,13 +108,13 @@ export class DatosUnidadFamiliarComponent implements OnInit {
     let valid = true;
     //En el caso que no se haya rellenado el campo de parentesco
     if (this.unidadFamiliar.idParentesco == null || this.unidadFamiliar.uf_enCalidad == null) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
       valid = false;
     } else if (this.unidadFamiliar.idParentesco == 3) {
       //Parentesco hija
       if (this.body.fechanacimiento == null) {
         //Si no tiene fecha determinada, no se continua con el guardado.
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.unidadFamiliar.errorHijo"));
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.unidadFamiliar.errorHijo"));
         valid = false;
       }
     }
@@ -150,14 +148,6 @@ export class DatosUnidadFamiliarComponent implements OnInit {
     }
 
     this.progressSpinner = false;
-  }
-
-  private showMessage(severity, summary, msg) {
-    this.notificacion.emit({
-      severity: severity,
-      summary: summary,
-      detail: msg,
-    });
   }
 
   private combos() {

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { CommonsService } from "../../../../_services/commons.service";
+import { NotificationService } from "../../../../_services/notification.service";
 import { PersistenceService } from "../../../../_services/persistence.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
@@ -27,7 +28,6 @@ export class GestionJusticiablesComponent implements OnInit {
   tarjetas = new Map();
   datosResumen = [];
   enlacesResumen = [];
-  msgs = [];
   origen: string = "";
   contrario: any;
   dialogOpcion: String = "";
@@ -42,7 +42,7 @@ export class GestionJusticiablesComponent implements OnInit {
   @ViewChild(DatosSolicitudComponent) datosSolicitud;
   @ViewChild(DatosRepresentanteComponent) datosRepresentante;
 
-  constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private persistenceService: PersistenceService) {}
+  constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private persistenceService: PersistenceService, private notificationService: NotificationService) {}
 
   async ngOnInit() {
     this.progressSpinner = true;
@@ -61,7 +61,7 @@ export class GestionJusticiablesComponent implements OnInit {
       let justiciable = this.persistenceService.getDatos();
       this.persistenceService.clearDatos();
       if (sessionStorage.getItem("asociado")) {
-        this.showMessage("success", this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
+        this.notificationService.showSuccess(this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
         sessionStorage.removeItem("asociado");
       }
       await this.searchRepresentanteById(justiciable.idpersona, justiciable.idinstitucion);
@@ -123,18 +123,10 @@ export class GestionJusticiablesComponent implements OnInit {
     }
   }
 
-  clear() {
-    this.msgs = [];
-  }
-
   openTarjeta(event: string) {
     let data = this.tarjetas.get(event);
     data.visibility = true;
     this.tarjetas.set(event, data);
-  }
-
-  notificacion(mensaje: any) {
-    this.showMessage(mensaje.severity, mensaje.summary, mensaje.detail);
   }
 
   abrirDialog(event: string) {
@@ -149,7 +141,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
   guardarDialog() {
     if (this.dialogOpcion == undefined || this.dialogOpcion == "") {
-      this.showMessage("info", "info", "Debes seleccionar una opción");
+      this.notificationService.showInfo("info", "Debes seleccionar una opción");
     } else {
       if (this.dialogOpcion == "s") {
         if (this.dialogTarjeta == "tarjetaGenerales") {
@@ -370,13 +362,5 @@ export class GestionJusticiablesComponent implements OnInit {
         }
       });
     }
-  }
-
-  private showMessage(severity, summary, detail) {
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: detail,
-    });
   }
 }

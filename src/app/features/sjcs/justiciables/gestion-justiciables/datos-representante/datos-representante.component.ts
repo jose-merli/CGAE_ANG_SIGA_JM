@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
 import { CommonsService } from "../../../../../_services/commons.service";
+import { NotificationService } from "../../../../../_services/notification.service";
 import { PersistenceService } from "../../../../../_services/persistence.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
@@ -22,7 +23,6 @@ export class DatosRepresentanteComponent implements OnInit {
   @Input() body: JusticiableItem;
   @Input() origen: string = "";
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
-  @Output() notificacion = new EventEmitter<any>();
   @Output() showDialog = new EventEmitter<string>();
 
   progressSpinner: boolean = false;
@@ -35,7 +35,7 @@ export class DatosRepresentanteComponent implements OnInit {
   dialogRepreOpcion: String = "";
   representante: JusticiableItem = new JusticiableItem();
 
-  constructor(private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private translateService: TranslateService, private commonsService: CommonsService) {}
+  constructor(private router: Router, private notificationService: NotificationService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private translateService: TranslateService, private commonsService: CommonsService) {}
 
   ngOnInit() {
     this.progressSpinner = false;
@@ -74,7 +74,7 @@ export class DatosRepresentanteComponent implements OnInit {
 
   searchRepresentanteByNif() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       if (this.representante.nif.trim() != undefined && this.representante.nif.trim() != "") {
         this.progressSpinner = true;
@@ -88,7 +88,7 @@ export class DatosRepresentanteComponent implements OnInit {
               this.createRepresentante();
             } else if (this.representante.nif == this.body.nif) {
               this.representante.idpersona = null;
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
             }
             this.disabledDisassociate();
             this.disabledAssociate();
@@ -104,7 +104,7 @@ export class DatosRepresentanteComponent implements OnInit {
 
   restRepresentante() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       if (this.body.idrepresentantejg != undefined) {
         this.searchRepresentanteById(this.body.idrepresentantejg.toString(), this.body.idinstitucion);
@@ -118,10 +118,10 @@ export class DatosRepresentanteComponent implements OnInit {
 
   disassociateRepresentante() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       if (this.disassociate) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
       } else {
         if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
           this.dialogAssociate = false;
@@ -130,7 +130,7 @@ export class DatosRepresentanteComponent implements OnInit {
           if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
             this.callServiceDisassociate();
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
           }
         }
       }
@@ -139,7 +139,7 @@ export class DatosRepresentanteComponent implements OnInit {
 
   searchRepresentante() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       sessionStorage.setItem("origin", "newRepresentante");
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
@@ -150,10 +150,10 @@ export class DatosRepresentanteComponent implements OnInit {
 
   associateRepresentante() {
     if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       if (this.associate) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
       } else {
         if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
           this.dialogAssociate = true;
@@ -162,7 +162,7 @@ export class DatosRepresentanteComponent implements OnInit {
           if (this.representante.idpersona != undefined && this.representante.idpersona != null && this.representante.idpersona.trim() != "") {
             if (this.representante.nif != undefined && this.representante.nif != "" && this.representante.nif != null && this.body != undefined && this.representante.nif == this.body.nif) {
               this.representante.idpersona = null;
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
               this.disabledDisassociate();
               this.disabledAssociate();
             } else {
@@ -181,7 +181,7 @@ export class DatosRepresentanteComponent implements OnInit {
       if (this.dialogAssociate) {
         if (this.representante.idpersona != undefined && this.representante.idpersona != null && this.representante.idpersona.trim() != "") {
           if (this.representante.nif != undefined && this.representante.nif != "" && this.representante.nif != null && this.body != undefined && this.representante.nif == this.body.nif) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
           } else {
             this.callServiceAssociate();
           }
@@ -190,7 +190,7 @@ export class DatosRepresentanteComponent implements OnInit {
         if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
           this.callServiceDisassociate();
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
         }
       }
     }
@@ -215,12 +215,12 @@ export class DatosRepresentanteComponent implements OnInit {
       this.sigaServices.post("designaciones_updateRepresentanteInteresado", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyChange.emit(this.body);
         },
         (err) => {
           this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         },
       );
     } else if (this.origen == "Contrario") {
@@ -229,12 +229,12 @@ export class DatosRepresentanteComponent implements OnInit {
       this.sigaServices.post("designaciones_updateRepresentanteContrario", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyChange.emit(this.body);
         },
         (err) => {
           this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         },
       );
     } else if (this.origen == "ContrarioEJG") {
@@ -243,24 +243,24 @@ export class DatosRepresentanteComponent implements OnInit {
       this.sigaServices.post("gestionejg_updateRepresentanteContrarioEJG", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyChange.emit(this.body);
         },
         (err) => {
           this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         },
       );
     } else {
       this.sigaServices.post("gestionJusticiables_associateRepresentante", this.body).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyChange.emit(this.body);
         },
         (err) => {
           this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         },
       );
     }
@@ -275,7 +275,7 @@ export class DatosRepresentanteComponent implements OnInit {
       this.sigaServices.post("designaciones_updateRepresentanteInteresado", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.body.idrepresentantejg = undefined;
           this.representante = new JusticiableItem();
           this.bodyChange.emit(this.body);
@@ -291,7 +291,7 @@ export class DatosRepresentanteComponent implements OnInit {
       this.sigaServices.post("designaciones_updateRepresentanteContrario", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.representante = new JusticiableItem();
           this.body.idrepresentantejg = undefined;
           this.bodyChange.emit(this.body);
@@ -307,7 +307,7 @@ export class DatosRepresentanteComponent implements OnInit {
       this.sigaServices.post("gestionejg_updateRepresentanteContrarioEJG", request).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.representante = new JusticiableItem();
           this.body.idrepresentantejg = undefined;
           this.bodyChange.emit(this.body);
@@ -321,14 +321,14 @@ export class DatosRepresentanteComponent implements OnInit {
       this.sigaServices.post("gestionJusticiables_disassociateRepresentante", this.body).subscribe(
         (n) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.representante = new JusticiableItem();
           this.body.idrepresentantejg = undefined;
           this.bodyChange.emit(this.body);
         },
         (err) => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.error.realiza.accion"));
         },
       );
     }
@@ -346,7 +346,7 @@ export class DatosRepresentanteComponent implements OnInit {
         this.router.navigate(["/gestionJusticiables"]);
       },
       reject: () => {
-        this.showMessage("info", "info", this.translateService.instant("general.message.accion.cancelada"));
+        this.notificationService.showInfo("info", this.translateService.instant("general.message.accion.cancelada"));
       },
     });
   }
@@ -396,14 +396,6 @@ export class DatosRepresentanteComponent implements OnInit {
   private getTiposIdentificacion() {
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe((n) => {
       this.tipoIdentificacion = n.combooItems;
-    });
-  }
-
-  private showMessage(severity, summary, msg) {
-    this.notificacion.emit({
-      severity: severity,
-      summary: summary,
-      detail: msg,
     });
   }
 }

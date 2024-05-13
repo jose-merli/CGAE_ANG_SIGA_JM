@@ -1,3 +1,5 @@
+<p-growl life="30000"></p-growl>
+
 <div class="siga-app-container">
     <app-header *ngIf="isLogged()"></app-header>
     <div class="wrapper-menu-sidebar">
@@ -17,18 +19,4 @@
     <button pButton type="button " label="{{'general.boton.submit' | translate}}" (click)='onHideCookies()'></button>
 </div>
 
-<p-confirmDialog styleClass="msgExpired" #cdExpired key="cdExpired" [closeOnEscape]="false" [closable]="false">
-</p-confirmDialog>
-
-<!--<div class="siga-app-container">
-    <app-header></app-header>
-    <div class="wrapper-menu-sidebar">
-        <div class="menu-sidebar ">
-            <app-menu></app-menu>
-        </div>
-        <div (scroll)="onWindowScroll($event,content)" #content class="content">
-            <router-outlet></router-outlet>
-            <div class="scroll-arrow" *ngIf="scroll" (click)="subirTop($event, content)"><i class="fa fa-arrow-up"></i></div>
-        </div>
-    </div>
-</div>-->
+<p-confirmDialog styleClass="msgExpired" #cdExpired key="cdExpired" [closeOnEscape]="false" [closable]="false"></p-confirmDialog>

@@ -2,6 +2,7 @@ import { Location } from "@angular/common";
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { CommonsService } from "../../../../../_services/commons.service";
+import { NotificationService } from "../../../../../_services/notification.service";
 import { PersistenceService } from "../../../../../_services/persistence.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { TranslateService } from "../../../../../commons/translate";
@@ -17,7 +18,6 @@ export class FiltroJusticiablesComponent implements OnInit {
   showDatosGenerales: boolean = true;
   showDatosDirecciones: boolean = false;
   showAsuntos: boolean = false;
-  msgs = [];
   checkOrigenAsuntos: boolean = false;
 
   filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
@@ -38,7 +38,7 @@ export class FiltroJusticiablesComponent implements OnInit {
   comboPoblacion = [];
   comboRoles = [];
 
-  constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) {}
+  constructor(private router: Router, private notificationService: NotificationService, private translateService: TranslateService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) {}
 
   ngOnInit() {
     this.getComboProvincias();
@@ -177,10 +177,8 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   checkPermisosNuevo() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
+    if (!this.permisoEscritura) {
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       this.nuevo();
     }
@@ -209,11 +207,10 @@ export class FiltroJusticiablesComponent implements OnInit {
       (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "") &&
       (this.filtros.idRol == null || this.filtros.idRol == "")
     ) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
     } else if (this.filtros != null && this.filtros.codigoPostal != null && this.filtros.codigoPostal.trim() != "" && this.filtros.codigoPostal.length != 5) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.cp"));
-      console.log("error cp");
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.cp"));
       return false;
     } else {
       // quita espacios vacios antes de buscar
@@ -263,19 +260,6 @@ export class FiltroJusticiablesComponent implements OnInit {
     this.filtros = new JusticiableBusquedaItem();
     this.comboPoblacion = [];
     this.isDisabledPoblacion = true;
-  }
-
-  clear() {
-    this.msgs = [];
-  }
-
-  private showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg,
-    });
   }
 
   //búsqueda con enter

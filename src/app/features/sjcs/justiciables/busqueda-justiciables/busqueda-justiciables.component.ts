@@ -1,7 +1,8 @@
 import { Location } from "@angular/common";
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { CommonsService } from "../../../../_services/commons.service";
+import { NotificationService } from "../../../../_services/notification.service";
 import { PersistenceService } from "../../../../_services/persistence.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
@@ -17,7 +18,6 @@ import { TablaJusticiablesComponent } from "./tabla-justiciables/tabla-justiciab
 })
 export class BusquedaJusticiablesComponent implements OnInit {
   datos;
-  msgs;
   breadcrumbs = [];
   origen: string = "";
   originjusticiable: string = "";
@@ -41,7 +41,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
   nuevoSoj: boolean = false;
   nuevoRepresentante: boolean = false;
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private activatedRoute: ActivatedRoute, private location: Location) {}
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private location: Location, private notificationService: NotificationService) {}
 
   ngOnInit() {
     this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
@@ -124,7 +124,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
           this.tabla.buscadores = this.tabla.buscadores.map((it) => (it = ""));
         }
         if (error != null && error.description != null) {
-          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+          this.notificationService.showInfo(this.translateService.instant("general.message.informacion"), error.description);
         }
       },
       (err) => {
@@ -140,19 +140,6 @@ export class BusquedaJusticiablesComponent implements OnInit {
     this.persistenceService.setDatos(this.justiciable);
     sessionStorage.setItem("origin", this.originjusticiable);
     this.router.navigate(["/gestionJusticiables"]);
-  }
-
-  private showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg,
-    });
-  }
-
-  clear() {
-    this.msgs = [];
   }
 
   backTo() {
