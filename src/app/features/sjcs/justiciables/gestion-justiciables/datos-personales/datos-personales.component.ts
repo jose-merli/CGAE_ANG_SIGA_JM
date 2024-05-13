@@ -158,7 +158,7 @@ export class DatosPersonalesComponent implements OnInit {
       if (!this.validateEmail()) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El correo electrónico no tiene un formato válido");
       } else if (!this.validateEmailTelematico()) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El aviso telematico esta autorizado, debe termer un correo electrónico");
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El aviso telemático está autorizado, debe tener un correo electrónico");
       } else if (!this.validateFax()) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El fax no tiene un formato válido");
       } else {
