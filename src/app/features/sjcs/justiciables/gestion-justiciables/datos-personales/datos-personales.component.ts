@@ -22,6 +22,7 @@ export class DatosPersonalesComponent implements OnInit {
   bodyInicialTelefonos;
   direccionPostal: String = "";
   resultadosPoblaciones: String = "";
+  originalData: any;
 
   progressSpinner: boolean = true;
   isDisabledPoblacion: boolean = true;
@@ -40,6 +41,7 @@ export class DatosPersonalesComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     this.getCombos();
+    this.loadData();
   }
 
   onChangeCodigoPostal() {
@@ -143,6 +145,13 @@ export class DatosPersonalesComponent implements OnInit {
 
   save() {
     this.deleteSpacing();
+    console.log('Attempting to save, current hasChange:', this.hasChange);
+    if (!this.hasChanges()) {
+      console.log('No changes to save');
+      return;
+    }
+    console.log('Saving changes for:', this.body);
+
     if (this.body.telefonos != null && this.body.telefonos.length > 1) {
       let telefonosFiltrados = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
       if (telefonosFiltrados.length === 0 && this.body.telefonos.length > 1) {
@@ -171,6 +180,10 @@ export class DatosPersonalesComponent implements OnInit {
         } else {
           this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
         }
+      }
+      if (this.body.direccionNoInformada) {
+        this.body.direccion = null; // Asegúrate de no guardar una dirección no deseada
+        console.log('Direccion cleared because No Informada is checked before saving');
       }
     }
   }
@@ -293,6 +306,7 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   validate() {
+    console.log('Validating form');
     this.validateForm = true;
     this.telefonoValido = true;
 
@@ -319,8 +333,36 @@ export class DatosPersonalesComponent implements OnInit {
         }
       }
     }
-
+    if (!this.validateForm) {
+      console.log('Validation failed');
+    } else {
+      console.log('Validation succeeded');
+    }
     return this.validateForm;
+  }
+
+  loadData() {
+    this.originalData = JSON.parse(JSON.stringify(this.body));
+  }
+
+  hasChanges() {
+    return JSON.stringify(this.originalData) !== JSON.stringify(this.body);
+  }
+
+  checkChanged() {
+    this.hasChange = this.hasChanges();  // Actualiza hasChange basándose en si realmente hay cambios
+    console.log("Cambios detectados:", this.hasChange);
+  }
+
+  onDireccionNoInformadaChange()
+  {
+    if (this.body.direccionNoInformada) {
+      this.body.direccion = null; // Asegura limpiar la dirección también
+      console.log('Direccion and DireccionPostal set to null due to No Informada being checked');
+    } else {
+      this.body.direccion = this.originalData.direccion;
+    }
+    this.checkChanged();
   }
 
   buscarPoblacion(e) {
