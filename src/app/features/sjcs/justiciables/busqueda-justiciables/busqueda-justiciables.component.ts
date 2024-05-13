@@ -85,7 +85,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
       this.originjusticiable = sessionStorage.getItem("originjusticiable");
       sessionStorage.removeItem("originjusticiable");
       this.filtros.filtros = this.persistenceService.getFiltrosAux();
-      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("menu.justiciaGratuita.justiciables.gestionjusticiables"), "Tarjeta Representante", this.translateService.instant("justiciaGratuita.justiciable.seleccion")];
+      this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("menu.justiciaGratuita.justiciables.gestionjusticiables"), this.translateService.instant("justiciaGratuita.justiciable.seleccion.representante")];
     } else {
       this.searchJusticiable = false;
       this.persistenceService.clearDatosEJG();
