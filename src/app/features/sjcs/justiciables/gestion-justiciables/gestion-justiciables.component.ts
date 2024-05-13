@@ -33,10 +33,18 @@ export class GestionJusticiablesComponent implements OnInit {
   dialogOpcion: String = "";
   dialogTarjeta: String = "";
 
+  direccionPostal: String = "";
+
   modoEdicion: boolean = false;
   progressSpinner: boolean = false;
   newRepresentante: boolean = false;
   showDialog: boolean = false;
+  isDisabledPoblacion: boolean = true;
+
+  comboTipoVia;
+  comboPais;
+  comboProvincia;
+  comboPoblacion;
 
   @ViewChild(DatosGeneralesComponent) datosGenerales;
   @ViewChild(DatosSolicitudComponent) datosSolicitud;
@@ -45,6 +53,7 @@ export class GestionJusticiablesComponent implements OnInit {
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private persistenceService: PersistenceService) {}
 
   async ngOnInit() {
+    this.getCombos();
     this.progressSpinner = true;
     this.getTarjetas();
     if (sessionStorage.getItem("origin")) {
@@ -186,31 +195,77 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   private updateTarjResumen() {
-    if (this.body != null && this.body != undefined) {
-      let movil: string = "";
-      if (this.body.telefonos != null && this.body.telefonos.length > 0) {
-        movil = this.body.telefonos[0].numeroTelefono;
-      }
+    if (this.body) {
+      const movil = this.body.telefonos && this.body.telefonos.length > 0 ? this.body.telefonos[0].numeroTelefono : "";
+      const nombre = `${this.body.apellido1}${this.body.apellido2 ? " " + this.body.apellido2 : ""}, ${this.body.nombre}`;
+  
+      let direccion = "No Informada"; // Por defecto si no se ha informado
+      if (!this.body.direccionNoInformada && this.body.direccion) {
+        const tipoVia = this.comboTipoVia?.find(v => v.value === this.body.idtipovia)?.label || 'Desconocido';
+        const poblacion = this.comboPoblacion?.find(p => p.value === this.body.idpoblacion)?.label || 'Desconocida';
+        console.log("Combo Poblacion (pre-búsqueda):", this.comboPoblacion);
+        const provincia = this.comboProvincia?.find(p => p.value === this.body.idprovincia)?.label || 'Desconocida';
+        console.log("Combo Provincia (pre-búsqueda):", this.comboProvincia);
 
-      let nombre = "";
-      if (this.body.nombre != undefined && this.body.apellido1 != undefined) {
-        nombre = this.body.apellido1 + (this.body.apellido2 != undefined ? " " + this.body.apellido2 : "") + ", " + this.body.nombre;
+        direccion = `${tipoVia} ${this.body.direccion}, ${this.body.codigopostal}, ${poblacion} - ${provincia}`;
       }
-
-      let direccion = "";
-      if (this.body.codigopostal != undefined && this.body.codigopostal != "") {
-        direccion = (this.body.direccion != null ? this.body.direccion + ", " : "") + this.body.codigopostal;
-      }
-
+  
       this.datosResumen = [
         { label: this.translateService.instant("censo.usuario.DNI"), value: this.body.nif },
         { label: this.translateService.instant("facturacionSJCS.retenciones.nombre"), value: nombre },
-        { label: this.translateService.instant("censo.datosDireccion.literal.correo"), value: this.body.correoelectronico },
+        { label: this.translateService.instant("censo.datosDireccion.literal.correo"), value: this.body.correoelectronico || 'No disponible' },
         { label: this.translateService.instant("censo.datosDireccion.literal.telefonoMovil"), value: movil },
-        { label: this.translateService.instant("censo.consultaDirecciones.literal.direccion"), value: direccion },
+        { label: this.translateService.instant("censo.consultaDirecciones.literal.direccion"), value: direccion }
       ];
     }
     this.progressSpinner = false;
+  }
+  
+  
+  async getCombos() {
+    await this.getComboTipoVia();
+    await this.getComboProvincia();  // Asegura que provincia esté cargada completamente antes de continuar
+    await this.getComboPoblacion("-1"); // Ahora seguramente las provincias están disponibles para las dependencias
+    this.updateTarjResumen(); // Llamar después de cargar todos los combos
+  }
+
+  getComboTipoVia() {
+    return new Promise((resolve, reject) => {
+      this.sigaServices.getParam("gestionJusticiables_comboTipoVias2", "?idTipoViaJusticiable=" + this.body.idtipovia).subscribe((n) => {
+        this.comboTipoVia = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTipoVia);
+        resolve(n);
+      }, error => reject(error));
+    });
+  }
+  
+  getComboProvincia() {
+    return new Promise((resolve, reject) => {
+      this.sigaServices.get("integrantes_provincias").subscribe((n) => {
+        this.comboProvincia = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboProvincia);
+        resolve(n);
+      }, error => reject(error));
+    });
+  }
+  
+  getComboPoblacion(filtro: string) {
+    if (!this.body.idprovincia) {
+      console.log("No se puede cargar poblaciones porque idprovincia es undefined o null.");
+      return Promise.resolve(); // Salir si no hay provincia seleccionada
+    }
+    return new Promise((resolve, reject) => {
+      this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + this.body.idprovincia + "&filtro=" + filtro).subscribe((n) => {
+        this.comboPoblacion = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboPoblacion);
+        this.rellenarDireccionPostal(); // Opción para procesar después de carga si es necesario
+        this.progressSpinner = false;
+        resolve(n);
+      }, error => {
+        console.log("Error al cargar poblaciones:", error);
+        reject(error);
+      });
+    });
   }
 
   private getPermiso(permiso: string) {
@@ -222,6 +277,29 @@ export class GestionJusticiablesComponent implements OnInit {
         return false;
       },
     );
+  }
+
+  rellenarDireccionPostal() {
+    if (this.body.direccion != undefined && this.body.direccion != null) {
+      this.comboTipoVia.forEach((element) => {
+        if (element.value == this.body.idtipovia) this.direccionPostal = element.label;
+      });
+      this.direccionPostal = this.direccionPostal + " " + this.body.direccion;
+
+      if (this.body.codigopostal) {
+        this.direccionPostal += ", " + this.body.codigopostal;
+      }
+
+      if (this.comboPoblacion != undefined) {
+        this.comboPoblacion.forEach((element) => {
+          if (element.value == this.body.idpoblacion) this.direccionPostal = this.direccionPostal + ", " + element.label;
+        });
+      }
+      this.comboProvincia.forEach((element) => {
+        if (element.value == this.body.idprovincia) this.direccionPostal = this.direccionPostal + ", " + element.label;
+      });
+      this.progressSpinner = false;
+    }
   }
 
   private checkAccesoTarjetas() {
