@@ -12,7 +12,6 @@ import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { CardService } from "../../../../_services/cardSearch.service";
 import { CommonsService } from "../../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../../_services/headerGestionEntidad.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { ImagePipe } from "../../../../commons/image-pipe/image.pipe";
 import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
@@ -45,7 +44,6 @@ import { PrecioModule } from "../../../../commons/precio/precio.module";
     //TiposAsistenciaComponent
   ],
   providers: [
-    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
     DatePipe,
     TrimPipePipe,
@@ -53,7 +51,6 @@ import { PrecioModule } from "../../../../commons/precio/precio.module";
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,

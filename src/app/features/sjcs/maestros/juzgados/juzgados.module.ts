@@ -13,7 +13,6 @@ import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { CardService } from "../../../../_services/cardSearch.service";
 import { CommonsService } from "../../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../../_services/headerGestionEntidad.service";
 import { PersistenceService } from "../../../../_services/persistence.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { FechaModule } from "../../../../commons/fecha/fecha.module";
@@ -33,7 +32,6 @@ import { TablaJuzgadosComponent } from "./tabla-juzgados/tabla-juzgados.componen
   imports: [CommonModule, DataTableModule, TableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, CheckboxModule, FechaModule, ConfirmDialogModule, PipeNumberModule],
   declarations: [BusquedaJuzgadosComponent, TablaJuzgadosComponent, FiltroJuzgadosComponent, GestionJuzgadosComponent, DatosGeneralesJuzgadoComponent, ProcedimientosJuzgadoComponent, DireccionJuzComponent],
   providers: [
-    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
     DatePipe,
     TrimPipePipe,
@@ -41,12 +39,11 @@ import { TablaJuzgadosComponent } from "./tabla-juzgados/tabla-juzgados.componen
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
     PersistenceService,
-
+    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,
@@ -57,7 +54,6 @@ import { TablaJuzgadosComponent } from "./tabla-juzgados/tabla-juzgados.componen
       useClass: JwtInterceptor,
       multi: true,
     },
-    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })

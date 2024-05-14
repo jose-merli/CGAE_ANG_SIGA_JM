@@ -12,7 +12,6 @@ import { JwtInterceptor } from "../../../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../../../_services/authentication.service";
 import { CardService } from "../../../../../_services/cardSearch.service";
 import { CommonsService } from "../../../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../../../_services/headerGestionEntidad.service";
 import { PersistenceService } from "../../../../../_services/persistence.service";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { ImagePipe } from "../../../../../commons/image-pipe/image.pipe";
@@ -26,7 +25,6 @@ import { GestionCostesfijosComponent } from "./gestion-costesfijos.component";
   imports: [CommonModule, TableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, MultiSelectModule, PrecioModule, ConfirmDialogModule, PipeNumberModule],
   declarations: [GestionCostesfijosComponent],
   providers: [
-    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
     DatePipe,
     TrimPipePipe,
@@ -34,12 +32,11 @@ import { GestionCostesfijosComponent } from "./gestion-costesfijos.component";
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
     PersistenceService,
-
+    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,
@@ -50,7 +47,6 @@ import { GestionCostesfijosComponent } from "./gestion-costesfijos.component";
       useClass: JwtInterceptor,
       multi: true,
     },
-    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })

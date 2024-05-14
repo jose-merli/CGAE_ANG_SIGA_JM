@@ -1,9 +1,6 @@
 import { APP_BASE_HREF, CommonModule, DatePipe, UpperCasePipe } from "@angular/common";
-import { LOCALE_ID, NgModule } from "@angular/core";
-// import { ZonaComponent } from './ficha-grupo-zona/zona/zona.component';
-// import { GrupoZonaComponent } from './ficha-grupo-zona/grupo-zona/grupo-zona.component';
-// import { FichaGrupoZonaComponent } from './ficha-grupo-zona/ficha-grupo-zona.component';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CookieService } from "ngx-cookie-service";
 import { MessageService } from "primeng/components/common/messageservice";
@@ -16,7 +13,6 @@ import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { CardService } from "../../../../_services/cardSearch.service";
 import { CommonsService } from "../../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../../_services/headerGestionEntidad.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { ImagePipe } from "../../../../commons/image-pipe/image.pipe";
 import { PrecioModule } from "../../../../commons/precio/precio.module";
@@ -69,7 +65,6 @@ import { TablaBusquedaAreasComponent } from "./tabla-busqueda-areas/tabla-busque
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,

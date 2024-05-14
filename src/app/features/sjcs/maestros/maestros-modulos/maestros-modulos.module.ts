@@ -4,7 +4,9 @@ import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CookieService } from "ngx-cookie-service";
 import { MessageService } from "primeng/components/common/messageservice";
+import { MultiSelectModule } from "primeng/multiselect";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DialogModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "primeng/primeng";
+import { RadioButtonModule } from "primeng/radiobutton";
 import { SpinnerModule } from "primeng/spinner";
 import { TableModule } from "primeng/table";
 import { environment } from "../../../../../environments/environment";
@@ -13,11 +15,11 @@ import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { CardService } from "../../../../_services/cardSearch.service";
 import { CommonsService } from "../../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../../_services/headerGestionEntidad.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { FechaModule } from "../../../../commons/fecha/fecha.module";
 import { ImagePipe } from "../../../../commons/image-pipe/image.pipe";
 import { PipeNumberModule } from "../../../../commons/number-pipe/number-pipe.module";
+import { PrecioModule } from "../../../../commons/precio/precio.module";
 import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
 import { TrimPipePipe } from "../../../../commons/trim-pipe/trim-pipe.pipe";
 import { MaestrosModulosComponent } from "./busqueda-modulosybasesdecompensacion.component";
@@ -27,40 +29,10 @@ import { TablaAcreditacionesComponent } from "./edicion-modulos/tabla-acreditaci
 import { FiltrosModulosComponent } from "./filtro-busqueda-modulos/filtros-modulos.component";
 import { TablaModulosComponent } from "./tabla-modulos/tabla-modulos.component";
 
-// import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
-import { MultiSelectModule } from "primeng/multiselect";
-import { RadioButtonModule } from "primeng/radiobutton";
-import { PrecioModule } from "../../../../commons/precio/precio.module";
-
-// import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
-
 @NgModule({
-  imports: [
-    CommonModule,
-    DataTableModule,
-    PaginatorModule,
-    InputTextModule,
-    ButtonModule,
-    DropdownModule,
-    CheckboxModule,
-    FormsModule,
-    GrowlModule,
-    PipeTranslationModule,
-    MenubarModule,
-    TableModule,
-    MultiSelectModule,
-    FechaModule,
-    SpinnerModule,
-    PrecioModule,
-    ConfirmDialogModule,
-    // FichaGrupoZonaModule
-    PipeNumberModule,
-    DialogModule,
-    RadioButtonModule,
-  ],
+  imports: [CommonModule, DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, TableModule, MultiSelectModule, FechaModule, SpinnerModule, PrecioModule, ConfirmDialogModule, PipeNumberModule, DialogModule, RadioButtonModule],
   declarations: [FiltrosModulosComponent, MaestrosModulosComponent, TablaModulosComponent, GestionModulosYBasesComponent, EdicionModulosComponent, TablaAcreditacionesComponent],
   providers: [
-    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
     DatePipe,
     TrimPipePipe,
@@ -68,11 +40,9 @@ import { PrecioModule } from "../../../../commons/precio/precio.module";
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
-
     AuthGuard,
     {
       provide: APP_BASE_HREF,

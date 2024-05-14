@@ -1,17 +1,13 @@
-import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { LogoService } from "../../_services/logo.service";
 import { SigaServices } from "../../_services/siga.service";
 import { TranslateService } from "../translate/translation.service";
-
-// prueba
-import { HeaderGestionEntidadService } from "../../_services/headerGestionEntidad.service";
-import { ImagePipe } from "../image-pipe/image.pipe";
 
 @Component({
   selector: "app-header",
   templateUrl: "./header.component.html",
-  styleUrls: ["./header.component.scss"]
+  styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent implements OnInit {
   menuUser: any = [];
@@ -21,15 +17,9 @@ export class HeaderComponent implements OnInit {
   httpExit: string;
   comboIdiomas: any[];
   idiomaSelected: any;
-  constructor(
-    private router: Router,
-    private sigaServices: SigaServices,
-    private headerGestionEntidadService: HeaderGestionEntidadService,
-    private imagePipe: ImagePipe,
-    private translateService: TranslateService,
-    private location: Location
-  ) {
-    this.headerGestionEntidadService.url$.subscribe(data => {
+
+  constructor(private router: Router, private sigaServices: SigaServices, private logoService: LogoService, private translateService: TranslateService) {
+    this.logoService.url$.subscribe((data) => {
       this.imagenURL = data;
     });
   }
@@ -37,23 +27,22 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.menuHide = true;
 
-    this.sigaServices.get("usuario_logeado").subscribe(n => {
+    this.sigaServices.get("usuario_logeado").subscribe((n) => {
       this.menuUser = n.usuarioLogeadoItem;
     });
 
     this.sigaServices.get("etiquetas_lenguajeFiltrado").subscribe(
-      n => {
+      (n) => {
         this.comboIdiomas = n.combooItems;
       },
-      err => {
+      (err) => {
         //console.log(err);
-      }
+      },
     );
 
-    this.sigaServices.get("recuperarApiKey").subscribe(n => {
+    this.sigaServices.get("recuperarApiKey").subscribe((n) => {
       sessionStorage.setItem("tinyApiKey", n.data);
     });
-
 
     /*this.menuUser = [
       {
@@ -73,18 +62,17 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-
     //this.sigaServices.get("ruta_logout").subscribe(n => {
     sessionStorage.removeItem("authenticated");
 
-    if (sessionStorage.getItem('loginDevelop') === 'true') {
-      sessionStorage.setItem('loginDevelop', '0');
+    if (sessionStorage.getItem("loginDevelop") === "true") {
+      sessionStorage.setItem("loginDevelop", "0");
     }
-    
-    let tipoLogin = sessionStorage.getItem('tipoLogin');
 
-    if(tipoLogin==="loginDevelop" || tipoLogin==="login"){
-      this.sigaServices.get("eliminaCookie").subscribe(response => {
+    let tipoLogin = sessionStorage.getItem("tipoLogin");
+
+    if (tipoLogin === "loginDevelop" || tipoLogin === "login") {
+      this.sigaServices.get("eliminaCookie").subscribe((response) => {
         let responseStatus = response[0].status;
         if (responseStatus == 200) {
           //console.log("Cookies eliminadas para cerrar la sesión");
@@ -92,11 +80,11 @@ export class HeaderComponent implements OnInit {
       });
       this.httpExit = this.menuUser[0].rutaLogoutCAS;
       window.location.href = this.httpExit;
-    }else{
+    } else {
       //this.httpExit = this.menuUser[0].rutaLogout;
       this.router.navigate(["/logout"]);
     }
-      //window.location.href = this.httpExit;
+    //window.location.href = this.httpExit;
   }
 
   navigateTo() {
@@ -105,7 +93,6 @@ export class HeaderComponent implements OnInit {
   }
 
   mostrarPopUpIdioma() {
-
     this.showIdioma = true;
   }
   cancelar() {
@@ -116,25 +103,24 @@ export class HeaderComponent implements OnInit {
     if (event != null) {
       this.idiomaSelected = event.value.value;
     }
-
   }
   cambiarIdioma() {
+    this.sigaServices.post("usuario_cambioIdioma", this.idiomaSelected).subscribe(
+      (result) => {
+        this.showIdioma = false;
 
-    this.sigaServices.post("usuario_cambioIdioma", this.idiomaSelected).subscribe(result => {
-      this.showIdioma = false;
+        this.sigaServices.get("usuario_logeado").subscribe((n) => {
+          this.menuUser = n.usuarioLogeadoItem;
+        });
 
-      this.sigaServices.get("usuario_logeado").subscribe(n => {
-        this.menuUser = n.usuarioLogeadoItem;
-      });
-
-      this.translateService.use(this.idiomaSelected);
-
-    }, error => {
-      //console.log(error);
-    });
+        this.translateService.use(this.idiomaSelected);
+      },
+      (error) => {
+        //console.log(error);
+      },
+    );
     this.showIdioma = false;
     this.translateService.use(this.idiomaSelected);
-
   }
   disableGuardar(): boolean {
     if (this.idiomaSelected != null && this.idiomaSelected != "") {
@@ -143,5 +129,4 @@ export class HeaderComponent implements OnInit {
       return true;
     }
   }
-
 }

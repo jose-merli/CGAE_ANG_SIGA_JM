@@ -1,7 +1,7 @@
 import { APP_BASE_HREF, CommonModule, DatePipe } from "@angular/common";
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { LOCALE_ID, NgModule } from "@angular/core";
-import { HTTP_INTERCEPTORS } from "../../../../../../node_modules/@angular/common/http";
-import { FormsModule } from "../../../../../../node_modules/@angular/forms";
+import { FormsModule } from "@angular/forms";
 import { CookieService } from "../../../../../../node_modules/ngx-cookie-service";
 import { MessageService } from "../../../../../../node_modules/primeng/components/common/messageservice";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "../../../../../../node_modules/primeng/primeng";
@@ -12,7 +12,6 @@ import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { CardService } from "../../../../_services/cardSearch.service";
 import { CommonsService } from "../../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../../_services/headerGestionEntidad.service";
 import { PersistenceService } from "../../../../_services/persistence.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { FechaModule } from "../../../../commons/fecha/fecha.module";
@@ -31,12 +30,10 @@ import { TablaCalendarioAgendaLaboralComponent } from "./busqueda-calendario-age
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
     PersistenceService,
-
     AuthGuard,
     {
       provide: APP_BASE_HREF,

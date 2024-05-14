@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import * as jwt_decode from "jwt-decode";
 import { Observable } from "rxjs";
 import { forkJoin } from "rxjs/observable/forkJoin";
-import { Router } from "@angular/router";
-import { SigaServices } from "./siga.service";
 import { OldSigaServices } from "./oldSiga.service";
-import * as jwt_decode from "jwt-decode";
+import { SigaServices } from "./siga.service";
 
 @Injectable()
 export class AuthenticationService {
-  
   constructor(private router: Router, private sigaServices: SigaServices, private oldSigaServices: OldSigaServices) {}
 
   logout() {
@@ -44,7 +43,7 @@ export class AuthenticationService {
   newSigaLoginMultiple(formValues): Observable<any> {
     const reqParams = new Map();
     for (let key in formValues) {
-		  reqParams.set(key, formValues[key]);
+      reqParams.set(key, formValues[key]);
     }
     return this.sigaServices.getBackend("login", reqParams, true);
   }
@@ -52,7 +51,7 @@ export class AuthenticationService {
   newSigaDevelopLogin(formValues): Observable<any> {
     const reqParams = new Map();
     for (let key in formValues) {
-		  reqParams.set(key, formValues[key]);
+      reqParams.set(key, formValues[key]);
     }
     return this.sigaServices.getBackend("loginDevelop", reqParams, true);
   }
@@ -64,7 +63,7 @@ export class AuthenticationService {
   autenticate(): Observable<any> {
     sessionStorage.removeItem("authenticated");
     let newSigaRquest = this.newSigaLogin();
-    return forkJoin([newSigaRquest]).map(response => {
+    return forkJoin([newSigaRquest]).map((response) => {
       let newSigaResponse = response[0].headers.get("Authorization");
       let newSigaResponseStatus = response[0].status;
       if (newSigaResponseStatus == 200) {
@@ -79,7 +78,7 @@ export class AuthenticationService {
   autenticateMultiple(formValues): Observable<any> {
     sessionStorage.removeItem("authenticated");
     let newSigaRquest = this.newSigaLoginMultiple(formValues);
-    return forkJoin([newSigaRquest]).map(response => {
+    return forkJoin([newSigaRquest]).map((response) => {
       let newSigaResponse = response[0].headers.get("Authorization");
       let newSigaResponseStatus = response[0].status;
       if (newSigaResponseStatus == 200) {
@@ -93,17 +92,15 @@ export class AuthenticationService {
 
   autenticateDevelop(formValues): Observable<any> {
     let newSigaRquest = this.newSigaDevelopLogin(formValues);
-     return forkJoin([newSigaRquest]).map(
-       (response) => {
-             let newSigaResponse = response[0].headers.get("Authorization");
-             let newSigaResponseStatus = response[0].status;
-             if (newSigaResponseStatus == 200) {
-                 sessionStorage.setItem('osAutenticated', 'true');
-                 sessionStorage.setItem('authenticated', 'true');
-                 sessionStorage.setItem('Authorization', newSigaResponse);
-                 return true;
-             }
-         }
-     );
+    return forkJoin([newSigaRquest]).map((response) => {
+      let newSigaResponse = response[0].headers.get("Authorization");
+      let newSigaResponseStatus = response[0].status;
+      if (newSigaResponseStatus == 200) {
+        sessionStorage.setItem("osAutenticated", "true");
+        sessionStorage.setItem("authenticated", "true");
+        sessionStorage.setItem("Authorization", newSigaResponse);
+        return true;
+      }
+    });
   }
 }

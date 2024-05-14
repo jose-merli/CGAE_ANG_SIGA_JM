@@ -1,31 +1,21 @@
+import { HttpBackend, HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
-import {
-  HttpBackend,
-  HttpClient
-} from "../../../node_modules/@angular/common/http";
 
+import { TranslateService } from "../commons/translate/translation.service";
+import { ComboItem } from "../models/ComboItem";
 import { ControlAccesoDto } from "../models/ControlAccesoDto";
 import { SigaServices } from "./siga.service";
-import { TranslateService } from '../commons/translate/translation.service';
-import { ComboItem } from "../models/ComboItem";
 
 export enum KEY_CODE {
-  ENTER = 13
+  ENTER = 13,
 }
 
 @Injectable()
 export class CommonsService {
   DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
-  constructor(
-    private http: HttpClient,
-    private sigaServices: SigaServices,
-    handler: HttpBackend,
-    private httpbackend: HttpClient,
-    private translateService: TranslateService
-  ) {
+  constructor(private http: HttpClient, private sigaServices: SigaServices, handler: HttpBackend, private httpbackend: HttpClient, private translateService: TranslateService) {
     this.httpbackend = new HttpClient(handler);
   }
 
@@ -113,25 +103,16 @@ export class CommonsService {
   }
 
   validateCodigoPostal(value): boolean {
-    return (
-      value &&
-      typeof value === "string" &&
-      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(value)
-    );
+    return value && typeof value === "string" && /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(value);
   }
 
-
-
   arregloTildesCombo(combo) {
-   
-    combo.map(e => {
-      let accents =
-        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-      let accentsOut =
-        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    combo.map((e) => {
+      let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
       let i;
       let x;
-      if(e != null && e.label !=null){
+      if (e != null && e.label != null) {
         for (i = 0; i < e.label.length; i++) {
           if ((x = accents.indexOf(e.label[i])) != -1) {
             e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
@@ -141,21 +122,14 @@ export class CommonsService {
       }
     });
   }
-          
-          
-         
-        
 
   arregloTildesContrariaCombo(combo) {
-    
-    combo.map(e => {
-      let accents =
-        "ÁÉÍÓÚáéíóú";
-      let accentsOut =
-        "ÀÈÌÒÙàèìòù";
+    combo.map((e) => {
+      let accents = "ÁÉÍÓÚáéíóú";
+      let accentsOut = "ÀÈÌÒÙàèìòù";
       let i;
       let x;
-      if(e != null && e.label !=null){
+      if (e != null && e.label != null) {
         for (i = 0; i < e.label.length; i++) {
           if ((x = accents.indexOf(e.label[i])) != -1) {
             e.labelTildeContraria = e.label.replace(e.label[i], accentsOut[x]);
@@ -165,19 +139,16 @@ export class CommonsService {
       }
     });
   }
-          
-          
-         
 
   getLetrado = () => {
-		let isLetrado: ComboItem;
+    let isLetrado: ComboItem;
     let respuesta = undefined;
 
     respuesta = new Promise((resolve, reject) => {
-      this.sigaServices.get('getLetrado').subscribe(
+      this.sigaServices.get("getLetrado").subscribe(
         (data) => {
           isLetrado = data;
-          if (isLetrado.value == 'S') {
+          if (isLetrado.value == "S") {
             resolve(true);
           } else {
             resolve(false);
@@ -186,11 +157,11 @@ export class CommonsService {
         (err) => {
           //console.log(err);
           reject(undefined);
-        }
-        );
+        },
+      );
     });
     return respuesta;
-	}
+  };
 
   checkAcceso = (idProceso) => {
     let activacionEditar = undefined;
@@ -199,14 +170,13 @@ export class CommonsService {
     let derechoAcceso;
 
     activacionEditar = new Promise((resolve, reject) => {
-
       this.sigaServices.post("acces_control", controlAcceso).subscribe(
-        data => {
+        (data) => {
           let permisosTree = JSON.parse(data.body);
           let permisosArray = permisosTree.permisoItems;
           derechoAcceso = permisosArray[0].derechoacceso;
         },
-        err => {
+        (err) => {
           //console.log(err);
           reject(undefined);
         },
@@ -220,27 +190,23 @@ export class CommonsService {
           } else {
             resolve(undefined);
           }
-
-        }
+        },
       );
     });
 
     return activacionEditar;
-
-  }
+  };
 
   openOutlook(correo) {
-
     let EMAIL_REGEX = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/;
     if (correo != undefined && correo != "" && EMAIL_REGEX.test(correo)) {
       let href = "mailto:" + correo;
       window.open(href, "_blank");
     }
-
   }
-  
+
   scrollTop() {
-    let top = document.getElementById('mainContainer');
+    let top = document.getElementById("mainContainer");
     if (top !== null) {
       top.scrollIntoView();
       top = null;
@@ -248,35 +214,19 @@ export class CommonsService {
   }
 
   isValidPassport(dni: String): boolean {
-    return (
-      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
-    );
+    return dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni);
   }
 
   isValidNIE(nie: String): boolean {
-    return (
-      nie &&
-      typeof nie === "string" &&
-      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
-    );
+    return nie && typeof nie === "string" && /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie);
   }
 
   isValidCIF(cif: String): boolean {
-    return (
-      cif &&
-      typeof cif === "string" &&
-      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
-    );
+    return cif && typeof cif === "string" && /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif);
   }
 
   isValidDNI(dni: String): boolean {
-    return (
-      dni &&
-      typeof dni === "string" &&
-      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
-      dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
-    );
+    return dni && typeof dni === "string" && /^[0-9]{8}([A-Za-z]{1})$/.test(dni) && dni.substr(8, 9).toUpperCase() === this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23);
   }
 
   showMessage(severity, summary, msg) {
@@ -284,14 +234,13 @@ export class CommonsService {
     msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
 
     return msgs;
   }
 
   compruebaDNI(idtipoidentificacion, nif) {
-
     if (this.isValidDNI(nif)) {
       idtipoidentificacion = "10";
       return idtipoidentificacion;
@@ -308,20 +257,17 @@ export class CommonsService {
       idtipoidentificacion = "30";
       return idtipoidentificacion;
     }
-
   }
 
   checkPermisos(permiso: boolean, historico: boolean) {
     if (!permiso) {
       return this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
-
       if (historico != undefined && historico) {
         return this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
       } else {
         return undefined;
       }
-
     }
   }
 
@@ -330,35 +276,30 @@ export class CommonsService {
   }
 
   arreglarFecha(fecha) {
-		let jsonDate = JSON.stringify(fecha);
-		let rawDate = jsonDate.slice(1, -1);
-		if (rawDate.length < 14) {
-		  let splitDate = rawDate.split("/");
-		  let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-		  fecha = new Date((arrayDate += "T00:00:00.001Z"));
-		} else {
-		  fecha = new Date(rawDate);
-		}
-	
-		return fecha;
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(rawDate);
+    }
+
+    return fecha;
   }
 
   getLabelbyFilter(string): string {
     /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 	para poder filtrar el dato con o sin estos caracteres*/
     let labelSinTilde = string;
-    let accents =
-      'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
-    let accentsOut =
-      'aaaaaaaaaaaaaooooooooooooooeeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz';
+    let accents = "ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ";
+    let accentsOut = "aaaaaaaaaaaaaooooooooooooooeeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz";
     let i;
     let x;
     for (i = 0; i < labelSinTilde.length; i++) {
       if ((x = accents.indexOf(labelSinTilde.charAt(i))) != -1) {
-        labelSinTilde = labelSinTilde.replace(
-          labelSinTilde.charAt(i),
-          accentsOut[x]
-        );
+        labelSinTilde = labelSinTilde.replace(labelSinTilde.charAt(i), accentsOut[x]);
       }
     }
 
@@ -373,9 +314,7 @@ export class CommonsService {
     return array;
   }
 
-
-
-  scrollTablaFoco(idFoco)  {
+  scrollTablaFoco(idFoco) {
     let top = document.getElementById(idFoco);
     if (top !== null) {
       top.scrollIntoView();
@@ -384,9 +323,8 @@ export class CommonsService {
   }
 
   styleObligatorio(evento) {
-    if (evento == null || evento == undefined || evento == '') {
-      return 'camposObligatorios';
+    if (evento == null || evento == undefined || evento == "") {
+      return "camposObligatorios";
     }
   }
-
 }

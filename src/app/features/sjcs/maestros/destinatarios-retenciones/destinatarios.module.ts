@@ -4,6 +4,7 @@ import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CookieService } from "ngx-cookie-service";
 import { MessageService } from "primeng/components/common/messageservice";
+import { MultiSelectModule } from "primeng/multiselect";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "primeng/primeng";
 import { TableModule } from "primeng/table";
 import { environment } from "../../../../../environments/environment";
@@ -12,41 +13,19 @@ import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { CardService } from "../../../../_services/cardSearch.service";
 import { CommonsService } from "../../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../../_services/headerGestionEntidad.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { ImagePipe } from "../../../../commons/image-pipe/image.pipe";
 import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
 import { TrimPipePipe } from "../../../../commons/trim-pipe/trim-pipe.pipe";
 
-import { MultiSelectModule } from "primeng/multiselect";
-//import { DestinatariosRetencionesComponent } from './destinatarios-retenciones.component';
-
 @NgModule({
-  imports: [
-    CommonModule,
-    DataTableModule,
-    PaginatorModule,
-    InputTextModule,
-    ButtonModule,
-    DropdownModule,
-    CheckboxModule,
-    FormsModule,
-    GrowlModule,
-    PipeTranslationModule,
-    MenubarModule,
-    TableModule,
-    MultiSelectModule,
-    ConfirmDialogModule,
-
-    // FichaGrupoZonaModuleP
-  ],
+  imports: [CommonModule, DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, TableModule, MultiSelectModule, ConfirmDialogModule],
   declarations: [
     //DestinatariosRetencionesComponent,
     //TablaDestinatariosComponent,
     //FiltrosRetenciones
   ],
   providers: [
-    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
     DatePipe,
     TrimPipePipe,
@@ -54,11 +33,10 @@ import { MultiSelectModule } from "primeng/multiselect";
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
-
+    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,
@@ -69,7 +47,6 @@ import { MultiSelectModule } from "primeng/multiselect";
       useClass: JwtInterceptor,
       multi: true,
     },
-    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })

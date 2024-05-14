@@ -250,8 +250,6 @@ import { MantenimientoJuzgadosComponent } from "./features/sjcs/maestros/manteni
 import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
 import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
 import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
-//import { RetencionesIRPFComponent } from './features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component';
-//import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 
 import { SolicitudesTurnosGuardiasComponent } from "./features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component";
 
@@ -265,7 +263,6 @@ import { JwtInterceptor } from "./_interceptor/jwt.interceptor";
 import { AuthenticationService } from "./_services/authentication.service";
 import { CommonsService } from "./_services/commons.service";
 import { DeadmanService } from "./_services/deadman.service";
-import { HeaderGestionEntidadService } from "./_services/headerGestionEntidad.service";
 import { PersistenceService } from "./_services/persistence.service";
 
 import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from "./features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-contrarios-designa/detalle-tarjeta-contrarios-ficha-designacion-oficio.component";
@@ -273,9 +270,6 @@ import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from ".
 import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from "./features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component";
 import { DetalleTarjetaLetradosDesignaComponent } from "./features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component";
 
-import { GuardiasIncompatibilidadesComponent } from "./features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component";
-import { GuardiasSolicitudesTurnosComponent } from "./features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component";
-//import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
 import { AlterMutuaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component";
 import { AlterMutuaOfertasComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaOfertas/alter-mutua-ofertas.component";
 import { AlterMutuaRetaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alterMutuaReta/alter-mutua-reta.component";
@@ -283,7 +277,9 @@ import { MutualidadAbogaciaSeguroAccidentes } from "./features/censo/solicitudes
 import { DefinirListasGuardiasComponent } from "./features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component";
 import { GuardiasAsistenciasComponent } from "./features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component";
 import { GuardiasBajasTemporalesComponent } from "./features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component";
+import { GuardiasIncompatibilidadesComponent } from "./features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component";
 import { GuardiasSaltosCompensacionesComponent } from "./features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component";
+import { GuardiasSolicitudesTurnosComponent } from "./features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component";
 import { VolanteExpresComponent } from "./features/sjcs/guardia/volante-expres/volante-expres.component";
 import { CartaFacturaColegiadoComponent } from "./features/sjcs/informes/carta-factura-colegiado/carta-factura-colegiado.component";
 import { CartaPagosColegiadosComponent } from "./features/sjcs/informes/carta-pagos-colegiados/carta-pagos-colegiados.component";
@@ -332,11 +328,6 @@ import { RegtelComponent } from "./features/censo/regtel/regtel.component";
 import { TurnoOficioComponent } from "./features/censo/turnoOficioCenso/turnoOficio.component";
 
 //INFORMES Y COMUNICACIONES
-import { PipeNumberModule } from "./commons/number-pipe/number-pipe.module";
-import { FichaConsultaComponent } from "./features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component";
-
-//import { TranslateService } from './commons/translate/translation.service';
-//import { TurnosComponent } from './features/sjcs/oficio/turnos/busqueda-turnos.component';
 import { BuscadorProcuradoresComponent } from "./commons/buscador-procuradores/buscador-procuradores.component";
 import { FiltroBuscadorProcuradorComponent } from "./commons/buscador-procuradores/filtro/filtro.component";
 import { TablaBuscadorProcuradorComponent } from "./commons/buscador-procuradores/tabla/tabla.component";
@@ -344,7 +335,9 @@ import { BusquedaAsuntosModule } from "./commons/busqueda-asuntos/busqueda-asunt
 import { GeneralSJCSModule } from "./commons/busqueda-generalSJCS/busqueda-generalSJCS.module";
 import { DialogoModule } from "./commons/dialog/dialogo.module";
 import { FechaModule } from "./commons/fecha/fecha.module";
+import { PipeNumberModule } from "./commons/number-pipe/number-pipe.module";
 import { PrecioModule } from "./commons/precio/precio.module";
+import { FichaConsultaComponent } from "./features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component";
 
 import { OficioModule } from "./features/sjcs/oficio/oficio.module";
 
@@ -379,7 +372,12 @@ import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 
 import { BuscadorColegiadosExpressComponent } from "./commons/buscador-colegiados-express/buscador-colegiados-express.component";
+import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
+import { FiltroBuscadorColegiadosComponent } from "./commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component";
+import { TablaBuscadorColegiadosComponent } from "./commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component";
+import { MigasDePanComponent } from "./commons/migas-de-pan/migas-de-pan.component";
 import { SiNoPipe } from "./commons/sino-pipe/si-no.pipe";
+import { TablaResultadoComponent } from "./commons/tabla-resultado/tabla-resultado.component";
 import { FacturacionesYPagosComponent } from "./features/sjcs/facturacionSJCS/facturaciones-pagos/facturaciones-pagos.component";
 import { FiltroBusquedaFacturacionComponent } from "./features/sjcs/facturacionSJCS/facturaciones-pagos/filtro-busqueda-facturacion/filtro-busqueda-facturacion.component";
 import { BaremosComponent } from "./features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-facturacion/baremos/baremos.component";
@@ -395,22 +393,13 @@ import { ConfiguracionFicherosComponent } from "./features/sjcs/facturacionSJCS/
 import { DatosPagosComponent } from "./features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/datos-pagos/datos-pagos.component";
 import { GestionPagosComponent } from "./features/sjcs/facturacionSJCS/facturaciones-pagos/gestion-pagos/gestion-pagos.component";
 import { TablaBusquedaFacturacionComponent } from "./features/sjcs/facturacionSJCS/facturaciones-pagos/tabla-busqueda-facturacion/tabla-busqueda-facturacion.component";
-//import { PaginadorComponent } from './commons/paginador/paginador.component';
-//import { SelectorComponent } from './commons/selector/selector.component';
-import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
-import { FiltroBuscadorColegiadosComponent } from "./commons/buscador-colegiados/filtro-buscador-colegiados/filtro-buscador-colegiados.component";
-import { TablaBuscadorColegiadosComponent } from "./commons/buscador-colegiados/tabla-buscador-colegiados/tabla-buscador-colegiados.component";
-import { MigasDePanComponent } from "./commons/migas-de-pan/migas-de-pan.component";
-import { TablaResultadoComponent } from "./commons/tabla-resultado/tabla-resultado.component";
 import { FormularioBusquedaComponent } from "./features/sjcs/oficio/cargas-masivas-oficio/formulario-busqueda/formulario-busqueda.component";
 import { FormularioSubidaComponent } from "./features/sjcs/oficio/cargas-masivas-oficio/formulario-subida/formulario-subida.component";
 import { ListaArchivosComponent } from "./features/sjcs/oficio/cargas-masivas-oficio/lista-archivos/lista-archivos.component";
 
-import { DatePickerRangeComponent } from "./commons/date-picker-range/date-picker-range.component";
-import { HoraComponent } from "./commons/hora/hora.component";
-import { InputDivididoComponent } from "./commons/input-dividido/input-dividido.component";
-//import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { DatePickerRangeComponent } from "./commons/date-picker-range/date-picker-range.component";
+import { InputDivididoComponent } from "./commons/input-dividido/input-dividido.component";
 import { Paginador3Module } from "./commons/paginador3/paginador3.module";
 
 //OFICIO
@@ -787,6 +776,7 @@ import { SolicitudesTurnosGuardiasClassiqueComponent } from "./features/sjcsClas
 import { TurnosClassiqueComponent } from "./features/sjcsClassique/oficioClassique/turnos/turnos.component";
 
 //Directive
+import { LogoService } from "./_services/logo.service";
 import { CheckPermissionDirective } from "./commons/directives/check-permission.directive";
 import { DigitDecimaNumberDirective } from "./commons/directives/digit-decima-number.directive";
 
@@ -1163,7 +1153,6 @@ enableRipple(true);
     GuardiasSolicitudesTurnosComponent,
     HeaderComponent,
     HomeComponent,
-    HoraComponent,
     ImagePipe,
     ImpugnacionComponent,
     InfoFacturaFactProgramadasComponent,
@@ -1493,7 +1482,7 @@ enableRipple(true);
     CookieService,
     DatePipe,
     CurrencyPipe,
-    HeaderGestionEntidadService,
+    LogoService,
     ImagePipe,
     MessageService,
     MovimientosVariosService,

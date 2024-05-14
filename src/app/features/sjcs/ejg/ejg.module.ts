@@ -13,7 +13,6 @@ import { JwtInterceptor } from "../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { CardService } from "../../../_services/cardSearch.service";
 import { CommonsService } from "../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../_services/headerGestionEntidad.service";
 import { SigaServices } from "../../../_services/siga.service";
 import { BusquedaColegiadoExpressModule } from "../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module";
 import { FechaModule } from "../../../commons/fecha/fecha.module";
@@ -34,7 +33,6 @@ import { EjgService } from "./gestion-ejg/services/ejg.service";
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,

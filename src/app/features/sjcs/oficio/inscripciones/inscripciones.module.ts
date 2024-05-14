@@ -12,7 +12,6 @@ import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { CardService } from "../../../../_services/cardSearch.service";
 import { CommonsService } from "../../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../../_services/headerGestionEntidad.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { ImagePipe } from "../../../../commons/image-pipe/image.pipe";
 import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
@@ -34,11 +33,11 @@ import { TarjetaInscripcion } from "./ficha-inscripciones/tarjeta-inscripciones/
 import { TarjetaLetradoComponent } from "./ficha-inscripciones/tarjeta-letrado/tarjeta-letrado.component";
 import { FiltrosInscripciones } from "./filtros-inscripciones/filtros-inscripciones.component";
 import { TablaInscripcionesComponent } from "./gestion-inscripciones/gestion-inscripciones.component";
+
 @NgModule({
   imports: [CommonModule, routingOficio, DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, TableModule, MultiSelectModule, PrecioModule, PickListModule, TooltipModule, TarjetaResumenFijaModule, ConfirmDialogModule, FechaModule, BusquedaColegiadoExpressModule, TreeTableModule, RadioButtonModule],
   declarations: [InscripcionesComponent, TablaInscripcionesComponent, FiltrosInscripciones, FichaInscripcionesComponent, TarjetaLetradoComponent, TarjetaInscripcion, TarjetaColaFijaComponent, TarjetaGestionInscripcion],
   providers: [
-    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
     DatePipe,
     TrimPipePipe,
@@ -46,7 +45,6 @@ import { TablaInscripcionesComponent } from "./gestion-inscripciones/gestion-ins
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,

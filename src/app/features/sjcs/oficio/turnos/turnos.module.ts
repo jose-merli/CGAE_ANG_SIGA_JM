@@ -4,6 +4,8 @@ import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CookieService } from "ngx-cookie-service";
 import { MessageService } from "primeng/components/common/messageservice";
+import { DialogModule } from "primeng/dialog";
+import { MultiSelectModule } from "primeng/multiselect";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule, PickListModule, TooltipModule } from "primeng/primeng";
 import { TableModule } from "primeng/table";
 import { environment } from "../../../../../environments/environment";
@@ -12,18 +14,14 @@ import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { CardService } from "../../../../_services/cardSearch.service";
 import { CommonsService } from "../../../../_services/commons.service";
-import { HeaderGestionEntidadService } from "../../../../_services/headerGestionEntidad.service";
 import { SigaServices } from "../../../../_services/siga.service";
-import { ImagePipe } from "../../../../commons/image-pipe/image.pipe";
-import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
-import { TrimPipePipe } from "../../../../commons/trim-pipe/trim-pipe.pipe";
-
-import { DialogModule } from "primeng/dialog";
-import { MultiSelectModule } from "primeng/multiselect";
 import { FechaModule } from "../../../../commons/fecha/fecha.module";
+import { ImagePipe } from "../../../../commons/image-pipe/image.pipe";
 import { PrecioModule } from "../../../../commons/precio/precio.module";
 import { TablaResultadoOrderModule } from "../../../../commons/tabla-resultado-order/tabla-resultado-order.module";
 import { TarjetaResumenFijaModule } from "../../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module";
+import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
+import { TrimPipePipe } from "../../../../commons/trim-pipe/trim-pipe.pipe";
 import { routingOficio } from "../oficio-routing.module";
 import { TurnosComponent } from "./busqueda-turnos.component";
 import { ConfiguracionColaOficioComponent } from "./ficha-turnos/configuracion-colaoficio/configuracion-colaoficio.component";
@@ -41,7 +39,6 @@ import { TablaTurnosComponent } from "./gestion-turnos/gestion-turnos.component"
   imports: [DialogModule, CommonModule, routingOficio, DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, TableModule, MultiSelectModule, PrecioModule, PickListModule, TooltipModule, TarjetaResumenFijaModule, ConfirmDialogModule, FechaModule, TablaResultadoOrderModule],
   declarations: [TurnosComponent, FiltrosTurnos, TablaTurnosComponent, FichaTurnosComponent, DatosGeneralesTurnosComponent, ConfiguracionTurnosComponent, ConfiguracionColaOficioComponent, TarjetaColaOficio, TarjetaColaGuardias, TarjetaGuardias, TarjetaInscripciones],
   providers: [
-    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
     DatePipe,
     TrimPipePipe,
@@ -49,11 +46,10 @@ import { TablaTurnosComponent } from "./gestion-turnos/gestion-turnos.component"
     SigaServices,
     CommonsService,
     CardService,
-    HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
-
+    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,
@@ -64,7 +60,6 @@ import { TablaTurnosComponent } from "./gestion-turnos/gestion-turnos.component"
       useClass: JwtInterceptor,
       multi: true,
     },
-    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })
