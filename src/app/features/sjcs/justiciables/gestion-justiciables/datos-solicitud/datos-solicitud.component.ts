@@ -90,6 +90,7 @@ export class DatosSolicitudComponent implements OnInit {
         this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.bodyChange.emit(this.body);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.tratamientoDescripcionesTarjeta();
       },
       (err) => {
         this.progressSpinner = false;
