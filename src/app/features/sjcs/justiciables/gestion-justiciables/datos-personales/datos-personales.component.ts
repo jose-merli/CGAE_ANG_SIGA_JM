@@ -232,7 +232,7 @@ export class DatosPersonalesComponent implements OnInit {
         this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
         this.rellenarDireccionPostal();
         this.hasChange = false;
-        this.bodyChange.emit(this.body);
+       // this.bodyChange.emit(this.body);
         this.progressSpinner = false;
       },
       (err) => {
@@ -272,6 +272,7 @@ export class DatosPersonalesComponent implements OnInit {
       });
       this.progressSpinner = false;
     }
+    this.bodyChange.emit(this.body);
   }
 
   /**
