@@ -1,42 +1,29 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ChangeDetectorRef,
-  HostListener
-} from "@angular/core";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
+import { DatePipe } from "@angular/common";
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { ConfirmationService } from "primeng/api";
+import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { esCalendar } from "./../../../../../utils/calendar";
 import { SigaServices } from "./.././../../../../_services/siga.service";
-import { TranslateService } from "./../../../../../commons/translate/translation.service";
-import { ConfirmationService } from "primeng/api";
-import { DatePipe } from "@angular/common";
 /*** COMPONENTES ***/
-import { DatosRetencionesObject } from "./../../../../../../app/models/DatosRetencionesObject";
-import { DatosRetencionesItem } from "./../../../../../../app/models/DatosRetencionesItem";
-import { cardService } from "./../../../../../_services/cardSearch.service";
+import { EventEmitter, Input, Output, SimpleChanges } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
-import { DataTable } from "./../../../../../../../node_modules/primeng/primeng";
-import { ControlAccesoDto } from "./../../../../../models/ControlAccesoDto";
-import { Input, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { FichaColegialGeneralesItem } from "../../../../../models/FichaColegialGeneralesItem";
+import { DataTable } from "./../../../../../../../node_modules/primeng/primeng";
+import { DatosRetencionesItem } from "./../../../../../../app/models/DatosRetencionesItem";
+import { DatosRetencionesObject } from "./../../../../../../app/models/DatosRetencionesObject";
+import { ControlAccesoDto } from "./../../../../../models/ControlAccesoDto";
 
 export enum KEY_CODE {
-  ENTER = 13
+  ENTER = 13,
 }
 
 @Component({
-  selector: 'app-retenciones-irpf-colegial',
-  templateUrl: './retenciones-irpf-colegial.component.html',
-  styleUrls: ['./retenciones-irpf-colegial.component.scss']
+  selector: "app-retenciones-irpf-colegial",
+  templateUrl: "./retenciones-irpf-colegial.component.html",
+  styleUrls: ["./retenciones-irpf-colegial.component.scss"],
 })
 export class RetencionesIrpfColegialComponent implements OnInit {
-
   formBusqueda: FormGroup;
   cols: any = [];
   colsFisicas: any = [];
@@ -101,85 +88,74 @@ export class RetencionesIrpfColegialComponent implements OnInit {
   liquidacion: DatosRetencionesItem = new DatosRetencionesItem();
   disabled: boolean = false;
 
-
-  constructor( private formBuilder: FormBuilder,
-    private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    public datepipe: DatePipe,
-    private cardService: cardService) { this.formBusqueda = this.formBuilder.group({
+  constructor(private formBuilder: FormBuilder, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private confirmationService: ConfirmationService, private translateService: TranslateService, public datepipe: DatePipe) {
+    this.formBusqueda = this.formBuilder.group({
       cif: null,
       fechaNacimiento: new FormControl(null, Validators.required),
       fechaIncorporacion: new FormControl(null),
-      fechaFacturacion: new FormControl(null)
+      fechaFacturacion: new FormControl(null),
     });
   }
 
   ngOnInit() {
     //copiarme los del censo/sociedades/retenciones-irpf
-    console.log("idpersona",this.idPersona);
+    console.log("idpersona", this.idPersona);
 
-    if (
-      sessionStorage.getItem("personaBody") != null &&
-      sessionStorage.getItem("personaBody") != undefined && 
-      sessionStorage.getItem("personaBody") != 'undefined' &&
-      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
-    ) {
+    if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != undefined && sessionStorage.getItem("personaBody") != "undefined" && JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true) {
       this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.idPersona = this.generalBody.idPersona;
     }
 
     this.checkAcceso();
-  
+
     this.colsFisicas = [
       {
         field: "fechaInicio",
-        header: "administracion.auditoriaUsuarios.fechaDesde"
+        header: "administracion.auditoriaUsuarios.fechaDesde",
       },
       {
         field: "fechaFin",
-        header: "administracion.auditoriaUsuarios.fechaHasta"
+        header: "administracion.auditoriaUsuarios.fechaHasta",
       },
       {
         field: "descripcionRetencion",
-        header: "factSJCS.datosPagos.literal.tipoRetencion"
+        header: "factSJCS.datosPagos.literal.tipoRetencion",
       },
       {
         field: "porcentajeRetencion",
-        header: "factSJCS.datosPagos.literal.porcentajeRetencion"
-      }
+        header: "factSJCS.datosPagos.literal.porcentajeRetencion",
+      },
     ];
 
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
-    
-    this.getTiposRetenciones();
-    
-     this.checkStatusInit();
-     //this.search();
 
-     if (sessionStorage.getItem("historicoSociedad") != null) {
-       this.camposDesactivados = true;
-       this.isCrear = true;
-     }
+    this.getTiposRetenciones();
+
+    this.checkStatusInit();
+    //this.search();
+
+    if (sessionStorage.getItem("historicoSociedad") != null) {
+      this.camposDesactivados = true;
+      this.isCrear = true;
+    }
 
     // this.nuevafecha = new Date();
     let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
@@ -192,15 +168,12 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     }
 
     this.searchRetencion();
-
   }
 
-   
-  ngOnChanges(changes: SimpleChanges){
-    if(this.openRetenciones){
-     this.openFicha = true;
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.openRetenciones) {
+      this.openFicha = true;
     }
-    
   }
   changeSort(event) {
     this.sortF = "fechaFin";
@@ -212,20 +185,14 @@ export class RetencionesIrpfColegialComponent implements OnInit {
 
     // this.table.sortMultiple();
   }
-  
+
   onChangeCalendar(event) {
     this.nuevafecha = event;
     this.isVolver = false;
     if (this.datos.length > 1) {
       this.datos.forEach((value: any, key: number) => {
-        if (
-          value.recursoRetencion == this.retencionActiveAnt.recursoRetencion &&
-          value.fechaInicio == this.retencionActiveAnt.fechaInicio
-        ) {
-          this.datos[key].fechaFin = this.datepipe.transform(
-            new Date(event - 86400000),
-            "dd/MM/yyyy"
-          );
+        if (value.recursoRetencion == this.retencionActiveAnt.recursoRetencion && value.fechaInicio == this.retencionActiveAnt.fechaInicio) {
+          this.datos[key].fechaFin = this.datepipe.transform(new Date(event - 86400000), "dd/MM/yyyy");
 
           // this.datos.forEach((value: any, key: number) => {
           //   if (value.fechaFin == null || value.fechaFin == undefined) {
@@ -240,10 +207,7 @@ export class RetencionesIrpfColegialComponent implements OnInit {
       });
     }
 
-    if (
-      this.newRetencion.descripcionRetencion != "" &&
-      this.newRetencion.descripcionRetencion != undefined
-    ) {
+    if (this.newRetencion.descripcionRetencion != "" && this.newRetencion.descripcionRetencion != undefined) {
       this.isEditar = false;
       this.isCrear = true;
     }
@@ -252,29 +216,23 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     this.changeSort(evento);
   }
 
-
   getTiposRetenciones() {
     this.sigaServices.get("retenciones_tipoRetencion").subscribe(
-      n => {
+      (n) => {
         this.tiposRetenciones = n.maestroRetencionItem;
       },
-      err => {
+      (err) => {
         console.log(err);
-      }
+      },
     );
   }
-
 
   checkStatusInit() {
     this.cols = this.colsFisicas;
   }
 
   activaGuardar() {
-    if (
-      this.nuevafecha > this.fechaMinima ||
-      this.fechaMinima == null ||
-      this.fechaMinima == undefined
-    ) {
+    if (this.nuevafecha > this.fechaMinima || this.fechaMinima == null || this.fechaMinima == undefined) {
       return this.isEditar;
     } else {
       return true;
@@ -282,20 +240,10 @@ export class RetencionesIrpfColegialComponent implements OnInit {
   }
 
   isValidDNI(dni: String): boolean {
-    return (
-      dni &&
-      typeof dni === "string" &&
-      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
-      dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
-    );
+    return dni && typeof dni === "string" && /^[0-9]{8}([A-Za-z]{1})$/.test(dni) && dni.substr(8, 9).toUpperCase() === this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23);
   }
   isValidIBAN(iban: String): boolean {
-    return (
-      iban &&
-      typeof iban === "string" &&
-      /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(iban)
-    );
+    return iban && typeof iban === "string" && /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(iban);
   }
   checkTypeCIF(value: String): boolean {
     if (this.isValidDNI(value)) {
@@ -313,23 +261,13 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     }
   }
   isValidPassport(dni: String): boolean {
-    return (
-      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
-    );
+    return dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni);
   }
   isValidNIE(nie: String): boolean {
-    return (
-      nie &&
-      typeof nie === "string" &&
-      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
-    );
+    return nie && typeof nie === "string" && /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie);
   }
   isValidCIF(cif: String): boolean {
-    return (
-      cif &&
-      typeof cif === "string" &&
-      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
-    );
+    return cif && typeof cif === "string" && /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif);
   }
 
   crear() {
@@ -344,11 +282,7 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     } else {
       valur2 = this.fechaMinima;
     }
-    if (
-      this.datos == null ||
-      this.datos == undefined ||
-      this.datos.length == 0
-    ) {
+    if (this.datos == null || this.datos == undefined || this.datos.length == 0) {
       this.datos = [];
     } else {
       // let value = this.table.first;
@@ -380,7 +314,7 @@ export class RetencionesIrpfColegialComponent implements OnInit {
       fechaInicio: "",
       fechaFin: undefined,
       descripcionRetencion: "",
-      porcentajeRetencion: ""
+      porcentajeRetencion: "",
     };
 
     this.datos = [dummy, ...this.datos];
@@ -400,49 +334,40 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     this.isCrear = false;
     this.datos.forEach((value: any, key: number) => {
       if (value.fechaFin == null || value.fechaFin == undefined) {
-        this.datos[key].fechaInicio = this.datepipe.transform(
-          new Date(this.nuevafecha),
-          "dd/MM/yyyy"
-        );
+        this.datos[key].fechaInicio = this.datepipe.transform(new Date(this.nuevafecha), "dd/MM/yyyy");
       }
     });
 
-    this.sigaServices
-      .postPaginado(
-        "retenciones_update",
-        "?idPersona=" + this.idPersona,
-        this.datos
-      )
-      .subscribe(
-        data => {
-          this.showSuccess();
-          this.progressSpinner = false;
-          let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
-          // this.changeSort(event);
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-          this.showFail();
-          let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
-          // this.changeSort(event);
-        },
-        () => {
-          this.volver();
-          this.progressSpinner = false;
-          this.isBuscar();
+    this.sigaServices.postPaginado("retenciones_update", "?idPersona=" + this.idPersona, this.datos).subscribe(
+      (data) => {
+        this.showSuccess();
+        this.progressSpinner = false;
+        let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+        // this.changeSort(event);
+      },
+      (err) => {
+        //console.log(err);
+        this.progressSpinner = false;
+        this.showFail();
+        let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
+        // this.changeSort(event);
+      },
+      () => {
+        this.volver();
+        this.progressSpinner = false;
+        this.isBuscar();
 
-          //Al haber añadido uno nuevo, actualizamos la cabecera de la tarjeta con la nueva retención activa (lo que se verá con la tarjeta colapsada)
-          if (this.datos.length > 0) {
-            this.datos.forEach((value: any, key: number) => {
-              //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
-              if (value.fechaFin == undefined) {
-                this.retencionNow = this.datos[key];
-              }
-            });
-          }
+        //Al haber añadido uno nuevo, actualizamos la cabecera de la tarjeta con la nueva retención activa (lo que se verá con la tarjeta colapsada)
+        if (this.datos.length > 0) {
+          this.datos.forEach((value: any, key: number) => {
+            //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+            if (value.fechaFin == undefined) {
+              this.retencionNow = this.datos[key];
+            }
+          });
         }
-      );
+      },
+    );
   }
 
   borrar() {
@@ -460,27 +385,20 @@ export class RetencionesIrpfColegialComponent implements OnInit {
       }
     });
 
-    this.sigaServices
-      .postPaginado(
-        "retenciones_update",
-        "?idPersona=" + this.idPersona,
-        datosDelete
-      )
-      .subscribe(
-        data => { 
-          this.searchRetencion();
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          this.volver();
-        }
-      );
+    this.sigaServices.postPaginado("retenciones_update", "?idPersona=" + this.idPersona, datosDelete).subscribe(
+      (data) => {
+        this.searchRetencion();
+      },
+      (err) => {
+        console.log(err);
+      },
+      () => {
+        this.volver();
+      },
+    );
   }
 
   volver() {
-
     if (this.camposDesactivados == true) {
       this.isVolver = true;
       this.isCrear = true;
@@ -509,12 +427,10 @@ export class RetencionesIrpfColegialComponent implements OnInit {
           {
             severity: "info",
             summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.error.realiza.accion"
-            )
-          }
+            detail: this.translateService.instant("general.message.error.realiza.accion"),
+          },
         ];
-      }
+      },
     });
   }
 
@@ -523,9 +439,7 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     this.msgs.push({
       severity: "error",
       summary: this.translateService.instant("general.message.incorrect"),
-      detail: this.translateService.instant(
-        "general.message.error.realiza.accion"
-      )
+      detail: this.translateService.instant("general.message.error.realiza.accion"),
     });
   }
 
@@ -534,70 +448,46 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     this.msgs.push({
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant("general.message.accion.realizada")
+      detail: this.translateService.instant("general.message.accion.realizada"),
     });
   }
-
 
   fechaNoPermitida() {
     this.bodyFecha.idPersona = this.idPersona;
     this.bodyFecha.idInstitucion = "";
     this.bodyFecha.idLenguaje = "";
     if (this.idPersona != undefined && this.idPersona != null) {
-      this.sigaServices
-        .postPaginado("retenciones_searchColegiado", "?numPagina=1", this.bodyFecha)
-        .subscribe(
-          data => {
-            let unorderedDate;
-            this.searchRetenciones = JSON.parse(data["body"]);
-            if (this.searchRetenciones.retencionesItemList != null) {
-              this.searchRetenciones.retencionesItemList.forEach(
-                (value: any, key: number) => {
-                  if (
-                    this.searchRetenciones.retencionesItemList[key].fechaFin ==
-                    null ||
-                    this.searchRetenciones.retencionesItemList[key].fechaFin ==
-                    undefined
-                  ) {
-                    unorderedDate = JSON.stringify(
-                      this.searchRetenciones.retencionesItemList[key]
-                        .fechaInicio
-                    );
-                  }
-                }
-              );
+      this.sigaServices.postPaginado("retenciones_searchColegiado", "?numPagina=1", this.bodyFecha).subscribe(
+        (data) => {
+          let unorderedDate;
+          this.searchRetenciones = JSON.parse(data["body"]);
+          if (this.searchRetenciones.retencionesItemList != null) {
+            this.searchRetenciones.retencionesItemList.forEach((value: any, key: number) => {
+              if (this.searchRetenciones.retencionesItemList[key].fechaFin == null || this.searchRetenciones.retencionesItemList[key].fechaFin == undefined) {
+                unorderedDate = JSON.stringify(this.searchRetenciones.retencionesItemList[key].fechaInicio);
+              }
+            });
 
-              let unorderedArray = unorderedDate
-                .substring(1, unorderedDate.length - 1)
-                .split("/");
-              let orderedDate =
-                unorderedArray[1] +
-                "-" +
-                unorderedArray[0] +
-                "-" +
-                unorderedArray[2];
-              this.fechaMinima = new Date(orderedDate);
-              this.nuevafecha = new Date(
-                this.fechaMinima.getTime() + 1000 * 60 * 60 * 24
-              );
-              this.nuevafecha.setHours(this.nuevafecha.getHours() + 4);
-              this.fechaMinima = new Date(
-                this.fechaMinima.getTime() + 1000 * 60 * 60 * 24
-              );
-              // this.nuevafecha = this.datepipe.transform(
-              //   new Date(),
-              //   "dd/MM/yyyy"
-              // )
-            }
-            if (this.datos.length == 1) {
-              this.fechaMinima = undefined;
-              this.nuevafecha = new Date();
-            }
-          },
-          err => {
-            console.log(err);
+            let unorderedArray = unorderedDate.substring(1, unorderedDate.length - 1).split("/");
+            let orderedDate = unorderedArray[1] + "-" + unorderedArray[0] + "-" + unorderedArray[2];
+            this.fechaMinima = new Date(orderedDate);
+            this.nuevafecha = new Date(this.fechaMinima.getTime() + 1000 * 60 * 60 * 24);
+            this.nuevafecha.setHours(this.nuevafecha.getHours() + 4);
+            this.fechaMinima = new Date(this.fechaMinima.getTime() + 1000 * 60 * 60 * 24);
+            // this.nuevafecha = this.datepipe.transform(
+            //   new Date(),
+            //   "dd/MM/yyyy"
+            // )
           }
-        );
+          if (this.datos.length == 1) {
+            this.fechaMinima = undefined;
+            this.nuevafecha = new Date();
+          }
+        },
+        (err) => {
+          console.log(err);
+        },
+      );
     }
   }
 
@@ -627,7 +517,6 @@ export class RetencionesIrpfColegialComponent implements OnInit {
   isBuscar() {
     this.buscar = true;
   }
-
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -688,85 +577,74 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     controlAcceso.idProceso = "233"; //mirar esto
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
+      (data) => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
         this.tarjeta = permisosArray[0].derechoacceso;
       },
-      err => {
+      (err) => {
         console.log(err);
       },
       () => {
-        if(this.tarjeta == "3" || this.tarjeta == "2"){
-					let permisos = "retenciones";
-					this.permisosEnlace.emit(permisos);
-				  }
-
-       }
-    );
-
-    }
-
-    searchRetencion(){
-
-      this.progressSpinner = true;
-      this.body.idPersona = this.idPersona;
-
-      this.sigaServices.post("retenciones_searchLiquidacionSociedad",this.body).subscribe(
-        data => {
-          
-          this.searchRetenciones = JSON.parse(data["body"]);
-          if (this.searchRetenciones.retencionesItemList != null) {          
-            this.disabled =  this.searchRetenciones.activo;
-            this.datos = this.searchRetenciones.retencionesItemList;
-            if (this.datos.length > 1) {
-              this.retencionActiveAnt = this.datos[1];
-            } else {
-              this.retencionActiveAnt = this.datos[0];
-            }
-          } else {
-            this.datos = [];
-          }
-
-          this.progressSpinner = false;
-        
-          // this.getUltimaFechaInicio()
-        },
-        err => {
-           this.progressSpinner = false;
-         
-          //console.log(err);
-        },
-        () => {
-          if (this.datos.length > 0) {
-            if (this.camposDesactivados != true) {
-              this.isEliminar = false;
-            }
-            this.datos.forEach((value: any, key: number) => {
-              //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
-              if (value.fechaFin == undefined) {
-                this.retencionNow = this.datos[key];
-              }
-            });
-          }
-           this.progressSpinner = false;
+        if (this.tarjeta == "3" || this.tarjeta == "2") {
+          let permisos = "retenciones";
+          this.permisosEnlace.emit(permisos);
         }
-      );
-  }
-        
-showMessage(severity, summary, msg) {
-      this.msgs = [];
-      this.msgs.push({
-        severity: severity,
-        summary: summary,
-        detail: msg
-      });
-    }
+      },
+    );
   }
 
+  searchRetencion() {
+    this.progressSpinner = true;
+    this.body.idPersona = this.idPersona;
 
+    this.sigaServices.post("retenciones_searchLiquidacionSociedad", this.body).subscribe(
+      (data) => {
+        this.searchRetenciones = JSON.parse(data["body"]);
+        if (this.searchRetenciones.retencionesItemList != null) {
+          this.disabled = this.searchRetenciones.activo;
+          this.datos = this.searchRetenciones.retencionesItemList;
+          if (this.datos.length > 1) {
+            this.retencionActiveAnt = this.datos[1];
+          } else {
+            this.retencionActiveAnt = this.datos[0];
+          }
+        } else {
+          this.datos = [];
+        }
 
+        this.progressSpinner = false;
 
+        // this.getUltimaFechaInicio()
+      },
+      (err) => {
+        this.progressSpinner = false;
 
-   
+        //console.log(err);
+      },
+      () => {
+        if (this.datos.length > 0) {
+          if (this.camposDesactivados != true) {
+            this.isEliminar = false;
+          }
+          this.datos.forEach((value: any, key: number) => {
+            //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+            if (value.fechaFin == undefined) {
+              this.retencionNow = this.datos[key];
+            }
+          });
+        }
+        this.progressSpinner = false;
+      },
+    );
+  }
 
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg,
+    });
+  }
+}

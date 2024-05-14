@@ -8,7 +8,7 @@ import { CookieService } from "ngx-cookie-service";
 import { ValidationModule } from "./commons/validation/validation.module";
 
 import { AuthGuard } from "./_guards/auth.guards";
-import { cardService } from "./_services/cardSearch.service";
+import { CardService } from "./_services/cardSearch.service";
 import { NotificationService } from "./_services/notification.service";
 import { OldSigaServices } from "./_services/oldSiga.service";
 import { SigaServices } from "./_services/siga.service";
@@ -1487,7 +1487,7 @@ enableRipple(true);
     AuthenticationService,
     DeadmanService,
     AuthGuard,
-    cardService,
+    CardService,
     CommonsService,
     ConfirmationService,
     CookieService,

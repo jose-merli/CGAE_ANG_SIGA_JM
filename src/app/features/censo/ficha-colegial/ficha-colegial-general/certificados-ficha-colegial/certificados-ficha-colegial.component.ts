@@ -1,31 +1,17 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { ConfirmationService, Message } from "primeng/components/common/api";
-import { AuthenticationService } from '../../../../../_services/authentication.service';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 // import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { cardService } from "./../../../../../_services/cardSearch.service";
-import { Location } from "@angular/common";
-import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
-import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
-import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
-import { AutoComplete, Dialog, Calendar, DataTable } from 'primeng/primeng';
-import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
-import { FichaColegialColegialesObject } from '../../../../../models/FichaColegialColegialesObject';
-import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
-import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
-import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
-import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
-import * as moment from 'moment';
-import { DatosColegiadosObject } from '../../../../../models/DatosColegiadosObject';
-import { FichaColegialCertificadosObject } from '../../../../../models/FichaColegialCertificadosObject';
+import { DataTable } from "primeng/primeng";
+import { DatosColegiadosObject } from "../../../../../models/DatosColegiadosObject";
+import { FichaColegialCertificadosObject } from "../../../../../models/FichaColegialCertificadosObject";
+import { FichaColegialColegialesItem } from "../../../../../models/FichaColegialColegialesItem";
+import { FichaColegialGeneralesItem } from "../../../../../models/FichaColegialGeneralesItem";
 @Component({
-  selector: 'app-certificados-ficha-colegial',
-  templateUrl: './certificados-ficha-colegial.component.html',
-  styleUrls: ['./certificados-ficha-colegial.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-certificados-ficha-colegial",
+  templateUrl: "./certificados-ficha-colegial.component.html",
+  styleUrls: ["./certificados-ficha-colegial.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   tarjetaOtrasColegiacionesNum: string;
@@ -43,7 +29,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   fichasPosibles = [
     {
       key: "certificados",
-      activa: false
+      activa: false,
     },
   ];
   message;
@@ -70,21 +56,15 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   @Input() openCertifi;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  constructor(private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.getCols();
-    if (
-      sessionStorage.getItem("personaBody") != null &&
-      sessionStorage.getItem("personaBody") != undefined &&
-      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
-    ) {
+    if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != undefined && JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true) {
       this.generalBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = new FichaColegialGeneralesItem();
 
-      if(sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != 'undefined'){
+      if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != "undefined") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
         this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -92,7 +72,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
     }
-    
+
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -107,11 +87,9 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-
   }
 
   ngOnChanges() {
-
     if (this.esColegiado != null) {
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -135,15 +113,15 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
     if (this.idPersona != undefined) {
-      if(this.datosCertificados == undefined || this.datosCertificados.length == 0){
-        if(this.tarjetaCertificados == "3" || this.tarjetaCertificados == "2"){
+      if (this.datosCertificados == undefined || this.datosCertificados.length == 0) {
+        if (this.tarjetaCertificados == "3" || this.tarjetaCertificados == "2") {
           this.searchCertificados();
         }
       }
     }
     if (this.openCertifi == true) {
       if (this.openFicha == false) {
-        this.abreCierraFicha('certificados')
+        this.abreCierraFicha("certificados");
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -163,46 +141,38 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   activarPaginacionCertificados() {
-    if (!this.datosCertificados || this.datosCertificados.length == 0)
-      return false;
+    if (!this.datosCertificados || this.datosCertificados.length == 0) return false;
     else return true;
   }
 
   searchCertificados() {
     this.mostrarNumero = false;
-    this.sigaServices
-      .postPaginado(
-        "fichaDatosCertificados_datosCertificadosSearch",
-        "?numPagina=1",
-        this.idPersona
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.certificadosBody = JSON.parse(data["body"]);
-          this.datosCertificados = this.certificadosBody.certificadoItem;
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-          this.mostrarNumero = true;
-        }, () => {
-          if (this.datosCertificados.length > 0) {
-            this.mostrarDatosCertificados = true;
-            this.DescripcionCertificado = this.datosCertificados[0];
-          }
-          if (this.datosCertificados.length == 0) {
-            this.message = this.datosCertificados.length.toString();
-            this.messageNoContent = this.translateService.instant(
-              "general.message.no.registros"
-            );
-            this.mostrarNumero = true;
-          } else {
-            this.message = this.datosCertificados.length.toString();
-            this.mostrarNumero = true;
-          }
+    this.sigaServices.postPaginado("fichaDatosCertificados_datosCertificadosSearch", "?numPagina=1", this.idPersona).subscribe(
+      (data) => {
+        this.progressSpinner = false;
+        this.certificadosBody = JSON.parse(data["body"]);
+        this.datosCertificados = this.certificadosBody.certificadoItem;
+      },
+      (err) => {
+        //console.log(err);
+        this.progressSpinner = false;
+        this.mostrarNumero = true;
+      },
+      () => {
+        if (this.datosCertificados.length > 0) {
+          this.mostrarDatosCertificados = true;
+          this.DescripcionCertificado = this.datosCertificados[0];
         }
-      );
+        if (this.datosCertificados.length == 0) {
+          this.message = this.datosCertificados.length.toString();
+          this.messageNoContent = this.translateService.instant("general.message.no.registros");
+          this.mostrarNumero = true;
+        } else {
+          this.message = this.datosCertificados.length.toString();
+          this.mostrarNumero = true;
+        }
+      },
+    );
   }
   onChangeRowsPerPagesCertificados(event) {
     this.selectedItemCertificados = event.value;
@@ -215,7 +185,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
+    let fichaPosible = this.fichasPosibles.filter((elto) => {
       return elto.key === key;
     });
     if (fichaPosible && fichaPosible.length) {
@@ -226,11 +196,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
-    if (
-      key == "generales" &&
-      !this.activacionTarjeta &&
-      !this.emptyLoadFichaColegial
-    ) {
+    if (key == "generales" && !this.activacionTarjeta && !this.emptyLoadFichaColegial) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -246,35 +212,34 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
     else return true;
   }
 
-
   getCols() {
     this.colsCertificados = [
       {
         field: "descripcion",
-        header: "general.description"
+        header: "general.description",
       },
       {
         field: "fechaEmision",
-        header: "facturacion.busquedaAbonos.literal.fecha2"
-      }
+        header: "facturacion.busquedaAbonos.literal.fecha2",
+      },
     ];
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
   }
   isOpenReceive(event) {

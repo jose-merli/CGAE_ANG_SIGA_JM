@@ -1,37 +1,36 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
-import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule } from 'primeng/primeng';
-import { FormsModule } from '@angular/forms';
-import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
-import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
-import { TrimPipePipe } from '../../../../commons/trim-pipe/trim-pipe.pipe';
-import { SigaServices } from '../../../../_services/siga.service';
-import { cardService } from '../../../../_services/cardSearch.service';
-import { CommonsService } from '../../../../_services/commons.service';
-import { HeaderGestionEntidadService } from '../../../../_services/headerGestionEntidad.service';
-import { AuthenticationService } from '../../../../_services/authentication.service';
-import { MessageService } from 'primeng/components/common/messageservice';
-import { AuthGuard } from '../../../../_guards/auth.guards';
-import { environment } from '../../../../../environments/environment';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
-import { CookieService } from 'ngx-cookie-service';
-import { TableModule } from 'primeng/table';
-import { FiltrosdocumentacionejgComponent } from './filtro-busqueda-ejg/filtros-documentacionejg.component';
-import { DocumentacionEJGComponent } from './documentacion-ejg.component';
+import { APP_BASE_HREF, CommonModule, DatePipe, UpperCasePipe } from "@angular/common";
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { LOCALE_ID, NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { CookieService } from "ngx-cookie-service";
+import { MessageService } from "primeng/components/common/messageservice";
+import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "primeng/primeng";
+import { TableModule } from "primeng/table";
+import { environment } from "../../../../../environments/environment";
+import { AuthGuard } from "../../../../_guards/auth.guards";
+import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
+import { AuthenticationService } from "../../../../_services/authentication.service";
+import { CardService } from "../../../../_services/cardSearch.service";
+import { CommonsService } from "../../../../_services/commons.service";
+import { HeaderGestionEntidadService } from "../../../../_services/headerGestionEntidad.service";
+import { SigaServices } from "../../../../_services/siga.service";
+import { ImagePipe } from "../../../../commons/image-pipe/image.pipe";
+import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
+import { TrimPipePipe } from "../../../../commons/trim-pipe/trim-pipe.pipe";
+import { DocumentacionEJGComponent } from "./documentacion-ejg.component";
+import { FiltrosdocumentacionejgComponent } from "./filtro-busqueda-ejg/filtros-documentacionejg.component";
 // import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
 // import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
 // import { EdicionModulosComponent } from './edicion-modulos/gestion-modulos/edicion-modulos.component';
 // import { TablaAcreditacionesComponent } from './edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component';
-import { FechaModule } from '../../../../commons/fecha/fecha.module';
+import { FechaModule } from "../../../../commons/fecha/fecha.module";
 
 // import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
 import { MultiSelectModule } from "primeng/multiselect";
-import { PartidasComponent } from '../partidas/partidas.component';
-import { TablaDocumentacionejgComponent } from './tabla-documentacionejg/tabla-documentacionejg.component';
-import { GestionDocumentacionejgComponent } from './gestion-documentacionejg/gestion-documentacionejg.component';
-import { GestionTipodocumentoComponent } from './gestion-documentacionejg/gestion-tipodocumento/gestion-tipodocumento.component';
-import { GestionDocumentosComponent } from './gestion-documentacionejg/gestion-documentos/gestion-documentos.component';
+import { GestionDocumentacionejgComponent } from "./gestion-documentacionejg/gestion-documentacionejg.component";
+import { GestionDocumentosComponent } from "./gestion-documentacionejg/gestion-documentos/gestion-documentos.component";
+import { GestionTipodocumentoComponent } from "./gestion-documentacionejg/gestion-tipodocumento/gestion-tipodocumento.component";
+import { TablaDocumentacionejgComponent } from "./tabla-documentacionejg/tabla-documentacionejg.component";
 
 // import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
 
@@ -53,7 +52,6 @@ import { GestionDocumentosComponent } from './gestion-documentacionejg/gestion-d
     FechaModule,
     ConfirmDialogModule,
     // FichaGrupoZonaModule
-
   ],
   declarations: [
     FiltrosdocumentacionejgComponent,
@@ -64,7 +62,7 @@ import { GestionDocumentosComponent } from './gestion-documentacionejg/gestion-d
     GestionDocumentosComponent,
     // MaestrosModulosComponent,
     // TablaModulosComponent,
-    // GestionModulosYBasesComponent, 
+    // GestionModulosYBasesComponent,
     // EdicionModulosComponent,
     // TablaAcreditacionesComponent
   ],
@@ -76,7 +74,7 @@ import { GestionDocumentosComponent } from './gestion-documentacionejg/gestion-d
     UpperCasePipe,
     SigaServices,
     CommonsService,
-    cardService,
+    CardService,
     HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
@@ -85,15 +83,15 @@ import { GestionDocumentosComponent } from './gestion-documentacionejg/gestion-d
     AuthGuard,
     {
       provide: APP_BASE_HREF,
-      useValue: environment.baseHref
+      useValue: environment.baseHref,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
-      multi: true
+      multi: true,
     },
     CookieService,
-    { provide: LOCALE_ID, useValue: 'es-ES' }
-  ]
+    { provide: LOCALE_ID, useValue: "es-ES" },
+  ],
 })
-export class GestionDocumentacionEJGModule { }
+export class GestionDocumentacionEJGModule {}

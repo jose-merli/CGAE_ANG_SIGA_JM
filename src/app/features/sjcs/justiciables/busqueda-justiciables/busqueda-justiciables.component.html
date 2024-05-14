@@ -8,12 +8,11 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura" [modoRepresentante]="modoRepresentante" 
-  [nuevaUniFamiliar]="nuevaUniFamiliar" [nuevoContrarioEJG]="nuevoContrarioEJG" [origen]="origen" [justiciable]="justiciable"></app-filtro-justiciables>
+  <app-filtro-justiciables (findJusticiable)="search($event)" [permisoEscritura]="permisoEscritura" [filtros]="filtros" [origen]="origen" [justiciable]="justiciable"></app-filtro-justiciables>
   
-  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" [nuevoInteresado]="nuevoInteresado" [nuevoContrario]="nuevoContrario" [nuevaUniFamiliar]="nuevaUniFamiliar" [nuevoSOJ]="nuevoSoj"
-  (searchHistoricalSend)="search($event)" [modoRepresentante]="modoRepresentante" [nuevoContrarioEJG]="nuevoContrarioEJG" [nuevoContrarioAsistencia]="nuevoContrarioAsistencia" 
-  [nuevoAsistido]="nuevoAsistido" [nuevoRepresentante]="nuevoRepresentante" (insertRepresentante)="insertRepresentante($event)"></app-tabla-justiciables>
+  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" [permisoEscritura]="permisoEscritura" [nuevoInteresado]="nuevoInteresado" [nuevoContrario]="nuevoContrario" 
+  [nuevaUniFamiliar]="nuevaUniFamiliar" [nuevoSOJ]="nuevoSoj" [modoRepresentante]="modoRepresentante" [nuevoContrarioEJG]="nuevoContrarioEJG" 
+  [nuevoContrarioAsistencia]="nuevoContrarioAsistencia" [nuevoAsistido]="nuevoAsistido" [nuevoRepresentante]="nuevoRepresentante" (insertRepresentante)="insertRepresentante($event)"></app-tabla-justiciables>
 </div>
 
 <div *ngIf="searchJusticiable" class="mt-3 text-right main-button ">

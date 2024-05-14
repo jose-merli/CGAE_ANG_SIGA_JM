@@ -6,9 +6,9 @@ import { NotificationService } from "../../../../_services/notification.service"
 import { PersistenceService } from "../../../../_services/persistence.service";
 import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate";
+import { JusticiableBusquedaItem } from "../../../../models/sjcs/JusticiableBusquedaItem";
 import { JusticiableItem } from "../../../../models/sjcs/JusticiableItem";
 import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
-import { FiltroJusticiablesComponent } from "./filtro-justiciables/filtro-justiciables.component";
 import { TablaJusticiablesComponent } from "./tabla-justiciables/tabla-justiciables.component";
 
 @Component({
@@ -22,11 +22,11 @@ export class BusquedaJusticiablesComponent implements OnInit {
   origen: string = "";
   originjusticiable: string = "";
   justiciable: any;
+  filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
 
   buscar: boolean = false;
   progressSpinner: boolean = false;
 
-  @ViewChild(FiltroJusticiablesComponent) filtros;
   @ViewChild(TablaJusticiablesComponent) tabla;
 
   permisoEscritura;
@@ -84,18 +84,28 @@ export class BusquedaJusticiablesComponent implements OnInit {
       sessionStorage.removeItem("justiciable");
       this.originjusticiable = sessionStorage.getItem("originjusticiable");
       sessionStorage.removeItem("originjusticiable");
-      this.filtros.filtros = this.persistenceService.getFiltrosAux();
+      let filtrosInicio: JusticiableBusquedaItem = new JusticiableBusquedaItem();
+      if (this.persistenceService.getFiltrosAux()) {
+        this.filtros = this.persistenceService.getFiltrosAux();
+        this.persistenceService.clearFiltrosAux();
+        this.filtros = { ...filtrosInicio, ...this.filtros };
+        this.search(this.filtros);
+      }
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables"), this.translateService.instant("menu.justiciaGratuita.justiciables.gestionjusticiables"), this.translateService.instant("justiciaGratuita.justiciable.seleccion.representante")];
     } else {
       this.searchJusticiable = false;
-      this.persistenceService.clearDatosEJG();
-      this.filtros.filtros = this.persistenceService.getFiltros();
+      let filtrosInicio: JusticiableBusquedaItem = new JusticiableBusquedaItem();
+      if (this.persistenceService.getFiltros()) {
+        this.filtros = this.persistenceService.getFiltros();
+        this.persistenceService.clearFiltros();
+        this.filtros = { ...filtrosInicio, ...this.filtros };
+        this.search(this.filtros);
+      }
       this.breadcrumbs = [this.translateService.instant("menu.justiciaGratuita"), this.translateService.instant("menu.justiciaGratuita.justiciables")];
     }
 
     this.commonsService.checkAcceso(procesos_justiciables.justiciables).then((respuesta) => {
       this.permisoEscritura = respuesta;
-      this.persistenceService.setPermisos(this.permisoEscritura);
       if (this.permisoEscritura == undefined) {
         sessionStorage.setItem("codError", "403");
         sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
@@ -104,13 +114,9 @@ export class BusquedaJusticiablesComponent implements OnInit {
     });
   }
 
-  isOpenReceive(event) {
+  search(event: JusticiableBusquedaItem) {
     this.progressSpinner = true;
-    this.search(event);
-  }
-
-  search(event) {
-    this.sigaServices.post("busquedaJusticiables_searchJusticiables", this.filtros.filtros).subscribe(
+    this.sigaServices.post("busquedaJusticiables_searchJusticiables", event).subscribe(
       (n) => {
         this.datos = JSON.parse(n.body).justiciableBusquedaItems;
         let error = JSON.parse(n.body).error;

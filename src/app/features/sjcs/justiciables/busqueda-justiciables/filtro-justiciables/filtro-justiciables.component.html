@@ -51,11 +51,7 @@
         <div class="row col-lg-3 col-md-3">
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ 'censo.ws.literal.codigopostal' | translate }}</label>
-            <input type="text" class="form-control"  maxlength="5" [(ngModel)]="filtros.codigoPostal" [disabled]="!permisoEscritura" (input)='editarCodigoPostal($event,filtros.codigoPostal)'
-              pInputText>
-
-            <!-- <input type="text" name="codigoExt" value="" class="box" class="form-control" [(ngModel)]='filtros.codigoPostal' maxlength="10"
-              pInputText> -->
+            <input type="text" class="form-control"  maxlength="5" [(ngModel)]="filtros.codigoPostal" [disabled]="!permisoEscritura" (input)='editarCodigoPostal($event,filtros.codigoPostal)' pInputText>
           </div>
         </div>
       </div>
@@ -94,12 +90,10 @@
   <div class="card-footer">
     <!-- BOTONES TARJETA -->
     <div class="text-right main-button">
-     
-      <button *ngIf="checkOrigenAsuntos" (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+      <button (click)="backTo()" *ngIf="checkOrigenAsuntos" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
       <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      <button [disabled]="!permisoEscritura" (click)="checkPermisosNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
-        label="{{ 'general.boton.new' | translate}}"></button>
+      <button (click)="nuevo()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 </div>

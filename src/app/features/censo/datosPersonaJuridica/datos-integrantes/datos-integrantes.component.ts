@@ -1,22 +1,21 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
-import { SigaServices } from "./../../../../_services/siga.service";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
-import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
+import { Subscription } from "rxjs/Subscription";
+import { TranslateService } from "../../../../commons/translate/translation.service";
 import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
-import { TranslateService } from "../../../../commons/translate/translation.service";
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
-import { cardService } from "./../../../../_services/cardSearch.service";
-import { Subscription } from "rxjs/Subscription";
-import { DatePipe } from '@angular/common';
+import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
+import { CardService } from "./../../../../_services/cardSearch.service";
+import { SigaServices } from "./../../../../_services/siga.service";
 /*** COMPONENTES ***/
 
 @Component({
   selector: "app-datos-integrantes",
   templateUrl: "./datos-integrantes.component.html",
   styleUrls: ["./datos-integrantes.component.scss"],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class DatosIntegrantesComponent implements OnInit {
   usuarios_rol: any[];
@@ -72,19 +71,12 @@ export class DatosIntegrantesComponent implements OnInit {
   isValidate: boolean;
 
   tarjeta: string;
-  @Input() cantidadIntegrantes; 
-  @Output() cantidadIntegrantesChange = new EventEmitter<any>(); 
+  @Input() cantidadIntegrantes;
+  @Output() cantidadIntegrantesChange = new EventEmitter<any>();
   @Input() openTarjeta;
   @Output() permisosEnlace = new EventEmitter<any>();
 
-  constructor(
-    private sigaServices: SigaServices,
-    private router: Router,
-    private fichasPosibles: DatosPersonaJuridicaComponent,
-    private cardService: cardService,
-    private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) { }
+  constructor(private sigaServices: SigaServices, private router: Router, private fichasPosibles: DatosPersonaJuridicaComponent, private cardService: CardService, private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.checkAcceso();
@@ -108,14 +100,12 @@ export class DatosIntegrantesComponent implements OnInit {
     }
 
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
-    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
-      id => {
-        if (id !== null) {
-          this.idPersona = id;
-          this.search();
-        }
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe((id) => {
+      if (id !== null) {
+        this.idPersona = id;
+        this.search();
       }
-    );
+    });
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
     }
@@ -123,40 +113,40 @@ export class DatosIntegrantesComponent implements OnInit {
       { field: "nifCif", header: "administracion.usuarios.literal.NIF" },
       {
         field: "nombreApel",
-        header: "administracion.parametrosGenerales.literal.nombre"
+        header: "administracion.parametrosGenerales.literal.nombre",
       },
       {
         field: "fechaHistorico",
-        header: "administracion.usuarios.literal.fechaAlta"
+        header: "administracion.usuarios.literal.fechaAlta",
       },
       { field: "cargo", header: "censo.busquedaComisiones.literal.cargos" },
       {
         field: "ejerciente",
-        header: "censo.fichaIntegrantes.literal.estado"
+        header: "censo.fichaIntegrantes.literal.estado",
       },
       {
         field: "capitalSocial",
-        header: "censo.consultaComponentesJuridicos.literal.Participacion"
-      }
+        header: "censo.consultaComponentesJuridicos.literal.Participacion",
+      },
     ];
 
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
 
     this.search();
@@ -165,11 +155,10 @@ export class DatosIntegrantesComponent implements OnInit {
     }
     sessionStorage.removeItem("editarIntegrante");
   }
-  ngOnChanges(changes: SimpleChanges){
-    if(this.openTarjeta == "integrantes"){
-     this.openFicha = true;
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.openTarjeta == "integrantes") {
+      this.openFicha = true;
     }
-    
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -205,7 +194,7 @@ export class DatosIntegrantesComponent implements OnInit {
   }
 
   getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.getFichasPosibles().filter(elto => {
+    let fichaPosible = this.fichasPosibles.getFichasPosibles().filter((elto) => {
       return elto.key === key;
     });
     if (fichaPosible && fichaPosible.length) {
@@ -219,20 +208,20 @@ export class DatosIntegrantesComponent implements OnInit {
     controlAcceso.idProceso = "231";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
+      (data) => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
         this.tarjeta = permisosArray[0].derechoacceso;
       },
-      err => {
+      (err) => {
         //console.log(err);
       },
       () => {
-        if(this.tarjeta == "3" || this.tarjeta == "2"){
-					let permisos = "integrantes";
-					this.permisosEnlace.emit(permisos);
-				  }
-       }
+        if (this.tarjeta == "3" || this.tarjeta == "2") {
+          let permisos = "integrantes";
+          this.permisosEnlace.emit(permisos);
+        }
+      },
     );
   }
 
@@ -247,36 +236,34 @@ export class DatosIntegrantesComponent implements OnInit {
     this.progressSpinner = true;
     this.selectAll = false;
     if (this.idPersona != undefined && this.idPersona != null) {
-      this.sigaServices
-        .postPaginado("integrantes_search", "?numPagina=1", searchObject)
-        .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.searchIntegrantes = JSON.parse(data["body"]);
-            this.datos = this.searchIntegrantes.datosIntegrantesItem;
-            // console.log(this.datos);
-            this.cantidadIntegrantesChange.emit(this.datos.length); 
-            this.datos = this.datos.map(it => {
-              it.nombreApel = it.apellidos.trim() + ", " + it.nombre;
-              return it;
-            });
-            this.comprobarValidacion();
-            if (this.datos.length == 1) {
-              this.body = this.datos[0];
-              this.only = true;
-            } else {
-              this.only = false;
-            }
-          },
-          err => {
-            //console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-           }
-        );
-    }else{
+      this.sigaServices.postPaginado("integrantes_search", "?numPagina=1", searchObject).subscribe(
+        (data) => {
+          this.progressSpinner = false;
+          this.searchIntegrantes = JSON.parse(data["body"]);
+          this.datos = this.searchIntegrantes.datosIntegrantesItem;
+          // console.log(this.datos);
+          this.cantidadIntegrantesChange.emit(this.datos.length);
+          this.datos = this.datos.map((it) => {
+            it.nombreApel = it.apellidos.trim() + ", " + it.nombre;
+            return it;
+          });
+          this.comprobarValidacion();
+          if (this.datos.length == 1) {
+            this.body = this.datos[0];
+            this.only = true;
+          } else {
+            this.only = false;
+          }
+        },
+        (err) => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        },
+      );
+    } else {
       this.progressSpinner = false;
     }
   }
@@ -302,7 +289,7 @@ export class DatosIntegrantesComponent implements OnInit {
         sessionStorage.setItem("integrante", JSON.stringify(ir));
 
         let dummy = {
-          integrante: true
+          integrante: true,
         };
         sessionStorage.removeItem("newIntegrante");
         sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
@@ -329,7 +316,7 @@ export class DatosIntegrantesComponent implements OnInit {
   }
   anadirIntegrante() {
     let dummy = {
-      integrante: true
+      integrante: true,
     };
     sessionStorage.removeItem("newIntegrante");
     sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
@@ -356,27 +343,25 @@ export class DatosIntegrantesComponent implements OnInit {
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.selectAll = false;
-    this.sigaServices
-      .postPaginado("integrantes_search", "?numPagina=1", searchObject)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.searchIntegrantes = JSON.parse(data["body"]);
-          this.datos = this.searchIntegrantes.datosIntegrantesItem;
-          this.datos = this.datos.map(it => {
-            it.nombreApel = it.apellidos.trim() + ", " + it.nombre;
-            return it;
-          });
-          this.table.paginator = true;
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        },
-        () => { 
-          this.progressSpinner = false;
-        }
-      );
+    this.sigaServices.postPaginado("integrantes_search", "?numPagina=1", searchObject).subscribe(
+      (data) => {
+        this.progressSpinner = false;
+        this.searchIntegrantes = JSON.parse(data["body"]);
+        this.datos = this.searchIntegrantes.datosIntegrantesItem;
+        this.datos = this.datos.map((it) => {
+          it.nombreApel = it.apellidos.trim() + ", " + it.nombre;
+          return it;
+        });
+        this.table.paginator = true;
+      },
+      (err) => {
+        //console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      },
+    );
   }
 
   borrar(selectedItem) {
@@ -386,20 +371,18 @@ export class DatosIntegrantesComponent implements OnInit {
       integranteBorrar[i].fechaCargo = new Date(integranteBorrar[i].fechaCargo);
     }
     deleteIntegrantes.datosIntegrantesItem = integranteBorrar;
-    this.sigaServices
-      .post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem)
-      .subscribe(
-        data => { },
-        err => {
-          //console.log(err);
-        },
-        () => {
-          this.editar = false;
-          this.dniCorrecto = null;
-          this.disabledRadio = false;
-          this.search();
-        }
-      );
+    this.sigaServices.post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem).subscribe(
+      (data) => {},
+      (err) => {
+        //console.log(err);
+      },
+      () => {
+        this.editar = false;
+        this.dniCorrecto = null;
+        this.disabledRadio = false;
+        this.search();
+      },
+    );
   }
   goToDetails(selectedDatos) {
     if (!this.selectMultiple) {
@@ -421,18 +404,10 @@ export class DatosIntegrantesComponent implements OnInit {
     //Falta añadir condiciones de profesión (tipo colegio), cargo y socio
     for (let dato of this.datos) {
       if (dato.personaJuridica == "0") {
-        if (
-          (dato.nifCif != null || dato.nifCif != undefined) &&
-          (dato.nombre != null || dato.nombre != undefined) &&
-          (dato.apellidos1 != null || dato.apellidos1 != undefined)
-        ) {
+        if ((dato.nifCif != null || dato.nifCif != undefined) && (dato.nombre != null || dato.nombre != undefined) && (dato.apellidos1 != null || dato.apellidos1 != undefined)) {
           if (dato.cargo != null || dato.cargo != undefined) {
             this.isValidate = true;
-            if (
-              (dato.descripcionCargo != null ||
-                dato.descripcionCargo != undefined) &&
-              (dato.fechaCargo != null || dato.fechaCargo != undefined)
-            ) {
+            if ((dato.descripcionCargo != null || dato.descripcionCargo != undefined) && (dato.fechaCargo != null || dato.fechaCargo != undefined)) {
               this.isValidate = true;
             } else {
               this.isValidate = false;
@@ -457,11 +432,11 @@ export class DatosIntegrantesComponent implements OnInit {
       }
     }
 
-    this.cardService.newCardValidator$.subscribe(data => {
-      data.map(result => {
+    this.cardService.newCardValidator$.subscribe((data) => {
+      data.map((result) => {
         result.cardIntegrantes = this.isValidate;
       });
-      //  
+      //
     });
   }
 

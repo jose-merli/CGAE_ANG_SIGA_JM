@@ -13,9 +13,10 @@ import { environment } from "../../../../environments/environment";
 import { AuthGuard } from "../../../_guards/auth.guards";
 import { JwtInterceptor } from "../../../_interceptor/jwt.interceptor";
 import { AuthenticationService } from "../../../_services/authentication.service";
-import { cardService } from "../../../_services/cardSearch.service";
+import { CardService } from "../../../_services/cardSearch.service";
 import { CommonsService } from "../../../_services/commons.service";
 import { HeaderGestionEntidadService } from "../../../_services/headerGestionEntidad.service";
+import { NotificationService } from "../../../_services/notification.service";
 import { SigaServices } from "../../../_services/siga.service";
 import { FechaModule } from "../../../commons/fecha/fecha.module";
 import { ImagePipe } from "../../../commons/image-pipe/image.pipe";
@@ -41,19 +42,19 @@ import { routingJusticiables } from "./justiciables-routing.module";
   imports: [CommonModule, routingJusticiables, DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, TableModule, MultiSelectModule, PrecioModule, FechaModule, FileUploadModule, ConfirmDialogModule, DialogModule, TarjetaResumenFijaModule, RadioButtonModule],
   declarations: [BusquedaJusticiablesComponent, FiltroJusticiablesComponent, TablaJusticiablesComponent, GestionJusticiablesComponent, DatosGeneralesComponent, DatosRepresentanteComponent, AsuntosComponent, DatosSolicitudComponent, DatosAbogadoContrarioComponent, DatosProcuradorContrarioComponent, DatosPersonalesComponent, DatosUnidadFamiliarComponent],
   providers: [
-    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
     DatePipe,
     TrimPipePipe,
     UpperCasePipe,
     SigaServices,
     CommonsService,
-    cardService,
+    CardService,
+    NotificationService,
     HeaderGestionEntidadService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
-
+    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,
@@ -64,7 +65,6 @@ import { routingJusticiables } from "./justiciables-routing.module";
       useClass: JwtInterceptor,
       multi: true,
     },
-    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
   exports: [AsuntosComponent],

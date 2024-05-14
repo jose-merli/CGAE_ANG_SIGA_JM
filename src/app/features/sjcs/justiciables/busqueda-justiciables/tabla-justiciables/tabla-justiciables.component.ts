@@ -27,7 +27,6 @@ export class TablaJusticiablesComponent implements OnInit {
   historico: boolean = false;
   seleccion: boolean = false;
   progressSpinner: boolean = false;
-  permisoEscritura: boolean = false;
   showLink: boolean = true;
 
   buscadores = [];
@@ -44,20 +43,14 @@ export class TablaJusticiablesComponent implements OnInit {
   @Input() nuevoContrarioEJG;
   @Input() nuevoSOJ;
   @Input() nuevoRepresentante;
-  //searchServiciosTransaccion: boolean = false;
+  @Input() permisoEscritura: boolean = false;
+  @Output() insertRepresentante = new EventEmitter<JusticiableItem>();
 
   @ViewChild("table") tabla: DataTable;
-
-  @Output() searchHistoricalSend = new EventEmitter<boolean>();
-  @Output() insertRepresentante = new EventEmitter<JusticiableItem>();
 
   constructor(private translateService: TranslateService, private notificationService: NotificationService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private location: Location) {}
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-
     if (this.nuevoInteresado || this.nuevoContrario || this.nuevoSOJ || this.nuevoAsistido || this.nuevoContrarioAsistencia || this.nuevoContrarioEJG || this.nuevaUniFamiliar || this.nuevoRepresentante) {
       this.showLink = false;
     }

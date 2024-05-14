@@ -1,31 +1,17 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { ConfirmationService, Message } from "primeng/components/common/api";
-import { AuthenticationService } from '../../../../../_services/authentication.service';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 // import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { cardService } from "./../../../../../_services/cardSearch.service";
-import { Location } from "@angular/common";
-import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
-import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
-import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
-import { AutoComplete, Dialog, Calendar, DataTable } from 'primeng/primeng';
-import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
-import { FichaColegialColegialesObject } from '../../../../../models/FichaColegialColegialesObject';
-import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
-import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
-import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
-import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
-import * as moment from 'moment';
-import { DatosColegiadosObject } from '../../../../../models/DatosColegiadosObject';
+import { DataTable } from "primeng/primeng";
+import { DatosColegiadosObject } from "../../../../../models/DatosColegiadosObject";
+import { FichaColegialColegialesItem } from "../../../../../models/FichaColegialColegialesItem";
+import { FichaColegialGeneralesItem } from "../../../../../models/FichaColegialGeneralesItem";
 
 @Component({
-  selector: 'app-otras-colegiaciones-ficha-colegial',
-  templateUrl: './otras-colegiaciones-ficha-colegial.component.html',
-  styleUrls: ['./otras-colegiaciones-ficha-colegial.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-otras-colegiaciones-ficha-colegial",
+  templateUrl: "./otras-colegiaciones-ficha-colegial.component.html",
+  styleUrls: ["./otras-colegiaciones-ficha-colegial.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChanges {
   activacionTarjeta: boolean = false;
@@ -42,7 +28,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   fichasPosibles = [
     {
       key: "colegiaciones",
-      activa: false
+      activa: false,
     },
   ];
   selectedItemColegiaciones: number = 10;
@@ -62,29 +48,21 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   @Input() openOtrasCole;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  constructor(private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-  ) { }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
-
     this.getCols();
 
-    if (
-      sessionStorage.getItem("personaBody") != null &&
-      sessionStorage.getItem("personaBody") != undefined &&
-      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
-    ) {
+    if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != undefined && JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true) {
       this.generalBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = new FichaColegialGeneralesItem();
-      
-      if(sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != 'undefined'){
+
+      if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != "undefined") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
         this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       }
-      
+
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
@@ -104,7 +82,6 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-
   }
 
   ngOnChanges() {
@@ -130,12 +107,12 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    if(this.tarjetaOtrasColegiaciones == "3" || this.tarjetaOtrasColegiaciones == "2"){
+    if (this.tarjetaOtrasColegiaciones == "3" || this.tarjetaOtrasColegiaciones == "2") {
       this.onInitOtrasColegiaciones();
     }
     if (this.openOtrasCole == true) {
       if (this.openFicha == false) {
-        this.abreCierraFicha('colegiaciones')
+        this.abreCierraFicha("colegiaciones");
       }
     }
   }
@@ -143,11 +120,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
-    if (
-      key == "generales" &&
-      !this.activacionTarjeta &&
-      !this.emptyLoadFichaColegial
-    ) {
+    if (key == "generales" && !this.activacionTarjeta && !this.emptyLoadFichaColegial) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -160,7 +133,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   }
 
   getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
+    let fichaPosible = this.fichasPosibles.filter((elto) => {
       return elto.key === key;
     });
     if (fichaPosible && fichaPosible.length) {
@@ -178,51 +151,43 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   }
 
   activarPaginacionOtrasColegiaciones() {
-    if (!this.datosColegiaciones || this.datosColegiaciones.length == 0)
-      return false;
+    if (!this.datosColegiaciones || this.datosColegiaciones.length == 0) return false;
     else return true;
   }
 
   searchOtherCollegues() {
     this.mostrarNumero = false;
-    this.sigaServices
-      .postPaginado(
-        "fichaColegialOtrasColegiaciones_searchOtherCollegues",
-        "?numPagina=1",
-        this.generalBody.nif
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.otrasColegiacionesBody = JSON.parse(data["body"]);
-          this.otrasColegiacionesBody.colegiadoItem.forEach((colegiado, index) =>{
-            if(colegiado.idInstitucion==this.generalBody.idInstitucion){
-              this.otrasColegiacionesBody.colegiadoItem.splice(index,1);
-            }
-          });
-          this.datosColegiaciones = this.otrasColegiacionesBody.colegiadoItem;
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-          this.mostrarNumero = true;
-        },()=>{
-          if (this.datosColegiaciones.length > 0) {
-            this.mostrarOtrasColegiaciones = true;
-            this.DescripcionOtrasColegiaciones = this.datosColegiaciones[0];
+    this.sigaServices.postPaginado("fichaColegialOtrasColegiaciones_searchOtherCollegues", "?numPagina=1", this.generalBody.nif).subscribe(
+      (data) => {
+        this.progressSpinner = false;
+        this.otrasColegiacionesBody = JSON.parse(data["body"]);
+        this.otrasColegiacionesBody.colegiadoItem.forEach((colegiado, index) => {
+          if (colegiado.idInstitucion == this.generalBody.idInstitucion) {
+            this.otrasColegiacionesBody.colegiadoItem.splice(index, 1);
           }
-          if (this.datosColegiaciones.length == 0 || this.datosColegiaciones == undefined) {
-            this.message = this.datosColegiaciones.length.toString();
-            this.messageNoContent = this.translateService.instant(
-              "general.message.no.registros"
-            );
-            this.mostrarNumero = true;
-          } else {
-            this.message = this.datosColegiaciones.length.toString();
-            this.mostrarNumero = true;
-          }
+        });
+        this.datosColegiaciones = this.otrasColegiacionesBody.colegiadoItem;
+      },
+      (err) => {
+        //console.log(err);
+        this.progressSpinner = false;
+        this.mostrarNumero = true;
+      },
+      () => {
+        if (this.datosColegiaciones.length > 0) {
+          this.mostrarOtrasColegiaciones = true;
+          this.DescripcionOtrasColegiaciones = this.datosColegiaciones[0];
         }
-      );
+        if (this.datosColegiaciones.length == 0 || this.datosColegiaciones == undefined) {
+          this.message = this.datosColegiaciones.length.toString();
+          this.messageNoContent = this.translateService.instant("general.message.no.registros");
+          this.mostrarNumero = true;
+        } else {
+          this.message = this.datosColegiaciones.length.toString();
+          this.mostrarNumero = true;
+        }
+      },
+    );
   }
 
   onChangeRowsPerPagesColegiaciones(event) {
@@ -234,46 +199,44 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
     this.colsColegiaciones = [
       {
         field: "institucion",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
+        header: "censo.busquedaClientesAvanzada.literal.colegio",
       },
       {
         field: "numColegiado",
-        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
+        header: "censo.busquedaClientesAvanzada.literal.nColegiado",
       },
       {
         field: "estadoColegial",
-        header: "censo.fichaIntegrantes.literal.estado"
+        header: "censo.fichaIntegrantes.literal.estado",
       },
       {
         field: "fechaEstadoStr",
-        header: "censo.nuevaSolicitud.fechaEstado"
-
+        header: "censo.nuevaSolicitud.fechaEstado",
       },
       {
         field: "residenteInscrito",
-        header: "censo.ws.literal.residente"
-      }
+        header: "censo.ws.literal.residente",
+      },
     ];
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
   }
-
 
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;

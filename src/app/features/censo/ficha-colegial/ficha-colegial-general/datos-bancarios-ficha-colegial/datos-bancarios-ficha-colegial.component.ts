@@ -1,35 +1,20 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
-import { SigaServices } from '../../../../../_services/siga.service';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ConfirmationService, Message } from "primeng/components/common/api";
-import { AuthenticationService } from '../../../../../_services/authentication.service';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 // import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { cardService } from "./../../../../../_services/cardSearch.service";
-import { Location } from "@angular/common";
-import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
-import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
-import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
-import { AutoComplete, Dialog, Calendar, DataTable } from 'primeng/primeng';
-import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
-import { FichaColegialColegialesObject } from '../../../../../models/FichaColegialColegialesObject';
-import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
-import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
-import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
-import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
-import * as moment from 'moment';
-import { BusquedaSancionesItem } from '../../../../../models/BusquedaSancionesItem';
-import { BusquedaSancionesObject } from '../../../../../models/BusquedaSancionesObject';
-import { DatosBancariosItem } from '../../../../../models/DatosBancariosItem';
-import { DatosBancariosObject } from '../../../../../models/DatosBancariosObject';
-import { Table } from 'primeng/table';
+import { Router } from "@angular/router";
+import { Table } from "primeng/table";
+import { DatosBancariosItem } from "../../../../../models/DatosBancariosItem";
+import { DatosBancariosObject } from "../../../../../models/DatosBancariosObject";
+import { FichaColegialColegialesItem } from "../../../../../models/FichaColegialColegialesItem";
+import { FichaColegialGeneralesItem } from "../../../../../models/FichaColegialGeneralesItem";
 
 @Component({
-  selector: 'app-datos-bancarios-ficha-colegial',
-  templateUrl: './datos-bancarios-ficha-colegial.component.html',
-  styleUrls: ['./datos-bancarios-ficha-colegial.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-datos-bancarios-ficha-colegial",
+  templateUrl: "./datos-bancarios-ficha-colegial.component.html",
+  styleUrls: ["./datos-bancarios-ficha-colegial.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
@@ -45,7 +30,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   fichasPosibles = [
     {
       key: "bancarios",
-      activa: false
+      activa: false,
     },
   ];
   selectedItemBancarios: number = 10;
@@ -69,7 +54,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   permisos: boolean = true;
   colsBancarios;
   rowsPerPage;
-  mostrarNumero:Boolean = false;
+  mostrarNumero: Boolean = false;
   message;
   messageNoContent;
   @Input() isLetrado;
@@ -80,22 +65,24 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   @ViewChild("tableBancarios")
   tableBancarios: Table;
   disabledAction: boolean = false;
-  constructor(private sigaServices: SigaServices,
+  constructor(
+    private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     // private sanitizer: DomSanitizer,
-    private router: Router) { }
+    private router: Router,
+  ) {}
 
   ngOnInit() {
-    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      // Esto disablea tela de cosas funciona como medio permisos.
       // Es estado baja colegial (historico?)
       this.disabledAction = true;
     } else {
       this.disabledAction = false;
     }
-    if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != undefined 
-        && sessionStorage.getItem("personaBody") != 'undefined' && JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true) {
+    if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != undefined && sessionStorage.getItem("personaBody") != "undefined" && JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true) {
       this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -118,11 +105,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     }
 
     this.getCols();
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    
     if (this.esColegiado != null)
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -132,11 +117,11 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         }
       }
     if (this.idPersona != undefined) {
-      if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")){
+      if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")) {
         this.onInitDatosBancarios();
-        if(this.tarjetaBancarios == "3"){
+        if (this.tarjetaBancarios == "3") {
           this.permisos = true;
-        }else{
+        } else {
           this.permisos = false;
         }
         this.getLetrado();
@@ -144,7 +129,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     }
     if (this.openBanca == true) {
       if (this.openFicha == false) {
-        this.abreCierraFicha('bancarios');
+        this.abreCierraFicha("bancarios");
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -163,53 +148,51 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     }
   }
 
-
-
   getCols() {
     this.colsBancarios = [
       {
         field: "titular",
-        header: "Titular"
+        header: "Titular",
       },
       {
         field: "iban",
-        header: "Código de cuenta (IBAN)"
+        header: "Código de cuenta (IBAN)",
       },
       {
         field: "bic",
-        header: "Banco (BIC)"
+        header: "Banco (BIC)",
       },
       {
         field: "uso",
-        header: "Uso"
+        header: "Uso",
       },
       {
         field: "fechaFirmaServicios",
-        header: "Fecha firma del mandato de servicios"
+        header: "Fecha firma del mandato de servicios",
       },
       {
         field: "fechaFirmaProductos",
-        header: "Fecha firma del mandato de productos"
-      }
+        header: "Fecha firma del mandato de productos",
+      },
     ];
 
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
   }
 
@@ -219,7 +202,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
+    let fichaPosible = this.fichasPosibles.filter((elto) => {
       return elto.key === key;
     });
     if (fichaPosible && fichaPosible.length) {
@@ -231,11 +214,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
-    if (
-      key == "generales" &&
-      !this.activacionTarjeta &&
-      !this.emptyLoadFichaColegial
-    ) {
+    if (key == "generales" && !this.activacionTarjeta && !this.emptyLoadFichaColegial) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -266,7 +245,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.searchDatosBancarios();
   }
 
-  ocultarHistoricoDatosBancarios(){
+  ocultarHistoricoDatosBancarios() {
     this.progressSpinner = true;
     this.onInitDatosBancarios();
   }
@@ -281,13 +260,12 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       if (this.bodyDatosBancarios.historico) {
         this.numSelectedBancarios = this.selectedDatosBancarios.length;
         this.selectMultipleBancarios = false;
-        this.selectedDatosBancarios = this.datosBancarios.filter(dato => dato.fechaBaja != undefined)
+        this.selectedDatosBancarios = this.datosBancarios.filter((dato) => dato.fechaBaja != undefined);
       } else {
         this.numSelectedBancarios = this.datosBancarios.length;
         this.selectMultipleBancarios = false;
         this.selectedDatosBancarios = this.datosBancarios;
       }
-
     } else {
       this.selectedDatosBancarios = [];
       this.numSelectedBancarios = 0;
@@ -323,15 +301,13 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
           {
             severity: "info",
             summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
+            detail: this.translateService.instant("general.message.accion.cancelada"),
+          },
         ];
 
         this.selectedDatosBancarios = [];
         this.selectMultipleBancarios = false;
-      }
+      },
     });
   }
 
@@ -343,26 +319,20 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     item.idCuentas = [];
     item.idPersona = this.idPersona;
 
-    selectedDatos.forEach(element => {
+    selectedDatos.forEach((element) => {
       item.idCuentas.push(element.idCuenta);
     });
 
     this.sigaServices.post("datosBancarios_delete", item).subscribe(
-      data => {
+      (data) => {
         //this.progressSpinner = false;
         if (selectedDatos.length == 1) {
-          this.showSuccessDetalle(
-            this.translateService.instant("messages.deleted.success")
-          );
+          this.showSuccessDetalle(this.translateService.instant("messages.deleted.success"));
         } else {
-          this.showSuccessDetalle(
-            selectedDatos.length +
-            " " +
-            this.translateService.instant("messages.deleted.selected.success")
-          );
+          this.showSuccessDetalle(selectedDatos.length + " " + this.translateService.instant("messages.deleted.selected.success"));
         }
       },
-      error => {
+      (error) => {
         //console.log(error);
         this.progressSpinner = false;
       },
@@ -371,7 +341,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         this.selectedDatosBancarios = [];
         this.selectMultipleBancarios = false;
         this.searchDatosBancarios();
-      }
+      },
     );
   }
   showSuccessDetalle(mensaje: string) {
@@ -382,54 +352,39 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.mostrarNumero = false;
     if (this.emptyLoadFichaColegial != true) {
       //this.progressSpinner = true;
-      this.sigaServices
-        .postPaginado(
-          "fichaDatosBancarios_datosBancariosSearch",
-          "?numPagina=1",
-          this.bodyDatosBancarios
-        )
-        .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.searchDatosBancariosIdPersona = JSON.parse(data["body"]);
-            this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
-            if (this.datosBancarios.length > 0) {
-              sessionStorage.setItem("ibanAlterMutua", this.datosBancarios[0].iban.toString());
-            }
-          },
-          error => {
-            this.mostrarNumero = true;
-            this.searchDatosBancariosIdPersona = JSON.parse(error["error"]);
-            this.showFailDetalle(
-              JSON.stringify(
-                this.searchDatosBancariosIdPersona.error.description
-              )
-            );
-            //console.log(error);
-            this.progressSpinner = false;
-          }, () => {
-            if (this.datosBancarios.length > 0) {
-              this.mostrarDatosBancarios = true;
-              for (let i = 0; i <= this.datosBancarios.length - 1; i++) {
-                this.DescripcionDatosBancarios = this.datosBancarios[i];
-              }
-            }
-            if (this.datosBancarios.length == 0) {
-              this.message = this.datosBancarios.length.toString();
-              this.messageNoContent = this.translateService.instant(
-                "general.message.no.registros"
-              );
-              this.mostrarNumero = true;
-  
-            } else {
-              this.message = this.datosBancarios.length.toString();
-              this.mostrarNumero = true;
-  
-            }
-
+      this.sigaServices.postPaginado("fichaDatosBancarios_datosBancariosSearch", "?numPagina=1", this.bodyDatosBancarios).subscribe(
+        (data) => {
+          this.progressSpinner = false;
+          this.searchDatosBancariosIdPersona = JSON.parse(data["body"]);
+          this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
+          if (this.datosBancarios.length > 0) {
+            sessionStorage.setItem("ibanAlterMutua", this.datosBancarios[0].iban.toString());
           }
-        );
-
+        },
+        (error) => {
+          this.mostrarNumero = true;
+          this.searchDatosBancariosIdPersona = JSON.parse(error["error"]);
+          this.showFailDetalle(JSON.stringify(this.searchDatosBancariosIdPersona.error.description));
+          //console.log(error);
+          this.progressSpinner = false;
+        },
+        () => {
+          if (this.datosBancarios.length > 0) {
+            this.mostrarDatosBancarios = true;
+            for (let i = 0; i <= this.datosBancarios.length - 1; i++) {
+              this.DescripcionDatosBancarios = this.datosBancarios[i];
+            }
+          }
+          if (this.datosBancarios.length == 0) {
+            this.message = this.datosBancarios.length.toString();
+            this.messageNoContent = this.translateService.instant("general.message.no.registros");
+            this.mostrarNumero = true;
+          } else {
+            this.message = this.datosBancarios.length.toString();
+            this.mostrarNumero = true;
+          }
+        },
+      );
     }
   }
   showFailDetalle(mensaje: string) {
@@ -437,7 +392,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.msgs.push({
       severity: "error",
       summary: this.translateService.instant("general.message.incorrect"),
-      detail: mensaje
+      detail: mensaje,
     });
   }
   redireccionarDatosBancarios(dato) {
@@ -449,7 +404,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
           sessionStorage.setItem("idCuenta", dato[0].idCuenta);
           //sessionStorage.setItem("permisos", JSON.stringify(this.permisos));
 
-          if (dato[0].fechaBaja != null || this.tarjetaBancarios == '2') {
+          if (dato[0].fechaBaja != null || this.tarjetaBancarios == "2") {
             sessionStorage.setItem("permisos", "false");
           } else {
             sessionStorage.setItem("permisos", "true");
@@ -461,7 +416,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
           sessionStorage.setItem("datosCuenta", JSON.stringify(dato[0]));
           sessionStorage.setItem("usuarioBody", JSON.stringify(dato[0]));
           sessionStorage.setItem("historico", JSON.stringify(this.bodyDatosBancarios.historico));
-
         } else {
           sessionStorage.setItem("editar", "false");
         }
@@ -487,10 +441,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     sessionStorage.setItem("nombreTitular", JSON.stringify(this.generalBody.nombre));
     sessionStorage.removeItem("permisos");
     sessionStorage.setItem("fichaColegial", "true");
-    sessionStorage.setItem(
-      "usuarioBody",
-      sessionStorage.getItem("personaBody")
-    );
+    sessionStorage.setItem("usuarioBody", sessionStorage.getItem("personaBody"));
     sessionStorage.setItem("editar", "false");
 
     let migaPan = "";
@@ -547,5 +498,4 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       this.isLetrado = !this.permisos;
     }
   }
-
 }
