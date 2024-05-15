@@ -78,7 +78,7 @@
           <div class="bloque col-lg-6 col-md-5 col-sm-5">
             <div class="form-row">
               <div class="form-group col-lg-6 col-md-6">
-                <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
+                <label>{{"censo.fichaCliente.literal.identificacion" | translate}} </label>
                 <input [ngClass]="styleObligatorio(body.nif)" [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm();onlyCheckDatos()"
                   [disabled]="!editar || disabledAction || tarjeta == '2'" pInputText>
                 <div *ngIf="identificacionValida == false">
