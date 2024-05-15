@@ -213,20 +213,33 @@ export class CommonsService {
     }
   }
 
-  isValidPassport(dni: String): boolean {
-    return dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni);
+  isValidPassport(passport: String): boolean {
+    return passport && typeof passport === "string" && /^[a-zA-Z]{3}[0-9]{6}[a-zA-Z]?$/i.test(passport);
   }
-
+  
   isValidNIE(nie: String): boolean {
     return nie && typeof nie === "string" && /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie);
   }
-
+  
   isValidCIF(cif: String): boolean {
     return cif && typeof cif === "string" && /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif);
   }
-
+  
   isValidDNI(dni: String): boolean {
-    return dni && typeof dni === "string" && /^[0-9]{8}([A-Za-z]{1})$/.test(dni) && dni.substr(8, 9).toUpperCase() === this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23);
+    if (!dni || typeof dni !== "string") return false;
+    
+    const dniPattern = /^[0-9]{8}[A-Za-z]$/;
+    if (!dniPattern.test(dni)) return false;
+    
+    const numberPart = dni.substr(0, 8);
+    const letterPart = dni.substr(8, 1).toUpperCase();
+    
+    if (parseInt(numberPart, 10) < 0) return false;
+    
+    const DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+    const expectedLetter = DNI_LETTERS.charAt(parseInt(numberPart, 10) % 23);
+    
+    return letterPart === expectedLetter;
   }
 
   showMessage(severity, summary, msg) {
