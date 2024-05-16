@@ -118,7 +118,7 @@
               <div class="bloque col-lg-10 col-md-9">
                 <div class="form-row d-flex align-items-center">
                   <div class="form-group col-lg-4 col-md-4" *ngIf= "destinatario.idPersona > 0">
-                    <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
+                    <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} 
                     </label>
                     <input type="text" class="form-control" [(ngModel)]="destinatario.nifcif" [attr.maxlength]="20"
                       [disabled]="true" pInputText />

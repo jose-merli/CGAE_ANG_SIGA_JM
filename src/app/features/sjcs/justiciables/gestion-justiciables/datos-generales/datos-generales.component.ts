@@ -92,30 +92,45 @@ export class DatosGeneralesComponent implements OnInit {
 
   save() {
     if (!this.permisoEscritura) {
-      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      this.notificationService.showError(
+        this.translateService.instant("general.message.incorrect"), 
+        this.translateService.instant("general.message.noTienePermisosRealizarAccion")
+      );
     } else if (!this.permisoSave) {
-      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
+      this.notificationService.showError(
+        this.translateService.instant("general.message.incorrect"), 
+        "No puede realizar esa acción"
+      );
+    } else if (!this.validateIdentification()) {
+      this.notificationService.showError(
+        this.translateService.instant("general.message.incorrect"), 
+        this.translateService.instant("general.message.identificacionInvalida")
+      );
     } else {
       this.progressSpinner = true;
       let menorEdadSinRepresentante = true;
       if ((this.body.edad != undefined && JSON.parse(this.body.edad) < SigaConstants.EDAD_ADULTA && this.body.idrepresentantejg != undefined) || this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) >= SigaConstants.EDAD_ADULTA)) {
         menorEdadSinRepresentante = false;
       } else {
-        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
-        //Si es menor no se guarda la fecha nacimiento hasta que no se le asocie un representante
+        this.notificationService.showError(
+          this.translateService.instant("general.message.incorrect"), 
+          this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable")
+        );
         this.body.fechanacimiento = undefined;
         this.body.edad = undefined;
       }
-
+  
       if (!this.modoEdicion) {
         this.callSaveService("gestionJusticiables_createJusticiable", false, false);
       } else {
         if (!menorEdadSinRepresentante) {
-          //Comprueba que si autorizaavisotelematico el correo no se pueda borrar
           if (this.body.autorizaavisotelematico == "1") {
             if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
               this.progressSpinner = false;
-              this.notificationService.showInfo(this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+              this.notificationService.showInfo(
+                this.translateService.instant("general.message.informacion"), 
+                this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones")
+              );
             } else {
               if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
                 this.progressSpinner = false;
@@ -125,12 +140,10 @@ export class DatosGeneralesComponent implements OnInit {
               }
             }
           } else {
-            //Si tiene mas de un asunto preguntamos el dialog de guardar en todos o como nuevo
             if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
               this.progressSpinner = false;
               this.showDialog.emit("tarjetaGenerales");
             } else {
-              //Si no tiene mas asuntos directamente guardamos sin preguntar
               this.callSaveService("gestionJusticiables_updateJusticiable", true, false);
             }
           }
@@ -193,21 +206,24 @@ export class DatosGeneralesComponent implements OnInit {
     }
   }
 
-  compruebaDNI() {
-    if (this.body.nif != undefined && this.body.nif.trim() != "" && this.body.nif != null) {
-      if (this.commonsService.isValidDNI(this.body.nif)) {
-        this.body.idtipoidentificacion = "10";
-      } else if (this.commonsService.isValidPassport(this.body.nif)) {
-        this.body.idtipoidentificacion = "30";
-      } else if (this.commonsService.isValidNIE(this.body.nif)) {
-        this.body.idtipoidentificacion = "40";
-      } else if (this.commonsService.isValidCIF(this.body.nif)) {
-        this.body.idtipoidentificacion = "20";
-      } else {
-        this.body.idtipoidentificacion = "30";
-      }
+  validateIdentification(): boolean {
+    if (this.body.nif == undefined || this.body.nif.trim() == "") {
+      return true;
+    }
+    if (this.commonsService.isValidDNI(this.body.nif)) {
+      this.body.idtipoidentificacion = "10";
+      return true;
+    } else if (this.commonsService.isValidPassport(this.body.nif)) {
+      this.body.idtipoidentificacion = "30";
+      return true;
+    } else if (this.commonsService.isValidNIE(this.body.nif)) {
+      this.body.idtipoidentificacion = "40";
+      return true;
+    } else if (this.commonsService.isValidCIF(this.body.nif)) {
+      this.body.idtipoidentificacion = "20";
+      return true;
     } else {
-      this.body.idtipoidentificacion = undefined;
+      return false;
     }
   }
 
