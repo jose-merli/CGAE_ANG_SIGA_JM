@@ -35,7 +35,7 @@ export class DatosRepresentanteComponent implements OnInit {
   dialogRepreOpcion: String = "";
   representante: JusticiableItem = new JusticiableItem();
 
-  constructor(private router: Router, private notificationService: NotificationService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private translateService: TranslateService, private commonsService: CommonsService) {}
+  constructor(private router: Router, private notificationService: NotificationService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private translateService: TranslateService, private commonsService: CommonsService) { }
 
   ngOnInit() {
     this.progressSpinner = false;
@@ -217,6 +217,8 @@ export class DatosRepresentanteComponent implements OnInit {
           this.progressSpinner = false;
           this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyChange.emit(this.body);
+          this.disabledDisassociate();
+          this.disabledAssociate();
         },
         (err) => {
           this.progressSpinner = false;
@@ -231,6 +233,8 @@ export class DatosRepresentanteComponent implements OnInit {
           this.progressSpinner = false;
           this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyChange.emit(this.body);
+          this.disabledDisassociate();
+          this.disabledAssociate();
         },
         (err) => {
           this.progressSpinner = false;
@@ -245,6 +249,8 @@ export class DatosRepresentanteComponent implements OnInit {
           this.progressSpinner = false;
           this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyChange.emit(this.body);
+          this.disabledDisassociate();
+          this.disabledAssociate();
         },
         (err) => {
           this.progressSpinner = false;
@@ -257,6 +263,8 @@ export class DatosRepresentanteComponent implements OnInit {
           this.progressSpinner = false;
           this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyChange.emit(this.body);
+          this.disabledDisassociate();
+          this.disabledAssociate();
         },
         (err) => {
           this.progressSpinner = false;
@@ -279,6 +287,8 @@ export class DatosRepresentanteComponent implements OnInit {
           this.body.idrepresentantejg = undefined;
           this.representante = new JusticiableItem();
           this.bodyChange.emit(this.body);
+          this.disabledDisassociate();
+          this.disabledAssociate();
         },
         (err) => {
           this.progressSpinner = false;
@@ -295,6 +305,8 @@ export class DatosRepresentanteComponent implements OnInit {
           this.representante = new JusticiableItem();
           this.body.idrepresentantejg = undefined;
           this.bodyChange.emit(this.body);
+          this.disabledDisassociate();
+          this.disabledAssociate();
         },
         (err) => {
           this.progressSpinner = false;
@@ -311,6 +323,8 @@ export class DatosRepresentanteComponent implements OnInit {
           this.representante = new JusticiableItem();
           this.body.idrepresentantejg = undefined;
           this.bodyChange.emit(this.body);
+          this.disabledDisassociate();
+          this.disabledAssociate();
         },
         (err) => {
           this.progressSpinner = false;
@@ -325,6 +339,8 @@ export class DatosRepresentanteComponent implements OnInit {
           this.representante = new JusticiableItem();
           this.body.idrepresentantejg = undefined;
           this.bodyChange.emit(this.body);
+          this.disabledDisassociate();
+          this.disabledAssociate();
         },
         (err) => {
           this.progressSpinner = false;
