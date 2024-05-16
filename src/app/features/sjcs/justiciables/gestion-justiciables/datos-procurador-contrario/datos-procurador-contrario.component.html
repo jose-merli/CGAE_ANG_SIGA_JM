@@ -56,7 +56,7 @@
     </div>
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}" [disabled]="!permisoEscritura || procurador.nColegiado == ''"></button>
+        <button pButton (click)="disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}" [disabled]="!permisoEscritura || procurador.nColegiado == null || procurador.nColegiado == ''"></button>
         <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}" [disabled]="!permisoEscritura"></button>
       </div>
     </div>
