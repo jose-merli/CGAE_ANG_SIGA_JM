@@ -43,6 +43,7 @@ export class DatosGeneralesComponent implements OnInit {
   constructor(private sigaServices: SigaServices, private notificationService: NotificationService, private translateService: TranslateService, private router: Router, private confirmationService: ConfirmationService, private commonsService: CommonsService, private authenticationService: AuthenticationService, private persistenceService: PersistenceService) {}
 
   ngOnInit() {
+    this.progressSpinner = true;
     this.getCombos();
     if (this.body != null && this.body.idpersona != null) {
       this.modoEdicion = true;
@@ -92,34 +93,22 @@ export class DatosGeneralesComponent implements OnInit {
 
   save() {
     if (!this.permisoEscritura) {
-      this.notificationService.showError(
-        this.translateService.instant("general.message.incorrect"), 
-        this.translateService.instant("general.message.noTienePermisosRealizarAccion")
-      );
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else if (!this.permisoSave) {
-      this.notificationService.showError(
-        this.translateService.instant("general.message.incorrect"), 
-        "No puede realizar esa acción"
-      );
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
     } else if (!this.validateIdentification()) {
-      this.notificationService.showError(
-        this.translateService.instant("general.message.incorrect"), 
-        this.translateService.instant("general.message.identificacionInvalida")
-      );
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.identificacionInvalida"));
     } else {
       this.progressSpinner = true;
       let menorEdadSinRepresentante = true;
       if ((this.body.edad != undefined && JSON.parse(this.body.edad) < SigaConstants.EDAD_ADULTA && this.body.idrepresentantejg != undefined) || this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) >= SigaConstants.EDAD_ADULTA)) {
         menorEdadSinRepresentante = false;
       } else {
-        this.notificationService.showError(
-          this.translateService.instant("general.message.incorrect"), 
-          this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable")
-        );
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
         this.body.fechanacimiento = undefined;
         this.body.edad = undefined;
       }
-  
+
       if (!this.modoEdicion) {
         this.callSaveService("gestionJusticiables_createJusticiable", false, false);
       } else {
@@ -127,10 +116,7 @@ export class DatosGeneralesComponent implements OnInit {
           if (this.body.autorizaavisotelematico == "1") {
             if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
               this.progressSpinner = false;
-              this.notificationService.showInfo(
-                this.translateService.instant("general.message.informacion"), 
-                this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones")
-              );
+              this.notificationService.showInfo(this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
             } else {
               if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
                 this.progressSpinner = false;
@@ -532,6 +518,7 @@ export class DatosGeneralesComponent implements OnInit {
     this.sigaServices.get("gestionJusticiables_comboMinusvalias").subscribe((n) => {
       this.comboMinusvalia = n.combooItems;
       this.commonsService.arregloTildesCombo(this.comboMinusvalia);
+      this.progressSpinner = false;
     });
   }
 
@@ -548,7 +535,6 @@ export class DatosGeneralesComponent implements OnInit {
       { label: "Gananciales", value: "G" },
       { label: "Separación de bienes", value: "S" },
     ];
-
     this.commonsService.arregloTildesCombo(this.comboRegimenConyugal);
   }
 

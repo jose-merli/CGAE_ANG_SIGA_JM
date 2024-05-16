@@ -134,7 +134,6 @@ export class DatosSolicitudComponent implements OnInit {
       { label: "No", value: "0" },
       { label: "Si", value: "1" },
     ];
-    this.commonsService.arregloTildesCombo(this.comboAutorizaAvisotel);
   }
 
   private getComboAutorizaEjg() {
@@ -142,7 +141,6 @@ export class DatosSolicitudComponent implements OnInit {
       { label: "No", value: "0" },
       { label: "Si", value: "1" },
     ];
-    this.commonsService.arregloTildesCombo(this.comboAutorizaEjg);
   }
 
   private getComboSolicitajg() {
@@ -150,6 +148,5 @@ export class DatosSolicitudComponent implements OnInit {
       { label: "No", value: "0" },
       { label: "Si", value: "1" },
     ];
-    this.commonsService.arregloTildesCombo(this.comboSolicitajg);
   }
 }
