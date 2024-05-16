@@ -66,6 +66,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     } else if (this.origen == "newSoj") {
       this.router.navigate(["/detalle-soj"]);
     } else if (this.origen == "newRepresentante") {
+      this.persistenceService.clearFiltrosAux();
       this.persistenceService.setDatos(this.justiciable);
       sessionStorage.setItem("origin", this.origen);
       sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaRepresentante");

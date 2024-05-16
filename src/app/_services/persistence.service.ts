@@ -323,4 +323,11 @@ export class PersistenceService {
     this.clearDatosBusquedaGeneralSJCS();
     this.clearFiltrosBusquedaGeneralSJCS();
   }
+
+  clearPersistenceFiltros() {
+    this.clearFiltros();
+    this.clearFiltrosAux();
+    this.clearFiltrosEJG();
+    this.clearFiltrosBusquedaGeneralSJCS();
+  }
 }

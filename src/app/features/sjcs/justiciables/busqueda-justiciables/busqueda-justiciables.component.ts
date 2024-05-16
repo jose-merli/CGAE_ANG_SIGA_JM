@@ -140,6 +140,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
   insertRepresentante(event: JusticiableItem) {
     // Asociar para Nuevo Representante
     this.persistenceService.clearBody();
+    this.persistenceService.clearFiltrosAux();
     this.persistenceService.setBody(event);
     this.persistenceService.setDatos(this.justiciable);
     sessionStorage.setItem("origin", this.originjusticiable);
@@ -156,6 +157,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
     } else if (this.origen == "newSoj") {
       this.router.navigate(["/detalle-soj"]);
     } else if (this.origen == "newRepresentante") {
+      this.persistenceService.clearFiltrosAux();
       this.persistenceService.setDatos(this.justiciable);
       sessionStorage.setItem("origin", this.originjusticiable);
       sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaRepresentante");
