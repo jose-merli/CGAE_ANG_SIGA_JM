@@ -1,4 +1,4 @@
-<p-growl life="30000"></p-growl>
+<p-growl life="5000" (onHover)="notificationService.clear()"></p-growl>
 
 <div class="siga-app-container">
     <app-header *ngIf="isLogged()"></app-header>

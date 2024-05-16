@@ -87,7 +87,6 @@ export class BusquedaJusticiablesComponent implements OnInit {
       let filtrosInicio: JusticiableBusquedaItem = new JusticiableBusquedaItem();
       if (this.persistenceService.getFiltrosAux()) {
         this.filtros = this.persistenceService.getFiltrosAux();
-        this.persistenceService.clearFiltrosAux();
         this.filtros = { ...filtrosInicio, ...this.filtros };
         this.search(this.filtros);
       }
@@ -97,7 +96,6 @@ export class BusquedaJusticiablesComponent implements OnInit {
       let filtrosInicio: JusticiableBusquedaItem = new JusticiableBusquedaItem();
       if (this.persistenceService.getFiltros()) {
         this.filtros = this.persistenceService.getFiltros();
-        this.persistenceService.clearFiltros();
         this.filtros = { ...filtrosInicio, ...this.filtros };
         this.search(this.filtros);
       }
