@@ -1,9 +1,8 @@
+import { Injectable } from "@angular/core";
 import { MenuItem } from "primeng/primeng";
+import { environment } from "../../../environments/environment";
 import { SigaServices } from "../../_services/siga.service";
-// app/translate/translate.service.ts
-
-import { Injectable, Inject } from "@angular/core";
-// import { TranslationClass } from './translation'; // import our opaque token
+import { DICCIONARIO } from "./diccionario";
 
 @Injectable()
 export class TranslateService {
@@ -12,102 +11,31 @@ export class TranslateService {
   menuItem: MenuItem;
   private enCalendar = {
     firstDayOfWeek: 0,
-    dayNames: [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-    ],
+    dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-    monthNames: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-    ],
-    monthNamesShort: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ],
+    monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     today: "Today",
-    clear: "Clear"
+    clear: "Clear",
   };
 
   private esCalendar = {
     firstDayOfWeek: 1,
-    dayNames: [
-      "Domingo",
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sábado"
-    ],
+    dayNames: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
     dayNamesShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
     dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-    monthNames: [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre"
-    ],
-    monthNamesShort: [
-      "Ene",
-      "Feb",
-      "Mar",
-      "Abr",
-      "May",
-      "Jun",
-      "Jul",
-      "Ago",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dic"
-    ],
+    monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
     today: "Hoy",
-    clear: "Limpiar"
+    clear: "Limpiar",
   };
 
   // inject our translations
   constructor(private service: SigaServices) {
-    service.get("usuario").subscribe(response => {
+    service.get("usuario").subscribe((response) => {
       this._currentLang = response.usuarioItem[0].idLenguaje;
     });
-    //service.get("diccionarios").subscribe(response => {
-    //  this._translations = response.DiccionarioItems;
-    //});
   }
 
   public get currentLang() {
@@ -124,10 +52,7 @@ export class TranslateService {
     let translation = key;
     if (this._translations) {
       for (var cont = 0; cont < this._translations.length; cont++) {
-        if (
-          this._translations[cont] &&
-          this._translations[cont].diccionario[this.currentLang]
-        ) {
+        if (this._translations[cont] && this._translations[cont].diccionario[this.currentLang]) {
           return this._translations[cont].diccionario[this.currentLang][key];
         }
       }
@@ -146,41 +71,27 @@ export class TranslateService {
   }
 
   public updateTranslations(service: SigaServices): void {
-    service.get("diccionarios").subscribe(response => {
-      this._translations = response.DiccionarioItems;
-    });
+    if (environment.diccionario) {
+      this._translations = DICCIONARIO.DiccionarioItems;
+    } else {
+      service.get("diccionarios").subscribe((response) => {
+        this._translations = response.DiccionarioItems;
+      });
+    }
   }
-
-  
-  // public getTranslations(): any {
-  //   this.service.get("diccionarios").subscribe(response => {
-  //     this._translations = response.DiccionarioItems;
-
-  //     this.service.get("menu").subscribe(response => {
-  //       return response.menuItems;
-  //     });
-
-  //   });
-  // }
-
 
   getTranslations(): Promise<any> {
     return new Promise(async (resolve, reject) => {
-
-      this.service.get("diccionarios").subscribe(response => {
-        this._translations = response.DiccionarioItems;
-
-        this.service.get("menu").subscribe(res => {
-          resolve(res.menuItems);
-        }, err =>{
-          //console.log(err);
+      if (environment.diccionario) {
+        this._translations = DICCIONARIO.DiccionarioItems;
+      } else {
+        this.service.get("diccionarios").subscribe((response) => {
+          this._translations = response.DiccionarioItems;
         });
-
+      }
+      this.service.get("menu").subscribe((res) => {
+        resolve(res.menuItems);
       });
-
-
     });
   }
-
-
 }
