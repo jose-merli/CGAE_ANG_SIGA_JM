@@ -3,8 +3,6 @@ import { MessageService } from "primeng/components/common/messageservice";
 
 @Injectable()
 export class NotificationService {
-  //messages: Message[] = [];
-
   constructor(private messageService: MessageService) {}
 
   showSuccess(summary: string, detail: string) {
@@ -23,7 +21,7 @@ export class NotificationService {
     this.messageService.add({ severity: "error", summary: summary, detail: detail });
   }
 
-  clean() {
-    //this.messages = [];
+  clear() {
+    this.messageService.clear();
   }
 }
