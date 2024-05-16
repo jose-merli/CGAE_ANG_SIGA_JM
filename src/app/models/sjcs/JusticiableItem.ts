@@ -21,25 +21,30 @@ export class JusticiableItem {
   idestadocivil: string;
   tipopersonajg: string;
   idtipoidentificacion: string;
-  observaciones: string;
   idrepresentantejg: number;
-  idtipoencalidad: string;
   sexo: string;
   idlenguaje: string;
-  numerohijos: string;
   fechaalta: Date;
   fax: string;
   correoelectronico: string;
   edad: string;
   idminusvalia: string;
-  existedomicilio: string;
-  idtipodir: string;
-  cnae: string;
   idtipovia: string;
   numerodir: string;
   escaleradir: string;
   pisodir: string;
   puertadir: string;
+
+  //idtipoencalidad: string;
+  //idtipodir: string;
+  //cnae: string;
+  //descpaisdir1: string;
+  //idtipoidentificacionotros: string;
+  //numerohijos: string;
+  //parentesco: string;
+  //observaciones: string;
+  //existedomicilio: string;
+
   //idprovincia2: string;
   //idpoblacion2: string;
   //direccion2: string;
@@ -54,8 +59,6 @@ export class JusticiableItem {
   //descpaisdir2: string;
   idtipopersona: string;
   idpaisdir1: string;
-  descpaisdir1: string;
-  idtipoidentificacionotros: string;
   asistidosolicitajg: string;
   asistidoautorizaeejg: string;
   autorizaavisotelematico: string;
@@ -66,7 +69,6 @@ export class JusticiableItem {
   telefonos: JusticiableTelefonoItem[];
 
   representante: number;
-  parentesco: string;
   tipojusticiable: string;
 
   datosAsuntos: any[];
