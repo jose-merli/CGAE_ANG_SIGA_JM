@@ -340,6 +340,10 @@ export class DatosPersonalesComponent implements OnInit {
       this.validateForm = false;
     }
 
+    if (this.body.idpaisdir1 == null || this.body.idpaisdir1.trim() == "") {
+      this.validateForm = false;
+    }
+
     if (!this.isExtranjero && (this.body.idprovincia == null || this.body.idprovincia.trim() == "")) {
       this.validateForm = false;
     }

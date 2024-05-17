@@ -80,10 +80,10 @@
             <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.puertadir" [disabled]="!permisoEscritura" pInputText (keydown)="onChangeInput($event)">
           </div>
           <div class="form-group col-lg-6 col-md-6">
-            <label>{{"censo.datosDireccion.literal.pais2" | translate}}</label>
+            <label>{{"censo.datosDireccion.literal.pais2" | translate}} *</label>
             <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
               [(ngModel)]="body.idpaisdir1" [showClear]="true" [filter]="true" filterMatchMode="contains" [options]="comboPais" [disabled]="!permisoEscritura"
-              (onChange)="onChangePais(); onChangeInput($event)">
+              (onChange)="onChangePais(); onChangeInput($event)" [ngClass]="styleObligatorio(body.idpaisdir1)">
             </p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6"> <label>{{"censo.ws.literal.codigopostal" | translate}} *</label>
