@@ -70,6 +70,10 @@ export class AppComponent implements OnInit {
     await this.getInstitucionActual();
   }
 
+  clear() {
+    this.notificationService.clear();
+  }
+
   subscribeNavigationEnd() {
     this.router.events
       .filter((e) => e instanceof NavigationEnd)
