@@ -477,13 +477,13 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   private getComboProvincia() {
-    return this.sigaServices.get("integrantes_provincias").toPromise().then((n) => {
+    return this.sigaServices.get("integrantes_provincias").toPromise().then(async (n) => {
       this.comboProvincia = n.combooItems;
       let sin = { label: "", value: "" };
       this.comboProvincia.push(sin);
       this.commonsService.arregloTildesCombo(this.comboProvincia);
       if (this.body.idprovincia != undefined && this.body.idprovincia != null && this.body.idprovincia != "") {
-        this.getComboPoblacion("-1");
+        await this.getComboPoblacion("-1");
         this.isDisabledPoblacion = false;
       }
       this.progressSpinner = false;
@@ -491,7 +491,7 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   private getComboPoblacion(filtro: string) {
-    this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + this.body.idprovincia + "&filtro=" + filtro).subscribe((n) => {
+    return this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + this.body.idprovincia + "&filtro=" + filtro).toPromise().then((n) => {
       this.comboPoblacion = n.combooItems;
       this.commonsService.arregloTildesCombo(this.comboPoblacion);
       this.progressSpinner = false;
