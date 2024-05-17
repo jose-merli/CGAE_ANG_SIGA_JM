@@ -85,7 +85,7 @@
           </div>
           <div class="form-group  col-lg-6 col-md-6">
             <label>{{ "censo.consultaDatosGenerales.literal.edad" | translate }}</label>
-            <input type="text" class="form-control" disabled [disabled]="!isEditable || alwaysDisabled" [(ngModel)]="body.edad" min="0" step="1" pattern="\d*" pInputText />
+            <input type="text" class="form-control" disabled [disabled]="true" [(ngModel)]="body.edad" min="0" step="1" pattern="\d*" pInputText />
           </div>
         </div>
         <div class="d-flex" style="height: 200px;">
