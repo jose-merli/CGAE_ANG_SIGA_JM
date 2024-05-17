@@ -497,6 +497,14 @@ export class DatosGeneralesComponent implements OnInit {
     this.getComboProfesion();
     this.getComboRegimenConyugal();
     this.getComboMinusvalia();
+    this.getComboNacionalidad();
+  }
+  getComboNacionalidad() {
+    this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
+      result => {
+        this.comboNacionalidad = result.combooItems;
+      }
+    );
   }
 
   private getComboSexo() {
