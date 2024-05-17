@@ -59,25 +59,25 @@
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}</label>
-            <p-dropdown class="select-form"  [(ngModel)]="body.idtipoidentificacion" [options]="comboTipoIdentificacion" [filter]="true" filterBy="label,labelSinTilde"
+            <p-dropdown class="select-form"  [(ngModel)]="body.idtipoidentificacion" [options]="comboTipoIdentificacion" (ngModelChange)="updateFormState()" [filter]="true" filterBy="label,labelSinTilde"
               placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.busquedaClientesAvanzada.literal.tipoPersona" | translate}}(*)</label>
             <p-dropdown class="select-form" [(ngModel)]="body.tipopersonajg" [options]="comboTipoPersona" [filter]="true" filterBy="label,labelSinTilde"
-              placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true" [disabled]="!permisoEscritura" [ngClass]="styleObligatorio(body.tipopersonajg)"></p-dropdown>
+              placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true" [disabled]="!permisoEscritura" (ngModelChange)="updateFormState()" [ngClass]="styleObligatorio(body.tipopersonajg)"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)</label>
-            <input [(ngModel)]="body.nombre" name="nombre" type="text" class="form-control" [maxLength]="95" [disabled]="!permisoEscritura" pInputText [ngClass]="styleObligatorio(body.nombre)" />
+            <input [(ngModel)]="body.nombre" name="nombre" type="text" class="form-control" (ngModelChange)="updateFormState()" [maxLength]="95" [disabled]="!permisoEscritura" pInputText [ngClass]="styleObligatorio(body.nombre)" />
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }} (*)</label>
-            <input [(ngModel)]="body.apellido1" name="apellido1" type="text" class="form-control" [maxLength]="95" [disabled]="!permisoEscritura" pInputText [ngClass]="styleObligatorio(body.apellido1)" />
+            <input [(ngModel)]="body.apellido1" name="apellido1" type="text" class="form-control" (ngModelChange)="updateFormState()" [maxLength]="95" [disabled]="!permisoEscritura" pInputText [ngClass]="styleObligatorio(body.apellido1)" />
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}</label>
-            <input [(ngModel)]="body.apellido2" name="apellido2" type="text" class="form-control" [maxLength]="95" [disabled]="!permisoEscritura" pInputText />
+            <input [(ngModel)]="body.apellido2" name="apellido2" type="text" class="form-control" (ngModelChange)="updateFormState()" [maxLength]="95" [disabled]="!permisoEscritura" pInputText />
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
             <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}</label>
@@ -85,7 +85,7 @@
           </div>
           <div class="form-group  col-lg-6 col-md-6">
             <label>{{ "censo.consultaDatosGenerales.literal.edad" | translate }}</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="body.edad" [disabled]="!permisoEscritura"pInputText />
+            <input type="text" class="form-control" disabled [disabled]="!isEditable || alwaysDisabled" [(ngModel)]="body.edad" min="0" step="1" pattern="\d*" pInputText />
           </div>
         </div>
         <div class="d-flex" style="height: 200px;">
@@ -99,43 +99,43 @@
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ 'justiciaGratuita.justiciables.literal.nacionalidad' | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]="body.idpais" [options]="comboNacionalidad" placeholder="{{'general.boton.seleccionar' | translate}}" 
-              [filter]="true" filterBy="label,labelSinTilde" showClear="true" [disabled]="!permisoEscritura"></p-dropdown>
+              [filter]="true" (ngModelChange)="updateFormState()" filterBy="label,labelSinTilde" showClear="true" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
             <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}</label>
-            <app-fecha [(value)]="body.fechaalta" [disabled]="true" [utc]="false" [disabled]="!permisoEscritura"></app-fecha>
+            <app-fecha [(value)]="body.fechaalta" [disabled]="true"  [utc]="false" [disabled]="!permisoEscritura"></app-fecha>
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
             <label>{{ 'censo.usuario.idioma' | translate }}</label>
             <p-dropdown class="select-form" [options]="comboIdiomas" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}" 
-              [(ngModel)]="body.idlenguaje" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+              [(ngModel)]="body.idlenguaje" [filter]="true" (ngModelChange)="updateFormState()" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
             <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }} (*)</label>
-            <p-dropdown class="select-form" [(ngModel)]="body.sexo" [options]="comboSexo" [filter]="true" [ngClass]="styleObligatorio(body.sexo)"
+            <p-dropdown class="select-form" [(ngModel)]="body.sexo" (ngModelChange)="updateFormState()" [options]="comboSexo" [filter]="true" [ngClass]="styleObligatorio(body.sexo)"
               filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
             <label>{{ "censo.consultaDatosGenerales.literal.estadoCivil" | translate }}</label>
             <p-dropdown class="select-form" [options]="comboEstadoCivil" showClear="true"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde"
+              placeholder="{{'general.boton.seleccionar' | translate}}" (ngModelChange)="updateFormState()" [filter]="true" filterBy="label,labelSinTilde"
               [(ngModel)]="body.idestadocivil" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
             <label>{{ "gratuita.personaJG.literal.regimenConyugal" | translate }}</label>
-            <p-dropdown class="select-form" [options]="comboRegimenConyugal" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}" 
+            <p-dropdown class="select-form" [options]="comboRegimenConyugal" showClear="true" (ngModelChange)="updateFormState()" placeholder="{{'general.boton.seleccionar' | translate}}" 
             [(ngModel)]="body.regimenConyugal" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
             <label>{{ "gratuita.personaJG.literal.profesion" | translate }}</label>
             <p-dropdown class="select-form" [options]="comboProfesion" showClear="true"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idprofesion" [filter]="true"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idprofesion" (ngModelChange)="updateFormState()" [filter]="true"
               filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
             <label>{{ "gratuita.busquedaSOJ.literal.minusvalia" | translate }}</label>
             <p-dropdown class="select-form" [options]="comboMinusvalia" showClear="true"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idminusvalia" [filter]="true"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idminusvalia" (ngModelChange)="updateFormState()" [filter]="true"
               filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
         </div>
@@ -145,7 +145,7 @@
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
         <button pButton (click)="rest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}" [disabled]="!permisoEscritura"></button>
-        <button pButton (click)="save()" [disabled]="!permisoSave || !permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button pButton (click)="save()" [disabled]="!permisoSave || !permisoEscritura || !canSave" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>
