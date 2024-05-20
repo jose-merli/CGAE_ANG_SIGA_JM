@@ -6,6 +6,7 @@
 		"ng": "ng",
 		"start": "webpack-dev-server --port=4200",
 		"startProxy": "node --max-http-header-size=32768 node_modules/@angular/cli/bin/ng serve --proxy-config src/proxy.conf.json",
+		"startProxy2": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng serve --proxy-config src/proxy.conf.json",
 		"build": "webpack",
 		"deploy": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --env=deloitte --base-href=/siga-ang/",
 		"deploytesting": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --env=deloittetesting --base-href=/siga-ang-testing/",

@@ -10,5 +10,5 @@ export const environment = {
   baseHref: "/htdocs/",
   oldSigaUrl: "/SIGA/",
   newSigaUrl: "/siga-web-desa/",
-  diccionario: true,
+  diccionario: false,
 };

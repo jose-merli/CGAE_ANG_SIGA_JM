@@ -11,5 +11,5 @@ export const environment = {
   oldSigaUrl: "/SIGA/",
   newSigaUrl: "/siga-web/",
 
-  diccionario: true,
+  diccionario: false,
 };

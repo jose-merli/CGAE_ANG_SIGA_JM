@@ -242,6 +242,11 @@ export class CommonsService {
     return letterPart === expectedLetter;
   }
 
+  isValidOtro(otro: String) : boolean
+  {
+    return otro && typeof otro === "string" && /^[a-zA-Z0-9]{1,20}$/i.test(otro);
+  }
+
   showMessage(severity, summary, msg) {
     let msgs = [];
     msgs.push({
