@@ -1,21 +1,19 @@
-import { Component, OnInit, HostBinding, ViewChild, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList, OnDestroy } from '@angular/core';
-import { FiltroGestionZonasComponent } from './filtro-gestion-zonas/filtro-gestion-zonas.component';
-import { TranslateService } from '../../../../commons/translate';
-import { SigaServices } from '../../../../_services/siga.service';
-import { PersistenceService } from '../../../../_services/persistence.service';
-import { CommonsService } from '../../../../_services/commons.service';
-import { procesos_maestros } from '../../../../permisos/procesos_maestros';
-import { Router } from '@angular/router';
-import { TablaGestionZonasComponent } from './tabla-gestion-zonas/tabla-gestion-zonas.component';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import { CommonsService } from "../../../../_services/commons.service";
+import { PersistenceService } from "../../../../_services/persistence.service";
+import { SigaServices } from "../../../../_services/siga.service";
+import { TranslateService } from "../../../../commons/translate";
+import { procesos_maestros } from "../../../../permisos/procesos_maestros";
+import { FiltroGestionZonasComponent } from "./filtro-gestion-zonas/filtro-gestion-zonas.component";
+import { TablaGestionZonasComponent } from "./tabla-gestion-zonas/tabla-gestion-zonas.component";
 
 @Component({
-  selector: 'app-gestion-zonas',
-  templateUrl: './gestion-zonas.component.html',
-  styleUrls: ['./gestion-zonas.component.scss']
+  selector: "app-gestion-zonas",
+  templateUrl: "./gestion-zonas.component.html",
+  styleUrls: ["./gestion-zonas.component.scss"],
 })
 export class GestionZonasComponent implements OnInit {
-
-
   buscar: boolean = false;
   messageShow: string;
   historico: boolean = false;
@@ -36,48 +34,37 @@ export class GestionZonasComponent implements OnInit {
   msgs;
   permisoEscritura: boolean = false;
 
-
-
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
-
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private router: Router) {}
 
   ngOnInit() {
-
-    this.commonsService.checkAcceso(procesos_maestros.zonasYSubzonas)
-      .then(respuesta => {
+    this.commonsService
+      .checkAcceso(procesos_maestros.zonasYSubzonas)
+      .then((respuesta) => {
         this.permisoEscritura = respuesta;
-
 
         this.persistenceService.setPermisos(this.permisoEscritura);
 
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
           this.router.navigate(["/errorAcceso"]);
         }
-      }
-      ).catch(error => console.error(error));
+      })
+      .catch((error) => console.error(error));
   }
-
 
   isOpenReceive(event) {
     this.filtros.filtros.historico = event;
     this.searchZonas(event);
   }
 
-
   searchZonas(event) {
-    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux();
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
     this.sigaServices.post("gestionZonas_searchZones", this.filtros.filtroAux).subscribe(
-      n => {
-
+      (n) => {
         this.datos = JSON.parse(n.body).zonasItems;
         this.buscar = true;
         this.progressSpinner = false;
@@ -86,10 +73,10 @@ export class GestionZonasComponent implements OnInit {
         }
         this.resetSelect();
       },
-      err => {
+      (err) => {
         this.progressSpinner = false;
-        //console.log(err);
-      });
+      },
+    );
   }
 
   resetSelect() {
@@ -100,9 +87,9 @@ export class GestionZonasComponent implements OnInit {
       this.tabla.selectAll = false;
       if (this.tabla && this.tabla.table) {
         this.tabla.table.sortOrder = 0;
-        this.tabla.table.sortField = '';
+        this.tabla.table.sortField = "";
         this.tabla.table.reset();
-        this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+        this.tabla.buscadores = this.tabla.buscadores.map((it) => (it = ""));
       }
     }
   }
@@ -112,18 +99,4 @@ export class GestionZonasComponent implements OnInit {
 
     this.searchZonas(event);
   }
-
-  showMessage(event) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: event.severity,
-      summary: event.summary,
-      detail: event.msg
-    });
-  }
-
-  clear() {
-    this.msgs = [];
-  }
-
 }
