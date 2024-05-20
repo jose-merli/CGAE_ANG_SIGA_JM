@@ -61,23 +61,23 @@
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.consultaDirecciones.literal.direccion" | translate}} *</label>
-            <input [(ngModel)]="body.direccion" type="text" class="form-control" [maxLength]="95" [disabled]="body.direccionNoInformada" pInputText [ngClass]="styleObligatorio(body.direccion)" (keydown)="onChangeInput($event)">
+            <input [(ngModel)]="body.direccion" type="text" class="form-control" [maxLength]="95" [disabled]="body.direccionNoInformada" pInputText [ngClass]="styleObligatorio(body.direccion)" (keyup)="onChangeInput($event)">
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"gratuita.busquedaAsistencias.literal.numero" | translate}}</label>
-            <input type="text" class="form-control" maxLength="5" [(ngModel)]="body.numerodir" [disabled]="!permisoEscritura" pInputText (keydown)="onChangeInput($event)">
+            <input type="text" class="form-control" maxLength="5" [(ngModel)]="body.numerodir" [disabled]="!permisoEscritura" pInputText (keyup)="onChangeInput($event)">
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"gratuita.busquedaAsistencias.literal.escalera" | translate}}</label>
-            <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.escaleradir" [disabled]="!permisoEscritura" pInputText (keydown)="onChangeInput($event)">
+            <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.escaleradir" [disabled]="!permisoEscritura" pInputText (keyup)="onChangeInput($event)">
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"gratuita.personaJG.literal.pisodir" | translate}}</label>
-            <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.pisodir" [disabled]="!permisoEscritura" pInputText (keydown)="onChangeInput($event)">
+            <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.pisodir" [disabled]="!permisoEscritura" pInputText (keyup)="onChangeInput($event)">
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"gratuita.personaJG.literal.puertadir" | translate}}</label>
-            <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.puertadir" [disabled]="!permisoEscritura" pInputText (keydown)="onChangeInput($event)">
+            <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.puertadir" [disabled]="!permisoEscritura" pInputText (keyup)="onChangeInput($event)">
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.datosDireccion.literal.pais2" | translate}}</label>
@@ -110,14 +110,14 @@
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.datosDireccion.literal.correo" | translate}}</label>
-            <input type="text" class="form-control" [class.border-error]="!validateEmail()"  [maxLength]="99" [(ngModel)]="body.correoelectronico" [disabled]="!permisoEscritura" pInputText (keydown)="onChangeInput($event)">
+            <input type="text" class="form-control" [class.border-error]="!validateEmail()"  [maxLength]="99" [(ngModel)]="body.correoelectronico" [disabled]="!permisoEscritura" pInputText (keyup)="onChangeInput($event)">
             <div *ngIf="!validateEmail()">
               <small class="input-error">{{ 'censo.datosDireccion.validacion.correo' | translate }}</small>
             </div>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.ws.literal.fax" | translate}}</label>
-            <input type="text" class="form-control" [class.border-error]="!validateFax()" [maxLength]="15" [(ngModel)]="body.fax" [disabled]="!permisoEscritura" pInputText (keydown)="onChangeInputAndNumberOnly($event)">
+            <input type="text" class="form-control" [class.border-error]="!validateFax()" [maxLength]="15" [(ngModel)]="body.fax" [disabled]="!permisoEscritura" pInputText (keyup)="onChangeInputAndNumberOnly($event)">
             <div *ngIf="!validateFax()">
               <small class="input-error">{{ 'censo.datosDireccion.validacion.fax' | translate }}</small>
             </div>
@@ -131,8 +131,8 @@
                 <th><button pButton type="button" icon="fas fa-plus" (click)="addTelefono()"></button></th>
               </tr>
               <tr *ngFor="let telefono of body.telefonos; let i = index">
-                <td><input pInputText type="text" maxlength="20" class="form-control" [(ngModel)]="telefono.nombreTelefono" (keydown)="onChangeInput($event)"></td>
-                <td><input pInputText type="text" maxlength="20" class="form-control" [(ngModel)]="telefono.numeroTelefono" (keydown)="onChangeInput($event)" [ngClass]="validateNumero(telefono.numeroTelefono)"></td>
+                <td><input pInputText type="text" maxlength="20" class="form-control" [(ngModel)]="telefono.nombreTelefono" (keyup)="onChangeInput($event)"></td>
+                <td><input pInputText type="text" maxlength="20" class="form-control" [(ngModel)]="telefono.numeroTelefono" (keyup)="onChangeInput($event)" [ngClass]="validateNumero(telefono.numeroTelefono)"></td>
                 <td><p-checkbox binary="true" [(ngModel)]="telefono.preferenteSmsCheck" (onChange)="onChangeSms(telefono, $event)"></p-checkbox></td>
                 <td><button pButton type="button" icon="far fa-trash-alt" (click)="deleteTelefono(i)"></button></td>
               </tr>

@@ -19,10 +19,9 @@ export class DatosPersonalesComponent implements OnInit {
   @Input() bodyInicial: JusticiableItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
 
-  bodyInicialTelefonos;
+  bodyInicialTelefonos = "";
   direccionPostal: String = "";
   resultadosPoblaciones: String = "";
-  originalData: any;
 
   progressSpinner: boolean = true;
   isDisabledPoblacion: boolean = true;
@@ -41,7 +40,6 @@ export class DatosPersonalesComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     this.getCombos();
-    this.loadData();
   }
 
   onChangeCodigoPostal() {
@@ -59,11 +57,11 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.idpoblacion = undefined;
       this.body.idprovincia = undefined;
     }
-    this.hasChange = true;
+    this.hasChanges();
   }
 
   onChangeInput(event) {
-    this.hasChange = true;
+    this.hasChanges();
   }
 
   /**
@@ -95,7 +93,7 @@ export class DatosPersonalesComponent implements OnInit {
         }
       }
     }
-    this.hasChange = true;
+    this.hasChanges();
   }
 
   validateNumero(event) {
@@ -124,33 +122,18 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   reset() {
-    if (this.modoEdicion) {
-      if (this.bodyInicial != undefined) {
-        this.body = { ...this.bodyInicial };
-        this.body.telefonos = [];
-        if (typeof this.bodyInicialTelefonos == "string") {
-          this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
-        } else {
-          this.body.telefonos = JSON.parse(JSON.stringify(this.bodyInicialTelefonos));
-        }
-      }
-    } else {
-      this.body = new JusticiableItem();
+    if (this.bodyInicial != undefined) {
+      this.body = { ...this.bodyInicial };
       this.body.telefonos = [];
-      this.body.telefonos[0] = new JusticiableTelefonoItem();
-      this.body.idpaisdir1 = "191";
+      if (this.bodyInicialTelefonos != "" && this.bodyInicialTelefonos != undefined) {
+        this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
+      }
     }
     this.hasChange = false;
   }
 
   save() {
     this.deleteSpacing();
-    console.log('Attempting to save, current hasChange:', this.hasChange);
-    if (!this.hasChanges()) {
-      console.log('No changes to save');
-      return;
-    }
-    console.log('Saving changes for:', this.body);
 
     if (this.body.telefonos != null && this.body.telefonos.length > 1) {
       let telefonosFiltrados = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
@@ -183,7 +166,6 @@ export class DatosPersonalesComponent implements OnInit {
       }
       if (this.body.direccionNoInformada) {
         this.body.direccion = null; // Asegúrate de no guardar una dirección no deseada
-        console.log('Direccion cleared because No Informada is checked before saving');
       }
     }
   }
@@ -232,7 +214,6 @@ export class DatosPersonalesComponent implements OnInit {
         this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
         this.rellenarDireccionPostal();
         this.hasChange = false;
-       // this.bodyChange.emit(this.body);
         this.progressSpinner = false;
       },
       (err) => {
@@ -307,7 +288,6 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   validate() {
-    console.log('Validating form');
     this.validateForm = true;
     this.telefonoValido = true;
 
@@ -334,36 +314,16 @@ export class DatosPersonalesComponent implements OnInit {
         }
       }
     }
-    if (!this.validateForm) {
-      console.log('Validation failed');
-    } else {
-      console.log('Validation succeeded');
-    }
     return this.validateForm;
   }
 
-  loadData() {
-    this.originalData = JSON.parse(JSON.stringify(this.body));
-  }
-
-  hasChanges() {
-    return JSON.stringify(this.originalData) !== JSON.stringify(this.body);
-  }
-
-  checkChanged() {
-    this.hasChange = this.hasChanges();  // Actualiza hasChange basándose en si realmente hay cambios
-    console.log("Cambios detectados:", this.hasChange);
-  }
-
-  onDireccionNoInformadaChange()
-  {
+  onDireccionNoInformadaChange() {
     if (this.body.direccionNoInformada) {
       this.body.direccion = null; // Asegura limpiar la dirección también
-      console.log('Direccion and DireccionPostal set to null due to No Informada being checked');
     } else {
-      this.body.direccion = this.originalData.direccion;
+      this.body.direccion = this.bodyInicial.direccion;
     }
-    this.checkChanged();
+    this.hasChanges();
   }
 
   buscarPoblacion(e) {
@@ -398,7 +358,7 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.telefonos = [];
     }
     this.body.telefonos.push(new JusticiableTelefonoItem());
-    this.hasChange = true;
+    this.hasChanges();
   }
 
   deleteTelefono(index: number) {
@@ -407,7 +367,14 @@ export class DatosPersonalesComponent implements OnInit {
     } else {
       this.body.telefonos.splice(index, 1);
     }
-    this.hasChange = true;
+    this.hasChanges();
+  }
+
+  private hasChanges() {
+    this.bodyInicial.telefonos == null ? (this.bodyInicial.telefonos = []) : null;
+    this.bodyInicial.direccion == null ? (this.bodyInicial.direccionNoInformada = true) : (this.bodyInicial.direccionNoInformada = false);
+    this.body.telefonos == null ? (this.body.telefonos = []) : null;
+    this.hasChange = !(JSON.stringify(this.bodyInicial) == JSON.stringify(this.body));
   }
 
   private async getCombos() {
