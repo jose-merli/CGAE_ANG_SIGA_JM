@@ -2,9 +2,9 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
+    <p-table [value]="filteredDatos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
       class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openZonegroupTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-      [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
+      [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -15,7 +15,8 @@
           <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value, col.field, 'contains')" />
+            <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText
+            type="text" (input)="filterTable($event.target.value, col.field)" />
           </th>
         </tr>
       </ng-template>

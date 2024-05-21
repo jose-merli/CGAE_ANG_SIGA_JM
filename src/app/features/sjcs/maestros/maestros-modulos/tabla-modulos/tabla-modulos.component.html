@@ -4,7 +4,7 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #tabla
+    <p-table [value]="filteredDatos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #tabla
       class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="seleccionaFila($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
@@ -18,9 +18,7 @@
             {{ col.header | translate}}
             <p-sortIcon [field]="col.field"></p-sortIcon>
             <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
-              type="text" (input)="
-                  tabla.filter($event.target.value, col.field, 'contains')
-                " />
+              type="text" (input)="filterTable($event.target.value, col.field)" />
           </th>
         </tr>
       </ng-template>

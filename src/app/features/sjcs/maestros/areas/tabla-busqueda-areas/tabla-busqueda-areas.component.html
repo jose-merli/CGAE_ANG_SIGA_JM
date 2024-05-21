@@ -8,9 +8,9 @@
       dataKey="idArea" [responsive]="true" selectionMode="multiple" #tabla class="tabla-listado" [value]="datos" [paginator]="true"
       paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="openZonegroupTab(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"> -->
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
+      <p-table [value]="filteredDatos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
       class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="seleccionaFila($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-      [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
+      [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -19,12 +19,10 @@
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-            {{ col.header | translate}}
+            {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
             <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText
-              type="text" (input)="
-                  table.filter($event.target.value, col.field, 'contains')
-                " />
+              type="text" (input)="filterTable($event.target.value, col.field)" />
           </th>
         </tr>
       </ng-template>
@@ -38,7 +36,6 @@
               <span>{{dato[col.field]}}</span>
             </div>
           </td>
-
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage" let-columns>
@@ -51,14 +48,12 @@
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
           <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}
-          </label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">Seleccionados: 0
-          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">Seleccionados: 0</label>
           <label>{{"general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
-          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
             <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisos" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
               name="groupname"></p-checkbox>
@@ -68,6 +63,7 @@
         </div>
       </ng-template>
     </p-table>
+    
 
   </div>
   <div class="card-footer">

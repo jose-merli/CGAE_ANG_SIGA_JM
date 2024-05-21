@@ -27,9 +27,11 @@ export class TablaGestionZonasComponent implements OnInit {
   message;
   buscadores = [];
   initDatos;
+  filteredDatos;
   nuevo: boolean = false;
   permisoEscritura: boolean = false;
   progressSpinner: boolean = false;
+  permisos: boolean = false;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -42,15 +44,26 @@ export class TablaGestionZonasComponent implements OnInit {
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private notificationService: NotificationService) {}
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.historico = this.persistenceService.getHistorico();
-    }
     this.getCols();
-    this.initDatos = JSON.parse(JSON.stringify(this.datos));
-  }
+    this.historico = this.persistenceService.getHistorico();
+    this.initDatos = [...this.datos];
+    this.filteredDatos = [...this.datos]; 
+    if (this.persistenceService.getPermisos()) {
+      this.permisos = true;
+    } else {
+      this.permisos = false;
+    }
+
+    }
+
+    normalizeString(str: string | null | undefined): string {
+      return (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+  
+    filterTable(value: string, field: string) {
+      const normalizedValue = this.normalizeString(value);
+      this.filteredDatos = this.initDatos.filter(d => this.normalizeString(d[field]).includes(normalizedValue));
+    }
 
   openZonegroupTab(evento) {
     if (!this.selectAll && !this.selectMultiple) {
@@ -112,26 +125,35 @@ export class TablaGestionZonasComponent implements OnInit {
       if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
         this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
       } else {
-        let zonasActivate = new ZonasObject();
-        zonasActivate.zonasItems = this.selectedDatos;
-        this.sigaServices.post("fichaZonas_activateGroupZones", zonasActivate).subscribe(
-          (data) => {
-            this.progressSpinner = false;
-            this.historico = false;
-            this.persistenceService.setHistorico(this.historico);
-            this.selectedDatos = [];
-            this.searchZonasSend.emit(true);
-            this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          },
-          (err) => {
-            this.progressSpinner = false;
-            if (err != undefined && JSON.parse(err.error).error.description != "") {
-              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-            } else {
-              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            }
-          },
-        );
+        this.activate();
+      }
+
+    }
+  }
+
+  activate() {
+    let zonasActivate = new ZonasObject();
+    zonasActivate.zonasItems = this.selectedDatos;
+    this.sigaServices.post("fichaZonas_activateGroupZones", zonasActivate).subscribe(
+      data => {
+        this.historico = false;
+        this.persistenceService.setHistorico(this.historico);
+        this.selectedDatos = [];
+        this.searchZonasSend.emit(true);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
       }
     }
   }
@@ -143,8 +165,7 @@ export class TablaGestionZonasComponent implements OnInit {
   }
 
   setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
+    return dato.fechabaja != null;
   }
 
   getCols() {
