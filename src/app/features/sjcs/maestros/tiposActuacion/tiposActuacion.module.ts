@@ -2,7 +2,6 @@ import { APP_BASE_HREF, CommonModule, DatePipe, UpperCasePipe } from "@angular/c
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CookieService } from "ngx-cookie-service";
 import { MessageService } from "primeng/components/common/messageservice";
 import { MultiSelectModule } from "primeng/multiselect";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "primeng/primeng";
@@ -55,7 +54,6 @@ import { TrimPipePipe } from "../../../../commons/trim-pipe/trim-pipe.pipe";
     MessageService,
     AuthenticationService,
     ConfirmationService,
-
     AuthGuard,
     {
       provide: APP_BASE_HREF,
@@ -66,7 +64,6 @@ import { TrimPipePipe } from "../../../../commons/trim-pipe/trim-pipe.pipe";
       useClass: JwtInterceptor,
       multi: true,
     },
-    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })

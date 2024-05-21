@@ -1,32 +1,24 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { D } from '@angular/core/src/render3';
-import { Item } from '@syncfusion/ej2-splitbuttons';
-import { DataTable, Message } from 'primeng/primeng';
-import { element } from 'protractor';
-import { format } from 'util';
-import { TranslateService } from '../../../../../../commons/translate';
-import { ComboItem } from '../../../../../../models/ComboItem';
-import { FacturaLineaItem } from '../../../../../../models/FacturaLineaItem';
-import { FacturasItem } from '../../../../../../models/FacturasItem';
-import { CommonsService } from '../../../../../../_services/commons.service';
-import { SigaServices } from '../../../../../../_services/siga.service';
-import { from } from 'rxjs/observable/from';
-import { groupBy, mergeMap, toArray } from 'rxjs/operators';
-import { isPlatformWorkerApp } from '@angular/common';
-import { FacturaSeleccionada } from '../../../../../../models/FacturaSelecionada';
-import { FacAbonoItem } from '../../../../../../models/sjcs/FacAbonoItem';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { DataTable, Message } from "primeng/primeng";
+import { from } from "rxjs/observable/from";
+import { groupBy, mergeMap, toArray } from "rxjs/operators";
+import { CommonsService } from "../../../../../../_services/commons.service";
+import { SigaServices } from "../../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../../commons/translate";
+import { FacturaLineaItem } from "../../../../../../models/FacturaLineaItem";
+import { FacturaSeleccionada } from "../../../../../../models/FacturaSelecionada";
+import { FacAbonoItem } from "../../../../../../models/sjcs/FacAbonoItem";
+
 @Component({
-  selector: 'app-tabla-abonos-seleccionadas',
-  templateUrl: './tabla-abonos-seleccionadas.component.html',
-  styleUrls: ['./tabla-abonos-seleccionadas.component.scss']
+  selector: "app-tabla-abonos-seleccionadas",
+  templateUrl: "./tabla-abonos-seleccionadas.component.html",
+  styleUrls: ["./tabla-abonos-seleccionadas.component.scss"],
 })
-
-export class TablaAbonosSeleccionadasComponent implements OnInit,OnChanges {
-
+export class TablaAbonosSeleccionadasComponent implements OnInit, OnChanges {
   msgs: Message[] = [];
   progressSpinner: boolean = false;
   @Input() bodyInicial: FacAbonoItem[];
-  itemsGeneral:FacAbonoItem[]=[];
+  itemsGeneral: FacAbonoItem[] = [];
   // Elementos para la tabla
   @ViewChild("table") table: DataTable;
   rowsPerPage = [];
@@ -36,7 +28,7 @@ export class TablaAbonosSeleccionadasComponent implements OnInit,OnChanges {
   buscadores = [];
   selectAll: boolean;
   selectMultiple: boolean;
-  datos:FacturaSeleccionada[] = [];
+  datos: FacturaSeleccionada[] = [];
   datosInit: FacturaLineaItem[] = [];
 
   comboTiposIVA: any[];
@@ -48,20 +40,15 @@ export class TablaAbonosSeleccionadasComponent implements OnInit,OnChanges {
   grupos: any[];
   openFicha: boolean = false;
 
-  total:number;
-  totalPendiente:number;
-  intro:boolean= false;
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices,
-    private commonsService: CommonsService,
-    private translateService: TranslateService
-  ) { }
+  total: number;
+  totalPendiente: number;
+  intro: boolean = false;
+  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.bodyInicial != undefined && this.bodyInicial.length>0){
+    if (this.bodyInicial != undefined && this.bodyInicial.length > 0) {
       this.datos = [];
-      this.total=0
+      this.total = 0;
       this.totalPendiente = 0;
       /*this.bodyInicial.forEach(element =>{
         let item:FacturaSeleccionada=new FacturaSeleccionada();
@@ -70,84 +57,85 @@ export class TablaAbonosSeleccionadasComponent implements OnInit,OnChanges {
         this.datos.push(item)
       });
       */
-     from(this.bodyInicial).pipe(
-      groupBy(ep => ep.estado),
-      mergeMap(group => group.reduce((acc, cur) => {
-          acc.values.push(cur);
-          return acc;
-        }, { key: group.key, values: [], activo: true })
-      ),
-      toArray()
-    ).subscribe(grupos => this.grupos = grupos);
-    //console.log(this.grupos)
+      from(this.bodyInicial)
+        .pipe(
+          groupBy((ep) => ep.estado),
+          mergeMap((group) =>
+            group.reduce(
+              (acc, cur) => {
+                acc.values.push(cur);
+                return acc;
+              },
+              { key: group.key, values: [], activo: true },
+            ),
+          ),
+          toArray(),
+        )
+        .subscribe((grupos) => (this.grupos = grupos));
+      //console.log(this.grupos)
 
-    this.grupos.forEach(element => {
-      let item:FacturaSeleccionada=new FacturaSeleccionada();
-      let grupitos:FacAbonoItem[] = element.values;
-      //console.log(grupitos)
-      item.total = 0;
-      item.totalPendiente = 0;
-      item.numFacturas = 0; 
-      grupitos.forEach(grup =>{
-        item.estado = grup.estadoNombre.toString();
-        if(grup.importeTotal !=null ){
-          item.total += Number(grup.importeTotal);
-        this.total += Number(grup.importeTotal);
-        }
-        this.totalPendiente += Number(grup.importePendientePorAbonar)
-        item.formaPago = grup.nombrePago.toString();
-        item.totalPendiente += Number(grup.importePendientePorAbonar)
-        item.numFacturas++;
+      this.grupos.forEach((element) => {
+        let item: FacturaSeleccionada = new FacturaSeleccionada();
+        let grupitos: FacAbonoItem[] = element.values;
+        //console.log(grupitos)
+        item.total = 0;
+        item.totalPendiente = 0;
+        item.numFacturas = 0;
+        grupitos.forEach((grup) => {
+          item.estado = grup.estadoNombre.toString();
+          if (grup.importeTotal != null) {
+            item.total += Number(grup.importeTotal);
+            this.total += Number(grup.importeTotal);
+          }
+          this.totalPendiente += Number(grup.importePendientePorAbonar);
+          item.formaPago = grup.nombrePago.toString();
+          item.totalPendiente += Number(grup.importePendientePorAbonar);
+          item.numFacturas++;
+        });
+        item.totalPendiente = Math.round(item.totalPendiente * 100) / 100;
+        item.total = Math.round(item.total * 100) / 100;
+        this.datos.push(item);
       });
-      item.totalPendiente = Math.round(item.totalPendiente * 100) / 100;
-      item.total = Math.round(item.total * 100) / 100;
-      this.datos.push(item)
-    })
 
-    this.totalPendiente = Math.round(this.totalPendiente * 100) / 100;
-    this.total = Math.round(this.total * 100) / 100;
+      this.totalPendiente = Math.round(this.totalPendiente * 100) / 100;
+      this.total = Math.round(this.total * 100) / 100;
     }
   }
- 
+
   ngOnInit() {
     //console.log(this.bodyInicial)
     this.getCols();
-   }
-
-
-
-
+  }
 
   // Definición de las columnas
   getCols() {
     this.cols = [
       { field: "estado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "20%" },
       { field: "formaPago", header: "facturacion.productos.formapago", width: "20%" },
-      { field: "numFacturas", header: "facturacion.factProgramadas.serieFactu.numFactu", width: "10%"},
-      { field: "total", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "10%" }, 
-      { field: "totalPendiente", header: "facturacion.factProgramadas.serieFactu.totalPendiente", width: "10%"},
+      { field: "numFacturas", header: "facturacion.factProgramadas.serieFactu.numFactu", width: "10%" },
+      { field: "total", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "10%" },
+      { field: "totalPendiente", header: "facturacion.factProgramadas.serieFactu.totalPendiente", width: "10%" },
     ];
-    this.cols.forEach(it => this.buscadores.push(""));
+    this.cols.forEach((it) => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
   }
-
 
   // Resultados por página
   onChangeRowsPerPages(event) {
@@ -158,20 +146,19 @@ export class TablaAbonosSeleccionadasComponent implements OnInit,OnChanges {
 
   // Checkbox de seleccionar todo
   onChangeSelectAll(): void {
-      if (this.selectAll) {
-        this.selectMultiple = true;
-        this.selectedDatos = this.datos;
-      } else {
-        this.selectedDatos = [];
-        this.selectMultiple = false;
-      }
+    if (this.selectAll) {
+      this.selectMultiple = true;
+      this.selectedDatos = this.datos;
+    } else {
+      this.selectedDatos = [];
+      this.selectMultiple = false;
+    }
   }
-
 
   // Abrir y cerrar la ficha
 
   abreCierraFicha(): void {
-    this.openFicha = !this.openFicha
+    this.openFicha = !this.openFicha;
   }
 
   // Mensajes en pantalla
@@ -181,12 +168,11 @@ export class TablaAbonosSeleccionadasComponent implements OnInit,OnChanges {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
   }
 
   clear() {
     this.msgs = [];
   }
-
 }
