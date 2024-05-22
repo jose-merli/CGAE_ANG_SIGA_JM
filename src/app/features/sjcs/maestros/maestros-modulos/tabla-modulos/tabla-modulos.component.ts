@@ -78,28 +78,28 @@ export class TablaModulosComponent implements OnInit {
 
 	ngOnInit() {
 		this.getCols();
-		this.initDatos = [...this.datos];
-		this.filteredDatos = [...this.datos]; 
+		this.initDatos = JSON.parse(JSON.stringify(this.datos));
 		this.juzgadoProcedente = JSON.parse(sessionStorage.getItem("datos"));
 		this.vieneDeJuzgados = sessionStorage.getItem("vieneDeFichaJuzgado");
-		if (this.persistenceService.getPermisos()) {
-			this.permisos = true;
-		} else {
-			this.permisos = false;
-		}
-
+		this.permisos = this.persistenceService.getPermisos();
+	
+		this.tabla.filterConstraints['contains'] = this.customFilter.bind(this);
+	
 		this.searchJuzgados();
 	}
-
-	normalizeString(str: string | null | undefined): string {
-		return (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-	  }
 	
-	filterTable(value: string, field: string) {
-		const normalizedValue = this.normalizeString(value);
-		this.filteredDatos = this.initDatos.filter(d => this.normalizeString(d[field]).includes(normalizedValue));
-	  }
 
+	normalizeString(str: string): string {
+		return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+	}
+
+	customFilter(value: string, filter: string): boolean {
+		if (!filter) {
+			return true;
+		}
+		return this.normalizeString(value).includes(this.normalizeString(filter));
+	}	
+	
 	ngOnChanges(changes: SimpleChanges) {
 		this.datos.forEach(element => {
 			element.importe = +element.importe;
