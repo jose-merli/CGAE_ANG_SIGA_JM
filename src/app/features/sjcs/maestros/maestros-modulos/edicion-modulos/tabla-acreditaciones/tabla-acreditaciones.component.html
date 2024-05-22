@@ -71,7 +71,7 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <div *ngIf="col.field == 'idAcreditacion'">
+              <div *ngIf="col.field == 'descripcion'">
                 <p-dropdown appendTo="body" *ngIf="!dato.acreditacionNueva" disabled class="select-form" [(ngModel)]="dato.idAcreditacion"
                   placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="comboAcreditaciones" [filter]="true"
                   [showClear]="true" filterBy="label,labelSinTilde"></p-dropdown>
@@ -80,9 +80,9 @@
 
               </div>
 
-              <div *ngIf="col.field == 'porcentajeReal'">
+              <div *ngIf="col.field == 'porcentaje'">
                 <span *ngIf="disableAll || ( !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)) || selectMultiple)">
-                  {{ dato.porcentaje }} % </span>
+                  {{ dato.porcentaje }} %</span>
 
 
                 <app-precio *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"

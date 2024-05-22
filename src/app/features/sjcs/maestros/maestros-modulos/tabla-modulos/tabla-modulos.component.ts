@@ -53,7 +53,7 @@ export class TablaModulosComponent implements OnInit {
 	initDatos;
 	nuevo: boolean = false;
 	progressSpinner: boolean = false;
-
+	filteredDatos;
 	textSelected: String = '{0} opciones seleccionadas';
 	textFilter: string = "Seleccionar";
 
@@ -78,7 +78,8 @@ export class TablaModulosComponent implements OnInit {
 
 	ngOnInit() {
 		this.getCols();
-		this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+		this.initDatos = [...this.datos];
+		this.filteredDatos = [...this.datos]; 
 		this.juzgadoProcedente = JSON.parse(sessionStorage.getItem("datos"));
 		this.vieneDeJuzgados = sessionStorage.getItem("vieneDeFichaJuzgado");
 		if (this.persistenceService.getPermisos()) {
@@ -89,6 +90,15 @@ export class TablaModulosComponent implements OnInit {
 
 		this.searchJuzgados();
 	}
+
+	normalizeString(str: string | null | undefined): string {
+		return (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+	  }
+	
+	filterTable(value: string, field: string) {
+		const normalizedValue = this.normalizeString(value);
+		this.filteredDatos = this.initDatos.filter(d => this.normalizeString(d[field]).includes(normalizedValue));
+	  }
 
 	ngOnChanges(changes: SimpleChanges) {
 		this.datos.forEach(element => {

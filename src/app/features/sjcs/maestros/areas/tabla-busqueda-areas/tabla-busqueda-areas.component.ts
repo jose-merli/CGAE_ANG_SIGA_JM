@@ -37,6 +37,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
+  filteredDatos;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -59,13 +60,23 @@ export class TablaBusquedaAreasComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
-    this.historico = this.persistenceService.getHistorico()
-    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    this.historico = this.persistenceService.getHistorico();
+    this.initDatos = [...this.datos];
+    this.filteredDatos = [...this.datos]; 
     if (this.persistenceService.getPermisos()) {
       this.permisos = true;
     } else {
       this.permisos = false;
     }
+  }
+
+  normalizeString(str: string | null | undefined): string {
+    return (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  }
+
+  filterTable(value: string, field: string) {
+    const normalizedValue = this.normalizeString(value);
+    this.filteredDatos = this.initDatos.filter(d => this.normalizeString(d[field]).includes(normalizedValue));
   }
 
   seleccionaFila(evento) {
@@ -77,7 +88,6 @@ export class TablaBusquedaAreasComponent implements OnInit {
         this.selectedDatos.pop();
       }
     }
-
   }
 
   checkPermisosDelete(selectedDatos) {
@@ -121,10 +131,9 @@ export class TablaBusquedaAreasComponent implements OnInit {
     });
   }
 
-
   delete(selectedDatos) {
     let AreasDelete = new AreasObject();
-    AreasDelete.areasItems = selectedDatos
+    AreasDelete.areasItems = selectedDatos;
     this.sigaServices.post("fichaAreas_deleteAreas", AreasDelete).subscribe(
       data => {
         this.selectedDatos = [];
@@ -173,9 +182,8 @@ export class TablaBusquedaAreasComponent implements OnInit {
   }
 
   activate(selectedDatos) {
-
     let AreasActivate = new AreasObject();
-    AreasActivate.areasItems = selectedDatos
+    AreasActivate.areasItems = selectedDatos;
     this.sigaServices.post("areasMaterias_activateMaterias", AreasActivate).subscribe(
       data => {
         this.selectedDatos = [];
@@ -229,18 +237,15 @@ export class TablaBusquedaAreasComponent implements OnInit {
 
   searchAreas() {
     this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico)
+    this.persistenceService.setHistorico(this.historico);
     this.searchAreasSend.emit(this.historico);
-
   }
 
   setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
+    return dato.fechabaja != null;
   }
 
   getCols() {
-
     this.cols = [
       { field: "nombreArea", header: "menu.justiciaGratuita.maestros.Area" },
       { field: "nombreMateria", header: "menu.justiciaGratuita.maestros.Materia" },
@@ -281,15 +286,12 @@ export class TablaBusquedaAreasComponent implements OnInit {
         this.selectedDatos = [];
         this.numSelected = 0;
       } else {
-        // this.pressNew = false;
         this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
       }
     }
-    // this.volver();
   }
-
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
@@ -308,5 +310,4 @@ export class TablaBusquedaAreasComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
 }
