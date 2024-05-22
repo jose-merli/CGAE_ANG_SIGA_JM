@@ -360,16 +360,8 @@ import { DescripcionEnvioMasivoComponent } from "./features/informes-comunicacio
 import { EnvioReintegrosXuntaComponent } from "./features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component";
 import { GenerarImpreso190Component } from "./features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component";
 
-//import { MatCheckboxModule } from "@angular/material/checkbox";
-//import { MatNativeDateModule } from "@angular/material/core";
-//import { MatDatepickerModule } from "@angular/material/datepicker";
-//import { MatExpansionModule } from "@angular/material/expansion";
-//import { MatInputModule } from "@angular/material/input";
-//import { MatPaginatorModule } from "@angular/material/paginator";
-//import { MatSelectModule } from "@angular/material/select";
-//import { MatSortModule } from "@angular/material/sort";
-//import { MatTableModule } from "@angular/material/table";
-//import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatSortModule } from "@angular/material/sort";
 
 import { BuscadorColegiadosExpressComponent } from "./commons/buscador-colegiados-express/buscador-colegiados-express.component";
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
@@ -1415,6 +1407,8 @@ registerLocaleData(es);
     KeyFilterModule,
     ListboxModule,
     MaestrosModule,
+    MatExpansionModule,
+    MatSortModule,
     MenubarModule,
     MovimientosVariosModule,
     MultiSelectModule,
