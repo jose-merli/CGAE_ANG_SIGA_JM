@@ -351,8 +351,7 @@ export class TablaModulosComponent implements OnInit {
 	}
 
 	setItalic(dato) {
-		if (this.formatDate(dato.fechadesdevigor) <= new Date() && (dato.fechahastavigor == null || this.formatDate(dato.fechahastavigor) > new Date()) &&
-		dato.fechabaja == null) return false;
+		if (dato.fechabaja == null) return false;
 		else return true;
 	}
 
