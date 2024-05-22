@@ -82,7 +82,7 @@
 
               <div *ngIf="col.field == 'porcentaje'">
                 <span *ngIf="disableAll || ( !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)) || selectMultiple)">
-                  {{ dato.porcentaje }} %</span>
+                  {{ dato.porcentaje.toString().replace(".", ",") }} %</span>
 
 
                 <app-precio *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
