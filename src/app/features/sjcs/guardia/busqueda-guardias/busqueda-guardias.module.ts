@@ -7,7 +7,6 @@ import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService,
 import { TableModule } from "primeng/table";
 import { TooltipModule } from "primeng/tooltip";
 import { HTTP_INTERCEPTORS } from "../../../../../../node_modules/@angular/common/http";
-import { CookieService } from "../../../../../../node_modules/ngx-cookie-service";
 import { MessageService } from "../../../../../../node_modules/primeng/components/common/messageservice";
 import { environment } from "../../../../../environments/environment";
 import { AuthGuard } from "../../../../_guards/auth.guards";
@@ -50,7 +49,6 @@ import { TablaGuardiasComponent } from "./buscador-guardia/tabla-guardias/tabla-
     MessageService,
     AuthenticationService,
     ConfirmationService,
-    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,

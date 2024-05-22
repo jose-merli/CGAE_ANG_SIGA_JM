@@ -5,7 +5,6 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule, PickListModule, TreeTableModule } from "primeng/primeng";
 import { TableModule } from "primeng/table";
 import { HTTP_INTERCEPTORS } from "../../../../../../node_modules/@angular/common/http";
-import { CookieService } from "../../../../../../node_modules/ngx-cookie-service";
 import { MessageService } from "../../../../../../node_modules/primeng/components/common/messageservice";
 import { environment } from "../../../../../environments/environment";
 import { AuthGuard } from "../../../../_guards/auth.guards";
@@ -39,7 +38,6 @@ import { FiltrosGuardiaIncompatibilidadesComponent } from "./buscador-guardia-in
     MessageService,
     AuthenticationService,
     ConfirmationService,
-    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,

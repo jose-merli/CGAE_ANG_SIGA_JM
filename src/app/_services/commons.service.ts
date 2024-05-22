@@ -1,4 +1,3 @@
-import { HttpBackend, HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
@@ -6,6 +5,7 @@ import "rxjs/add/operator/map";
 import { TranslateService } from "../commons/translate/translation.service";
 import { ComboItem } from "../models/ComboItem";
 import { ControlAccesoDto } from "../models/ControlAccesoDto";
+import { NotificationService } from "./notification.service";
 import { SigaServices } from "./siga.service";
 
 export enum KEY_CODE {
@@ -15,9 +15,8 @@ export enum KEY_CODE {
 @Injectable()
 export class CommonsService {
   DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
-  constructor(private http: HttpClient, private sigaServices: SigaServices, handler: HttpBackend, private httpbackend: HttpClient, private translateService: TranslateService) {
-    this.httpbackend = new HttpClient(handler);
-  }
+
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private notificationService: NotificationService) {}
 
   validateEmail(value) {
     let correo = value;
@@ -216,34 +215,33 @@ export class CommonsService {
   isValidPassport(passport: String): boolean {
     return passport && typeof passport === "string" && /^[a-zA-Z]{3}[0-9]{6}[a-zA-Z]?$/i.test(passport);
   }
-  
+
   isValidNIE(nie: String): boolean {
     return nie && typeof nie === "string" && /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie);
   }
-  
+
   isValidCIF(cif: String): boolean {
     return cif && typeof cif === "string" && /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif);
   }
-  
+
   isValidDNI(dni: String): boolean {
     if (!dni || typeof dni !== "string") return false;
-    
+
     const dniPattern = /^[0-9]{8}[A-Za-z]$/;
     if (!dniPattern.test(dni)) return false;
-    
+
     const numberPart = dni.substr(0, 8);
     const letterPart = dni.substr(8, 1).toUpperCase();
-    
+
     if (parseInt(numberPart, 10) < 0) return false;
-    
+
     const DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
     const expectedLetter = DNI_LETTERS.charAt(parseInt(numberPart, 10) % 23);
-    
+
     return letterPart === expectedLetter;
   }
 
-  isValidOtro(otro: String) : boolean
-  {
+  isValidOtro(otro: String): boolean {
     return otro && typeof otro === "string" && /^[a-zA-Z0-9]{1,20}$/i.test(otro);
   }
 
@@ -291,6 +289,24 @@ export class CommonsService {
 
   checkPermisoAccion() {
     return this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
+  }
+
+  checkPermisosService(permiso: boolean, historico: boolean): boolean {
+    let acceso = true;
+    if (!permiso) {
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      acceso = false;
+    } else {
+      if (historico != undefined && historico) {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+        acceso = false;
+      }
+    }
+    return acceso;
+  }
+
+  checkPermisoAccionService() {
+    this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
   }
 
   arreglarFecha(fecha) {

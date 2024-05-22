@@ -2,7 +2,6 @@ import { APP_BASE_HREF, CommonModule, DatePipe, UpperCasePipe } from "@angular/c
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { HTTP_INTERCEPTORS } from "../../../../../../../node_modules/@angular/common/http";
 import { FormsModule } from "../../../../../../../node_modules/@angular/forms";
-import { CookieService } from "../../../../../../../node_modules/ngx-cookie-service";
 import { MessageService } from "../../../../../../../node_modules/primeng/components/common/messageservice";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DropdownModule, GrowlModule, InputTextModule, MenubarModule, MultiSelectModule, PaginatorModule } from "../../../../../../../node_modules/primeng/primeng";
 import { TableModule } from "../../../../../../../node_modules/primeng/table";
@@ -36,7 +35,6 @@ import { GestionCostesfijosComponent } from "./gestion-costesfijos.component";
     AuthenticationService,
     ConfirmationService,
     PersistenceService,
-    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,

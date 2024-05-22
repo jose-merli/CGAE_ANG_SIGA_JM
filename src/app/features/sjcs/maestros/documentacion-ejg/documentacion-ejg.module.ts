@@ -2,7 +2,6 @@ import { APP_BASE_HREF, CommonModule, DatePipe, UpperCasePipe } from "@angular/c
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CookieService } from "ngx-cookie-service";
 import { MessageService } from "primeng/components/common/messageservice";
 import { MultiSelectModule } from "primeng/multiselect";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "primeng/primeng";
@@ -39,7 +38,6 @@ import { TablaDocumentacionejgComponent } from "./tabla-documentacionejg/tabla-d
     MessageService,
     AuthenticationService,
     ConfirmationService,
-    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,
