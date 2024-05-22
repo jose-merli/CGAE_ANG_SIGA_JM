@@ -116,14 +116,12 @@ export class TablaAcreditacionesComponent implements OnInit {
       this.datos = res.acreditacionItem;
       this.listaTabla = JSON.parse(JSON.stringify(this.datos));
       this.datos.forEach((element) => {
-        let seleccionados = [];
         if (element.nig_numprocedimiento == 1) {
           element.nigProcedimiento = true;
         } else {
           element.nigProcedimiento = false;
         }
-        element.porcentaje = element.porcentaje.replace(".", ",");
-        if (element.porcentaje[0] == ",") element.porcentaje = "0".concat(element.porcentaje);
+        element.porcentaje = +element.porcentaje;
         element.editable = false;
         element.overlayVisible = false;
         element.idprocedimiento = this.idProcedimiento;
