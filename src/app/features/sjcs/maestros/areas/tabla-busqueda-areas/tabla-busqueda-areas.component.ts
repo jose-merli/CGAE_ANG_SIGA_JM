@@ -8,6 +8,7 @@ import { TableModule } from 'primeng/table';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { Table } from 'primeng/table';
 
 
 @Component({
@@ -46,7 +47,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
 
   @Output() searchAreasSend = new EventEmitter<boolean>();
 
-  @ViewChild("table") tabla;
+  @ViewChild('table') table: Table;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -61,8 +62,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
   ngOnInit() {
     this.getCols();
     this.historico = this.persistenceService.getHistorico();
-    this.initDatos = [...this.datos];
-    this.filteredDatos = [...this.datos]; 
+    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     if (this.persistenceService.getPermisos()) {
       this.permisos = true;
     } else {
@@ -70,15 +70,19 @@ export class TablaBusquedaAreasComponent implements OnInit {
     }
   }
 
-  normalizeString(str: string | null | undefined): string {
-    return (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  normalizeString(str: string): string {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
 
-  filterTable(value: string, field: string) {
-    const normalizedValue = this.normalizeString(value);
-    this.filteredDatos = this.initDatos.filter(d => this.normalizeString(d[field]).includes(normalizedValue));
+  filter(event: any, field: string) {
+    const value = this.normalizeString(event.target.value);
+    const fieldData = this.datos.map(d => {
+      d[field] = this.normalizeString(d[field]);
+      return d;
+    });
+    this.table.filter(value, field, 'contains');
   }
-
+  
   seleccionaFila(evento) {
     if (!this.selectAll && !this.selectMultiple) {
       this.persistenceService.setDatos(this.selectedDatos[0]);
@@ -275,7 +279,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.tabla.reset();
+    this.table.reset();
   }
 
   isSelectMultiple() {

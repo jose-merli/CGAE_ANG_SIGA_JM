@@ -152,37 +152,34 @@ export class EdicionModulosComponent implements OnInit {
 
   getProcedimientos(id) {
     this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + this.modulosItem.idProcedimiento).subscribe(
-      (n) => {
-        this.procedimientos = n.combooItems;
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.procedimientos.map((e) => {
-          let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
+        n => {
+            this.procedimientos = n.combooItems;
+            this.procedimientos.map(e => {
+                let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+                let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+                for (let i = 0; i < e.label.length; i++) {
+                    let x = accents.indexOf(e.label[i]);
+                    if (x != -1) {
+                        e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                        return e.labelSinTilde;
+                    }
+                }
+            });
+            this.sortOptions();
+        },
+        err => {
+            // handle error
+        },
+        () => {
+            if (this.modulosItem.procedimientos != null && this.modulosItem.procedimientos != "") {
+                this.modulosItem.procedimientosReal = this.modulosItem.procedimientos.split(",");
+                this.sortOptions();
+            } else {
+                this.modulosItem.procedimientosReal = [];
             }
-          }
-        });
-        this.sortOptions();
-      },
-      (err) => {
-        //console.log(err);
-      },
-      () => {
-        if (this.modulosItem.procedimientos != null && this.modulosItem.procedimientos != "") {
-          this.modulosItem.procedimientosReal = this.modulosItem.procedimientos.split(",");
-          this.sortOptions();
-        } else {
-          this.modulosItem.procedimientosReal = [];
         }
-      },
     );
-  }
+}
 
   disableJurisdiccion() {
     if (this.modulosItem.procedimientosReal != undefined && this.modulosItem.procedimientosReal.length > 0) {
@@ -388,16 +385,17 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined && this.modulosItem.importe != "" && this.modulosItem.fechadesdevigor != undefined && this.modulosItem.idjurisdiccion != "" && this.modulosItem.idjurisdiccion != undefined && this.modulosItem.procedimientosReal != undefined && this.modulosItem.procedimientosReal.length > 0 && JSON.stringify(this.modulosItem) != JSON.stringify(this.bodyInicial)) {
-      if (this.modulosItem.nombre.trim() != "") {
-        return false;
-      } else {
-        return true;
-      }
+    if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined &&
+        this.modulosItem.importe != "" && this.modulosItem.fechadesdevigor != undefined && this.modulosItem.idjurisdiccion != "" &&
+        this.modulosItem.idjurisdiccion != undefined) && 
+        (JSON.stringify(this.modulosItem) != JSON.stringify(this.bodyInicial))) {
+        if (this.modulosItem.nombre.trim() != "") {
+            return false;
+        } else { return true; }
     } else {
-      return true;
+        return true;
     }
-  }
+}
 
   sortOptions() {
     if (this.procedimientos && this.modulosItem.procedimientosReal) {
