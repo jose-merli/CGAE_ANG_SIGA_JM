@@ -595,8 +595,8 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   getCols() {
     this.cols = [
-      { field: "idAcreditacion", header: "menu.justiciaGratuita.maestros.Acreditacion" },
-      { field: "porcentajeReal", header: "menu.justiciaGratuita.maestros.porcentaje" },
+      { field: "descripcion", header: "menu.justiciaGratuita.maestros.Acreditacion" },
+      { field: "porcentaje", header: "menu.justiciaGratuita.maestros.porcentaje" },
       { field: "nig_numprocedimiento", header: "menu.justiciaGratuita.maestros.numProcedimiento" },
       { field: "codigoext", header: "general.codeext" },
       { field: "codSubTarifa", header: "menu.justiciaGratuita.maestros.codSubtarifa" }
