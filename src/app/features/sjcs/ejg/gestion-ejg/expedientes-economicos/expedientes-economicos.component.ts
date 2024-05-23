@@ -1,17 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ConfirmationService } from 'primeng/primeng';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
-import { SigaServices } from '../../../../../_services/siga.service';
-import { EJGItem } from '../../../../../models/sjcs/EJGItem';
-import { TranslateService } from '../../../../../commons/translate';
+import { ConfirmationService } from "primeng/primeng";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate";
+import { EJGItem } from "../../../../../models/sjcs/EJGItem";
 
 @Component({
-  selector: 'app-expedientes-economicos',
-  templateUrl: './expedientes-economicos.component.html',
-  styleUrls: ['./expedientes-economicos.component.scss']
+  selector: "app-expedientes-economicos",
+  templateUrl: "./expedientes-economicos.component.html",
+  styleUrls: ["./expedientes-economicos.component.scss"],
 })
 export class ExpedientesEconomicosComponent implements OnInit {
- 
   @Input() body: EJGItem;
   @Input() modoEdicion;
   @Input() openTarjetaExpedientesEconomicos;
@@ -36,11 +35,10 @@ export class ExpedientesEconomicosComponent implements OnInit {
     f_solicitud: null,
     f_recepcion: null,
     estado: "",
-    nExpedientes: 0
+    nExpedientes: 0,
   };
-  
- constructor(private sigaServices: SigaServices, 
-  private translateService: TranslateService, private confirmationService: ConfirmationService) { }
+
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService) {}
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -51,10 +49,6 @@ export class ExpedientesEconomicosComponent implements OnInit {
 
   abreCierraFicha() {
     this.openTarjetaExpedientesEconomicos = !this.openTarjetaExpedientesEconomicos;
-  }
-
-  onChangeRowsPerPages() {
-    //ARR: Terminar
   }
 
   onChangeSelectAll() {
@@ -76,49 +70,48 @@ export class ExpedientesEconomicosComponent implements OnInit {
   }
 
   disabledDownload(): boolean {
-    return this.selectedDatos == undefined || this.selectedDatos.length == 0 || this.selectedDatos.some(d => d.idEstado != "30");
+    return this.selectedDatos == undefined || this.selectedDatos.length == 0 || this.selectedDatos.some((d) => d.idEstado != "30");
   }
 
   disableEnviarDocumentacionAdicional(): boolean {
-    return this.selectedDatos == undefined || this.selectedDatos.length == 0 || this.selectedDatos.some(d => d.csv == undefined || d.csv.length == 0 || d.idEstado == "40");
+    return this.selectedDatos == undefined || this.selectedDatos.length == 0 || this.selectedDatos.some((d) => d.csv == undefined || d.csv.length == 0 || d.idEstado == "40");
   }
 
   downloadEEJ() {
-    
     if (!this.permisoEscritura) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
-      this.progressSpinner=true;
+      this.progressSpinner = true;
       let data = [];
-      this.selectedDatos.forEach(element => {
+      this.selectedDatos.forEach((element) => {
         let ejgData: EJGItem = new EJGItem();
         ejgData.annio = this.body.annio;
         ejgData.idInstitucion = this.body.idInstitucion;
         ejgData.numEjg = this.body.numEjg;
         ejgData.tipoEJG = this.body.tipoEJG;
-        ejgData.observaciones=element.csv;
+        ejgData.observaciones = element.csv;
         data.push(ejgData);
       });
 
       this.sigaServices.postDownloadFiles("gestionejg_descargarExpedientesJG", data).subscribe(
-        data => {
-          this.progressSpinner=false;
+        (data) => {
+          this.progressSpinner = false;
           let blob = null;
           let now = new Date();
-          let month = (now.getMonth() + 1) + "";
-          let nombreFichero = "eejg_" + now.getFullYear() + month.padStart(2, '0') + now.getDate() + "_" + now.getHours() + "" + now.getMinutes();
+          let month = now.getMonth() + 1 + "";
+          let nombreFichero = "eejg_" + now.getFullYear() + month.padStart(2, "0") + now.getDate() + "_" + now.getHours() + "" + now.getMinutes();
           let mime = data.type;
           blob = new Blob([data], { type: mime });
           saveAs(blob, nombreFichero);
         },
-        err => {
+        (err) => {
           this.progressSpinner = false;
-          if(err.status == 404){
+          if (err.status == 404) {
             this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant("administracion.parametro.eejg.messageNoExistenArchivos"));
-          }else{
+          } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
-        }
+        },
       );
     }
   }
@@ -133,44 +126,50 @@ export class ExpedientesEconomicosComponent implements OnInit {
       },
       reject: () => {
         this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
-      }
+      },
     });
   }
 
   private async enviarDocumentacionAdicional() {
-      this.progressSpinner = true;
-      let requests = this.selectedDatos.filter(d => d.csv != undefined && d.csv.length != 0 && d.idEstado != "40").map(d => {
+    this.progressSpinner = true;
+    let requests = this.selectedDatos
+      .filter((d) => d.csv != undefined && d.csv.length != 0 && d.idEstado != "40")
+      .map((d) => {
         return { idPeticion: d.idPeticion };
       });
-      await Promise.all(requests.map(d => this.accionEnviarDocumentacionAdicional(d))).then((values) => {
-        this.progressSpinner = false;
-      });
-      this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
-      this.updateIntercambios.emit();
+    await Promise.all(requests.map((d) => this.accionEnviarDocumentacionAdicional(d))).then((values) => {
+      this.progressSpinner = false;
+    });
+    this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+    this.updateIntercambios.emit();
   }
 
   private accionEnviarDocumentacionAdicional(body): Promise<any> {
-    return this.sigaServices.post("gestionejg_enviaDocumentacionAdicionalExpEconomico", body).toPromise().then(
-      n => {
-        const body = JSON.parse(n.body);
-        if (body.error != undefined) {
-          return Promise.reject(n.error);
-        }
-      },
-      err => {
-        return Promise.reject();
-      }
-    );
+    return this.sigaServices
+      .post("gestionejg_enviaDocumentacionAdicionalExpEconomico", body)
+      .toPromise()
+      .then(
+        (n) => {
+          const body = JSON.parse(n.body);
+          if (body.error != undefined) {
+            return Promise.reject(n.error);
+          }
+        },
+        (err) => {
+          return Promise.reject();
+        },
+      );
   }
 
   private getEnviarDocumentacionAdicional() {
-    this.sigaServices.get("gestionejg_esColegioConfiguradoEnvioCAJG").toPromise().then(
-      n => {
+    this.sigaServices
+      .get("gestionejg_esColegioConfiguradoEnvioCAJG")
+      .toPromise()
+      .then((n) => {
         if (n.error == undefined && this.body.idExpedienteExt != undefined) {
           this.showEnviarDocumentacionAdicional = true;
-        } 
-      }
-    )
+        }
+      });
   }
 
   private getCols() {
@@ -186,12 +185,12 @@ export class ExpedientesEconomicosComponent implements OnInit {
       { label: 10, value: 10 },
       { label: 20, value: 20 },
       { label: 30, value: 30 },
-      { label: 40, value: 40 }
+      { label: 40, value: 40 },
     ];
   }
 
-  private updateResumen(){
-    if(this.expedientesEcon.length > 0){
+  private updateResumen() {
+    if (this.expedientesEcon.length > 0) {
       this.resumen.f_solicitud = this.expedientesEcon[0].f_solicitud;
       this.resumen.f_recepcion = this.expedientesEcon[0].f_recepcion;
       this.resumen.estado = this.expedientesEcon[0].estado;
@@ -202,12 +201,13 @@ export class ExpedientesEconomicosComponent implements OnInit {
 
   private getExpedientesEconomicos() {
     this.sigaServices.post("gestionejg_getExpedientesEconomicos", this.body).subscribe(
-      n => {
+      (n) => {
         this.expedientesEcon = JSON.parse(n.body).expEconItems;
         this.updateResumen();
-      }, err => {
+      },
+      (err) => {
         this.progressSpinner = false;
-      }
+      },
     );
   }
 
@@ -216,7 +216,7 @@ export class ExpedientesEconomicosComponent implements OnInit {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
   }
 }

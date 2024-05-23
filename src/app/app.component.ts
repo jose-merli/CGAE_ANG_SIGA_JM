@@ -1,21 +1,16 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-// import { MenubarModule } from 'primeng/menubar';
-// import { MenuItem } from 'primeng/api';
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    Router
-} from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { CookieService } from "ngx-cookie-service";
 import { AuthenticationService } from "./_services/authentication.service";
-import { SigaServices } from "./_services/siga.service";
 import { DeadmanService } from "./_services/deadman.service";
+import { NotificationService } from "./_services/notification.service";
+import { SigaServices } from "./_services/siga.service";
 import { ColegiadoItem } from "./models/ColegiadoItem";
 import { SigaStorageService } from "./siga-storage.service";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"]
+  styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
   @ViewChild("content")
@@ -33,21 +28,12 @@ export class AppComponent implements OnInit {
   scroll: boolean = false;
   isScrollReseteable: boolean = false;
 
-  constructor(
-    private autenticateService: AuthenticationService,
-    private deadmanService: DeadmanService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private cookieService: CookieService,
-    private localStorageService : SigaStorageService,
-    private sigaServices : SigaServices
-  ) { }
+  constructor(private autenticateService: AuthenticationService, private deadmanService: DeadmanService, private activatedRoute: ActivatedRoute, private router: Router, private cookieService: CookieService, private localStorageService: SigaStorageService, private sigaServices: SigaServices, private notificationService: NotificationService) {}
 
-   async ngOnInit(): Promise<void> {
-
+  async ngOnInit(): Promise<void> {
     this.deadmanService.startDeadmanTimer();
-    
-    this.router.events.subscribe(evt => {
+
+    this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
         this.router.navigated = false;
         window.scrollTo(0, 0);
@@ -68,43 +54,38 @@ export class AppComponent implements OnInit {
       this.bottomCookies = "0";
     }
 
-    this.cookieService.set(
-      "Test",
-      "Utilizamos cookies propias y de analítica para mejorar tu experiencia de usuario. Si continúas navegando, consideramos que aceptas su uso."
-    );
+    this.cookieService.set("Test", "Utilizamos cookies propias y de analítica para mejorar tu experiencia de usuario. Si continúas navegando, consideramos que aceptas su uso.");
     this.cookieValue = this.cookieService.get("Test");
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
-    await this.sigaServices.get('getLetrado').subscribe(
-			(data) => {
-			  if (data.value == 'S') {
-				this.localStorageService.isLetrado = true;
-			  } else {
-				this.localStorageService.isLetrado = false;
-			  }
-			},
-			(err) => {
-			  //console.log(err);
-			}
-		);
+    await this.sigaServices.get("getLetrado").subscribe((data) => {
+      if (data.value == "S") {
+        this.localStorageService.isLetrado = true;
+      } else {
+        this.localStorageService.isLetrado = false;
+      }
+    });
     await this.getDataLoggedUser();
     await this.getInstitucionActual();
+  }
 
+  clear() {
+    this.notificationService.clear();
   }
 
   subscribeNavigationEnd() {
     this.router.events
-      .filter(e => e instanceof NavigationEnd)
+      .filter((e) => e instanceof NavigationEnd)
       .map(() => this.activatedRoute)
-      .map(route => {
+      .map((route) => {
         if (route.firstChild) {
           route = route.firstChild;
         }
         return route;
       })
-      .filter(route => route.outlet === "primary")
-      .mergeMap(route => route.data)
+      .filter((route) => route.outlet === "primary")
+      .mergeMap((route) => route.data)
       .subscribe((e: any) => {
         this.isScrollReseteable = e.scrollReset;
       });
@@ -127,9 +108,7 @@ export class AppComponent implements OnInit {
     // expires = 2;
     if (expires) {
       if (typeof expires === "number") {
-        const dateExpires = new Date(
-          new Date().getTime() + expires * 1000 * 60 * 60 * 24
-        );
+        const dateExpires = new Date(new Date().getTime() + expires * 1000 * 60 * 60 * 24);
         this.date = { value: "date", dateExpires };
         localStorage.setItem("date", JSON.stringify(this.date));
       }
@@ -169,22 +148,23 @@ export class AppComponent implements OnInit {
   }
 
   getDataLoggedUser() {
-		this.sigaServices.get("usuario_logeado").subscribe(async n => {
-			const usuario = n.usuarioLogeadoItem;
-			const colegiadoItem = new ColegiadoItem();
-			colegiadoItem.nif = usuario[0].dni;
-			await this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
-				usr => {
-					let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
-					if(usuarioLogado) {
-						this.localStorageService.idPersona = usuarioLogado.idPersona;
-						this.localStorageService.numColegiado = usuarioLogado.numColegiado;
-					}
-				});
-		});
-	}
+    this.sigaServices.get("usuario_logeado").subscribe(async (n) => {
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+      await this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe((usr) => {
+        let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+        if (usuarioLogado) {
+          this.localStorageService.idPersona = usuarioLogado.idPersona;
+          this.localStorageService.numColegiado = usuarioLogado.numColegiado;
+        }
+      });
+    });
+  }
 
-	getInstitucionActual() {
-		this.sigaServices.get("institucionActual").subscribe(n => { this.localStorageService.institucionActual = n.value });
-	}
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe((n) => {
+      this.localStorageService.institucionActual = n.value;
+    });
+  }
 }

@@ -1,20 +1,16 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { SigaServices } from "./siga.service";
+
 @Injectable()
-export class HeaderGestionEntidadService {
+export class LogoService {
   // Servicio para comunicar gestion-entidad.component con header.component
 
   private url = new BehaviorSubject<any>("");
   url$ = this.url.asObservable();
 
   constructor(sigaServices: SigaServices) {
-    this.url.next(
-      sigaServices.getNewSigaUrl() +
-        sigaServices.getServucePath("header_logo") +
-        "?random=" +
-        new Date().getTime()
-    );
+    this.url.next(sigaServices.getNewSigaUrl() + sigaServices.getServucePath("header_logo") + "?random=" + new Date().getTime());
   }
 
   // Funcion para cambiar la url de la imagen del logotipo de header.component

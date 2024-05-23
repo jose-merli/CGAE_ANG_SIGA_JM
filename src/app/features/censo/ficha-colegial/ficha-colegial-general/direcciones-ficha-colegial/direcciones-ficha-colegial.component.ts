@@ -1,26 +1,23 @@
-import { DatePipe, Location } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from "@angular/core";
 // import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
-import { Router } from '@angular/router';
-import { ConfirmationService, Message } from "primeng/components/common/api";
-import { DataTable } from 'primeng/primeng';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
-import { BusquedaSancionesItem } from '../../../../../models/BusquedaSancionesItem';
-import { BusquedaSancionesObject } from '../../../../../models/BusquedaSancionesObject';
-import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
-import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
-import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
-import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
-import { RevisionAutLetradoItem } from '../../../../../models/RevisionAutLetradoItem';
-import { AuthenticationService } from '../../../../../_services/authentication.service';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { cardService } from "./../../../../../_services/cardSearch.service";
+import { Router } from "@angular/router";
+import { Message } from "primeng/components/common/api";
+import { DataTable } from "primeng/primeng";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { BusquedaSancionesItem } from "../../../../../models/BusquedaSancionesItem";
+import { BusquedaSancionesObject } from "../../../../../models/BusquedaSancionesObject";
+import { DatosDireccionesItem } from "../../../../../models/DatosDireccionesItem";
+import { DatosDireccionesObject } from "../../../../../models/DatosDireccionesObject";
+import { FichaColegialColegialesItem } from "../../../../../models/FichaColegialColegialesItem";
+import { FichaColegialGeneralesItem } from "../../../../../models/FichaColegialGeneralesItem";
+import { RevisionAutLetradoItem } from "../../../../../models/RevisionAutLetradoItem";
 
 @Component({
-  selector: 'app-direcciones-ficha-colegial',
-  templateUrl: './direcciones-ficha-colegial.component.html',
-  styleUrls: ['./direcciones-ficha-colegial.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-direcciones-ficha-colegial",
+  templateUrl: "./direcciones-ficha-colegial.component.html",
+  styleUrls: ["./direcciones-ficha-colegial.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   esNewColegiado: boolean = false;
@@ -43,7 +40,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   fichasPosibles = [
     {
       key: "direcciones",
-      activa: false
+      activa: false,
     },
   ];
   selectAll: boolean = false;
@@ -68,7 +65,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   rowsPerPage;
   numSelectedCurriculares: number = 0;
   colsDirecciones;
-  mostrarNumero:Boolean = false;
+  mostrarNumero: Boolean = false;
   message;
   messageNoContent;
   bodyDirecciones: DatosDireccionesItem;
@@ -99,28 +96,17 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   disabledAction: boolean = false;
-  constructor(
-    private sigaServices: SigaServices,
-    private confirmationService: ConfirmationService,
-    private authenticationService: AuthenticationService,
-    private cardService: cardService,
-    private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    // private sanitizer: DomSanitizer,
-    private router: Router,
-    private datepipe: DatePipe,
-    private location: Location,
-  ) { }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit() {
-    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      // Esto disablea tela de cosas funciona como medio permisos.
       // Es estado baja colegial (historico?)
       this.disabledAction = true;
     } else {
       this.disabledAction = false;
     }
-    if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != undefined
-        && sessionStorage.getItem("personaBody") != 'undefined' &&JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true) {
+    if (sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody") != undefined && sessionStorage.getItem("personaBody") != "undefined" && JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true) {
       this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -133,7 +119,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.esColegiado = true;
       }
 
-      sessionStorage.removeItem("historicoDir")
+      sessionStorage.removeItem("historicoDir");
 
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -159,12 +145,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     }
 
     this.getCols();
-
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    
     if (this.esColegiado != null) {
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -177,10 +160,10 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     if (this.idPersona != undefined) {
       if (this.bodyDirecciones == undefined && (this.tarjetaDirecciones == "3" || this.tarjetaDirecciones == "2")) {
         this.onInitDirecciones();
-        
-        if(this.tarjetaDirecciones == "3"){
+
+        if (this.tarjetaDirecciones == "3") {
           this.permisos = true;
-        }else{
+        } else {
           this.permisos = false;
         }
         this.getLetrado();
@@ -188,7 +171,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     }
     if (this.openDirec == true) {
       if (this.openFicha == false) {
-        this.abreCierraFicha('direcciones');
+        this.abreCierraFicha("direcciones");
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -207,72 +190,67 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     }
   }
 
-
   getCols() {
     this.colsDirecciones = [
       {
         field: "tipoDireccion",
         header: "censo.datosDireccion.literal.tipo.direccion",
-        width: "22%"
+        width: "22%",
       },
       {
         field: "domicilioLista",
-        header: "censo.consultaDirecciones.literal.direccion"
+        header: "censo.consultaDirecciones.literal.direccion",
       },
       {
         field: "codigoPostal",
-        header: "censo.ws.literal.codigopostal"
+        header: "censo.ws.literal.codigopostal",
       },
       {
         field: "nombrePoblacion",
-        header: "censo.consultaDirecciones.literal.poblacion"
+        header: "censo.consultaDirecciones.literal.poblacion",
       },
       {
         field: "nombreProvincia",
-        header: "censo.datosDireccion.literal.provincia"
+        header: "censo.datosDireccion.literal.provincia",
       },
       {
         field: "telefono",
-        header: "censo.ws.literal.telefono"
+        header: "censo.ws.literal.telefono",
       },
       {
         field: "movil",
-        header: "censo.datosDireccion.literal.movil"
+        header: "censo.datosDireccion.literal.movil",
       },
       {
         field: "correoElectronico",
-        header: "censo.datosDireccion.literal.correo"
-      }
+        header: "censo.datosDireccion.literal.correo",
+      },
     ];
 
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
   }
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
-    if (
-      key == "generales" &&
-      !this.activacionTarjeta &&
-      !this.emptyLoadFichaColegial
-    ) {
+    if (key == "generales" && !this.activacionTarjeta && !this.emptyLoadFichaColegial) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -285,7 +263,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
+    let fichaPosible = this.fichasPosibles.filter((elto) => {
       return elto.key === key;
     });
     if (fichaPosible && fichaPosible.length) {
@@ -305,7 +283,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.searchDirecciones();
   }
 
-  ocultarHistoricoDatosDirecciones(){
+  ocultarHistoricoDatosDirecciones() {
     this.progressSpinner = true;
     this.onInitDirecciones();
   }
@@ -326,14 +304,13 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     if (this.selectAllDirecciones === true) {
       if (this.bodyDirecciones.historico == true) {
         this.selectMultipleDirecciones = false;
-        this.selectedDatosDirecciones = this.datosDirecciones.filter(dato => dato.fechaBaja != undefined);
+        this.selectedDatosDirecciones = this.datosDirecciones.filter((dato) => dato.fechaBaja != undefined);
         this.numSelectedCurriculares = this.selectedDatosDirecciones.length;
       } else {
         this.numSelectedDirecciones = this.datosDirecciones.length;
         this.selectMultipleDirecciones = false;
         this.selectedDatosDirecciones = this.datosDirecciones;
       }
-
     } else {
       this.selectedDatosDirecciones = [];
       this.numSelectedDirecciones = 0;
@@ -363,31 +340,17 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     // });
 
     this.borrarDireccion(selectedItem);
-
-
   }
 
   borrarDireccion(datosDelete) {
-
     if (this.esColegiado) {
       let dirDelete = JSON.parse(JSON.stringify(datosDelete));
 
       for (const key in datosDelete) {
-
         let flag = false;
-        datosDelete[key].idTipoDireccion.forEach(element => {
-
+        datosDelete[key].idTipoDireccion.forEach((element) => {
           if (!flag) {
-
-            if (element == this.valorCensoWeb
-              || element == this.valorTraspaso
-              || element == this.valorFacturacion
-              || element == this.valorGuardia
-              || element == this.valorGuiaJudicial
-              || element == this.valorPreferenteCorreo
-              || element == this.valorPreferenteEmail
-              || element == this.valorPreferenteSMS) {
-
+            if (element == this.valorCensoWeb || element == this.valorTraspaso || element == this.valorFacturacion || element == this.valorGuardia || element == this.valorGuiaJudicial || element == this.valorPreferenteCorreo || element == this.valorPreferenteEmail || element == this.valorPreferenteSMS) {
               dirDelete.splice(key, 1);
               flag = true;
             }
@@ -396,23 +359,19 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
               let cont = 0;
 
               if (element == this.valorDespacho) {
-
-                this.datosDirecciones.forEach(dir => {
-                  let idFindDespacho = dir.idTipoDireccion.findIndex(x => x == element);
+                this.datosDirecciones.forEach((dir) => {
+                  let idFindDespacho = dir.idTipoDireccion.findIndex((x) => x == element);
 
                   if (idFindDespacho != -1) {
                     cont = cont + 1;
                   }
-
                 });
 
                 if (cont == 1) {
                   dirDelete.splice(key, 1);
                   flag = true;
                 }
-
               }
-
             }
           }
         });
@@ -421,7 +380,6 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       if (dirDelete.length != datosDelete.length && dirDelete.length > 0) {
         datosDelete = dirDelete;
         this.serviceDeleteDirection(datosDelete, false);
-
       } else if (dirDelete.length == 0) {
         this.showInfo("No se puede borrar la dirección porque tiene tipos de dirección obligatorios");
 
@@ -429,20 +387,17 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.selectAllDirecciones = false;
         this.numSelectedDirecciones = 0;
         this.progressSpinner = false;
-
       } else {
         this.serviceDeleteDirection(datosDelete, true);
-
       }
     } else {
       this.serviceDeleteDirection(datosDelete, true);
     }
-
   }
 
   serviceDeleteDirection(datosDelete, all) {
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
-      data => {
+      (data) => {
         //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
         let peticion = new RevisionAutLetradoItem();
         peticion.idPersona = this.generalBody.idPersona.toString();
@@ -453,10 +408,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
         if (!all) {
           this.showInfo("No se ha podido borrar todas las direcciones seleccionadas porque tienen tipos de dirección obligatorios");
-
         }
       },
-      err => {
+      (err) => {
         this.progressSpinner = false;
         this.showInfo("No se puede eliminar una dirección con tipo CensoWeb, Traspaso, Facturación, Guardia o Despacho");
         this.selectMultipleDirecciones = false;
@@ -473,7 +427,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.numSelectedDirecciones = 0;
         this.selectAllDirecciones = false;
         this.searchDirecciones();
-      }
+      },
     );
   }
 
@@ -494,57 +448,44 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     //this.progressSpinner = true;
     this.selectAll = false;
     if (this.idPersona != undefined && this.idPersona != null) {
-      this.sigaServices
-        .postPaginado(
-          "fichaDatosDirecciones_datosDireccionesSearch",
-          "?numPagina=1",
-          this.bodyDirecciones
-        )
-        .subscribe(
-          data => {
-            this.searchDireccionIdPersona = JSON.parse(data["body"]);
-            this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
-            let contador = 0;
-            this.datosDirecciones.forEach(element => {
-              let numDespacho = element.idTipoDireccion.find(
-                item => item == '2'
-              );
+      this.sigaServices.postPaginado("fichaDatosDirecciones_datosDireccionesSearch", "?numPagina=1", this.bodyDirecciones).subscribe(
+        (data) => {
+          this.searchDireccionIdPersona = JSON.parse(data["body"]);
+          this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
+          let contador = 0;
+          this.datosDirecciones.forEach((element) => {
+            let numDespacho = element.idTipoDireccion.find((item) => item == "2");
 
-              if (numDespacho != undefined) {
-                contador = contador + 1;
-              }
-            });
-            sessionStorage.setItem("numDespacho", JSON.stringify(contador));
-            sessionStorage.setItem("datosDireccionesAlterMutua", JSON.stringify(this.datosDirecciones))
+            if (numDespacho != undefined) {
+              contador = contador + 1;
+            }
+          });
+          sessionStorage.setItem("numDespacho", JSON.stringify(contador));
+          sessionStorage.setItem("datosDireccionesAlterMutua", JSON.stringify(this.datosDirecciones));
 
-            this.progressSpinner = false;
-          },
-          err => {
-            //console.log(err);
-            this.progressSpinner = false;
-            this.mostrarNumero = true;
-          },
-          () => {
-            this.progressSpinner = false;
-            if (this.datosDirecciones.length > 0) {
-              this.mostrarDatosDireccion = true;
-              this.DescripcionDatosDireccion = this.datosDirecciones[0];
-              
-            }
-            if (this.datosDirecciones.length == 0) {
-              this.message = this.datosDirecciones.length.toString();
-              this.messageNoContent = this.translateService.instant(
-                "general.message.no.registros"
-              );
-              this.mostrarNumero = true;
-  
-            } else {
-              this.message = this.datosDirecciones.length.toString();
-              this.mostrarNumero = true;
-  
-            }
+          this.progressSpinner = false;
+        },
+        (err) => {
+          //console.log(err);
+          this.progressSpinner = false;
+          this.mostrarNumero = true;
+        },
+        () => {
+          this.progressSpinner = false;
+          if (this.datosDirecciones.length > 0) {
+            this.mostrarDatosDireccion = true;
+            this.DescripcionDatosDireccion = this.datosDirecciones[0];
           }
-        );
+          if (this.datosDirecciones.length == 0) {
+            this.message = this.datosDirecciones.length.toString();
+            this.messageNoContent = this.translateService.instant("general.message.no.registros");
+            this.mostrarNumero = true;
+          } else {
+            this.message = this.datosDirecciones.length.toString();
+            this.mostrarNumero = true;
+          }
+        },
+      );
     }
   }
 
@@ -560,28 +501,16 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     sessionStorage.removeItem("direccion");
     sessionStorage.removeItem("editarDireccion");
     sessionStorage.setItem("fichaColegial", "true");
-    sessionStorage.setItem(
-      "usuarioBody",
-      JSON.stringify(this.generalBody.idPersona)
-    );
+    sessionStorage.setItem("usuarioBody", JSON.stringify(this.generalBody.idPersona));
     sessionStorage.setItem("editarDireccion", "false");
-    sessionStorage.setItem(
-      "direcciones",
-      JSON.stringify(this.datosDirecciones)
-    );
+    sessionStorage.setItem("direcciones", JSON.stringify(this.datosDirecciones));
     this.datosColegiales = JSON.parse(sessionStorage.getItem("datosColDir"));
 
     if (this.datosColegiales.length != 0) {
       if (this.isCrearColegial) {
-        sessionStorage.setItem(
-          "situacionColegialesBody",
-          JSON.stringify(this.datosColegiales[1].idEstado)
-        );
+        sessionStorage.setItem("situacionColegialesBody", JSON.stringify(this.datosColegiales[1].idEstado));
       } else {
-        sessionStorage.setItem(
-          "situacionColegialesBody",
-          JSON.stringify(this.datosColegiales[0].idEstado)
-        );
+        sessionStorage.setItem("situacionColegialesBody", JSON.stringify(this.datosColegiales[0].idEstado));
       }
     }
 
@@ -621,33 +550,20 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
           sessionStorage.setItem("editarDireccion", "true");
 
           sessionStorage.setItem("usuarioBody", JSON.stringify(dato));
-          sessionStorage.setItem(
-            "esColegiado",
-            sessionStorage.getItem("esColegiado")
-          );
+          sessionStorage.setItem("esColegiado", sessionStorage.getItem("esColegiado"));
         } else {
           sessionStorage.setItem("editar", "false");
         }
-        sessionStorage.setItem(
-          "direcciones",
-          JSON.stringify(this.datosDirecciones)
-        );
+        sessionStorage.setItem("direcciones", JSON.stringify(this.datosDirecciones));
         sessionStorage.setItem("permisoTarjeta", this.tarjetaDirecciones);
 
         if (this.datosColegiales.length != 0) {
           if (this.isCrearColegial) {
-            sessionStorage.setItem(
-              "situacionColegialesBody",
-              JSON.stringify(this.datosColegiales[1].idEstado)
-            );
+            sessionStorage.setItem("situacionColegialesBody", JSON.stringify(this.datosColegiales[1].idEstado));
           } else {
-            sessionStorage.setItem(
-              "situacionColegialesBody",
-              JSON.stringify(this.datosColegiales[0].idEstado)
-            );
+            sessionStorage.setItem("situacionColegialesBody", JSON.stringify(this.datosColegiales[0].idEstado));
           }
         }
-
 
         let migaPan = "";
 
@@ -659,7 +575,6 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
         sessionStorage.setItem("migaPan", migaPan);
         this.router.navigate(["/consultarDatosDirecciones"]);
-
       } else {
         this.numSelectedDirecciones = this.selectedDatosDirecciones.length;
       }
@@ -671,7 +586,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.msgs.push({
       severity: "error",
       summary: this.translateService.instant("general.message.incorrect"),
-      detail: mensaje
+      detail: mensaje,
     });
   }
 
@@ -685,7 +600,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.msgs.push({
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant("general.message.accion.realizada")
+      detail: this.translateService.instant("general.message.accion.realizada"),
     });
   }
 
@@ -694,9 +609,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.msgs.push({
       severity: "error",
       summary: this.translateService.instant("general.message.incorrect"),
-      detail: this.translateService.instant(
-        "general.message.error.realiza.accion"
-      )
+      detail: this.translateService.instant("general.message.error.realiza.accion"),
     });
   }
 
@@ -713,8 +626,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     }
   }
   activarPaginacionDireciones() {
-    if (!this.datosDirecciones || this.datosDirecciones.length == 0)
-      return false;
+    if (!this.datosDirecciones || this.datosDirecciones.length == 0) return false;
     else return true;
   }
   clear() {
@@ -743,23 +655,19 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.selectMultiple = false;
     this.selectedDatosDirecciones = "";
     this.selectAllDirecciones = false;
-    this.sigaServices
-      .postPaginado("direcciones_search", "?numPagina=1", searchObject)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.datosDireccionesHist = JSON.parse(data["body"]);
-          this.datosDirecciones = this.datosDireccionesHist.datosDireccionesItem;
-          this.tableDirecciones.paginator = true;
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-
-        }
-      );
+    this.sigaServices.postPaginado("direcciones_search", "?numPagina=1", searchObject).subscribe(
+      (data) => {
+        this.progressSpinner = false;
+        this.datosDireccionesHist = JSON.parse(data["body"]);
+        this.datosDirecciones = this.datosDireccionesHist.datosDireccionesItem;
+        this.tableDirecciones.paginator = true;
+      },
+      (err) => {
+        //console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {},
+    );
   }
   isOpenReceive(event) {
     let fichaPosible = this.esFichaActiva(event);
@@ -773,5 +681,4 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       this.selectedDatosDirecciones.pop();
     }
   }
-
 }

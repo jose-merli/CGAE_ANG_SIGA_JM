@@ -1,20 +1,16 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-
-// prueba
-import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
-
-import { SigaServices } from "./../../../_services/siga.service";
+import { Message } from "primeng/components/common/api";
+import { LogoService } from "../../../_services/logo.service";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
-
-import { Message } from "primeng/components/common/api";
+import { SigaServices } from "./../../../_services/siga.service";
 
 @Component({
   selector: "app-gestion-entidad",
   templateUrl: "./gestion-entidad.component.html",
   styleUrls: ["./gestion-entidad.component.scss"],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class GestionEntidad extends SigaWrapper implements OnInit {
   showDatosGenerales: boolean = true;
@@ -28,30 +24,23 @@ export class GestionEntidad extends SigaWrapper implements OnInit {
   file: File = undefined;
   nombreImagen: any;
   imagenURL: any;
-  constructor(
-    private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private headerGestionEntidadService: HeaderGestionEntidadService
-  ) {
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private logoService: LogoService) {
     super(USER_VALIDATIONS);
   }
 
   ngOnInit() {
     this.sigaServices.get("entidad_lenguajeInstitucion").subscribe(
-      n => {
+      (n) => {
         this.lenguajeInstitucion = n.idLenguaje;
 
         this.sigaServices.get("entidad_lenguaje").subscribe(
-          n => {
+          (n) => {
             this.idiomaBusqueda = n.combooItems;
 
-            /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-para poder filtrar el dato con o sin estos caracteres*/
-            this.idiomaBusqueda.map(e => {
-              let accents =
-                "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-              let accentsOut =
-                "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+            /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, para poder filtrar el dato con o sin estos caracteres*/
+            this.idiomaBusqueda.map((e) => {
+              let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+              let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
               let i;
               let x;
               for (i = 0; i < e.label.length; i++) {
@@ -62,22 +51,20 @@ para poder filtrar el dato con o sin estos caracteres*/
               }
             });
 
-            this.valorDefectoIdioma = this.idiomaBusqueda.find(
-              item => item.value == this.lenguajeInstitucion
-            );
+            this.valorDefectoIdioma = this.idiomaBusqueda.find((item) => item.value == this.lenguajeInstitucion);
 
             if (this.valorDefectoIdioma != undefined) {
               this.selectedIdiomaBusqueda = this.valorDefectoIdioma.value;
             }
           },
-          err => {
+          (err) => {
             //console.log(err);
-          }
+          },
         );
       },
-      err => {
+      (err) => {
         //console.log(err);
-      }
+      },
     );
   }
 
@@ -90,9 +77,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs.push({
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant(
-        "general.message.logotipo.actualizado"
-      )
+      detail: this.translateService.instant("general.message.logotipo.actualizado"),
     });
   }
 
@@ -101,9 +86,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs.push({
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant(
-        "general.message.lenguaje.actualizado"
-      )
+      detail: this.translateService.instant("general.message.lenguaje.actualizado"),
     });
   }
 
@@ -112,9 +95,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs.push({
       severity: "success",
       summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant(
-        "general.message.logotipoLenguage.actualizado"
-      )
+      detail: this.translateService.instant("general.message.logotipoLenguage.actualizado"),
     });
   }
 
@@ -123,7 +104,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs.push({
       severity: "error",
       summary: "Error",
-      detail: "Formato incorrecto de imagen seleccionada"
+      detail: "Formato incorrecto de imagen seleccionada",
     });
   }
 
@@ -132,16 +113,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     let fileList: FileList = event.files;
 
     let nombreCompletoArchivo = fileList[0].name;
-    let extensionArchivo = nombreCompletoArchivo.substring(
-      nombreCompletoArchivo.lastIndexOf("."),
-      nombreCompletoArchivo.length
-    );
+    let extensionArchivo = nombreCompletoArchivo.substring(nombreCompletoArchivo.lastIndexOf("."), nombreCompletoArchivo.length);
 
-    if (
-      extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
-    ) {
+    if (extensionArchivo == null || extensionArchivo.trim() == "" || !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())) {
       // Mensaje de error de formato de imagen y deshabilitar boton guardar
       this.file = undefined;
       this.archivoDisponible = false;
@@ -158,80 +132,57 @@ para poder filtrar el dato con o sin estos caracteres*/
   isGuardar() {
     // si se guardan la imagen y el lenguaje muestra un mensaje de ambos
     let lenguajeeImagen: boolean = false;
-    if (
-      this.file != undefined &&
-      (this.selectedIdiomaBusqueda != "" ||
-        this.selectedIdiomaBusqueda != undefined)
-    ) {
+    if (this.file != undefined && (this.selectedIdiomaBusqueda != "" || this.selectedIdiomaBusqueda != undefined)) {
       lenguajeeImagen = true;
     }
 
     // guardar imagen en bd y refresca header.component
     if (this.file != undefined) {
-      this.sigaServices
-        .postSendContent("entidad_uploadFile", this.file)
-        .subscribe(
-          data => {
-            this.file = undefined;
-            this.archivoDisponible = false;
-            this.nombreImagen = "";
+      this.sigaServices.postSendContent("entidad_uploadFile", this.file).subscribe(
+        (data) => {
+          this.file = undefined;
+          this.archivoDisponible = false;
+          this.nombreImagen = "";
 
-            this.imagenURL =
-              this.sigaServices.getNewSigaUrl() +
-              this.sigaServices.getServucePath("header_logo") +
-              "?random=" +
-              new Date().getTime();
+          this.imagenURL = this.sigaServices.getNewSigaUrl() + this.sigaServices.getServucePath("header_logo") + "?random=" + new Date().getTime();
 
-            // Aqui se refresca el header.component, gracias al servicio headerGestionEntidadService
-            this.headerGestionEntidadService.changeUrl(this.imagenURL);
+          // Aqui se refresca el header.component, gracias al servicio logoService
+          this.logoService.changeUrl(this.imagenURL);
 
-            if (!lenguajeeImagen) {
-              this.showSuccessUploadedImage();
-            }
-          },
-          err => {
-            //console.log(err);
+          if (!lenguajeeImagen) {
+            this.showSuccessUploadedImage();
           }
-        );
+        },
+        (err) => {
+          //console.log(err);
+        },
+      );
     }
 
     // actualizar idLenguaje
-    if (
-      this.selectedIdiomaBusqueda != "" ||
-      this.selectedIdiomaBusqueda != undefined
-    ) {
-      this.sigaServices
-        .post(
-          "entidad_uploadLenguage",
-          JSON.stringify(this.selectedIdiomaBusqueda)
-        )
-        .subscribe(
-          data => {
-            this.lenguajeInstitucion = this.selectedIdiomaBusqueda;
-            if (!lenguajeeImagen) {
-              this.showSuccessUploadedLenguage();
-            }
-          },
-          err => {
-            //console.log(err);
-          },
-          () => {
-            // mensaje conjunto
-            if (lenguajeeImagen) {
-              this.showSuccessUploadedLenguageImage();
-              lenguajeeImagen = false;
-            }
+    if (this.selectedIdiomaBusqueda != "" || this.selectedIdiomaBusqueda != undefined) {
+      this.sigaServices.post("entidad_uploadLenguage", JSON.stringify(this.selectedIdiomaBusqueda)).subscribe(
+        (data) => {
+          this.lenguajeInstitucion = this.selectedIdiomaBusqueda;
+          if (!lenguajeeImagen) {
+            this.showSuccessUploadedLenguage();
           }
-        );
+        },
+        (err) => {
+          //console.log(err);
+        },
+        () => {
+          // mensaje conjunto
+          if (lenguajeeImagen) {
+            this.showSuccessUploadedLenguageImage();
+            lenguajeeImagen = false;
+          }
+        },
+      );
     }
   }
   isHabilitadoGuardar() {
-    if (
-      (this.selectedIdiomaBusqueda != this.lenguajeInstitucion &&
-        this.selectedIdiomaBusqueda != "" &&
-        this.selectedIdiomaBusqueda != undefined) ||
-      this.file != undefined
-    ) {
+    if ((this.selectedIdiomaBusqueda != this.lenguajeInstitucion && this.selectedIdiomaBusqueda != "" && this.selectedIdiomaBusqueda != undefined) || this.file != undefined) {
       this.guardarHabilitado = false;
     } else this.guardarHabilitado = true;
 

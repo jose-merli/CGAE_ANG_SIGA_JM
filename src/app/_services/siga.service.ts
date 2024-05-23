@@ -759,36 +759,6 @@ export class SigaServices {
 
   /** BACKEND **/
 
-  //TODO: Descomentar esto para trabajar en local
-  /*
-  getBackend(service: string, reqParams?: Map<string, string>, respose: boolean = false): Observable<any> {
-    let headers = new HttpHeaders({ "CAS-username": "30964112V", "CAS-displayName": "Prueba", "CAS-roles": "AC0000 Personal::AC0000 SIGA-Admin", "CAS-defaultRole": "AC0000 Personal" });
-    //let headers = new HttpHeaders({'CAS-username': '08967425R', 'CAS-displayName': 'Prueba', 'CAS-roles': 'A30030 7676 Abogado::A04013 2121 Colegiado No Ejerciente::A14021 3776 Abogado::A07040 7676 Abogado::A30030 Personal', 'CAS-defaultRole': 'A04013 2121 Colegiado No Ejerciente'});
-    //let headers = new HttpHeaders({'CAS-username': '51120235K', 'CAS-displayName': 'Prueba', 'CAS-roles': 'A14021 Personal::A04013 7676 Abogado', 'CAS-defaultRole': 'A14021 Personal'});
-    //let headers = new HttpHeaders({'CAS-username': '20349999J', 'CAS-displayName': 'Prueba', 'CAS-roles': '', 'CAS-defaultRole': ''});
-    //let headers = new HttpHeaders({'CAS-username': '20461012M', 'CAS-displayName': 'Prueba', 'CAS-roles': 'A12040 1578 Abogado Residente', 'CAS-defaultRole': 'A12040 1578 Abogado Residente'});
-
-    let params = new HttpParams();
-    if (reqParams != undefined) {
-      reqParams.forEach((value, key) => {
-        params = params.set(key, value);
-      });
-    }
-
-    let options = {};
-    if (respose) {
-      options = { params: params, observe: "response", headers: headers };
-    } else {
-      options = { params: params, observe: "body", headers: headers };
-    }
-
-    return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service], options).map((response) => {
-      return response;
-    });
-  }
-  */
-
-  //TODO: Comentar esto para trabajar en local
   getBackend(service: string, reqParams?: Map<string, string>, respose: boolean = false): Observable<any> {
     let params = new HttpParams();
     if (reqParams != undefined) {

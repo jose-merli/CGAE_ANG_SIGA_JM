@@ -1,58 +1,36 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
-import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { ButtonModule, CheckboxModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, MultiSelectModule, PaginatorModule, PickListModule, TreeTableModule } from 'primeng/primeng';
-import { FormsModule } from '@angular/forms';
-import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
-import { TableModule } from '../../../../../../node_modules/primeng/table';
-import { FechaModule } from '../../../../commons/fecha/fecha.module';
-import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
-import { TrimPipePipe } from '../../../../commons/trim-pipe/trim-pipe.pipe';
-import { SigaServices } from '../../../../_services/siga.service';
-import { CommonsService } from '../../../../_services/commons.service';
-import { cardService } from '../../../../_services/cardSearch.service';
-import { AuthenticationService } from '../../../../_services/authentication.service';
-import { MessageService } from '../../../../../../node_modules/primeng/components/common/messageservice';
-import { HeaderGestionEntidadService } from '../../../../_services/headerGestionEntidad.service';
-import { AuthGuard } from '../../../../_guards/auth.guards';
-import { environment } from '../../../../../environments/environment';
-import { HTTP_INTERCEPTORS } from '../../../../../../node_modules/@angular/common/http';
-import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
-import { CookieService } from '../../../../../../node_modules/ngx-cookie-service';
-import { BusquedaColegiadoExpressModule } from '../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
-import { DialogModule } from 'primeng/dialog';
+import { APP_BASE_HREF, CommonModule, DatePipe, UpperCasePipe } from "@angular/common";
+import { LOCALE_ID, NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { DialogModule } from "primeng/dialog";
+import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, MultiSelectModule, PaginatorModule, PickListModule, TreeTableModule } from "primeng/primeng";
+import { HTTP_INTERCEPTORS } from "../../../../../../node_modules/@angular/common/http";
+import { CookieService } from "../../../../../../node_modules/ngx-cookie-service";
+import { MessageService } from "../../../../../../node_modules/primeng/components/common/messageservice";
+import { TableModule } from "../../../../../../node_modules/primeng/table";
+import { environment } from "../../../../../environments/environment";
+import { AuthGuard } from "../../../../_guards/auth.guards";
+import { JwtInterceptor } from "../../../../_interceptor/jwt.interceptor";
+import { AuthenticationService } from "../../../../_services/authentication.service";
+import { CardService } from "../../../../_services/cardSearch.service";
+import { CommonsService } from "../../../../_services/commons.service";
+import { SigaServices } from "../../../../_services/siga.service";
+import { BusquedaColegiadoExpressModule } from "../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module";
+import { FechaModule } from "../../../../commons/fecha/fecha.module";
+import { ImagePipe } from "../../../../commons/image-pipe/image.pipe";
+import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
+import { TrimPipePipe } from "../../../../commons/trim-pipe/trim-pipe.pipe";
 
 @NgModule({
-  imports: [
-    DialogModule,
-    CommonModule,
-    DataTableModule,
-    PaginatorModule,
-    InputTextModule,
-    ButtonModule,
-    DropdownModule,
-    CheckboxModule,
-    FormsModule,
-    GrowlModule,
-    PipeTranslationModule,
-    MenubarModule,
-    TableModule,
-    MultiSelectModule,
-    FechaModule,
-    ConfirmDialogModule,
-    BusquedaColegiadoExpressModule,
-    PickListModule,
-     TreeTableModule
-  ],
+  imports: [DialogModule, CommonModule, DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, TableModule, MultiSelectModule, FechaModule, ConfirmDialogModule, BusquedaColegiadoExpressModule, PickListModule, TreeTableModule],
   declarations: [],
-  providers:[
+  providers: [
     ImagePipe,
     DatePipe,
     TrimPipePipe,
     UpperCasePipe,
     SigaServices,
     CommonsService,
-    cardService,
-    HeaderGestionEntidadService,
+    CardService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
@@ -60,15 +38,15 @@ import { DialogModule } from 'primeng/dialog';
     AuthGuard,
     {
       provide: APP_BASE_HREF,
-      useValue: environment.baseHref
+      useValue: environment.baseHref,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
-      multi: true
+      multi: true,
     },
     CookieService,
-    { provide: LOCALE_ID, useValue: 'es-ES' }
-  ]
+    { provide: LOCALE_ID, useValue: "es-ES" },
+  ],
 })
-export class GuardiaColegiadoModule { }
+export class GuardiaColegiadoModule {}

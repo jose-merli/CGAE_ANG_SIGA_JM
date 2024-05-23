@@ -1,24 +1,23 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { EJGItem } from '../../../../../models/sjcs/EJGItem';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { TranslateService } from '../../../../../commons/translate';
-import { EnviosMasivosItem } from '../../../../../models/EnviosMasivosItem';
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate";
+import { EnviosMasivosItem } from "../../../../../models/EnviosMasivosItem";
+import { EJGItem } from "../../../../../models/sjcs/EJGItem";
 
 @Component({
-  selector: 'app-comunicaciones-ejg',
-  templateUrl: './comunicaciones-ejg.component.html',
-  styleUrls: ['./comunicaciones-ejg.component.scss']
+  selector: "app-comunicaciones-ejg",
+  templateUrl: "./comunicaciones-ejg.component.html",
+  styleUrls: ["./comunicaciones-ejg.component.scss"],
 })
 export class ComunicacionesEJGComponent implements OnInit {
-
   @Input() datos: EJGItem;
   @Input() modoEdicion;
   @Input() permisoEscritura: boolean = false;
   @Input() openTarjetaComunicaciones;
 
   progressSpinner: boolean = false;
-    
+
   msgs;
   cols;
   buscadores = [];
@@ -27,16 +26,12 @@ export class ComunicacionesEJGComponent implements OnInit {
   comunicaciones: EnviosMasivosItem[] = [];
   numComunicaciones: Number = 0;
 
-  constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) {}
 
   ngOnInit() {
     this.progressSpinner = true;
     this.getCols();
     this.getComunicaciones();
-  }
-
-  onChangeRowsPerPages(){
-    //ARR: terminar
   }
 
   abreCierraFicha() {
@@ -54,37 +49,37 @@ export class ComunicacionesEJGComponent implements OnInit {
       { field: "fechaCreacion", header: "informesycomunicaciones.enviosMasivos.fechaCreacion" },
       { field: "fechaProgramada", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
       { field: "tipoEnvio", header: "informesycomunicaciones.comunicaciones.busqueda.tipoEnvio" },
-      { field: "estadoEnvio", header: "censo.nuevaSolicitud.estado" }
+      { field: "estadoEnvio", header: "censo.nuevaSolicitud.estado" },
     ];
 
     this.rowsPerPage = [
       { label: 10, value: 10 },
       { label: 20, value: 20 },
       { label: 30, value: 30 },
-      { label: 40, value: 40 }
+      { label: 40, value: 40 },
     ];
   }
 
   navigateTo(dato) {
     if (dato.idEstado != 5) {
-      sessionStorage.setItem("comunicacionesSearch",  JSON.stringify(dato));
+      sessionStorage.setItem("comunicacionesSearch", JSON.stringify(dato));
       this.router.navigate(["/fichaRegistroComunicacion"]);
     } else {
-      this.showMessage("error",this.translateService.instant("general.message.incorrect"),this.translateService.instant("informesycomunicaciones.comunicaciones.envioProcess"));
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("informesycomunicaciones.comunicaciones.envioProcess"));
     }
   }
 
   private getComunicaciones() {
     this.sigaServices.post("gestionejg_getComunicaciones", this.datos).subscribe(
-      n => {
+      (n) => {
         this.comunicaciones = JSON.parse(n.body).enviosMasivosItem;
         this.numComunicaciones = this.comunicaciones.length;
         this.progressSpinner = false;
       },
-      err => {
+      (err) => {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
+      },
     );
   }
 
@@ -93,7 +88,7 @@ export class ComunicacionesEJGComponent implements OnInit {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
   }
 }

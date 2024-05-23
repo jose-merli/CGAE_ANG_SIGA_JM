@@ -50,15 +50,18 @@ export class TarjetaResumenFijaComponent implements OnInit {
     if(enlace != null){
       //enlace.scrollIntoView({ block: "center", behavior: 'smooth',inline: "start" });
       enlace.scrollIntoView();
+      this.isOpen.emit(nombre);
+      this.enlaceAnterior = [];
+      this.enlaceAnterior.push(enlace.id);
     }else{
       // Si no tenemos el elemneto lo buscamos por su nombre
       let element = document.getElementById(nombre);
       if (element != null){
         element.scrollIntoView();
       }
+      this.isOpen.emit(nombre);
+      this.enlaceAnterior = [];
+      this.enlaceAnterior.push(element.id);
     }
-    this.isOpen.emit(nombre);
-    this.enlaceAnterior = [];
-    this.enlaceAnterior.push(enlace.id);
   }
 }

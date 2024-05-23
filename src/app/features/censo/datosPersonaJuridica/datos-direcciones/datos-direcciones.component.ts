@@ -1,22 +1,22 @@
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { DataTable } from "primeng/datatable";
 import { Message } from "primeng/components/common/api";
-import { SigaServices } from "./../../../../_services/siga.service";
-import { DatosDireccionesItem } from "./../../../../../app/models/DatosDireccionesItem";
-import { DatosDireccionesObject } from "./../../../../../app/models/DatosDireccionesObject";
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
+import { DataTable } from "primeng/datatable";
+import { Subscription } from "rxjs/Subscription";
 import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
-import { cardService } from "./../../../../_services/cardSearch.service";
-import { Subscription } from "rxjs/Subscription";
+import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
+import { DatosDireccionesItem } from "./../../../../../app/models/DatosDireccionesItem";
+import { DatosDireccionesObject } from "./../../../../../app/models/DatosDireccionesObject";
+import { CardService } from "./../../../../_services/cardSearch.service";
+import { SigaServices } from "./../../../../_services/siga.service";
 
 import { TranslateService } from "../../../../commons/translate/translation.service";
 @Component({
   selector: "app-datos-direcciones",
   templateUrl: "./datos-direcciones.component.html",
-  styleUrls: ["./datos-direcciones.component.scss"]
+  styleUrls: ["./datos-direcciones.component.scss"],
 })
 export class DatosDireccionesComponent implements OnInit {
   cols: any = [];
@@ -72,14 +72,7 @@ export class DatosDireccionesComponent implements OnInit {
   @Input() openTarjeta;
   @Output() permisosEnlace = new EventEmitter<any>();
 
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices,
-    private router: Router,
-    private translateService: TranslateService,
-    private fichasPosibles: DatosPersonaJuridicaComponent,
-    private cardService: cardService
-  ) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private router: Router, private translateService: TranslateService, private fichasPosibles: DatosPersonaJuridicaComponent, private cardService: CardService) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDirecciones") == "true") {
@@ -92,27 +85,27 @@ export class DatosDireccionesComponent implements OnInit {
     this.cols = [
       {
         field: "tipoDireccion",
-        header: "censo.datosDireccion.literal.tipo.direccion"
+        header: "censo.datosDireccion.literal.tipo.direccion",
       },
       {
         field: "domicilioLista",
-        header: "censo.consultaDirecciones.literal.direccion"
+        header: "censo.consultaDirecciones.literal.direccion",
       },
       {
         field: "codigoPostal",
-        header: "censo.ws.literal.codigopostal"
+        header: "censo.ws.literal.codigopostal",
       },
       {
         field: "nombrePoblacion",
-        header: "censo.consultaDirecciones.literal.poblacion"
+        header: "censo.consultaDirecciones.literal.poblacion",
       },
       {
         field: "nombreProvincia",
-        header: "censo.datosDireccion.literal.provincia"
+        header: "censo.datosDireccion.literal.provincia",
       },
       {
         field: "telefono",
-        header: "censo.ws.literal.telefono"
+        header: "censo.ws.literal.telefono",
       },
       // {
       //   field: "fax",
@@ -120,45 +113,43 @@ export class DatosDireccionesComponent implements OnInit {
       // },
       {
         field: "movil",
-        header: "censo.datosDireccion.literal.movil"
+        header: "censo.datosDireccion.literal.movil",
       },
       {
         field: "correoElectronico",
-        header: "censo.datosDireccion.literal.correo"
-      }
+        header: "censo.datosDireccion.literal.correo",
+      },
     ];
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
     if (this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
       this.search();
     }
-    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
-      id => {
-        if (id !== null) {
-          this.body.idPersona = id;
-          this.idPersona = id;
-          this.search();
-        }
+    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe((id) => {
+      if (id !== null) {
+        this.body.idPersona = id;
+        this.idPersona = id;
+        this.search();
       }
-    );
+    });
     if (sessionStorage.getItem("historicoSociedad") != null) {
       this.camposDesactivados = true;
     }
@@ -168,12 +159,11 @@ export class DatosDireccionesComponent implements OnInit {
       this.disabledAction = false;
     }
   }
-  ngOnChanges(changes: SimpleChanges){
+  ngOnChanges(changes: SimpleChanges) {
     let fichaPosible = this.esFichaActiva(this.openTarjeta);
-    if(fichaPosible == false){
+    if (fichaPosible == false) {
       this.abreCierraFicha(this.openTarjeta);
     }
-    
   }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
@@ -198,21 +188,20 @@ export class DatosDireccionesComponent implements OnInit {
     controlAcceso.idProceso = "287";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
+      (data) => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
         this.tarjeta = permisosArray[0].derechoacceso;
       },
-      err => {
+      (err) => {
         //console.log(err);
       },
-      () => { 
-        if(this.tarjeta == "3" || this.tarjeta == "2"){
-					let permisos = "direcciones";
-					this.permisosEnlace.emit(permisos);
-				  }
-
-      }
+      () => {
+        if (this.tarjeta == "3" || this.tarjeta == "2") {
+          let permisos = "direcciones";
+          this.permisosEnlace.emit(permisos);
+        }
+      },
     );
   }
 
@@ -230,7 +219,7 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.getFichasPosibles().filter(elto => {
+    let fichaPosible = this.fichasPosibles.getFichasPosibles().filter((elto) => {
       return elto.key === key;
     });
     if (fichaPosible && fichaPosible.length) {
@@ -263,28 +252,26 @@ export class DatosDireccionesComponent implements OnInit {
     this.selectAll = false;
     // Se comprueba si hay idpersona para cuando se crea una sociedad (sociedad ya existente)
     if (this.idPersona != undefined && this.idPersona != null) {
-      this.sigaServices
-        .postPaginado("direcciones_search", "?numPagina=1", searchObject)
-        .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.searchDirecciones = JSON.parse(data["body"]);
-            this.datos = this.searchDirecciones.datosDireccionesItem;
-            if (this.datos.length == 1) {
-              this.body = this.datos[0];
-              this.only = true;
-            } else {
-              this.only = false;
-            }
+      this.sigaServices.postPaginado("direcciones_search", "?numPagina=1", searchObject).subscribe(
+        (data) => {
+          this.progressSpinner = false;
+          this.searchDirecciones = JSON.parse(data["body"]);
+          this.datos = this.searchDirecciones.datosDireccionesItem;
+          if (this.datos.length == 1) {
+            this.body = this.datos[0];
+            this.only = true;
+          } else {
+            this.only = false;
+          }
 
-            this.comprobarValidacion();
-          },
-          err => {
-            //console.log(err);
-            this.progressSpinner = false;
-          },
-          () => { }
-        );
+          this.comprobarValidacion();
+        },
+        (err) => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {},
+      );
     } else {
       // Sociedad no existente,
       this.progressSpinner = false;
@@ -296,7 +283,7 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   redireccionar(dato) {
-    dato = [dato]
+    dato = [dato];
     if (this.camposDesactivados != true) {
       if (!this.selectMultiple) {
         if (dato[0].fechaBaja != null) {
@@ -323,15 +310,15 @@ export class DatosDireccionesComponent implements OnInit {
   }
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      if(this.historico){
+      if (this.historico) {
         this.selectMultiple = false;
-        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined)
+        this.selectedDatos = this.datos.filter((dato) => dato.fechaBaja != undefined);
         this.numSelected = this.selectedDatos.length;
-      }else{
+      } else {
         this.selectMultiple = false;
         this.selectedDatos = this.datos;
         this.numSelected = this.datos.length;
-      }    
+      }
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -348,21 +335,19 @@ export class DatosDireccionesComponent implements OnInit {
     this.selectMultiple = false;
     this.selectedDatos = "";
     this.selectAll = false;
-    this.sigaServices
-      .postPaginado("direcciones_search", "?numPagina=1", searchObject)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.searchDirecciones = JSON.parse(data["body"]);
-          this.datos = this.searchDirecciones.datosDireccionesItem;
-          this.table.paginator = true;
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        },
-        () => { }
-      );
+    this.sigaServices.postPaginado("direcciones_search", "?numPagina=1", searchObject).subscribe(
+      (data) => {
+        this.progressSpinner = false;
+        this.searchDirecciones = JSON.parse(data["body"]);
+        this.datos = this.searchDirecciones.datosDireccionesItem;
+        this.table.paginator = true;
+      },
+      (err) => {
+        //console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {},
+    );
   }
 
   borrar(selectedItem) {
@@ -376,8 +361,8 @@ export class DatosDireccionesComponent implements OnInit {
     });
 
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
-      data => { },
-      err => {
+      (data) => {},
+      (err) => {
         //console.log(err);
       },
       () => {
@@ -386,7 +371,7 @@ export class DatosDireccionesComponent implements OnInit {
         this.dniCorrecto = null;
         this.disabledRadio = false;
         this.search();
-      }
+      },
     );
   }
 
@@ -411,18 +396,13 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   comprobarValidacion() {
-    let tipoDireccion = this.datos.map(dato => {
+    let tipoDireccion = this.datos.map((dato) => {
       return dato.idTipoDireccionList;
     });
 
     if (tipoDireccion.indexOf("3") != -1) {
       for (let dato of this.datos) {
-        if (
-          dato.idTipoDireccionList == "3" &&
-          (dato.codigoPostal != null || dato.codigoPostal != undefined) &&
-          (dato.nombreProvincia != null || dato.nombreProvincia != undefined) &&
-          (dato.nombrePoblacion != null || dato.nombrePoblacion != undefined)
-        ) {
+        if (dato.idTipoDireccionList == "3" && (dato.codigoPostal != null || dato.codigoPostal != undefined) && (dato.nombreProvincia != null || dato.nombreProvincia != undefined) && (dato.nombrePoblacion != null || dato.nombrePoblacion != undefined)) {
           this.isValidate = true;
         }
       }
@@ -430,8 +410,8 @@ export class DatosDireccionesComponent implements OnInit {
       this.isValidate = false;
     }
 
-    this.cardService.newCardValidator$.subscribe(data => {
-      data.map(result => {
+    this.cardService.newCardValidator$.subscribe((data) => {
+      data.map((result) => {
         result.cardDirecciones = this.isValidate;
       });
     });

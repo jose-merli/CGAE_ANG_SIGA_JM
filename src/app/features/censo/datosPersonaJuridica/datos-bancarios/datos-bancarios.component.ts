@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
 
@@ -12,12 +12,12 @@ import { DatosBancariosObject } from "./../../../../../app/models/DatosBancarios
 
 import { Subscription } from "rxjs/Subscription";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
-import { cardService } from "./../../../../_services/cardSearch.service";
+import { CardService } from "./../../../../_services/cardSearch.service";
 
 @Component({
   selector: "app-datos-bancarios",
   templateUrl: "./datos-bancarios.component.html",
-  styleUrls: ["./datos-bancarios.component.scss"]
+  styleUrls: ["./datos-bancarios.component.scss"],
 })
 export class DatosBancariosComponent implements OnInit {
   openFicha: boolean = false;
@@ -53,14 +53,7 @@ export class DatosBancariosComponent implements OnInit {
   @Input() openTarjeta;
   @Output() permisosEnlace = new EventEmitter<any>();
 
-  constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
-    private sigaServices: SigaServices,
-    private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private cardService: cardService
-  ) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private router: Router, private sigaServices: SigaServices, private confirmationService: ConfirmationService, private translateService: TranslateService, private cardService: CardService) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDatosBancarios") == "true") {
@@ -92,68 +85,64 @@ export class DatosBancariosComponent implements OnInit {
         this.cargarDatosBancarios();
       }
 
-
-      this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
-        id => {
-          if (id !== null) {
-            this.idPersona = id;
-            this.cargarDatosBancarios();
-          }
+      this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe((id) => {
+        if (id !== null) {
+          this.idPersona = id;
+          this.cargarDatosBancarios();
         }
-      );
+      });
     }
 
     this.cols = [
       {
         field: "titular",
-        header: "Titular"
+        header: "Titular",
       },
       {
         field: "iban",
-        header: "Código de cuenta (IBAN)"
+        header: "Código de cuenta (IBAN)",
       },
       {
         field: "bic",
-        header: "Banco (BIC)"
+        header: "Banco (BIC)",
       },
       {
         field: "uso",
-        header: "Uso"
+        header: "Uso",
       },
       {
         field: "fechaFirmaServicios",
-        header: "Fecha firma del mandato de servicios"
+        header: "Fecha firma del mandato de servicios",
       },
       {
         field: "fechaFirmaProductos",
-        header: "Fecha firma del mandato de productos"
-      }
+        header: "Fecha firma del mandato de productos",
+      },
     ];
 
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
   }
   ngOnChanges(changes: SimpleChanges) {
     if (this.openTarjeta == "bancarios") {
       this.openFicha = true;
     }
-
   }
   cargarDatosBancarios() {
     this.historico = false;
@@ -179,12 +168,12 @@ export class DatosBancariosComponent implements OnInit {
     controlAcceso.idProceso = "288";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
+      (data) => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
         this.tarjeta = permisosArray[0].derechoacceso;
       },
-      err => {
+      (err) => {
         //console.log(err);
       },
       () => {
@@ -192,7 +181,7 @@ export class DatosBancariosComponent implements OnInit {
           let permisos = "bancarios";
           this.permisosEnlace.emit(permisos);
         }
-      }
+      },
     );
   }
 
@@ -210,29 +199,23 @@ export class DatosBancariosComponent implements OnInit {
   }
 
   buscarDatosBancarios() {
-    this.sigaServices
-      .postPaginado("datosBancarios_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.bodySearch = JSON.parse(data["body"]);
-          this.body = this.bodySearch.datosBancariosItem[0];
-        },
-        error => {
-          this.bodySearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.bodySearch.error.description));
-          //console.log(error);
-          this.progressSpinner = false;
-        }
-      );
+    this.sigaServices.postPaginado("datosBancarios_search", "?numPagina=1", this.body).subscribe(
+      (data) => {
+        this.progressSpinner = false;
+        this.bodySearch = JSON.parse(data["body"]);
+        this.body = this.bodySearch.datosBancariosItem[0];
+      },
+      (error) => {
+        this.bodySearch = JSON.parse(error["error"]);
+        this.showFail(JSON.stringify(this.bodySearch.error.description));
+        //console.log(error);
+        this.progressSpinner = false;
+      },
+    );
   }
 
   activarPaginacion() {
-    if (
-      !this.bodySearch.datosBancariosItem ||
-      this.bodySearch.datosBancariosItem.length == 0
-    )
-      return false;
+    if (!this.bodySearch.datosBancariosItem || this.bodySearch.datosBancariosItem.length == 0) return false;
     else return true;
   }
 
@@ -254,7 +237,6 @@ export class DatosBancariosComponent implements OnInit {
 
   onChangeSelectAll() {
     if (!this.historico) {
-
       if (this.selectAll === true) {
         this.selectMultiple = false;
         this.selectedDatos = this.bodySearch.datosBancariosItem;
@@ -266,7 +248,7 @@ export class DatosBancariosComponent implements OnInit {
     } else {
       if (this.selectAll) {
         this.selectMultiple = true;
-        this.selectedDatos = this.bodySearch.datosBancariosItem.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.selectedDatos = this.bodySearch.datosBancariosItem.filter((dato) => dato.fechaBaja != undefined && dato.fechaBaja != null);
         this.numSelected = this.selectedDatos.length;
       } else {
         this.selectedDatos = [];
@@ -326,16 +308,14 @@ export class DatosBancariosComponent implements OnInit {
           {
             severity: "info",
             summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
+            detail: this.translateService.instant("general.message.accion.cancelada"),
+          },
         ];
 
         this.historico = true;
         this.selectedDatos = [];
         this.selectMultiple = false;
-      }
+      },
     });
   }
 
@@ -347,26 +327,20 @@ export class DatosBancariosComponent implements OnInit {
     item.idCuentas = [];
     item.idPersona = this.idPersona;
 
-    selectedDatos.forEach(element => {
+    selectedDatos.forEach((element) => {
       item.idCuentas.push(element.idCuenta);
     });
 
     this.sigaServices.post("datosBancarios_delete", item).subscribe(
-      data => {
+      (data) => {
         this.progressSpinner = false;
         if (selectedDatos.length == 1) {
-          this.showSuccess(
-            this.translateService.instant("messages.deleted.success")
-          );
+          this.showSuccess(this.translateService.instant("messages.deleted.success"));
         } else {
-          this.showSuccess(
-            selectedDatos.length +
-            " " +
-            this.translateService.instant("messages.deleted.selected.success")
-          );
+          this.showSuccess(selectedDatos.length + " " + this.translateService.instant("messages.deleted.selected.success"));
         }
       },
-      error => {
+      (error) => {
         //console.log(error);
         this.progressSpinner = false;
       },
@@ -375,15 +349,13 @@ export class DatosBancariosComponent implements OnInit {
         this.selectedDatos = [];
         this.selectMultiple = false;
         this.cargarDatosBancarios();
-      }
+      },
     );
   }
 
   abrirFicha() {
-    // si no se esta creando una nueva sociedad  
-    if (
-      (this.tarjeta == "3" || this.tarjeta == "2") && sessionStorage.getItem("nuevoRegistro") == null
-    ) {
+    // si no se esta creando una nueva sociedad
+    if ((this.tarjeta == "3" || this.tarjeta == "2") && sessionStorage.getItem("nuevoRegistro") == null) {
       this.openFicha = !this.openFicha;
     }
   }

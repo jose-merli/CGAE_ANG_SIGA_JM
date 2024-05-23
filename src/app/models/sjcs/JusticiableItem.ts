@@ -1,7 +1,6 @@
-import { JusticiableTelefonoObject } from './JusticiableTelefonoObject';
-import { JusticiableTelefonoItem } from './JusticiableTelefonoItem';
-export class JusticiableItem {
+import { JusticiableTelefonoItem } from "./JusticiableTelefonoItem";
 
+export class JusticiableItem {
   idpersona: string;
   idinstitucion: string;
   nif: string;
@@ -22,56 +21,59 @@ export class JusticiableItem {
   idestadocivil: string;
   tipopersonajg: string;
   idtipoidentificacion: string;
-  observaciones: string;
   idrepresentantejg: number;
-  idtipoencalidad: string;
   sexo: string;
   idlenguaje: string;
-  numerohijos: string;
   fechaalta: Date;
   fax: string;
   correoelectronico: string;
   edad: string;
   idminusvalia: string;
-  existedomicilio: string;
-  idprovincia2: string;
-  idpoblacion2: string;
-  direccion2: string;
-  codigopostal2: string;
-  idtipodir: string;
-  idtipodir2: string;
-  cnae: string;
   idtipovia: string;
   numerodir: string;
   escaleradir: string;
   pisodir: string;
   puertadir: string;
-  idtipovia2: string;
-  numerodir2: string;
-  escaleradir2: string;
+
+  //idtipoencalidad: string;
+  //idtipodir: string;
+  //cnae: string;
+  //descpaisdir1: string;
+  //idtipoidentificacionotros: string;
+  //numerohijos: string;
+  //parentesco: string;
+  //observaciones: string;
+  //existedomicilio: string;
+
+  //idprovincia2: string;
+  //idpoblacion2: string;
+  //direccion2: string;
+  //codigopostal2: string;
+  //idtipodir2: string;
+  //idtipovia2: string;
+  //numerodir2: string;
+  //escaleradir2: string;
+  //pisodir2: string;
+  //puertadir2: string;
+  //idpaisdir2: string;
+  //descpaisdir2: string;
   idtipopersona: string;
-  pisodir2: string;
-  puertadir2: string;
   idpaisdir1: string;
-  idpaisdir2: string;
-  descpaisdir1: string;
-  descpaisdir2: string;
-  idtipoidentificacionotros: string;
   asistidosolicitajg: string;
   asistidoautorizaeejg: string;
   autorizaavisotelematico: string;
-
+  direccionNoInformada: boolean = false;
   numeroAsuntos: string;
   ultimoAsunto: string;
 
   telefonos: JusticiableTelefonoItem[];
 
   representante: number;
-  parentesco: string;
   tipojusticiable: string;
 
   datosAsuntos: any[];
   validacionRepeticion: boolean;
   asociarRepresentante: boolean;
-  constructor() { }
+  direccionExtranjera: string;
+  constructor() {}
 }

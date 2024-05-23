@@ -64,6 +64,19 @@
       "CAS-defaultRole": "AC0000 Personal"
     }
   },
+  "/siga-web/rolesColegioUsuario": {
+    "target": "http://localhost:8080/siga-web-1.1.0-SNAPSHOT",
+    "changeOrigin": true,
+    "secure": false,
+    "logLevel": "error",
+    "pathRewrite": { "^/siga-web/": "/" },
+    "headers": {
+      "CAS-username":"30964112V", 
+      "CAS-displayName":"Prueba", 
+      "CAS-roles":"AC0000 Personal::AC0000 SIGA-Admin", 
+      "CAS-defaultRole": "AC0000 Personal"
+    }
+  },
   "/siga-web/loginDevelop": {
     "target": "http://localhost:8080/siga-web-1.1.0-SNAPSHOT",
     "changeOrigin": true,
@@ -100,7 +113,7 @@
   "/SIGA/**": {
     "target": "https://sigaint.redabogacia.org",
     "changeOrigin": true,
-    "secure": false,
+    "secure": true,
     "logLevel": "error"
   }
 }

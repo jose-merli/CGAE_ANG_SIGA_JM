@@ -1,144 +1,79 @@
-import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
-import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
-import { Router } from '@angular/router';
-import { TranslateService } from '../../../../../commons/translate';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
-import { CommonsService } from '../../../../../_services/commons.service';
-import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
-import { DatePipe, Location } from '@angular/common';
+import { Location } from "@angular/common";
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from "@angular/core";
+import { Router } from "@angular/router";
+import { CommonsService } from "../../../../../_services/commons.service";
+import { NotificationService } from "../../../../../_services/notification.service";
+import { PersistenceService } from "../../../../../_services/persistence.service";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate";
+import { JusticiableBusquedaItem } from "../../../../../models/sjcs/JusticiableBusquedaItem";
+import { KEY_CODE } from "../../../../administracion/parametros/parametros-generales/parametros-generales.component";
 
 @Component({
-  selector: 'app-filtro-justiciables',
-  templateUrl: './filtro-justiciables.component.html',
-  styleUrls: ['./filtro-justiciables.component.scss']
+  selector: "app-filtro-justiciables",
+  templateUrl: "./filtro-justiciables.component.html",
+  styleUrls: ["./filtro-justiciables.component.scss"],
 })
 export class FiltroJusticiablesComponent implements OnInit {
-
   showDatosGenerales: boolean = true;
   showDatosDirecciones: boolean = false;
   showAsuntos: boolean = false;
-  msgs = [];
   checkOrigenAsuntos: boolean = false;
-
-  filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
-  filtroAux: JusticiableBusquedaItem = new JusticiableBusquedaItem();
-
 
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones: any;
 
   @Input() permisoEscritura;
-  @Output() isOpen = new EventEmitter<boolean>();
-  @Input() modoRepresentante;
-  @Input() nuevaUniFamiliar;
-  @Input() nuevoContrarioEJG;
+  @Input() origen: string = "";
+  @Input() justiciable: any;
+  @Input() filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
+  @Output() findJusticiable = new EventEmitter<JusticiableBusquedaItem>();
 
   comboProvincias = [];
   comboPoblacion = [];
   comboRoles = [];
 
-  fichasPosiblesNew = [
-    {
-      key: "generales",
-      activa: true
-    }
-
-  ];
-
-  constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) { }
+  constructor(private router: Router, private notificationService: NotificationService, private translateService: TranslateService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) {}
 
   ngOnInit() {
     this.getComboProvincias();
     this.getComboRoles();
-
-    if (this.modoRepresentante) {
-      if (this.persistenceService.getFiltrosAux() != undefined) {
-        this.filtros = this.persistenceService.getFiltrosAux();
-        //this.isOpen.emit(false)
-        this.configuracionFiltros();
-      } else {
-        this.filtros = new JusticiableBusquedaItem();
-      }
-    } else {
-      if (this.persistenceService.getFiltros() != undefined) {
-        this.filtros = this.persistenceService.getFiltros();
-        //this.isOpen.emit(false)
-        this.configuracionFiltros();
-      } else {
-        this.filtros = new JusticiableBusquedaItem();
-      }
-    }
+    this.getFiltros();
 
     // Comprobar botón ATRAS en caso de Asociar Justiciable con EJG. Designas..
-    if (sessionStorage.getItem("contrariosEJG") || sessionStorage.getItem("asistenciaAsistido") || sessionStorage.getItem("contrarios")
-      || sessionStorage.getItem("datosFamiliares") || sessionStorage.getItem("interesados")) {
+    if (this.origen != "") {
       this.checkOrigenAsuntos = true;
     }
-    this.clearFilters();
-
-    // Mantenemos los filtros de la búsqueda anterior
-    if (sessionStorage.getItem("vieneDeFichaJusticiable") && sessionStorage.getItem("filtrosBusquedaJusticiable")) {
-
-      this.filtros = JSON.parse(sessionStorage.getItem("filtrosBusquedaJusticiable"));
-
-      // Añadimos la poblacion, para ello necesitamos obtener el combo de poblaciones
-      let poblacion = this.filtros.idPoblacion;
-      this.onChangeProvincia();
-      this.filtros.idPoblacion = poblacion;
-    }
-
-    sessionStorage.removeItem("vieneDeFichaJusticiable");
-    sessionStorage.removeItem("filtrosBusquedaJusticiable");
   }
 
-  configuracionFiltros() {
-    if ((this.filtros.idProvincia != undefined && this.filtros.idProvincia != null) ||
-      (this.filtros.idPoblacion != undefined && this.filtros.idPoblacion != null) ||
-      (this.filtros.codigoPostal != undefined && this.filtros.codigoPostal != null)) {
+  private getFiltros() {
+    if ((this.filtros.idProvincia != undefined && this.filtros.idProvincia != null) || (this.filtros.idPoblacion != undefined && this.filtros.idPoblacion != null) || (this.filtros.codigoPostal != undefined && this.filtros.codigoPostal != null)) {
       this.showDatosDirecciones = true;
+      this.onChangeProvincia();
     }
-
-    if ((this.filtros.anioDesde != undefined && this.filtros.anioDesde != null) ||
-      (this.filtros.anioHasta != undefined && this.filtros.anioHasta != null) ||
-      (this.filtros.idRol != undefined && this.filtros.idRol != null)) {
+    if ((this.filtros.anioDesde != undefined && this.filtros.anioDesde != null) || (this.filtros.anioHasta != undefined && this.filtros.anioHasta != null) || (this.filtros.idRol != undefined && this.filtros.idRol != null)) {
       this.showAsuntos = true;
     }
   }
 
   backTo() {
-    // Quitar para no poder Asociar Justiciables en caso de entrar en Uno.
-    if (sessionStorage.getItem("itemDesignas")) {
-      sessionStorage.removeItem("itemDesignas");
-    }
-    sessionStorage.removeItem("fichaJust");
-    if(this.persistenceService.getDatosEJG()){
+    if (this.origen == "newInteresado" || this.origen == "newContrario") {
+      this.router.navigate(["fichaDesignaciones"]);
+    } else if (this.origen == "newAsistido" || this.origen == "newContrarioAsistencia") {
+      this.router.navigate(["/fichaAsistencia"]);
+    } else if (this.origen == "newUnidadFamiliar" || this.origen == "newContrarioEJG") {
       this.router.navigate(["/gestionEjg"]);
+    } else if (this.origen == "newSoj") {
+      this.router.navigate(["/detalle-soj"]);
+    } else if (this.origen == "newRepresentante") {
+      this.persistenceService.clearFiltrosAux();
+      this.persistenceService.setDatos(this.justiciable);
+      sessionStorage.setItem("origin", this.origen);
+      sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaRepresentante");
+      this.router.navigate(["/gestionJusticiables"]);
     } else {
       this.location.back();
     }
-  }
-
-  getComboRoles() {
-    this.sigaServices.get("busquedaJusticiables_comboRoles").subscribe(
-      n => {
-        this.comboRoles = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboRoles);
-      }
-    );
-  }
-
-  getComboProvincias() {
-    this.sigaServices.get("busquedaJuzgados_provinces").subscribe(
-      n => {
-        this.comboProvincias = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboProvincias);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
   }
 
   onChangeProvincia() {
@@ -168,20 +103,11 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   getComboPoblacion(dataFilter) {
-    this.sigaServices
-      .getParam(
-        "busquedaJuzgados_population",
-        "?idProvincia=" + this.filtros.idProvincia + "&dataFilter=" + dataFilter
-      )
-      .subscribe(
-        n => {
-          this.isDisabledPoblacion = false;
-          this.comboPoblacion = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboPoblacion);
-        },
-        error => { },
-        () => { }
-      );
+    this.sigaServices.getParam("busquedaJuzgados_population", "?idProvincia=" + this.filtros.idProvincia + "&dataFilter=" + dataFilter).subscribe((n) => {
+      this.isDisabledPoblacion = false;
+      this.comboPoblacion = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboPoblacion);
+    });
   }
 
   onHideDatosGenerales() {
@@ -197,53 +123,26 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   search() {
-    // Quitar para no poder Asociar Justiciables en caso de entrar en Uno.
-    // if (sessionStorage.getItem("itemEJG")) {
-    //   sessionStorage.removeItem("itemEJG");
-    // }
-    // if (sessionStorage.getItem("itemAsistencia")) {
-    //   sessionStorage.removeItem("itemAsistencia");
-    // }
-     if (sessionStorage.getItem("itemDesignas")) {
-       sessionStorage.removeItem("itemDesignas");
-     }
     if (this.checkFilters()) {
-      if (this.modoRepresentante) {
+      if (this.origen == "newRepresentante") {
         this.persistenceService.setFiltrosAux(this.filtros);
-        this.isOpen.emit(false)
       } else {
         this.persistenceService.setFiltros(this.filtros);
-        this.isOpen.emit(false)
       }
-    }
-
-    sessionStorage.setItem("filtrosBusquedaJusticiable", JSON.stringify(this.filtros));
-  }
-
-  checkPermisosNuevo() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      this.nuevo();
+      this.findJusticiable.emit(this.filtros);
     }
   }
 
   nuevo() {
-    this.modoRepresentante = true;
-    sessionStorage.setItem("nuevoJusticiable", "true");
-    sessionStorage.setItem("Nuevo", "true");
-    sessionStorage.setItem("nuevoJusticiableTarjetas", "true");
-    this.persistenceService.setFichasPosibles(this.fichasPosiblesNew);
-    if (this.modoRepresentante) {
-      this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });
+    if (!this.permisoEscritura) {
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
-      this.persistenceService.clearDatos();
-      this.persistenceService.clearBody();
-      if (this.nuevaUniFamiliar) {
-        sessionStorage.setItem("origin", "UnidadFamiliar");
-        sessionStorage.setItem("Nuevo", "true");
+      sessionStorage.setItem("origin", this.origen);
+      if (this.origen != "newRepresentante") {
+        this.persistenceService.clearDatos();
+        this.persistenceService.clearBody();
+      } else {
+        sessionStorage.setItem("justiciable", JSON.stringify(this.justiciable));
       }
       this.router.navigate(["/gestionJusticiables"]);
     }
@@ -256,17 +155,17 @@ export class FiltroJusticiablesComponent implements OnInit {
       (this.filtros.codigoPostal == null || this.filtros.codigoPostal.trim() == "" || this.filtros.codigoPostal.length < 3) &&
       (this.filtros.nif == null || this.filtros.nif.trim() == "" || this.filtros.nif.length < 3) &&
       (this.filtros.anioDesde == null || this.filtros.anioDesde == undefined) &&
-      (this.filtros.anioHasta == null || this.filtros.anioDesde == undefined) &&
+      (this.filtros.anioHasta == null || this.filtros.anioHasta == undefined) &&
       (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
       (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "") &&
-      (this.filtros.idRol == null || this.filtros.idRol == "")) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      (this.filtros.idRol == null || this.filtros.idRol == "")
+    ) {
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
-    } else if(this.filtros != null && this.filtros.codigoPostal != null && this.filtros.codigoPostal.length != 5){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.cp"));
-      console.log("error cp")
+    } else if (this.filtros != null && this.filtros.codigoPostal != null && this.filtros.codigoPostal.trim() != "" && this.filtros.codigoPostal.length != 5) {
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.cp"));
       return false;
-    }else {
+    } else {
       // quita espacios vacios antes de buscar
       if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
         this.filtros.nombre = this.filtros.nombre.trim();
@@ -302,31 +201,23 @@ export class FiltroJusticiablesComponent implements OnInit {
         this.filtros.codigoPostal = event.currentTarget.value.slice(0, 5);
       }
     } else {
-
       if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
         this.filtros.codigoPostal = event.currentTarget.value.slice(0, 5);
       } else {
         event.currentTarget.value = "";
       }
-
     }
   }
 
   clearFilters() {
     this.filtros = new JusticiableBusquedaItem();
-  }
-
-  clear() {
-    this.msgs = [];
-  }
-
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
+    this.comboPoblacion = [];
+    this.isDisabledPoblacion = true;
+    if (this.origen == "newRepresentante") {
+      this.persistenceService.clearFiltrosAux();
+    } else {
+      this.persistenceService.clearFiltros();
+    }
   }
 
   //búsqueda con enter
@@ -337,4 +228,17 @@ export class FiltroJusticiablesComponent implements OnInit {
     }
   }
 
+  private getComboRoles() {
+    this.sigaServices.get("busquedaJusticiables_comboRoles").subscribe((n) => {
+      this.comboRoles = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboRoles);
+    });
+  }
+
+  private getComboProvincias() {
+    this.sigaServices.get("busquedaJuzgados_provinces").subscribe((n) => {
+      this.comboProvincias = n.combooItems;
+      this.commonsService.arregloTildesCombo(this.comboProvincias);
+    });
+  }
 }

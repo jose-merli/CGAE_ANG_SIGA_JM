@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService, MenuItem } from "primeng/api";
+import { PersistenceService } from "../../_services/persistence.service";
 import { SigaServices } from "../../_services/siga.service";
 import { TranslateService } from "../translate/translation.service";
 
@@ -8,10 +9,9 @@ import { TranslateService } from "../translate/translation.service";
   selector: "app-menu",
   templateUrl: "./menu.component.html",
   styleUrls: ["./menu.component.scss"],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class MenuComponent implements OnInit {
-  
   items: MenuItem[];
   closeMenu: boolean = false;
   bloquedMenu: boolean = false;
@@ -24,32 +24,16 @@ export class MenuComponent implements OnInit {
   encontrado: boolean;
   progressSpinner: boolean = false;
 
-  constructor(
-    private router: Router,
-    private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private confirmationService: ConfirmationService
-  ) { }
+  constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private persistenceService: PersistenceService) {}
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
     this.progressSpinner = true;
-    //this.sigaServices.get("diccionarios").subscribe(response => {
-    //response.DiccionarioItems;
-    //this.sigaServices.get("menu").subscribe(response => {
-
-    this.translateService.getTranslations().then(
-      items => {
-        this.items = items;
-
-        this.progressSpinner = false;
-        //        this.items = response.menuItems;
-        //        return this.items;
-        //      });
-        //    });
-      }
-    );
+    this.translateService.getTranslations().then((items) => {
+      this.items = items;
+      this.progressSpinner = false;
+    });
   }
   onCloseMenu() {
     if (!this.bloquedMenu) {
@@ -63,16 +47,14 @@ export class MenuComponent implements OnInit {
   }
 
   isRoute(ruta) {
-
     var currentRoute = this.router.url;
     this.encontrado = false;
     //Si el booleano de vieneDeFichaJuzgado está en true y la ruta es la de módulos
-    if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "maestrosModulos"){
+    if (sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "maestrosModulos") {
       this.encontrado = false;
-    }
-    else if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "mantenimientoJuzgados"){
+    } else if (sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "mantenimientoJuzgados") {
       this.encontrado = true;
-    }else if (currentRoute == ('/' + ruta)) {
+    } else if (currentRoute == "/" + ruta) {
       this.encontrado = true;
     }
     return currentRoute === ruta || this.encontrado;
@@ -83,26 +65,20 @@ export class MenuComponent implements OnInit {
 
   navigateTo(ruta) {
     let keyConfirmation = "confirmacionGuardarJustificacionExpress";
-    if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda") == null 
-        && sessionStorage.getItem('rowIdsToUpdate') != null 
-          && sessionStorage.getItem('rowIdsToUpdate') != 'null' 
-            && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
-      //console.log('if')
+    if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda") == null && sessionStorage.getItem("rowIdsToUpdate") != null && sessionStorage.getItem("rowIdsToUpdate") != "null" && sessionStorage.getItem("rowIdsToUpdate") != "[]") {
       this.confirmationService.confirm({
         key: keyConfirmation,
-        message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
+        message: this.translateService.instant("justiciaGratuita.oficio.justificacion.reestablecer"),
         icon: "fa fa-trash-alt",
         accept: () => {
           this.navigate(ruta);
         },
-        reject: () => {
-        }
+        reject: () => {},
       });
     } else {
-      //console.log('else')
+      this.persistenceService.clearPersistenceFiltros();
       this.navigate(ruta);
     }
-
   }
   navigate(ruta: string) {
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
@@ -139,7 +115,6 @@ export class MenuComponent implements OnInit {
           this.onCloseMenu();
           this.router.navigate([ruta]);
         }
-
       }
 
       if (ruta == "permisos") {
@@ -169,11 +144,11 @@ export class MenuComponent implements OnInit {
     }
   }
 
-  comprobarProcedencia(label){
-    if(label == 'menu.justiciaGratuita.oficio.guardiasColegiado'){
+  comprobarProcedencia(label) {
+    if (label == "menu.justiciaGratuita.oficio.guardiasColegiado") {
       sessionStorage.setItem("ProcedenciaGuardiasColegiado", "true");
-    }else{
-      if(sessionStorage.getItem("ProcedenciaGuardiasColegiado")){
+    } else {
+      if (sessionStorage.getItem("ProcedenciaGuardiasColegiado")) {
         sessionStorage.removeItem("ProcedenciaGuardiasColegiado");
       }
     }
@@ -187,12 +162,11 @@ export class MenuComponent implements OnInit {
     this.showChildOfChild = false;
   }
 
-  eliminarOrigenNav(){
-    let rutasTemporales = ["contrariosEJG", "asistenciaAsistido","contrarios","datosFamiliares","interesados","origin"];
+  eliminarOrigenNav() {
+    let rutasTemporales = ["contrariosEJG", "asistenciaAsistido", "contrarios", "datosFamiliares", "interesados", "origin"];
 
     for (let index = 0; index < rutasTemporales.length; index++) {
       sessionStorage.removeItem(rutasTemporales[index]);
     }
-    
   }
 }

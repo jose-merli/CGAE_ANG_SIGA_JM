@@ -1,20 +1,20 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { Router } from "@angular/router";
-import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from "@angular/core";
+import { Router } from "@angular/router";
 import { SelectItem } from "primeng/api";
-import { SigaServices } from "./../../../../_services/siga.service";
+import { Message } from "primeng/components/common/api";
+import { Subscription } from "rxjs/Subscription";
+import { TranslateService } from "../../../../commons/translate";
+import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
 import { DatosNotarioItem } from "./../../../../../app/models/DatosNotarioItem";
 import { DatosNotarioObject } from "./../../../../../app/models/DatosNotarioObject";
-import { cardService } from "./../../../../_services/cardSearch.service";
-import { Subscription } from "rxjs/Subscription";
-import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
-import { TranslateService } from "../../../../commons/translate";
+import { CardService } from "./../../../../_services/cardSearch.service";
+import { SigaServices } from "./../../../../_services/siga.service";
 
 @Component({
   selector: "app-accesoFichaPersona",
   templateUrl: "./accesoFichaPersona.component.html",
-  styleUrls: ["./accesoFichaPersona.component.scss"]
+  styleUrls: ["./accesoFichaPersona.component.scss"],
 })
 export class AccesoFichaPersonaComponent implements OnInit {
   comboTipoIdentificacion: SelectItem[];
@@ -44,13 +44,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
   @Input() openTarjeta;
   @Output() permisosEnlace = new EventEmitter<any>();
 
-  constructor(
-    private router: Router,
-    private location: Location,
-    private sigaServices: SigaServices,
-    private cardService: cardService,
-    private translateService: TranslateService
-  ) { }
+  constructor(private router: Router, private location: Location, private sigaServices: SigaServices, private cardService: CardService, private translateService: TranslateService) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("disabledAction") == "true") {
@@ -73,7 +67,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     }
     this.tipoPersona = "Notario";
 
-    // this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+    // this.suscripcionBusquedaNuevo = this.CardService.searchNewAnnounce$.subscribe(
     //   id => {
     //     if (id !== null) {
     //       this.idPersona = id;
@@ -82,10 +76,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     //   }
     // );
 
-    if (
-      sessionStorage.getItem("notario") != undefined &&
-      sessionStorage.getItem("notario") != null
-    ) {
+    if (sessionStorage.getItem("notario") != undefined && sessionStorage.getItem("notario") != null) {
       this.notario = JSON.parse(sessionStorage.getItem("notario"));
       // abre la ficha para que el usuario vea donde debe tocar
       this.openFicha = true;
@@ -132,10 +123,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     }
     this.activarGuardarNotarioNoExistente();
     // si viene de pantalla de persona fisica => no hace busqueda
-    if (
-      sessionStorage.getItem("notario") != undefined &&
-      sessionStorage.getItem("notario") != null
-    ) {
+    if (sessionStorage.getItem("notario") != undefined && sessionStorage.getItem("notario") != null) {
       this.obtenerTiposIdentificacion();
       //sessionStorage.removeItem("notario");
     } else {
@@ -146,11 +134,10 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.checkAcceso();
   }
 
-  ngOnChanges(changes: SimpleChanges){
-    if(this.openTarjeta == "notario"){
-     this.openFicha = true;
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.openTarjeta == "notario") {
+      this.openFicha = true;
     }
-    
   }
 
   search() {
@@ -160,34 +147,29 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.body.tipoPersona = this.tipoPersona;
     this.body.idInstitucion = "";
     if (this.idPersona != undefined && this.idPersona != null) {
-      this.sigaServices
-        .postPaginado("accesoFichaPersona_search", "?numPagina=1", this.body)
-        .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.bodySearch = JSON.parse(data["body"]);
-            if (
-              this.bodySearch.fichaPersonaItem != undefined &&
-              this.bodySearch.fichaPersonaItem != null
-            ) {
-              this.body = this.bodySearch.fichaPersonaItem[0];
-              if (this.camposDesactivados != true) {
-                this.desasociar = true;
-              }
-              this.obtenerTiposIdentificacion();
-            } else {
-              this.guardarNotario = false;
-              this.desasociar = false;
-              this.limpiarCamposNotario();
+      this.sigaServices.postPaginado("accesoFichaPersona_search", "?numPagina=1", this.body).subscribe(
+        (data) => {
+          this.progressSpinner = false;
+          this.bodySearch = JSON.parse(data["body"]);
+          if (this.bodySearch.fichaPersonaItem != undefined && this.bodySearch.fichaPersonaItem != null) {
+            this.body = this.bodySearch.fichaPersonaItem[0];
+            if (this.camposDesactivados != true) {
+              this.desasociar = true;
             }
-          },
-          error => {
-            this.bodySearch = JSON.parse(error["error"]);
-            this.showFail(JSON.stringify(this.bodySearch.error.description));
-            //console.log(error);
-            this.progressSpinner = false;
+            this.obtenerTiposIdentificacion();
+          } else {
+            this.guardarNotario = false;
+            this.desasociar = false;
+            this.limpiarCamposNotario();
           }
-        );
+        },
+        (error) => {
+          this.bodySearch = JSON.parse(error["error"]);
+          this.showFail(JSON.stringify(this.bodySearch.error.description));
+          //console.log(error);
+          this.progressSpinner = false;
+        },
+      );
     }
     this.progressSpinner = false;
   }
@@ -206,26 +188,24 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.body.tipoPersona = this.tipoPersona;
     this.body.idInstitucion = "";
 
-    this.sigaServices
-      .post("accesoFichaPersona_desasociarPersona", this.body)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.body.status = data.status;
+    this.sigaServices.post("accesoFichaPersona_desasociarPersona", this.body).subscribe(
+      (data) => {
+        this.progressSpinner = false;
+        this.body.status = data.status;
 
-          this.showSuccess("Notario desasociado");
-        },
-        error => {
-          this.bodySearch = JSON.parse(error["error"]);
-          this.showFail(JSON.stringify(this.bodySearch.error.description));
-          this.showFail("Ha ocurrido un error");
-          //console.log(error);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.search();
-        }
-      );
+        this.showSuccess("Notario desasociado");
+      },
+      (error) => {
+        this.bodySearch = JSON.parse(error["error"]);
+        this.showFail(JSON.stringify(this.bodySearch.error.description));
+        this.showFail("Ha ocurrido un error");
+        //console.log(error);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.search();
+      },
+    );
   }
 
   guardar() {
@@ -242,13 +222,13 @@ export class AccesoFichaPersonaComponent implements OnInit {
       this.body.idInstitucion = "";
 
       this.sigaServices.post("accesoFichaPersona_guardar", this.body).subscribe(
-        data => {
+        (data) => {
           this.progressSpinner = false;
           this.body.status = data.status;
 
           this.showSuccess("Se ha guardado correctamente");
         },
-        error => {
+        (error) => {
           this.bodySearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.bodySearch.error.description));
           //console.log(error);
@@ -258,19 +238,17 @@ export class AccesoFichaPersonaComponent implements OnInit {
         () => {
           this.guardarNotario = false;
           this.search();
-        }
+        },
       );
     }
   }
 
   crearNotarioYGuardar() {
     this.sigaServices.post("fichaPersona_crearNotario", this.body).subscribe(
-      data => {
-        this.body.idPersonaAsociar = JSON.parse(
-          data["body"]
-        ).combooItems[0].value;
+      (data) => {
+        this.body.idPersonaAsociar = JSON.parse(data["body"]).combooItems[0].value;
       },
-      error => {
+      (error) => {
         //console.log(error);
       },
       () => {
@@ -279,40 +257,32 @@ export class AccesoFichaPersonaComponent implements OnInit {
         this.body.tipoPersona = this.tipoPersona;
         this.body.idInstitucion = "";
 
-        this.sigaServices
-          .post("accesoFichaPersona_guardar", this.body)
-          .subscribe(
-            data => {
-              this.progressSpinner = false;
-              this.body.status = data.status;
+        this.sigaServices.post("accesoFichaPersona_guardar", this.body).subscribe(
+          (data) => {
+            this.progressSpinner = false;
+            this.body.status = data.status;
 
-              this.showSuccess("Se ha creado correctamente");
-            },
-            error => {
-              this.bodySearch = JSON.parse(error["error"]);
-              this.showFail(JSON.stringify(this.bodySearch.error.description));
-              //console.log(error);
+            this.showSuccess("Se ha creado correctamente");
+          },
+          (error) => {
+            this.bodySearch = JSON.parse(error["error"]);
+            this.showFail(JSON.stringify(this.bodySearch.error.description));
+            //console.log(error);
 
-              this.showFail("Ha habido un error al crear el notario");
-              this.progressSpinner = false;
-            },
-            () => {
-              this.guardarNotario = false;
-              this.search();
-            }
-          );
-      }
+            this.showFail("Ha habido un error al crear el notario");
+            this.progressSpinner = false;
+          },
+          () => {
+            this.guardarNotario = false;
+            this.search();
+          },
+        );
+      },
     );
   }
 
   activarGuardarNotarioNoExistente() {
-    if (
-      this.editar &&
-      this.body.nombre != undefined &&
-      this.body.nombre.trim() != "" &&
-      this.body.apellido1 != undefined &&
-      this.body.apellido1 != ""
-    ) {
+    if (this.editar && this.body.nombre != undefined && this.body.nombre.trim() != "" && this.body.apellido1 != undefined && this.body.apellido1 != "") {
       this.guardarNotario = true;
     } else {
       if (this.editar) {
@@ -323,14 +293,12 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   obtenerTiposIdentificacion() {
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
-      n => {
+      (n) => {
         this.comboTipoIdentificacion = n.combooItems;
 
         // obtener la identificacion a seleccionar
         if (this.body.tipoIdentificacion != undefined) {
-          let ident = this.comboTipoIdentificacion.find(
-            item => item.value == this.body.tipoIdentificacion
-          );
+          let ident = this.comboTipoIdentificacion.find((item) => item.value == this.body.tipoIdentificacion);
 
           this.selectedTipoIdentificacion = ident.value;
         } else {
@@ -341,9 +309,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
         //this.comprobarValidacion();
       },
-      err => {
+      (err) => {
         //console.log(err);
-      }
+      },
     );
   }
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
@@ -389,16 +357,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
     let fileList: FileList = event.files;
 
     let nombreCompletoArchivo = fileList[0].name;
-    let extensionArchivo = nombreCompletoArchivo.substring(
-      nombreCompletoArchivo.lastIndexOf("."),
-      nombreCompletoArchivo.length
-    );
+    let extensionArchivo = nombreCompletoArchivo.substring(nombreCompletoArchivo.lastIndexOf("."), nombreCompletoArchivo.length);
 
-    if (
-      extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())
-    ) {
+    if (extensionArchivo == null || extensionArchivo.trim() == "" || !/\.(gif|jpg|jpeg|tiff|png)$/i.test(extensionArchivo.trim().toUpperCase())) {
       // Mensaje de error de formato de imagen y deshabilitar boton guardar
       this.file = undefined;
       this.archivoDisponible = false;
@@ -415,11 +376,11 @@ export class AccesoFichaPersonaComponent implements OnInit {
     this.msgs.push({
       severity: "error",
       summary: "Error",
-      detail: "Formato incorrecto de imagen seleccionada"
+      detail: "Formato incorrecto de imagen seleccionada",
     });
   }
 
-  seleccionarFecha(event) { }
+  seleccionarFecha(event) {}
 
   showFail(mensaje: string) {
     this.msgs = [];
@@ -436,22 +397,14 @@ export class AccesoFichaPersonaComponent implements OnInit {
   }
 
   comprobarValidacion() {
-    if (
-      (this.body.tipoIdentificacion != undefined ||
-        this.body.tipoIdentificacion != null) &&
-      this.body.nif != undefined &&
-      this.body.nombre != undefined &&
-      this.body.nombre.trim() != "" &&
-      this.body.apellido1 != undefined &&
-      this.body.apellido1 != ""
-    ) {
+    if ((this.body.tipoIdentificacion != undefined || this.body.tipoIdentificacion != null) && this.body.nif != undefined && this.body.nombre != undefined && this.body.nombre.trim() != "" && this.body.apellido1 != undefined && this.body.apellido1 != "") {
       this.isValidate = true;
     } else {
       this.isValidate = false;
     }
 
-    this.cardService.newCardValidator$.subscribe(data => {
-      data.map(result => {
+    this.cardService.newCardValidator$.subscribe((data) => {
+      data.map((result) => {
         result.cardNotario = this.isValidate;
       });
     });
@@ -462,20 +415,20 @@ export class AccesoFichaPersonaComponent implements OnInit {
     controlAcceso.idProceso = "229";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
+      (data) => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
         this.tarjeta = permisosArray[0].derechoacceso;
       },
-      err => {
+      (err) => {
         //console.log(err);
       },
-      () => { 
-        if(this.tarjeta == "3" || this.tarjeta == "2"){
-					let permisos = "notario";
-					this.permisosEnlace.emit(permisos);
-				  }
-       }
+      () => {
+        if (this.tarjeta == "3" || this.tarjeta == "2") {
+          let permisos = "notario";
+          this.permisosEnlace.emit(permisos);
+        }
+      },
     );
   }
 }

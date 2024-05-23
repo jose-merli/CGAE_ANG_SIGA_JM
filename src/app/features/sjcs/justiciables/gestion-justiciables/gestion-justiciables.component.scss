@@ -1,4 +1,16 @@
 
 .top{
-    display: block !important;
+  display: block !important;
+}
+
+.radio-style{
+  display:flex;
+
+  ::ng-deep .ui-radiobutton {
+    .ui-radiobutton-box {
+        .ui-radiobutton-icon {
+        vertical-align: middle;
+      }
+    }
   }
+}

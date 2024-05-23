@@ -59,7 +59,7 @@
         <div class="bloque col-lg-6 col-md-5 col-sm-5">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} 
               </label>
               <input [(ngModel)]="generalBody.nif" type="text" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledNif || disabledAction"
                 class="form-control" [ngClass]="styleObligatorio('datosGenerales', generalBody.nif)" (ngModelChange)="compruebaDNI()"

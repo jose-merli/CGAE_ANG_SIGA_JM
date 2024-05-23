@@ -1,25 +1,18 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { DataTable, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
-import { TranslateService } from '../../../../../../commons/translate';
-import { Router } from '../../../../../../../../node_modules/@angular/router';
-import { SigaServices } from '../../../../../../_services/siga.service';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { ProcuradoresItem } from '../../../../../../models/sjcs/ProcuradoresItem';
-import { ProcuradoresModule } from '../../procuradores.module';
-import { ProcuradoresObject } from '../../../../../../models/sjcs/ProcuradoresObject';
-import { Identifiers } from '../../../../../../../../node_modules/@angular/compiler';
-import { CommonsService } from '../../../../../../_services/commons.service';
-
-
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Router } from "../../../../../../../../node_modules/@angular/router";
+import { ConfirmationService, DataTable } from "../../../../../../../../node_modules/primeng/primeng";
+import { CommonsService } from "../../../../../../_services/commons.service";
+import { PersistenceService } from "../../../../../../_services/persistence.service";
+import { SigaServices } from "../../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../../commons/translate";
+import { ProcuradoresObject } from "../../../../../../models/sjcs/ProcuradoresObject";
 
 @Component({
-  selector: 'app-tabla-procuradores',
-  templateUrl: './tabla-procuradores.component.html',
-  styleUrls: ['./tabla-procuradores.component.scss']
+  selector: "app-tabla-procuradores",
+  templateUrl: "./tabla-procuradores.component.html",
+  styleUrls: ["./tabla-procuradores.component.scss"],
 })
 export class TablaProcuradoresComponent implements OnInit {
-
-
   rowsPerPage: any = [];
   cols;
   msgs;
@@ -48,15 +41,7 @@ export class TablaProcuradoresComponent implements OnInit {
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
 
-
-  constructor(private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
-    private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService,
-    private commonsService: CommonsService
-  ) { }
+  constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private commonsService: CommonsService) {}
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined) {
@@ -64,7 +49,7 @@ export class TablaProcuradoresComponent implements OnInit {
     }
 
     this.getCols();
-    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    this.initDatos = JSON.parse(JSON.stringify(this.datos));
 
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
@@ -86,27 +71,23 @@ export class TablaProcuradoresComponent implements OnInit {
   }
 
   confirmDelete() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
-    );
+    let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        this.delete()
+        this.delete();
       },
       reject: () => {
         this.msgs = [
           {
             severity: "info",
             summary: "Cancelar",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
+            detail: this.translateService.instant("general.message.accion.cancelada"),
+          },
         ];
-      }
+      },
     });
   }
 
@@ -126,23 +107,20 @@ export class TablaProcuradoresComponent implements OnInit {
   }
 
   searchHistorical() {
-
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
     this.searchHistoricalSend.emit(this.historico);
-    this.selectAll = false
+    this.selectAll = false;
     if (this.selectMultiple) {
       this.selectMultiple = false;
     }
-
   }
 
   openTab(evento) {
-
     //Si proviene de una ficha de contrario
-    if(this.fromProcuradorContrario){
-      sessionStorage.setItem('procurador', JSON.stringify(evento));
-      this.router.navigate(['/gestionJusticiables']);
+    if (this.fromProcuradorContrario) {
+      sessionStorage.setItem("procurador", JSON.stringify(evento));
+      this.router.navigate(["/gestionJusticiables"]);
     }
 
     if (this.persistenceService.getPermisos() != undefined) {
@@ -150,35 +128,27 @@ export class TablaProcuradoresComponent implements OnInit {
     }
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-      if (evento.data.idInstitucion != this.institucionActual)
-        evento.data.institucionVal = false;
+      if (evento.data.idInstitucion != this.institucionActual) evento.data.institucionVal = false;
 
       this.persistenceService.setDatos(evento.data);
       this.router.navigate(["/gestionProcuradores"]);
-
     } else {
-      if (this.institucionActual != evento.data.idInstitucion)
-        this.selectedDatos.pop();
-      else if (evento.data.fechabaja == undefined && this.historico)
-        this.selectedDatos.pop();
+      if (this.institucionActual != evento.data.idInstitucion) this.selectedDatos.pop();
+      else if (evento.data.fechabaja == undefined && this.historico) this.selectedDatos.pop();
     }
   }
 
   delete() {
-
     let procuradorDelete = new ProcuradoresObject();
     procuradorDelete.procuradorItems = this.selectedDatos;
     this.sigaServices.post("busquedaProcuradores_deleteProcuradores", procuradorDelete).subscribe(
-
-      data => {
-
+      (data) => {
         this.selectedDatos = [];
         this.searchHistoricalSend.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
-      err => {
-
+      (err) => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
@@ -188,7 +158,7 @@ export class TablaProcuradoresComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
-      }
+      },
     );
   }
 
@@ -210,15 +180,13 @@ export class TablaProcuradoresComponent implements OnInit {
     let procuradorActivate = new ProcuradoresObject();
     procuradorActivate.procuradorItems = this.selectedDatos;
     this.sigaServices.post("busquedaProcuradores_activateProcuradores", procuradorActivate).subscribe(
-      data => {
-
+      (data) => {
         this.selectedDatos = [];
         this.searchHistoricalSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
-      err => {
-
+      (err) => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
@@ -228,7 +196,7 @@ export class TablaProcuradoresComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
-      }
+      },
     );
   }
 
@@ -238,35 +206,33 @@ export class TablaProcuradoresComponent implements OnInit {
   }
 
   getCols() {
-
     this.cols = [
       { field: "nColegiado", header: "censo.resultadosSolicitudesModificacion.literal.nColegiado" },
       { field: "nombreApe", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
       { field: "codigoExt", header: "administracion.parametrosGenerales.literal.codigo" },
       { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion" },
       { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion" },
-      { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia" }
-
+      { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia" },
     ];
-    this.cols.forEach(it => this.buscadores.push(""));
+    this.cols.forEach((it) => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10
+        value: 10,
       },
       {
         label: 20,
-        value: 20
+        value: 20,
       },
       {
         label: 30,
-        value: 30
+        value: 30,
       },
       {
         label: 40,
-        value: 40
-      }
+        value: 40,
+      },
     ];
   }
 
@@ -278,7 +244,7 @@ export class TablaProcuradoresComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.permisoEscritura) {
-      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
+      this.selectedDatos = this.datos.filter((dato) => dato.idInstitucion == this.institucionActual);
 
       if (!this.historico) {
         if (this.selectAll) {
@@ -293,7 +259,7 @@ export class TablaProcuradoresComponent implements OnInit {
       } else {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
+          this.selectedDatos = this.datos.filter((dato) => dato.fechabaja != undefined && dato.fechabaja != null);
           this.numSelected = this.selectedDatos.length;
         } else {
           this.selectedDatos = [];
@@ -314,12 +280,11 @@ export class TablaProcuradoresComponent implements OnInit {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg
+      detail: msg,
     });
   }
 
   clear() {
     this.msgs = [];
   }
-
 }

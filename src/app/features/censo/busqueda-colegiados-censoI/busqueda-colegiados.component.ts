@@ -1,93 +1,38 @@
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  ViewChild,
-  ChangeDetectorRef,
-  Input
-} from "@angular/core";
-import { OldSigaServices } from "../../../_services/oldSiga.service";
-
-import {
-  /*** MODULOS ***/
-  NgModule
-} from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule, Location } from "@angular/common";
+import { Component, NgModule, OnInit, ViewChild } from "@angular/core";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { ButtonModule } from "primeng/button";
 import { CalendarModule } from "primeng/calendar";
+import { CheckboxModule } from "primeng/checkbox";
+import { ChipsModule } from "primeng/chips";
+import { Message } from "primeng/components/common/api";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { DataTableModule } from "primeng/datatable";
+import { DropdownModule } from "primeng/dropdown";
+import { FileUploadModule } from "primeng/fileupload";
 import { InputTextModule } from "primeng/inputtext";
 import { InputTextareaModule } from "primeng/inputtextarea";
-import { DropdownModule } from "primeng/dropdown";
-import { CheckboxModule } from "primeng/checkbox";
-import { ButtonModule } from "primeng/button";
-import { DataTableModule } from "primeng/datatable";
-// import { MenubarModule } from 'primeng/menubar';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-// import { DialogModule } from 'primeng/dialog';
-import { AutoCompleteModule } from "primeng/autocomplete";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { TooltipModule } from "primeng/tooltip";
-import { ChipsModule } from "primeng/chips";
 import { RadioButtonModule } from "primeng/radiobutton";
-import { FileUploadModule } from "primeng/fileupload";
-
-import { Http, Response } from "@angular/http";
-import { MenuItem } from "primeng/api";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
-import { SelectItem } from "primeng/api";
+import { TooltipModule } from "primeng/tooltip";
 import { esCalendar } from "../../../utils/calendar";
-import { Router } from "@angular/router";
-import { Message } from "primeng/components/common/api";
-import { Location } from "@angular/common";
-
-import { SigaServices } from "./../../../_services/siga.service";
-import { SigaWrapper } from "../../../wrapper/wrapper.class";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { HeaderGestionEntidadService } from "./../../../_services/headerGestionEntidad.service";
 
 /*** COMPONENTES ***/
-import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
-import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
-import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
 import { DatosGeneralesItem } from "./../../../../app/models/DatosGeneralesItem";
-import { DatosGeneralesObject } from "./../../../../app/models/DatosGeneralesObject";
-import { DatosPersonaJuridicaComponent } from "./../../../features/censo/datosPersonaJuridica/datosPersonaJuridica.component";
+import { DatosColegialesComponent } from "./../../../new-features/censo/ficha-colegial/datos-colegiales/datos-colegiales.component";
+import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
+import { FichaColegialComponent } from "./../../../new-features/censo/ficha-colegial/ficha-colegial.component";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    CalendarModule,
-    InputTextModule,
-    InputTextareaModule,
-    DropdownModule,
-    CheckboxModule,
-    ButtonModule,
-    DataTableModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AutoCompleteModule,
-    ConfirmDialogModule,
-    TooltipModule,
-    ChipsModule,
-    RadioButtonModule,
-    FileUploadModule
-  ],
-  declarations: [
-    FichaColegialComponent,
-    DatosGeneralesComponent,
-    DatosColegialesComponent
-  ],
+  imports: [CommonModule, CalendarModule, InputTextModule, InputTextareaModule, DropdownModule, CheckboxModule, ButtonModule, DataTableModule, FormsModule, ReactiveFormsModule, AutoCompleteModule, ConfirmDialogModule, TooltipModule, ChipsModule, RadioButtonModule, FileUploadModule],
+  declarations: [FichaColegialComponent, DatosGeneralesComponent, DatosColegialesComponent],
   exports: [FichaColegialComponent],
-  providers: []
+  providers: [],
 })
 @Component({
   selector: "app-busqueda-colegiados",
   templateUrl: "./busqueda-colegiados.component.html",
-  styleUrls: ["./busqueda-colegiados.component.scss"]
+  styleUrls: ["./busqueda-colegiados.component.scss"],
 })
 export class BusquedaColegiadosComponentI implements OnInit {
   uploadedFiles: any[] = [];
@@ -127,7 +72,7 @@ export class BusquedaColegiadosComponentI implements OnInit {
     { label: "Castellano", value: "castellano" },
     { label: "Catalá", value: "catalan" },
     { label: "Euskara", value: "euskera" },
-    { label: "Galego", value: "gallego" }
+    { label: "Galego", value: "gallego" },
   ];
   edadCalculada: String;
 
@@ -140,29 +85,29 @@ export class BusquedaColegiadosComponentI implements OnInit {
   fichasPosibles = [
     {
       key: "generales",
-      activa: false
+      activa: false,
     },
     {
       key: "direcciones",
-      activa: false
+      activa: false,
     },
     {
       key: "colegiales",
-      activa: false
+      activa: false,
     },
     {
       key: "bancarios",
-      activa: false
+      activa: false,
     },
     {
       key: "cv",
-      activa: false
-    }
+      activa: false,
+    },
   ];
 
   constructor(private formBuilder: FormBuilder, private location: Location) {
     this.formBusqueda = this.formBuilder.group({
-      cif: null
+      cif: null,
     });
   }
 

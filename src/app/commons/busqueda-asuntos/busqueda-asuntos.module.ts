@@ -1,36 +1,35 @@
-import { APP_BASE_HREF, CommonModule, DatePipe } from '@angular/common';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { APP_BASE_HREF, CommonModule, DatePipe } from "@angular/common";
+import { LOCALE_ID, NgModule } from "@angular/core";
 // import { BusquedaGeneralSJCSComponent } from './busqueda-generalSJCS/busqueda-generalSJCS.component';
 // import { FiltrosGeneralSJCSComponent } from './busqueda-generalSJCS/filtros-generalSJCS/filtros-generalSJCS.component';
 // import { TablaGeneralSJCSComponent } from './busqueda-generalSJCS/tabla-generalSJCS/tabla-generalSJCS.component';
-import { TooltipModule } from 'primeng/tooltip';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '../../../../node_modules/@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '../../../../node_modules/@angular/forms';
-import { CookieService } from '../../../../node_modules/ngx-cookie-service';
-import { ConfirmationService } from '../../../../node_modules/primeng/api';
-import { MessageService } from '../../../../node_modules/primeng/components/common/messageservice';
-import { AutoCompleteModule, ButtonModule, CalendarModule, ChipsModule, ColorPickerModule, ConfirmDialogModule, DialogModule, DropdownModule, EditorModule, FileUploadModule, GrowlModule, InputTextModule, KeyFilterModule, ListboxModule, MultiSelectModule, PaginatorModule, PickListModule, ProgressSpinnerModule, RadioButtonModule, ScheduleModule, SelectButtonModule, StepsModule, TreeModule } from '../../../../node_modules/primeng/primeng';
-import { TableModule } from '../../../../node_modules/primeng/table';
-import { environment } from '../../../environments/environment';
-import { AuthGuard } from '../../_guards/auth.guards';
-import { JwtInterceptor } from '../../_interceptor/jwt.interceptor';
-import { AuthenticationService } from '../../_services/authentication.service';
-import { cardService } from '../../_services/cardSearch.service';
-import { CommonsService } from '../../_services/commons.service';
-import { HeaderGestionEntidadService } from '../../_services/headerGestionEntidad.service';
-import { PersistenceService } from '../../_services/persistence.service';
-import { SigaServices } from '../../_services/siga.service';
-import { FechaModule } from '../../commons/fecha/fecha.module';
-import { PipeTranslationModule } from '../../commons/translate/pipe-translation.module';
-import { TrimPipePipe } from '../../commons/trim-pipe/trim-pipe.pipe';
-import { BusquedaColegiadoExpressModule } from '../busqueda-colegiado-express/busqueda-colegiado-express.module';
-import { GeneralSJCSModule } from '../busqueda-generalSJCS/busqueda-generalSJCS.module';
-import { PipeNumberModule } from '../number-pipe/number-pipe.module';
-import { PrecioModule } from '../precio/precio.module';
-import { ValidationModule } from '../validation/validation.module';
-import { BusquedaAsuntosComponent } from './busqueda-asuntos.component';
+import { TooltipModule } from "primeng/tooltip";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "../../../../node_modules/@angular/common/http";
+import { FormsModule, ReactiveFormsModule } from "../../../../node_modules/@angular/forms";
+import { CookieService } from "../../../../node_modules/ngx-cookie-service";
+import { ConfirmationService } from "../../../../node_modules/primeng/api";
+import { MessageService } from "../../../../node_modules/primeng/components/common/messageservice";
+import { AutoCompleteModule, ButtonModule, CalendarModule, ChipsModule, ColorPickerModule, ConfirmDialogModule, DialogModule, DropdownModule, EditorModule, FileUploadModule, GrowlModule, InputTextModule, KeyFilterModule, ListboxModule, MultiSelectModule, PaginatorModule, PickListModule, ProgressSpinnerModule, RadioButtonModule, ScheduleModule, SelectButtonModule, StepsModule, TreeModule } from "../../../../node_modules/primeng/primeng";
+import { TableModule } from "../../../../node_modules/primeng/table";
+import { environment } from "../../../environments/environment";
+import { AuthGuard } from "../../_guards/auth.guards";
+import { JwtInterceptor } from "../../_interceptor/jwt.interceptor";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { CardService } from "../../_services/cardSearch.service";
+import { CommonsService } from "../../_services/commons.service";
+import { PersistenceService } from "../../_services/persistence.service";
+import { SigaServices } from "../../_services/siga.service";
+import { FechaModule } from "../../commons/fecha/fecha.module";
+import { PipeTranslationModule } from "../../commons/translate/pipe-translation.module";
+import { TrimPipePipe } from "../../commons/trim-pipe/trim-pipe.pipe";
+import { BusquedaColegiadoExpressModule } from "../busqueda-colegiado-express/busqueda-colegiado-express.module";
+import { GeneralSJCSModule } from "../busqueda-generalSJCS/busqueda-generalSJCS.module";
+import { PipeNumberModule } from "../number-pipe/number-pipe.module";
+import { PrecioModule } from "../precio/precio.module";
+import { ValidationModule } from "../validation/validation.module";
+import { BusquedaAsuntosComponent } from "./busqueda-asuntos.component";
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
-import { TablaBusquedaAsuntosComponent } from './tabla-busqueda-asuntos/tabla-busqueda-asuntos.component';
+import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
 
 @NgModule({
   imports: [
@@ -72,8 +71,7 @@ import { TablaBusquedaAsuntosComponent } from './tabla-busqueda-asuntos/tabla-bu
     GeneralSJCSModule,
     SelectButtonModule,
     ColorPickerModule,
-    EditorModule
-
+    EditorModule,
   ],
   declarations: [BusquedaAsuntosComponent, FiltrosBusquedaAsuntosComponent, TablaBusquedaAsuntosComponent],
   exports: [BusquedaAsuntosComponent],
@@ -83,8 +81,7 @@ import { TablaBusquedaAsuntosComponent } from './tabla-busqueda-asuntos/tabla-bu
     TrimPipePipe,
     SigaServices,
     CommonsService,
-    cardService,
-    HeaderGestionEntidadService,
+    CardService,
     MessageService,
     AuthenticationService,
     ConfirmationService,
@@ -92,17 +89,15 @@ import { TablaBusquedaAsuntosComponent } from './tabla-busqueda-asuntos/tabla-bu
     AuthGuard,
     {
       provide: APP_BASE_HREF,
-      useValue: environment.baseHref
+      useValue: environment.baseHref,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
-      multi: true
+      multi: true,
     },
     CookieService,
-    { provide: LOCALE_ID, useValue: 'es-ES' }
-  ]
-
+    { provide: LOCALE_ID, useValue: "es-ES" },
+  ],
 })
-export class BusquedaAsuntosModule { }
-
+export class BusquedaAsuntosModule {}

@@ -11,10 +11,7 @@
             adm: opcion.idClass === 'adm',
             plantillas: opcion.idClass === 'plantillas',
             'menu-item-active': isRoute(opcion.routerLink)
-          }" *ngFor="let opcion of items" (click)="
-            viewChild(opcion.items, opcion.label) ||
-              navigateTo(opcion.routerLink) || comprobarProcedencia(opcion.label)
-          ">
+          }" *ngFor="let opcion of items" (click)="viewChild(opcion.items, opcion.label) || navigateTo(opcion.routerLink) || comprobarProcedencia(opcion.label)">
           {{ opcion.label | translate }}
           <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i>
         </li>
@@ -25,31 +22,18 @@
         </li>
         <li class="title-section">{{ selectedLabel | translate }}</li>
         <div *ngFor="let opcion of selectedItem">
-          <div (click)="
-              viewChildOfChild(opcion.items, opcion.label) ||
-                navigateTo(opcion.routerLink) || comprobarProcedencia(opcion.label)
-            ">
+          <div (click)="viewChildOfChild(opcion.items, opcion.label) || navigateTo(opcion.routerLink) || comprobarProcedencia(opcion.label)">
             <li class="itemChild" [ngClass]="{ 'menu-item-active': isRoute(opcion.routerLink) }">
               {{ opcion.label | translate }}
               <i class="fa float-right" [ngClass]="{
-                  'fa-angle-down':
-                    (opcion.items && showChildOfChild == false) ||
-                    (opcion.items && opcion.items !== selectedItemOfChild),
-                  'fa-angle-up':
-                    opcion.items &&
-                    opcion.items == selectedItemOfChild &&
-                    showChildOfChild != false
+                  'fa-angle-down':(opcion.items && showChildOfChild == false) || (opcion.items && opcion.items !== selectedItemOfChild),
+                  'fa-angle-up': opcion.items && opcion.items == selectedItemOfChild && showChildOfChild != false
                 }"></i>
             </li>
           </div>
           <div *ngFor="let opcionChild of selectedItemOfChild">
             <div (click)="navigateTo(opcionChild.routerLink) || comprobarProcedencia(opcionChild.label)">
-              <li class="itemChildOfChild" *ngIf="
-                  selectedItemOfChild == opcion.items &&
-                  showChildOfChild == true
-                " [ngClass]="{
-                  'menu-item-active': isRoute(opcionChild.routerLink)
-                }">
+              <li class="itemChildOfChild" *ngIf="selectedItemOfChild == opcion.items && showChildOfChild == true" [ngClass]="{'menu-item-active': isRoute(opcionChild.routerLink)}">
                 {{ opcionChild.label | translate }}
                 <i *ngIf="opcionChild.items" class="fa fa-angle-right float-right"></i>
               </li>

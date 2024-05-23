@@ -1,4 +1,6 @@
- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
 
 <div class="ficha-container">
   <div class="card" id = "procuradorJusticiable">
@@ -12,31 +14,21 @@
       </div>
       <div *ngIf="!showTarjeta" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fa fa-user icon-ficha"></i>
-          </div>
+          <div class="img-colegiado"><i class="fa fa-user icon-ficha"></i></div>
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate }}
-            </label>
-            <!-- <label class="registros-ficha">(0 registros)</label> -->
+            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.designas.contrarios.procurador' | translate }}</label>
           </div>
           <div class="row">
             <div class="col-3">
-              <label>{{ 'censo.resultadosSolicitudesModificacion.literal.nColegiado' | translate }}:
-                <span>{{ nColegiadoCabecera }}</span>
-              </label>
+              <label>{{ 'censo.resultadosSolicitudesModificacion.literal.nColegiado' | translate }}: <span>{{ procurador.nColegiado }}</span></label>
             </div>
             <div class="col-3">
-              <label>{{ 'administracion.parametrosGenerales.literal.nombre.apellidos' | translate }}:
-                <span>{{ nombreCabecera }}</span>
-              </label>
+              <label>{{ 'administracion.parametrosGenerales.literal.nombre.apellidos' | translate }}: <span>{{ procurador.nombre }}</span></label>
             </div>
             <div class="col-3"></div>
-            <div class="col-3">
-              <i class="fa fa-angle-down float-right"></i>
-            </div>
+            <div class="col-3"><i class="fa fa-angle-down float-right"></i></div>
           </div>
         </div>
       </div>
@@ -49,78 +41,24 @@
           </div>
         </div>
         <div class="bloque col-lg-10 col-md-10 col-sm-10">
-          <!-- <div class="form-row">
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} (*)
-              </label>
-              <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="generalBody.idtipoidentificacion" showClear="true" disabled></p-dropdown>
-            </div> 
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
-              </label>
-              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" maxlength="20" pInputText (ngModelChange)="compruebaDNIInput()"
-                [disabled]="!permisoEscritura" />
-            </div>
-            <div class="form-group col-lg-3 col-md-3 main-button pt-3">
-              <label></label>
-              <button (click)="checkPermisosSearchRepresentanteByNif()" pButton type="button" icon="fa fa-search" iconPos="center" [disabled]="!permisoEscritura"></button>
-            </div>
-          </div> -->
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
-              </label>
-              <input [(ngModel)]="generalBody.nColegiado" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
-                pInputText/>
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}</label>
+              <input [(ngModel)]="procurador.nColegiado" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura" pInputText/>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}
-              </label>
-              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
-                pInputText />
+              <label>{{ "justiciaGratuita.oficio.designas.interesados.apellidosnombre" | translate }}</label>
+              <input [(ngModel)]="procurador.nombre" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura" pInputText />
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="Disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
-          [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
-        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <!-- <button pButton (click)="Associate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-          [disabled]="!permisoEscritura || disabledSave()"></button>-->
+        <button pButton (click)="disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}" [disabled]="!permisoEscritura || procurador.nColegiado == null || procurador.nColegiado == ''"></button>
+        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}" [disabled]="!permisoEscritura"></button>
       </div>
     </div>
   </div>
 </div>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdCreateProcurador"
-  #cdCreateProcurador>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdCreateProcurador.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdProcuradorAssociate"
-  #cdProcuradorAssociate>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdProcuradorAssociate.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="rejectAssociate()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdProcuradorDisassociate"
-  #cdProcuradorDisassociate>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cdProcuradorDisassociate.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="rejectDisassociate()"></button>
-  </p-footer>
-</p-confirmDialog>
