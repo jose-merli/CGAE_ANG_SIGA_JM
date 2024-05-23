@@ -86,7 +86,7 @@ export class TablaModulosComponent implements OnInit {
     } else {
       if (!this.selectAll && !this.selectMultiple) {
         this.persistenceService.setDatos(this.selectedDatos[0]);
-        this.router.navigate(["/gestionModulos"], { queryParams: { idProcedimiento: this.selectedDatos[0].idProcedimiento, historico: this.isHistorico(this.selectedDatos[0]) } });
+        this.router.navigate(["/gestionModulos"], { queryParams: { idProcedimiento: this.selectedDatos[0].idProcedimiento } });
       } else {
         /* if (evento.data.fechabaja == undefined && this.historico == true) {
 					this.selectedDatos.pop();
@@ -272,8 +272,11 @@ export class TablaModulosComponent implements OnInit {
   }
 
   isHistorico(dato) {
-    if (this.formatDate(dato.fechadesdevigor) <= new Date() && (dato.fechahastavigor == null || this.formatDate(dato.fechahastavigor) > new Date()) && dato.fechabaja == null) return false;
-    else return true;
+    let historico = false;
+    if (dato.fechabaja != null) {
+      historico = true;
+    }
+    return historico;
   }
 
   formatDate(date) {

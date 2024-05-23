@@ -12,9 +12,9 @@ import { UnidadFamiliarEJGItem } from "../../../../models/sjcs/UnidadFamiliarEJG
 import { procesos_ejg } from "../../../../permisos/procesos_ejg";
 import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
 import { DatosGeneralesComponent } from "./datos-generales/datos-generales.component";
+import { DatosPersonalesComponent } from "./datos-personales/datos-personales.component";
 import { DatosRepresentanteComponent } from "./datos-representante/datos-representante.component";
 import { DatosSolicitudComponent } from "./datos-solicitud/datos-solicitud.component";
-import { DatosPersonalesComponent } from "./datos-personales/datos-personales.component";
 
 @Component({
   selector: "app-gestion-justiciables",
@@ -184,15 +184,15 @@ export class GestionJusticiablesComponent implements OnInit {
   private updateTarjResumen() {
     if (this.body) {
       const movil = this.body.telefonos && this.body.telefonos.length > 0 ? this.body.telefonos[0].numeroTelefono : "";
-      const nombre = `${this.body.apellido1 ? this.body.apellido1 : "" }${this.body.apellido2 ? " " + this.body.apellido2 : ""}${this.body.nombre ? ", " + this.body.nombre : ""}`;
-      const direccionPostal = this.datosPersonales != undefined && this.datosPersonales.direccionPostal? this.datosPersonales.direccionPostal : "No informada";
+      const nombre = `${this.body.apellido1 ? this.body.apellido1 : ""}${this.body.apellido2 ? " " + this.body.apellido2 : ""}${this.body.nombre ? ", " + this.body.nombre : ""}`;
+      const direccionPostal = this.datosPersonales != undefined && this.datosPersonales.direccionPostal ? this.datosPersonales.direccionPostal : "No informada";
 
       this.datosResumen = [
         { label: this.translateService.instant("censo.usuario.DNI"), value: this.body.nif },
         { label: this.translateService.instant("facturacionSJCS.retenciones.nombre"), value: nombre },
-        { label: this.translateService.instant("censo.datosDireccion.literal.correo"), value: this.body.correoelectronico || 'No disponible' },
+        { label: this.translateService.instant("censo.datosDireccion.literal.correo"), value: this.body.correoelectronico || "No disponible" },
         { label: this.translateService.instant("censo.datosDireccion.literal.telefonoMovil"), value: movil },
-        { label: this.translateService.instant("censo.consultaDirecciones.literal.direccion"), value: direccionPostal }
+        { label: this.translateService.instant("censo.consultaDirecciones.literal.direccion"), value: direccionPostal },
       ];
     }
     this.progressSpinner = false;

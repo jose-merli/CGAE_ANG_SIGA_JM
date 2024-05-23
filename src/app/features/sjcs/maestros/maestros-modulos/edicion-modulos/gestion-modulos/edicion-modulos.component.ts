@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { CommonsService } from "../../../../../../_services/commons.service";
 import { NotificationService } from "../../../../../../_services/notification.service";
 import { PersistenceService } from "../../../../../../_services/persistence.service";
@@ -11,7 +11,7 @@ import { ModulosItem } from "../../../../../../models/sjcs/ModulosItem";
   templateUrl: "./edicion-modulos.component.html",
   styleUrls: ["./edicion-modulos.component.scss"],
 })
-export class EdicionModulosComponent implements OnInit {
+export class EdicionModulosComponent implements OnInit, OnChanges {
   body: ModulosItem = new ModulosItem();
   bodyInicial;
   progressSpinner: boolean = false;
@@ -30,19 +30,27 @@ export class EdicionModulosComponent implements OnInit {
 
   ngOnInit() {
     this.getCombos();
+    if (this.modulosItem == undefined) {
+      this.modoEdicion = false;
+      this.modulosItem = new ModulosItem();
+    }
+  }
+
+  ngOnChanges() {
     if (this.modulosItem != undefined) {
+      this.modoEdicion = true;
       this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
+      if (this.modulosItem.fechadesdevigor == null) {
+        this.modulosItem.fechadesdevigor = undefined;
+      }
+      if (this.modulosItem.fechahastavigor == null) {
+        this.modulosItem.fechahastavigor = undefined;
+      }
       this.body = this.modulosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
-      if (this.body.idProcedimiento == undefined) {
-        this.modoEdicion = false;
-      } else {
-        this.modoEdicion = true;
-        this.getProcedimientos(this.body.idProcedimiento);
-      }
+      this.getProcedimientos(this.modulosItem.idjurisdiccion);
+
       this.arreglaChecks();
-    } else {
-      this.modulosItem = new ModulosItem();
     }
   }
 
@@ -59,13 +67,7 @@ export class EdicionModulosComponent implements OnInit {
     this.getProcedimientos(evento.value);
   }
 
-  onChangeProcedimientos(evento) {
-    this.modulosItem.procedimientosReal = [];
-    this.modulosItem.procedimientos = "";
-    this.getProcedimientos(evento.value);
-  }
-
-  getProcedimientos(id) {
+  private getProcedimientos(id) {
     this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + id).subscribe(
       (n) => {
         this.procedimientos = n.combooItems;
@@ -90,6 +92,7 @@ export class EdicionModulosComponent implements OnInit {
     }
   }
 
+  /*
   transformaFecha(fecha) {
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);
@@ -107,6 +110,7 @@ export class EdicionModulosComponent implements OnInit {
 
     return fecha;
   }
+  */
 
   arreglaChecks() {
     // idjurisdiccion complemento permitiraniadirletrado
@@ -144,13 +148,13 @@ export class EdicionModulosComponent implements OnInit {
 
   rest() {
     if (this.modoEdicion) {
+      if (this.bodyInicial != undefined) this.modulosItem = JSON.parse(JSON.stringify(this.bodyInicial));
+      this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
+      this.modulosItem.fechadesdevigor = new Date(this.modulosItem.fechadesdevigor);
+      this.modulosItem.fechahastavigor = new Date(this.modulosItem.fechahastavigor);
       if (this.modulosItem.idjurisdiccion != undefined) {
         this.getProcedimientos(this.modulosItem.idjurisdiccion);
       }
-      if (this.bodyInicial != undefined) this.modulosItem = JSON.parse(JSON.stringify(this.bodyInicial));
-      this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
-      this.modulosItem.fechadesdevigor = this.transformaFecha(this.modulosItem.fechadesdevigor);
-      this.modulosItem.fechahastavigor = this.transformaFecha(this.modulosItem.fechahastavigor);
       this.arreglaChecks();
     } else {
       this.modulosItem = new ModulosItem();
@@ -271,7 +275,6 @@ export class EdicionModulosComponent implements OnInit {
 
   fillFechaDesdeCalendar(event) {
     this.modulosItem.fechadesdevigor = event;
-
     if (this.modulosItem.fechadesdevigor > this.modulosItem.fechahastavigor) {
       this.modulosItem.fechahastavigor = undefined;
     }
