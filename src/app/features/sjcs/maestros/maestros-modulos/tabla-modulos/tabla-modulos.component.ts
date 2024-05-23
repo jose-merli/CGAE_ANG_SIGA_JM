@@ -65,31 +65,34 @@ export class TablaModulosComponent implements OnInit {
     this.searchJuzgados();
   }
 
-  normalizeString(str: string): string {
-    return str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
+  normalizeString(str: any): string {
+    if (typeof str !== 'string') {
+      return '';
+    }
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   }
 
   customFilter(value: any, filter: string): boolean {
     if (!filter) {
-		return true;
-	}
-	
-	if (typeof value === 'number' || !isNaN(value)) {
-	  const numericValue = parseFloat((value || '').toString().replace(/\./g, '').replace(/,/g, '.'));
-	  const numericFilter = parseFloat(filter.replace(/\./g, '').replace(/,/g, '.'));
-	  return numericValue.toString().includes(numericFilter.toString());
-	}
-  }
+      return true;
+    }
+    
+    if (typeof value === 'number' || !isNaN(value)) {
+      // Convert both to numeric values for comparison
+      const numericValue = parseFloat((value || '').toString().replace(/\./g, '').replace(/,/g, '.'));
+      const numericFilter = parseFloat(filter.replace(/\./g, '').replace(/,/g, '.'));
+      return numericValue.toString().includes(numericFilter.toString());
+    }
+
+    return this.normalizeString(value).includes(this.normalizeString(filter));
+  }	
 
   filterImporte(event: any, field: string, mode: string) {
-	const value = event.target.value;
-	console.log('Original Value:', value);
-	const numericValue = value.replace(/\./g, '').replace(/,/g, '.'); 
-	console.log('Numeric Value:', numericValue);
-	this.tabla.filter(numericValue, field, mode);
+    const value = event.target.value;
+    console.log('Original Value:', value);
+    const numericValue = value.replace(/\./g, '').replace(/,/g, '.'); 
+    console.log('Numeric Value:', numericValue);
+    this.tabla.filter(numericValue, field, mode);
   }
 
   seleccionaFila(evento) {
