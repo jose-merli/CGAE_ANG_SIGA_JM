@@ -72,11 +72,24 @@ export class TablaModulosComponent implements OnInit {
       .toLowerCase();
   }
 
-  customFilter(value: string, filter: string): boolean {
+  customFilter(value: any, filter: string): boolean {
     if (!filter) {
-      return true;
-    }
-    return this.normalizeString(value).includes(this.normalizeString(filter));
+		return true;
+	}
+	
+	if (typeof value === 'number' || !isNaN(value)) {
+	  const numericValue = parseFloat((value || '').toString().replace(/\./g, '').replace(/,/g, '.'));
+	  const numericFilter = parseFloat(filter.replace(/\./g, '').replace(/,/g, '.'));
+	  return numericValue.toString().includes(numericFilter.toString());
+	}
+  }
+
+  filterImporte(event: any, field: string, mode: string) {
+	const value = event.target.value;
+	console.log('Original Value:', value);
+	const numericValue = value.replace(/\./g, '').replace(/,/g, '.'); 
+	console.log('Numeric Value:', numericValue);
+	this.tabla.filter(numericValue, field, mode);
   }
 
   seleccionaFila(evento) {

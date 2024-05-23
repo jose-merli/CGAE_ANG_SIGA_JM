@@ -12,12 +12,12 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-            {{ col.header | translate}}
-            <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text"
-              (input)="table.filter($event.target.value, col.field, 'contains')">
-          </th>
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                {{ col.header | translate}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="filterImporte($event, col.field, 'contains')" />          
+            </th>
         </tr>
       </ng-template>
 
