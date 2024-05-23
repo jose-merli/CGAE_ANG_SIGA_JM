@@ -70,9 +70,9 @@
               </p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{'justiciaGratuita.maestros.Procedimiento' | translate }} (*)</label>
+              <label>{{'justiciaGratuita.maestros.Procedimiento' | translate }}</label>
               <p-multiSelect maxSelectedLabels="1" [defaultLabel]="textFilter" [filter]="true" styleClass="widthAll" [(ngModel)]='modulosItem.procedimientosReal'
-                [options]="procedimientos" [selectedItemsLabel]="textSelected" filterBy="label,labelSinTilde" (ngModelChange)="sortOptions()" [disabled]="modulosItem.historico || modulosItem.idjurisdiccion=='' || modulosItem.idjurisdiccion==undefined"></p-multiSelect>
+              [options]="procedimientos" [selectedItemsLabel]="textSelected" filterBy="label,labelSinTilde" (ngModelChange)="sortOptions()" [disabled]="modulosItem.historico || modulosItem.idjurisdiccion=='' || modulosItem.idjurisdiccion==undefined"></p-multiSelect>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <br>
