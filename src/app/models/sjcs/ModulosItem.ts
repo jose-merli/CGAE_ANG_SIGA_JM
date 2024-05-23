@@ -15,12 +15,12 @@ export class ModulosItem {
   orden: string;
   codigoext: string;
   permitiraniadirletrado: string;
-  fechadesdevigor: any;
-  fechahastavigor: any;
+  fechadesdevigor: Date;
+  fechahastavigor: Date;
   observaciones: string;
   complementoCheck: boolean;
   permitiraniadirletradoCheck: boolean;
   jurisdiccionDes: string;
   verSoloAlta: boolean = true;
-  constructor() { }
+  constructor() {}
 }

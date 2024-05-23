@@ -291,7 +291,7 @@ export class CommonsService {
     return this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
   }
 
-  checkPermisosService(permiso: boolean, historico: boolean): boolean {
+  checkPermisosService(permiso: boolean, historico?: boolean): boolean {
     let acceso = true;
     if (!permiso) {
       this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));

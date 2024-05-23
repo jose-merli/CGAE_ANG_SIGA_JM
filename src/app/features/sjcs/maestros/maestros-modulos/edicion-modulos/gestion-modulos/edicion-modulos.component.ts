@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { CommonsService } from "../../../../../../_services/commons.service";
 import { NotificationService } from "../../../../../../_services/notification.service";
 import { PersistenceService } from "../../../../../../_services/persistence.service";
@@ -18,123 +18,38 @@ export class EdicionModulosComponent implements OnInit {
   modoEdicion: boolean = false;
   jurisdicciones;
   procedimientos;
-  textFilter;
   showTarjeta: boolean = true;
   esComa: boolean = false;
+  textFilter: String = "Seleccionar";
   textSelected: String = "{label}";
 
-  @Output() modoEdicionSend = new EventEmitter<any>();
-
-  @ViewChild("importe") importe;
-  //Resultados de la busqueda
   @Input() modulosItem: ModulosItem;
+  @Output() modoEdicionSend = new EventEmitter<any>();
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService, private persistenceService: PersistenceService, private commonsService: CommonsService, private notificationService: NotificationService) {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.textFilter = this.translateService.instant("general.boton.seleccionar");
+  ngOnInit() {
+    this.getCombos();
     if (this.modulosItem != undefined) {
       this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
-      if (this.modulosItem.fechadesdevigor != undefined) {
-        this.modulosItem.fechadesdevigor = this.transformaFecha(this.modulosItem.fechadesdevigor);
-      } else {
-        this.modulosItem.fechadesdevigor = undefined;
-      }
-      if (this.modulosItem.fechahastavigor != undefined) {
-        this.modulosItem.fechahastavigor = this.transformaFecha(this.modulosItem.fechahastavigor);
-      } else {
-        this.modulosItem.fechahastavigor = undefined;
-      }
-      if (this.modulosItem.idjurisdiccion != undefined) {
-        this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + this.modulosItem.idProcedimiento).subscribe(
-          (n) => {
-            this.procedimientos = n.combooItems;
-            /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-        para poder filtrar el dato con o sin estos caracteres*/
-            this.procedimientos.map((e) => {
-              let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-              let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-              let i;
-              let x;
-              for (i = 0; i < e.label.length; i++) {
-                if ((x = accents.indexOf(e.label[i])) != -1) {
-                  e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-                  return e.labelSinTilde;
-                }
-              }
-            });
-            this.sortOptions();
-          },
-          (err) => {
-            //console.log(err);
-          },
-          () => {
-            if (this.modulosItem.procedimientos != null && this.modulosItem.procedimientos != "") {
-              this.modulosItem.procedimientosReal = this.modulosItem.procedimientos.split(",");
-              this.sortOptions();
-            } else {
-              this.modulosItem.procedimientosReal = [];
-            }
-            this.body = this.modulosItem;
-            this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
-            if (this.body.idProcedimiento == undefined) {
-              this.modoEdicion = false;
-            } else {
-              this.modoEdicion = true;
-            }
-          },
-        );
-      } else {
-        this.body = this.modulosItem;
-        this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
-        if (this.body.idProcedimiento == undefined) {
-          this.modoEdicion = false;
-        } else {
-          this.modoEdicion = true;
-        }
-      }
-    } else {
-      this.modulosItem = new ModulosItem();
-      this.modulosItem.fechadesdevigor = undefined;
-      this.modulosItem.fechahastavigor = undefined;
-    }
-
-    this.arreglaChecks();
-  }
-  ngOnInit() {
-    this.textFilter = this.translateService.instant("general.boton.seleccionar");
-    if (this.modulosItem != undefined) {
       this.body = this.modulosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
+      if (this.body.idProcedimiento == undefined) {
+        this.modoEdicion = false;
+      } else {
+        this.modoEdicion = true;
+        this.getProcedimientos(this.body.idProcedimiento);
+      }
+      this.arreglaChecks();
     } else {
       this.modulosItem = new ModulosItem();
     }
-    if (this.body.idProcedimiento == undefined) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
-    this.getCombos();
   }
 
   getCombos() {
     this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe((n) => {
       this.jurisdicciones = n.combooItems;
-
-      /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-      this.jurisdicciones.map((e) => {
-        let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-        let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-        let i;
-        let x;
-        for (i = 0; i < e.label.length; i++) {
-          if ((x = accents.indexOf(e.label[i])) != -1) {
-            e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-            return e.labelSinTilde;
-          }
-        }
-      });
+      this.commonsService.arregloTildesCombo(this.jurisdicciones);
     });
   }
 
@@ -151,27 +66,10 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   getProcedimientos(id) {
-    this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + this.modulosItem.idProcedimiento).subscribe(
+    this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + id).subscribe(
       (n) => {
         this.procedimientos = n.combooItems;
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.procedimientos.map((e) => {
-          let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-        this.sortOptions();
-      },
-      (err) => {
-        //console.log(err);
+        this.commonsService.arregloTildesCombo(this.procedimientos);
       },
       () => {
         if (this.modulosItem.procedimientos != null && this.modulosItem.procedimientos != "") {
@@ -295,6 +193,7 @@ export class EdicionModulosComponent implements OnInit {
     this.callSaveService(url);
   }
 
+  /*
   changeImporte() {
     this.esComa = this.modulosItem.importe.includes(",");
     if (this.esComa) {
@@ -306,6 +205,7 @@ export class EdicionModulosComponent implements OnInit {
       }
     }
   }
+  */
 
   numberOnly(event): boolean {
     const charCode = event.which ? event.which : event.keyCode;

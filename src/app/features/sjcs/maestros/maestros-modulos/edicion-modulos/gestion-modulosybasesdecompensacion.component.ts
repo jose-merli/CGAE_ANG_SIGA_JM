@@ -1,10 +1,11 @@
 import { Location } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { CommonsService } from "../../../../../_services/commons.service";
 import { PersistenceService } from "../../../../../_services/persistence.service";
 import { ModulosItem } from "../../../../../models/sjcs/ModulosItem";
+import { procesos_maestros } from "../../../../../permisos/procesos_maestros";
 import { SigaServices } from "./../../../../../_services/siga.service";
-import { TranslateService } from "./../../../../../commons/translate";
 
 @Component({
   selector: "app-gestion-modulosybasesdecompensacion",
@@ -14,36 +15,24 @@ import { TranslateService } from "./../../../../../commons/translate";
 export class GestionModulosYBasesComponent implements OnInit {
   fichasPosibles;
   modoEdicion: boolean;
+  permisoEscritura: boolean = false;
   idProcedimiento;
+  historico;
   messageShow: string;
   acreditacionesItem;
   modulosItem;
-  constructor(private location: Location, private route: ActivatedRoute, private changeDetectorRef: ChangeDetectorRef, private translateService: TranslateService, private sigaServices: SigaServices, private persistenceService: PersistenceService) {}
+
+  constructor(private location: Location, private route: ActivatedRoute, private sigaServices: SigaServices, private persistenceService: PersistenceService, private commonsService: CommonsService) {}
 
   ngOnInit() {
-    // this.getFichasPosibles();
+    this.getPermisos();
     this.route.queryParams.subscribe((params) => {
       this.idProcedimiento = params.idProcedimiento;
+      this.historico = params.historico;
     });
     if (this.idProcedimiento != undefined) {
       this.searchModulos();
     }
-  }
-
-  searchModulos() {
-    let filtros: ModulosItem = new ModulosItem();
-    filtros.idProcedimiento = this.idProcedimiento;
-    filtros.historico = false;
-    if (this.persistenceService.getHistorico() != undefined) {
-      filtros.historico = this.persistenceService.getHistorico();
-    }
-    this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", filtros).subscribe((n) => {
-      this.modulosItem = JSON.parse(n.body).modulosItem[0];
-      if (this.modulosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
-        this.modulosItem.historico = true;
-      }
-      this.modulosItem.buscar = true;
-    });
   }
 
   modoEdicionSend(event) {
@@ -53,5 +42,27 @@ export class GestionModulosYBasesComponent implements OnInit {
 
   backTo() {
     this.location.back();
+  }
+
+  private getPermisos() {
+    this.commonsService
+      .checkAcceso(procesos_maestros.modulo)
+      .then((respuesta) => {
+        this.permisoEscritura = respuesta;
+      })
+      .catch((error) => console.error(error));
+  }
+
+  private searchModulos() {
+    let filtros: ModulosItem = new ModulosItem();
+    filtros.idProcedimiento = this.idProcedimiento;
+    filtros.historico = this.historico;
+    this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", filtros).subscribe((n) => {
+      this.modulosItem = JSON.parse(n.body).modulosItem[0];
+      if (this.modulosItem.fechabaja != undefined) {
+        this.modulosItem.historico = true;
+      }
+      this.modulosItem.buscar = true;
+    });
   }
 }

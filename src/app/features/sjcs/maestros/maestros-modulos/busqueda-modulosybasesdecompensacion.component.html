@@ -1,14 +1,12 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<div class="busqueda-container">
-    <app-filtros-modulos (busqueda)="searchModulos($event)" [permisos]="permisoEscritura"></app-filtros-modulos>
-    <app-tabla-modulos *ngIf="buscar" [datos]="datos" (searchModulos)="searchModulos($event)"></app-tabla-modulos>
-</div>
-
 <div *ngIf="progressSpinner" class="overlay-spinner">
-    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
     <div class="loader"></div>
 </div>
 
+<div class="busqueda-container">
+    <app-filtros-modulos [permisos]="permisoEscritura" (searchModulos)="searchModulos($event)"></app-filtros-modulos>
+    <app-tabla-modulos *ngIf="isResult" [datos]="datos" [permisos]="permisoEscritura" (searchModulos)="searchModulos($event)"></app-tabla-modulos>
+</div>
+
 <div class="mt-3 text-right main-button ">
-    <button *ngIf="vieneDeFichaJuzgado == 'true'" (click)="volverFichaJuzgado()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+    <button *ngIf="vieneDeFichaJuzgado" (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
 </div>

@@ -42,8 +42,7 @@
                 </div>
                 <div class="form-group col-lg-6 col-md-6">
                   <label>{{ "form.busquedaCursos.literal.precio" | translate }} (*)</label>
-                  <br>
-                  <input #importe [disabled]="modulosItem.historico" (input)="changeImporte()" type="text" class="form-control" (keypress)="numberOnly($event)" [(ngModel)]="modulosItem.importe" pInputText maxLength="8" />
+                  <input [disabled]="modulosItem.historico" type="text" class="form-control" (keypress)="numberOnly($event)" [(ngModel)]="modulosItem.importe" pInputText maxLength="8" />
                 </div>
               </div>
             </div>
