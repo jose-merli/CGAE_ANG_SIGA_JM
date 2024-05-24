@@ -32,6 +32,8 @@ export class FiltrosModulosComponent implements OnInit {
       this.filtros = this.persistenceService.getFiltros();
       this.buscar();
     }
+
+    this.filtros.fechadesdevigor = new Date();
   }
 
   checkPermisosNewModulo() {
@@ -75,5 +77,9 @@ export class FiltrosModulosComponent implements OnInit {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.buscar();
     }
+  }
+
+  fillFechaDesdeVigor(fecha) {
+    this.filtros.fechadesdevigor = fecha;
   }
 }
