@@ -53,6 +53,7 @@ export class FiltrosModulosComponent implements OnInit {
       this.isBuscar();
     }
 
+    this.filtros.fechadesdevigor = new Date();
   }
 
   checkPermisosNewModulo() {
@@ -138,5 +139,9 @@ export class FiltrosModulosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  fillFechaDesdeVigor(fecha) {
+    this.filtros.fechadesdevigor = fecha;
   }
 }
