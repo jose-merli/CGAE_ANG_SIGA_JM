@@ -107,7 +107,7 @@
       <span class="mr-4">
         <label> {{ "menu.facturacionSJCS.mantenimientoJuzgados" | translate}} </label>
         <p-multiSelect #someDropdown1 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='juzgados'
-        [options]="juzgadosList" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+        [options]="juzgadosList" maxSelectedLabels="2" selectionLimits="2" [selectedItemsLabel]="textSelected"
         styleClass="widthAll"[filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
       </span>
     </div>
