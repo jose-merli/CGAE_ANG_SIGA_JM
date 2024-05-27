@@ -18,7 +18,7 @@
       [showTarjeta]="isOpenTarjeta('tarjetaGenerales')" [origen]="origen" [justiciable]="justiciable" (bodyChange)="updateBody($event)" (showDialog)="abrirDialog($event)"></app-datos-generales>
 
     <app-datos-personales *ngIf="modoEdicion" id="tarjetaPersonales" [body]="body" [bodyInicial]="bodyInicial" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaPersonales')" 
-      [showTarjeta]="isOpenTarjeta('tarjetaPersonales')" (bodyChange)="updateBody($event)"></app-datos-personales>
+      [showTarjeta]="isOpenTarjeta('tarjetaPersonales')" [origen]="origen" (bodyChange)="updateBody($event)" (showDialog)="abrirDialog($event)"></app-datos-personales>
 
     <app-datos-unidad-familiar *ngIf="modoEdicion && origen == 'UnidadFamiliar'" id="tarjetaUnidadFamiliar" [modoEdicion]="modoEdicion" [permisoEscritura]="isPermisoTarjeta('tarjetaUnidadFamiliar')" 
       [showTarjeta]="isOpenTarjeta('tarjetaProcurador')" [body]="body" [unidadFamiliar]="unidadFamiliar"></app-datos-unidad-familiar>
