@@ -76,7 +76,7 @@ export class AsuntosComponent implements OnInit {
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("origin", this.origen);
-      sessionStorage.setItem("nombreInteresado", this.body.apellidos + " " + this.body.nombre);
+      sessionStorage.setItem("nombreInteresado", this.body.apellido1 + (this.body.apellido2 != undefined ? " " + this.body.apellido2 : "") + ", " + this.body.nombre);
       sessionStorage.setItem("deJusticiableANuevaDesigna", "true");
       sessionStorage.setItem("nuevaDesigna", "true");
       this.router.navigate(["/fichaDesignaciones"]);
@@ -90,7 +90,7 @@ export class AsuntosComponent implements OnInit {
     } else {
       sessionStorage.setItem("justiciable", JSON.stringify(this.body));
       sessionStorage.setItem("origin", this.origen);
-      sessionStorage.setItem("nombreInteresado", this.body.apellidos + " " + this.body.nombre);
+      sessionStorage.setItem("nombreInteresado", this.body.apellido1 + (this.body.apellido2 != undefined ? " " + this.body.apellido2 : "") + ", " + this.body.nombre);
       sessionStorage.setItem("nuevaAsistencia", "true");
       this.router.navigate(["/fichaAsistencia"]);
     }
