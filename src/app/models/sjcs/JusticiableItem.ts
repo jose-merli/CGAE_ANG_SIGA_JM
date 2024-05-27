@@ -25,8 +25,8 @@ export class JusticiableItem {
   sexo: string;
   idlenguaje: string;
   fechaalta: Date;
-  fax: string;
-  correoelectronico: string;
+  fax: string = "";
+  correoelectronico: string = "";
   edad: string;
   idminusvalia: string;
   idtipovia: string;
@@ -66,7 +66,7 @@ export class JusticiableItem {
   numeroAsuntos: string;
   ultimoAsunto: string;
 
-  telefonos: JusticiableTelefonoItem[];
+  telefonos: JusticiableTelefonoItem[] = [];
 
   representante: number;
   tipojusticiable: string;

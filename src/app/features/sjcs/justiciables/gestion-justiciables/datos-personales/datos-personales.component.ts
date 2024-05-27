@@ -15,19 +15,19 @@ export class DatosPersonalesComponent implements OnInit {
   @Input() modoEdicion;
   @Input() showTarjeta: boolean = false;
   @Input() permisoEscritura: boolean = true;
+  @Input() origen: string = "";
   @Input() body: JusticiableItem;
   @Input() bodyInicial: JusticiableItem;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
+  @Output() showDialog = new EventEmitter<string>();
 
-  bodyInicialTelefonos;
-  direccionPostal: String = "";
-  resultadosPoblaciones: String = "";
-  originalData: any;
+  bodyInicialTelefonos: string = "";
+  direccionPostal: string = "";
+  resultadosPoblaciones: string = "";
 
   progressSpinner: boolean = true;
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
-  validateForm: boolean = true;
   hasChange: boolean = false;
   telefonoValido: boolean = true;
   isExtranjero: boolean;
@@ -40,15 +40,14 @@ export class DatosPersonalesComponent implements OnInit {
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private translateService: TranslateService, private notificationService: NotificationService) {}
 
   ngOnInit() {
+    this.progressSpinner = true;
     if (this.body.idpaisdir1 != "191") {
       this.isExtranjero = true;
     } else {
       this.isExtranjero = false;
     }
-
-    this.progressSpinner = true;
+    this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
     this.getCombos();
-    this.loadData();
   }
 
   onChangeCodigoPostal() {
@@ -68,11 +67,11 @@ export class DatosPersonalesComponent implements OnInit {
         this.body.idprovincia = undefined;
       }
     }
-    this.hasChange = true;
+    this.changes();
   }
 
   onChangeInput(event) {
-    this.hasChange = true;
+    this.changes();
   }
 
   /**
@@ -104,16 +103,15 @@ export class DatosPersonalesComponent implements OnInit {
         }
       }
     }
-    this.hasChange = true;
+    this.changes();
   }
 
   validateNumero(event) {
-    let NUMBER_REGEX = /^(\(\+[0-9]{2}\)|[0-9]{4})?[ ]?[0-9]{9}$/;
-    if (event == undefined || event == "" || NUMBER_REGEX.test(event)) {
-      return "";
-    } else {
-      return "camposObligatorios";
+    let campoRequerido = "camposObligatorios";
+    if (event == undefined || this.commonsService.validateTelefono(event)) {
+      campoRequerido = "";
     }
+    return campoRequerido;
   }
 
   editarCompleto(event, dato) {
@@ -137,11 +135,7 @@ export class DatosPersonalesComponent implements OnInit {
       if (this.bodyInicial != undefined) {
         this.body = { ...this.bodyInicial };
         this.body.telefonos = [];
-        if (typeof this.bodyInicialTelefonos == "string") {
-          this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
-        } else {
-          this.body.telefonos = JSON.parse(JSON.stringify(this.bodyInicialTelefonos));
-        }
+        this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
       }
     } else {
       this.body = new JusticiableItem();
@@ -154,22 +148,6 @@ export class DatosPersonalesComponent implements OnInit {
 
   save() {
     this.deleteSpacing();
-    console.log('Attempting to save, current hasChange:', this.hasChange);
-    if (!this.hasChanges()) {
-      console.log('No changes to save');
-      return;
-    }
-    console.log('Saving changes for:', this.body);
-
-    if (this.body.telefonos != null && this.body.telefonos.length > 1) {
-      let telefonosFiltrados = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
-      if (telefonosFiltrados.length === 0 && this.body.telefonos.length > 1) {
-        this.body.telefonos = [new JusticiableTelefonoItem()];
-      } else {
-        this.body.telefonos = telefonosFiltrados;
-      }
-    }
-
     if (!this.validate()) {
       this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "Campos obligatorios no se han rellando");
     } else {
@@ -184,15 +162,16 @@ export class DatosPersonalesComponent implements OnInit {
         if (this.body.telefonos != null && this.body.telefonos.length > 0) {
           this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
         }
-        if (!this.modoEdicion) {
-          this.callSaveService("gestionJusticiables_createJusticiable");
+        //if (!this.modoEdicion) {
+        //this.callSaveService("gestionJusticiables_createJusticiable");
+        //} else {
+        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+          this.progressSpinner = false;
+          this.showDialog.emit("tarjetaPersonales");
         } else {
           this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
         }
-      }
-      if (this.body.direccionNoInformada) {
-        this.body.direccion = null; // Asegúrate de no guardar una dirección no deseada
-        console.log('Direccion cleared because No Informada is checked before saving');
+        //}
       }
     }
   }
@@ -216,52 +195,23 @@ export class DatosPersonalesComponent implements OnInit {
     if (this.body.fax != null && this.body.fax != undefined) {
       this.body.fax = this.body.fax.trim();
     }
-    if (this.body.telefonos != null && this.body.telefonos.length > 0) {
-      for (let i = 0; i < this.body.telefonos.length; i++) {
-        this.body.telefonos[i].preferenteSms = "0";
-        if (this.body.telefonos[i].preferenteSmsCheck) {
-          this.body.telefonos[i].preferenteSms = "1";
-        }
-      }
-    }
-  }
-
-  callSaveService(url) {
     if (!this.isExtranjero) {
       this.body.direccionExtranjera = "";
     }
-
-    this.sigaServices.post(url, this.body).subscribe(
-      (data) => {
-        let dataJusticiable = JSON.parse(data.body);
-        if (dataJusticiable.error.message != "C") {
-          if (!this.modoEdicion) {
-            this.modoEdicion = true;
-            this.body.idpersona = dataJusticiable.id;
+    if (this.body.telefonos != null && this.body.telefonos.length > 0) {
+      let telefonosFiltrados = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
+      if (telefonosFiltrados.length === 0) {
+        this.body.telefonos = [];
+      } else {
+        for (let i = 0; i < telefonosFiltrados.length; i++) {
+          telefonosFiltrados[i].preferenteSms = "0";
+          if (telefonosFiltrados[i].preferenteSmsCheck) {
+            telefonosFiltrados[i].preferenteSms = "1";
           }
-          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }
-        this.bodyInicial = { ...this.body };
-        this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
-        this.rellenarDireccionPostal();
-        this.hasChange = false;
-       // this.bodyChange.emit(this.body);
-        this.progressSpinner = false;
-      },
-      (err) => {
-        let dataJusticiable = JSON.parse(err.error);
-        if (dataJusticiable.error.description != "") {
-          if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), dataJusticiable.error.description);
-          } else {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(dataJusticiable.error.description));
-          }
-        } else {
-          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-    );
+        this.body.telefonos = telefonosFiltrados;
+      }
+    }
   }
 
   rellenarDireccionPostal() {
@@ -288,7 +238,7 @@ export class DatosPersonalesComponent implements OnInit {
           if (element.value == this.body.idprovincia) this.direccionPostal = this.direccionPostal + ", " + element.label;
         });
       }
-      this.comboPais.forEach(element => {
+      this.comboPais.forEach((element) => {
         if (element.value == this.body.idpaisdir1) this.direccionPostal = this.direccionPostal + ", " + element.label;
       });
       this.progressSpinner = false;
@@ -296,111 +246,55 @@ export class DatosPersonalesComponent implements OnInit {
     this.bodyChange.emit(this.body);
   }
 
-  /**
-   * Valida el email cuando su campo no está vacío
-   */
-  validateEmail() {
-    let pattern: RegExp = /^[a-zA-Z0-9\+\._-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)?\.[a-zA-Z]+$/;
-    //Email vacio no se valida. En caso contrario, si
-    return !this.body.correoelectronico || pattern.test(this.body.correoelectronico);
-  }
-
-  /**
-   * Valida el email cuando esta activo el aviso telematico
-   */
-  private validateEmailTelematico() {
-    return !((this.body.correoelectronico == undefined || this.body.correoelectronico == "") && this.bodyInicial.autorizaavisotelematico == "1");
-  }
-
-  /**
-   * Valida el fax cuando su campo no está vacío
-   */
-  validateFax() {
-    let pattern: RegExp = /^(\(\+[0-9]{2}\)|[0-9]{4})?[ ]?[0-9]{9}$/;
-    return !this.body.fax || pattern.test(this.body.fax);
-  }
-
-  /**
-   * Valida los campos obligatorios
-   */
-  validateRequiredFields() {
-    return this.body.idtipovia && this.body.direccion && this.body.codigopostal && this.body.idprovincia && this.body.idpoblacion;
-  }
-
-  validate() {
-    console.log('Validating form');
-    this.validateForm = true;
-    this.telefonoValido = true;
-
-    if (!this.body.idtipovia || this.body.idtipovia.trim() === "" || !this.body.codigopostal || this.body.codigopostal.trim() === "") {
-      this.validateForm = false;
-    }
-    
-    if (this.isExtranjero && (this.body.direccionExtranjera == null || this.body.direccionExtranjera.trim() == "")) {
-      this.validateForm = false;
-    }
-
-    if (this.body.idpaisdir1 == null || this.body.idpaisdir1.trim() == "") {
-      this.validateForm = false;
-    }
-
-    if (!this.isExtranjero && (this.body.idprovincia == null || this.body.idprovincia.trim() == "")) {
-      this.validateForm = false;
-    }
-
-    if (!this.isExtranjero && (this.body.idpoblacion == null || this.body.idpoblacion.trim() == "")) {
-      this.validateForm = false;
-    }
-
-    if (!this.body.direccionNoInformada) {
-      if (!this.body.direccion || this.body.direccion.trim() === "") {
-        this.validateForm = false;
-      }
-    }
-
-    if (this.body.telefonos != null && this.body.telefonos.length > 0) {
-      for (let i = 0; i < this.body.telefonos.length; i++) {
-        if (this.body.telefonos[i].numeroTelefono === undefined || this.body.telefonos[i].numeroTelefono === "") {
-          this.deleteTelefono(i);
-        } else {
-          let NUMBER_REGEX = /^(\(\+[0-9]{2}\)|[0-9]{4})?[ ]?[0-9]{9}$/;
-          if (!NUMBER_REGEX.test(this.body.telefonos[i].numeroTelefono)) {
-            this.telefonoValido = false;
-            this.validateForm = false;
-          }
-        }
-      }
-    }
-    if (!this.validateForm) {
-      console.log('Validation failed');
-    } else {
-      console.log('Validation succeeded');
-    }
-    return this.validateForm;
-  }
-
-  loadData() {
-    this.originalData = JSON.parse(JSON.stringify(this.body));
-  }
-
-  hasChanges() {
-    return JSON.stringify(this.originalData) !== JSON.stringify(this.body);
-  }
-
-  checkChanged() {
-    this.hasChange = this.hasChanges();  // Actualiza hasChange basándose en si realmente hay cambios
-    console.log("Cambios detectados:", this.hasChange);
-  }
-
-  onDireccionNoInformadaChange()
-  {
+  onDireccionNoInformadaChange() {
     if (this.body.direccionNoInformada) {
-      this.body.direccion = null; // Asegura limpiar la dirección también
-      console.log('Direccion and DireccionPostal set to null due to No Informada being checked');
+      this.body.idtipovia = "";
+      this.body.direccion = "";
+      this.body.numerodir = "";
+      this.body.escaleradir = "";
+      this.body.pisodir = "";
+      this.body.puertadir = "";
+      this.body.idpais = "";
+      this.body.codigopostal = "";
+      this.body.idprovincia = "";
+      this.body.idpoblacion = "";
     } else {
-      this.body.direccion = this.originalData.direccion;
+      this.body.idtipovia = this.bodyInicial.idtipovia;
+      this.body.direccion = this.bodyInicial.direccion;
+      this.body.numerodir = this.bodyInicial.numerodir;
+      this.body.escaleradir = this.bodyInicial.escaleradir;
+      this.body.pisodir = this.bodyInicial.pisodir;
+      this.body.puertadir = this.bodyInicial.puertadir;
+      this.body.idpais = this.bodyInicial.idpais;
+      this.body.codigopostal = this.bodyInicial.codigopostal;
+      this.body.idprovincia = this.bodyInicial.idprovincia;
+      this.body.idpoblacion = this.bodyInicial.idpoblacion;
+      this.getComboProvincia();
     }
-    this.checkChanged();
+    this.changes();
+  }
+
+  onChangePais() {
+    //Si se selecciona un pais extranjero
+    if (this.body.idpaisdir1 != "191") {
+      this.body.idprovincia = "";
+      this.body.idpoblacion = "";
+      this.isDisabledPoblacion = true;
+      this.comboPoblacion = [];
+      this.isExtranjero = true;
+    } else {
+      //Si se selecciona españa
+      this.isExtranjero = false;
+      this.body.direccionExtranjera = "";
+      this.onChangeCodigoPostal();
+    }
+  }
+
+  changes() {
+    this.bodyInicial.telefonos == undefined ? (this.bodyInicial.telefonos = []) : null;
+    this.bodyInicial.direccionNoInformada == undefined ? (this.bodyInicial["direccionNoInformada"] = !this.body.direccionNoInformada) : null;
+    this.body.telefonos == undefined ? (this.body.telefonos = []) : null;
+    this.hasChange = JSON.stringify(this.bodyInicial) !== JSON.stringify(this.body);
   }
 
   buscarPoblacion(e) {
@@ -419,7 +313,7 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   styleObligatorio(evento) {
-    if (!this.validateForm) {
+    if (!this.body.direccionNoInformada) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
@@ -435,7 +329,7 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.telefonos = [];
     }
     this.body.telefonos.push(new JusticiableTelefonoItem());
-    this.hasChange = true;
+    this.changes();
   }
 
   deleteTelefono(index: number) {
@@ -444,7 +338,95 @@ export class DatosPersonalesComponent implements OnInit {
     } else {
       this.body.telefonos.splice(index, 1);
     }
-    this.hasChange = true;
+    this.changes();
+  }
+
+  validateEmail() {
+    return this.body.correoelectronico == null || this.commonsService.validateEmail(this.body.correoelectronico);
+  }
+
+  validateFax() {
+    return this.body.fax == null || this.commonsService.validateFax(this.body.fax);
+  }
+
+  guardarDialog(clonar: boolean) {
+    this.progressSpinner = true;
+    if (!clonar) {
+      this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
+    }
+  }
+
+  private validate() {
+    let validateForm = true;
+    this.telefonoValido = true;
+
+    if (!this.body.direccionNoInformada) {
+      if (!this.body.idtipovia || this.body.idtipovia.trim() === "" || !this.body.codigopostal || this.body.codigopostal.trim() === "") {
+        validateForm = false;
+      }
+      if (this.isExtranjero && (this.body.direccionExtranjera == null || this.body.direccionExtranjera.trim() == "")) {
+        validateForm = false;
+      }
+      if (this.body.idpaisdir1 == null || this.body.idpaisdir1.trim() == "") {
+        validateForm = false;
+      }
+      if (!this.isExtranjero && (this.body.idprovincia == null || this.body.idprovincia.trim() == "")) {
+        validateForm = false;
+      }
+      if (!this.isExtranjero && (this.body.idpoblacion == null || this.body.idpoblacion.trim() == "")) {
+        validateForm = false;
+      }
+    }
+
+    if (this.body.telefonos != null && this.body.telefonos.length > 0) {
+      for (let i = 0; i < this.body.telefonos.length; i++) {
+        if (!this.commonsService.validateTelefono(this.body.telefonos[i].numeroTelefono)) {
+          this.telefonoValido = false;
+          validateForm = false;
+        }
+      }
+    }
+    return validateForm;
+  }
+
+  /**
+   * Valida el email cuando esta activo el aviso telematico
+   */
+  private validateEmailTelematico() {
+    return !((this.body.correoelectronico == undefined || this.body.correoelectronico == "") && this.bodyInicial.autorizaavisotelematico == "1");
+  }
+
+  private callSaveService(url) {
+    this.sigaServices.post(url, this.body).subscribe(
+      (data) => {
+        let dataJusticiable = JSON.parse(data.body);
+        if (dataJusticiable.error.message != "C") {
+          if (!this.modoEdicion) {
+            this.modoEdicion = true;
+            this.body.idpersona = dataJusticiable.id;
+          }
+          this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
+        this.bodyInicial = { ...this.body };
+        this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
+        this.rellenarDireccionPostal();
+        this.hasChange = false;
+        this.progressSpinner = false;
+      },
+      (err) => {
+        let dataJusticiable = JSON.parse(err.error);
+        if (dataJusticiable.error.description != "") {
+          if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), dataJusticiable.error.description);
+          } else {
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(dataJusticiable.error.description));
+          }
+        } else {
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+    );
   }
 
   private async getCombos() {
@@ -455,63 +437,47 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   private getComboTipoVia() {
-    return this.sigaServices.getParam("gestionJusticiables_comboTipoVias2", "?idTipoViaJusticiable=" + this.body.idtipovia).toPromise().then((n) => {
-      this.comboTipoVia = n.combooItems;
-      this.commonsService.arregloTildesCombo(this.comboTipoVia);
-    });
+    return this.sigaServices
+      .getParam("gestionJusticiables_comboTipoVias2", "?idTipoViaJusticiable=" + this.body.idtipovia)
+      .toPromise()
+      .then((n) => {
+        this.comboTipoVia = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTipoVia);
+      });
   }
 
-  private getComboPais(){
-    return this.sigaServices.get("direcciones_comboPais").toPromise().then(
-      n => {
+  private getComboPais() {
+    return this.sigaServices
+      .get("direcciones_comboPais")
+      .toPromise()
+      .then((n) => {
         this.comboPais = n.combooItems;
-
-        if (this.body.idpaisdir1 == undefined) {
-          this.body.idpaisdir1 = this.comboPais[0].value;
-          this.onChangePais();
-        }
-
-        this.progressSpinner = false;
-      }
-    );
+      });
   }
 
   private getComboProvincia() {
-    return this.sigaServices.get("integrantes_provincias").toPromise().then(async (n) => {
-      this.comboProvincia = n.combooItems;
-      let sin = { label: "", value: "" };
-      this.comboProvincia.push(sin);
-      this.commonsService.arregloTildesCombo(this.comboProvincia);
-      if (this.body.idprovincia != undefined && this.body.idprovincia != null && this.body.idprovincia != "") {
-        await this.getComboPoblacion("-1");
-        this.isDisabledPoblacion = false;
-      }
-      this.progressSpinner = false;
-    });
+    return this.sigaServices
+      .get("integrantes_provincias")
+      .toPromise()
+      .then(async (n) => {
+        this.comboProvincia = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboProvincia);
+        if (this.body.idprovincia != undefined && this.body.idprovincia != null && this.body.idprovincia != "") {
+          await this.getComboPoblacion("-1");
+          this.isDisabledPoblacion = false;
+        }
+        this.progressSpinner = false;
+      });
   }
 
   private getComboPoblacion(filtro: string) {
-    return this.sigaServices.getParam("direcciones_comboPoblacion", "?idProvincia=" + this.body.idprovincia + "&filtro=" + filtro).toPromise().then((n) => {
-      this.comboPoblacion = n.combooItems;
-      this.commonsService.arregloTildesCombo(this.comboPoblacion);
-      this.progressSpinner = false;
-    });
+    return this.sigaServices
+      .getParam("direcciones_comboPoblacion", "?idProvincia=" + this.body.idprovincia + "&filtro=" + filtro)
+      .toPromise()
+      .then((n) => {
+        this.comboPoblacion = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboPoblacion);
+        this.progressSpinner = false;
+      });
   }
-  
-  onChangePais() {
-    //Si se selecciona un pais extranjero
-    if (this.body.idpaisdir1 != "191") {
-      this.body.idprovincia = "";
-      this.body.idpoblacion = "";
-      this.isDisabledPoblacion = true;
-      this.comboPoblacion = [];
-      this.isExtranjero = true;
-      //Si se selecciona españa
-    } else {
-      this.isExtranjero = false;
-      this.body.direccionExtranjera = "";
-      this.onChangeCodigoPostal();
-    }
-  }
-
 }
