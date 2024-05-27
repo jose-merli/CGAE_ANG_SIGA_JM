@@ -28,12 +28,16 @@ export class FiltrosModulosComponent implements OnInit {
     if (sessionStorage.getItem("vieneDeFichaJuzgado")) {
       this.vieneDeFichaJuzgado = true;
     }
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-      this.buscar();
-    }
 
-    this.filtros.fechadesdevigor = new Date();
+    if (this.persistenceService.getFiltros() != undefined) {
+      let filtrosAux: ModulosItem = this.persistenceService.getFiltros();
+      filtrosAux.fechadesdevigor = new Date(filtrosAux.fechadesdevigor.toString());
+      
+      this.filtros = filtrosAux;
+      this.buscar();
+    } else {
+      this.filtros.fechadesdevigor = new Date();
+    }
   }
 
   checkPermisosNewModulo() {
