@@ -41,13 +41,16 @@ export class DatosPersonalesComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
+    this.getCombos();
     if (this.body.idpaisdir1 != "191") {
       this.isExtranjero = true;
     } else {
       this.isExtranjero = false;
     }
+    if (!this.body.codigopostal) {
+      this.body.direccionNoInformada = true;
+    }
     this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
-    this.getCombos();
   }
 
   onChangeCodigoPostal() {
@@ -399,6 +402,7 @@ export class DatosPersonalesComponent implements OnInit {
   private callSaveService(url) {
     this.sigaServices.post(url, this.body).subscribe(
       (data) => {
+        this.progressSpinner = false;
         let dataJusticiable = JSON.parse(data.body);
         if (dataJusticiable.error.message != "C") {
           if (!this.modoEdicion) {
@@ -411,9 +415,9 @@ export class DatosPersonalesComponent implements OnInit {
         this.bodyInicialTelefonos = JSON.stringify(this.body.telefonos);
         this.rellenarDireccionPostal();
         this.hasChange = false;
-        this.progressSpinner = false;
       },
       (err) => {
+        this.progressSpinner = false;
         let dataJusticiable = JSON.parse(err.error);
         if (dataJusticiable.error.description != "") {
           if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
@@ -424,7 +428,6 @@ export class DatosPersonalesComponent implements OnInit {
         } else {
           this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        this.progressSpinner = false;
       },
     );
   }
@@ -434,6 +437,17 @@ export class DatosPersonalesComponent implements OnInit {
     await this.getComboTipoVia();
     await this.getComboProvincia();
     this.rellenarDireccionPostal();
+    this.checkSms();
+  }
+
+  private checkSms() {
+    if (this.body.telefonos != null && this.body.telefonos.length > 0) {
+      for (let i = 0; i < this.body.telefonos.length; i++) {
+        if (this.body.telefonos[i].preferenteSms == "1") {
+          this.body.telefonos[i].preferenteSmsCheck = true;
+        }
+      }
+    }
   }
 
   private getComboTipoVia() {
