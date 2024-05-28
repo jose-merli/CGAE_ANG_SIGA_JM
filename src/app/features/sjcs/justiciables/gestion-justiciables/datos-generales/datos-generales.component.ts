@@ -109,7 +109,11 @@ export class DatosGeneralesComponent implements OnInit {
     } else if (!this.permisoSave) {
       this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
     } else if (!this.validateIdentification()) {
-      this.notificationService.showError(this.translateService.instant("general.message.identificacionInvalida"), this.translateService.instant("general.message.incorrect"));
+      if (!this.body.idtipoidentificacion) {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "El campo tipo de identificación es requerido");
+      } else {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.identificacionInvalida"));
+      }
     } else if (!this.comprobarCampos()) {
       this.progressSpinner = false;
     } else {
@@ -206,28 +210,25 @@ export class DatosGeneralesComponent implements OnInit {
     }
   }
 
-  validateIdentification(): boolean {
+  private validateIdentification(): boolean {
+    let valid = false;
     if (this.body.nif == undefined || this.body.nif.trim() == "") {
-      return true;
-    }
-    if (this.commonsService.isValidDNI(this.body.nif)) {
-      this.body.idtipoidentificacion = "10";
-      return true;
-    } else if (this.commonsService.isValidPassport(this.body.nif)) {
-      this.body.idtipoidentificacion = "30";
-      return true;
-    } else if (this.commonsService.isValidNIE(this.body.nif)) {
-      this.body.idtipoidentificacion = "40";
-      return true;
-    } else if (this.commonsService.isValidCIF(this.body.nif)) {
-      this.body.idtipoidentificacion = "20";
-      return true;
-    } else if (this.commonsService.isValidOtro(this.body.nif)) {
-      this.body.idtipoidentificacion = "20";
-      return true;
+      valid = true;
     } else {
-      return false;
+      //let leng = this.body.nif.length;
+      if (this.body.idtipoidentificacion == "10") {
+        valid = this.commonsService.isValidDNI(this.body.nif);
+      } else if (this.body.idtipoidentificacion == "20") {
+        valid = this.commonsService.isValidCIF(this.body.nif);
+      } else if (this.body.idtipoidentificacion == "30") {
+        valid = this.commonsService.isValidPassport(this.body.nif);
+      } else if (this.body.idtipoidentificacion == "40") {
+        valid = this.commonsService.isValidNIE(this.body.nif);
+      } else if (this.body.idtipoidentificacion == "50") {
+        valid = this.commonsService.isValidOtro(this.body.nif);
+      }
     }
+    return valid;
   }
 
   private crearJusticiable() {

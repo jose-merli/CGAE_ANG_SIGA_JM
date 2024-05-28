@@ -55,7 +55,7 @@
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}</label>
-            <input [(ngModel)]="body.nif" type="text" class="form-control" maxLength="18" (ngModelChange)="validateIdentification()" [disabled]="!permisoEscritura" pInputText/>
+            <input [(ngModel)]="body.nif" type="text" class="form-control" maxLength="20" [disabled]="!permisoEscritura" (ngModelChange)="updateFormState()" pInputText/>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}</label>

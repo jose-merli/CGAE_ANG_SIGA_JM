@@ -15,6 +15,7 @@ export enum KEY_CODE {
 @Injectable()
 export class CommonsService {
   DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+
   constructor(private http: HttpClient, private sigaServices: SigaServices, handler: HttpBackend, private httpbackend: HttpClient, private translateService: TranslateService) {
     this.httpbackend = new HttpClient(handler);
   }
@@ -214,36 +215,56 @@ export class CommonsService {
   }
 
   isValidPassport(passport: String): boolean {
-    return passport && typeof passport === "string" && /^[a-zA-Z]{3}[0-9]{6}[a-zA-Z]?$/i.test(passport);
+    if (!passport || typeof passport !== "string") return false;
+
+    const passportPattern = /^[A-Z]{3}[0-9]{6}[A-Z]?$/;
+    return passportPattern.test(passport.toUpperCase());
   }
 
   isValidNIE(nie: String): boolean {
-    return nie && typeof nie === "string" && /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie);
+    if (!nie || typeof nie !== "string") return false;
+
+    const niePattern = /^[XYZ]{1}[0-9]{7}[A-Z]{1}$/;
+    if (!niePattern.test(nie.toUpperCase())) return false;
+
+    const letterExt = nie.substr(0, 1).toUpperCase();
+    const numberPart = nie.substr(1, 7);
+    const letterPart = nie.substr(8, 1).toUpperCase();
+
+    if (parseInt(numberPart, 10) < 0) return false;
+
+    const expectedLetter = this.DNI_LETTERS.charAt(parseInt(numberPart, 10) % 23);
+    return letterPart === expectedLetter;
   }
 
   isValidCIF(cif: String): boolean {
-    return cif && typeof cif === "string" && /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif);
+    if (!cif || typeof cif !== "string") return false;
+
+    const cifPattern = /^[ABCDEFGHJKLMNPQRSUVW]{1}[0-9]{7}([0-9A-J]{1})$/;
+    return cifPattern.test(cif.toUpperCase());
   }
 
   isValidDNI(dni: String): boolean {
     if (!dni || typeof dni !== "string") return false;
 
-    const dniPattern = /^[0-9]{8}[A-Za-z]$/;
-    if (!dniPattern.test(dni)) return false;
+    const dniPattern = /^[0-9]{8}[A-Z]{1}$/;
+    if (!dniPattern.test(dni.toUpperCase())) return false;
 
     const numberPart = dni.substr(0, 8);
     const letterPart = dni.substr(8, 1).toUpperCase();
 
     if (parseInt(numberPart, 10) < 0) return false;
 
-    const DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
-    const expectedLetter = DNI_LETTERS.charAt(parseInt(numberPart, 10) % 23);
+    const expectedLetter = this.DNI_LETTERS.charAt(parseInt(numberPart, 10) % 23);
 
     return letterPart === expectedLetter;
   }
 
   isValidOtro(otro: String): boolean {
-    return otro && typeof otro === "string" && /^[a-zA-Z0-9]{1,20}$/i.test(otro);
+    if (!otro || typeof otro !== "string") return false;
+
+    const otroPattern = /^[A-Z0-9]{1,20}$/;
+    return otroPattern.test(otro.toUpperCase());
   }
 
   showMessage(severity, summary, msg) {
