@@ -1,4 +1,6 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
 
 <div class="card mt-3">
   <div class="card-body p-0">
@@ -45,16 +47,10 @@
           <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
             + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
           <label>{{"general.message.mostrar" | translate}}</label>
-          <p-dropdown class="dropdownTable" [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
-          </p-dropdown>
+          <p-dropdown class="dropdownTable" [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
         </div>
       </ng-template>
     </p-table>
-
   </div>
-</div>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
 </div>

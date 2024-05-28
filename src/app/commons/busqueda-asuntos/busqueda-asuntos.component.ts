@@ -136,7 +136,20 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       }
 
       if (this.fromJust) {
-        this.asociarJust(this.datosAsociar);
+        let radioValue = sessionStorage.getItem("radioTajertaValue");
+        if (radioValue == "soj" || radioValue == "asi") {
+          if (this.datosAsociar.idInteresado != undefined) {
+            if (this.datosAsociar.idInteresado != this.datosJusticiable.idpersona) {
+              this.confirmAsociarJust(this.datosAsociar);
+            } else {
+              this.showMesg("info", "Información", this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.yaasociado"));
+            }
+          } else {
+            this.asociarJust(this.datosAsociar);
+          }
+        } else {
+          this.asociarJust(this.datosAsociar);
+        }
       }
     }
   }
@@ -159,7 +172,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     if (this.datosJusticiable != undefined) {
       this.persistenceService.setDatos(this.datosJusticiable);
       //Indicamos que al volver a justiciables queremos abrir la tarjetaAsunto
-      sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
+      sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaAsunto");
       this.router.navigate(["/gestionJusticiables"]);
     } else {
       sessionStorage.removeItem("radioTajertaValue");
@@ -169,74 +182,53 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
   //confirmAsociarSOJ
   confirmAsociarSOJ(data) {
-    let mess = this.translateService.instant("justiciaGratuita.soj.busquedaAsuntos.confirmacionAsociarSoj");
-    let icon = "fa fa-edit";
     this.confirmationService.confirm({
       key: "asoc",
-      message: mess,
-      icon: icon,
+      message: this.translateService.instant("justiciaGratuita.soj.busquedaAsuntos.confirmacionAsociarSoj"),
+      icon: "fa fa-edit",
       accept: () => {
         this.asociarEJGaSOJ(data);
       },
       reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancelar",
-            detail: this.translateService.instant("general.message.accion.cancelada"),
-          },
-        ];
+        this.showMesg("info", this.translateService.instant("general.message.cancelado"), this.translateService.instant("general.message.accion.cancelada"));
       },
     });
   }
 
   confirmAsociarEJG(data) {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmacionAsociarEjg");
-    let icon = "fa fa-edit";
     this.confirmationService.confirm({
       key: "asoc",
-      message: mess,
-      icon: icon,
+      message: this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmacionAsociarEjg"),
+      icon: "fa fa-edit",
       accept: () => {
         this.confirmCopiarEJG(data);
       },
       reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancelar",
-            detail: this.translateService.instant("general.message.accion.cancelada"),
-          },
-        ];
+        this.showMesg("info", this.translateService.instant("general.message.cancelado"), this.translateService.instant("general.message.accion.cancelada"));
       },
     });
   }
 
   confirmCopiarJust(data) {
-    //Introducir etiqueta en la BBDD
-    let mess = "¿Desea copiar los datos de la justiciable en el asunto seleccionado?";
-    let icon = "fa fa-edit";
     this.confirmationService.confirm({
       key: "copy",
-      message: mess,
-      icon: icon,
+      message: this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmCopiarJust"),
+      icon: "fa fa-edit",
       accept: () => {
         this.asociarJust(data);
       },
       reject: () => {
-        this.showMesg("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+        this.showMesg("info", this.translateService.instant("general.message.cancelado"), this.translateService.instant("general.message.accion.cancelada"));
       },
     });
   }
 
   confirmCopiarEJG(data) {
     //Introducir etiqueta en la BBDD
-    let mess = "¿Desea copiar los datos del EJG en el asunto seleccionado?";
-    let icon = "fa fa-edit";
     this.confirmationService.confirm({
       key: "copy",
-      message: mess,
-      icon: icon,
+      message: this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmCopiarEJG"),
+      icon: "fa fa-edit",
       accept: () => {
         this.asociarEJG(data, true);
       },
@@ -248,12 +240,10 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
   confirmCopiarDES(data) {
     //Introducir etiqueta en la BBDD
-    let mess = "¿Desea copiar los datos de la designación en el asunto seleccionado?";
-    let icon = "fa fa-edit";
     this.confirmationService.confirm({
       key: "copy",
-      message: mess,
-      icon: icon,
+      message: this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmCopiarDES"),
+      icon: "fa fa-edit",
       accept: () => {
         this.asociarDES(data, true);
       },
@@ -416,13 +406,21 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         //this.asociarDES(data, false);
       },
       reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancelar",
-            detail: this.translateService.instant("general.message.accion.cancelada"),
-          },
-        ];
+        this.showMesg("info", this.translateService.instant("general.message.cancelado"), this.translateService.instant("general.message.accion.cancelada"));
+      },
+    });
+  }
+
+  confirmAsociarJust(data) {
+    this.confirmationService.confirm({
+      message: this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmAsociarJust"),
+      key: "asoc",
+      icon: "fa fa-edit",
+      accept: () => {
+        this.asociarJust(data);
+      },
+      reject: () => {
+        this.showMesg("info", this.translateService.instant("general.message.cancelado"), this.translateService.instant("general.message.accion.cancelada"));
       },
     });
   }
@@ -446,7 +444,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               if (JSON.parse(m.body).error.code == 200) {
                 this.persistenceService.setDatos(this.datosJusticiable);
                 sessionStorage.setItem("asociado", "true");
-                sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
+                sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaAsunto");
                 this.router.navigate(["/gestionJusticiables"]);
               } else {
                 this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
@@ -468,7 +466,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               if (JSON.parse(m.body).error.code == 200) {
                 this.persistenceService.setDatos(this.datosJusticiable);
                 sessionStorage.setItem("asociado", "true");
-                sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
+                sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaAsunto");
                 this.router.navigate(["/gestionJusticiables"]);
               } else {
                 this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
@@ -490,7 +488,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               if (JSON.parse(m.body).error.code == 200) {
                 this.persistenceService.setDatos(this.datosJusticiable);
                 sessionStorage.setItem("asociado", "true");
-                sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
+                sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaAsunto");
                 this.router.navigate(["/gestionJusticiables"]);
               } else {
                 this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
@@ -510,7 +508,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               sessionStorage.removeItem("radioTajertaValue");
               this.persistenceService.setDatos(this.datosJusticiable);
               sessionStorage.setItem("asociado", "true");
-              sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
+              sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaAsunto");
               this.router.navigate(["/gestionJusticiables"]);
             },
             (err) => {
