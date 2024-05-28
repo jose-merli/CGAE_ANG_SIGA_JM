@@ -310,11 +310,13 @@ export class TablaModulosComponent implements OnInit {
   getCols() {
     this.cols = [
       { field: "codigo", header: "general.boton.code", width: "12%" },
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre", width: "42%" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre", width: "26%" },
       { field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio", width: "11%" },
       { field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin", width: "11%" },
       { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "8%" },
       { field: "jurisdiccionDes", header: "menu.justiciaGratuita.maestros.Jurisdiccion", width: "16%" },
+      { field: "juzgados", header: "justiciaGratuita.ejg.datosGenerales.Juzgado", width: "16%" },
+      { field: "acreditaciones", header: "menu.justiciaGratuita.maestros.Acreditaciones", width: "16%" }
     ];
     this.cols.forEach((it) => this.buscadores.push(""));
 
@@ -331,6 +333,37 @@ export class TablaModulosComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.tabla.reset();
   }
+
+  getShortenedJuzgados(juzgados: string | null | undefined): string {
+    const maxLength = 3;
+
+    if (!juzgados) {
+      return '';
+    } else {
+      let leng = juzgados.split(",").length;
+      if (juzgados.length > maxLength) {
+        return juzgados.substring(0, maxLength) + '...' + '(' + leng + ')';
+      } else {
+        return juzgados;
+      }
+    }
+  }
+
+  getShortenedAcreditaciones(acreditaciones: string | null | undefined): string {
+    const maxLength = 3;
+
+    if (!acreditaciones) {
+      return '';
+    } else {
+      let leng = acreditaciones.split(",").length;
+      if (acreditaciones.length > maxLength) {
+        return acreditaciones.substring(0, maxLength) + '...' + '(' + leng + ')';
+      } else {
+        return acreditaciones;
+      }
+    }
+  }
+  
 
   isSelectMultiple() {
     if (this.permisos) {

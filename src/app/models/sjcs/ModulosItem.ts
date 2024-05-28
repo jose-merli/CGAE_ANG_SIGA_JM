@@ -22,5 +22,7 @@ export class ModulosItem {
   permitiraniadirletradoCheck: boolean;
   jurisdiccionDes: string;
   verSoloAlta: boolean = true;
+  juzgados: string; 
+  acreditaciones: string;
   constructor() {}
 }
