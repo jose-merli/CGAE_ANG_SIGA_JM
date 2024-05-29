@@ -332,7 +332,7 @@ export class TablaModulosComponent implements OnInit {
       { field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin", width: "11%" },
       { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "8%" },
       { field: "jurisdiccionDes", header: "menu.justiciaGratuita.maestros.Jurisdiccion", width: "16%" },
-      { field: "juzgados", header: "justiciaGratuita.ejg.datosGenerales.Juzgado", width: "16%" },
+      { field: "juzgados", header: "menu.facturacionSJCS.mantenimientoJuzgados", width: "16%" },
       { field: "acreditaciones", header: "menu.justiciaGratuita.maestros.Acreditaciones", width: "16%" }
     ];
     this.cols.forEach((it) => this.buscadores.push(""));
@@ -352,34 +352,22 @@ export class TablaModulosComponent implements OnInit {
   }
 
   getShortenedJuzgados(juzgados: string | null | undefined): string {
-    const maxLength = 3;
-
     if (!juzgados) {
-      return '';
+        return '';
     } else {
-      let leng = juzgados.split(",").length;
-      if (juzgados.length > maxLength) {
-        return juzgados.substring(0, maxLength) + '...' + '(' + leng + ')';
-      } else {
-        return juzgados;
-      }
+        let leng = juzgados.split(",").length;
+        return `(${leng})`;
     }
-  }
+}
 
-  getShortenedAcreditaciones(acreditaciones: string | null | undefined): string {
-    const maxLength = 3;
-
+getShortenedAcreditaciones(acreditaciones: string | null | undefined): string {
     if (!acreditaciones) {
-      return '';
+        return '';
     } else {
-      let leng = acreditaciones.split(",").length;
-      if (acreditaciones.length > maxLength) {
-        return acreditaciones.substring(0, maxLength) + '...' + '(' + leng + ')';
-      } else {
-        return acreditaciones;
-      }
+        let leng = acreditaciones.split(",").length;
+        return `(${leng})`;
     }
-  }
+}
   
 
   isSelectMultiple() {
