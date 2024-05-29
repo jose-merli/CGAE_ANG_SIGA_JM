@@ -330,6 +330,9 @@ export class GestionJusticiablesComponent implements OnInit {
     await this.sigaServices.post("gestionJusticiables_searchJusticiable", bodyBusqueda).subscribe(
       (n) => {
         this.body = JSON.parse(n.body).justiciable;
+        if (this.body.fechanacimiento != undefined) {
+          this.body.fechanacimiento = new Date(this.body.fechanacimiento);
+        }
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.modoEdicion = true;
         this.searchContrarios();

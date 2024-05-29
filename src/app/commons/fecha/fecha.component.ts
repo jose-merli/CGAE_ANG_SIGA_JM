@@ -1,185 +1,176 @@
-import {
-    AfterViewInit,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
-import * as moment from 'moment';
-import { Calendar } from 'primeng/primeng';
-import { SigaServices } from '../../_services/siga.service';
-import { catCalendar, esCalendar, euCalendar, glCalendar } from '../../utils/calendar';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
+import * as moment from "moment";
+import { Calendar } from "primeng/primeng";
+import { SigaServices } from "../../_services/siga.service";
+import { catCalendar, esCalendar, euCalendar, glCalendar } from "../../utils/calendar";
 
 @Component({
-	selector: 'app-fecha',
-	templateUrl: './fecha.component.html',
-	styleUrls: ['./fecha.component.scss'],
-	encapsulation: ViewEncapsulation.None
+  selector: "app-fecha",
+  templateUrl: "./fecha.component.html",
+  styleUrls: ["./fecha.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class FechaComponent implements OnInit, AfterViewInit {
-	@Input() value: Date;
-	@Output() valueChangeSelected = new EventEmitter();
-	@Output() valueChangeInput = new EventEmitter();
-	@Output() valueFocus = new EventEmitter();
-	@Output() valueBlur = new EventEmitter();
-	@Output() fechaHoraSelectedButton = new EventEmitter();
-	@Input() minDate: Date;
-	@Input() maxDate: Date;
-	@Input() disabled: boolean;
-	@Input() showTime: boolean;
-	@Input() utc: boolean;
-	@Input() selectionMode: string;
-	@Input() disabledToday: boolean;
-	@Input() disabledDelete: boolean;
-	@Input() inputStyleClass: string;
-	@Input() appendTo = null;
-	@Input() placeholder: string;
+  @Input() value: Date;
+  @Input() minDate: Date;
+  @Input() maxDate: Date;
+  @Input() disabled: boolean;
+  @Input() showTime: boolean;
+  @Input() utc: boolean;
+  @Input() selectionMode: string;
+  @Input() disabledToday: boolean;
+  @Input() disabledDelete: boolean;
+  @Input() inputStyleClass: string;
+  @Input() appendTo = null;
+  @Input() placeholder: string;
 
-	es: any = esCalendar;
-	fechaSelectedFromCalendar: boolean = false;
-	currentLang;
-	yearRange: string;
+  @Output() valueChangeSelected = new EventEmitter();
+  @Output() valueChangeInput = new EventEmitter();
+  @Output() valueFocus = new EventEmitter();
+  @Output() valueBlur = new EventEmitter();
+  @Output() fechaHoraSelectedButton = new EventEmitter();
 
-	first: boolean = true;
+  es: any = esCalendar;
+  fechaSelectedFromCalendar: boolean = false;
+  currentLang;
+  yearRange: string;
 
-	@ViewChild('calendar') calendar: Calendar;
+  first: boolean = true;
 
-	constructor(private service: SigaServices) { }
+  @ViewChild("calendar") calendar: Calendar;
 
-	ngOnInit() {
-		this.getRangeYear();
-	}
+  constructor(private service: SigaServices) {}
 
-	ngAfterViewInit(): void {
-		this.getLenguage();
-	}
+  ngOnInit() {
+    this.getRangeYear();
+  }
 
-	getRangeYear() {
-		let today = new Date();
-		let year = today.getFullYear();
-		this.yearRange = year - 80 + ':' + (year + 20);
-	}
+  ngAfterViewInit(): void {
+    this.getLenguage();
+  }
 
-	getLenguage() {
-		this.service.get('usuario').subscribe((response) => {
-			this.currentLang = response.usuarioItem[0].idLenguaje;
+  getRangeYear() {
+    let today = new Date();
+    let year = today.getFullYear();
+    this.yearRange = year - 80 + ":" + (year + 20);
+  }
 
-			switch (this.currentLang) {
-				case '1':
-					this.es = esCalendar;
-					break;
-				case '2':
-					this.es = catCalendar;
-					break;
-				case '3':
-					this.es = euCalendar;
-					break;
-				case '4':
-					this.es = glCalendar;
-					break;
-				default:
-					this.es = esCalendar;
-					break;
-			}
-		});
-	}
+  getLenguage() {
+    this.service.get("usuario").subscribe((response) => {
+      this.currentLang = response.usuarioItem[0].idLenguaje;
 
-	change(newValue) {
-		//evento que cambia el value de la fecha
-		if (!this.showTime) {
-			this.fechaSelectedFromCalendar = true;
-			this.value = new Date(newValue);
-			let year = this.value.getFullYear();
-			if (year >= year - 80 && year <= year + 20) {
-				if (this.minDate) {
-					if (this.value >= this.minDate) {
-						this.valueChangeSelected.emit(this.value);
-					} else {
-						this.borrarFecha();
-					}
-				} else {
-					this.valueChangeSelected.emit(this.value);
-				}
-			} else {
-				this.borrarFecha();
-			}
-		} else {
-			if (this.value == null || this.value == undefined) {
-				if ( !(this.value instanceof Date) && newValue.toString() != 'Invalid Date') {
-					this.value = new Date(newValue);
-				}
-			}
+      switch (this.currentLang) {
+        case "1":
+          this.es = esCalendar;
+          break;
+        case "2":
+          this.es = catCalendar;
+          break;
+        case "3":
+          this.es = euCalendar;
+          break;
+        case "4":
+          this.es = glCalendar;
+          break;
+        default:
+          this.es = esCalendar;
+          break;
+      }
+    });
+  }
 
-			if (this.value != null && this.value.toString().indexOf(':') != -1) {
-				this.value = new Date(newValue);
-			}
-			
-			this.valueChangeSelected.emit(this.value);
-		}
-	}
+  change(newValue) {
+    //evento que cambia el value de la fecha
+    if (!this.showTime) {
+      this.fechaSelectedFromCalendar = true;
+      this.value = new Date(newValue);
+      let year = this.value.getFullYear();
+      if (year >= year - 80 && year <= year + 20) {
+        if (this.minDate) {
+          if (this.value >= this.minDate) {
+            this.valueChangeSelected.emit(this.value);
+          } else {
+            this.borrarFecha();
+          }
+        } else {
+          this.valueChangeSelected.emit(this.value);
+        }
+      } else {
+        this.borrarFecha();
+      }
+    } else {
+      if (this.value == null || this.value == undefined) {
+        if (!(this.value instanceof Date) && newValue.toString() != "Invalid Date") {
+          this.value = new Date(newValue);
+        }
+      }
 
-	blur(e) {
-		let REGEX = /[a-zA-Z]/;
-		//evento necesario para informar de las fechas que metan manualmente (escribiendo o pegando)
-		if (!this.fechaSelectedFromCalendar) {
-			let newValue = e.target.value;
-			if (this.showTime) {
-				if (!REGEX.test(newValue)) {
-					if (newValue.length < 11) {
-						let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
-						this.calendar.onSelect.emit(fecha);
-					} else {
-						let fecha = moment(newValue, 'DD/MM/YYYY hh:mm').toDate();
-						this.calendar.onSelect.emit(fecha);
-					}
-				} else {
-					this.calendar.overlayVisible = false;
-					this.value = null;
-				}
-			} else {
-				if (newValue != null && newValue != '') {
-					if (!REGEX.test(newValue) && newValue.length < 11) {
-						let fecha = moment(newValue, 'DD/MM/YYYY').toDate();
-						this.calendar.onSelect.emit(fecha);
-					} else {
-						this.calendar.overlayVisible = false;
-						this.value = null;
-					}
-				}
-			}
-		}
+      if (this.value != null && this.value.toString().indexOf(":") != -1) {
+        this.value = new Date(newValue);
+      }
 
-		this.valueBlur.emit(this.value);
-	}
+      this.valueChangeSelected.emit(this.value);
+    }
+  }
 
-	input(e) {
-		if (e != null && !isNaN(Date.parse(e))) {
-		this.fechaSelectedFromCalendar = false;
-		this.valueChangeInput.emit(e);
-		}
-		//evento necesario para informar de las fechas que borren manualmente (teclado)
-	}
+  blur(e) {
+    let REGEX = /[a-zA-Z]/;
+    //evento necesario para informar de las fechas que metan manualmente (escribiendo o pegando)
+    if (!this.fechaSelectedFromCalendar) {
+      let newValue = e.target.value;
+      if (this.showTime) {
+        if (!REGEX.test(newValue)) {
+          if (newValue.length < 11) {
+            let fecha = moment(newValue, "DD/MM/YYYY").toDate();
+            this.calendar.onSelect.emit(fecha);
+          } else {
+            let fecha = moment(newValue, "DD/MM/YYYY hh:mm").toDate();
+            this.calendar.onSelect.emit(fecha);
+          }
+        } else {
+          this.calendar.overlayVisible = false;
+          this.value = null;
+        }
+      } else {
+        if (newValue != null && newValue != "") {
+          if (!REGEX.test(newValue) && newValue.length < 11) {
+            let fecha = moment(newValue, "DD/MM/YYYY").toDate();
+            this.calendar.onSelect.emit(fecha);
+          } else {
+            this.calendar.overlayVisible = false;
+            this.value = null;
+          }
+        }
+      }
+    }
 
-	focus(e) {
-		this.valueFocus.emit(e);
-	}
+    this.valueBlur.emit(this.value);
+  }
 
-	borrarFecha() {
-		this.value = null;
-		this.valueChangeInput.emit(this.value);
-		this.fechaSelectedFromCalendar = true;
-		this.calendar.onClearButtonClick("");
-	}
+  input(e) {
+    if (e != null && !isNaN(Date.parse(e))) {
+      this.fechaSelectedFromCalendar = false;
+      this.valueChangeInput.emit(e);
+    }
+    //evento necesario para informar de las fechas que borren manualmente (teclado)
+  }
 
-	fechaHoy() {
-		this.value = new Date();
-		this.valueChangeSelected.emit(this.value);
-		this.calendar.overlayVisible = false;
-		this.fechaSelectedFromCalendar = true;
-		this.fechaHoraSelectedButton.emit(true);
-	}
+  focus(e) {
+    this.valueFocus.emit(e);
+  }
 
+  borrarFecha() {
+    this.value = null;
+    this.valueChangeInput.emit(this.value);
+    this.fechaSelectedFromCalendar = true;
+    this.calendar.onClearButtonClick("");
+  }
+
+  fechaHoy() {
+    this.value = new Date();
+    this.valueChangeSelected.emit(this.value);
+    this.calendar.overlayVisible = false;
+    this.fechaSelectedFromCalendar = true;
+    this.fechaHoraSelectedButton.emit(true);
+  }
 }

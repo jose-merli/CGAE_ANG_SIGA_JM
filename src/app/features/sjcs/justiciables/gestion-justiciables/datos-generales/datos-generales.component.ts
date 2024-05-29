@@ -45,17 +45,14 @@ export class DatosGeneralesComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
-    this.getCombos();
-    if (this.body != null && this.body.idpersona != null) {
-      this.modoEdicion = true;
-      this.disabledSave();
-    } else {
+    if (this.body == null || this.body.idpersona == null) {
       this.body = new JusticiableItem();
       this.body.idpaisdir1 = "191";
       this.body.sexo = "N";
       this.body.tipopersonajg = "F";
       this.body.fechaalta = new Date();
     }
+    this.getCombos();
   }
 
   onHideTarjeta() {
@@ -70,6 +67,7 @@ export class DatosGeneralesComponent implements OnInit {
   }
 
   fillFechaNacimiento(event) {
+    /*
     let fechaActual = new Date();
     fechaActual.setHours(0, 0, 0, 0);
 
@@ -87,6 +85,7 @@ export class DatosGeneralesComponent implements OnInit {
       this.body.edad = undefined;
       this.canSave = false;
     }
+    */
   }
 
   rest() {
