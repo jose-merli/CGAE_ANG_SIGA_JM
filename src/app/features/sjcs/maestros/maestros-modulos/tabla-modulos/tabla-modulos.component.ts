@@ -9,6 +9,7 @@ import { TranslateService } from "../../../../../commons/translate/translation.s
 import { JuzgadoItem } from "../../../../../models/sjcs/JuzgadoItem";
 import { ModulosObject } from "../../../../../models/sjcs/ModulosObject";
 import { ProcedimientoObject } from "../../../../../models/sjcs/ProcedimientoObject";
+import { SortEvent } from "primeng/api";
 
 @Component({
   selector: "app-tabla-modulos",
@@ -71,6 +72,22 @@ export class TablaModulosComponent implements OnInit {
     }
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   }
+
+  customSort(event: SortEvent) {
+    event.data.sort((data1, data2) => {
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      let result = null;
+
+      if (value1 == null && value2 != null) result = -1;
+      else if (value1 != null && value2 == null) result = 1;
+      else if (value1 == null && value2 == null) result = 0;
+      else if (typeof value1 === "string" && typeof value2 === "string") result = value1.localeCompare(value2);
+      else result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+
+      return event.order * result;
+    });
+  };
 
   customFilter(value: any, filter: string): boolean {
     if (!filter) {
