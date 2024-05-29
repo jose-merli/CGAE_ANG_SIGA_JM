@@ -79,6 +79,7 @@ export class GestionJusticiablesComponent implements OnInit {
         let representante = JSON.parse(sessionStorage.getItem("representante"));
         sessionStorage.removeItem("representante");
         this.body.nif = representante.nif;
+        this.body.idtipoidentificacion = representante.idtipoidentificacion;
         this.newRepresentante = true;
       }
       this.checkAccesoTarjetas();

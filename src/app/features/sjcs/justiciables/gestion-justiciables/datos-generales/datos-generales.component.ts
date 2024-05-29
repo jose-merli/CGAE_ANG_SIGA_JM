@@ -45,8 +45,7 @@ export class DatosGeneralesComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
-    if (this.body == null || this.body.idpersona == null) {
-      this.body = new JusticiableItem();
+    if (this.body.idpersona == null) {
       this.body.idpaisdir1 = "191";
       this.body.sexo = "N";
       this.body.tipopersonajg = "F";
