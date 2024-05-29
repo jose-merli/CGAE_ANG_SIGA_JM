@@ -517,6 +517,11 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       })
       .catch((error) => console.error(error));
 
+    // Rellenar Nombre de Justiciable Tarjeta Resumen.
+    if (sessionStorage.getItem("justiciable")) {
+      this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
+    }
+
     if (!this.nuevaDesigna) {
       this.getPermiteTurno();
 
@@ -787,8 +792,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       }
 
       this.progressSpinner = false;
-      // Rellenar Nombre de Justiciable Tarjeta Resumen.
-      this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
+
       if (this.datosJusticiables) {
         let nombre = this.datosJusticiables.nombre || ""; // Asegura que el nombre no es undefined
         let apellido1 = this.datosJusticiables.apellido1 || ""; // Asegura que el apellido no es undefined
