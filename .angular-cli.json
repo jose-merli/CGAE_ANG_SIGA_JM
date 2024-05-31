@@ -25,7 +25,6 @@
 				"../node_modules/primeng/resources/themes/omega/theme.css",
 				"../resources/web-fonts-with-css/css/fontawesome-all.min.css",
 				"styles.scss",
-				"../node_modules/fullcalendar/dist/fullcalendar.min.css",
 				"../node_modules/quill/dist/quill.core.css",
 				"../node_modules/quill/dist/quill.snow.css"
 			],
@@ -38,8 +37,6 @@
 				"../resources/js/calendar.js",
 				"../node_modules/moment/min/moment.min.js",
 				"../node_modules/moment/min/locales.min.js",
-				"../node_modules/fullcalendar/dist/fullcalendar.js",
-				"../node_modules/fullcalendar/dist/locale/es.js",
 				"../node_modules/quill/dist/quill.js"
 			],
 			"environmentSource": "environments/environment.ts",
