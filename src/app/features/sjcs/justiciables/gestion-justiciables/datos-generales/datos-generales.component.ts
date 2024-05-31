@@ -66,7 +66,6 @@ export class DatosGeneralesComponent implements OnInit {
   }
 
   fillFechaNacimiento(event) {
-    /*
     let fechaActual = new Date();
     fechaActual.setHours(0, 0, 0, 0);
 
@@ -84,7 +83,6 @@ export class DatosGeneralesComponent implements OnInit {
       this.body.edad = undefined;
       this.canSave = false;
     }
-    */
   }
 
   rest() {
