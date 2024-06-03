@@ -79,6 +79,7 @@ export class GestionJusticiablesComponent implements OnInit {
         let representante = JSON.parse(sessionStorage.getItem("representante"));
         sessionStorage.removeItem("representante");
         this.body.nif = representante.nif;
+        this.body.idtipoidentificacion = representante.idtipoidentificacion;
         this.newRepresentante = true;
       }
       this.checkAccesoTarjetas();
@@ -150,6 +151,8 @@ export class GestionJusticiablesComponent implements OnInit {
       if (this.dialogOpcion == "s") {
         if (this.dialogTarjeta == "tarjetaGenerales") {
           this.datosGenerales.guardarDialog(false);
+        } else if (this.dialogTarjeta == "tarjetaPersonales") {
+          this.datosPersonales.guardarDialog(false);
         } else if (this.dialogTarjeta == "tarjetaSolicitud") {
           this.datosSolicitud.guardarDialog(false);
         } else if (this.dialogTarjeta == "tarjetaRepresentante") {
@@ -157,6 +160,9 @@ export class GestionJusticiablesComponent implements OnInit {
         }
       } else if (this.dialogOpcion == "n") {
         if (this.dialogTarjeta == "tarjetaGenerales") {
+          this.datosGenerales.guardarDialog(true);
+        } else if (this.dialogTarjeta == "tarjetaPersonales") {
+          this.datosGenerales.guardarDialog(true);
           this.datosGenerales.guardarDialog(true);
         } else if (this.dialogTarjeta == "tarjetaSolicitud") {
           this.datosSolicitud.guardarDialog(true);
@@ -325,6 +331,9 @@ export class GestionJusticiablesComponent implements OnInit {
     await this.sigaServices.post("gestionJusticiables_searchJusticiable", bodyBusqueda).subscribe(
       (n) => {
         this.body = JSON.parse(n.body).justiciable;
+        if (this.body.fechanacimiento != undefined) {
+          this.body.fechanacimiento = new Date(this.body.fechanacimiento);
+        }
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.modoEdicion = true;
         this.searchContrarios();

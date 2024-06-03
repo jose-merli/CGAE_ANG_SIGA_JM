@@ -29,7 +29,7 @@ export class DatosGeneralesComponent implements OnInit {
 
   progressSpinner: boolean = false;
   permisoSave: boolean = false;
-  canSave: boolean = true; 
+  canSave: boolean = true;
 
   comboTipoPersona;
   comboTipoIdentificacion;
@@ -45,17 +45,13 @@ export class DatosGeneralesComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
-    this.getCombos();
-    if (this.body != null && this.body.idpersona != null) {
-      this.modoEdicion = true;
-      this.disabledSave();
-    } else {
-      this.body = new JusticiableItem();
+    if (this.body.idpersona == null) {
       this.body.idpaisdir1 = "191";
       this.body.sexo = "N";
       this.body.tipopersonajg = "F";
       this.body.fechaalta = new Date();
     }
+    this.getCombos();
   }
 
   onHideTarjeta() {
@@ -74,27 +70,22 @@ export class DatosGeneralesComponent implements OnInit {
     fechaActual.setHours(0, 0, 0, 0);
 
     if (event != null && event != undefined) {
-        let fechaNacimiento = new Date(event);
-        if (fechaNacimiento > fechaActual) {
-            this.notificationService.showError(
-                this.translateService.instant("general.message.incorrect"),
-                "La fecha de nacimiento no puede ser una fecha futura."
-            );
-            this.canSave = false; 
-        } else {
-            this.body.fechanacimiento = fechaNacimiento;
-            this.calculateAge();
-            this.canSave = true; 
-        }
+      let fechaNacimiento = new Date(event);
+      if (fechaNacimiento > fechaActual) {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "La fecha de nacimiento no puede ser una fecha futura.");
+        this.canSave = false;
+      } else {
+        this.body.fechanacimiento = fechaNacimiento;
+        this.calculateAge();
+        this.canSave = true;
+      }
     } else {
-        this.body.edad = undefined;
-        this.canSave = false; 
+      this.body.edad = undefined;
+      this.canSave = false;
     }
-}
+  }
 
-
-
-rest() {
+  rest() {
     if (!this.permisoEscritura) {
       this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
@@ -110,70 +101,58 @@ rest() {
 
   save() {
     if (!this.permisoEscritura) {
-        this.notificationService.showError(
-            this.translateService.instant("general.message.incorrect"), 
-            this.translateService.instant("general.message.noTienePermisosRealizarAccion")
-        );
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else if (!this.permisoSave) {
-        this.notificationService.showError(
-            this.translateService.instant("general.message.incorrect"), 
-            "No puede realizar esa acción"
-        );
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
     } else if (!this.validateIdentification()) {
-        this.notificationService.showError(
-            this.translateService.instant("general.message.identificacionInvalida"),
-            this.translateService.instant("general.message.incorrect")
-        );
-    } else if (!this.comprobarCampos()) { 
-        this.progressSpinner = false;
+      if (!this.body.idtipoidentificacion) {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "El campo tipo de identificación es requerido");
+      } else {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.identificacionInvalida"));
+      }
+    } else if (!this.comprobarCampos()) {
+      this.progressSpinner = false;
     } else {
-        this.progressSpinner = true;
-        let menorEdadSinRepresentante = true;
-        if ((this.body.edad != undefined && JSON.parse(this.body.edad) < SigaConstants.EDAD_ADULTA && this.body.idrepresentantejg != undefined) || this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) >= SigaConstants.EDAD_ADULTA)) {
-            menorEdadSinRepresentante = false;
-        } else {
-            this.notificationService.showError(
-                this.translateService.instant("general.message.incorrect"), 
-                this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable")
-            );
-            this.body.fechanacimiento = undefined;
-            this.body.edad = undefined;
-        }
-  
-        if (!this.modoEdicion) {
-            this.callSaveService("gestionJusticiables_createJusticiable", false, false);
-        } else {
-            if (!menorEdadSinRepresentante) {
-                if (this.body.autorizaavisotelematico == "1") {
-                    if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
-                        this.progressSpinner = false;
-                        this.notificationService.showInfo(
-                            this.translateService.instant("general.message.informacion"), 
-                            this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones")
-                        );
-                    } else {
-                        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
-                            this.progressSpinner = false;
-                            this.showDialog.emit("tarjetaGenerales");
-                        } else {
-                            this.callSaveService("gestionJusticiables_updateJusticiable", true, false);
-                        }
-                    }
-                } else {
-                    if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
-                        this.progressSpinner = false;
-                        this.showDialog.emit("tarjetaGenerales");
-                    } else {
-                        this.callSaveService("gestionJusticiables_updateJusticiable", true, false);
-                    }
-                }
-            } else {
-                this.progressSpinner = false;
-            }
-        }
-    }
-}
+      this.progressSpinner = true;
+      let menorEdadSinRepresentante = true;
+      if ((this.body.edad != undefined && JSON.parse(this.body.edad) < SigaConstants.EDAD_ADULTA && this.body.idrepresentantejg != undefined) || this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) >= SigaConstants.EDAD_ADULTA)) {
+        menorEdadSinRepresentante = false;
+      } else {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+        this.body.fechanacimiento = undefined;
+        this.body.edad = undefined;
+      }
 
+      if (!this.modoEdicion) {
+        this.callSaveService("gestionJusticiables_createJusticiable", false, false);
+      } else {
+        if (!menorEdadSinRepresentante) {
+          if (this.body.autorizaavisotelematico == "1") {
+            if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
+              this.progressSpinner = false;
+              this.notificationService.showInfo(this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+            } else {
+              if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+                this.progressSpinner = false;
+                this.showDialog.emit("tarjetaGenerales");
+              } else {
+                this.callSaveService("gestionJusticiables_updateJusticiable", true, false);
+              }
+            }
+          } else {
+            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+              this.progressSpinner = false;
+              this.showDialog.emit("tarjetaGenerales");
+            } else {
+              this.callSaveService("gestionJusticiables_updateJusticiable", true, false);
+            }
+          }
+        } else {
+          this.progressSpinner = false;
+        }
+      }
+    }
+  }
 
   private callSaveService(url: string, validate: boolean, clonar: boolean) {
     this.comprobarCampos();
@@ -227,29 +206,25 @@ rest() {
     }
   }
 
-  validateIdentification(): boolean {
+  private validateIdentification(): boolean {
+    let valid = false;
     if (this.body.nif == undefined || this.body.nif.trim() == "") {
-      return true;
+      valid = true;
+    } else {
+      //let leng = this.body.nif.length;
+      if (this.body.idtipoidentificacion == "10") {
+        valid = this.commonsService.isValidDNI(this.body.nif);
+      } else if (this.body.idtipoidentificacion == "20") {
+        valid = this.commonsService.isValidCIF(this.body.nif);
+      } else if (this.body.idtipoidentificacion == "30") {
+        valid = this.commonsService.isValidPassport(this.body.nif);
+      } else if (this.body.idtipoidentificacion == "40") {
+        valid = this.commonsService.isValidNIE(this.body.nif);
+      } else if (this.body.idtipoidentificacion == "50") {
+        valid = this.commonsService.isValidOtro(this.body.nif);
+      }
     }
-    if (this.commonsService.isValidDNI(this.body.nif)) {
-      this.body.idtipoidentificacion = "10";
-      return true;
-    } else if (this.commonsService.isValidPassport(this.body.nif)) {
-      this.body.idtipoidentificacion = "30";
-      return true;
-    } else if (this.commonsService.isValidNIE(this.body.nif)) {
-      this.body.idtipoidentificacion = "40";
-      return true;
-    } else if (this.commonsService.isValidCIF(this.body.nif)) {
-      this.body.idtipoidentificacion = "20";
-      return true;
-    } else if(this.commonsService.isValidOtro(this.body.nif)){
-      this.body.idtipoidentificacion = "20";
-      return true;
-    }
-    else{
-      return false;
-    }
+    return valid;
   }
 
   private crearJusticiable() {
@@ -477,83 +452,65 @@ rest() {
   private comprobarCampos(): boolean {
     let isValid = true;
     let fechaActual = new Date();
-    fechaActual.setHours(0, 0, 0, 0); 
+    fechaActual.setHours(0, 0, 0, 0);
 
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
 
-    if (this.body.nombre != null && this.body.nombre.trim() !== '') {
-        if (!regex.test(this.body.nombre)) {
-            this.notificationService.showError(
-                this.translateService.instant("general.message.incorrect"),
-                "El nombre sólo puede contener letras y espacios."
-            );
-            isValid = false;
-        }
+    if (this.body.nombre != null && this.body.nombre.trim() !== "") {
+      if (!regex.test(this.body.nombre)) {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "El nombre sólo puede contener letras y espacios.");
+        isValid = false;
+      }
     }
 
-    if (this.body.apellido1 != null && this.body.apellido1.trim() !== '') {
-        if (!regex.test(this.body.apellido1)) {
-            this.notificationService.showError(
-                this.translateService.instant("general.message.incorrect"),
-                "El apellido sólo puede contener letras y espacios."
-            );
-            isValid = false;
-        }
+    if (this.body.apellido1 != null && this.body.apellido1.trim() !== "") {
+      if (!regex.test(this.body.apellido1)) {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "El apellido sólo puede contener letras y espacios.");
+        isValid = false;
+      }
     }
 
-    if (this.body.apellido2 != null && this.body.apellido2.trim() !== '') {
-        if (!regex.test(this.body.apellido2)) {
-            this.notificationService.showError(
-                this.translateService.instant("general.message.incorrect"),
-                "El apellido sólo puede contener letras y espacios."
-            );
-            isValid = false;
-        }
+    if (this.body.apellido2 != null && this.body.apellido2.trim() !== "") {
+      if (!regex.test(this.body.apellido2)) {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "El apellido sólo puede contener letras y espacios.");
+        isValid = false;
+      }
     }
 
     if (this.body.fechanacimiento != null && new Date(this.body.fechanacimiento) > fechaActual) {
-        this.notificationService.showError(
-            this.translateService.instant("general.message.incorrect"),
-            "La fecha de nacimiento no puede ser una fecha futura."
-        );
-        isValid = false;
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "La fecha de nacimiento no puede ser una fecha futura.");
+      isValid = false;
     }
-  
+
     if (this.body.nif != null && this.body.nif != undefined) {
-        this.body.nif = this.body.nif.trim();
+      this.body.nif = this.body.nif.trim();
     }
-  
+
     if (this.body.edad != null && this.body.edad != undefined) {
-        if (!/^\d+$/.test(this.body.edad)) {  
-            this.notificationService.showError(
-                this.translateService.instant("general.message.incorrect"), 
-                "La edad debe contener solo números."
-            );
-            isValid = false;
-        } else {
-            if (this.body.edad.length > 1 && this.body.edad.substring(0, 1) == "0") {
-                this.body.edad = this.body.edad.substring(2, this.body.edad.length - 1);
-            }
-            let edad = parseInt(this.body.edad);
-            if (isNaN(edad) || edad < 0) {
-                this.notificationService.showError(
-                    this.translateService.instant("general.message.incorrect"), 
-                    "Edad inválida. Debe ser un número entero no negativo."
-                );
-                isValid = false;
-            } else if (this.body.edad == "") {
-            }
+      if (!/^\d+$/.test(this.body.edad)) {
+        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "La edad debe contener solo números.");
+        isValid = false;
+      } else {
+        if (this.body.edad.length > 1 && this.body.edad.substring(0, 1) == "0") {
+          this.body.edad = this.body.edad.substring(2, this.body.edad.length - 1);
         }
+        let edad = parseInt(this.body.edad);
+        if (isNaN(edad) || edad < 0) {
+          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "Edad inválida. Debe ser un número entero no negativo.");
+          isValid = false;
+        } else if (this.body.edad == "") {
+        }
+      }
     }
     this.canSave = isValid;
     return isValid;
-}
+  }
 
-updateFormState() {
-  this.comprobarCampos(); 
-  this.disabledSave();    
-}
-  
+  updateFormState() {
+    this.comprobarCampos();
+    this.disabledSave();
+  }
+
   private disabledSave() {
     this.permisoSave = false;
     if (this.body.nombre != undefined && this.body.nombre.trim() != "" && this.body.apellido1 != undefined && this.body.apellido1.trim() != "" && this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" && this.body.sexo != undefined && this.body.sexo != "") {
@@ -568,16 +525,15 @@ updateFormState() {
     var m = hoy.getMonth() - cumpleanos.getMonth();
 
     if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-        edad--;
+      edad--;
     }
 
     if (edad < 0) {
-        this.body.edad = "0";
+      this.body.edad = "0";
     } else {
-        this.body.edad = JSON.stringify(edad);
+      this.body.edad = JSON.stringify(edad);
     }
-}
-
+  }
 
   private getCombos() {
     this.getComboSexo();
@@ -591,11 +547,9 @@ updateFormState() {
     this.getComboNacionalidad();
   }
   getComboNacionalidad() {
-    this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
-      result => {
-        this.comboNacionalidad = result.combooItems;
-      }
-    );
+    this.sigaServices.get("solicitudIncorporacion_pais").subscribe((result) => {
+      this.comboNacionalidad = result.combooItems;
+    });
   }
 
   private getComboSexo() {

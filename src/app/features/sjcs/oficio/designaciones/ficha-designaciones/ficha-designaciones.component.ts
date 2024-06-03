@@ -239,14 +239,14 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.checkTengoPermiso();
-    
+
     let storedNombreInteresado = sessionStorage.getItem("nombreInteresado");
     console.log("nombreInteresado desde sessionStorage antes de asignar:", storedNombreInteresado);
 
     if (storedNombreInteresado && storedNombreInteresado !== "null") {
-      let partes = storedNombreInteresado.split(' ');
+      let partes = storedNombreInteresado.split(" ");
       let nombre = partes[0];
-      let apellido = partes[1] || ''; // Si no hay apellido, asigna una cadena vacía
+      let apellido = partes[1] || ""; // Si no hay apellido, asigna una cadena vacía
       this.nombreInteresado = `${nombre} ${apellido}`.trim();
       console.log("nombreInteresado asignado:", this.nombreInteresado); // Verificar valor asignado
 
@@ -257,7 +257,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     if (sessionStorage.getItem("designaItemLink")) {
       this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
       console.log("designaItem parseado:", this.designaItem); // Verificar el objeto parseado
-
     }
 
     this.progressSpinner = true;
@@ -277,7 +276,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         }
       });
     }
-    
 
     this.msjEliminarDesignacion = this.translateService.instant("justiciaGratuita.oficio.designaciones.eliminarDesignacion");
     this.msjGuardarProcurador = this.translateService.instant("justiciaGratuita.oficio.designaciones.guardarProcurador");
@@ -518,6 +516,11 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         }
       })
       .catch((error) => console.error(error));
+
+    // Rellenar Nombre de Justiciable Tarjeta Resumen.
+    if (sessionStorage.getItem("justiciable")) {
+      this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
+    }
 
     if (!this.nuevaDesigna) {
       this.getPermiteTurno();
@@ -789,23 +792,25 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       }
 
       this.progressSpinner = false;
-      // Rellenar Nombre de Justiciable Tarjeta Resumen.
-      this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
-      if (this.datosJusticiables) {
-          let nombre = this.datosJusticiables.nombre || '';  // Asegura que el nombre no es undefined
-          let apellido = this.datosJusticiables.apellido1 || '';  // Asegura que el apellido no es undefined
-          let nombreCompleto = `${apellido}, ${nombre}`.trim();
 
-          let tarjInteresados = this.listaTarjetas.find(tarjInteresados => tarjInteresados.id === 'sjcsDesigInt');
-          if (tarjInteresados) {
-              tarjInteresados.campos = [{
-                  "key": null,
-                  "value": nombreCompleto
-              }];
-          }
-          this.tarjetaFija.campos[3].value = nombreCompleto;
-          this.nombreInteresado = nombreCompleto;
-          console.log("Nombre al completo:", this.nombreInteresado);
+      if (this.datosJusticiables) {
+        let nombre = this.datosJusticiables.nombre || ""; // Asegura que el nombre no es undefined
+        let apellido1 = this.datosJusticiables.apellido1 || ""; // Asegura que el apellido no es undefined
+        let apellido2 = this.datosJusticiables.apellido2 || ""; // Asegura que el apellido no es undefined
+        let nombreCompleto = `${apellido1} ${apellido2}, ${nombre}`.trim();
+
+        let tarjInteresados = this.listaTarjetas.find((tarjInteresados) => tarjInteresados.id === "sjcsDesigInt");
+        if (tarjInteresados) {
+          tarjInteresados.campos = [
+            {
+              key: null,
+              value: nombreCompleto,
+            },
+          ];
+        }
+        this.tarjetaFija.campos[3].value = nombreCompleto;
+        this.nombreInteresado = nombreCompleto;
+        console.log("Nombre al completo:", this.nombreInteresado);
       }
     }
 
@@ -906,7 +911,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     sessionStorage.setItem("volver", "true");
     if (this.datosJusticiables != undefined) {
       //Indicamos que al volver a justiciables queremos abrir la tarjetaAsunto
-      sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAsunto');
+      sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaAsunto");
       this.persistenceService.setDatos(this.datosJusticiables);
       this.router.navigate(["/gestionJusticiables"]);
     } else if (this.persistenceService.getDatosEJG()) {

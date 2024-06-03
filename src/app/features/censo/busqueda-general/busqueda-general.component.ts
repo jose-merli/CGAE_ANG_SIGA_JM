@@ -918,11 +918,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
         //this.location.back();
       }
     } else if (this.nuevoProcurador) {
-      //En caso que se este seleccionando un nuevo porcurador
-      sessionStorage.setItem("datosProcurador", JSON.stringify(id));
-      sessionStorage.setItem("origin", this.origen);
-      this.persistenceService.setDatos(this.datosJusticiable);
-      this.router.navigate(["/gestionJusticiables"]);
+      if (this.datosJusticiable != undefined) {
+        //En caso que se este seleccionando un nuevo porcurador
+        sessionStorage.setItem("datosProcurador", JSON.stringify(id));
+        sessionStorage.setItem("origin", this.origen);
+        this.persistenceService.setDatos(this.datosJusticiable);
+        this.router.navigate(["/gestionJusticiables"]);
+      } else {
+        sessionStorage.setItem("datosProcurador", JSON.stringify(id));
+        this.router.navigate(["/gestionEjg"]);
+      }
     }
     // ir a ficha de notario
     else if (sessionStorage.getItem("abrirNotario") == "true" && sessionStorage.getItem("abrirRemitente") != "true") {
@@ -1389,12 +1394,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
         sessionStorage.setItem("origin", this.origen);
       }
       this.persistenceService.setDatos(this.datosJusticiable);
-      
+
       //Indicamos que al volver a justiciables queremos abrir la tarjetaRepresentante
-      if(this.origen == 'ContrarioEJG') {
-        sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaProcurador'); 
-      } else if(this.origen == "AbogadoContrarioEJG") {
-        sessionStorage.setItem('abrirTarjetaJusticiable', 'tarjetaAbogado'); 
+      if (this.origen == "ContrarioEJG") {
+        sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaProcurador");
+      } else if (this.origen == "AbogadoContrarioEJG") {
+        sessionStorage.setItem("abrirTarjetaJusticiable", "tarjetaAbogado");
       }
 
       this.router.navigate(["/gestionJusticiables"]);

@@ -101,6 +101,11 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.datos.numColegiado = persona.nColegiado;
       this.datos.idPersona = persona.idPersona;
     }
+
+    if (sessionStorage.getItem('back')) {
+      sessionStorage.removeItem('back');
+      this.abreCierraFicha();
+    }
   }
 
   //Eventos
