@@ -24,5 +24,7 @@ export class ModulosItem {
   verSoloAlta: boolean = true;
   juzgados: string; 
   acreditaciones: string;
+  numJuzgados: number;
+  numAcreditaciones: number;
   constructor() {}
 }

@@ -10,6 +10,7 @@ import { JuzgadoItem } from "../../../../../models/sjcs/JuzgadoItem";
 import { ModulosObject } from "../../../../../models/sjcs/ModulosObject";
 import { ProcedimientoObject } from "../../../../../models/sjcs/ProcedimientoObject";
 import { SortEvent } from "primeng/api";
+import { ModulosItem } from "../../../../../models/sjcs/ModulosItem";
 
 @Component({
   selector: "app-tabla-modulos",
@@ -351,22 +352,12 @@ export class TablaModulosComponent implements OnInit {
     this.tabla.reset();
   }
 
-  getShortenedJuzgados(juzgados: string | null | undefined): string {
-    if (!juzgados) {
-        return '';
-    } else {
-        let leng = juzgados.split(",").length;
-        return `(${leng})`;
-    }
+  getShortenedJuzgados(modulo: ModulosItem): string {
+    return modulo.numJuzgados.toString();
 }
 
-getShortenedAcreditaciones(acreditaciones: string | null | undefined): string {
-    if (!acreditaciones) {
-        return '';
-    } else {
-        let leng = acreditaciones.split(",").length;
-        return `(${leng})`;
-    }
+getShortenedAcreditaciones(modulo: ModulosItem): string {
+    return modulo.numAcreditaciones.toString();
 }
   
 

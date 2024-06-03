@@ -34,11 +34,11 @@
             </div>
             <div *ngIf="col.field == 'juzgados'" pTooltip="{{dato[col.field]}}">
               <span [ngClass]="{historic: isHistorico(dato)}">
-                {{ getShortenedJuzgados(dato[col.field]) }}
+                {{ (dato.numJuzgados) }}
               </span>
             </div>
             <div *ngIf="col.field == 'acreditaciones'" pTooltip="{{dato[col.field]}}">
-              <span [ngClass]="{historic: isHistorico(dato)}">{{ getShortenedAcreditaciones(dato[col.field]) }}</span>
+              <span [ngClass]="{historic: isHistorico(dato)}">{{ (dato.numAcreditaciones) }}</span>
             </div>
             <div *ngIf="col.field != 'fechadesdevigor' && col.field != 'fechahastavigor' && col.field != 'importe' && col.field != 'juzgados' && col.field != 'acreditaciones'">
               <span [ngClass]="{historic: isHistorico(dato)}">{{dato[col.field]}}</span>

@@ -3,6 +3,8 @@ import { Router } from "@angular/router";
 import { CommonsService } from "../../../../../_services/commons.service";
 import { PersistenceService } from "../../../../../_services/persistence.service";
 import { ModulosItem } from "../../../../../models/sjcs/ModulosItem";
+import { SigaServices } from "../../../../../_services/siga.service";
+import { TranslateService } from "../../../../../commons/translate";
 
 const enum KEY_CODE {
   ENTER = 13,
@@ -19,19 +21,52 @@ export class FiltrosModulosComponent implements OnInit {
   jurisdicciones: any[] = [];
   vieneDeFichaJuzgado: boolean = false;
 
+  comboJurisdicciones: any[] = [];
+  comboProcedimientos: any[] = [];
+  comboJuzgados: any[] = [];
+  comboComplemento: any[] = [
+    {label: this.translateService.instant("messages.si"), value: "1"},
+    {label: this.translateService.instant("general.boton.no"), value: "0"}
+  ];
+
+  jurisdiccionesSeleccionadas: any[] = [];
+  procedimientosSeleccionados: any[] = [];
+  juzgadosSeleccionados: any[] = [];
+
   @Input() permisos: boolean = false;
   @Output() searchModulos = new EventEmitter<any>();
 
-  constructor(private router: Router, private persistenceService: PersistenceService, private commonsService: CommonsService) {}
+  constructor(private router: Router, private persistenceService: PersistenceService, private commonsService: CommonsService, private sigaServices: SigaServices,private translateService: TranslateService) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("vieneDeFichaJuzgado")) {
       this.vieneDeFichaJuzgado = true;
     }
 
+    this.getCombos();
+
     if (this.persistenceService.getFiltros() != undefined) {
       let filtrosAux: ModulosItem = this.persistenceService.getFiltros();
-      filtrosAux.fechadesdevigor = new Date(filtrosAux.fechadesdevigor.toString());
+      
+      if (filtrosAux.fechadesdevigor != null) {
+        filtrosAux.fechadesdevigor = new Date(filtrosAux.fechadesdevigor.toString());
+      }
+
+      if (filtrosAux.fechahastavigor != null) {
+        filtrosAux.fechahastavigor = new Date(filtrosAux.fechahastavigor.toString());
+      }
+
+      if (filtrosAux.idjurisdiccion != null && filtrosAux.idjurisdiccion != "") {
+        this.jurisdiccionesSeleccionadas = filtrosAux.idjurisdiccion.split(",");
+      }
+
+      if (filtrosAux.procedimientos != null && filtrosAux.procedimientos != "") {
+        this.procedimientosSeleccionados = filtrosAux.procedimientos.split(",");
+      }
+
+      if (filtrosAux.juzgados != null && filtrosAux.juzgados != "") {
+        this.juzgadosSeleccionados = filtrosAux.juzgados.split(",");
+      }
       
       this.filtros = filtrosAux;
       this.buscar();
@@ -66,11 +101,19 @@ export class FiltrosModulosComponent implements OnInit {
   }
 
   buscar() {
+    this.filtros.idjurisdiccion = this.jurisdiccionesSeleccionadas.toString();
+    this.filtros.idProcedimiento = this.procedimientosSeleccionados.toString();
+    this.filtros.juzgados = this.juzgadosSeleccionados.toString();
+
     this.checkFilters();
     this.searchModulos.emit(null);
   }
 
   clearFilters() {
+    this.jurisdiccionesSeleccionadas = [];
+    this.procedimientosSeleccionados = [];
+    this.juzgadosSeleccionados = [];
+
     this.filtros = new ModulosItem();
     this.persistenceService.clearFiltros();
   }
@@ -86,4 +129,66 @@ export class FiltrosModulosComponent implements OnInit {
   fillFechaDesdeVigor(fecha) {
     this.filtros.fechadesdevigor = fecha;
   }
+
+  fillFechaHastaVigor(fecha) {
+    this.filtros.fechahastavigor = fecha;
+  }
+
+  getCombos() {
+    this.getComboJurisdicciones();
+    this.getComboProdecimientos();
+    this.getComboJuzgados();
+  }
+
+  getComboJurisdicciones() {
+    this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe((n) => {
+      this.comboJurisdicciones = n.combooItems;
+
+      /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+      this.comboJurisdicciones.map((e) => {
+        let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+        let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+        let i;
+        let x;
+        for (i = 0; i < e.label.length; i++) {
+          if ((x = accents.indexOf(e.label[i])) != -1) {
+            e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+            return e.labelSinTilde;
+          }
+        }
+      });
+    });
+  }
+
+  getComboProdecimientos() {
+    this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=").subscribe(
+      (n) => {
+        this.comboProcedimientos = n.combooItems;
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+        para poder filtrar el dato con o sin estos caracteres*/
+        this.comboProcedimientos.map((e) => {
+          let accents = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+      });
+    }
+
+    getComboJuzgados() {
+      this.sigaServices.post("busquedaJuzgados_searchCourt", this.filtros).subscribe(
+        (n) => {
+          JSON.parse(n.body).juzgadoItems.forEach((juzgados) => {
+            this.comboJuzgados.push({ label: juzgados.nombre + " (" + juzgados.codigoExt2 + ")", value: juzgados.idJuzgado });
+          });
+        }
+      );
+    }
 }
