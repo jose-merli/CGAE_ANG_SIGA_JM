@@ -1,7 +1,4 @@
 import { Injectable } from "@angular/core";
-import "rxjs/add/operator/catch";
-import "rxjs/add/operator/map";
-
 import { TranslateService } from "../commons/translate/translation.service";
 import { ComboItem } from "../models/ComboItem";
 import { ControlAccesoDto } from "../models/ControlAccesoDto";
@@ -16,9 +13,7 @@ export enum KEY_CODE {
 export class CommonsService {
   DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
-  constructor(private http: HttpClient, private sigaServices: SigaServices, handler: HttpBackend, private httpbackend: HttpClient, private translateService: TranslateService, private notificationService: NotificationService) {
-    this.httpbackend = new HttpClient(handler);
-  }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private notificationService: NotificationService) {}
 
   validateEmail(value) {
     //let correo = value;

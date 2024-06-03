@@ -50,7 +50,7 @@
 		"moment": "2.29.3",
 		"primeng": "5.2.7",
 		"rxjs": "5.5.6",
-		"tinymce": "^6.8.3",
+		"tinymce": "5.10.3",
 		"web-animations-js": "2.3.1",
 		"zone.js": "0.8.20"
 	},
