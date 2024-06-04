@@ -51,27 +51,27 @@
         <!-- JURISDICCIONES -->
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'menu.justiciaGratuita.maestros.Jurisdiccion' | translate }}</label>
-          <p-multiSelect defaultLabel="{{'general.boton.seleccionar' | translate}}"
+          <p-multiSelect maxSelectedLabels="1" defaultLabel="{{'general.boton.seleccionar' | translate}}"
             [filter]="true" styleClass="widthAll" [(ngModel)]="jurisdiccionesSeleccionadas"
-            [options]="comboJurisdicciones"
+            [options]="comboJurisdicciones" [selectedItemsLabel]="textSelected"
             filterBy="label,labelSinTilde"></p-multiSelect>
         </div>
 
         <!-- PROCEDIMIENTOS -->
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.maestros.Procedimiento' | translate }}</label>
-          <p-multiSelect defaultLabel="{{'general.boton.seleccionar' | translate}}" [filter]="true" styleClass="widthAll"
+          <p-multiSelect maxSelectedLabels="1" defaultLabel="{{'general.boton.seleccionar' | translate}}" [filter]="true" styleClass="widthAll"
             [(ngModel)]="procedimientosSeleccionados"
-            [options]="comboProcedimientos"
+            [options]="comboProcedimientos" [selectedItemsLabel]="textSelected"
             filterBy="label,labelSinTilde"></p-multiSelect>
         </div>
 
         <!-- JUZGADOS -->
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.juzgado' | translate }}</label>
-          <p-multiSelect defaultLabel="{{'general.boton.seleccionar' | translate}}" [filter]="true" styleClass="widthAll"
+          <p-multiSelect maxSelectedLabels="1" defaultLabel="{{'general.boton.seleccionar' | translate}}" [filter]="true" styleClass="widthAll"
             [(ngModel)]="juzgadosSeleccionados"
-            [options]="comboJuzgados"
+            [options]="comboJuzgados" [selectedItemsLabel]="textSelected"
             filterBy="label,labelSinTilde"></p-multiSelect>
         </div>
 
