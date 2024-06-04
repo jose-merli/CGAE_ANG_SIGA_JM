@@ -7,6 +7,7 @@ import { ComboItem } from "../models/ComboItem";
 import { ControlAccesoDto } from "../models/ControlAccesoDto";
 import { NotificationService } from "./notification.service";
 import { SigaServices } from "./siga.service";
+import { HttpBackend, HttpClient } from "@angular/common/http";
 
 export enum KEY_CODE {
   ENTER = 13,
