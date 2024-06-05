@@ -54,6 +54,10 @@ export class AsuntosComponent implements OnInit {
     this.search();
   }
 
+  updateAsuntos() {
+    this.search();
+  }
+
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
   }
@@ -265,7 +269,7 @@ export class AsuntosComponent implements OnInit {
       .catch((error) => console.error(error));
   }
 
-  search() {
+  private search() {
     if (this.body.idpersona != undefined) {
       this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
         (n) => {

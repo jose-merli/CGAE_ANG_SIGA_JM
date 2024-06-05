@@ -95,12 +95,16 @@ export class GestionJusticiablesComponent implements OnInit {
       if (!this.modoEdicion) {
         this.modoEdicion = true;
         this.checkAccesoTarjetas();
-      } else {
-        //this.datosAsuntos.search();
       }
     }
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     this.updateTarjResumen();
+  }
+
+  updateAsuntos(justiciable: JusticiableItem) {
+    this.body = justiciable;
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.datosAsuntos.updateAsuntos();
   }
 
   isOpenTarjeta(idTarjeta: string) {

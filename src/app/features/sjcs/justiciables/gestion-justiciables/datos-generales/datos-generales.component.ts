@@ -25,6 +25,7 @@ export class DatosGeneralesComponent implements OnInit {
   @Input() origen: string = "";
   @Input() justiciable: any;
   @Output() bodyChange = new EventEmitter<JusticiableItem>();
+  @Output() asuntosChange = new EventEmitter<JusticiableItem>();
   @Output() showDialog = new EventEmitter<string>();
 
   progressSpinner: boolean = false;
@@ -176,7 +177,9 @@ export class DatosGeneralesComponent implements OnInit {
           } else {
             this.progressSpinner = false;
           }
-          this.bodyChange.emit(this.body);
+          if (!clonar) {
+            this.bodyChange.emit(this.body);
+          }
         } else {
           this.progressSpinner = false;
           this.callConfirmationSave();
@@ -290,6 +293,7 @@ export class DatosGeneralesComponent implements OnInit {
       (data) => {
         this.progressSpinner = false;
         this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.asuntosChange.emit(this.body);
       },
       (err) => {
         this.progressSpinner = false;
@@ -309,6 +313,7 @@ export class DatosGeneralesComponent implements OnInit {
       (data) => {
         this.progressSpinner = false;
         this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.asuntosChange.emit(this.body);
       },
       (err) => {
         this.progressSpinner = false;
@@ -333,6 +338,7 @@ export class DatosGeneralesComponent implements OnInit {
           } else {
             this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
+          this.asuntosChange.emit(this.body);
         },
         (err) => {
           this.progressSpinner = false;
@@ -361,6 +367,7 @@ export class DatosGeneralesComponent implements OnInit {
           } else {
             this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
+          this.asuntosChange.emit(this.body);
         },
         (err) => {
           this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -377,6 +384,7 @@ export class DatosGeneralesComponent implements OnInit {
       (data) => {
         this.progressSpinner = false;
         this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.asuntosChange.emit(this.body);
       },
       (err) => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -396,6 +404,7 @@ export class DatosGeneralesComponent implements OnInit {
       (data) => {
         this.progressSpinner = false;
         this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.asuntosChange.emit(this.body);
       },
       (err) => {
         this.progressSpinner = false;
@@ -425,6 +434,7 @@ export class DatosGeneralesComponent implements OnInit {
               sessionStorage.setItem("tarjeta", "idAsistenciaContrarios");
               this.router.navigate(["/fichaAsistencia"]);
             }
+            this.asuntosChange.emit(this.body);
           },
           (err) => {
             this.progressSpinner = false;
@@ -443,6 +453,7 @@ export class DatosGeneralesComponent implements OnInit {
             } else {
               this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             }
+            this.asuntosChange.emit(this.body);
           },
           (err) => {
             this.progressSpinner = false;
