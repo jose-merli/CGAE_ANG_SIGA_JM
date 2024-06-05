@@ -33,6 +33,7 @@ export class MaestrosModulosComponent implements OnInit {
       .checkAcceso(procesos_maestros.modulo)
       .then((respuesta) => {
         this.permisoEscritura = respuesta;
+        this.persistenceService.setPermisos(this.permisoEscritura);
 
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");

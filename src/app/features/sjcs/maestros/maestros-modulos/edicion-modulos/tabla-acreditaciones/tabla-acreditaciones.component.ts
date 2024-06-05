@@ -50,6 +50,7 @@ export class TablaAcreditacionesComponent implements OnInit {
   @Input() idProcedimiento;
   //Resultados de la busqueda
   @Input() modoEdicion: boolean = false;
+  permisos: boolean;
 
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
@@ -58,6 +59,8 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
+
+    this.permisos = this.persistenceService.getPermisos();
 
     if (this.idProcedimiento != undefined) {
       this.modoEdicion = true;
@@ -74,7 +77,9 @@ export class TablaAcreditacionesComponent implements OnInit {
       }
     }
 
-    if (this.persistenceService.getPermisos() != true) {
+    if (this.permisos) {
+      this.disableAll = false;
+    } else {
       this.disableAll = true;
     }
   }
@@ -96,7 +101,9 @@ export class TablaAcreditacionesComponent implements OnInit {
         this.disableAll = true;
       }
     }
-    if (this.persistenceService.getPermisos() != true) {
+    if (this.permisos) {
+      this.disableAll = false;
+    } else {
       this.disableAll = true;
     }
   }
