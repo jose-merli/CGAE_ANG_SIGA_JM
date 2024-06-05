@@ -51,7 +51,7 @@ export class TablaModulosComponent implements OnInit {
   modulosDelete = new ModulosObject();
 
   @Input() datos;
-  @Input() permisos: boolean = false;
+  @Input() permisos: boolean;
   @Output() searchModulos = new EventEmitter<any>();
 
   @ViewChild("tabla") tabla;
@@ -62,7 +62,7 @@ export class TablaModulosComponent implements OnInit {
     this.getCols();
     this.juzgadoProcedente = JSON.parse(sessionStorage.getItem("datos"));
     this.vieneDeJuzgados = sessionStorage.getItem("vieneDeFichaJuzgado");
-    this.permisos = this.persistenceService.getPermisos();
+    //this.permisos = this.persistenceService.getPermisos();
     this.tabla.filterConstraints["contains"] = this.customFilter.bind(this);
     this.searchJuzgados();
   }

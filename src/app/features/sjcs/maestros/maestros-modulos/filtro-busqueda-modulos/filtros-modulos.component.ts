@@ -21,6 +21,8 @@ export class FiltrosModulosComponent implements OnInit {
   jurisdicciones: any[] = [];
   vieneDeFichaJuzgado: boolean = false;
 
+  progressSpinner: boolean = false;
+
   comboJurisdicciones: any[] = [];
   comboProcedimientos: any[] = [];
   comboJuzgados: any[] = [];
@@ -45,7 +47,9 @@ export class FiltrosModulosComponent implements OnInit {
       this.vieneDeFichaJuzgado = true;
     }
 
+    this.progressSpinner = true;
     await this.getCombos();
+    this.progressSpinner = false;
 
     if (this.persistenceService.getFiltros() != undefined) {
       let filtrosAux: ModulosItem = this.persistenceService.getFiltros();
