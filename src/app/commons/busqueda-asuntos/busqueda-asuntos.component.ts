@@ -1,4 +1,4 @@
-import { Location } from "@angular/common";
+import { DatePipe, Location } from "@angular/common";
 import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
@@ -10,6 +10,7 @@ import { TarjetaAsistenciaItem } from "../../models/guardia/TarjetaAsistenciaIte
 import { AsuntosJusticiableItem } from "../../models/sjcs/AsuntosJusticiableItem";
 import { DesignaItem } from "../../models/sjcs/DesignaItem";
 import { EJGItem } from "../../models/sjcs/EJGItem";
+import { JusticiableBusquedaItem } from "../../models/sjcs/JusticiableBusquedaItem";
 import { ScsDefendidosDesignasItem } from "../../models/sjcs/ScsDefendidosDesignasItem";
 import { USER_VALIDATIONS } from "../../properties/val-properties";
 import { SigaWrapper } from "../../wrapper/wrapper.class";
@@ -64,7 +65,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   @ViewChild(TablaBusquedaAsuntosComponent) tabla;
 
   //Diálogo de comunicación
-  constructor(private sigaServices: SigaServices, private formBuilder: FormBuilder, private persistenceService: PersistenceService, private location: Location, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router, private commonServices: CommonsService) {
+  constructor(private datepipe: DatePipe, private sigaServices: SigaServices, private formBuilder: FormBuilder, private persistenceService: PersistenceService, private location: Location, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router, private commonServices: CommonsService) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
       nif: new FormControl(null, Validators.minLength(3)),
@@ -140,7 +141,13 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         if (radioValue == "soj" || radioValue == "asi") {
           if (this.datosAsociar.idInteresado != undefined) {
             if (this.datosAsociar.idInteresado != this.datosJusticiable.idpersona) {
-              this.confirmAsociarJust(this.datosAsociar);
+              let bodyBusqueda = new JusticiableBusquedaItem();
+              bodyBusqueda.idpersona = this.datosAsociar.idInteresado;
+              bodyBusqueda.idinstitucion = this.datosAsociar.idinstitucion;
+              this.sigaServices.post("gestionJusticiables_searchJusticiable", bodyBusqueda).subscribe((n) => {
+                let datosJusticiableOld = JSON.parse(n.body).justiciable;
+                this.confirmAsociarJust(this.datosAsociar, datosJusticiableOld);
+              });
             } else {
               this.showMesg("info", "Información", this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.yaasociado"));
             }
@@ -411,9 +418,20 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     });
   }
 
-  confirmAsociarJust(data) {
+  formatDate(date) {
+    const pattern = "dd/MM/yyyy";
+    return this.datepipe.transform(date, pattern);
+  }
+
+  confirmAsociarJust(data, datosJusticiableOld) {
+    //this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmAsociarJust"),
+
+    let msg = "El registro seleccionado ya tenía un asistido relacionado: ##OLD##, ¿Desea realizar el reemplazo con el justiciable actual?: ##NEW##";
+    msg = msg.replace("##OLD##", datosJusticiableOld.nif + " - " + datosJusticiableOld.apellidos + ", " + datosJusticiableOld.nombre + " - modificado el: " + this.formatDate(datosJusticiableOld.fechamodificacion));
+    msg = msg.replace("##NEW##", this.datosJusticiable.nif + " - " + this.datosJusticiable.apellidos + ", " + this.datosJusticiable.nombre + " - modificado el: " + this.formatDate(this.datosJusticiable.fechamodificacion));
+
     this.confirmationService.confirm({
-      message: this.translateService.instant("justiciaGratuita.ejg.busquedaAsuntos.confirmAsociarJust"),
+      message: msg,
       key: "asoc",
       icon: "fa fa-edit",
       accept: () => {
