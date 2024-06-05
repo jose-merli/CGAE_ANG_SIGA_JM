@@ -184,6 +184,9 @@ export class DatosGeneralesComponent implements OnInit {
       },
       (err) => {
         this.progressSpinner = false;
+        if (clonar) {
+          this.modoEdicion = true;
+        }
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
           if (JSON.parse(err.error).error.code == "600") {
             this.notificationService.showError(this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
