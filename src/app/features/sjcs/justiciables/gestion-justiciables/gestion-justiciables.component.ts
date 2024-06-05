@@ -96,7 +96,7 @@ export class GestionJusticiablesComponent implements OnInit {
         this.modoEdicion = true;
         this.checkAccesoTarjetas();
       } else {
-        this.datosAsuntos.search();
+        //this.datosAsuntos.search();
       }
     }
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
