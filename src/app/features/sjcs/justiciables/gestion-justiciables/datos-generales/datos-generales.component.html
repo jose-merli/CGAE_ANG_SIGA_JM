@@ -16,23 +16,19 @@
             <label class="mr-auto title-ficha">{{ 'administracion.catalogos.titulo.datos.generales' | translate}}</label>
           </div>
           <div class="row">
-            <div class="col-2">
-              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}: <span>{{ body.nif }}</span></label>
-            </div>
-            <div class="col-2">
-              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}: <span>{{ body.apellido1 }} {{ body.apellido2 }}, {{ body.nombre }}</span></label>
-            </div>
-            <div class="col-2">
-              <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}: <span>{{ body.fechanacimiento | date: 'dd/MM/yyyy' }}</span></label>
-            </div>
-            <div class="col-2">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }}: <span>{{ body.sexo }}</span></label>
-            </div>
-            <div class="col-2">
-              <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}: <span>{{ body.fechaalta | date: 'dd/MM/yyyy' }}</span></label>
-            </div>
-            <div class="col-2 d-flex justify-content-end">
-              <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
+            <div class="col-11">
+              <div class="d-flex flex-wrap">
+                  <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}: <span style="padding-right: 20px;">{{ body.nif }}</span></label>
+                  <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}: <span style="padding-right: 20px;">{{ body.apellido1 }} {{ body.apellido2 }}, {{ body.nombre }}</span></label>
+                  <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}: <span style="padding-right: 20px;">{{ body.fechanacimiento | date: 'dd/MM/yyyy' }}</span></label>
+                  <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }}: <span style="padding-right: 20px;">{{ body.sexo }}</span></label>
+                  <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}: <span>{{ body.fechaalta | date: 'dd/MM/yyyy' }}</span></label>
+              </div>
+            </div> 
+            <div class="col-1">
+              <div class="d-flex justify-content-end">
+                <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
+              </div>
             </div>
           </div>
         </div>

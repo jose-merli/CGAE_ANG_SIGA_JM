@@ -11,6 +11,7 @@ import { JusticiableItem } from "../../../../models/sjcs/JusticiableItem";
 import { UnidadFamiliarEJGItem } from "../../../../models/sjcs/UnidadFamiliarEJGItem";
 import { procesos_ejg } from "../../../../permisos/procesos_ejg";
 import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
+import { AsuntosComponent } from "./asuntos/asuntos.component";
 import { DatosGeneralesComponent } from "./datos-generales/datos-generales.component";
 import { DatosPersonalesComponent } from "./datos-personales/datos-personales.component";
 import { DatosRepresentanteComponent } from "./datos-representante/datos-representante.component";
@@ -44,6 +45,7 @@ export class GestionJusticiablesComponent implements OnInit {
   @ViewChild(DatosSolicitudComponent) datosSolicitud;
   @ViewChild(DatosRepresentanteComponent) datosRepresentante;
   @ViewChild(DatosPersonalesComponent) datosPersonales;
+  @ViewChild(AsuntosComponent) datosAsuntos;
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private persistenceService: PersistenceService, private notificationService: NotificationService) {}
 
@@ -97,6 +99,12 @@ export class GestionJusticiablesComponent implements OnInit {
     }
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     this.updateTarjResumen();
+  }
+
+  updateAsuntos(justiciable: JusticiableItem) {
+    this.body = justiciable;
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.datosAsuntos.updateAsuntos();
   }
 
   isOpenTarjeta(idTarjeta: string) {

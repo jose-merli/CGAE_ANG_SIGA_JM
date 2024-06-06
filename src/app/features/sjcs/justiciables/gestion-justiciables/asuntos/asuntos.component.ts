@@ -54,6 +54,10 @@ export class AsuntosComponent implements OnInit {
     this.search();
   }
 
+  updateAsuntos() {
+    this.search();
+  }
+
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
   }
@@ -290,7 +294,7 @@ export class AsuntosComponent implements OnInit {
     //fieldRol = "interesado"; headerRol = "justiciaGratuita.justiciables.literal.interesados"; widthRol = "25%";
 
     this.cols = [
-      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "6%" },
+      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "8%" },
       { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
       { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardiaTarjAsuntos", width: "10%" },
       { field: "nColegiado", header: "justiciaGratuita.justiciables.literal.numColegiado", width: "4%" },
