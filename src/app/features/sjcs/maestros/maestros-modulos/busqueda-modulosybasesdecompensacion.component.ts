@@ -102,11 +102,11 @@ export class MaestrosModulosComponent implements OnInit {
 
           this.datos.forEach(element => {
             if (element.fechadesdevigor != null) {
-              element.fechadesdevigor = this.formatDate(element.fechadesdevigor).toLocaleDateString();
+              element.fechadesdevigorString = this.formatDate(element.fechadesdevigor).toLocaleDateString();
             }
 
             if (element.fechahastavigor != null) {
-              element.fechahastavigor = this.formatDate(element.fechahastavigor).toLocaleDateString();
+              element.fechahastavigorString = this.formatDate(element.fechahastavigor).toLocaleDateString();
             }
           });
 

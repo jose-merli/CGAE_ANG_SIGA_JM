@@ -17,6 +17,8 @@ export class ModulosItem {
   permitiraniadirletrado: string;
   fechadesdevigor: Date;
   fechahastavigor: Date;
+  fechadesdevigorString: string;
+  fechahastavigorString: string;
   observaciones: string;
   complementoCheck: boolean;
   permitiraniadirletradoCheck: boolean;

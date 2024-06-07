@@ -21,8 +21,15 @@
           <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate}}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+            <input *ngIf="col.field != 'fechadesdevigor' && col.field != 'fechahastavigor'" pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" pInputText
             type="text" (input)="filterImporte($event, col.field, 'contains')" />
+
+            <input *ngIf="col.field == 'fechadesdevigor'" pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" pInputText
+            type="text" (input)="filterImporte($event, 'fechadesdevigorString', 'contains')" />
+
+            <input *ngIf="col.field == 'fechahastavigor'" pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" pInputText
+            type="text" (input)="filterImporte($event, 'fechahastavigorString', 'contains')" />
+
           </th>
         </tr>
       </ng-template>
@@ -31,7 +38,7 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div *ngIf="col.field == 'fechadesdevigor' || col.field == 'fechahastavigor'">
-              <span [ngClass]="{historic: isHistorico(dato)}">{{ dato[col.field] }}</span>
+              <span [ngClass]="{historic: isHistorico(dato)}">{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
             </div>
             <div *ngIf="col.field == 'importe'">
               <span [ngClass]="{historic: isHistorico(dato)}">{{ dato[col.field] | currency: 'EUR'}}</span>
