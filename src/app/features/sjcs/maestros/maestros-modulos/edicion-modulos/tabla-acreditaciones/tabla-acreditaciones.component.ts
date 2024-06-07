@@ -477,7 +477,6 @@ export class TablaAcreditacionesComponent implements OnInit {
   }
 
   rest() {
-    this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
 
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
