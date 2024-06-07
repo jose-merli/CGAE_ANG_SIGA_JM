@@ -140,6 +140,24 @@ export class FiltrosModulosComponent implements OnInit {
     this.filtros.fechahastavigor = fecha;
   }
 
+  // Control de fechas
+  getFechaHastaVigenciaCalendar(fechaInputDesde, fechainputHasta) {
+    if (
+      fechaInputDesde != undefined &&
+      fechainputHasta != undefined
+    ) {
+      let one_day = 1000 * 60 * 60 * 24;
+
+      // convertir fechas en milisegundos
+      let fechaDesde = new Date(fechaInputDesde).getTime();
+      let fechaHasta = new Date(fechainputHasta).getTime();
+      let msRangoFechas = fechaHasta - fechaDesde;
+
+      if (msRangoFechas < 0) fechainputHasta = undefined;
+    }
+    return fechainputHasta;
+  }
+
   async getCombos() {
     await this.getComboJurisdicciones();
     await this.getComboProdecimientos();

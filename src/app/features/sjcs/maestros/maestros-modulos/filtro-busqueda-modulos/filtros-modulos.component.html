@@ -39,7 +39,7 @@
         <!-- FECHA DESDE VIGENCIA -->
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'sjcs.maestros.modulos.filtro.vigenteDesde' | translate }}</label>
-          <app-fecha [(value)]="filtros.fechadesdevigor"
+          <app-fecha [(value)]="filtros.fechadesdevigor" [maxDate]="getFechaHastaVigenciaCalendar(filtros.fechadesdevigor, filtros.fechahastavigor)"
             (valueChangeSelected)="fillFechaDesdeVigor($event)" (valueChangeInput)="fillFechaDesdeVigor($event)">
           </app-fecha>
         </div>
@@ -47,7 +47,7 @@
         <!-- FECHA HASTA VIGENCIA -->
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'sjcs.maestros.modulos.filtro.vigenteHasta' | translate }}</label>
-          <app-fecha [(value)]="filtros.fechahastavigor"
+          <app-fecha [(value)]="filtros.fechahastavigor" [minDate]="filtros.fechadesdevigor"
             (valueChangeSelected)="fillFechaHastaVigor($event)" (valueChangeInput)="fillFechaHastaVigor($event)">
           </app-fecha>
         </div>
