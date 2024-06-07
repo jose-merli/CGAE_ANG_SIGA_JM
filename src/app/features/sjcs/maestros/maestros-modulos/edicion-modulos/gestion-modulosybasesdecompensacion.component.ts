@@ -53,7 +53,7 @@ export class GestionModulosYBasesComponent implements OnInit {
   private searchModulos() {
     let filtros: ModulosItem = new ModulosItem();
     filtros.idProcedimiento = this.idProcedimiento;
-    filtros.historico = true;
+    //filtros.historico = true;
     this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", filtros).subscribe((n) => {
       this.modulosItem = JSON.parse(n.body).modulosItem[0];
       if (this.modulosItem.fechadesdevigor != null) {

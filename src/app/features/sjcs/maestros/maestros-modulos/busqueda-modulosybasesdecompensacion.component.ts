@@ -99,6 +99,17 @@ export class MaestrosModulosComponent implements OnInit {
             this.tabla.buscadores = this.tabla.buscadores.map((it) => (it = ""));
           }
           this.datos = JSON.parse(n.body).modulosItem;
+
+          this.datos.forEach(element => {
+            if (element.fechadesdevigor != null) {
+              element.fechadesdevigor = this.formatDate(element.fechadesdevigor).toLocaleDateString();
+            }
+
+            if (element.fechahastavigor != null) {
+              element.fechahastavigor = this.formatDate(element.fechahastavigor).toLocaleDateString();
+            }
+          });
+
           this.resetSelect();
         },
         (err) => {
@@ -114,6 +125,18 @@ export class MaestrosModulosComponent implements OnInit {
       this.tabla.numSelected = 0;
       this.tabla.selectMultiple = false;
       this.tabla.selectAll = false;
+    }
+  }
+
+  formatDate(date) {
+    if (date instanceof Date) {
+      return date;
+    } else if (typeof date == "number") {
+      return new Date(date.valueOf());
+    } else {
+      var parts = date.split("/");
+      var formattedDate = new Date(parts[1] + "/" + parts[0] + "/" + parts[2]);
+      return formattedDate;
     }
   }
 }

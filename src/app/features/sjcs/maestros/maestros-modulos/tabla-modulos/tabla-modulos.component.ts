@@ -333,8 +333,8 @@ export class TablaModulosComponent implements OnInit {
       { field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin", width: "11%" },
       { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "8%" },
       { field: "jurisdiccionDes", header: "menu.justiciaGratuita.maestros.Jurisdiccion", width: "16%" },
-      { field: "juzgados", header: "menu.facturacionSJCS.mantenimientoJuzgados", width: "16%" },
-      { field: "acreditaciones", header: "menu.justiciaGratuita.maestros.Acreditaciones", width: "16%" }
+      { field: "numJuzgados", header: "menu.facturacionSJCS.mantenimientoJuzgados", width: "16%" },
+      { field: "numAcreditaciones", header: "menu.justiciaGratuita.maestros.Acreditaciones", width: "16%" }
     ];
     this.cols.forEach((it) => this.buscadores.push(""));
 

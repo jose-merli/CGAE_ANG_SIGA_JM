@@ -31,20 +31,20 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div *ngIf="col.field == 'fechadesdevigor' || col.field == 'fechahastavigor'">
-              <span [ngClass]="{historic: isHistorico(dato)}">{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
+              <span [ngClass]="{historic: isHistorico(dato)}">{{ dato[col.field] }}</span>
             </div>
             <div *ngIf="col.field == 'importe'">
               <span [ngClass]="{historic: isHistorico(dato)}">{{ dato[col.field] | currency: 'EUR'}}</span>
             </div>
-            <div *ngIf="col.field == 'juzgados'" pTooltip="{{dato[col.field]}}">
+            <div *ngIf="col.field == 'numJuzgados'" pTooltip="{{dato.juzgados}}">
               <span [ngClass]="{historic: isHistorico(dato)}">
-                {{ (dato.numJuzgados) }}
+                {{ dato[col.field] }}
               </span>
             </div>
-            <div *ngIf="col.field == 'acreditaciones'" pTooltip="{{dato[col.field]}}">
-              <span [ngClass]="{historic: isHistorico(dato)}">{{ (dato.numAcreditaciones) }}</span>
+            <div *ngIf="col.field == 'numAcreditaciones'" pTooltip="{{dato.acreditaciones}}">
+              <span [ngClass]="{historic: isHistorico(dato)}">{{ dato[col.field] }}</span>
             </div>
-            <div *ngIf="col.field != 'fechadesdevigor' && col.field != 'fechahastavigor' && col.field != 'importe' && col.field != 'juzgados' && col.field != 'acreditaciones'">
+            <div *ngIf="col.field != 'fechadesdevigor' && col.field != 'fechahastavigor' && col.field != 'importe' && col.field != 'numJuzgados' && col.field != 'numAcreditaciones'">
               <span [ngClass]="{historic: isHistorico(dato)}">{{dato[col.field]}}</span>
             </div>
           </td>

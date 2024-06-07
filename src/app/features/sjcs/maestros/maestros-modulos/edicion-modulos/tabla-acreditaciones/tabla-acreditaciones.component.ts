@@ -209,11 +209,9 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   checkPermisosNewAcreditacion() {
     if (this.commonsService.checkPermisosService(!this.disableAll, this.disableAll)) {
-      if (this.disabledSave()) {
-        this.commonsService.checkPermisoAccionService();
-      } else {
-        this.newAcreditacion();
-      }
+      this.newAcreditacion();
+    } else {
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
     }
   }
 
@@ -434,11 +432,9 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   checkPermisosDelete() {
     if (this.commonsService.checkPermisosService(!this.disableAll, this.disableAll)) {
-      if (this.disabledSave()) {
-        this.commonsService.checkPermisoAccionService();
-      } else {
-        this.delete();
-      }
+      this.delete();
+    } else {
+      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
     }
   }
 
@@ -477,7 +473,6 @@ export class TablaAcreditacionesComponent implements OnInit {
   }
 
   rest() {
-
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     } else {
