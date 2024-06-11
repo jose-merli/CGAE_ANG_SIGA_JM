@@ -165,16 +165,13 @@ export class DatosPersonalesComponent implements OnInit {
         if (this.body.telefonos != null && this.body.telefonos.length > 0) {
           this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
         }
-        //if (!this.modoEdicion) {
-        //this.callSaveService("gestionJusticiables_createJusticiable");
-        //} else {
+
         if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
           this.progressSpinner = false;
           this.showDialog.emit("tarjetaPersonales");
         } else {
           this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
         }
-        //}
       }
     }
   }

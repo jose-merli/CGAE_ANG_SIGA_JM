@@ -82,7 +82,7 @@ export class DatosGeneralesComponent implements OnInit {
       }
     } else {
       this.body.edad = undefined;
-      this.canSave = false;
+      this.canSave = true;
     }
   }
 
