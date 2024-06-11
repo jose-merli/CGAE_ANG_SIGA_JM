@@ -166,7 +166,7 @@ export class DatosPersonalesComponent implements OnInit {
           this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
         }
 
-        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
           this.progressSpinner = false;
           this.showDialog.emit("tarjetaPersonales");
         } else {

@@ -134,7 +134,7 @@ export class DatosGeneralesComponent implements OnInit {
               this.progressSpinner = false;
               this.notificationService.showInfo(this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
             } else {
-              if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+              if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
                 this.progressSpinner = false;
                 this.showDialog.emit("tarjetaGenerales");
               } else {
@@ -142,7 +142,7 @@ export class DatosGeneralesComponent implements OnInit {
               }
             }
           } else {
-            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
               this.progressSpinner = false;
               this.showDialog.emit("tarjetaGenerales");
             } else {
