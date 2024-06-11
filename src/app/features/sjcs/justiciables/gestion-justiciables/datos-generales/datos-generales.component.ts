@@ -11,6 +11,7 @@ import { EJGItem } from "../../../../../models/sjcs/EJGItem";
 import { FichaSojItem } from "../../../../../models/sjcs/FichaSojItem";
 import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
 import { SigaConstants } from "../../../../../utils/SigaConstants";
+
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
@@ -116,12 +117,12 @@ export class DatosGeneralesComponent implements OnInit {
     } else {
       this.progressSpinner = true;
       let menorEdadSinRepresentante = true;
-      if ((this.body.edad != undefined && JSON.parse(this.body.edad) < SigaConstants.EDAD_ADULTA && this.body.idrepresentantejg != undefined) || this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) >= SigaConstants.EDAD_ADULTA)) {
-        menorEdadSinRepresentante = false;
-      } else {
+      if (this.body.edad != undefined && JSON.parse(this.body.edad) < SigaConstants.EDAD_ADULTA && this.body.idrepresentantejg == undefined) {
         this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
         this.body.fechanacimiento = undefined;
         this.body.edad = undefined;
+      } else {
+        menorEdadSinRepresentante = false;
       }
 
       if (!this.modoEdicion) {

@@ -35,7 +35,7 @@ export class DatosRepresentanteComponent implements OnInit {
   dialogRepreOpcion: String = "";
   representante: JusticiableItem = new JusticiableItem();
 
-  constructor(private router: Router, private notificationService: NotificationService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private translateService: TranslateService, private commonsService: CommonsService) { }
+  constructor(private router: Router, private notificationService: NotificationService, private sigaServices: SigaServices, private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private translateService: TranslateService, private commonsService: CommonsService) {}
 
   ngOnInit() {
     this.progressSpinner = false;
@@ -127,7 +127,7 @@ export class DatosRepresentanteComponent implements OnInit {
           this.dialogAssociate = false;
           this.showDialog.emit("tarjetaRepresentante");
         } else {
-          if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
+          if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) >= SigaConstants.EDAD_ADULTA)) {
             this.callServiceDisassociate();
           } else {
             this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
@@ -187,7 +187,7 @@ export class DatosRepresentanteComponent implements OnInit {
           }
         }
       } else {
-        if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
+        if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) >= SigaConstants.EDAD_ADULTA)) {
           this.callServiceDisassociate();
         } else {
           this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
