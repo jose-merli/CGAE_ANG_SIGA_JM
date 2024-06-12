@@ -12,7 +12,7 @@
 		"deploytesting": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --env=deloittetesting --base-href=/siga-ang-testing/",
 		"deployDesaCGAE": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --env=desacgae --base-href=/htdocs/",
 		"deployDesaDebugger": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --env=desacgae --base-href=/htdocs/",
-		"cgaeBuild": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod  --build-optimizer --env=cgae --base-href=/htdocs/",
+		"cgaeBuild": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --env=cgae --base-href=/htdocs/",
 		"cgaeBuildDebugger": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --env=cgae --base-href=/htdocs/",
 		"test": "karma start ./karma.conf.js",
 		"lint": "ng lint",
