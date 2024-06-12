@@ -415,15 +415,25 @@ export class DatosPersonalesComponent implements OnInit {
       },
       (err) => {
         this.progressSpinner = false;
-        let dataJusticiable = JSON.parse(err.error);
-        if (dataJusticiable.error.description != "") {
-          if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), dataJusticiable.error.description);
+        const errors = JSON.parse(err.error);
+        if (errors.error != undefined && errors.error.description != "") {
+          if (JSON.parse(err.error).error.code == "600") {
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), errors.error.description);
           } else {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(dataJusticiable.error.description));
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(errors.error.description));
           }
         } else {
-          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          if (err.status == 400) {
+            let description = "";
+            for (const error in errors) {
+              if (errors.hasOwnProperty(error)) {
+                description = description + (description != "" ? "<br/>" : "") + errors[error];
+              }
+            }
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), description);
+          } else {
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
         }
       },
     );

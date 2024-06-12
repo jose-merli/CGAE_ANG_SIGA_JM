@@ -191,11 +191,26 @@ export class DatosGeneralesComponent implements OnInit {
         if (clonar) {
           this.modoEdicion = true;
         }
-        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          if (JSON.parse(err.error).error.code == "600") {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+        if (err.error != undefined) {
+          const errors = JSON.parse(err.error);
+          if (errors.error != undefined && errors.error.description != "") {
+            if (JSON.parse(err.error).error.code == "600") {
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), errors.error.description);
+            } else {
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(errors.error.description));
+            }
           } else {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            if (err.status == 400) {
+              let description = "";
+              for (const error in errors) {
+                if (errors.hasOwnProperty(error)) {
+                  description = description + (description != "" ? "<br/>" : "") + errors[error];
+                }
+              }
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), description);
+            } else {
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
           }
         } else {
           this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
