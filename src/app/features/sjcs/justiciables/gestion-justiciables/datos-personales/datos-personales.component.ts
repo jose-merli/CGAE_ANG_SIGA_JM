@@ -350,8 +350,8 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   guardarDialog(clonar: boolean) {
-    this.progressSpinner = true;
     if (!clonar) {
+      this.progressSpinner = true;
       this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
     }
   }
