@@ -254,7 +254,7 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.escaleradir = "";
       this.body.pisodir = "";
       this.body.puertadir = "";
-      this.body.idpais = "";
+      this.body.idpaisdir1 = "";
       this.body.codigopostal = "";
       this.body.idprovincia = "";
       this.body.idpoblacion = "";
@@ -265,7 +265,7 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.escaleradir = this.bodyInicial.escaleradir;
       this.body.pisodir = this.bodyInicial.pisodir;
       this.body.puertadir = this.bodyInicial.puertadir;
-      this.body.idpais = this.bodyInicial.idpais;
+      this.body.idpaisdir1 = this.bodyInicial.idpaisdir1;
       this.body.codigopostal = this.bodyInicial.codigopostal;
       this.body.idprovincia = this.bodyInicial.idprovincia;
       this.body.idpoblacion = this.bodyInicial.idpoblacion;
