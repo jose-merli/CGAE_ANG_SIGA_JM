@@ -107,8 +107,8 @@
               [(ngModel)]="body.idlenguaje" [filter]="true" (ngModelChange)="updateFormState()" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
-            <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }} (*)</label>
-            <p-dropdown class="select-form" [(ngModel)]="body.sexo" (ngModelChange)="updateFormState()" [options]="comboSexo" [filter]="true" [ngClass]="styleObligatorio(body.sexo)"
+            <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]="body.sexo" (ngModelChange)="updateFormState()" [options]="comboSexo" [filter]="true"
               filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6 ">
