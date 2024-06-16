@@ -1,21 +1,25 @@
-import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from "@angular/core";
-import { MultiSelect } from "primeng/primeng";
-import { UpperCasePipe } from "../../../../../../../../node_modules/@angular/common";
-import { CommonsService } from "../../../../../../_services/commons.service";
-import { NotificationService } from "../../../../../../_services/notification.service";
-import { PersistenceService } from "../../../../../../_services/persistence.service";
-import { SigaServices } from "../../../../../../_services/siga.service";
-import { TranslateService } from "../../../../../../commons/translate/translation.service";
-import { AcreditacionesItem } from "../../../../../../models/sjcs/AcreditacionesItem";
-import { AcreditacionesObject } from "../../../../../../models/sjcs/AcreditacionesObject";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { TranslateService } from '../../../../../../commons/translate/translation.service';
+import { AcreditacionesItem } from '../../../../../../models/sjcs/AcreditacionesItem';
+import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
+import { AcreditacionesObject } from '../../../../../../models/sjcs/AcreditacionesObject';
+import { findIndex } from 'rxjs/operators';
+import { MultiSelect } from 'primeng/primeng';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
+
 
 @Component({
-  selector: "app-tabla-acreditaciones",
-  templateUrl: "./tabla-acreditaciones.component.html",
-  styleUrls: ["./tabla-acreditaciones.component.scss"],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'app-tabla-acreditaciones',
+  templateUrl: './tabla-acreditaciones.component.html',
+  styleUrls: ['./tabla-acreditaciones.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TablaAcreditacionesComponent implements OnInit {
+
+
+
   textSelected: String = "{label}";
   id;
   selectedItem: number = 10;
@@ -33,6 +37,7 @@ export class TablaAcreditacionesComponent implements OnInit {
   disableAll: boolean = false;
 
   progressSpinner: boolean = false;
+  msgs;
   body;
   nuevo: boolean = false;
   datosInicial = [];
@@ -50,17 +55,16 @@ export class TablaAcreditacionesComponent implements OnInit {
   @Input() idProcedimiento;
   //Resultados de la busqueda
   @Input() modoEdicion: boolean = false;
-  permisos: boolean;
 
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe, private persistenceService: PersistenceService, private commonsService: CommonsService, private notificationService: NotificationService) {}
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
     this.getCols();
-
-    this.permisos = this.persistenceService.getPermisos();
 
     if (this.idProcedimiento != undefined) {
       this.modoEdicion = true;
@@ -77,9 +81,7 @@ export class TablaAcreditacionesComponent implements OnInit {
       }
     }
 
-    if (this.permisos) {
-      this.disableAll = false;
-    } else {
+    if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
   }
@@ -101,9 +103,7 @@ export class TablaAcreditacionesComponent implements OnInit {
         this.disableAll = true;
       }
     }
-    if (this.permisos) {
-      this.disableAll = false;
-    } else {
+    if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
   }
@@ -115,86 +115,136 @@ export class TablaAcreditacionesComponent implements OnInit {
   getId() {
     let seleccionados = [];
     seleccionados.push(this.selectedDatos);
-    this.id = this.datos.findIndex((item) => item.idAcreditacion === seleccionados[0].idAcreditacion);
+    this.id = this.datos.findIndex(item => item.idAcreditacion === seleccionados[0].idAcreditacion);
   }
 
   getAcreditaciones() {
-    this.sigaServices.getParam("modulosybasesdecompensacion_searchAcreditaciones", "?idProcedimiento=" + this.idProcedimiento).subscribe((res) => {
-      this.datos = res.acreditacionItem;
-      this.listaTabla = JSON.parse(JSON.stringify(this.datos));
-      this.datos.forEach((element) => {
-        if (element.nig_numprocedimiento == 1) {
-          element.nigProcedimiento = true;
-        } else {
-          element.nigProcedimiento = false;
+    this.sigaServices
+      .getParam(
+        "modulosybasesdecompensacion_searchAcreditaciones",
+        "?idProcedimiento=" + this.idProcedimiento
+      )
+      .subscribe(
+        res => {
+          this.datos = res.acreditacionItem;
+          this.listaTabla = JSON.parse(JSON.stringify(this.datos));
+          this.datos.forEach(element => {
+            let seleccionados = [];
+            if (element.nig_numprocedimiento == 1) {
+              element.nigProcedimiento = true;
+            } else {
+              element.nigProcedimiento = false;
+            }
+            element.porcentaje = element.porcentaje.replace(".", ",");
+            if (element.porcentaje[0] == ',')
+              element.porcentaje = "0".concat(element.porcentaje)
+            element.editable = false;
+            element.overlayVisible = false;
+            element.idprocedimiento = this.idProcedimiento;
+          });
+
+          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+          this.progressSpinner = false;
+
+        },
+        err => {
+          //console.log(err);
         }
-        element.porcentaje = +element.porcentaje;
-        element.editable = false;
-        element.overlayVisible = false;
-        element.idprocedimiento = this.idProcedimiento;
-      });
-      this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-      this.progressSpinner = false;
-    });
+      );
+
   }
 
   getComboAcreditaciones() {
-    this.sigaServices.getParam("modulosybasesdecompensacion_comboAcreditacionesDisponibles", "?idProcedimiento=" + this.idProcedimiento).subscribe((res) => {
-      this.comboAcreditacionesNew = res.combooItems;
-    });
+    this.sigaServices
+      .getParam(
+        "modulosybasesdecompensacion_comboAcreditacionesDisponibles",
+        "?idProcedimiento=" + this.idProcedimiento
+      )
+      .subscribe(
+        res => {
+          this.comboAcreditacionesNew = res.combooItems;
+        },
+        err => {
+          //console.log(err);
+        }
+      );
 
-    this.sigaServices.get("modulosybasesdecompensacion_comboAcreditaciones").subscribe((res) => {
-      this.comboAcreditaciones = res.combooItems;
-    });
+    this.sigaServices
+      .get(
+        "modulosybasesdecompensacion_comboAcreditaciones"
+      )
+      .subscribe(
+        res => {
+          this.comboAcreditaciones = res.combooItems;
+        },
+        err => {
+          //console.log(err);
+        }
+      );
   }
 
   checkPermisosSave() {
-    if (this.commonsService.checkPermisosService(!this.disableAll, this.disableAll)) {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
       if (this.disabledSave()) {
-        this.commonsService.checkPermisoAccionService();
+        this.msgs = this.commonsService.checkPermisoAccion();
       } else {
         this.save();
       }
     }
   }
 
+
   save() {
     this.progressSpinner = true;
+    let url = "";
+
     if (this.nuevo) {
-      this.validatenewAcreditacion("modulosybasesdecompensacion_createAcreditacion");
+      url = "modulosybasesdecompensacion_createAcreditacion";
+      this.validatenewAcreditacion(url);
+
     } else {
+      url = "modulosybasesdecompensacion_updateAcreditacion";
       this.body = new AcreditacionesObject();
       this.body.acreditacionItem = this.updateAcreditaciones;
-      this.callSaveService("modulosybasesdecompensacion_updateAcreditacion");
+      this.callSaveService(url);
     }
+
   }
 
   callSaveService(url) {
     if (this.body.acreditacionItem != undefined) {
-      this.body.acreditacionItem.forEach((element) => {
-        element.porcentajeReal = +element.porcentaje;
+      this.body.acreditacionItem.forEach(element => {
+        element.porcentajeReal = + element.porcentaje;
         element.porcentaje = element.porcentaje.replace(",", ".");
+
       });
     } else {
-      this.body.porcentaje = +this.body.porcentaje.replace(",", ".");
+      this.body.porcentaje = + this.body.porcentaje.replace(",", ".");
     }
 
     this.sigaServices.post(url, this.body).subscribe(
-      (data) => {
+      data => {
+
         if (this.nuevo) {
           this.nuevo = false;
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         }
+
         this.getComboAcreditaciones();
-        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+
       },
-      (err) => {
+      err => {
         this.progressSpinner = false;
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
       },
@@ -203,15 +253,22 @@ export class TablaAcreditacionesComponent implements OnInit {
         this.updateAcreditaciones = [];
         this.progressSpinner = false;
         this.getAcreditaciones();
-      },
+      }
     );
+
   }
 
   checkPermisosNewAcreditacion() {
-    if (this.commonsService.checkPermisosService(!this.disableAll, this.disableAll)) {
-      this.newAcreditacion();
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
     } else {
-      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      if (this.selectMultiple || this.selectAll || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newAcreditacion();
+      }
     }
   }
 
@@ -233,7 +290,7 @@ export class TablaAcreditacionesComponent implements OnInit {
       codigoext: "",
       codSubTarifa: "",
       idprocedimiento: this.idProcedimiento,
-      acreditacionNueva: true,
+      acreditacionNueva: true
     };
 
     if (this.datos.length == 0) {
@@ -243,16 +300,18 @@ export class TablaAcreditacionesComponent implements OnInit {
     }
 
     this.table.sortOrder = 0;
-    this.table.sortField = "";
+    this.table.sortField = '';
     this.table.reset();
   }
 
   numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if ((charCode >= 48 && charCode <= 57) || charCode == 44) {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
       return true;
-    } else {
+    }
+    else {
       return false;
+
     }
   }
 
@@ -324,6 +383,7 @@ export class TablaAcreditacionesComponent implements OnInit {
 
     this.body = acreditacion;
     this.callSaveService(url);
+
   }
 
   disabledSave() {
@@ -333,8 +393,9 @@ export class TablaAcreditacionesComponent implements OnInit {
       } else {
         return true;
       }
+
     } else {
-      if (this.updateAcreditaciones != undefined && this.updateAcreditaciones.length > 0) {
+      if ((this.updateAcreditaciones != undefined && this.updateAcreditaciones.length > 0)) {
         return false;
       } else {
         return true;
@@ -343,11 +404,14 @@ export class TablaAcreditacionesComponent implements OnInit {
   }
 
   editAreas(evento) {
+
     if (this.nuevo) {
       this.seleccion = false;
     } else {
+
       if (!this.selectAll && !this.selectMultiple) {
-        this.datos.forEach((element) => {
+
+        this.datos.forEach(element => {
           element.editable = false;
           element.overlayVisible = false;
         });
@@ -358,83 +422,106 @@ export class TablaAcreditacionesComponent implements OnInit {
         this.selectedDatos.push(evento.data);
 
         this.seleccion = true;
+
       }
+
     }
   }
 
+
   changeAcreditacion(dato) {
-    let findDato = this.datosInicial.find((item) => item.idAcreditacion === dato.idAcreditacion);
+
+    let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
 
     if (findDato != undefined) {
       if (dato.idAcreditacion != findDato.idAcreditacion) {
-        let findUpdate = this.updateAcreditaciones.find((item) => item.idAcreditacion === dato.idAcreditacion);
+
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
         }
       }
     }
+
   }
   changeCodigoExt(dato) {
-    let findDato = this.datosInicial.find((item) => item.idAcreditacion === dato.idAcreditacion);
+
+    let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
 
     if (findDato != undefined) {
       if (dato.codigoext != findDato.codigoext) {
-        let findUpdate = this.updateAcreditaciones.find((item) => item.idAcreditacion == dato.idAcreditacion);
+
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion == dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
         }
       }
     }
+
   }
   changeCodSubTarifa(dato) {
-    let findDato = this.datosInicial.find((item) => item.idAcreditacion === dato.idAcreditacion);
+
+    let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
 
     if (findDato != undefined) {
       if (dato.codSubTarifa != findDato.codSubTarifa) {
-        let findUpdate = this.updateAcreditaciones.find((item) => item.idAcreditacion === dato.idAcreditacion);
+
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
         }
       }
     }
+
   }
   changePorcentaje(dato) {
     dato.porcentaje = dato.valorNum;
 
-    let findDato = this.datosInicial.find((item) => item.idAcreditacion === dato.idAcreditacion);
+    let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
 
     if (findDato != undefined) {
       if (dato.porcentaje != findDato.porcentaje) {
-        let findUpdate = this.updateAcreditaciones.find((item) => item.idAcreditacion === dato.idAcreditacion);
+
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
         }
       }
     }
+
   }
   changeNigNumprocedimiento(dato) {
-    let findDato = this.datosInicial.find((item) => item.idAcreditacion === dato.idAcreditacion);
+
+    let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
 
     if (findDato != undefined) {
       if (dato.nigProcedimiento != findDato.nigProcedimiento) {
-        let findUpdate = this.updateAcreditaciones.find((item) => item.idAcreditacion === dato.idAcreditacion);
+
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
         }
       }
     }
+
   }
 
   checkPermisosDelete() {
-    if (this.commonsService.checkPermisosService(!this.disableAll, this.disableAll)) {
-      this.delete();
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
     } else {
-      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+      if (((!this.selectMultiple && !this.selectAll) || this.nuevo) || this.selectedDatos == undefined || this.selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete();
+      }
     }
   }
 
@@ -444,30 +531,36 @@ export class TablaAcreditacionesComponent implements OnInit {
     this.body = new AcreditacionesObject();
     this.body.acreditacionItem = this.selectedDatos;
     this.sigaServices.post("modulosybasesdecompensacion_deleteAcreditacion", this.body).subscribe(
-      (data) => {
+      data => {
         this.nuevo = false;
         this.selectedDatos = [];
         this.getAcreditaciones();
-        this.notificationService.showSuccess(this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
-      (err) => {
+      err => {//areasacreditaciones.acreditaciones.ficha.materiaEnUso
+
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
       },
       () => {
         this.progressSpinner = false;
         this.getComboAcreditaciones();
-      },
+
+      }
     );
   }
 
   checkPermisosRest() {
-    if (this.commonsService.checkPermisosService(!this.disableAll, this.disableAll)) {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
       this.rest();
     }
   }
@@ -478,7 +571,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     } else {
       this.datos = [];
     }
-    this.datos.forEach((element) => {
+    this.datos.forEach(element => {
       element.editable = false;
       element.overlayVisible = false;
     });
@@ -486,25 +579,46 @@ export class TablaAcreditacionesComponent implements OnInit {
     this.updateAcreditaciones = [];
     this.nuevo = false;
     this.table.sortOrder = 0;
-    this.table.sortField = "";
+    this.table.sortField = '';
     this.table.reset();
-    this.buscadores = this.buscadores.map((it) => (it = ""));
+    this.buscadores = this.buscadores.map(it => it = "");
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   getCols() {
     this.cols = [
-      { field: "descripcion", header: "menu.justiciaGratuita.maestros.Acreditacion" },
-      { field: "porcentaje", header: "menu.justiciaGratuita.maestros.porcentaje" },
+      { field: "idAcreditacion", header: "menu.justiciaGratuita.maestros.Acreditacion" },
+      { field: "porcentajeReal", header: "menu.justiciaGratuita.maestros.porcentaje" },
       { field: "nig_numprocedimiento", header: "menu.justiciaGratuita.maestros.numProcedimiento" },
       { field: "codigoext", header: "general.codeext" },
-      { field: "codSubTarifa", header: "menu.justiciaGratuita.maestros.codSubtarifa" },
+      { field: "codSubTarifa", header: "menu.justiciaGratuita.maestros.codSubtarifa" }
     ];
 
     this.rowsPerPage = [
-      { label: 10, value: 10 },
-      { label: 20, value: 20 },
-      { label: 30, value: 30 },
-      { label: 40, value: 40 },
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
     ];
   }
 
@@ -515,6 +629,7 @@ export class TablaAcreditacionesComponent implements OnInit {
   }
 
   onChangeSelectAll() {
+
     if (!this.disableAll) {
       this.selectMultiple = false;
       if (this.selectAll) {
@@ -536,8 +651,8 @@ export class TablaAcreditacionesComponent implements OnInit {
     }
   }
   editElementDisabled() {
-    this.datos.forEach((element) => {
-      element.editable = false;
+    this.datos.forEach(element => {
+      element.editable = false
       element.overlayVisible = false;
     });
   }
@@ -549,11 +664,13 @@ export class TablaAcreditacionesComponent implements OnInit {
         this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "single";
+
       } else {
         this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "multiple";
+
       }
     } else {
       this.selectionMode = undefined;
@@ -562,7 +679,16 @@ export class TablaAcreditacionesComponent implements OnInit {
   }
 
   actualizaSeleccionados(selectedDatos) {
-    if (selectedDatos != undefined) this.numSelected = selectedDatos.length;
+    if (selectedDatos != undefined)
+      this.numSelected = selectedDatos.length;
     // this.seleccion = false;
   }
+
+  clear() {
+    this.msgs = [];
+  }
+
+
 }
+
+

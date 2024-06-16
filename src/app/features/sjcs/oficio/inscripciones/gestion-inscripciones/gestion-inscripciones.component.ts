@@ -1,25 +1,33 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from "@angular/core";
-import { DataTable, SortEvent } from "primeng/primeng";
-import { DatePipe } from "../../../../../../../node_modules/@angular/common";
-import { Router } from "../../../../../../../node_modules/@angular/router";
-import { ConfirmationService } from "../../../../../../../node_modules/primeng/primeng";
-import { CommonsService } from "../../../../../_services/commons.service";
-import { PersistenceService } from "../../../../../_services/persistence.service";
-import { SigaServices } from "../../../../../_services/siga.service";
-import { TranslateService } from "../../../../../commons/translate/translation.service";
-import { DatosDireccionesItem } from "../../../../../models/DatosDireccionesItem";
-import { DatosDireccionesObject } from "../../../../../models/DatosDireccionesObject";
-import { InscripcionesObject } from "../../../../../models/sjcs/InscripcionesObject";
-import { PartidasObject } from "../../../../../models/sjcs/PartidasObject";
-import { SigaStorageService } from "../../../../../siga-storage.service";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
+import { UpperCasePipe, DatePipe } from '../../../../../../../node_modules/@angular/common';
+import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
+import { findIndex } from 'rxjs/operators';
+import { MultiSelect, SortEvent, DataTable } from 'primeng/primeng';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { Router } from '../../../../../../../node_modules/@angular/router';
+import { TurnosObject } from '../../../../../models/sjcs/TurnosObject';
+import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
+import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
+import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObject';
+import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
+import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
+import { SigaStorageService } from '../../../../../siga-storage.service';
+import { Item } from '@syncfusion/ej2-splitbuttons';
+
 
 @Component({
-  selector: "app-gestion-inscripciones",
-  templateUrl: "./gestion-inscripciones.component.html",
-  styleUrls: ["./gestion-inscripciones.component.scss"],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'app-gestion-inscripciones',
+  templateUrl: './gestion-inscripciones.component.html',
+  styleUrls: ['./gestion-inscripciones.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TablaInscripcionesComponent implements OnInit {
+
   rowsPerPage: any = [];
   cols;
   colsPartidoJudicial;
@@ -75,15 +83,25 @@ export class TablaInscripcionesComponent implements OnInit {
   idClaseComunicacion: String;
   keys: any[] = [];
 
-  constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService, private localStorageService: SigaStorageService, private datepipe: DatePipe) {}
+  constructor(private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router,
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService,
+    private confirmationService: ConfirmationService,
+    private localStorageService: SigaStorageService,
+    private datepipe: DatePipe,
+  ) { }
 
   ngOnInit() {
     this.currentRoute = this.router.url;
     this.isLetrado = this.localStorageService.isLetrado;
-    if (this.isLetrado == undefined) {
-      this.commonsService.getLetrado().then((respuesta) => {
-        this.isLetrado = respuesta;
-      });
+    if(this.isLetrado == undefined){
+      this.commonsService.getLetrado()
+        .then(respuesta => {
+          this.isLetrado = respuesta;
+        });
       setTimeout(() => {
         //esperando isLetrado
         console.log("Se ha refrescado la pantalla");
@@ -93,21 +111,21 @@ export class TablaInscripcionesComponent implements OnInit {
     this.datos.fechaActual = new Date();
     this.getCols();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-    this.initDatos = JSON.parse(JSON.stringify(this.datos));
+    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     if (this.persistenceService.getPaginacion() != undefined) {
       let paginacion = this.persistenceService.getPaginacion();
       this.first = paginacion.paginacion;
       this.selectedItem = paginacion.selectedItem;
     }
     setTimeout(() => {
-      this.commonsService.scrollTablaFoco("tablaFoco");
+      this.commonsService.scrollTablaFoco('tablaFoco');
     }, 5);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.historico == false) {
       this.selectMultiple = false;
-      this.selectionMode = "single";
+      this.selectionMode = "single"
     }
     this.datos.fechaActual = new Date();
     this.selectedDatos = [];
@@ -122,13 +140,15 @@ export class TablaInscripcionesComponent implements OnInit {
   }
 
   numberOnly(event): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
+    const charCode = (event.which) ? event.which : event.keyCode;
 
     if (charCode >= 44 && charCode <= 57) {
       return true;
-    } else {
+    }
+    else {
       return false;
     }
+
   }
 
   edit(evento) {
@@ -136,8 +156,10 @@ export class TablaInscripcionesComponent implements OnInit {
       this.selectedDatos = [];
     }
     if (!this.nuevo && this.permisos) {
+
       if (!this.selectAll && !this.selectMultiple && !this.historico) {
-        this.datos.forEach((element) => {
+
+        this.datos.forEach(element => {
           element.editable = false;
           element.overlayVisible = false;
         });
@@ -150,7 +172,7 @@ export class TablaInscripcionesComponent implements OnInit {
         this.selectedDatos = [];
         this.selectedDatos.push(evento.data);
 
-        let findDato = this.datosInicial.find((item) => item.nombrepartida === this.selectedDatos[0].nombrepartida && item.descripcion === this.selectedDatos[0].descripcion && item.importepartida === this.selectedDatos[0].importepartida);
+        let findDato = this.datosInicial.find(item => item.nombrepartida === this.selectedDatos[0].nombrepartida && item.descripcion === this.selectedDatos[0].descripcion && item.importepartida === this.selectedDatos[0].importepartida);
 
         this.selectedBefore = findDato;
       } else {
@@ -161,14 +183,16 @@ export class TablaInscripcionesComponent implements OnInit {
             this.selectedDatos = [];
           }
         }
+
       }
+
     }
   }
 
   mySort(event: any, field: string) {
     if (event.order === 1) {
       this.rows.sort((a, b) => {
-        if (typeof a[field] === "string") {
+        if (typeof a[field] === 'string') {
           const sortDesc = a[field] < b[field] ? -1 : 0;
           return a[field] > b[field] ? 1 : sortDesc;
         }
@@ -176,7 +200,7 @@ export class TablaInscripcionesComponent implements OnInit {
       });
     } else {
       this.rows.sort((a, b) => {
-        if (typeof a[field] === "string") {
+        if (typeof a[field] === 'string') {
           const sortDesc = a[field] < b[field] ? 1 : 0;
           return a[field] > b[field] ? -1 : sortDesc;
         }
@@ -189,8 +213,9 @@ export class TablaInscripcionesComponent implements OnInit {
   getId() {
     let seleccionados = [];
     seleccionados.push(this.selectedDatos);
-    this.id = this.datos.findIndex((item) => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
+    this.id = this.datos.findIndex(item => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
   }
+
 
   transformaFecha(fecha) {
     if (fecha != null) {
@@ -207,6 +232,7 @@ export class TablaInscripcionesComponent implements OnInit {
       fecha = undefined;
     }
 
+
     return fecha;
   }
 
@@ -217,7 +243,8 @@ export class TablaInscripcionesComponent implements OnInit {
 
   callSaveService(url) {
     this.sigaServices.post(url, this.body).subscribe(
-      (data) => {
+      data => {
+
         if (this.nuevo) {
           this.nuevo = false;
         }
@@ -228,7 +255,8 @@ export class TablaInscripcionesComponent implements OnInit {
 
         this.progressSpinner = false;
       },
-      (err) => {
+      err => {
+
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
@@ -240,9 +268,11 @@ export class TablaInscripcionesComponent implements OnInit {
         this.selectedDatos = [];
         this.updatePartidasPres = [];
         this.progressSpinner = false;
-      },
+      }
     );
+
   }
+
 
   save() {
     this.progressSpinner = true;
@@ -259,13 +289,14 @@ export class TablaInscripcionesComponent implements OnInit {
         this.body.importepartida = 0;
       }
       this.callSaveService(url);
+
     } else {
       url = "gestionPartidasPres_updatePartidasPres";
       this.editMode = false;
       if (this.validateUpdate()) {
         this.body = new PartidasObject();
         this.body.partidasItem = this.updatePartidasPres;
-        this.body.partidasItem.forEach((element) => {
+        this.body.partidasItem.forEach(element => {
           element.importepartida = element.importepartida.replace(",", ".");
           element.importepartidaReal = +element.importepartida;
           if (element.importepartida == ".") {
@@ -274,16 +305,18 @@ export class TablaInscripcionesComponent implements OnInit {
         });
         this.callSaveService(url);
       } else {
-        (err) => {
+        err => {
+
           if (err.error != undefined && JSON.parse(err.error).error.description != "") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           }
           this.progressSpinner = false;
-        };
+        }
       }
     }
+
   }
   rest() {
     if (this.datosInicial != undefined) {
@@ -297,7 +330,7 @@ export class TablaInscripcionesComponent implements OnInit {
     this.nuevo = false;
     this.editMode = false;
     this.tabla.sortOrder = 0;
-    this.tabla.sortField = "";
+    this.tabla.sortField = '';
     this.tabla.reset();
   }
 
@@ -314,7 +347,7 @@ export class TablaInscripcionesComponent implements OnInit {
     this.editMode = false;
     this.selectionMode = "single";
     this.tabla.sortOrder = 0;
-    this.tabla.sortField = "";
+    this.tabla.sortField = '';
     this.tabla.reset();
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -328,7 +361,7 @@ export class TablaInscripcionesComponent implements OnInit {
       importepartida: "0",
       importepartidaReal: 0,
       idpartidapresupuestaria: undefined,
-      editable: true,
+      editable: true
     };
     if (this.datos.length == 0) {
       this.datos.push(partidaPresupuestaria);
@@ -336,19 +369,21 @@ export class TablaInscripcionesComponent implements OnInit {
       this.datos = [partidaPresupuestaria, ...this.datos];
     }
     this.tabla.sortOrder = 0;
-    this.tabla.sortField = "";
+    this.tabla.sortField = '';
     this.tabla.reset();
   }
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined && this.datos[0].valorNum != undefined) {
+      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
+        && this.datos[0].valorNum != undefined) {
         return false;
       } else {
         return true;
       }
+
     } else {
-      if (!this.historico && this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0 && this.permisos) {
+      if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
         return false;
       } else {
         return true;
@@ -356,104 +391,114 @@ export class TablaInscripcionesComponent implements OnInit {
     }
   }
 
+
   validateUpdate() {
+
     let check = true;
 
-    this.updatePartidasPres.forEach((dato) => {
-      let findDatos = this.datos.filter((item) => item.nombrepartida === dato.nombrepartida && item.descripcion === dato.descripcion && item.importepartida === dato.importepartida);
+    this.updatePartidasPres.forEach(dato => {
+
+      let findDatos = this.datos.filter(item => item.nombrepartida === dato.nombrepartida && item.descripcion === dato.descripcion && item.importepartida === dato.importepartida);
 
       if (findDatos != undefined && findDatos.length > 1) {
         check = false;
       }
+
     });
 
     return check;
   }
 
   searchHistorical() {
+
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
     this.searchPartidas.emit(this.historico);
-    this.selectAll = false;
+    this.selectAll = false
     // if (this.historico) {
     //   this.selectMultiple = true;
     //   this.selectionMode = "multiple";
     // }
   }
   checkTrabajosSJCS(selectedDatos, access) {
-    this.sigaServices.post("inscripciones_checkTrabajosSJCS", selectedDatos).subscribe((n) => {
-      let keyConfirmation = "deletePlantillaDoc";
-      if (n.body == true) {
-        this.progressSpinner = false;
-        this.confirmationService.confirm({
-          key: keyConfirmation,
-          message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSJCS"),
-          icon: "fa fa-trash-alt",
-          accept: () => {
-            if (access == 0) {
-              this.validar(selectedDatos.inscripcionesItem, 1);
-            } else if (access == 2) {
-              this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
-              //Cuando es perfil no letrado, validamos directamente tras dar de baja
-              if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false") {
-                this.validar(selectedDatos, 1);
+    this.sigaServices.post("inscripciones_checkTrabajosSJCS", selectedDatos).subscribe(
+      n => {
+        let keyConfirmation = "deletePlantillaDoc";
+        if (n.body == true) {
+          this.progressSpinner = false;
+          this.confirmationService.confirm({
+            key: keyConfirmation,
+            message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSJCS"),
+            icon: "fa fa-trash-alt",
+            accept: () => {
+              if (access == 0){ 
+                this.validar(selectedDatos.inscripcionesItem, 1);
+              }else if (access == 2){
+                this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+                //Cuando es perfil no letrado, validamos directamente tras dar de baja
+                if(sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false"){
+                  this.validar(selectedDatos, 1);
+                }
               }
+            },
+            reject: () => {
+              this.msgs = [
+                {
+                  severity: "info",
+                  summary: "Cancel",
+                  detail: this.translateService.instant(
+                    "general.message.accion.cancelada"
+                  )
+                }
+              ];
             }
-          },
-          reject: () => {
-            this.msgs = [
-              {
-                severity: "info",
-                summary: "Cancel",
-                detail: this.translateService.instant("general.message.accion.cancelada"),
-              },
-            ];
-          },
-        });
-      }
-      if (access == 0) {
-        this.validar(selectedDatos.inscripcionesItem, 1);
-      } else if (access == 2) {
-        this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
-        //Cuando es perfil no letrado, validamos directamente tras dar de baja
-        if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false") {
-          selectedDatos[0].estadonombre = "Baja pendiente";
-          this.validar(selectedDatos, 1);
+          });
         }
-      }
-    });
+        if (access == 0){
+          this.validar(selectedDatos.inscripcionesItem, 1);
+        }else if (access == 2){ 
+          this.solicitarBaja(selectedDatos.inscripcionesItem, 3);
+          //Cuando es perfil no letrado, validamos directamente tras dar de baja
+          if(sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false"){
+            selectedDatos[0].estadonombre = 'Baja pendiente';
+            this.validar(selectedDatos, 1);
+          }
+        }
+      });
     this.progressSpinner = false;
   }
 
   mensajeObservaciones() {
     this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Incorrecto",
-      detail: "Es necesario seleccionar algún registro y rellenar la fecha y las observaciones",
-    });
+      this.msgs.push({
+        severity: "error",
+        summary: "Incorrecto",
+        detail: "Es necesario seleccionar algún registro y rellenar la fecha y las observaciones"
+      });
   }
+
 
   validar(selectedDatos, access = 0) {
     let vb = 0;
     this.progressSpinner = true;
     this.body = new InscripcionesObject();
-    this.body.inscripcionesItem = selectedDatos;
-    this.body.inscripcionesItem.forEach((element) => {
+    this.body.inscripcionesItem = selectedDatos
+    this.body.inscripcionesItem.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
       if (element.estado == "2") {
         vb++;
       }
     });
-    if (this.datos.fechaActual == null || this.datos.fechaActual == undefined || this.datos.observaciones == null || this.datos.observaciones == "" || /*this.*/ selectedDatos.length == 0) {
+    if(this.datos.fechaActual == null || this.datos.fechaActual== undefined || this.datos.observaciones == null || this.datos.observaciones== "" || /*this.*/selectedDatos.length==0){
       this.mensajeObservaciones();
-    } else {
-      if (vb > 0 && access == 0) {
+    }else{
+      if (vb > 0 && access == 0){
         this.checkTrabajosSJCS(this.body, access);
-      } else {
+      }else {
         if (vb > 0) {
-          this.sigaServices.post("inscripciones_checkSaltos", this.body).subscribe((n) => {
+        this.sigaServices.post("inscripciones_checkSaltos", this.body).subscribe(
+          n => {
             let keyConfirmation = "deletePlantillaDoc";
             let ins = new InscripcionesObject();
             ins.inscripcionesItem = JSON.parse(n.body).inscripcionesItem;
@@ -464,63 +509,25 @@ export class TablaInscripcionesComponent implements OnInit {
                 message: this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajeSaltos"),
                 icon: "fa fa-trash-alt",
                 accept: () => {
-                  ins.inscripcionesItem.forEach((element) => {
+                  ins.inscripcionesItem.forEach(element => {
                     element.fechaActual = this.datos.fechaActual;
-                  });
+                  }
+                  )
                   this.sigaServices.post("inscripciones_updateBorrarSaltos", ins).subscribe();
-                },
-              });
+                }
+              })
             }
-          });
-        }
-        this.sigaServices.post("inscripciones_updateValidar", this.body).subscribe(
-          (data) => {
-            this.selectedDatos = [];
-            this.searchPartidas.emit(false);
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.progressSpinner = false;
-          },
-          (err) => {
-            if (err != undefined && JSON.parse(err.error).error.description != "") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-            } else {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            }
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-            this.historico = false;
-            this.selectMultiple = false;
-            this.selectAll = false;
-            this.editMode = false;
-            this.nuevo = false;
-          },
-        );
+          }
+        )
       }
-    }
-    this.progressSpinner = false;
-  }
-
-  cambiarFecha(selectedDatos) {
-    this.progressSpinner = true;
-    this.body = new InscripcionesObject();
-    this.body.inscripcionesItem = selectedDatos;
-    this.body.inscripcionesItem.forEach((element) => {
-      element.fechaActual = this.datos.fechaActual;
-      element.observaciones = this.datos.observaciones;
-    });
-    if (this.datos.fechaActual == null || this.datos.fechaActual == undefined || this.datos.observaciones == null || this.datos.observaciones == "" || this.selectedDatos.length == 0) {
-      this.mensajeObservaciones();
-    } else {
-      this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
-        (data) => {
+      this.sigaServices.post("inscripciones_updateValidar", this.body).subscribe(
+        data => {
           this.selectedDatos = [];
           this.searchPartidas.emit(false);
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.progressSpinner = false;
         },
-        (err) => {
+        err => {
           if (err != undefined && JSON.parse(err.error).error.description != "") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
@@ -535,8 +542,48 @@ export class TablaInscripcionesComponent implements OnInit {
           this.selectAll = false;
           this.editMode = false;
           this.nuevo = false;
-        },
+        }
       );
+    }
+  }
+  this.progressSpinner = false;
+}
+
+  cambiarFecha(selectedDatos) {
+    this.progressSpinner = true;
+    this.body = new InscripcionesObject();
+    this.body.inscripcionesItem = selectedDatos
+    this.body.inscripcionesItem.forEach(element => {
+      element.fechaActual = this.datos.fechaActual;
+      element.observaciones = this.datos.observaciones;
+    });
+    if(this.datos.fechaActual == null || this.datos.fechaActual== undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
+      this.mensajeObservaciones();
+    }else{
+    this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
+      data => {
+        this.selectedDatos = [];
+        this.searchPartidas.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
+        this.editMode = false;
+        this.nuevo = false;
+      }
+    );
     }
     this.progressSpinner = false;
   }
@@ -544,38 +591,38 @@ export class TablaInscripcionesComponent implements OnInit {
   denegar(selectedDatos) {
     this.progressSpinner = true;
     this.body = new InscripcionesObject();
-    this.body.inscripcionesItem = selectedDatos;
-    this.body.inscripcionesItem.forEach((element) => {
+    this.body.inscripcionesItem = selectedDatos
+    this.body.inscripcionesItem.forEach(element => {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
     });
-    if (this.datos.fechaActual == null || this.datos.fechaActual == undefined || this.datos.observaciones == null || this.datos.observaciones == "" || this.selectedDatos.length == 0) {
+    if(this.datos.fechaActual == null || this.datos.fechaActual== undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
       this.mensajeObservaciones();
-    } else {
-      this.sigaServices.post("inscripciones_updateDenegar", this.body).subscribe(
-        (data) => {
-          this.selectedDatos = [];
-          this.searchPartidas.emit(false);
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
-        },
-        (err) => {
-          if (err != undefined && JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-          this.historico = false;
-          this.selectMultiple = false;
-          this.selectAll = false;
-          this.editMode = false;
-          this.nuevo = false;
-        },
-      );
+    }else{
+    this.sigaServices.post("inscripciones_updateDenegar", this.body).subscribe(
+      data => {
+        this.selectedDatos = [];
+        this.searchPartidas.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
+        this.editMode = false;
+        this.nuevo = false;
+      }
+    );
     }
     this.progressSpinner = false;
   }
@@ -583,18 +630,18 @@ export class TablaInscripcionesComponent implements OnInit {
   solicitarBaja(selectedDatos, access = 2) {
     this.progressSpinner = true;
     let fechaDeHoy = new Date();
-    let fechaHoy = this.datepipe.transform(fechaDeHoy, "dd/MM/yyyy");
-    let fechaActual2 = this.datepipe.transform(this.datos.fechaActual, "dd/MM/yyyy");
-    if (fechaActual2 == null || fechaActual2 == undefined || this.datos.observaciones == null || this.datos.observaciones == "" || this.selectedDatos.length == 0) {
+    let fechaHoy = this.datepipe.transform(fechaDeHoy, 'dd/MM/yyyy');
+    let fechaActual2 = this.datepipe.transform(this.datos.fechaActual, 'dd/MM/yyyy')
+    if(fechaActual2 == null || fechaActual2 == undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
       this.mensajeObservaciones();
-    } /*else if (fechaActual2 != fechaHoy) {
+    }/*else if (fechaActual2 != fechaHoy) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
       this.progressSpinner = false;
     }*/ else {
       let vb = 0;
       this.body = new InscripcionesObject();
       this.body.inscripcionesItem = selectedDatos;
-      this.body.inscripcionesItem.forEach((element) => {
+      this.body.inscripcionesItem.forEach(element => {
         element.fechaActual = this.datos.fechaActual;
         element.fechasolicitudbaja = this.datos.fechaActual;
         element.observaciones = this.datos.observaciones;
@@ -604,17 +651,17 @@ export class TablaInscripcionesComponent implements OnInit {
           vb++;
         }
       });
-      if (vb > 0 && access == 2) {
+      if (vb > 0 && access == 2){
         this.checkTrabajosSJCS(this.body, access);
-      } else {
+      }else {
         this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
-          (data) => {
+          data => {
             this.selectedDatos = [];
             this.searchPartidas.emit(false);
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.progressSpinner = false;
           },
-          (err) => {
+          err => {
             if (err != undefined && JSON.parse(err.error).error.description != "") {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
             } else {
@@ -629,18 +676,20 @@ export class TablaInscripcionesComponent implements OnInit {
             this.selectAll = false;
             this.editMode = false;
             this.nuevo = false;
-          },
+          }
         );
 
         //Cuando es perfil no letrado, validamos directamente tras dar de baja
-        if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false") {
-          selectedDatos[0].estadonombre = "Baja pendiente";
+        if(sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") == "false"){
+          selectedDatos[0].estadonombre = 'Baja pendiente';
           this.validar(selectedDatos, 1);
         }
       }
     }
     this.progressSpinner = false;
   }
+
+  
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
@@ -651,7 +700,7 @@ export class TablaInscripcionesComponent implements OnInit {
       this.editElementDisabled();
 
       if (this.historico) {
-        this.selectedDatos = this.datos.filter((dato) => dato.fechabaja != undefined && dato.fechabaja != null);
+        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
         this.selectMultiple = true;
         this.selectionMode = "single";
       } else {
@@ -661,11 +710,12 @@ export class TablaInscripcionesComponent implements OnInit {
       }
       this.selectionMode = "multiple";
       this.numSelected = this.datos.length;
-      this.actualizaBotones(this.selectedDatos);
+      this.actualizaBotones(this.selectedDatos)
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
-      if (this.historico) this.selectMultiple = true;
+      if (this.historico)
+        this.selectMultiple = true;
       this.selectionMode = "multiple";
     }
   }
@@ -673,6 +723,7 @@ export class TablaInscripcionesComponent implements OnInit {
   searchPartida() {
     this.historico = !this.historico;
     if (this.historico) {
+
       this.editElementDisabled();
       this.editMode = false;
       this.nuevo = false;
@@ -682,7 +733,8 @@ export class TablaInscripcionesComponent implements OnInit {
       this.selectedDatos = [];
       this.numSelected = 0;
       this.selectionMode = "multiple";
-    } else {
+    }
+    else {
       this.selectMultiple = false;
       this.selectionMode = "single";
     }
@@ -690,13 +742,14 @@ export class TablaInscripcionesComponent implements OnInit {
     this.selectAll = false;
   }
 
+
   setItalic(dato) {
     // if (dato.fechabaja == null) return false;
     // else return true;
   }
 
   getCols() {
-    // Para cambiar la presentacion de las columnas en la tabala se debe
+    // Para cambiar la presentacion de las columnas en la tabala se debe 
     // cambiar de orden aqui.
     this.cols = [
       { field: "ncolegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
@@ -706,36 +759,37 @@ export class TablaInscripcionesComponent implements OnInit {
       { field: "fechavalidacion", header: "oficio.busquedaInscripcion.fechaEfectivaAlta" },
       { field: "fechasolicitudbaja", header: "oficio.busquedaInscripcion.fechaSolicitudBaja" },
       { field: "fechabaja", header: "oficio.busquedaInscripcion.fechaEfectivaBaja" },
-      { field: "estadonombre", header: "censo.fichaIntegrantes.literal.estado" },
+      { field: "estadonombre", header: "censo.fichaIntegrantes.literal.estado" }
     ];
-    this.cols.forEach((element) => {
+    this.cols.forEach(element => {
       this.buscadores.push("");
     });
 
     this.rowsPerPage = [
       {
         label: 10,
-        value: 10,
+        value: 10
       },
       {
         label: 20,
-        value: 20,
+        value: 20
       },
       {
         label: 30,
-        value: 30,
+        value: 30
       },
       {
         label: 40,
-        value: 40,
-      },
+        value: 40
+      }
     ];
   }
 
   openTab(evento) {
+
     let paginacion = {
       paginacion: this.tabla.first,
-      selectedItem: this.selectedItem,
+      selectedItem: this.selectedItem
     };
 
     this.persistenceService.setPaginacion(paginacion);
@@ -754,11 +808,13 @@ export class TablaInscripcionesComponent implements OnInit {
   }
 
   editElementDisabled() {
-    this.datos.forEach((element) => {
-      element.editable = false;
+    this.datos.forEach(element => {
+      element.editable = false
       element.overlayVisible = false;
     });
   }
+
+
 
   isSelectMultiple() {
     if (this.permisos && !this.historico) {
@@ -777,30 +833,32 @@ export class TablaInscripcionesComponent implements OnInit {
         this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "multiple";
+
       }
     }
     // this.volver();
   }
 
   formatDateSinHora(date) {
-    const pattern = "dd/MM/yyyy";
+    const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);
   }
 
   actualizaBotones(selectedDatos) {
+
     this.selectedDatos = selectedDatos;
     if (this.selectedDatos == undefined) {
-      this.selectedDatos = [];
+      this.selectedDatos = []
     }
 
     this.estadosDistintos = false;
     let estadoInicial = null;
 
     if (selectedDatos != null && selectedDatos.length != 0) {
-      estadoInicial = this.selectedDatos[0].estado;
+      estadoInicial= this.selectedDatos[0].estado;
 
-      this.selectedDatos.forEach((item) => {
-        if (item.estado != estadoInicial) {
+      this.selectedDatos.forEach(item => {
+        if(item.estado != estadoInicial){
           this.estadosDistintos = true;
         }
       });
@@ -808,15 +866,15 @@ export class TablaInscripcionesComponent implements OnInit {
 
     if (selectedDatos != null && selectedDatos.length != 0 && this.estadosDistintos == false) {
       this.numSelected = selectedDatos.length;
-      let findDato = this.selectedDatos.find((item) => item.estado != "2");
+      let findDato = this.selectedDatos.find(item => item.estado != "2");
       let currentDate = new Date();
       let currentDateString = this.formatDateSinHora(currentDate);
-      let selectedDate = this.datos.fechaActual;
+      let selectedDate = this.datos.fechaActual
       let selectedDateString = this.formatDateSinHora(selectedDate);
       if (findDato != null) {
         this.disabledSolicitarBaja = true;
-      } else {
-        /*
+      }
+      else {/*
         if (currentDateString != selectedDateString && this.isLetrado) {
           this.disabledSolicitarBaja = true;
         } else {
@@ -845,14 +903,15 @@ export class TablaInscripcionesComponent implements OnInit {
         this.disabledDenegar = false;
       }*/
       // Si no es Alta o Baja
-      let findDato3 = this.selectedDatos.find((item) => item.estado != "2" && item.estado != "3");
+      let findDato3 = this.selectedDatos.find(item => item.estado != "2" && item.estado != "3");
       if (findDato3 != null) {
         this.disabledCambiarFecha = true;
-      } else {
+      }
+      else {
         this.disabledCambiarFecha = false;
       }
 
-      let findDato4 = this.selectedDatos.find((item) => item.estado == null || item.estado == undefined || item.estado == "");
+      let findDato4 = this.selectedDatos.find(item => item.estado == null || item.estado == undefined || item.estado == '');
 
       if (findDato4 != null) {
         this.disabledValidar = true;
@@ -862,25 +921,26 @@ export class TablaInscripcionesComponent implements OnInit {
         this.disabledCambiarFecha = true;
         this.disabledDenegar = true;
       }
-    } else {
-      this.disabledValidar = true;
-      this.disabledDenegar = true;
-      this.selectAll = false;
-      this.selectMultiple = false;
-      this.disabledCambiarFecha = true;
-      this.disabledSolicitarBaja = true;
-      this.disabledCambiarFecha = true;
-      this.disabledDenegar = true;
+    }else{
+        this.disabledValidar = true;
+        this.disabledDenegar = true;
+        this.selectAll = false;
+        this.selectMultiple = false;
+        this.disabledCambiarFecha = true;
+        this.disabledSolicitarBaja = true;
+        this.disabledCambiarFecha = true;
+        this.disabledDenegar = true;
     }
 
     if (this.selectedDatos && this.selectedDatos != null && this.estadosDistintos == false) {
       this.checkValidarInscripciones = false;
-      this.selectedDatos.forEach((el) => {
-        if (this.isLetrado && el.validarinscripciones && el.validarinscripciones != null && el.validarinscripciones.toUpperCase() != "N") {
+      this.selectedDatos.forEach(el => {
+        if (this.isLetrado && el.validarinscripciones && el.validarinscripciones != null && el.validarinscripciones.toUpperCase() != 'N') {
           this.checkValidarInscripciones = true;
         }
       });
     }
+
   }
 
   desactBotones(selectedDatos) {
@@ -896,7 +956,9 @@ export class TablaInscripcionesComponent implements OnInit {
   }
 
   esPendienteAltaOpendienteBaja(item) {
+
     return item.estado == "6" || item.estado == "7";
+
   }
 
   showMessage(severity, summary, msg) {
@@ -904,7 +966,7 @@ export class TablaInscripcionesComponent implements OnInit {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg,
+      detail: msg
     });
   }
 
@@ -920,40 +982,50 @@ export class TablaInscripcionesComponent implements OnInit {
     this.bodyDirecciones.idPersona = idPersona;
     this.bodyDirecciones.historico = false;
     if (this.bodyDirecciones.idPersona != undefined && this.bodyDirecciones.idPersona != null) {
-      this.sigaServices.postPaginado("fichaDatosDirecciones_datosDireccionesSearch", "?numPagina=1", this.bodyDirecciones).subscribe(
-        (data) => {
-          this.searchDireccionIdPersona = JSON.parse(data["body"]);
-          this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
-          let contador = 0;
-          this.datosDirecciones.forEach((element) => {
-            if (element.tipoDireccion != undefined) {
-              var index = element.tipoDireccion.indexOf("Guardia");
-              if (index != -1) {
-                this.datosContacto = element.movil;
-                if (this.datosContacto.length != 9) {
-                  this.disabledValidar = true;
-                } else {
-                  this.disabledValidar = false;
+      this.sigaServices
+        .postPaginado(
+          "fichaDatosDirecciones_datosDireccionesSearch",
+          "?numPagina=1",
+          this.bodyDirecciones
+        )
+        .subscribe(
+          data => {
+            this.searchDireccionIdPersona = JSON.parse(data["body"]);
+            this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
+            let contador = 0;
+            this.datosDirecciones.forEach(element => {
+
+              if (element.tipoDireccion != undefined) {
+                var index = element.tipoDireccion.indexOf("Guardia");
+                if (index != -1) {
+                  this.datosContacto = element.movil;
+                  if (this.datosContacto.length != 9) {
+                    this.disabledValidar = true;
+                  }
+                  else {
+                    this.disabledValidar = false;
+                  }
                 }
               }
-            }
-          });
-          sessionStorage.setItem("numDespacho", JSON.stringify(contador));
-        },
-        (err) => {
-          //console.log(err);
-          this.progressSpinner = false;
-        },
-      );
+            });
+            sessionStorage.setItem("numDespacho", JSON.stringify(contador));
+          },
+          err => {
+            //console.log(err);
+            this.progressSpinner = false;
+          },
+        );
     }
   }
   navigateComunicar(dato) {
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de SJCS es 10
-    sessionStorage.setItem("idModulo", "10");
+    sessionStorage.setItem("idModulo", '10');
 
     this.getDatosComunicar();
   }
+
+
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
@@ -962,17 +1034,15 @@ export class TablaInscripcionesComponent implements OnInit {
       let result = null;
 
       if (value1 != null && value2 != null) {
-        if (isNaN(parseInt(value1))) {
-          //Checked for numeric
+        if (isNaN(parseInt(value1))) { //Checked for numeric
           const dayA = value1.substr(0, 2);
           const monthA = value1.substr(3, 2);
           const yearA = value1.substr(6, 10);
           //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
           var dt = new Date(yearA, monthA, dayA);
-          if (!isNaN(dt.getTime())) {
-            //Checked for date
+          if (!isNaN(dt.getTime())) { //Checked for date
             result = this.compareDate(value1, value2);
-            return event.order * result;
+            return (event.order * result);
           }
         }
       }
@@ -983,16 +1053,17 @@ export class TablaInscripcionesComponent implements OnInit {
         result = 1;
       } else if (value1 == null && value2 == null) {
         result = 0;
-      } else if (typeof value1 === "string" && typeof value2 === "string") {
+      } else if (typeof value1 === 'string' && typeof value2 === 'string') {
         result = value1.localeCompare(value2);
       } else {
-        result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+        result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
       }
-      return event.order * result;
+      return (event.order * result);
     });
   }
 
   compareDate(fechaA: any, fechaB: any) {
+
     let dateA = null;
     let dateB = null;
     if (fechaA != null) {
@@ -1011,40 +1082,53 @@ export class TablaInscripcionesComponent implements OnInit {
       dateB = new Date(yearB, monthB, dayB);
     }
 
-    return dateA < dateB ? -1 : 1;
+
+    return (dateA < dateB ? -1 : 1);
+
+
   }
+
 
   getDatosComunicar() {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
 
-    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
-      (data) => {
-        this.idClaseComunicacion = JSON.parse(data["body"]).clasesComunicaciones[0].idClaseComunicacion;
-        this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-          (data) => {
-            this.keys = JSON.parse(data["body"]).keysItem;
-            this.selectedDatos.forEach((element) => {
-              let keysValues = [];
-              this.keys.forEach((key) => {
-                if (element[key.nombre.toLowerCase()] != undefined) {
-                  keysValues.push(element[key.nombre.toLowerCase()]);
-                }
-              });
-              datosSeleccionados.push(keysValues);
-            });
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.selectedDatos.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (element[key.nombre.toLowerCase()] != undefined) {
+                      keysValues.push(element[key.nombre.toLowerCase()]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
 
-            sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
-            this.router.navigate(["/dialogoComunicaciones"]);
-          },
-          (err) => {
-            //console.log(err);
-          },
-        );
-      },
-      (err) => {
-        //console.log(err);
-      },
-    );
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
   }
 }

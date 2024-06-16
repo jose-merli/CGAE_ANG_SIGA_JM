@@ -60,14 +60,14 @@ export class DatosSolicitudComponent implements OnInit {
         if (this.body.autorizaavisotelematico == "1") {
           this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
         } else {
-          if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+          if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
             this.showDialog.emit("tarjetaSolicitud");
           } else {
             this.callServiceSave();
           }
         }
       } else {
-        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
           this.showDialog.emit("tarjetaSolicitud");
         } else {
           this.callServiceSave();

@@ -4,6 +4,7 @@ import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { CookieService } from "ngx-cookie-service";
 import { ValidationModule } from "./commons/validation/validation.module";
 
 import { AuthGuard } from "./_guards/auth.guards";
@@ -360,8 +361,15 @@ import { DescripcionEnvioMasivoComponent } from "./features/informes-comunicacio
 import { EnvioReintegrosXuntaComponent } from "./features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component";
 import { GenerarImpreso190Component } from "./features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component";
 
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatExpansionModule } from "@angular/material/expansion";
+import { MatInputModule } from "@angular/material/input";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatSelectModule } from "@angular/material/select";
 import { MatSortModule } from "@angular/material/sort";
+import { MatTableModule } from "@angular/material/table";
 
 import { BuscadorColegiadosExpressComponent } from "./commons/buscador-colegiados-express/buscador-colegiados-express.component";
 import { BuscadorColegiadosComponent } from "./commons/buscador-colegiados/buscador-colegiados.component";
@@ -389,6 +397,7 @@ import { FormularioBusquedaComponent } from "./features/sjcs/oficio/cargas-masiv
 import { FormularioSubidaComponent } from "./features/sjcs/oficio/cargas-masivas-oficio/formulario-subida/formulario-subida.component";
 import { ListaArchivosComponent } from "./features/sjcs/oficio/cargas-masivas-oficio/lista-archivos/lista-archivos.component";
 
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { DatePickerRangeComponent } from "./commons/date-picker-range/date-picker-range.component";
 import { InputDivididoComponent } from "./commons/input-dividido/input-dividido.component";
 import { Paginador3Module } from "./commons/paginador3/paginador3.module";
@@ -452,7 +461,11 @@ import { LetradoSalienteComponent } from "./features/sjcs/oficio/designaciones/f
 import { SigaStorageService } from "./siga-storage.service";
 
 //PRODUCTOS Y SERVICIOS
+import { MatSlideToggleModule } from "@angular/material";
+import { RadioButtonModule as RadioButtonEJSModule } from "@syncfusion/ej2-angular-buttons";
+import { DropDownListModule } from "@syncfusion/ej2-angular-dropdowns";
 import { QueryBuilderModule } from "@syncfusion/ej2-angular-querybuilder";
+import { enableRipple } from "@syncfusion/ej2-base";
 import { CargasMasivasComprasComponent } from "./features/facturacion/cargas-masivas-compras/cargas-masivas-compras.component";
 import { TarjetaBusquedaCmcComponent } from "./features/facturacion/cargas-masivas-compras/tarjeta-busqueda-cmc/tarjeta-busqueda-cmc.component";
 import { TarjetaFicheroModeloCmcComponent } from "./features/facturacion/cargas-masivas-compras/tarjeta-fichero-modelo-cmc/tarjeta-fichero-modelo-cmc.component";
@@ -768,7 +781,7 @@ import { CheckPermissionDirective } from "./commons/directives/check-permission.
 import { DigitDecimaNumberDirective } from "./commons/directives/digit-decima-number.directive";
 
 registerLocaleData(es);
-//enableRipple(true);
+enableRipple(true);
 
 @NgModule({
   declarations: [
@@ -1392,6 +1405,7 @@ registerLocaleData(es);
     DestinatariosModule,
     DialogModule,
     DialogoModule,
+    DropDownListModule,
     DropdownModule,
     EditorModule,
     FechaModule,
@@ -1407,8 +1421,17 @@ registerLocaleData(es);
     KeyFilterModule,
     ListboxModule,
     MaestrosModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
     MatExpansionModule,
+    MatInputModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatSelectModule,
+    MatSlideToggleModule,
     MatSortModule,
+    MatTableModule,
+    MatTooltipModule,
     MenubarModule,
     MovimientosVariosModule,
     MultiSelectModule,
@@ -1427,6 +1450,7 @@ registerLocaleData(es);
     PrecioModule,
     ProgressSpinnerModule,
     QueryBuilderModule,
+    RadioButtonEJSModule,
     RadioButtonModule,
     ReactiveFormsModule,
     routing,
@@ -1455,6 +1479,7 @@ registerLocaleData(es);
     CardService,
     CommonsService,
     ConfirmationService,
+    CookieService,
     DatePipe,
     CurrencyPipe,
     LogoService,

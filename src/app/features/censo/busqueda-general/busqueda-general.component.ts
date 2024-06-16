@@ -891,12 +891,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.bodyJuridica.denominacion = "";
       this.bodyJuridica.abreviatura = "";
       this.selectedTipo = "";
-      
-      if (this.isSociedad) {
-        this.getInstitucion();
-      } else {
-        this.colegios_seleccionados = [];
-      }
+      this.colegios_seleccionados = [];
     }
   }
 

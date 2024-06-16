@@ -143,9 +143,8 @@ export class DatosPersonalesComponent implements OnInit {
     } else {
       this.body = new JusticiableItem();
       this.body.telefonos = [];
-      if (this.bodyInicialTelefonos != "" && this.bodyInicialTelefonos != undefined) {
-        this.body.telefonos = JSON.parse(this.bodyInicialTelefonos);
-      }
+      this.body.telefonos[0] = new JusticiableTelefonoItem();
+      this.body.idpaisdir1 = "191";
     }
     this.hasChange = false;
   }
@@ -166,16 +165,13 @@ export class DatosPersonalesComponent implements OnInit {
         if (this.body.telefonos != null && this.body.telefonos.length > 0) {
           this.body.telefonos = this.body.telefonos.filter((t) => t.numeroTelefono && t.numeroTelefono.trim() !== "");
         }
-        //if (!this.modoEdicion) {
-        //this.callSaveService("gestionJusticiables_createJusticiable");
-        //} else {
-        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+
+        if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
           this.progressSpinner = false;
           this.showDialog.emit("tarjetaPersonales");
         } else {
           this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
         }
-        //}
       }
     }
   }
@@ -258,7 +254,7 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.escaleradir = "";
       this.body.pisodir = "";
       this.body.puertadir = "";
-      this.body.idpais = "";
+      this.body.idpaisdir1 = "";
       this.body.codigopostal = "";
       this.body.idprovincia = "";
       this.body.idpoblacion = "";
@@ -269,7 +265,7 @@ export class DatosPersonalesComponent implements OnInit {
       this.body.escaleradir = this.bodyInicial.escaleradir;
       this.body.pisodir = this.bodyInicial.pisodir;
       this.body.puertadir = this.bodyInicial.puertadir;
-      this.body.idpais = this.bodyInicial.idpais;
+      this.body.idpaisdir1 = this.bodyInicial.idpaisdir1;
       this.body.codigopostal = this.bodyInicial.codigopostal;
       this.body.idprovincia = this.bodyInicial.idprovincia;
       this.body.idpoblacion = this.bodyInicial.idpoblacion;
@@ -354,8 +350,8 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   guardarDialog(clonar: boolean) {
-    this.progressSpinner = true;
     if (!clonar) {
+      this.progressSpinner = true;
       this.callSaveService("gestionJusticiables_updateJusticiableDatosPersonales");
     }
   }
@@ -419,15 +415,25 @@ export class DatosPersonalesComponent implements OnInit {
       },
       (err) => {
         this.progressSpinner = false;
-        let dataJusticiable = JSON.parse(err.error);
-        if (dataJusticiable.error.description != "") {
-          if (err.error != undefined && JSON.parse(err.error).error.code == "600") {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), dataJusticiable.error.description);
+        const errors = JSON.parse(err.error);
+        if (errors.error != undefined && errors.error.description != "") {
+          if (JSON.parse(err.error).error.code == "600") {
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), errors.error.description);
           } else {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(dataJusticiable.error.description));
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(errors.error.description));
           }
         } else {
-          this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          if (err.status == 400) {
+            let description = "";
+            for (const error in errors) {
+              if (errors.hasOwnProperty(error)) {
+                description = description + (description != "" ? "<br/>" : "") + errors[error];
+              }
+            }
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), description);
+          } else {
+            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
         }
       },
     );

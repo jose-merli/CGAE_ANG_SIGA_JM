@@ -2,6 +2,7 @@ import { APP_BASE_HREF, CommonModule, DatePipe } from "@angular/common";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { CookieService } from "../../../../../../node_modules/ngx-cookie-service";
 import { MessageService } from "../../../../../../node_modules/primeng/components/common/messageservice";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "../../../../../../node_modules/primeng/primeng";
 import { TableModule } from "../../../../../../node_modules/primeng/table";
@@ -43,6 +44,7 @@ import { TablaCalendarioAgendaLaboralComponent } from "./busqueda-calendario-age
       useClass: JwtInterceptor,
       multi: true,
     },
+    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })

@@ -2,6 +2,7 @@ import { APP_BASE_HREF, CommonModule, DatePipe } from "@angular/common";
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { HTTP_INTERCEPTORS } from "../../../../../../node_modules/@angular/common/http";
 import { FormsModule } from "../../../../../../node_modules/@angular/forms";
+import { CookieService } from "../../../../../../node_modules/ngx-cookie-service";
 import { ConfirmationService } from "../../../../../../node_modules/primeng/api";
 import { MessageService } from "../../../../../../node_modules/primeng/components/common/messageservice";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "../../../../../../node_modules/primeng/primeng";
@@ -35,6 +36,7 @@ import { TablaRetencionesIrpfComponent } from "./tabla-retenciones-irpf/tabla-re
     AuthenticationService,
     ConfirmationService,
     PersistenceService,
+    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,

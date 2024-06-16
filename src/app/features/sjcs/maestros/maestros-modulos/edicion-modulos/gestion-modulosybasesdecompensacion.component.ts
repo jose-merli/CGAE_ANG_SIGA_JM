@@ -1,70 +1,91 @@
 import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import { CommonsService } from "../../../../../_services/commons.service";
+// import { EdicionAreasComponent } from './gestion-areas/edicion-areas.component';
+// import { TablaMateriasComponent } from "./gestion-materias/tabla-materias.component";
+import { TranslateService } from './../../../../../commons/translate';
+import { SigaServices } from './../../../../../_services/siga.service';
 import { ModulosItem } from "../../../../../models/sjcs/ModulosItem";
-import { procesos_maestros } from "../../../../../permisos/procesos_maestros";
-import { SigaServices } from "./../../../../../_services/siga.service";
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
-  selector: "app-gestion-modulosybasesdecompensacion",
-  templateUrl: "./gestion-modulosybasesdecompensacion.component.html",
-  styleUrls: ["./gestion-modulosybasesdecompensacion.component.scss"],
+  selector: 'app-gestion-modulosybasesdecompensacion',
+  templateUrl: './gestion-modulosybasesdecompensacion.component.html',
+  styleUrls: ['./gestion-modulosybasesdecompensacion.component.scss']
 })
 export class GestionModulosYBasesComponent implements OnInit {
+
   fichasPosibles;
   modoEdicion: boolean;
-  permisoEscritura: boolean = false;
   idProcedimiento;
   messageShow: string;
   acreditacionesItem;
-  modulosItem: any;
-
-  constructor(private location: Location, private route: ActivatedRoute, private sigaServices: SigaServices, private commonsService: CommonsService) {}
+  modulosItem;
+  constructor(private location: Location,
+    private route: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    this.getPermisos();
-    this.route.queryParams.subscribe((params) => {
-      this.idProcedimiento = params.idProcedimiento;
-    });
+    // this.getFichasPosibles();
+    this.route.queryParams
+      .subscribe(params => {
+        this.idProcedimiento = params.idProcedimiento
+        //console.log(params);
+      });
     if (this.idProcedimiento != undefined) {
       this.searchModulos();
     }
+
+
+  }
+
+  searchModulos() {
+    // this.filtros.filtros.historico = event;
+    // this.progressSpinner = true;
+    let filtros: ModulosItem = new ModulosItem;
+    filtros.idProcedimiento = this.idProcedimiento;
+    filtros.historico = false;
+    if (this.persistenceService.getHistorico() != undefined) {
+      filtros.historico = this.persistenceService.getHistorico();
+    }
+    this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", filtros).subscribe(
+      n => {
+        this.modulosItem = JSON.parse(n.body).modulosItem[0];
+        if (this.modulosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
+          this.modulosItem.historico = true;
+        }
+        this.modulosItem.buscar = true;
+      },
+      err => {
+        //console.log(err);
+      }
+    );
   }
 
   modoEdicionSend(event) {
     this.modoEdicion = event.modoEdicion;
-    this.idProcedimiento = event.idProcedimiento;
+    this.idProcedimiento = event.idProcedimiento
   }
+
+  // getFichasPosibles() {
+
+  //   this.fichasPosibles = [
+  //     {
+  //       key: "edicionAreas",
+  //       activa: true
+  //     },
+  //     {
+  //       key: "tablaMaterias",
+  //       activa: true
+  //     }
+
+  //   ];
+  // }
 
   backTo() {
     this.location.back();
-  }
-
-  private getPermisos() {
-    this.commonsService
-      .checkAcceso(procesos_maestros.modulo)
-      .then((respuesta) => {
-        this.permisoEscritura = respuesta;
-      })
-      .catch((error) => console.error(error));
-  }
-
-  private searchModulos() {
-    let filtros: ModulosItem = new ModulosItem();
-    filtros.idProcedimiento = this.idProcedimiento;
-    //filtros.historico = true;
-    this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", filtros).subscribe((n) => {
-      this.modulosItem = JSON.parse(n.body).modulosItem[0];
-      if (this.modulosItem.fechadesdevigor != null) {
-        this.modulosItem.fechadesdevigor = new Date(this.modulosItem.fechadesdevigor);
-      }
-      if (this.modulosItem.fechahastavigor != null) {
-        this.modulosItem.fechahastavigor = new Date(this.modulosItem.fechahastavigor);
-      }
-      if (this.modulosItem.fechabaja != undefined) {
-        this.modulosItem.historico = true;
-      }
-    });
   }
 }

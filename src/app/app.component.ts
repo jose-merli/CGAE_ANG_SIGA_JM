@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { CookieService } from "ngx-cookie-service";
 import { AuthenticationService } from "./_services/authentication.service";
 import { DeadmanService } from "./_services/deadman.service";
 import { NotificationService } from "./_services/notification.service";
@@ -14,6 +15,9 @@ import { SigaStorageService } from "./siga-storage.service";
 export class AppComponent implements OnInit {
   @ViewChild("content")
   content: any;
+
+  cookieValue = "UNKNOWN";
+
   hideCookies: boolean = true;
   bottomCookies: string = "0";
   expires: number;
@@ -24,7 +28,7 @@ export class AppComponent implements OnInit {
   scroll: boolean = false;
   isScrollReseteable: boolean = false;
 
-  constructor(private autenticateService: AuthenticationService, private deadmanService: DeadmanService, private activatedRoute: ActivatedRoute, private router: Router, private localStorageService: SigaStorageService, private sigaServices: SigaServices, private notificationService: NotificationService) {}
+  constructor(private autenticateService: AuthenticationService, private deadmanService: DeadmanService, private activatedRoute: ActivatedRoute, private router: Router, private cookieService: CookieService, private localStorageService: SigaStorageService, private sigaServices: SigaServices, private notificationService: NotificationService) {}
 
   async ngOnInit(): Promise<void> {
     this.deadmanService.startDeadmanTimer();
@@ -50,6 +54,8 @@ export class AppComponent implements OnInit {
       this.bottomCookies = "0";
     }
 
+    this.cookieService.set("Test", "Utilizamos cookies propias y de analítica para mejorar tu experiencia de usuario. Si continúas navegando, consideramos que aceptas su uso.");
+    this.cookieValue = this.cookieService.get("Test");
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };

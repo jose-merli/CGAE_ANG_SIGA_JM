@@ -1,6 +1,4 @@
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="header-title">
   <i class="fa fa-square"></i>
@@ -24,69 +22,16 @@
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
-        <!-- CÓDIGO -->
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'general.boton.code' | translate}}</label>
-          <input type="text" name="codigo" class="form-control" [(ngModel)]='filtros.codigo' pInputText maxLength="20" pInputText>
-        </div>
-
-        <!-- NOMBRE -->
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
-          <input type="text" name="nombre" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="100" pInputText>
+          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="100"
+            pInputText>
         </div>
-
-        <!-- FECHA DESDE VIGENCIA -->
         <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'sjcs.maestros.modulos.filtro.vigenteDesde' | translate }}</label>
-          <app-fecha [(value)]="filtros.fechadesdevigor" [maxDate]="getFechaHastaVigenciaCalendar(filtros.fechadesdevigor, filtros.fechahastavigor)"
-            (valueChangeSelected)="fillFechaDesdeVigor($event)" (valueChangeInput)="fillFechaDesdeVigor($event)">
-          </app-fecha>
+          <label>{{ 'general.boton.code' | translate}}</label>
+          <input type="text" name="codigo" value="" class="box" class="form-control" [(ngModel)]='filtros.codigo' pInputText maxLength="20"
+            pInputText>
         </div>
-
-        <!-- FECHA HASTA VIGENCIA -->
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'sjcs.maestros.modulos.filtro.vigenteHasta' | translate }}</label>
-          <app-fecha [(value)]="filtros.fechahastavigor" [minDate]="filtros.fechadesdevigor"
-            (valueChangeSelected)="fillFechaHastaVigor($event)" (valueChangeInput)="fillFechaHastaVigor($event)">
-          </app-fecha>
-        </div>
-
-        <!-- JURISDICCIONES -->
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'menu.justiciaGratuita.maestros.Jurisdiccion' | translate }}</label>
-          <p-multiSelect maxSelectedLabels="1" defaultLabel="{{'general.boton.seleccionar' | translate}}"
-            [filter]="true" styleClass="widthAll" [(ngModel)]="jurisdiccionesSeleccionadas"
-            [options]="comboJurisdicciones" [selectedItemsLabel]="textSelected"
-            filterBy="label,labelSinTilde"></p-multiSelect>
-        </div>
-
-        <!-- PROCEDIMIENTOS -->
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'justiciaGratuita.maestros.Procedimiento' | translate }}</label>
-          <p-multiSelect maxSelectedLabels="1" defaultLabel="{{'general.boton.seleccionar' | translate}}" [filter]="true" styleClass="widthAll"
-            [(ngModel)]="procedimientosSeleccionados"
-            [options]="comboProcedimientos" [selectedItemsLabel]="textSelected"
-            filterBy="label,labelSinTilde"></p-multiSelect>
-        </div>
-
-        <!-- JUZGADOS -->
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.juzgado' | translate }}</label>
-          <p-multiSelect maxSelectedLabels="1" defaultLabel="{{'general.boton.seleccionar' | translate}}" [filter]="true" styleClass="widthAll"
-            [(ngModel)]="juzgadosSeleccionados"
-            [options]="comboJuzgados" [selectedItemsLabel]="textSelected"
-            filterBy="label,labelSinTilde"></p-multiSelect>
-        </div>
-
-        <!-- COMPLEMENTO -->
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'menu.justiciaGratuita.maestros.Complemento' | translate }}</label>
-          <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" styleClass="widthAll"
-            [(ngModel)]="filtros.complemento" [options]="comboComplemento" filterBy="label,labelSinTilde"
-            [showClear]="true"></p-dropdown>
-        </div>
-
       </div>
     </div>
   </div>
@@ -94,8 +39,10 @@
     <!-- BOTONES TARJETA -->
     <div class="text-right main-button">
       <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
-      <button (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      <button (click)="checkPermisosNewModulo()" [disabled]="!permisos" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <button (click)="checkPermisosNewModulo()" [disabled]="!permisos" pButton type="button" icon="fa fa-plus" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>
+      <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
     </div>
   </div>
 </div>

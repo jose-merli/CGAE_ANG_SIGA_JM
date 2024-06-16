@@ -3,6 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatSortModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
+import { FilterService, GridModule, GroupService, PageService, SortService } from "@syncfusion/ej2-angular-grids";
 import { MultiSelectModule } from "primeng/multiselect";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule, PickListModule, RadioButtonModule, TreeTableModule } from "primeng/primeng";
 import { TableModule } from "primeng/table";
@@ -60,6 +61,7 @@ import { GuardiasInscripcionesComponent } from "./guardias-inscripciones.compone
     PaginadorModule,
     TablaResultadoMixModule,
     BrowserModule,
+    GridModule,
     RadioButtonModule,
   ],
   declarations: [
@@ -83,6 +85,10 @@ import { GuardiasInscripcionesComponent } from "./guardias-inscripciones.compone
     MessageService,
     AuthenticationService,
     ConfirmationService,
+    PageService,
+    SortService,
+    FilterService,
+    GroupService,
     //TablaResultadoMixSaltosCompService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

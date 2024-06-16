@@ -2,6 +2,7 @@ import { APP_BASE_HREF, CommonModule, DatePipe, UpperCasePipe } from "@angular/c
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { CookieService } from "ngx-cookie-service";
 import { MessageService } from "primeng/components/common/messageservice";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule, PickListModule, TooltipModule } from "primeng/primeng";
 import { TableModule } from "primeng/table";
@@ -47,6 +48,7 @@ import { TablaInscripcionesComponent } from "./gestion-inscripciones/gestion-ins
     MessageService,
     AuthenticationService,
     ConfirmationService,
+
     AuthGuard,
     {
       provide: APP_BASE_HREF,
@@ -57,6 +59,7 @@ import { TablaInscripcionesComponent } from "./gestion-inscripciones/gestion-ins
       useClass: JwtInterceptor,
       multi: true,
     },
+    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })

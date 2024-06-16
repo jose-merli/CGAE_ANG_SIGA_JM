@@ -3,6 +3,7 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatSortModule } from "@angular/material/sort";
+import { CookieService } from "ngx-cookie-service";
 import { ConfirmationService } from "primeng/api";
 import { MessageService } from "primeng/components/common/messageservice";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
@@ -56,6 +57,7 @@ import { Paginador2Module } from "./paginador2/paginador2.module";
       useClass: JwtInterceptor,
       multi: true,
     },
+    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })

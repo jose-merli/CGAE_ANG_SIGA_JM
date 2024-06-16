@@ -27,8 +27,6 @@ export class TablaGestionZonasComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
-  
-  filteredDatos;
 
   message;
   permisoEscritura: boolean = false;
@@ -36,7 +34,6 @@ export class TablaGestionZonasComponent implements OnInit {
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
-  permisos: boolean = false;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -57,26 +54,18 @@ export class TablaGestionZonasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
+
+    if (this.persistenceService.getHistorico() != undefined) {
+      this.historico = this.persistenceService.getHistorico();
+    }
+
     this.getCols();
-    this.historico = this.persistenceService.getHistorico();
-    this.initDatos = [...this.datos];
-    this.filteredDatos = [...this.datos]; 
-    if (this.persistenceService.getPermisos()) {
-      this.permisos = true;
-    } else {
-      this.permisos = false;
-    }
-
-    }
-
-    normalizeString(str: string | null | undefined): string {
-      return (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    }
-  
-    filterTable(value: string, field: string) {
-      const normalizedValue = this.normalizeString(value);
-      this.filteredDatos = this.initDatos.filter(d => this.normalizeString(d[field]).includes(normalizedValue));
-    }
+    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+  }
 
   openZonegroupTab(evento) {
 

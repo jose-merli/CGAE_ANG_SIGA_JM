@@ -1,123 +1,159 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { Router } from "@angular/router";
-import { CommonsService } from "../../../../_services/commons.service";
-import { PersistenceService } from "../../../../_services/persistence.service";
-import { SigaServices } from "../../../../_services/siga.service";
-import { TranslateService } from "../../../../commons/translate";
-import { ModulosJuzgadoItem } from "../../../../models/sjcs/ModulosJuzgadoItem";
-import { procesos_maestros } from "../../../../permisos/procesos_maestros";
-import { FiltrosModulosComponent } from "./filtro-busqueda-modulos/filtros-modulos.component";
-import { TablaModulosComponent } from "./tabla-modulos/tabla-modulos.component";
+
+import { Component, OnInit, HostBinding, ViewChild, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList } from '@angular/core';
+import { FiltrosModulosComponent } from './filtro-busqueda-modulos/filtros-modulos.component';
+import { TablaModulosComponent } from './tabla-modulos/tabla-modulos.component';
+import { TranslateService } from '../../../../commons/translate';
+import { SigaServices } from '../../../../_services/siga.service';
+import { CommonsService } from '../../../../_services/commons.service';
+// import { FiltrosModulosComponent } from './tabla-busqueda-modulos/tabla-busqueda-modulos.component';
+import { PersistenceService } from '../../../../_services/persistence.service';
+import { procesos_maestros } from '../../../../permisos/procesos_maestros';
+import { Router } from '@angular/router';
+import { ModulosJuzgadoItem } from '../../../../models/sjcs/ModulosJuzgadoItem';
 
 @Component({
-  selector: "app-busqueda-modulosybasesdecompensacion",
-  templateUrl: "./busqueda-modulosybasesdecompensacion.component.html",
-  styleUrls: ["./busqueda-modulosybasesdecompensacion.component.scss"],
+  selector: 'app-busqueda-modulosybasesdecompensacion',
+  templateUrl: './busqueda-modulosybasesdecompensacion.component.html',
+  styleUrls: ['./busqueda-modulosybasesdecompensacion.component.scss']
 })
-export class MaestrosModulosComponent implements OnInit {
+export class MaestrosModulosComponent implements OnInit, AfterViewInit {
+
+  buscar: boolean = false;
   messageShow: string;
+
   datos;
   progressSpinner: boolean = false;
+  //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
+  /*a particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
+  cargada para acceder a los atributos del hijo. Para ello creamos un método de Angular llamado
+   ngAfterViewInit() en el que simplemente inicializamos la variable con el valor del atributo del hijo 
+   el hijo lo declaramos como @ViewChild(ChildComponent)).*/
+
+  @ViewChild(FiltrosModulosComponent) filtros;
   filtrosJuzgado: ModulosJuzgadoItem = new ModulosJuzgadoItem();
-  permisoEscritura: boolean = false;
-  vieneDeFichaJuzgado: boolean = false;
-  isResult: boolean = false;
+  @ViewChild(TablaModulosComponent) tabla;
 
-  @ViewChild(FiltrosModulosComponent) filtros: FiltrosModulosComponent;
-  @ViewChild(TablaModulosComponent) tabla: TablaModulosComponent;
+  //comboPartidosJudiciales
+  msgs;
+  permisoEscritura: any;
 
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService, private persistenceService: PersistenceService, private router: Router) {}
+  vieneDeFichaJuzgado: String;
+
+
+
+  constructor(private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private persistenceService: PersistenceService,
+    private router: Router) { }
+
 
   ngOnInit() {
-    this.commonsService
-      .checkAcceso(procesos_maestros.modulo)
-      .then((respuesta) => {
+    this.buscar = this.filtros.buscar
+
+    this.commonsService.checkAcceso(procesos_maestros.modulo)
+      .then(respuesta => {
         this.permisoEscritura = respuesta;
+
         this.persistenceService.setPermisos(this.permisoEscritura);
 
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
-      })
-      .catch((error) => console.error(error));
+      }
+      ).catch(error => console.error(error));
 
-    if (sessionStorage.getItem("vieneDeFichaJuzgado")) {
-      this.vieneDeFichaJuzgado = sessionStorage.getItem("vieneDeFichaJuzgado") == "true" ? true : false;
-    }
+    if (sessionStorage.getItem("vieneDeFichaJuzgado")) this.vieneDeFichaJuzgado = sessionStorage.getItem("vieneDeFichaJuzgado");
+  }
+
+  ngAfterViewInit() {
   }
 
   ngOnDestroy() {
-    if (sessionStorage.getItem("vieneDeFichaJuzgado")) {
-      sessionStorage.removeItem("vieneDeFichaJuzgado");
-    }
+    if (sessionStorage.getItem("vieneDeFichaJuzgado")) sessionStorage.removeItem("vieneDeFichaJuzgado");
   }
 
-  volver() {
+  volverFichaJuzgado() {
     this.router.navigate(["gestionJuzgados"]);
   }
 
-  searchModulos(historico: any) {
+  // busquedaReceive(event) {
+  //   this.searchAreas();
+  // }
+
+
+  searchModulos(event) {
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-    if (historico != null) {
-      this.filtros.filtros.historico = historico;
-    }
-    this.persistenceService.setFiltros(this.filtros.filtros);
 
     if (this.vieneDeFichaJuzgado) {
-      let filtrosJuzgado: ModulosJuzgadoItem = new ModulosJuzgadoItem();
-      filtrosJuzgado.modulo = this.filtros.filtros;
-      filtrosJuzgado.idJuzgado = this.persistenceService.getIdJuzgado();
-      filtrosJuzgado.historicoJuzgado = this.persistenceService.getHistoricoJuzgado();
+      this.filtrosJuzgado.modulo = this.filtros.filtroAux;
+      this.filtrosJuzgado.modulo.historico = event;
+      this.filtrosJuzgado.idJuzgado = this.persistenceService.getIdJuzgado();
+      this.filtrosJuzgado.historicoJuzgado = this.persistenceService.getHistoricoJuzgado();
       this.sigaServices.post("modulosYBasesDeCompensacion_searchModulosJuzgados", this.filtrosJuzgado).subscribe(
-        (n) => {
-          this.progressSpinner = false;
-          this.isResult = true;
-          if (this.tabla != null && this.tabla != undefined) {
-            this.tabla.tabla.sortOrder = 0;
-            this.tabla.tabla.sortField = "";
-            this.tabla.tabla.reset();
-            this.tabla.buscadores = this.tabla.buscadores.map((it) => (it = ""));
-          }
+        n => {
           this.datos = JSON.parse(n.body).modulosItem;
+          this.buscar = true
+          if (this.datos != undefined)
+            this.datos.forEach(element => {
+              element.precio = element.importe.replace(".", ",");
+              if (element.precio[0] == '.' || element.precio[0] == ',')
+                element.precio = "0".concat(element.precio)
+            });
+
+          if (this.tabla != null && this.tabla != undefined) {
+            this.tabla.historico = event;
+            this.tabla.tabla.sortOrder = 0;
+            this.tabla.tabla.sortField = '';
+            this.tabla.tabla.reset();
+            this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+          }
+          this.progressSpinner = false;
           this.resetSelect();
         },
-        (err) => {
+        err => {
           this.progressSpinner = false;
-        },
-      );
+          //console.log(err);
+        });
     } else {
-      this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", this.filtros.filtros).subscribe(
-        (n) => {
-          this.progressSpinner = false;
-          this.isResult = true;
-          if (this.tabla != null && this.tabla != undefined) {
-            this.tabla.tabla.sortOrder = 0;
-            this.tabla.tabla.sortField = "";
-            this.tabla.tabla.reset();
-            this.tabla.buscadores = this.tabla.buscadores.map((it) => (it = ""));
-          }
+      this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", this.filtros.filtroAux).subscribe(
+        n => {
           this.datos = JSON.parse(n.body).modulosItem;
+          this.buscar = true
+          if (this.datos != undefined)
+            this.datos.forEach(element => {
+              element.precio = element.importe.replace(".", ",");
+              if (element.precio[0] == '.' || element.precio[0] == ',')
+                element.precio = "0".concat(element.precio)
+            });
 
-          this.datos.forEach(element => {
-            if (element.fechadesdevigor != null) {
-              element.fechadesdevigorString = this.formatDate(element.fechadesdevigor).toLocaleDateString();
-            }
-
-            if (element.fechahastavigor != null) {
-              element.fechahastavigorString = this.formatDate(element.fechahastavigor).toLocaleDateString();
-            }
-          });
-
+          if (this.tabla != null && this.tabla != undefined) {
+            this.tabla.historico = event;
+            this.tabla.tabla.sortOrder = 0;
+            this.tabla.tabla.sortField = '';
+            this.tabla.tabla.reset();
+            this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+          }
+          this.progressSpinner = false;
           this.resetSelect();
         },
-        (err) => {
+        err => {
           this.progressSpinner = false;
-        },
-      );
+          //console.log(err);
+        });
     }
+
+
   }
+
 
   resetSelect() {
     if (this.tabla != undefined) {
@@ -128,15 +164,17 @@ export class MaestrosModulosComponent implements OnInit {
     }
   }
 
-  formatDate(date) {
-    if (date instanceof Date) {
-      return date;
-    } else if (typeof date == "number") {
-      return new Date(date.valueOf());
-    } else {
-      var parts = date.split("/");
-      var formattedDate = new Date(parts[1] + "/" + parts[0] + "/" + parts[2]);
-      return formattedDate;
-    }
+  showMessage(event) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
+    });
   }
+
+  clear() {
+    this.msgs = [];
+  }
+
 }

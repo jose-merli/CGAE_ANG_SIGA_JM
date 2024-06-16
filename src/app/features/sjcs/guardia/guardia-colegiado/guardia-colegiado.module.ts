@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { DialogModule } from "primeng/dialog";
 import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, MultiSelectModule, PaginatorModule, PickListModule, TreeTableModule } from "primeng/primeng";
 import { HTTP_INTERCEPTORS } from "../../../../../../node_modules/@angular/common/http";
+import { CookieService } from "../../../../../../node_modules/ngx-cookie-service";
 import { MessageService } from "../../../../../../node_modules/primeng/components/common/messageservice";
 import { TableModule } from "../../../../../../node_modules/primeng/table";
 import { environment } from "../../../../../environments/environment";
@@ -44,6 +45,7 @@ import { TrimPipePipe } from "../../../../commons/trim-pipe/trim-pipe.pipe";
       useClass: JwtInterceptor,
       multi: true,
     },
+    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })

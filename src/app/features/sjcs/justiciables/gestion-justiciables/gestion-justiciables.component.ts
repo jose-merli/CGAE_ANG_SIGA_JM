@@ -170,7 +170,7 @@ export class GestionJusticiablesComponent implements OnInit {
         if (this.dialogTarjeta == "tarjetaGenerales") {
           this.datosGenerales.guardarDialog(true);
         } else if (this.dialogTarjeta == "tarjetaPersonales") {
-          this.datosGenerales.guardarDialog(true);
+          this.datosPersonales.guardarDialog(true);
           this.datosGenerales.guardarDialog(true);
         } else if (this.dialogTarjeta == "tarjetaSolicitud") {
           this.datosSolicitud.guardarDialog(true);

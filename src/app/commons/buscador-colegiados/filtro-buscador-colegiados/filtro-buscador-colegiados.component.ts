@@ -1,19 +1,23 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from "@angular/core";
-import { CommonsService } from "../../../_services/commons.service";
-import { SigaServices } from "../../../_services/siga.service";
-import { ColegiadosSJCSItem } from "../../../models/ColegiadosSJCSItem";
-import { TranslateService } from "../../translate";
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { stringToNumber } from '@syncfusion/ej2-charts';
+import { CommonsService } from '../../../_services/commons.service';
+import { SigaServices } from '../../../_services/siga.service';
+import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
+import { TranslateService } from '../../translate';
+
 
 export enum KEY_CODE {
-  ENTER = 13,
+  ENTER = 13
 }
 
 @Component({
-  selector: "app-filtro-buscador-colegiados",
-  templateUrl: "./filtro-buscador-colegiados.component.html",
-  styleUrls: ["./filtro-buscador-colegiados.component.scss"],
+  selector: 'app-filtro-buscador-colegiados',
+  templateUrl: './filtro-buscador-colegiados.component.html',
+  styleUrls: ['./filtro-buscador-colegiados.component.scss']
 })
+
 export class FiltroBuscadorColegiadosComponent implements OnInit {
+
   institucionActual;
   msgs;
   @Input() filtroRecibido;
@@ -33,15 +37,16 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   comboEstadoColegial: any;
   @ViewChild("estado") dropEstado;
 
-  @Input("nuevaInscripcion") nuevaInscripcion;
-  @Input("nuevaInscripcionGuardia") nuevaInscripcionGuardia;
+ 
+  @Input('nuevaInscripcion') nuevaInscripcion;
+  @Input('nuevaInscripcionGuardia') nuevaInscripcionGuardia;
   @Output() buscar = new EventEmitter<boolean>();
 
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService) {}
+  constructor(private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService) { }
 
   ngOnInit() {
     //('this.filtroRecibido: ', this.filtroRecibido)
-    if (this.filtroRecibido) {
+    if (this.filtroRecibido){
       this.filtro.idGuardia = this.filtroRecibido.idGuardia;
       this.filtro.idTurno = this.filtroRecibido.idTurno;
     }
@@ -50,17 +55,17 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
 
     this.filtro = new ColegiadosSJCSItem();
 
-    if (sessionStorage.getItem("usuarioBusquedaExpress")) {
-      sessionStorage.removeItem("usuarioBusquedaExpress");
+    if (sessionStorage.getItem('usuarioBusquedaExpress')) {
+      sessionStorage.removeItem('usuarioBusquedaExpress')
     }
 
     //Bloquear el desplegable del estado de colegiado y lo colocamos en ejerciente por defecto
     if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit") {
-      this.disabledEstado = true;
+        this.disabledEstado = true;
     }
     this.filtro.idEstado = "20";
 
-    this.sigaServices.get("institucionActual").subscribe((n) => {
+    this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       this.filtro.idInstitucion = n.value;
       this.getComboColegios();
@@ -68,44 +73,44 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
       this.getComboEstadoColegial();
     });
 
-    //Comprobar si proviene de la tarjeta servicio de tramitacion de la ficha EJG.
-    if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit") {
-      if (sessionStorage.getItem("idTurno")) {
-        this.filtro.idTurno = [];
-        this.filtro.idTurno.push(sessionStorage.getItem("idTurno"));
-        this.getComboguardiaPorTurno({ value: this.filtro.idTurno[0] });
+        //Comprobar si proviene de la tarjeta servicio de tramitacion de la ficha EJG.
+        if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit") {
+          if (sessionStorage.getItem("idTurno")) {
+            this.filtro.idTurno = [];
+            this.filtro.idTurno.push(sessionStorage.getItem("idTurno"));
+            this.getComboguardiaPorTurno({ value: this.filtro.idTurno[0] });
+          }
+        }
+
+      if (sessionStorage.getItem("idTurnoAsistencia")) {
+          this.filtro.idTurno = [];
+          this.filtro.idTurno.push(sessionStorage.getItem("idTurnoAsistencia"));
+          this.getComboguardiaPorTurno({ value: this.filtro.idTurno[0] });
+
+          if (sessionStorage.getItem("idGuardiaAsistencia")) {
+            this.filtro.idGuardia = [];
+            this.filtro.idGuardia.push(sessionStorage.getItem("idGuardiaAsistencia"));
+            sessionStorage.removeItem('idGuardiaAsistencia');
+          }
+          sessionStorage.removeItem('idTurnoAsistencia');
       }
-    }
-
-    if (sessionStorage.getItem("idTurnoAsistencia")) {
-      this.filtro.idTurno = [];
-      this.filtro.idTurno.push(sessionStorage.getItem("idTurnoAsistencia"));
-      this.getComboguardiaPorTurno({ value: this.filtro.idTurno[0] });
-
-      if (sessionStorage.getItem("idGuardiaAsistencia")) {
-        this.filtro.idGuardia = [];
-        this.filtro.idGuardia.push(sessionStorage.getItem("idGuardiaAsistencia"));
-        sessionStorage.removeItem("idGuardiaAsistencia");
+      
+      let sizeOfDataColegiado = sessionStorage.getItem("sizedatacolegiado");
+      sessionStorage.removeItem("sizedatacolegiado");
+      let ncol = sessionStorage.numColegiado;
+      sessionStorage.removeItem("numColegiado");
+      if(stringToNumber(sizeOfDataColegiado, 1) > 1){
+        this.filtro.nColegiado = ncol;
+        this.busquedaColegiado();
       }
-      sessionStorage.removeItem("idTurnoAsistencia");
-    }
-
-    let sizeOfDataColegiado = sessionStorage.getItem("sizedatacolegiado");
-    sessionStorage.removeItem("sizedatacolegiado");
-    let ncol = sessionStorage.getItem("numColegiado");
-    sessionStorage.removeItem("numColegiado");
-    if (sizeOfDataColegiado != undefined && sizeOfDataColegiado != null && +sizeOfDataColegiado > 1) {
-      this.filtro.nColegiado = ncol;
-      this.busquedaColegiado();
-    }
-    this.progressSpinner = false;
+      this.progressSpinner = false;
   }
 
   getComboColegios() {
     this.progressSpinner = true;
 
     this.sigaServices.getParam("busquedaCol_colegio", "?idInstitucion=" + this.institucionActual).subscribe(
-      (n) => {
+      n => {
         this.comboColegios = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboColegios);
 
@@ -115,42 +120,44 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
 
         this.progressSpinner = false;
       },
-      (err) => {
+      err => {
         //console.log(err);
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      },
+      }
     );
+    
   }
 
   getComboTurno() {
     this.progressSpinner = true;
     //si la pantalla viene de ejg, se cargan unos turnos
     this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=" + sessionStorage.getItem("pantalla")).subscribe(
-      (n) => {
+      n => {
         this.comboTurno = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTurno);
         this.progressSpinner = false;
       },
-      (err) => {
+      err => {
         this.progressSpinner = false;
-      },
+      }
     );
     this.progressSpinner = true;
-    if (sessionStorage.getItem("turnoDesigna")) {
-      this.datosDesgina = JSON.parse(sessionStorage.getItem("turnoDesigna"));
-      if (this.datosDesgina != null && this.datosDesgina != undefined) {
+    if (sessionStorage.getItem('turnoDesigna')) {
+      this.datosDesgina = JSON.parse(sessionStorage.getItem('turnoDesigna'));
+      if((this.datosDesgina != null && this.datosDesgina != undefined)){
         this.filtro.idTurno = [this.datosDesgina];
-      }
-      sessionStorage.removeItem("turnoDesigna");
+        }
+      sessionStorage.removeItem('turnoDesigna');
     }
-    if (sessionStorage.getItem("turnoEJG")) {
-      this.datosDesgina = JSON.parse(sessionStorage.getItem("turnoEJG"));
-      if (this.datosDesgina != null && this.datosDesgina != undefined) {
+    if (sessionStorage.getItem('turnoEJG')) {
+      this.datosDesgina = JSON.parse(sessionStorage.getItem('turnoEJG'));
+      if((this.datosDesgina != null && this.datosDesgina != undefined)){
         this.filtro.idTurno = [this.datosDesgina];
-      }
-      sessionStorage.removeItem("turnoEJG");
+        }
+      sessionStorage.removeItem('turnoEJG');
     }
+      
   }
 
   getComboguardiaPorTurno(evento) {
@@ -158,7 +165,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
 
     if (evento.value != undefined && evento.value.length != 0) {
       this.sigaServices.getParam("combo_guardiaPorTurno", "?idTurno=" + evento.value).subscribe(
-        (n) => {
+        n => {
           this.comboguardiaPorTurno = n.combooItems;
           this.progressSpinner = false;
           if (this.comboguardiaPorTurno.length == 0) this.filtro.idGuardia = [];
@@ -170,10 +177,10 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
             }
           }
         },
-        (err) => {
+        err => {
           this.progressSpinner = false;
-        },
-      );
+        }
+        );
     } else {
       this.filtro.idGuardia = [];
       this.progressSpinner = false;
@@ -184,15 +191,15 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
     this.progressSpinner = true;
 
     this.sigaServices.get("busquedaColegiados_situacion").subscribe(
-      (n) => {
+      n => {
         this.comboEstadoColegial = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadoColegial);
         this.progressSpinner = false;
       },
-      (err) => {
+      err => {
         //console.log(err);
         this.progressSpinner = false;
-      },
+      }
     );
   }
 
@@ -201,10 +208,10 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
     this.msgs.push({
       severity: severity,
       summary: summary,
-      detail: msg,
+      detail: msg
     });
   }
-
+  
   fillFechaEstado(event) {
     this.filtro.fechaestado = this.transformaFecha(event);
   }
@@ -234,12 +241,13 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
     this.filtro.idInstitucion = colegio;
     //En el caso que se este buscando un colegiado para una nueva inscripcion
     this.filtro.idEstado = "20";
-    if (this.dropEstado.disabled) this.filtro.idEstado = estado;
+    if(this.dropEstado.disabled) this.filtro.idEstado = estado;
   }
 
   busquedaColegiado() {
     this.buscar.emit(false);
   }
+
 
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
@@ -248,4 +256,5 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
       this.busquedaColegiado();
     }
   }
+
 }

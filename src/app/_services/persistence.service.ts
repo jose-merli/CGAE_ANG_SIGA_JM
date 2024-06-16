@@ -329,6 +329,5 @@ export class PersistenceService {
     this.clearFiltrosAux();
     this.clearFiltrosEJG();
     this.clearFiltrosBusquedaGeneralSJCS();
-    this.clearHistorico();
   }
 }

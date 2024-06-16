@@ -3,6 +3,7 @@ import { LOCALE_ID, NgModule } from "@angular/core";
 import { CheckboxModule } from "primeng/checkbox";
 import { HTTP_INTERCEPTORS } from "../../../../../../node_modules/@angular/common/http";
 import { FormsModule } from "../../../../../../node_modules/@angular/forms";
+import { CookieService } from "../../../../../../node_modules/ngx-cookie-service";
 import { MessageService } from "../../../../../../node_modules/primeng/components/common/messageservice";
 import { ButtonModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "../../../../../../node_modules/primeng/primeng";
 import { TableModule } from "../../../../../../node_modules/primeng/table";
@@ -42,6 +43,7 @@ import { TablaJuzgadosComponent } from "./tabla-juzgados/tabla-juzgados.componen
     AuthenticationService,
     ConfirmationService,
     PersistenceService,
+    CookieService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,

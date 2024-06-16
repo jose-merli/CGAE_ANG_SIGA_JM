@@ -11,6 +11,7 @@ import { EJGItem } from "../../../../../models/sjcs/EJGItem";
 import { FichaSojItem } from "../../../../../models/sjcs/FichaSojItem";
 import { JusticiableItem } from "../../../../../models/sjcs/JusticiableItem";
 import { SigaConstants } from "../../../../../utils/SigaConstants";
+
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
@@ -82,7 +83,7 @@ export class DatosGeneralesComponent implements OnInit {
       }
     } else {
       this.body.edad = undefined;
-      this.canSave = false;
+      this.canSave = true;
     }
   }
 
@@ -116,12 +117,12 @@ export class DatosGeneralesComponent implements OnInit {
     } else {
       this.progressSpinner = true;
       let menorEdadSinRepresentante = true;
-      if ((this.body.edad != undefined && JSON.parse(this.body.edad) < SigaConstants.EDAD_ADULTA && this.body.idrepresentantejg != undefined) || this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) >= SigaConstants.EDAD_ADULTA)) {
-        menorEdadSinRepresentante = false;
-      } else {
+      if (this.body.edad != undefined && JSON.parse(this.body.edad) < SigaConstants.EDAD_ADULTA && this.body.idrepresentantejg == undefined) {
         this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
         this.body.fechanacimiento = undefined;
         this.body.edad = undefined;
+      } else {
+        menorEdadSinRepresentante = false;
       }
 
       if (!this.modoEdicion) {
@@ -133,7 +134,7 @@ export class DatosGeneralesComponent implements OnInit {
               this.progressSpinner = false;
               this.notificationService.showInfo(this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
             } else {
-              if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+              if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
                 this.progressSpinner = false;
                 this.showDialog.emit("tarjetaGenerales");
               } else {
@@ -141,7 +142,7 @@ export class DatosGeneralesComponent implements OnInit {
               }
             }
           } else {
-            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "" && this.origen != "Asistencia" && this.origen != "Soj") {
+            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && this.origen != "") {
               this.progressSpinner = false;
               this.showDialog.emit("tarjetaGenerales");
             } else {
@@ -190,11 +191,26 @@ export class DatosGeneralesComponent implements OnInit {
         if (clonar) {
           this.modoEdicion = true;
         }
-        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          if (JSON.parse(err.error).error.code == "600") {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+        if (err.error != undefined) {
+          const errors = JSON.parse(err.error);
+          if (errors.error != undefined && errors.error.description != "") {
+            if (JSON.parse(err.error).error.code == "600") {
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), errors.error.description);
+            } else {
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(errors.error.description));
+            }
           } else {
-            this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            if (err.status == 400) {
+              let description = "";
+              for (const error in errors) {
+                if (errors.hasOwnProperty(error)) {
+                  description = description + (description != "" ? "<br/>" : "") + errors[error];
+                }
+              }
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), description);
+            } else {
+              this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
           }
         } else {
           this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -527,7 +543,7 @@ export class DatosGeneralesComponent implements OnInit {
 
   private disabledSave() {
     this.permisoSave = false;
-    if (this.body.nombre != undefined && this.body.nombre.trim() != "" && this.body.apellido1 != undefined && this.body.apellido1.trim() != "" && this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" && this.body.sexo != undefined && this.body.sexo != "") {
+    if (this.body.nombre != undefined && this.body.nombre.trim() != "" && this.body.apellido1 != undefined && this.body.apellido1.trim() != "" && this.body.tipopersonajg != undefined && this.body.tipopersonajg != "") {
       this.permisoSave = true;
     }
   }

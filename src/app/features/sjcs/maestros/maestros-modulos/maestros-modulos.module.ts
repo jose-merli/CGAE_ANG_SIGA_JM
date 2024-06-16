@@ -2,9 +2,10 @@ import { APP_BASE_HREF, CommonModule, DatePipe, UpperCasePipe } from "@angular/c
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { CookieService } from "ngx-cookie-service";
 import { MessageService } from "primeng/components/common/messageservice";
 import { MultiSelectModule } from "primeng/multiselect";
-import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DialogModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule, Tooltip } from "primeng/primeng";
+import { ButtonModule, CheckboxModule, ConfirmDialogModule, ConfirmationService, DataTableModule, DialogModule, DropdownModule, GrowlModule, InputTextModule, MenubarModule, PaginatorModule } from "primeng/primeng";
 import { RadioButtonModule } from "primeng/radiobutton";
 import { SpinnerModule } from "primeng/spinner";
 import { TableModule } from "primeng/table";
@@ -27,10 +28,9 @@ import { GestionModulosYBasesComponent } from "./edicion-modulos/gestion-modulos
 import { TablaAcreditacionesComponent } from "./edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component";
 import { FiltrosModulosComponent } from "./filtro-busqueda-modulos/filtros-modulos.component";
 import { TablaModulosComponent } from "./tabla-modulos/tabla-modulos.component";
-import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
-  imports: [CommonModule, DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, TableModule, MultiSelectModule, FechaModule, SpinnerModule, PrecioModule, ConfirmDialogModule, PipeNumberModule, DialogModule, RadioButtonModule, TooltipModule],
+  imports: [CommonModule, DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, FormsModule, GrowlModule, PipeTranslationModule, MenubarModule, TableModule, MultiSelectModule, FechaModule, SpinnerModule, PrecioModule, ConfirmDialogModule, PipeNumberModule, DialogModule, RadioButtonModule],
   declarations: [FiltrosModulosComponent, MaestrosModulosComponent, TablaModulosComponent, GestionModulosYBasesComponent, EdicionModulosComponent, TablaAcreditacionesComponent],
   providers: [
     ImagePipe,
@@ -53,6 +53,7 @@ import { TooltipModule } from "primeng/tooltip";
       useClass: JwtInterceptor,
       multi: true,
     },
+    CookieService,
     { provide: LOCALE_ID, useValue: "es-ES" },
   ],
 })

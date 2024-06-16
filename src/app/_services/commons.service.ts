@@ -1,10 +1,12 @@
+import { HttpBackend, HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import "rxjs/add/operator/catch";
+import "rxjs/add/operator/map";
+
 import { TranslateService } from "../commons/translate/translation.service";
 import { ComboItem } from "../models/ComboItem";
 import { ControlAccesoDto } from "../models/ControlAccesoDto";
-import { NotificationService } from "./notification.service";
 import { SigaServices } from "./siga.service";
-import { HttpBackend, HttpClient } from "@angular/common/http";
 
 export enum KEY_CODE {
   ENTER = 13,
@@ -14,7 +16,9 @@ export enum KEY_CODE {
 export class CommonsService {
   DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private notificationService: NotificationService) {}
+  constructor(private http: HttpClient, private sigaServices: SigaServices, handler: HttpBackend, private httpbackend: HttpClient, private translateService: TranslateService) {
+    this.httpbackend = new HttpClient(handler);
+  }
 
   validateEmail(value) {
     //let correo = value;
@@ -307,24 +311,6 @@ export class CommonsService {
 
   checkPermisoAccion() {
     return this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
-  }
-
-  checkPermisosService(permiso: boolean, historico?: boolean): boolean {
-    let acceso = true;
-    if (!permiso) {
-      this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
-      acceso = false;
-    } else {
-      if (historico != undefined && historico) {
-        this.notificationService.showError(this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
-        acceso = false;
-      }
-    }
-    return acceso;
-  }
-
-  checkPermisoAccionService() {
-    this.notificationService.showError(this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
   }
 
   arreglarFecha(fecha) {
