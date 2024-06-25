@@ -1,3 +1,7 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="header-title">
   <i class="fa fa-square"></i>
   <p>{{ "agenda.cabecera" | translate }}</p>
@@ -7,24 +11,15 @@
   <div class="card-body">
     <div class="row">
       <div class="col-2">
-        <!--
-          <button (click)="isNuevo()" pButton type="button" icon="fa fa-search" iconPos="left" label="Nuevo"></button>
-          <button (click)="isEditar()" pButton type="button" icon="fa fa-search" iconPos="left" label="Editar"></button>
-
-          <hr>
-        -->
 
         <div class="ui-g" style="width:250px;margin-bottom:10px">
           <div *ngFor="let calendario of calendarios" class="ui-g-12">
             <div class="ui-chkbox ui-widget">
               <div class="ui-helper-hidden-accessible">
-                <input type="checkbox" attr.id="{calendario.idCalendario}}" value="{{calendario.idCalendario}}" [(ngModel)]="calendario.checked"
-                />
+                <input type="checkbox" attr.id="{calendario.idCalendario}}" value="{{calendario.idCalendario}}" [(ngModel)]="calendario.checked"/>
               </div>
 
-              <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default" (click)="onClickCheckBox(calendario)" [style.background-color]="
-                  calendario.checked ? calendario.color : 'white'
-                " [style.border-color]="calendario.color">
+              <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default" (click)="onClickCheckBox(calendario)" [style.background-color]="calendario.checked ? calendario.color : 'white'" [style.border-color]="calendario.color">
                 <span class="ui-chkbox-icon ui-clickable" [style.color]="'white'" [ngClass]="{ 'fa fa-check': calendario.checked }"></span>
               </div>
             </div>
@@ -40,8 +35,4 @@
       </div>
     </div>
   </div>
-</div>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
 </div>
